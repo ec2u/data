@@ -1,5 +1,6 @@
 /@
 
+/cache/
 /target/
 /overlays/
 /node_modules/

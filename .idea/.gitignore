@@ -1,0 +1,11 @@
+
+# IntelliJ IDEA (see https://www.jetbrains.com/help/idea/managing-projects-under-version-control.html)
+
+/workspace.xml
+/modules.xml
+/tasks.xml
+
+/libraries/
+/dictionaries/
+/shelf/
+/httpRequests/

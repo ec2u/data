@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Copyright © 2021-2021 EC2U Consortium
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>eu.ec2u</groupId>
+	<artifactId>ec2u-work</artifactId>
+	<version>0.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>EC2U Sandbox</name>
+	<description>EC2U Sandbox</description>
+	<url>https://github.com/ec2u/work</url>
+	<inceptionYear>2021</inceptionYear>
+
+	<organization>
+		<name>EC2U</name>
+		<url>https://ec2u.eu/</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>EC2U SW Development Team</name>
+			<email>sw@ec2u.eu</email>
+			<organization>EC2U</organization>
+			<organizationUrl>https://ec2u.eu</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:ec2u/work.git</connection>
+		<developerConnection>scm:git:git@github.com:ec2u/work.git</developerConnection>
+		<url>https://github.com/ec2u/work</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/ec2u/work/issues</url>
+	</issueManagement>
+
+	<properties>
+
+		<java.version>1.8</java.version>
+		<node.version>12.18.2</node.version>
+		<maven.version>3.6</maven.version>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<maven.deploy.skip>true</maven.deploy.skip> <!-- no public artifact deployment -->
+		<maven.site.skip>skip</maven.site.skip> <!-- no site -->
+
+		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
+
+		<timestamp>${maven.build.timestamp}</timestamp> <!-- ;( not directly available to filtered resources -->
+
+	</properties>
+
+	<dependencyManagement>
+
+		<dependencies>
+
+			<dependency>
+				<groupId>com.metreeca</groupId>
+				<artifactId>metreeca-link</artifactId>
+				<version>0.0.0-SNAPSHOT</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.metreeca</groupId>
+			<artifactId>metreeca-rest</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.metreeca</groupId>
+			<artifactId>metreeca-xml</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+
+		<plugins>
+
+			<plugin> <!-- https://maven.apache.org/enforcer/maven-enforcer-plugin/ -->
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M2</version>
+
+				<executions>
+					<execution>
+
+						<id>enforce-maven</id>
+
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>${maven.version}</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+
+					</execution>
+				</executions>
+
+			</plugin>
+
+			<plugin> <!-- https://maven.apache.org/plugins/maven-compiler-plugin -->
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+
+				<configuration>
+
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+
+				</configuration>
+
+			</plugin>
+
+			<plugin> <!-- https://maven.apache.org/surefire/maven-surefire-plugin/ -->
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+</project>
