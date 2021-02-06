@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="./index.xsl"?>
+
+<!----------------------------------------------------------------------------------------------------------------------
+  Copyright © 2021-2021 EC2U Consortium
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  --------------------------------------------------------------------------------------------------------------------->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+
+		<title>Expertise</title>
+
+		<style type="text/css">
+
+			main > header > h1 {
+				overflow: visible;
+			}
+
+			main > header > h1 > * {
+				box-sizing: content-box;
+				margin-top: -0.25em; /* compensate top input padding */
+			}
+
+			main > header > h1 > input {
+				width: 100%;
+				padding: 0.25em 1.5em;
+				border-style: solid;
+				border-radius: 1em;
+				font-weight: 300;
+			}
+
+			main > header > h1 > :first-child,
+			main > header > h1 > :last-child {
+				z-index: 1;
+				height: 0.9em; /* tbr / align mockup links */
+			}
+
+			main > header > h1 > :first-child {
+				margin-right: -1.25em;
+			}
+
+			main > header > h1 > :last-child {
+				margin-left: -1.25em;
+			}
+
+
+			main > section > ul {
+				display: table;
+				margin: 5% auto;
+				font-size: 250%;
+			}
+
+			main > section > ul > li {
+				list-style: none;
+				display: table-row;
+			}
+
+			main > section > ul > li > * {
+				display: table-cell;
+				padding: 0 0.25em;
+			}
+
+			main > section > ul > li > :first-child {
+				text-align: right;
+			}
+
+			main > section > ul > li > :last-child {
+				width: 66%;
+				text-align: left;
+			}
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<header>
+
+			<h1>
+				<button data-icon="search"/>
+				<input autofocus="autofocus" type="text" placeholder="Expertise"/>
+				<a data-icon="arrow-right-circle" href="results.xhtml"/>
+			</h1>
+
+		</header>
+
+		<nav>
+
+		</nav>
+
+		<section>
+
+			<ul>
+				<li><span>99</span><a data-icon="home" href="structures/"/><span>Structures</span></li>
+				<li><span>123</span><a data-icon="bookmark" href="structures/"/><span>Subjects</span></li>
+				<li><span>2'300</span><a data-icon="tool" href="structures/"/><span>Projects</span></li>
+				<li><span>4'200</span><a data-icon="users" href="structures/"/><span>People</span></li>
+				<li><span>567'890</span><a data-icon="book-open" href="structures/"/><span>Publications</span></li>
+			</ul>
+
+		</section>
+
+	</body>
+
+</html>
