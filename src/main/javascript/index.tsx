@@ -19,6 +19,8 @@ import { render } from "react-dom";
 import { HashRouter, Route, Switch } from "react-router-dom";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
+import ToolStructure from "./pages/structures/structure";
+import ToolStructures from "./pages/structures/structures";
 
 window.onload=() => {
 
@@ -31,10 +33,10 @@ window.onload=() => {
 
 				<Route path={`/`} exact component={ToolHome}/>
 
-				{/*<Route path="/articles" render={({ match: { url } }) => (<>*/}
-				{/*	<Route path={`${url}/`} exact component={NewsArticles}/>*/}
-				{/*	<Route path={`${url}/:id`} component={NewsArticle}/>*/}
-				{/*</>)}/>*/}
+				<Route path="/structures" render={({ match: { url } }) => (<>
+					<Route path={`${url}/`} exact component={ToolStructures}/>
+					<Route path={`${url}/:id`} component={ToolStructure}/>
+				</>)}/>
 
 				<Route component={ToolNone}/>
 
@@ -43,6 +45,6 @@ window.onload=() => {
 
 		// </GraphContext.Provider>
 
-	), document.querySelector("body > main"));
+	), document.querySelector("body > div"));
 
 };

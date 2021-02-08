@@ -77,17 +77,16 @@ export default function ToolFacet({
 		
 		}`}>
 
-			<button><ChevronRight/></button>
+			<button disabled={true}><ChevronRight/></button>
 			<h1>{name}</h1>
 
-			<input type="checkbox"/><NavLink to="/">University of Coimbra</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/">University of Iasi</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/">University of Jena</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/">University of Pavia</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/">University of Poitiers</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/">University of Salamanca</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/">University of Turku</NavLink><small>123</small>
-
+			<input type="checkbox"/><NavLink to="/structures/">University of Coimbra</NavLink><small>123</small>
+			<input type="checkbox"/><NavLink to="/structures/">University of Iasi</NavLink><small>123</small>
+			<input type="checkbox"/><NavLink to="/structures/">University of Jena</NavLink><small>123</small>
+			<input type="checkbox"/><NavLink to="/structures/">University of Pavia</NavLink><small>123</small>
+			<input type="checkbox"/><NavLink to="/structures/">University of Poitiers</NavLink><small>123</small>
+			<input type="checkbox"/><NavLink to="/structures/">University of Salamanca</NavLink><small>123</small>
+			<input type="checkbox"/><NavLink to="/structures/">University of Turku</NavLink><small>123</small>
 
 		</div>
 	);

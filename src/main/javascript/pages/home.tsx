@@ -15,6 +15,7 @@
  */
 
 import { css } from "emotion";
+
 import React from "react";
 import { Bookmark, BookOpen, Home, Tool, Users } from "react-feather";
 import { NavLink } from "react-router-dom";
@@ -68,11 +69,11 @@ export default function ToolHome() {
 				}
 		
 			}`}>
-				<li><span>99</span><NavLink to="/"><Home/></NavLink><span>Structures</span></li>
-				<li><span>123</span><NavLink to="/"><Bookmark/></NavLink><span>Subjects</span></li>
-				<li><span>2'300</span><NavLink to="/"><Tool/></NavLink><span>Projects</span></li>
-				<li><span>4'200</span><NavLink to="/"><Users/></NavLink><span>People</span></li>
-				<li><span>567'890</span><NavLink to="/"><BookOpen/></NavLink><span>Publications</span></li>
+				<li><span>99</span><NavLink to="/structures/"><Home/></NavLink><span>Structures</span></li>
+				<li><span>123</span><NavLink to="/structures/"><Bookmark/></NavLink><span>Subjects</span></li>
+				<li><span>2'300</span><NavLink to="/structures/"><Tool/></NavLink><span>Projects</span></li>
+				<li><span>4'200</span><NavLink to="/structures/"><Users/></NavLink><span>People</span></li>
+				<li><span>567'890</span><NavLink to="/structures/"><BookOpen/></NavLink><span>Publications</span></li>
 			</ul>
 
 

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-
 html {
 
 	--tool--border-style: solid;
-	--tool--border-color: #EEE;
+	--tool--border-color: #CCC;
 	--tool--border-width: 1px;
 
 	--tool--color-enabled: #567;
@@ -26,6 +25,20 @@ html {
 	--tool--color-hover: #B50;
 	--tool--color-focus: #789;
 
+}
+
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	outline-style: none;
+	border-style: none;
+	border-width: var(--tool--border-width);
+	border-color: var(--tool--border-color);
+	overflow: visible;
+	font: inherit;
+	color: inherit;
+	background-color: inherit;
 }
 
 /**** Fonts ***********************************************************************************************************/
@@ -44,23 +57,8 @@ h1, h2, h3, a, strong {
 	font-weight: 400;
 }
 
-/**** Defaults ********************************************************************************************************/
 
-* {
-	box-sizing: border-box;
-	padding: 0;
-	margin: 0;
-	outline-style: none;
-	border-style: none;
-	border-width: var(--tool--border-width);
-	border-color: var(--tool--border-color);
-	overflow: hidden;
-	font: inherit;
-	color: inherit;
-	background-color: inherit;
-}
-
-/**** Lists ***********************************************************************************************************/
+/**** Blocks **********************************************************************************************************/
 
 ul, ol {
 
@@ -68,6 +66,14 @@ ul, ol {
 
 	> li {
 		list-style-type: square;
+	}
+
+}
+
+p {
+
+	* + & {
+		margin-top: 0.5em;
 	}
 
 }
@@ -97,6 +103,9 @@ a, a:visited {
 
 }
 
+
+/**** Controls ********************************************************************************************************/
+
 input {
 
 	&:focus {
@@ -115,14 +124,19 @@ button {
 	display: inline-grid;
 	align-items: center;
 	justify-content: center;
-	cursor: pointer;
 
-	&:hover {
-		color: var(--tool--color-hover) !important;
-	}
+	&:enabled {
 
-	&:active {
-		color: var(--tool--color-focus) !important;
+		cursor: pointer;
+
+		&:hover {
+			color: var(--tool--color-hover) !important;
+		}
+
+		&:active {
+			color: var(--tool--color-focus) !important;
+		}
+
 	}
 
 }
