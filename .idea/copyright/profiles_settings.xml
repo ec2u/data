@@ -16,6 +16,7 @@
       <option name="prefixLines" value="false" />
       <option name="lenBefore" value="120" />
       <option name="lenAfter" value="120" />
+      <option name="filler" value="~" />
     </LanguageOptions>
     <LanguageOptions name="XML">
       <option name="fileTypeOverride" value="3" />
