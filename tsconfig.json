@@ -1,0 +1,18 @@
+// https://www.typescriptlang.org/docs/handbook/tsconfig-json.html
+// https://www.typescriptlang.org/docs/handbook/compiler-options.html
+
+{
+	"compilerOptions": {
+		"target": "es2017",
+		"module": "commonjs",
+		"lib": [ "DOM" ],
+		"esModuleInterop": true,
+		"jsx": "react",
+		"strict": true,
+		"newLine": "LF",
+		"stripInternal": true,
+		"allowSyntheticDefaultImports": true
+	},
+	"include": [ "src/**/*.ts", "src/**/*.tsx" ],
+	"exclude": [ "src/**/*.test.ts" ]
+}
