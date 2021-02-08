@@ -6,11 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ec2u-work" />
+        <module name="KXTA" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="ec2u-kxta" target="1.8" />
       <module name="ec2u-work" target="1.8" />
+      <module name="KXTA" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

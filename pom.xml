@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Copyright © 2021-2021 EC2U Consortium
+  Copyright © 2021 EC2U Consortium
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.ec2u</groupId>
-	<artifactId>ec2u-work</artifactId>
+	<artifactId>ec2u-kxta</artifactId>
 	<version>0.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>EC2U Sandbox</name>
-	<description>EC2U Sandbox</description>
-	<url>https://github.com/ec2u/work</url>
+	<name>EC2U Testbed</name>
+	<description>EC2U Connect Centre development and testing environment.</description>
+	<url>https://github.com/ec2u/kxta</url>
 	<inceptionYear>2021</inceptionYear>
 
 	<organization>
@@ -46,22 +46,22 @@
 
 	<developers>
 		<developer>
-			<name>EC2U SW Development Team</name>
-			<email>sw@ec2u.eu</email>
-			<organization>EC2U</organization>
+			<name>EC2U Connect Centre</name>
+			<email>cc@ec2u.eu</email>
+			<organization>EC2U Consortium</organization>
 			<organizationUrl>https://ec2u.eu</organizationUrl>
 		</developer>
 	</developers>
 
 	<scm>
-		<connection>scm:git:git@github.com:ec2u/work.git</connection>
-		<developerConnection>scm:git:git@github.com:ec2u/work.git</developerConnection>
-		<url>https://github.com/ec2u/work</url>
+		<connection>scm:git:git@github.com:ec2u/kxta.git</connection>
+		<developerConnection>scm:git:git@github.com:ec2u/kxta.git</developerConnection>
+		<url>https://github.com/ec2u/kxta</url>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/ec2u/work/issues</url>
+		<url>https://github.com/ec2u/kxta/issues</url>
 	</issueManagement>
 
 	<properties>
@@ -271,7 +271,7 @@
 
 						<configuration>
 							<arguments>run build --
-								--dist-dir target/${project.build.finalName}/
+								--dist-dir target/${project.build.finalName}
 								--cache-dir target/cache
 							</arguments>
 						</configuration>
