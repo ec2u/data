@@ -32,7 +32,6 @@ export default function ToolHome() {
 		<ToolPage
 
 			name={<ToolSearch placeholder="Discover Skills and Resources"/>}
-			// menu={<button><Edit/></button>}
 
 			side={<>
 				<ToolFacet name={"University"}/>
@@ -44,7 +43,7 @@ export default function ToolHome() {
 			<ul className={css`& {
 
 				display: table;
-				margin: 10% auto;
+				margin: 5% auto;
 				font-size: 200%;
 				
 				> li {

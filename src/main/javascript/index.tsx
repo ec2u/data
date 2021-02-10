@@ -17,10 +17,12 @@
 import React from "react";
 import { render } from "react-dom";
 import { HashRouter, Route, Switch } from "react-router-dom";
+import ToolAbout from "./pages/about";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
 import ToolStructure from "./pages/structures/structure";
 import ToolStructures from "./pages/structures/structures";
+import ToolUser from "./pages/user";
 
 window.onload=() => {
 
@@ -32,6 +34,9 @@ window.onload=() => {
 			<Switch>
 
 				<Route path={`/`} exact component={ToolHome}/>
+
+				<Route path={"/user"} exact component={ToolUser}/>
+				<Route path={"/about"} exact component={ToolAbout}/>
 
 				<Route path="/structures" render={({ match: { url } }) => (<>
 					<Route path={`${url}/`} exact component={ToolStructures}/>

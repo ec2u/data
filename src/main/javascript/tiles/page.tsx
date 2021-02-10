@@ -17,7 +17,7 @@
 import { css } from "emotion";
 
 import React from "react";
-import { ChevronRight, Info } from "react-feather";
+import { User } from "react-feather";
 import { NavLink } from "react-router-dom";
 
 const title=document.title;
@@ -60,6 +60,8 @@ export default function ToolPage({
 			align-items: stretch;
 			
 			> * {
+			
+ 				position: relative; // support page-relative content positioning
 							
 				display: flex;
 				flex-direction: column;
@@ -70,6 +72,8 @@ export default function ToolPage({
 
 				> header {
 				
+					flex-shrink: 0;
+	
 					position: sticky;
 					top: 0;
 				
@@ -78,114 +82,21 @@ export default function ToolPage({
 					align-items: center;
 					
 					z-index: 1;
-					flex-shrink: 0;
 					
-					height: 3.5rem;
-					
-					white-space: nowrap;
-									
-				}
-				
-				> section {
-				
-					flex-grow: 1;
-								
-					display: flex;
-					flex-direction: column;
-					align-items: stretch;
-
-					padding-top: 1rem;
-					padding-bottom: 0.5rem;
-									
-					> small {
-					
-						display: flex;
-						flex-direction: row;
-						align-items: center;
-						
-						padding-top: 1.5em;
-						margin-top: auto;
-						
-						white-space: nowrap;
-						
-						font-size: 75%;
-						color: #999;
-						
-					}
-					
-				}
-			
-			}
-				
-			> nav {
-			
-				flex-shrink: 0;
-			
-				width: 15rem;
-								
-				border-right-style: solid;
-				border-color: #EEE;
-				background-color: #F4F5F6;
-
-				> * {
-				
-					padding-left: 1rem;
-					padding-right: 0.75rem;
-					
-				}
-				
-				> header {
-					
-					box-shadow: 0 0 0.5rem 0.5rem #F4F5F6;
-					
-					> :first-child {
-						margin-right: -0.125rem;
-						transform: translateX(-0.25rem);
-					}
-					
-					> :last-child {
-						margin-left: auto;
-					}
-					
-				}
-							
-				> section {
+					height: 4rem;
+										
+					box-shadow: 0 0 0.5rem 0.5rem #FFF; // !!! factor
 	
-					font-size: 90%;
-					
-				}
-				
-			}
-
-			> main {
-			
-				flex-grow: 1;
-			
-	            > * {
-				
-					padding-right: 1rem;
-					padding-left: 1rem;
-					
-				}
-
-				> header {
-						
-					box-shadow: 0 0 0.5rem 0.5rem #FFF;
-								
+					white-space: nowrap;
+					font-size: 125%;
+		
 					> h1 {
 					
 						flex-grow: 1;
-						font-size: 125%;
-						
-						> a {
-						
-							font-weight: bold;
-							
-							:not(:first-child)::before {
-								content: '›';
-								padding: 0 0.25em;
-							}
-						
+	
+						> *+a::before {
+							content: '›';
+							padding: 0 0.25em;
 						}
 											
 					}
@@ -202,38 +113,87 @@ export default function ToolPage({
 
 				> section {
 				
-					> * {
-						flex-shrink: 0;
-					}
+					flex-grow: 1;
+
+					padding-top: 1rem;
+					padding-bottom: 1rem;
+
+				}
+			
+			}
+							
+			> aside {
+			
+				flex-shrink: 0;
+			
+				width: 15rem;
+											
+				border-right-style: solid;
+				border-color: #EEE;
+				background-color: #F4F5F6;
+				
+				> * {
+				
+					padding-left: 2rem;
+					padding-right: 0.75rem;
+					
+				}
+				
+				> header {
+					
+					box-shadow: 0 0 0.5rem 0.5rem #F4F5F6; // !!! factor
+					
+					> :first-child {
+					
+						width: 1em;
+						height: 1em;
+
+						background-image: url('${icon}');
+						background-size: contain;
+						background-repeat: no-repeat;
+						background-position: center;
 						
+						transform: translateX(-10%) scale(2);
+						transform-origin: right center;
+
+					}
+
+				}
+							
+				> section {
+	
+					font-size: 90%;
+					
+				}
+		
+			}
+
+			> main {
+			
+				flex-grow: 1;
+			
+	            > * {
+				
+					padding-left: 1.5rem;
+					padding-right: 1.5rem;
+					
 				}
 
 			}
 	
 		}`}>
 
-			<nav>
+			<aside>
 
 				<header>
-					<ChevronRight/> {/*<button title="Log in"><LogIn/></button>*/}
-					<h1>
-						<NavLink to={"/"}>EC2U Connect Centre</NavLink>
-					</h1>
-					<button><Logo/></button>
+					<NavLink to={"/about"} title={`About ${title}`}/>
+					<h1><NavLink to={"/"}>Knowledge Hub</NavLink></h1>
+					<NavLink to={"/user"}><User/></NavLink> { /* !!! log in / user name*/}
 				</header>
 
-				<section>
+				<section>{side}</section>
 
-					{side}
-
-					<small>
-						<span>{copy}</span>
-						<button title={`About ${title}`} style={{ marginLeft: "auto" }}><Info/></button>
-					</small>
-
-				</section>
-
-			</nav>
+			</aside>
 
 			<main>
 
@@ -242,9 +202,7 @@ export default function ToolPage({
 					<nav>{menu}</nav>
 				</header>
 
-				<section>
-					{children}
-				</section>
+				<section>{children}</section>
 
 			</main>
 
@@ -253,21 +211,4 @@ export default function ToolPage({
 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function Logo() {
-
-	let size="2.5rem";
-
-	return <span style={{
-		width: size,
-		height: size,
-		backgroundImage: `url('${icon}')`,
-		backgroundSize: "contain",
-		backgroundRepeat: "no-repeat",
-		backgroundPosition: "center right"
-	}}/>;
-
-}
 

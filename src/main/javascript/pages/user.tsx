@@ -16,24 +16,24 @@
 
 import { css } from "emotion";
 import React from "react";
-import { X } from "react-feather";
+import { LogOut } from "react-feather";
 import ToolPage from "../tiles/page";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function ToolNone() {
+export default function ToolUser() {
 	return (
 
 		<ToolPage
 
-			menu={<button title="Remove from History"><X/></button>}
+			menu={<button title="Log out"><LogOut/></button>}
 
 		>
 
-			<div className={css`& {
+			<ul className={css`& {
 
-				label: tool-none;
+				label: tool-user;
 				
 				position: absolute;
 				left: 0;
@@ -42,17 +42,29 @@ export default function ToolNone() {
 				bottom: 0;
 				
 				display: flex;
+				flex-direction: column;
 				align-items: center;
 				justify-content: center;
 				
+				padding: 0;
+				margin: 0;
+				
 				font-size: 200%;
 				color: #999;
+								
+				> li {
+				
+					list-style: none;
+				
+				}
 					
 			}`}>
 
-				<span>404 | Not Found :-(</span>
+				<li>Tino Faussone</li>
+				<li>tino.faussone@example.edu</li>
+				<li>University of Example</li>
 
-			</div>
+			</ul>
 
 		</ToolPage>
 

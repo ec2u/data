@@ -22,18 +22,18 @@ import ToolPage from "../tiles/page";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function ToolNone() {
+export default function ToolAbout() {
 	return (
 
 		<ToolPage
 
-			menu={<button title="Remove from History"><X/></button>}
+			menu={<button title="Close"><X/></button>}
 
 		>
 
-			<div className={css`& {
+			<ul className={css`& {
 
-				label: tool-none;
+				label: tool-user;
 				
 				position: absolute;
 				left: 0;
@@ -42,17 +42,28 @@ export default function ToolNone() {
 				bottom: 0;
 				
 				display: flex;
+				flex-direction: column;
 				align-items: center;
 				justify-content: center;
 				
+				padding: 0;
+				margin: 0;
+				
 				font-size: 200%;
 				color: #999;
+								
+				> li {
+				
+					list-style: none;
+				
+				}
 					
-			}`}>
+			}`}> {/* !!! populate from html metadata */}
 
-				<span>404 | Not Found :-(</span>
+				<li>EC2U Connect Centre</li>
+				<li>v1.10.2+20210710</li>
 
-			</div>
+			</ul>
 
 		</ToolPage>
 
