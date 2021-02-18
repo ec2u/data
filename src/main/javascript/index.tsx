@@ -16,6 +16,7 @@
 
 import { h, render } from "preact";
 import Router, { Route } from "preact-router";
+import "./index.less";
 import ToolAbout from "./pages/about";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
@@ -23,26 +24,24 @@ import ToolStructure from "./pages/structures/structure";
 import ToolStructures from "./pages/structures/structures";
 import ToolUser from "./pages/user";
 
-window.onload=() => {
 
-	render((
+render((
 
-		<Router>
+	<Router>
 
-			<Route path="/" component={ToolHome}/>
-			<Route path="/user" component={ToolUser}/>
-			<Route path="/about" component={ToolAbout}/>
+		<Route path="/" component={ToolHome}/>
+		<Route path="/user" component={ToolUser}/>
+		<Route path="/about" component={ToolAbout}/>
 
-			<Route path="/structures" component={ToolStructures}/>
-			<Route path="/structures/:id" component={ToolStructure}/>
+		<Route path="/structures" component={ToolStructures}/>
+		<Route path="/structures/:id" component={ToolStructure}/>
 
-			<Route default component={ToolNone}/>
+		<Route default component={ToolNone}/>
 
-		</Router>
+	</Router>
 
-	), document.body);
+), document.body);
 
-};
 
 // @ts-ignore
 
