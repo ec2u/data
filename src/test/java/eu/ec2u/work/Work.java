@@ -36,14 +36,20 @@ public final class Work {
 
 				.exec(() -> Xtream
 
-						.of("https://registry.erasmuswithoutpaper.eu/catalogue-v1.xml")
+						//.of("https://registry.erasmuswithoutpaper.eu/catalogue-v1.xml")
+						.of("https://dev-registry.erasmuswithoutpaper.eu/catalogue-v1.xml")
 
 						.optMap(new Query())
 						.optMap(new Fetch())
 						.optMap(new Parse<>(xml()))
 
-						.flatMap(XPath(path -> path.nodes("/_:catalogue/_:host[_:institutions-covered/_:hei-id[text()"
-								+ "='unipv.it']]")))
+						.flatMap(XPath(catalog -> catalog.nodes("/_:catalogue/_:host")))
+
+						.optMap(XPath(host -> {
+
+							return host.string("ewp:admin-email");
+
+						}))
 
 						.forEach(System.out::println)
 

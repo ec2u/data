@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-import { h } from "preact";
-import { X } from "preact-feather";
-import ToolPage from "../tiles/page";
-import "./about.less";
+/** @type {import("snowpack").SnowpackUserConfig } */
 
+module.exports={
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	mount: {
+		"src/main/javascript": "/"
+	},
 
-export default function ToolAbout() {
-	return (
+	routes: [
+		{match: "routes", src: ".*", dest: "/index.html"}
+	],
 
-		<ToolPage
+	plugins: [
+		"snowpack-plugin-less"
+	],
 
-			menu={<button title="Close"><X/></button>}
+	optimize: {
+		bundle: true,
+		minify: true,
+		splitting: true,
+		treeshake: true,
+		manifest: false,
+		target: "es2020"
+	},
 
-		>
+	devOptions: {
+		port: 6800
+	},
 
-			<ul> {/* !!! populate from html metadata */}
+	buildOptions: {
+		out: "target/bundle"
+	}
 
-				<li>EC2U Connect Centre</li>
-				<li>v1.10.2+20210710</li>
-
-			</ul>
-
-		</ToolPage>
-
-	);
-
-}
+};

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { css } from "emotion";
-import React from "react";
-import { Tag } from "react-feather";
+import { ComponentChildren, h, JSX } from "preact";
+import { Tag } from "preact-feather";
+import "./card.less";
+import { Custom } from "./custom";
 
 
 export interface Props {
@@ -26,7 +27,7 @@ export interface Props {
 
 	tags?: (JSX.Element | string)[]
 
-	children?: React.ReactNode
+	children?: ComponentChildren
 
 }
 
@@ -44,72 +45,7 @@ export default function ToolCard({
 }: Props) {
 
 	return (
-		<div className={css`& {
-		
-			label: tool-card;
-			
-			display: flex;
-			flex-direction: column;
-			align-items: stretch;
-			
-			*+& {
-				margin-top: 1em;
-			}
-			
-			> header {
-			
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				
-				> h1 {
-				
-					font-weight: 700;
-												
-					> *+*::before {
-						content: '›';
-						margin: 0 0.25em;
-					}
-
-				}
-					
-				> nav {
-				
-					margin-left: auto;
-					font-size: 75%;
-					
-					> * {
-						
-						display: inline-flex;
-						flex-direction: row;
-						align-items: center;
-						
-						padding: 0.25em 0.75em;
-						border-style: solid;
-						border-radius: 1em;
-						background-color: #F4F5F6;
-						
-						margin-left: 0.25em;
-						
-						> svg {
-							width: 1em;
-							height: 1em;
-							margin-right: 0.25em;
-							stroke: #333;
-						}
-						
-					}
-					
-				}
-
-			}
-			
-			> section {
-				margin-top: 0.25em;
-				font-size: 90%;
-			}
-			
-		}`}>
+		<Custom tag="tool-card">
 
 			<header>
 				<h1>{site}{name}</h1>
@@ -118,6 +54,6 @@ export default function ToolCard({
 
 			<section>{children}</section>
 
-		</div>
+		</Custom>
 	);
 }

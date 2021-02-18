@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import { css } from "emotion";
 
-import React from "react";
-import { Bookmark, BookOpen, Home, Tool, Users } from "react-feather";
-import { NavLink } from "react-router-dom";
+import { Fragment, h } from "preact";
+import { Bookmark, BookOpen, Home, Tool, Users } from "preact-feather";
+import { Link } from "preact-router";
+import { Custom } from "../tiles/custom";
 import ToolFacet from "../tiles/facet";
 import ToolPage from "../tiles/page";
 import ToolSearch from "../tiles/search";
+import "./home.less";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,48 +34,27 @@ export default function ToolHome() {
 
 			name={<ToolSearch placeholder="Discover Skills and Resources"/>}
 
-			side={<>
-				<ToolFacet name={"University"}/>
-				<ToolFacet name={"Collection"}/>
-			</>}
+			side={(
+				<Fragment>
+					<ToolFacet name={"University"}/>
+					<ToolFacet name={"Collection"}/>
+				</Fragment>
+			)}
 
 		>
 
-			<ul className={css`& {
+			<Custom tag="tool-home">
 
-				display: table;
-				margin: 5% auto;
-				font-size: 200%;
-				
-				> li {
-				
-					list-style: none;
-					display: table-row;
-							
-					> * {
-						display: table-cell;
-						padding: 0 0.25em;
-					}
-				
-					> :first-child {
-						text-align: right;
-					}
-				
-					> :last-child {
-						width: 60%;
-						text-align: left;
-					}
-	
-				}
-		
-			}`}>
-				<li><span>99</span><NavLink to="/structures/"><Home/></NavLink><span>Structures</span></li>
-				<li><span>123</span><NavLink to="/structures/"><Bookmark/></NavLink><span>Subjects</span></li>
-				<li><span>2'300</span><NavLink to="/structures/"><Tool/></NavLink><span>Projects</span></li>
-				<li><span>4'200</span><NavLink to="/structures/"><Users/></NavLink><span>People</span></li>
-				<li><span>567'890</span><NavLink to="/structures/"><BookOpen/></NavLink><span>Publications</span></li>
-			</ul>
+				<ul>
+					<li><span>99</span><Link href="/structures/"><Home/></Link><span>Structures</span></li>
+					<li><span>123</span><Link href="/structures/"><Bookmark/></Link><span>Subjects</span></li>
+					<li><span>2'300</span><Link href="/structures/"><Tool/></Link><span>Projects</span></li>
+					<li><span>4'200</span><Link href="/structures/"><Users/></Link><span>People</span></li>
+					<li><span>567'890</span><Link href="/structures/"><BookOpen/></Link><span>Publications</span>
+					</li>
+				</ul>
 
+			</Custom>
 
 		</ToolPage>
 

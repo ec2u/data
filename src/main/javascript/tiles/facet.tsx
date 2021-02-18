@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { css } from "emotion";
-import React from "react";
-import { ChevronRight } from "react-feather";
-import { NavLink } from "react-router-dom";
-
+import { h } from "preact";
+import { ChevronRight } from "preact-feather";
+import { Link } from "preact-router";
+import { Custom } from "./custom";
+import "./facet.less";
 
 export interface Props {
 
@@ -35,59 +35,19 @@ export default function ToolFacet({
 }: Props) {
 
 	return (
-		<div className={css`& {
-		
-			label: tool-facet;
-			
-			display: grid;
-			grid-template-columns: min-content 1fr min-content;
-			grid-column-gap: 0.5em;
-			align-items: center;
-			white-space: nowrap;
-			
-			*+& {
-				margin-top: 1em;
-			}
-			
-			* {
-				padding: 0;
-				margin: 0;
-			}
-			
-			> button {
-				margin-bottom: 0.25rem;
-				color: #999;
-				transform: rotate(90deg);
-			}
-			
-			> h1 {
-				grid-column: span 2;
-				margin-bottom: 0.25rem;
-				font-weight: 700;
-			}
-				
-			> input {
-				justify-self: center;
-			}
-										
-			> small {
-				font-size: 66%;
-				color: #999;
-			}
-		
-		}`}>
+		<Custom tag="tool-facet">
 
 			<button disabled={true}><ChevronRight/></button>
 			<h1>{name}</h1>
 
-			<input type="checkbox"/><NavLink to="/structures/">University of Coimbra</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/structures/">University of Iasi</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/structures/">University of Jena</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/structures/">University of Pavia</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/structures/">University of Poitiers</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/structures/">University of Salamanca</NavLink><small>123</small>
-			<input type="checkbox"/><NavLink to="/structures/">University of Turku</NavLink><small>123</small>
+			<input type="checkbox"/><Link href="/structures/123">University of Coimbra</Link><small>123</small>
+			<input type="checkbox"/><Link href="/structures/123">University of Iasi</Link><small>123</small>
+			<input type="checkbox"/><Link href="/structures/123">University of Jena</Link><small>123</small>
+			<input type="checkbox"/><Link href="/structures/123">University of Pavia</Link><small>123</small>
+			<input type="checkbox"/><Link href="/structures/123">University of Poitiers</Link><small>123</small>
+			<input type="checkbox"/><Link href="/structures/123">University of Salamanca</Link><small>123</small>
+			<input type="checkbox"/><Link href="/structures/123">University of Turku</Link><small>123</small>
 
-		</div>
+		</Custom>
 	);
 }

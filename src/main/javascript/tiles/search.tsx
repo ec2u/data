@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-import { css } from "emotion";
-import React from "react";
-import { ArrowRightCircle, Search } from "react-feather";
+import { h } from "preact";
+import { ArrowRightCircle, Search } from "preact-feather";
+import { Custom } from "./custom";
+import "./search.less";
+
+// import { ArrowRightCircle, Search } from "react-feather";
 
 
 export interface Props {
@@ -34,50 +37,12 @@ export default function ToolSearch({
 }: Props) {
 
 	return (
-		<div className={css`& {
-
-			label: tool-search;
-			
-			--tool-search-width-side: 1.75em;
-			
-			display: grid;
-			grid-template-columns: var(--tool-search-width-side) 1fr var(--tool-search-width-side);
-			grid-template-rows: min-content;
-			align-items: center;
-			
-			> * {
-				grid-row: 1;    
-			}
-					
-            > input {
-			    grid-column: 1 / span 3;
-				padding: 0.3em var(--tool-search-width-side) 0.2em;
-				border-style: solid;
-				border-radius: 1em;
-				font-weight: 300;
-			}
-		
-			 > :first-child,
-			 > :last-child {
-				z-index: 1;
-				color: #999;
-				background-color: transparent;
-			}
-		
-			> :first-child {
-				grid-column: 1;
-			}
-		
-			> :last-child {
-				grid-column: 3;
-			}
-		
-		}`}>
+		<Custom tag="tool-search">
 
 			<button><Search/></button>
 			<input autoFocus={true} type="text" placeholder={placeholder}/>
 			<button><ArrowRightCircle/></button>
 
-		</div>
+		</Custom>
 	);
 }

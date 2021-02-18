@@ -14,36 +14,29 @@
  * limitations under the License.
  */
 
-import { h } from "preact";
-import { LogOut } from "preact-feather";
-import { Custom } from "../tiles/custom";
-import ToolPage from "../tiles/page";
-import "./user.less";
+tool-about {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
 
-export default function ToolUser() {
-	return (
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 
-		<ToolPage
+	padding: 0;
+	margin: 0;
 
-			menu={<button title="Log out"><LogOut/></button>}
+	font-size: 200%;
+	color: #999;
 
-		>
-			<Custom tag="tool-user">
+	> li {
 
-				<ul>
+		list-style: none;
 
-					<li>Tino Faussone</li>
-					<li>tino.faussone@example.edu</li>
-					<li>University of Example</li>
-
-				</ul>
-
-			</Custom>
-
-		</ToolPage>
-
-	);
+	}
 
 }

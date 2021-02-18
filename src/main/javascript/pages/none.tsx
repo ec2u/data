@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { css } from "emotion";
-import React from "react";
-import { X } from "react-feather";
+
+import { h } from "preact";
+import { X } from "preact-feather";
 import ToolPage from "../tiles/page";
+import "./none.less";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,28 +32,7 @@ export default function ToolNone() {
 
 		>
 
-			<div className={css`& {
-
-				label: tool-none;
-				
-				position: absolute;
-				left: 0;
-				right: 0;
-				top:0;
-				bottom: 0;
-				
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				
-				font-size: 200%;
-				color: #999;
-					
-			}`}>
-
-				<span>404 | Not Found :-(</span>
-
-			</div>
+			<span>404 | Not Found :-(</span>
 
 		</ToolPage>
 

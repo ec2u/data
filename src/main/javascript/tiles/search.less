@@ -14,32 +14,40 @@
  * limitations under the License.
  */
 
-import { h } from "preact";
-import { X } from "preact-feather";
-import ToolPage from "../tiles/page";
-import "./about.less";
+tool-search {
 
+	--tool-search-width-side: 1.75em;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	display: grid;
+	grid-template-columns: var(--tool-search-width-side) 1fr var(--tool-search-width-side);
+	grid-template-rows: min-content;
+	align-items: center;
 
-export default function ToolAbout() {
-	return (
+	> * {
+		grid-row: 1;
+	}
 
-		<ToolPage
+	> input {
+		grid-column: 1 / span 3;
+		padding: 0.3em var(--tool-search-width-side) 0.2em;
+		border-style: solid;
+		border-radius: 1em;
+		font-weight: 300;
+	}
 
-			menu={<button title="Close"><X/></button>}
+	> :first-child,
+	> :last-child {
+		z-index: 1;
+		color: #999;
+		background-color: transparent;
+	}
 
-		>
+	> :first-child {
+		grid-column: 1;
+	}
 
-			<ul> {/* !!! populate from html metadata */}
-
-				<li>EC2U Connect Centre</li>
-				<li>v1.10.2+20210710</li>
-
-			</ul>
-
-		</ToolPage>
-
-	);
+	> :last-child {
+		grid-column: 3;
+	}
 
 }

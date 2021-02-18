@@ -14,36 +14,13 @@
  * limitations under the License.
  */
 
-import { h } from "preact";
-import { LogOut } from "preact-feather";
-import { Custom } from "../tiles/custom";
-import ToolPage from "../tiles/page";
-import "./user.less";
+import { ComponentChildren, h, JSX } from "preact";
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function ToolUser() {
-	return (
+export function Custom({ tag, children }: { tag: string, children: ComponentChildren }) {
 
-		<ToolPage
+	const Tag=tag as keyof JSX.IntrinsicElements;
 
-			menu={<button title="Log out"><LogOut/></button>}
-
-		>
-			<Custom tag="tool-user">
-
-				<ul>
-
-					<li>Tino Faussone</li>
-					<li>tino.faussone@example.edu</li>
-					<li>University of Example</li>
-
-				</ul>
-
-			</Custom>
-
-		</ToolPage>
-
-	);
+	return <Tag>{children}</Tag>;
 
 }

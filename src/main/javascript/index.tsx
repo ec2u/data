@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import React from "react";
-import { render } from "react-dom";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import { h, render } from "preact";
+import Router, { Route } from "preact-router";
 import ToolAbout from "./pages/about";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
@@ -28,28 +27,24 @@ window.onload=() => {
 
 	render((
 
-		// <GraphContext.Provider value={RESTTGraph()}>
+		<Router>
 
-		<HashRouter>
-			<Switch>
+			<Route path="/" component={ToolHome}/>
+			<Route path="/user" component={ToolUser}/>
+			<Route path="/about" component={ToolAbout}/>
 
-				<Route path={`/`} exact component={ToolHome}/>
+			<Route path="/structures" component={ToolStructures}/>
+			<Route path="/structures/:id" component={ToolStructure}/>
 
-				<Route path={"/user"} exact component={ToolUser}/>
-				<Route path={"/about"} exact component={ToolAbout}/>
+			<Route default component={ToolNone}/>
 
-				<Route path="/structures" render={({ match: { url } }) => (<>
-					<Route path={`${url}/`} exact component={ToolStructures}/>
-					<Route path={`${url}/:id`} component={ToolStructure}/>
-				</>)}/>
+		</Router>
 
-				<Route component={ToolNone}/>
-
-			</Switch>
-		</HashRouter>
-
-		// </GraphContext.Provider>
-
-	), document.querySelector("body > div"));
+	), document.body);
 
 };
+
+// @ts-ignore
+
+import.meta.hot?.accept();
+

@@ -271,8 +271,7 @@
 
 						<configuration>
 							<arguments>run build --
-								--dist-dir target/${project.build.finalName}
-								--cache-dir target/cache
+								--out target/${project.build.finalName}
 							</arguments>
 						</configuration>
 

@@ -1,18 +1,15 @@
-// https://www.typescriptlang.org/docs/handbook/tsconfig-json.html
-// https://www.typescriptlang.org/docs/handbook/compiler-options.html
-
 {
 	"compilerOptions": {
-		"target": "es2017",
-		"module": "commonjs",
-		"lib": [ "DOM" ],
-		"esModuleInterop": true,
-		"jsx": "react",
+		"target": "es2020",
+		"module": "es2020",
+		"lib": [ "es2020", "dom" ],
+		"moduleResolution": "node",
+		"jsx": "preserve",
+		"jsxFactory": "h",
+		"jsxFragmentFactory": "Fragment",
+		"noEmit": true,
 		"strict": true,
-		"newLine": "LF",
-		"stripInternal": true,
-		"allowSyntheticDefaultImports": true
+		"newLine": "lf"
 	},
-	"include": [ "src/**/*.ts", "src/**/*.tsx" ],
-	"exclude": [ "src/**/*.test.ts" ]
+	"include": [ "src" ]
 }

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React from "react";
-import { Edit } from "react-feather";
-import { NavLink } from "react-router-dom";
+import { h } from "preact";
+import { Edit } from "preact-feather";
+import { Link } from "preact-router";
 import ToolPage from "../../tiles/page";
 
 
@@ -28,8 +28,8 @@ export default function ToolStructure() {
 		<ToolPage
 
 			name={<>
-				<NavLink to={"/structures/"}>Structures</NavLink>
-				<NavLink to={"/structures/123"}>University of Neverland</NavLink>
+				<Link href={"/structures/"}>Structures</Link>
+				<Link href={"/structures/123"}>University of Neverland</Link>
 			</>}
 
 			menu={<button><Edit/></button>}

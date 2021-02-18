@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React from "react";
-import { NavLink } from "react-router-dom";
+import { Fragment, h } from "preact";
+import { Link } from "preact-router";
 import ToolCard from "../../tiles/card";
 import ToolFacet from "../../tiles/facet";
 import ToolPage from "../../tiles/page";
@@ -31,19 +31,21 @@ export default function ToolStructures() {
 
 			name={<ToolSearch placeholder="Discover Structures"/>}
 
-			side={<>
-				<ToolFacet name={"University"}/>
-				<ToolFacet name={"Type"}/>
-			</>}
+			side={(
+				<Fragment>
+					<ToolFacet name={"University"}/>
+					<ToolFacet name={"Type"}/>
+				</Fragment>
+			)}
 
 		>
 
 			<ToolCard
 
-				site={<NavLink to="/structures/1234">University of Nowhere</NavLink>}
-				name={<NavLink to="/structures/1234">Proin Department</NavLink>}
+				site={<Link href="/structures/1234">University of Nowhere</Link>}
+				name={<Link href="/structures/1234">Proin Department</Link>}
 
-				tags={[<NavLink to="/structures/">department</NavLink>]}
+				tags={[<Link href="/structures/">department</Link>]}
 
 			>
 
@@ -59,10 +61,10 @@ export default function ToolStructures() {
 
 			<ToolCard
 
-				site={<NavLink to="/structures/1234">University of Nowhere</NavLink>}
-				name={<NavLink to="/structures/1234">Proin Department</NavLink>}
+				site={<Link href="/structures/1234">University of Nowhere</Link>}
+				name={<Link href="/structures/1234">Proin Department</Link>}
 
-				tags={[<NavLink to="/structures/">university</NavLink>, <NavLink to="/structures/">department</NavLink>]}
+				tags={[<Link href="/structures/">university</Link>, <Link href="/structures/">department</Link>]}
 
 			>
 
