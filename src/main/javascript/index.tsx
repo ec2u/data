@@ -23,22 +23,28 @@ import ToolNone from "./pages/none";
 import ToolStructure from "./pages/structures/structure";
 import ToolStructures from "./pages/structures/structures";
 import ToolUser from "./pages/user";
+import Graph from "./work/graph";
+import RESTTGraph from "./work/rest";
 
 
 render((
 
-	<Router>
+	<Graph.Provider value={RESTTGraph()}>
 
-		<Route path="/" component={ToolHome}/>
-		<Route path="/user" component={ToolUser}/>
-		<Route path="/about" component={ToolAbout}/>
+		<Router>
 
-		<Route path="/structures" component={ToolStructures}/>
-		<Route path="/structures/:id" component={ToolStructure}/>
+			<Route path="/" component={ToolHome}/>
+			<Route path="/user" component={ToolUser}/>
+			<Route path="/about" component={ToolAbout}/>
 
-		<Route default component={ToolNone}/>
+			<Route path="/structures" component={ToolStructures}/>
+			<Route path="/structures/:id" component={ToolStructure}/>
 
-	</Router>
+			<Route default component={ToolNone}/>
+
+		</Router>
+
+	</Graph.Provider>
 
 ), document.body);
 
