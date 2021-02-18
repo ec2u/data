@@ -35,6 +35,10 @@ tool-search {
 		font-weight: 300;
 	}
 
+	&:focus-within > input {
+		box-shadow: inset var(--tool--box-shadow-focus);
+	}
+
 	> :first-child,
 	> :last-child {
 		z-index: 1;

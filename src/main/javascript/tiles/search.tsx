@@ -15,12 +15,10 @@
  */
 
 import { h } from "preact";
-import { ArrowRightCircle, Search } from "preact-feather";
+import { Search, XCircle } from "preact-feather";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { Custom } from "./custom";
 import "./search.less";
-
-// import { ArrowRightCircle, Search } from "react-feather";
-
 
 export interface Props {
 
@@ -36,12 +34,25 @@ export default function ToolSearch({
 
 }: Props) {
 
+	const [keywords, setKeywords]=useState("");
+
+	const input=useRef<HTMLInputElement>();
+
+	useEffect(() => input.current?.focus());
+
 	return (
 		<Custom tag="tool-search">
 
-			<button><Search/></button>
-			<input autoFocus={true} type="text" placeholder={placeholder}/>
-			<button><ArrowRightCircle/></button>
+			<button disabled><Search/></button>
+
+			<input autoFocus ref={input} type="text" placeholder={placeholder} value={keywords}
+				onInput={e => setKeywords((e.currentTarget as HTMLInputElement).value)}
+			/>
+
+			{keywords
+				? <button title="Clear" onClick={() => setKeywords("")}><XCircle/></button>
+				: <span/>
+			}
 
 		</Custom>
 	);

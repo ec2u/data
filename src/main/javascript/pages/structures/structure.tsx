@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { h } from "preact";
+import { Fragment, h } from "preact";
 import { Edit } from "preact-feather";
 import { Link } from "preact-router";
 import ToolPage from "../../tiles/page";
@@ -27,10 +27,12 @@ export default function ToolStructure() {
 
 		<ToolPage
 
-			name={<>
-				<Link href={"/structures/"}>Structures</Link>
-				<Link href={"/structures/123"}>University of Neverland</Link>
-			</>}
+			name={(
+				<Fragment>
+					<Link href={"/structures/"}>Structures</Link>
+					<Link href={"/structures/123"}>University of Neverland</Link>
+				</Fragment>
+			)}
 
 			menu={<button><Edit/></button>}
 
