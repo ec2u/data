@@ -16,13 +16,12 @@
 
 package eu.ec2u.work;
 
-import com.metreeca.rdf4j.assets.Graph;
 import com.metreeca.rdf4j.assets.GraphEngine;
 import com.metreeca.rest.Context;
 import com.metreeca.rest.assets.Cache.FileCache;
 import com.metreeca.rest.assets.Fetcher.CacheFetcher;
 
-import org.eclipse.rdf4j.repository.http.HTTPRepository;
+import eu.ec2u.data.Data;
 
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -36,11 +35,6 @@ import static com.metreeca.rest.assets.Fetcher.fetcher;
 
 final class Work {
 
-	public static Graph local() {
-		return new Graph(new HTTPRepository("http://localhost:7200/repositories/ec2u"));
-	}
-
-
 	static void exec(final Runnable... tasks) {
 		new Context()
 
@@ -48,7 +42,7 @@ final class Work {
 				.set(fetcher(), CacheFetcher::new)
 
 				.set(cache(), () -> new FileCache().ttl(Duration.ofDays(1))) // !!!
-				.set(graph(), Work::local)
+				.set(graph(), Data::local)
 
 				.set(engine(), GraphEngine::new)
 

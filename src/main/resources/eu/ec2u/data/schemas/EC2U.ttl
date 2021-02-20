@@ -11,8 +11,7 @@
 
 <https://data.ec2u.eu/terms#>
     rdf:type          owl:Ontology ;
-    owl:imports       ewp: ;
-    void:rootResource ec2u:University, ewp:Host .
+    void:rootResource ec2u:University .
 
 #################################################################
 #    Annotation properties

@@ -24,7 +24,7 @@
 	<groupId>eu.ec2u</groupId>
 	<artifactId>ec2u-kxta</artifactId>
 	<version>0.0.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>EC2U Testbed</name>
 	<description>EC2U Connect Centre development and testing environment.</description>
@@ -101,6 +101,11 @@
 
 		<dependency>
 			<groupId>com.metreeca</groupId>
+			<artifactId>metreeca-jee</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.metreeca</groupId>
 			<artifactId>metreeca-rest</artifactId>
 		</dependency>
 
@@ -114,15 +119,49 @@
 			<artifactId>metreeca-rdf4j</artifactId>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-repository-sail</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-sail-memory</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-repository-http</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
+			<groupId>com.metreeca</groupId>
+			<artifactId>metreeca-gcp</artifactId>
 		</dependency>
+
+
+		<dependency>
+			<groupId>com.metreeca</groupId>
+			<artifactId>metreeca-self</artifactId>
+			<version>0.51.0</version>
+			<type>war</type>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -281,12 +320,99 @@
 
 						<configuration>
 							<arguments>run build --
-								--out target/${project.build.finalName}
+								--out target/apps/tool/${project.build.finalName}
 							</arguments>
 						</configuration>
 
 					</execution>
 
+				</executions>
+
+			</plugin>
+
+			<plugin> <!-- https://maven.apache.org/plugins/maven-war-plugin/ -->
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.1</version>
+
+				<configuration>
+
+					<overlays>
+
+						<overlay>
+							<groupId>com.metreeca</groupId>
+							<artifactId>metreeca-self</artifactId>
+							<targetPath>/apps/</targetPath>
+						</overlay>
+
+					</overlays>
+
+					<archive>
+
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+
+						<manifestEntries>
+							<Implementation-Version>${project.version}+${maven.build.timestamp}
+							</Implementation-Version>
+							<Built-By>${project.organization.name}</Built-By>
+						</manifestEntries>
+
+					</archive>
+
+				</configuration>
+
+			</plugin>
+
+			<plugin> <!-- https://maven.apache.org/plugins/maven-project-info-reports-plugin/ -->
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.1.1</version>
+
+				<executions>
+					<execution>
+
+						<id>generate dependency reports</id>
+						<phase>site</phase>
+
+						<goals>
+							<goal>dependencies</goal>
+						</goals>
+
+					</execution>
+				</executions>
+
+			</plugin>
+
+			<plugin> <!-- https://cloud.google.com/appengine/docs/standard/java/tools/maven-reference -->
+
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>2.4.0</version>
+
+				<configuration>
+					<projectId>${project.artifactId}</projectId>
+					<version>0</version>
+					<promote>true</promote>
+					<stopPreviousVersion>true</stopPreviousVersion>
+				</configuration>
+
+				<executions>
+					<execution>
+
+						<id>deploy-to-gae</id>
+						<phase>deploy</phase>
+
+						<goals>
+							<goal>deploy</goal>
+							<goal>deployCron</goal>
+						</goals>
+
+					</execution>
 				</executions>
 
 			</plugin>
