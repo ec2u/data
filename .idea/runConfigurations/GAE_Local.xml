@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="GAE Local" type="gcp-app-engine-local-run" factoryName="Local" APPLICATION_SERVER_NAME="Google App Engine Standard Local Server" ALTERNATIVE_JRE_ENABLED="false">
+    <option name="OPEN_IN_BROWSER" value="false" />
     <option name="COMMON_VM_ARGUMENTS" value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" />
     <option name="UPDATING_POLICY" value="restart-server" />
     <server-settings>
@@ -72,7 +73,6 @@
       </SHUTDOWN>
     </ConfigurationWrapper>
     <method v="2">
-      <option name="Make" enabled="true" />
       <option name="BuildArtifacts" enabled="true">
         <artifact name="KXTA:war exploded" />
       </option>

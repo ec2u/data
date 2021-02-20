@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-/** @type {import("snowpack").SnowpackUserConfig } */
+const proxy=require("http-proxy").createServer({ target: "http://localhost:8080/" });
 
 module.exports={
 
@@ -11,7 +11,7 @@ module.exports={
 	},
 
 	routes: [
-		{match: "routes", src: ".*", dest: "/index.html"}
+		{ match: "routes", src: "/.*", dest: (req, res) => proxy.web(req, res) }
 	],
 
 	plugins: [
