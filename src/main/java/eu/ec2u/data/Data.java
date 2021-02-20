@@ -24,6 +24,7 @@ import com.metreeca.rdf4j.assets.GraphEngine;
 import com.metreeca.rest.assets.Logger;
 import com.metreeca.rest.assets.Store;
 
+import eu.ec2u.data.handlers.Universities;
 import eu.ec2u.data.schemas.EC2U;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.model.Statement;
@@ -60,10 +61,12 @@ import static com.metreeca.rest.assets.Logger.time;
 import static com.metreeca.rest.assets.Store.store;
 import static com.metreeca.rest.assets.Vault.vault;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
+import static com.metreeca.rest.handlers.Publisher.publisher;
 import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.wrappers.Bearer.bearer;
 import static com.metreeca.rest.wrappers.CORS.cors;
 import static com.metreeca.rest.wrappers.Gateway.gateway;
+import static com.metreeca.rest.wrappers.Launcher.launcher;
 import static java.lang.String.format;
 import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTAX;
 
@@ -192,19 +195,21 @@ import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTA
 
 						.with(preprocessor(request -> request.base(EC2U.Base)))
 
+						.with(launcher(router()
+								.path("/sparql", status(SeeOther, "/self/#endpoint=/sparql"))
+								.path("/*", publisher("/static/index.html"))
+						))
+
 						.wrap(router()
 
-								.path("/", request -> request.reply(status(
-										SeeOther, "/apps/self/#endpoint=/sparql" // !!! "/apps/tool/"
-								)))
-
 								//.path("/_cron/*", new Cron())
+
+								.path("/universities/*", new Universities())
 
 								.path("/sparql", sparql()
 										.query()
 										.update(Root)
 								)
-
 						)
 
 				)

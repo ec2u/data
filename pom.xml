@@ -67,7 +67,7 @@
 	<properties>
 
 		<java.version>1.8</java.version>
-		<node.version>12.18.2</node.version>
+		<node.version>14.15.4</node.version>
 		<maven.version>3.6</maven.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -229,6 +229,8 @@
 							<filesets>
 								<fileset>
 									<directory>${project.basedir}/overlays</directory>
+								</fileset>
+								<fileset>
 									<directory>${project.basedir}/node_modules</directory>
 								</fileset>
 							</filesets>
@@ -320,7 +322,7 @@
 
 						<configuration>
 							<arguments>run build --
-								--out target/apps/tool/${project.build.finalName}
+								--out target/${project.build.finalName}/static/
 							</arguments>
 						</configuration>
 
@@ -343,7 +345,7 @@
 						<overlay>
 							<groupId>com.metreeca</groupId>
 							<artifactId>metreeca-self</artifactId>
-							<targetPath>/apps/</targetPath>
+							<targetPath>/static/</targetPath>
 						</overlay>
 
 					</overlays>
@@ -356,8 +358,7 @@
 						</manifest>
 
 						<manifestEntries>
-							<Implementation-Version>${project.version}+${maven.build.timestamp}
-							</Implementation-Version>
+							<Implementation-Version>${project.version}+${maven.build.timestamp}</Implementation-Version>
 							<Built-By>${project.organization.name}</Built-By>
 						</manifestEntries>
 

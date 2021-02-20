@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Copyright © 2021 EC2U Consortium
@@ -16,19 +16,4 @@
   limitations under the License.
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-
-	<runtime>java8</runtime>
-	<threadsafe>true</threadsafe>
-
-	<public-root>/static/</public-root>
-
-	<resource-files>
-		<include path="/static/index.html"/>
-	</resource-files>
-
-	<automatic-scaling>
-		<max-instances>1</max-instances> <!-- prevent conflicts when dumping rdf to storage bucket -->
-	</automatic-scaling>
-
-</appengine-web-app>
+<manifest/>

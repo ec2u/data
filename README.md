@@ -1,2 +1,2 @@
-[Knowledge Hub](https://tinyurl.com/yagkk4ew)
-[EWP APIs](https://tinyurl.com/ycp9rn6e)
+[Knowledge Hub](https://tinyurl.com/y9yywyeq)
+[EWP APIs](https://tinyurl.com/y9xnnxo5)
