@@ -16,62 +16,45 @@
 
 package eu.ec2u.work;
 
+import com.metreeca.rdf4j.assets.Graph;
+import com.metreeca.rdf4j.assets.GraphEngine;
 import com.metreeca.rest.Context;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
+import com.metreeca.rest.assets.Cache.FileCache;
 import com.metreeca.rest.assets.Fetcher.CacheFetcher;
 
-import org.junit.jupiter.api.Test;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
+import java.nio.file.Paths;
+import java.time.Duration;
+
+import static com.metreeca.rdf4j.assets.Graph.graph;
+import static com.metreeca.rest.Context.storage;
+import static com.metreeca.rest.assets.Cache.cache;
+import static com.metreeca.rest.assets.Engine.engine;
 import static com.metreeca.rest.assets.Fetcher.fetcher;
-import static com.metreeca.xml.actions.XPath.XPath;
-import static com.metreeca.xml.formats.XMLFormat.xml;
 
-public final class Work {
 
-	@Test void manifest() {
-		new Context()
+final class Work {
 
-				.set(fetcher(), CacheFetcher::new)
-
-				.exec(() -> Xtream
-
-						//.of("https://registry.erasmuswithoutpaper.eu/catalogue-v1.xml")
-						.of("https://dev-registry.erasmuswithoutpaper.eu/catalogue-v1.xml")
-
-						.optMap(new Query())
-						.optMap(new Fetch())
-						.optMap(new Parse<>(xml()))
-
-						.flatMap(XPath(catalog -> catalog.nodes("/_:catalogue/_:host")))
-
-						.optMap(XPath(host -> {
-
-							return host.string("ewp:admin-email");
-
-						}))
-
-						.forEach(System.out::println)
-
-				);
+	public static Graph local() {
+		return new Graph(new HTTPRepository("http://localhost:7200/repositories/ec2u"));
 	}
 
-	@Test void echo() {
+
+	static void exec(final Runnable... tasks) {
 		new Context()
 
+				.set(storage(), () -> Paths.get("data"))
 				.set(fetcher(), CacheFetcher::new)
 
-				.exec(() -> Xtream
+				.set(cache(), () -> new FileCache().ttl(Duration.ofDays(1))) // !!!
+				.set(graph(), Work::local)
 
-						.of("https://ewp.demo.usos.edu.pl/ewp/echo") // demo.usos.edu.pl
+				.set(engine(), GraphEngine::new)
 
-						.optMap(new Query())
-						.optMap(new Fetch())
-						.optMap(new Parse<>(xml()))
+				.exec(tasks)
 
-						.forEach(System.out::println)
-
-				);
-
+				.clear();
 	}
+
 }
