@@ -5,6 +5,8 @@
 
 import { h } from "preact";
 import { X } from "preact-feather";
+import { route } from "preact-router";
+import { Custom } from "../tiles/custom";
 import ToolPage from "../tiles/page";
 import "./none.less";
 
@@ -16,11 +18,13 @@ export default function ToolNone() {
 
 		<ToolPage
 
-			menu={<button title="Remove from History"><X/></button>}
+			name="404 | Not Found"
+
+			menu={<button title="Remove from History" onClick={() => route("/", true)}><X/></button>}
 
 		>
 
-			<span>404 | Not Found :-(</span>
+			<Custom tag={"tool-none"}/>
 
 		</ToolPage>
 

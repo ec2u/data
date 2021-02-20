@@ -5,7 +5,7 @@
 import { ComponentChildren, h, JSX } from "preact";
 
 
-export function Custom({ tag, children }: { tag: string, children: ComponentChildren }) {
+export function Custom({ tag, children=[] }: { tag: string, children?: ComponentChildren }) {
 
 	const Tag=tag as keyof JSX.IntrinsicElements;
 

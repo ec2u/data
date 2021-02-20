@@ -3,7 +3,6 @@
  */
 
 import { ComponentChild, ComponentChildren, h } from "preact";
-import { Bookmark, User } from "preact-feather";
 import { Link } from "preact-router";
 import { Custom } from "./custom";
 import "./page.less";
@@ -42,8 +41,8 @@ export default function ToolPage({
 
 				<header>
 					<Link href={"/"} title={title} style={{ backgroundImage: `url(${icon})` }}/>
-					<Link href={"/user"}><Bookmark/></Link>
-					<Link href={"/user"}><User/></Link> { /* !!! log in / user name*/}
+					{/*<Link href={"/user"}><Bookmark/></Link>*/}
+					{/*<Link href={"/user"}><User/></Link> { /* !!! log in / user name*!/*/}
 				</header>
 
 				<section>{side}</section>
