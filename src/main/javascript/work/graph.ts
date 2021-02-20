@@ -45,7 +45,7 @@ export interface Graph {
  */
 export interface Entry<V, E> {
 
-	get(query: Query<V>): V;
+	get(query?: Query<V>): V;
 
 	patch(patch: Patch<V>): void;
 
@@ -70,7 +70,7 @@ export interface Probe<V, E, R> {
 export const GraphContext=createContext(RESTTGraph());
 
 
-export function useGraph<V, E=object>(id: string, query: Query<V>): [V, Entry<V, E>] {
+export function useGraph<V, E=object>(id: string, query?: Query<V>): [V, Entry<V, E>] {
 
 	const graph=useContext(GraphContext);
 

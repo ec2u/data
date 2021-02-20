@@ -32,7 +32,7 @@ function entry<V, E>(id: string): Entry<V, E> {
 
 	const entry: Entry<V, E>={
 
-		get(query: Query<V>): V {
+		get(query?: Query<V>): V {
 
 			if ( value ) {
 
@@ -49,11 +49,15 @@ function entry<V, E>(id: string): Entry<V, E> {
 
 				const params=new URLSearchParams();
 
-				if ( query["~"] ) { params.append("~", String(query["~"])); }
+				if ( query ) {
 
-				if ( query._offset ) { params.append("_offset", String(query._offset)); }
-				if ( query._limit ) { params.append("_limit", String(query._limit)); }
-				if ( query._order ) { params.append("_order", String(query._order)); } // !!! handle lists
+					if ( query["~"] ) { params.append("~", String(query["~"])); }
+
+					if ( query._offset ) { params.append("_offset", String(query._offset)); }
+					if ( query._limit ) { params.append("_limit", String(query._limit)); }
+					if ( query._order ) { params.append("_order", String(query._order)); } // !!! handle lists
+
+				}
 
 				const search=params.toString();
 
