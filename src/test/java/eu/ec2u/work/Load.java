@@ -4,23 +4,22 @@
 
 package eu.ec2u.work;
 
+import com.metreeca.json.Frame;
 import com.metreeca.open.actions.WikidataMirror;
+import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rest.Xtream;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.schemas.EC2U;
 import eu.ec2u.data.schemas.EWP;
 import org.eclipse.rdf4j.model.vocabulary.*;
-import org.eclipse.rdf4j.rio.*;
 import org.junit.jupiter.api.Test;
-
-import java.io.*;
 
 import static com.metreeca.json.Values.iri;
 import static com.metreeca.rdf4j.assets.Graph.graph;
 import static com.metreeca.rest.Context.asset;
-import static com.metreeca.rest.Context.input;
+import static com.metreeca.rest.Context.resource;
+
 import static eu.ec2u.work.Work.exec;
 
 
@@ -45,21 +44,9 @@ final class Load {
 	@Test void universities() {
 		exec(() -> Xtream
 
-				.of(".ttl")
+				.from(EC2U.Universities.values())
 
-				.bagMap(path -> {
-					try ( final InputStream input=input(Data.class, path) ) {
-
-						return Rio.parse(input, EC2U.Base, RDFParserRegistry
-								.getInstance()
-								.getFileFormatForFileName(path)
-								.orElse(RDFFormat.TURTLE)
-						);
-
-					} catch ( final IOException e ) {
-						throw new UncheckedIOException(e);
-					}
-				})
+				.bagMap(Frame::model)
 
 				.batch(0) // avoid multiple truth-maintenance rounds
 
@@ -76,19 +63,9 @@ final class Load {
 
 				.of(".ttl", "EWP.ttl")
 
-				.bagMap(path -> {
-					try ( final InputStream input=input(EC2U.class, path) ) {
+				.map(path -> resource(EC2U.class, path).toString())
 
-						return Rio.parse(input, EC2U.Base, RDFParserRegistry
-								.getInstance()
-								.getFileFormatForFileName(path)
-								.orElse(RDFFormat.TURTLE)
-						);
-
-					} catch ( final IOException e ) {
-						throw new UncheckedIOException(e);
-					}
-				})
+				.bagMap(new Retrieve())
 
 				.batch(0) // avoid multiple truth-maintenance rounds
 

@@ -30,10 +30,10 @@ import org.eclipse.rdf4j.sail.SailConnection;
 import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
-import javax.servlet.annotation.WebFilter;
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import javax.servlet.annotation.WebFilter;
 
 import static com.metreeca.json.Values.uuid;
 import static com.metreeca.rdf4j.assets.Graph.graph;
@@ -57,8 +57,10 @@ import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.wrappers.Bearer.bearer;
 import static com.metreeca.rest.wrappers.CORS.cors;
 import static com.metreeca.rest.wrappers.Gateway.gateway;
-import static java.lang.String.format;
+
 import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTAX;
+
+import static java.lang.String.format;
 
 @WebFilter(urlPatterns="/*") public final class Data extends Server {
 
@@ -69,6 +71,8 @@ import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTA
 
 	public static final String Root="root"; // root role
 
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static Graph local() {
 		return new Graph(new HTTPRepository("http://localhost:7200/repositories/ec2u"));
@@ -171,9 +175,10 @@ import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTA
 						entry("@type", "type")
 				))
 
-				.exec(() -> asset(graph()).exec(connection -> {
+				.exec(() -> asset(graph()).exec(connection -> { // !!! remove
 
 					try {
+						connection.clear();
 						connection.add(resource(getClass(), ".brf"), EC2U.Base, RDFFormat.BINARY);
 					} catch ( final IOException e ) {
 						throw new UncheckedIOException(e);

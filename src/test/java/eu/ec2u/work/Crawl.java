@@ -27,7 +27,9 @@ import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.Xtream.entry;
 import static com.metreeca.xml.formats.XMLFormat.xml;
+
 import static eu.ec2u.work.Work.exec;
+
 import static java.lang.String.format;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -120,7 +122,7 @@ final class Crawl {
 				.set(RDF.TYPE).value(EWP.Host)
 				.set(RDFS.LABEL).value(literal(label))
 
-				.set(EC2U.university).value(EC2U.Universities.get(hei))
+				.set(EC2U.university).value(EC2U.Universities.get(hei).focus())
 
 				.set(EWP.hei).value(literal(hei))
 				.set(EWP.network).frame(network)
