@@ -10,6 +10,8 @@ import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
 import ToolStructure from "./pages/structures/structure";
 import ToolStructures from "./pages/structures/structures";
+import ToolUniversities from "./pages/universities/universities";
+import ToolUniversity from "./pages/universities/university";
 import ToolUser from "./pages/user";
 import Graph from "./work/graph";
 import RESTTGraph from "./work/rest";
@@ -25,7 +27,10 @@ render((
 			<Route path="/user" component={ToolUser}/>
 			<Route path="/about" component={ToolAbout}/>
 
-			<Route path="/structures" component={ToolStructures}/>
+			<Route path="/universities/" component={ToolUniversities}/>
+			<Route path="/universities/:id" component={ToolUniversity}/>
+
+			<Route path="/structures/" component={ToolStructures}/>
 			<Route path="/structures/:id" component={ToolStructure}/>
 
 			<Route default component={ToolNone}/>

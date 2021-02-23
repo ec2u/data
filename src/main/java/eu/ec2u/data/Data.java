@@ -13,6 +13,7 @@ import com.metreeca.rest.Request;
 import com.metreeca.rest.assets.Logger;
 import com.metreeca.rest.assets.Store;
 
+import eu.ec2u.data.handlers.Resources;
 import eu.ec2u.data.handlers.Universities;
 import eu.ec2u.data.schemas.EC2U;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
@@ -165,7 +166,10 @@ import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTA
 
 				.set(engine(), GraphEngine::new)
 
-				.set(keywords(), () -> map(entry("@id", "id")))
+				.set(keywords(), () -> map(
+						entry("@id", "id"),
+						entry("@type", "type")
+				))
 
 				.exec(() -> asset(graph()).exec(connection -> {
 
@@ -193,6 +197,7 @@ import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTA
 
 								router()
 
+										.path("/resources/*", new Resources())
 										.path("/universities/*", new Universities())
 
 										.path("/sparql", sparql()

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Metreeca srl. All rights reserved.
+ * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
 import { h } from "preact";

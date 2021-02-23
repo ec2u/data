@@ -11,7 +11,7 @@ import { Custom } from "./custom";
 export interface Props {
 
 	site: JSX.Element | string
-	name: JSX.Element | string
+	name?: JSX.Element | string
 
 	tags?: (JSX.Element | string)[]
 

@@ -41,8 +41,7 @@ export default function ToolPage({
 
 				<header>
 					<Link href={"/"} title={title} style={{ backgroundImage: `url(${icon})` }}/>
-					{/*<Link href={"/user"}><Bookmark/></Link>*/}
-					{/*<Link href={"/user"}><User/></Link> { /* !!! log in / user name*!/*/}
+					<h1><a href={"/"}>EC2U Knowledge Hub</a></h1>
 				</header>
 
 				<section>{side}</section>

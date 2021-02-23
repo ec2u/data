@@ -11,19 +11,18 @@ import java.util.Map;
 import static com.metreeca.json.Values.iri;
 import static com.metreeca.rest.Xtream.entry;
 import static com.metreeca.rest.Xtream.map;
-import static java.lang.String.format;
 import static java.util.Collections.unmodifiableMap;
 
 public final class EC2U {
 
-	public static final Map<String, String> Universities=unmodifiableMap(map(
-			entry("uc.pt", "University of Coimbra"),
-			entry("uaic.ro", "University of Iasi"),
-			entry("uni-jena.de", "University of Jena"),
-			entry("unipv.it", "University of Pavia"),
-			entry("univ-poitiers.fr", "University of Poitiers"),
-			entry("usal.es", "University of Salamanca"),
-			entry("utu.fi", "University of Turku")
+	public static final Map<String, IRI> Universities=unmodifiableMap(map(
+			entry("uc.pt", iri("https://data.ec2u.eu/universities/1")),
+			entry("uaic.ro", iri("https://data.ec2u.eu/universities/2")),
+			entry("uni-jena.de", iri("https://data.ec2u.eu/universities/3")),
+			entry("unipv.it", iri("https://data.ec2u.eu/universities/4")),
+			entry("univ-poitiers.fr", iri("https://data.ec2u.eu/universities/5")),
+			entry("usal.es", iri("https://data.ec2u.eu/universities/6")),
+			entry("utu.fi", iri("https://data.ec2u.eu/universities/7"))
 	));
 
 
@@ -39,15 +38,11 @@ public final class EC2U {
 
 	//// Vocabulary ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	public static final IRI Resource=iri(Name, "Resource");
 	public static final IRI University=iri(Name, "University");
 
 	public static final IRI university=iri(Name, "university");
-	public static final IRI shac=iri(Name, "shac");
-
-
-	public static IRI university(final String shac) {
-		return iri(format("https://%s/", shac));
-	}
+	public static final IRI schac=iri(Name, "schac");
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,9 +4,11 @@
 
 package eu.ec2u.work;
 
+import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rest.Xtream;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data.schemas.EC2U;
 import eu.ec2u.data.schemas.EWP;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -15,12 +17,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.literal;
+import static com.metreeca.json.Values.iri;
 import static com.metreeca.rdf4j.assets.Graph.graph;
 import static com.metreeca.rest.Context.asset;
 import static com.metreeca.rest.Context.input;
-import static eu.ec2u.data.schemas.EC2U.university;
 import static eu.ec2u.work.Work.exec;
 
 
@@ -40,6 +40,35 @@ final class Load {
 			connection.setNamespace("void", VOID.NAMESPACE);
 
 		}));
+	}
+
+	@Test void universities() {
+		exec(() -> Xtream
+
+				.of(".ttl")
+
+				.bagMap(path -> {
+					try ( final InputStream input=input(Data.class, path) ) {
+
+						return Rio.parse(input, EC2U.Base, RDFParserRegistry
+								.getInstance()
+								.getFileFormatForFileName(path)
+								.orElse(RDFFormat.TURTLE)
+						);
+
+					} catch ( final IOException e ) {
+						throw new UncheckedIOException(e);
+					}
+				})
+
+				.batch(0) // avoid multiple truth-maintenance rounds
+
+				.forEach(new Upload()
+						.clear(true)
+						.contexts(EC2U.universities)
+				)
+
+		);
 	}
 
 	@Test void ontologies() {
@@ -70,28 +99,14 @@ final class Load {
 		);
 	}
 
-	@Test void universities() {
+	@Test void wikidata() {
 		exec(() -> Xtream
 
-				.from(EC2U.Universities.entrySet())
+				.of("?item wdt:P463 wd:Q105627243") // <member of> <EC2U>
 
-				.bagMap(university -> frame(university(university.getKey()))
-
-						.set(RDF.TYPE).value(EC2U.University)
-						.set(RDFS.LABEL).value(literal(university.getValue()))
-
-						.set(EC2U.shac).value(literal(university.getKey()))
-
-						.model()
+				.sink(new WikidataMirror()
+						.contexts(iri(EC2U.Name, "wikidata"))
 				)
-
-				.batch(0) // avoid multiple truth-maintenance rounds
-
-				.forEach(new Upload()
-						.clear(true)
-						.contexts(EC2U.universities)
-				)
-
 		);
 	}
 
