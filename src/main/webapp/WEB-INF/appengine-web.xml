@@ -15,6 +15,10 @@
 		<include path="/static/index.html"/>
 	</resource-files>
 
+	<system-properties>
+		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
+	</system-properties>
+
 	<automatic-scaling>
 		<max-instances>1</max-instances> <!-- prevent conflicts when dumping rdf to storage bucket -->
 	</automatic-scaling>

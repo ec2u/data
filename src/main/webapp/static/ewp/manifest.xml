@@ -4,4 +4,92 @@
   Copyright © 2021 EC2U Consortium. All rights reserved.
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<manifest/>
+<manifest
+
+		xmlns="https://github.com/erasmus-without-paper/ewp-specs-api-discovery/tree/stable-v5"
+		xmlns:mf="https://github.com/erasmus-without-paper/ewp-specs-api-discovery/tree/stable-v5"
+		xmlns:ewp="https://github.com/erasmus-without-paper/ewp-specs-architecture/blob/stable-v1/common-types.xsd"
+		xmlns:r="https://github.com/erasmus-without-paper/ewp-specs-api-registry/tree/stable-v1"
+		xmlns:xml="http://www.w3.org/XML/1998/namespace"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+		xsi:schemaLocation="
+
+		https://github.com/erasmus-without-paper/ewp-specs-api-discovery/tree/stable-v5
+		https://raw.githubusercontent.com/erasmus-without-paper/ewp-specs-api-discovery/stable-v5/manifest.xsd
+
+        https://github.com/erasmus-without-paper/ewp-specs-api-registry/tree/stable-v1
+        https://raw.githubusercontent.com/erasmus-without-paper/ewp-specs-api-registry/stable-v1/catalogue.xsd
+
+        https://github.com/erasmus-without-paper/ewp-specs-architecture/blob/stable-v1/common-types.xsd
+        https://raw.githubusercontent.com/erasmus-without-paper/ewp-specs-architecture/stable-v1/common-types.xsd
+
+		"
+>
+
+	<host>
+
+		<ewp:admin-email>cc@ec2u.eu</ewp:admin-email>
+		<ewp:admin-notes>EC2U Development EWP Node</ewp:admin-notes>
+
+		<r:apis-implemented>
+
+			<!-- The entry for the Discovery Manifest API (a self-reference). -->
+
+			<discovery version="5.0.0"
+			           xmlns="https://github.com/erasmus-without-paper/ewp-specs-api-discovery/blob/stable-v5/manifest-entry.xsd"
+			>
+				<url>https://data.ec2u.eu/ewp/manifest.xml</url>
+			</discovery>
+
+		</r:apis-implemented>
+
+		<mf:institutions-covered xmlns="https://github.com/erasmus-without-paper/ewp-specs-api-registry/tree/stable-v1">
+
+			<hei id="ec2u.eu">
+				<name xml:lang="en">EC2U European University</name>
+			</hei>
+
+		</mf:institutions-covered>
+
+		<client-credentials-in-use>
+
+			<!-- This one is used for TLS Client Authentication (optional) -->
+			<certificate>
+				MIIDuTCCAqGgAwIBAgIJAK5ps0mVHjvZMA0GCSqGSIb3DQEBCwUAMHIxCzAJBgNV
+				BAYTAlBMMRQwEgYDVQQIDAtNYXpvd2llY2tpZTERMA8GA1UEBwwIV2Fyc3phd2Ex
+				DDAKBgNVBAoMA0VXUDEsMCoGA1UEAwwjU2FtcGxlIFJTQSAyMDQ4IENlcnRpZmlj
+				YXRlIGZvciBFV1AwIBcNMTYwNjA5MjA0MzAzWhgPMjI5MDAzMjUyMDQzMDNaMHIx
+				CzAJBgNVBAYTAlBMMRQwEgYDVQQIDAtNYXpvd2llY2tpZTERMA8GA1UEBwwIV2Fy
+				c3phd2ExDDAKBgNVBAoMA0VXUDEsMCoGA1UEAwwjU2FtcGxlIFJTQSAyMDQ4IENl
+				cnRpZmljYXRlIGZvciBFV1AwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+				AQDaB2/WrqF3uMZquhlDAfSbmPwEDTpIwSVvx7rBD9S7H231E++Hp5YS8vHVrsaX
+				oxy/ADyK0acdSYKhMowatloycSoWMMu22iVvUNHYhcsGrXYBBev7+JJEYl688vdi
+				MGO98PeYj+orQtjSZINNUbiO3TfM+Y6AuAIO5mrcdSfBgijlUV6ia5GrfF6lysY6
+				xKEZ6lBtWzjqBApsBKl3iYOAR5fj1t0k7bFf/JacOdZYda1adfasgcfifq3P9nkB
+				tNMU7FHcQdchbFawIENjAgSz4sJvA8rooVA6TvSj4jVjkbtWo9Q3mwY+5UICZKM+
+				l6seNz7D5O+OXEzq9iSBy/ULAgMBAAGjUDBOMB0GA1UdDgQWBBQSkyNNL1JI4XSY
+				WUOf2c+psBT09TAfBgNVHSMEGDAWgBQSkyNNL1JI4XSYWUOf2c+psBT09TAMBgNV
+				HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQDViw6XUCdXIfZgoin5g7jr1txY
+				ZL1nCpHorwGMRezmwnfOg/4I+wPS9325eUmnFhjSVlYyIWcRWovpMEh0MEY2p6/K
+				yJEaFbSkpwNA0+c3qdQbz6/b6o2LnFU6e6mWsAwxURi6Mxf+Cs7NoU+Ef4MkcefE
+				k6edF2wZjJl58IEGnP7tY7BCqV87WYGKE9tRE7LYREHVbqNh1d+QUz3er0HRHD0l
+				YQWikBdQrF6xUnin7bA8eC1YV+G6rrxCKDeSTMQtC8mCzQUP4coGfrSaJETv1Lue
+				CAsLtNi5QyYgfvdPjvCOAS8s9t9iPSvJUvHBr01/oFZJ5aQQ3tclZcYw0mw/
+			</certificate>
+
+			<!-- And this one is used for HTTP Signature Authentication -->
+			<rsa-public-key>
+				MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkQojIPtX+BYGGC2f1zXr
+				U3ijq5oApW6YA+mSiB3p5pEQRUuvIHKbSKRXQaW/5hORYpWU1GzU2Wq99vykjX9b
+				8GQlM+0xbFP0cILIhjz23R0Q53mKcf2xAzQt2b3f56QOnjUaKbXsuB+ejTLAtQ4D
+				yKYSodCzUFkuUZUw+TK7G9ySMbcVHqrG8qDCw3/7CXkN0Wf9HpSnYP5fwd426fay
+				u6RXGeX5vUuX5BJkjsxoL8Smn7TB31LSFn3LbQLzG4UuxGaGgHWZCMSC35dX2d3z
+				4zcpZxgyN8LNWXCf4g95b20Ljsbnvk1dIUTJtRJJ29zbWXcgXgVl69UKQx8NxXIx
+				6wIDAQAB
+			</rsa-public-key>
+
+		</client-credentials-in-use>
+
+	</host>
+</manifest>

@@ -125,7 +125,7 @@
           <element id="library" level="project" name="Maven: io.grpc:grpc-grpclb:1.35.0" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.11" />
           <element id="library" level="project" name="Maven: org.conscrypt:conscrypt-openjdk-uber:2.5.1" />
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-simple:1.7.30" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-jdk14:1.7.30" />
         </element>
       </element>
       <element id="directory" name="META-INF">
