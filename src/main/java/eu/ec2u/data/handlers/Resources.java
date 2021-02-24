@@ -12,7 +12,6 @@ import eu.ec2u.data.schemas.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.json.Shape.required;
-import static com.metreeca.json.shapes.And.and;
 import static com.metreeca.json.shapes.Clazz.clazz;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
@@ -37,11 +36,13 @@ public final class Resources extends Delegator {
 			convey().then(
 
 					field(RDF.TYPE, repeatable(), datatype(Values.IRIType)),
-					field(RDFS.LABEL, required(), datatype(XSD.STRING)),
 
-					field(EC2U.university, optional(), and(
+					field(RDFS.LABEL, required(), datatype(XSD.STRING)),
+					field(RDFS.COMMENT, optional(), datatype(XSD.STRING)),
+
+					field(EC2U.university, optional(),
 							field(RDFS.LABEL, required(), datatype(XSD.STRING))
-					))
+					)
 
 			)
 

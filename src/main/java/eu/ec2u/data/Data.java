@@ -10,11 +10,11 @@ import com.metreeca.jee.Server;
 import com.metreeca.rdf4j.assets.Graph;
 import com.metreeca.rdf4j.assets.GraphEngine;
 import com.metreeca.rest.Request;
+import com.metreeca.rest.assets.Cache.FileCache;
 import com.metreeca.rest.assets.Logger;
 import com.metreeca.rest.assets.Store;
 
-import eu.ec2u.data.handlers.Resources;
-import eu.ec2u.data.handlers.Universities;
+import eu.ec2u.data.handlers.*;
 import eu.ec2u.data.schemas.EC2U;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.model.Statement;
@@ -47,6 +47,7 @@ import static com.metreeca.rest.Response.SeeOther;
 import static com.metreeca.rest.Wrapper.preprocessor;
 import static com.metreeca.rest.Xtream.entry;
 import static com.metreeca.rest.Xtream.map;
+import static com.metreeca.rest.assets.Cache.cache;
 import static com.metreeca.rest.assets.Engine.engine;
 import static com.metreeca.rest.assets.Logger.logger;
 import static com.metreeca.rest.assets.Logger.time;
@@ -61,6 +62,7 @@ import static com.metreeca.rest.wrappers.Gateway.gateway;
 import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTAX;
 
 import static java.lang.String.format;
+import static java.time.Duration.ofDays;
 
 @WebFilter(urlPatterns="/*") public final class Data extends Server {
 
@@ -166,6 +168,7 @@ import static java.lang.String.format;
 				.set(vault(), GCPVault::new)
 				.set(store(), GCPStore::new)
 
+				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
 				.set(graph(), () -> Production ? memory() : local())
 
 				.set(engine(), GraphEngine::new)
@@ -177,11 +180,13 @@ import static java.lang.String.format;
 
 				.exec(() -> asset(graph()).exec(connection -> { // !!! remove
 
-					try {
-						connection.clear();
-						connection.add(resource(getClass(), ".brf"), EC2U.Base, RDFFormat.BINARY);
-					} catch ( final IOException e ) {
-						throw new UncheckedIOException(e);
+					if ( Production ) {
+						try {
+							connection.clear();
+							connection.add(resource(getClass(), ".brf"), EC2U.Base, RDFFormat.BINARY);
+						} catch ( final IOException e ) {
+							throw new UncheckedIOException(e);
+						}
 					}
 
 				}))
@@ -202,6 +207,7 @@ import static java.lang.String.format;
 
 								router()
 
+										.path("/codes/*", new Codes())
 										.path("/resources/*", new Resources())
 										.path("/universities/*", new Universities())
 

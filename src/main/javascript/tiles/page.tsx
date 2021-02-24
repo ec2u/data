@@ -4,7 +4,9 @@
 
 import { ComponentChild, ComponentChildren, h } from "preact";
 import { Link } from "preact-router";
+import { useEffect, useState } from "preact/hooks";
 import { Custom } from "./custom";
+import ToolLoader from "./loader";
 import "./page.less";
 
 const title=document.title;
@@ -34,28 +36,52 @@ export default function ToolPage({
 
 }: Props) {
 
+	const [hidden, setHidden]=useState(false);
+	const [mockup, setMockup]=useState((JSON.parse(sessionStorage.getItem("mockup") || "false")));
+
+	useEffect(() => {
+		sessionStorage.setItem("mockup", JSON.stringify(mockup));
+	});
+
 	return (
 		<Custom tag="tool-page">
 
 			<aside>
 
 				<header>
-					<Link href={"/"} title={title} style={{ backgroundImage: `url(${icon})` }}/>
+
+					<Link href={"/"} title={title} style={{ backgroundImage: `url(${icon})` }} onClick={e => {
+
+						if ( e.shiftKey ) {
+
+							e.preventDefault();
+							setHidden(!hidden);
+
+						} else if ( e.altKey ) {
+
+							e.preventDefault();
+							setMockup(!mockup);
+
+						}
+
+					}}/>
+
 					<h1><a href={"/"}>EC2U Knowledge Hub</a></h1>
+
 				</header>
 
-				<section>{side}</section>
+				<section>{hidden ? <Hidden/> : mockup ? side : null}</section>
 
 			</aside>
 
 			<main>
 
 				<header>
-					<h1>{name}</h1>
-					<nav>{menu}</nav>
+					<h1>{mockup ? name : "Work in progress…"}</h1>
+					<nav>{mockup ? menu : <ToolLoader/>}</nav>
 				</header>
 
-				<section>{children}</section>
+				<section>{mockup ? children : null}</section>
 
 			</main>
 
@@ -63,4 +89,16 @@ export default function ToolPage({
 	);
 
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function Hidden() {
+	return (
+		<ul>
+			<li><a href="/ewp/" target={"_blank"}>EWP APIs</a></li>
+			<li><a href="/sparql" target={"_blank"}>SPARQL</a></li>
+		</ul>
+	);
+}
+
 

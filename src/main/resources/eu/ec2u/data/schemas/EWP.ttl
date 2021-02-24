@@ -1,4 +1,3 @@
-@prefix : <https://github.com/erasmus-without-paper/ewp-specs-api-registry/tree/stable-v1#> .
 @prefix ewp: <https://github.com/erasmus-without-paper/ewp-specs-api-registry#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .

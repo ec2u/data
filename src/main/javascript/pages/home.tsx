@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { h } from "preact";
+import { Fragment, h } from "preact";
 import { Bookmark, BookOpen, Home, MapPin, Tool, Users } from "preact-feather";
 import { Link } from "preact-router";
 import { Custom } from "../tiles/custom";
@@ -22,10 +22,10 @@ export default function ToolHome() {
 			name={<ToolSearch placeholder="Discover Skills and Resources"/>}
 
 			side={(
-				<>
+				<Fragment>
 					<ToolFacet name={"University"}/>
 					<ToolFacet name={"Collection"}/>
-				</>
+				</Fragment>
 			)}
 
 		>
