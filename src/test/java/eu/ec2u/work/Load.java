@@ -7,13 +7,13 @@ package eu.ec2u.work;
 import com.metreeca.json.Frame;
 import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
-import com.metreeca.rdf4j.assets.Graph;
 import com.metreeca.rest.Xtream;
-import com.metreeca.rest.assets.Logger;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.schemas.EC2U;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
@@ -27,6 +27,7 @@ import java.nio.file.Paths;
 
 import static com.metreeca.json.Values.iri;
 import static com.metreeca.rdf4j.assets.Graph.graph;
+import static com.metreeca.rdf4j.assets.Graph.txn;
 import static com.metreeca.rest.Context.asset;
 import static com.metreeca.rest.Context.resource;
 import static com.metreeca.rest.assets.Logger.logger;
@@ -39,14 +40,13 @@ final class Load {
 	@Test void namespaces() {
 		exec(new Runnable() {
 
-			private final Graph graph=asset(graph());
-			private final Logger logger=asset(logger());
-
 			@Override public void run() {
-				graph.exec(connection -> {
+				asset(graph()).exec(connection -> {
 					try {
 
 						connection.clearNamespaces();
+
+						connection.setNamespace("skos", SKOS.NAMESPACE);
 
 						Files.walk(Paths.get(resource(Data.class, "schemas").toURI()))
 								.filter(path -> path.toString().endsWith(".ttl"))
@@ -58,7 +58,8 @@ final class Load {
 											@Override public void handleNamespace(final String prefix,
 													final String uri) {
 
-												logger.info(this, String.format("@prefix %s: <%s>", prefix, uri));
+												asset(logger()).info(this, String.format("@prefix %s: <%s>", prefix,
+														uri));
 												connection.setNamespace(prefix, uri);
 											}
 
@@ -85,7 +86,6 @@ final class Load {
 		});
 	}
 
-
 	@Test void universities() {
 		exec(() -> Xtream
 
@@ -106,9 +106,12 @@ final class Load {
 	@Test void ontologies() {
 		exec(() -> Xtream
 
-				.of(".ttl", "EWP.ttl")
+				.from(
 
-				.map(path -> resource(EC2U.class, path).toString())
+						Xtream.of(".ttl", "EWP.ttl").map(path -> resource(EC2U.class, path).toString()),
+						Xtream.of(SKOS.NAMESPACE)
+
+				)
 
 				.bagMap(new Retrieve())
 
@@ -119,6 +122,52 @@ final class Load {
 						.contexts(EC2U.ontologies)
 				)
 		);
+	}
+
+	@Test void taxonomies() {
+		exec(() -> asset(graph()).exec(txn(connection -> {
+
+			Xtream
+
+					.of("https://op.europa.eu/o/opportal-service/euvoc-download-handler?cellarURI=http%3A%2F"
+							+"%2Fpublications.europa.eu%2Fresource%2Fcellar%2F2d457b09-b648-11ea-bb7a-01aa75ed71a1"
+							+".0001.01%2FDOC_1&fileName=international-education-classification-skos-ap-eu.rdf")
+
+					.bagMap(new Retrieve())
+
+					.batch(100*1000)
+
+					.forEach(new Upload()
+							.clear(true)
+							.contexts(EC2U.taxonomies)
+					);
+
+			Xtream
+
+					.of("prefix ec2u: <terms#>\n"
+							+"prefix owl: <http://www.w3.org/2002/07/owl#>\n"
+							+"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+							+"\n"
+							+"insert { ?alias a ec2u:Theme; owl:sameAs ?resource } where {\n"
+							+"\n"
+							+"\tvalues (?prefix ?type) {\n"
+							+"\t\t(<taxonomies/> skos:ConceptScheme)\n"
+							+"\t\t(<concepts/> skos:Concept)\n"
+							+"\t}\n"
+							+"\n"
+							+"\t?resource a ?type\n"
+							+"\n"
+							+"\tbind(iri(concat(str(?prefix), str(?resource))) as ?alias)\n"
+							+"\n"
+							+"}"
+					)
+
+					.forEach(new Update()
+							.base(EC2U.Base)
+							.insert(EC2U.taxonomies)
+					);
+
+		})));
 	}
 
 	@Test void wikidata() {

@@ -2,9 +2,10 @@
   <configuration default="false" name="GAE Local" type="gcp-app-engine-local-run" factoryName="Local" APPLICATION_SERVER_NAME="Google App Engine Standard Local Server" ALTERNATIVE_JRE_ENABLED="false">
     <option name="OPEN_IN_BROWSER" value="false" />
     <option name="COMMON_VM_ARGUMENTS" value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" />
+    <option name="SHOW_DIALOG_ON_UPDATE" value="false" />
     <option name="UPDATING_POLICY" value="restart-server" />
     <server-settings>
-      <artifact>KXTA:war exploded</artifact>
+      <artifact>ec2u-kxta:war exploded</artifact>
     </server-settings>
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="56807" />
@@ -73,8 +74,9 @@
       </SHUTDOWN>
     </ConfigurationWrapper>
     <method v="2">
+      <option name="Make" enabled="true" />
       <option name="BuildArtifacts" enabled="true">
-        <artifact name="KXTA:war exploded" />
+        <artifact name="ec2u-kxta:war exploded" />
       </option>
     </method>
   </configuration>

@@ -89,6 +89,11 @@
 
 		<dependency>
 			<groupId>com.metreeca</groupId>
+			<artifactId>metreeca-jse</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.metreeca</groupId>
 			<artifactId>metreeca-jee</artifactId>
 		</dependency>
 

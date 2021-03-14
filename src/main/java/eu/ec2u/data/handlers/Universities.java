@@ -4,58 +4,44 @@
 
 package eu.ec2u.data.handlers;
 
-import com.metreeca.json.Shape;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.schemas.EC2U;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
+import static com.metreeca.json.Shape.optional;
 import static com.metreeca.json.Shape.required;
 import static com.metreeca.json.shapes.Clazz.clazz;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
-import static com.metreeca.json.shapes.Guard.*;
-import static com.metreeca.json.shapes.Or.or;
+import static com.metreeca.json.shapes.Guard.filter;
+import static com.metreeca.json.shapes.Guard.relate;
+import static com.metreeca.json.shapes.Same.same;
 import static com.metreeca.rest.handlers.Router.router;
+import static com.metreeca.rest.operators.Browser.browser;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
 public final class Universities extends Delegator {
 
-	private static final Shape UniversityShape=or(
-
-			relate()
-
-	).then(
-
-			filter().then(
-					clazz(EC2U.University)
-			),
-
-			convey().then(
-
-					field(RDFS.LABEL, required(), datatype(XSD.STRING)),
-
-					detail().then(
-
-
-					)
-
-			)
-
-	);
-
-
 	public Universities() {
-		delegate(driver(
+		delegate(driver(relate(
 
-				member().then(UniversityShape)
+				filter(clazz(EC2U.University)),
 
-		).wrap(router()
+				field(RDFS.LABEL, required(), datatype(XSD.STRING)),
+
+				field(EC2U.schac, required(), datatype(XSD.STRING)),
+
+				same(
+						field(WGS84.LAT, optional(), datatype(XSD.DOUBLE)),
+						field(WGS84.LONG, optional(), datatype(XSD.DOUBLE))
+				)
+
+		)).wrap(router()
 
 				.path("/", router()
-						.get(relator())
+						.get(browser())
 				)
 
 				.path("/{id}", router()

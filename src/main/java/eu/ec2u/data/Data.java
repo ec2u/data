@@ -6,10 +6,11 @@ package eu.ec2u.data;
 
 import com.metreeca.gcp.assets.GCPStore;
 import com.metreeca.gcp.assets.GCPVault;
-import com.metreeca.jee.Server;
+import com.metreeca.jee.JEEServer;
+import com.metreeca.jse.JSEServer;
 import com.metreeca.rdf4j.assets.Graph;
 import com.metreeca.rdf4j.assets.GraphEngine;
-import com.metreeca.rest.Request;
+import com.metreeca.rest.*;
 import com.metreeca.rest.assets.Cache.FileCache;
 import com.metreeca.rest.assets.Logger;
 import com.metreeca.rest.assets.Store;
@@ -31,8 +32,10 @@ import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
 import java.io.*;
+import java.util.function.Function;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import javax.servlet.annotation.WebFilter;
 
 import static com.metreeca.json.Values.uuid;
@@ -54,17 +57,16 @@ import static com.metreeca.rest.assets.Logger.time;
 import static com.metreeca.rest.assets.Store.store;
 import static com.metreeca.rest.assets.Vault.vault;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
+import static com.metreeca.rest.handlers.Publisher.publisher;
 import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.wrappers.Bearer.bearer;
 import static com.metreeca.rest.wrappers.CORS.cors;
 import static com.metreeca.rest.wrappers.Gateway.gateway;
 
-import static org.eclipse.rdf4j.rio.helpers.BasicParserSettings.VERIFY_URI_SYNTAX;
-
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 
-@WebFilter(urlPatterns="/*") public final class Data extends Server {
+public final class Data {
 
 	private static final boolean Production="Production".equals(System.getProperty(
 			"com.google.appengine.runtime.environment", ""
@@ -105,13 +107,14 @@ import static java.time.Duration.ofDays;
 				try {
 
 					Rio.createParser(format)
-							.set(VERIFY_URI_SYNTAX, false) // ;(dbpedia) ignore malformed resource ids
+
 							.setRDFHandler(new AbstractRDFHandler() {
 								@Override public void handleStatement(final Statement statement) {
 									connection.add(statement);
 								}
 							})
-							.parse(input, EC2U.Base);
+
+							.parse(input);
 
 				} catch ( final IOException e ) {
 					throw new UncheckedIOException(e);
@@ -160,10 +163,18 @@ import static java.time.Duration.ofDays;
 	}
 
 
+	public static void main(final String... args) {
+		new JSEServer()
+				.delegate(server(publisher(resource(Data.class, "static"))))
+				.start();
+
+	}
+
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public Data() {
-		delegate(context -> context
+	private static Function<Context, Handler> server(final Handler content) {
+		return context -> context
 
 				.set(vault(), GCPVault::new)
 				.set(store(), GCPStore::new)
@@ -183,7 +194,7 @@ import static java.time.Duration.ofDays;
 					if ( Production ) {
 						try {
 							connection.clear();
-							connection.add(resource(getClass(), ".brf"), EC2U.Base, RDFFormat.BINARY);
+							connection.add(resource(Data.class, ".brf"), EC2U.Base, RDFFormat.BINARY);
 						} catch ( final IOException e ) {
 							throw new UncheckedIOException(e);
 						}
@@ -203,11 +214,11 @@ import static java.time.Duration.ofDays;
 								router()
 
 										.path("/sparql", status(SeeOther, "/self/#endpoint=/sparql"))
-										.path("/*", fallback("/static/index.html")),
+										.path("/*", content),
 
 								router()
 
-										.path("/codes/*", new Codes())
+										.path("/concepts/*", new Concepts())
 										.path("/resources/*", new Resources())
 										.path("/universities/*", new Universities())
 
@@ -219,8 +230,18 @@ import static java.time.Duration.ofDays;
 								//.path("/_cron/*", new Cron())
 
 						))
-				)
-		);
+				);
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	@WebFilter(urlPatterns="/*") public static final class JEE extends JEEServer {
+
+		public JEE() {
+			delegate(server(fallback("/static/index.html")));
+		}
+
 	}
 
 }

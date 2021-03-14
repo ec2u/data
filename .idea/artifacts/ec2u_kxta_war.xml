@@ -1,14 +1,14 @@
 <component name="ArtifactManager">
-  <artifact type="war" name="KXTA:war">
+  <artifact type="war" name="ec2u-kxta:war">
     <output-path>$PROJECT_DIR$/target</output-path>
     <properties id="maven-jee-properties">
       <options>
-        <module>KXTA</module>
+        <module>ec2u-kxta</module>
         <packaging>war</packaging>
       </options>
     </properties>
     <root id="archive" name="ec2u-kxta-0.0.0-SNAPSHOT.war">
-      <element id="artifact" artifact-name="KXTA:war exploded" />
+      <element id="artifact" artifact-name="ec2u-kxta:war exploded" />
     </root>
   </artifact>
 </component>

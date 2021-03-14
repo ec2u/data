@@ -4,7 +4,6 @@
 
 package eu.ec2u.data.handlers;
 
-import com.metreeca.json.Shape;
 import com.metreeca.json.Values;
 import com.metreeca.rest.handlers.Delegator;
 
@@ -16,48 +15,30 @@ import static com.metreeca.json.shapes.Clazz.clazz;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Guard.*;
-import static com.metreeca.json.shapes.Or.or;
 import static com.metreeca.rest.handlers.Router.router;
-import static com.metreeca.rest.operators.Relator.relator;
+import static com.metreeca.rest.operators.Browser.browser;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
 public final class Resources extends Delegator {
 
-	private static final Shape ResourceShape=or(
-
-			relate()
-
-	).then(
-
-			filter().then(
-					clazz(EC2U.Resource)
-			),
-
-			convey().then(
-
-					field(RDF.TYPE, repeatable(), datatype(Values.IRIType)),
-
-					field(RDFS.LABEL, required(), datatype(XSD.STRING)),
-					field(RDFS.COMMENT, optional(), datatype(XSD.STRING)),
-
-					field(EC2U.university, optional(),
-							field(RDFS.LABEL, required(), datatype(XSD.STRING))
-					)
-
-			)
-
-	);
-
-
 	public Resources() {
-		delegate(driver(
+		delegate(driver(relate(
 
-				member().then(ResourceShape)
+				filter(clazz(EC2U.Resource)),
 
-		).wrap(router()
+				field(RDF.TYPE, repeatable(), datatype(Values.IRIType)),
+
+				field(RDFS.LABEL, required(), datatype(XSD.STRING)),
+				field(RDFS.COMMENT, optional(), datatype(XSD.STRING)),
+
+				field(EC2U.university, optional(),
+						field(RDFS.LABEL, required(), datatype(XSD.STRING))
+				)
+
+		)).wrap(router()
 
 				.path("/", router()
-						.get(relator())
+						.get(browser())
 				)
 
 		));
