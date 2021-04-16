@@ -26,11 +26,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static com.metreeca.json.Values.iri;
-import static com.metreeca.rdf4j.assets.Graph.graph;
-import static com.metreeca.rdf4j.assets.Graph.txn;
-import static com.metreeca.rest.Context.asset;
-import static com.metreeca.rest.Context.resource;
-import static com.metreeca.rest.assets.Logger.logger;
+import static com.metreeca.rdf4j.services.Graph.graph;
+import static com.metreeca.rest.Toolbox.resource;
+import static com.metreeca.rest.Toolbox.service;
+import static com.metreeca.rest.Xtream.task;
+import static com.metreeca.rest.services.Logger.logger;
 
 import static eu.ec2u.work.Work.exec;
 
@@ -41,7 +41,7 @@ final class Load {
 		exec(new Runnable() {
 
 			@Override public void run() {
-				asset(graph()).exec(connection -> {
+				service(graph()).update(task(connection -> {
 					try {
 
 						connection.clearNamespaces();
@@ -58,7 +58,7 @@ final class Load {
 											@Override public void handleNamespace(final String prefix,
 													final String uri) {
 
-												asset(logger()).info(this, String.format("@prefix %s: <%s>", prefix,
+												service(logger()).info(this, String.format("@prefix %s: <%s>", prefix,
 														uri));
 												connection.setNamespace(prefix, uri);
 											}
@@ -81,7 +81,7 @@ final class Load {
 
 					}
 
-				});
+				}));
 			}
 		});
 	}
@@ -91,7 +91,7 @@ final class Load {
 
 				.from(EC2U.Universities.values())
 
-				.bagMap(Frame::model)
+				.flatMap(Frame::model)
 
 				.batch(0) // avoid multiple truth-maintenance rounds
 
@@ -125,7 +125,7 @@ final class Load {
 	}
 
 	@Test void taxonomies() {
-		exec(() -> asset(graph()).exec(txn(connection -> {
+		exec(() -> service(graph()).update(task(connection -> {
 
 			Xtream
 

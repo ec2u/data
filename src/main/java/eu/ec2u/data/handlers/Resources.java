@@ -16,7 +16,7 @@ import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Guard.*;
 import static com.metreeca.rest.handlers.Router.router;
-import static com.metreeca.rest.operators.Browser.browser;
+import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
 public final class Resources extends Delegator {
@@ -38,7 +38,7 @@ public final class Resources extends Delegator {
 		)).wrap(router()
 
 				.path("/", router()
-						.get(browser())
+						.get(relator())
 				)
 
 		));

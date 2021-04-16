@@ -4,27 +4,27 @@
 
 package eu.ec2u.work;
 
-import com.metreeca.rdf4j.assets.GraphEngine;
-import com.metreeca.rest.Context;
-import com.metreeca.rest.assets.Cache.FileCache;
-import com.metreeca.rest.assets.Fetcher.CacheFetcher;
+import com.metreeca.rdf4j.services.GraphEngine;
+import com.metreeca.rest.Toolbox;
+import com.metreeca.rest.services.Cache.FileCache;
+import com.metreeca.rest.services.Fetcher.CacheFetcher;
 
 import eu.ec2u.data.Data;
 
 import java.nio.file.Paths;
 import java.time.Duration;
 
-import static com.metreeca.rdf4j.assets.Graph.graph;
-import static com.metreeca.rest.Context.storage;
-import static com.metreeca.rest.assets.Cache.cache;
-import static com.metreeca.rest.assets.Engine.engine;
-import static com.metreeca.rest.assets.Fetcher.fetcher;
+import static com.metreeca.rdf4j.services.Graph.graph;
+import static com.metreeca.rest.Toolbox.storage;
+import static com.metreeca.rest.services.Cache.cache;
+import static com.metreeca.rest.services.Engine.engine;
+import static com.metreeca.rest.services.Fetcher.fetcher;
 
 
 final class Work {
 
 	static void exec(final Runnable... tasks) {
-		new Context()
+		new Toolbox()
 
 				.set(storage(), () -> Paths.get("data"))
 				.set(fetcher(), CacheFetcher::new)

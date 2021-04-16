@@ -10,9 +10,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.ec2u</groupId>
-	<artifactId>ec2u-kxta</artifactId>
+	<artifactId>kxta</artifactId>
 	<version>0.0.0-SNAPSHOT</version>
-	<packaging>war</packaging>
 
 	<name>EC2U Testbed</name>
 	<description>EC2U Connect Centre development and testing environment.</description>
@@ -54,9 +53,11 @@
 
 	<properties>
 
-		<java.version>1.8</java.version>
-		<node.version>14.15.4</node.version>
+		<java.version>11</java.version>
 		<maven.version>3.6</maven.version>
+
+		<node.version>14.15.4</node.version>
+		<npm.version>7.7.6</npm.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -90,11 +91,6 @@
 		<dependency>
 			<groupId>com.metreeca</groupId>
 			<artifactId>metreeca-jse</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.metreeca</groupId>
-			<artifactId>metreeca-jee</artifactId>
 		</dependency>
 
 		<dependency>
@@ -138,26 +134,10 @@
 			<artifactId>metreeca-gcp</artifactId>
 		</dependency>
 
-
-		<dependency>
-			<groupId>com.metreeca</groupId>
-			<artifactId>metreeca-self</artifactId>
-			<version>0.51.0</version>
-			<type>war</type>
-			<scope>runtime</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
 		</dependency>
 
 
@@ -226,9 +206,6 @@
 						<configuration>
 							<filesets>
 								<fileset>
-									<directory>${project.basedir}/overlays</directory>
-								</fileset>
-								<fileset>
 									<directory>${project.basedir}/node_modules</directory>
 								</fileset>
 							</filesets>
@@ -266,11 +243,16 @@
 
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.11.0</version>
+				<version>1.11.3</version>
 
 				<configuration>
 
 					<installDirectory>target</installDirectory>
+
+					<environmentVariables>
+						<code>${project.build.scriptSourceDirectory}</code>
+						<dist>${project.build.outputDirectory}/static</dist>
+					</environmentVariables>
 
 				</configuration>
 
@@ -279,15 +261,15 @@
 					<execution>
 
 						<id>install-node-and-npm</id>
+						<phase>validate</phase>
 
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
 
-						<phase>initialize</phase>
-
 						<configuration>
 							<nodeVersion>v${node.version}</nodeVersion>
+							<npmVersion>${npm.version}</npmVersion>
 						</configuration>
 
 					</execution>
@@ -295,12 +277,11 @@
 					<execution>
 
 						<id>npm-install</id>
+						<phase>initialize</phase>
 
 						<goals>
 							<goal>npm</goal>
 						</goals>
-
-						<phase>generate-resources</phase>
 
 						<configuration>
 							<arguments>install</arguments>
@@ -311,58 +292,19 @@
 					<execution>
 
 						<id>npm-build</id>
+						<phase>generate-resources</phase>
 
 						<goals>
 							<goal>npm</goal>
 						</goals>
 
-						<phase>compile</phase>
-
 						<configuration>
-							<arguments>run build --
-								--out target/${project.build.finalName}/static/
-							</arguments>
+							<arguments>run build</arguments>
 						</configuration>
 
 					</execution>
 
 				</executions>
-
-			</plugin>
-
-			<plugin> <!-- https://maven.apache.org/plugins/maven-war-plugin/ -->
-
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>3.3.1</version>
-
-				<configuration>
-
-					<overlays>
-
-						<overlay>
-							<groupId>com.metreeca</groupId>
-							<artifactId>metreeca-self</artifactId>
-							<targetPath>/static/</targetPath>
-						</overlay>
-
-					</overlays>
-
-					<archive>
-
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-
-						<manifestEntries>
-							<Implementation-Version>${project.version}+${maven.build.timestamp}</Implementation-Version>
-							<Built-By>${project.organization.name}</Built-By>
-						</manifestEntries>
-
-					</archive>
-
-				</configuration>
 
 			</plugin>
 

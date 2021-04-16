@@ -8,16 +8,17 @@ import com.metreeca.json.Shape;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.schemas.EC2U;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
+import static com.metreeca.json.Values.inverse;
 import static com.metreeca.json.shapes.Clazz.clazz;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Guard.*;
 import static com.metreeca.json.shapes.Lang.lang;
+import static com.metreeca.json.shapes.Link.link;
 import static com.metreeca.json.shapes.Localized.localized;
-import static com.metreeca.json.shapes.Same.same;
 import static com.metreeca.rest.handlers.Router.router;
-import static com.metreeca.rest.operators.Browser.browser;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
@@ -35,25 +36,21 @@ public final class Concepts extends Delegator {
 
 				filter(clazz(EC2U.Theme)),
 
-				same(
+				link(OWL.SAMEAS,
 
-						label(),
+						label(), detail(
 
-						detail(
+								field("broader", SKOS.BROADER_TRANSITIVE, label(), link(inverse(OWL.SAMEAS))),
 
-								field("broader", SKOS.BROADER_TRANSITIVE, label()),
+								field(SKOS.NARROWER, label(), link(inverse(OWL.SAMEAS))),
+								field(SKOS.RELATED, label(), link(inverse(OWL.SAMEAS)))
 
-								field(SKOS.NARROWER, label()),
-								field(SKOS.RELATED, label())
-
-						)
-
-				)
+						))
 
 		)).wrap(router()
 
 				.path("/", router()
-						.get(browser())
+						.get(relator())
 				)
 
 				.path("/*", router()

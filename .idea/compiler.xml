@@ -6,12 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="EC2U/KXTA" />
         <module name="ec2u-kxta" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="ec2u-kxta" target="1.8" />
+      <module name="ec2u-kxta" target="11" />
       <module name="ec2u-work" target="1.8" />
+      <module name="EC2U/KXTA" target="1.8" />
       <module name="KXTA" target="1.8" />
       <module name="metreeca-back" target="1.8" />
       <module name="metreeca-gcp" target="1.8" />

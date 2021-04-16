@@ -16,9 +16,8 @@ import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Guard.filter;
 import static com.metreeca.json.shapes.Guard.relate;
-import static com.metreeca.json.shapes.Same.same;
+import static com.metreeca.json.shapes.Link.link;
 import static com.metreeca.rest.handlers.Router.router;
-import static com.metreeca.rest.operators.Browser.browser;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
@@ -33,7 +32,7 @@ public final class Universities extends Delegator {
 
 				field(EC2U.schac, required(), datatype(XSD.STRING)),
 
-				same(
+				link(OWL.SAMEAS,
 						field(WGS84.LAT, optional(), datatype(XSD.DOUBLE)),
 						field(WGS84.LONG, optional(), datatype(XSD.DOUBLE))
 				)
@@ -41,7 +40,7 @@ public final class Universities extends Delegator {
 		)).wrap(router()
 
 				.path("/", router()
-						.get(browser())
+						.get(relator())
 				)
 
 				.path("/{id}", router()

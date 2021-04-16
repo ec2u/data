@@ -1,0 +1,9 @@
+runtime: java11
+
+handlers:
+  - url: .*
+    script: auto
+    secure: always
+
+automatic_scaling:
+  max_idle_instances: 1 # prevent conflicts when dumping rdf to storage bucket

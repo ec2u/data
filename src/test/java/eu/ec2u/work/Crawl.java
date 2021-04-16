@@ -93,7 +93,7 @@ final class Crawl {
 
 										)))
 
-										.bagMap(Frame::model)
+										.flatMap(Frame::model)
 
 								)
 						))
@@ -113,30 +113,30 @@ final class Crawl {
 	private Frame host(final String hei, final Frame network, final Frame api, final Map<String, String> urls) {
 
 		final String label=format("%s / %s / %s", hei,
-				network.get(RDFS.LABEL).value(Values::string).orElse("<?>"),
-				api.get(RDFS.LABEL).value(Values::string).orElse("<?>")
+				network.label().orElse("<?>"),
+				api.label().orElse("<?>")
 		);
 
 		return frame(iri(format("urn:uuid:%s", uuid(label))))
 
-				.set(RDF.TYPE).value(EWP.Host)
-				.set(RDFS.LABEL).value(literal(label))
+				.value(RDF.TYPE, EWP.Host)
+				.value(RDFS.LABEL, literal(label))
 
-				.set(EC2U.university).value(EC2U.Universities.get(hei).focus())
+				.value(EC2U.university, EC2U.Universities.get(hei).focus())
 
-				.set(EWP.hei).value(literal(hei))
-				.set(EWP.network).frame(network)
-				.set(EWP.provider).values(urls.values().stream().map(Values::literal))
+				.value(EWP.hei, literal(hei))
+				.frame(EWP.network, network)
+				.values(EWP.provider, urls.values().stream().map(Values::literal))
 
-				.set(EWP.api).frame(api)
-				.set(EWP.url).values(urls.keySet().stream().map(url -> literal(url, XSD.ANYURI)));
+				.frame(EWP.api, api)
+				.values(EWP.url, urls.keySet().stream().map(url -> literal(url, XSD.ANYURI)));
 	}
 
 	private Frame network(final Entry<String, String> network) {
 		return frame(iri(network.getValue()))
 
-				.set(RDF.TYPE).value(EWP.Network)
-				.set(RDFS.LABEL).value(literal(network.getKey()));
+				.value(RDF.TYPE, EWP.Network)
+				.value(RDFS.LABEL, literal(network.getKey()));
 
 	}
 
@@ -153,11 +153,11 @@ final class Crawl {
 
 					return frame(iri(specs))
 
-							.set(RDF.TYPE).value(EWP.API)
-							.set(RDFS.LABEL).value(literal(format("%s / %s", function, version)))
+							.value(RDF.TYPE, EWP.API)
+							.value(RDFS.LABEL, literal(format("%s / %s", function, version)))
 
-							.set(EWP.function).value(literal(function))
-							.set(EWP.version).value(literal(version));
+							.value(EWP.function, literal(function))
+							.value(EWP.version, literal(version));
 
 				})
 
