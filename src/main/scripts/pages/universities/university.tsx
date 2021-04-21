@@ -2,28 +2,92 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
+import { useEntry } from "@metreeca/tile/hooks/entry";
+import { title } from "@metreeca/tile/nests/router";
+import { Custom } from "@metreeca/tile/tiles/custom";
+import { ToolSpinner } from "@metreeca/tile/tiles/spinner";
+import { useEffect } from "preact/hooks";
 import ToolPage from "../../tiles/page";
+import "./university.less";
+
+
+const University={
+
+	id: "",
+	label: "",
+	comment: "",
+
+	schac: "",
+	lat: 0,
+	long: 0,
+
+	image: "",
+	inception: "",
+	students: 0,
+
+	country: {
+		id: "",
+		label: ""
+	}
+
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function ToolUniversity() {
-	return (
+
+	const university=useEntry("", University);
+
+	useEffect(() => university.then(university => title(university.label)));
+
+	return university.then(university => (
 
 		<ToolPage
 
-			name={<a href={"/universities/"}>Universities</a>}
+			name={(
+				<>
+					<a href={"/universities/"}>Universities</a>
+					<a href={university.id}>{university.label}</a>
+				</>
+			)}
+
+			side={side(university)}
 
 		>
 
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida vulputate leo ut placerat. Morbi
-				tempor egestas turpis, eu rutrum lacus pharetra sit amet. Fusce in auctor erat. Duis bibendum nibh elit,
-				eget blandit quam vulputate et. Cras sit amet risus at neque varius fringilla a sit amet felis. Morbi
-				pellentesque lobortis posuere. Pellentesque purus est, posuere vitae est eu, mollis eleifend est. Integer
-				molestie ut tellus ut faucibus.</p>
+			{main(university)}
 
 		</ToolPage>
 
-	);
+	)) || <ToolSpinner size="3em"/>;
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function side({ inception, students, country }: typeof University) {
+	return <dl>
+
+		<dt>Country</dt>
+		<dd><a href={country.id}>{country.label}</a></dd>
+
+		<dt>Inception</dt>
+		<dd>{inception && inception.substr(0, 4) || "-"}</dd>
+
+		<dt>Students</dt>
+		<dd>{students && students.toLocaleString() || "-"}</dd>
+
+	</dl>;
+}
+
+function main({ label, comment, image }: typeof University) {
+	return <Custom tag="tool-university">
+
+		{image && <img src={image} alt={`Image of ${label}`}/>}
+
+		<p>{comment}</p>
+
+	</Custom>;
 }

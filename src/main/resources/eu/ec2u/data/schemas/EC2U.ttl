@@ -1,6 +1,7 @@
 @prefix : <https://data.ec2u.eu/terms#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix ec2u: <https://data.ec2u.eu/terms#> .
@@ -18,6 +19,50 @@
 
 ###  http://rdfs.org/ns/void#rootResource
 void:rootResource rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.wikidata.org/prop/direct/P17
+wdt:P17 rdf:type owl:ObjectProperty ;
+        rdfs:subPropertyOf ec2u:country .
+
+
+###  http://www.wikidata.org/prop/direct/P18
+wdt:P18 rdf:type owl:ObjectProperty ;
+        rdfs:subPropertyOf ec2u:image .
+
+
+###  https://data.ec2u.eu/terms#country
+ec2u:country rdf:type owl:ObjectProperty .
+
+
+###  https://data.ec2u.eu/terms#image
+ec2u:image rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.wikidata.org/prop/direct/P2196
+wdt:P2196 rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf ec2u:students .
+
+
+###  http://www.wikidata.org/prop/direct/P571
+wdt:P571 rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf ec2u:inception .
+
+
+###  https://data.ec2u.eu/terms#inception
+ec2u:inception rdf:type owl:DatatypeProperty .
+
+
+###  https://data.ec2u.eu/terms#students
+ec2u:students rdf:type owl:DatatypeProperty .
 
 
 #################################################################

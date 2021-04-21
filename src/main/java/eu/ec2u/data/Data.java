@@ -22,7 +22,6 @@ import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.eclipse.rdf4j.sail.SailConnection;
 import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
@@ -110,7 +109,7 @@ public final class Data {
 								.path("/graphs", graphs().query().update(root))
 
 								.path("/sparql", route(
-										status(SeeOther, "/self/#endpoint={@}"),
+										status(SeeOther, "https://apps.metreeca.com/self/#endpoint={@}"),
 										sparql().query().update(root)
 								))
 
@@ -148,6 +147,7 @@ public final class Data {
 	public static Graph memory() {
 
 		final String blob="graph.brf.gz";
+		final String base=EC2U.Base;
 		final RDFFormat format=RDFFormat.BINARY;
 
 		final Store store=service(store());
@@ -165,15 +165,7 @@ public final class Data {
 
 				try {
 
-					Rio.createParser(format)
-
-							.setRDFHandler(new AbstractRDFHandler() {
-								@Override public void handleStatement(final Statement statement) {
-									connection.add(statement);
-								}
-							})
-
-							.parse(input);
+					connection.add(input, base, format);
 
 				} catch ( final IOException e ) {
 					throw new UncheckedIOException(e);

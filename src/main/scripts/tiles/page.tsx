@@ -4,8 +4,7 @@
 
 import { Custom } from "@metreeca/tile/tiles/custom";
 import { ComponentChild, ComponentChildren } from "preact";
-import { useEffect, useState } from "preact/hooks";
-import ToolLoader from "./loader";
+import { useState } from "preact/hooks";
 import "./page.less";
 
 const title=document.title;
@@ -36,11 +35,6 @@ export default function ToolPage({
 }: Props) {
 
 	const [hidden, setHidden]=useState(false);
-	const [mockup, setMockup]=useState((JSON.parse(sessionStorage.getItem("mockup") || "false")));
-
-	useEffect(() => {
-		sessionStorage.setItem("mockup", JSON.stringify(mockup));
-	});
 
 	return (
 		<Custom tag="tool-page">
@@ -56,11 +50,6 @@ export default function ToolPage({
 							e.preventDefault();
 							setHidden(!hidden);
 
-						} else if ( e.altKey ) {
-
-							e.preventDefault();
-							setMockup(!mockup);
-
 						}
 
 					}}/>
@@ -69,18 +58,18 @@ export default function ToolPage({
 
 				</header>
 
-				<section>{hidden ? <Hidden/> : mockup ? side : null}</section>
+				<section>{hidden ? <Hidden/> : side}</section>
 
 			</aside>
 
 			<main>
 
 				<header>
-					<h1>{mockup ? name : "Work in progress…"}</h1>
-					<nav>{mockup ? menu : <ToolLoader/>}</nav>
+					<h1>{name}</h1>
+					<nav>{menu}</nav>
 				</header>
 
-				<section>{mockup ? children : null}</section>
+				<section>{children}</section>
 
 			</main>
 

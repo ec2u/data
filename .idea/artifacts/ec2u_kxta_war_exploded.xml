@@ -11,7 +11,7 @@
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="ec2u-kxta" />
+          <element id="module-output" name="data" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: com.metreeca:metreeca-jse:0.0.0-SNAPSHOT" />
@@ -132,7 +132,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/target/ec2u-kxta-0.0.0-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="ec2u-kxta/web/Web" />
+      <element id="javaee-facet-resources" facet="data/web/Web" />
     </root>
   </artifact>
 </component>
