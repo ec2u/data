@@ -46,6 +46,10 @@ public final class Universities extends Delegator {
 										field(RDFS.LABEL, optional(), localized("en"))
 								),
 
+								field(EC2U.location, optional(),
+										field(RDFS.LABEL, optional(), localized("en"))
+								),
+
 								field(EC2U.inception, optional(), datatype(XSD.DATETIME)),
 								field(EC2U.students, optional(), datatype(XSD.DECIMAL))
 						)

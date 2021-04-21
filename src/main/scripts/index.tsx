@@ -9,6 +9,7 @@ import { Router } from "@metreeca/tile/nests/router";
 import { render } from "preact";
 import "./index.less";
 import ToolAbout from "./pages/about";
+import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
 import ToolStructure from "./pages/structures/structure";
 import ToolStructures from "./pages/structures/structures";
@@ -25,7 +26,7 @@ render((
 
 		<Router routes={{
 
-			"/": "/universities/ "/*ToolHome*/,
+			"/": ToolHome,
 			"/user": ToolUser,
 			"/about": ToolAbout,
 

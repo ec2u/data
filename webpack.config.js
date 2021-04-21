@@ -49,7 +49,7 @@ export default {
 
 	plugins: [
 		new HtmlWebpackPlugin({
-			base: { href: `/`, target: "_blank" },
+			base: { href: "/", target: "_blank" },
 			template: resolve(code, "index.html"),
 			favicon: resolve(code, "index.svg")
 		})

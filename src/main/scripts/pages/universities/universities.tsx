@@ -18,6 +18,7 @@ const Universities={
 		id: "",
 		label: "",
 		comment: "",
+		image: "",
 
 		schac: "",
 		lat: 0,
@@ -49,11 +50,11 @@ export default function ToolUniversities() {
 		<ToolPage
 
 			name={<ToolSearch path={"label"} placeholder="Discover Universities" state={[query, putQuery]}/>}
-			side={<a href={"https://tinyurl.com/ygm9chxw"}>Locations ››</a>}
+			side={side()}
 
 		>
 
-			{cards(query)}
+			{main(query)}
 
 		</ToolPage>
 
@@ -63,7 +64,13 @@ export default function ToolUniversities() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function cards(query: typeof Query) {
+function side() {
+	return <a href={"https://tinyurl.com/ygm9chxw"}>
+		<img src={"/blobs/ec2u.png"} alt={"EC2U Locations"}/>
+	</a>;
+}
+
+function main(query: typeof Query) {
 
 	const universities=useEntry("", Universities, query);
 
@@ -74,6 +81,7 @@ function cards(query: typeof Query) {
 			<ToolCard
 
 				site={<a href={university.id}>{university.label}</a>}
+				icon={university.image}
 				tags={[<a href={"/universities/"}>University</a>]}
 
 			>{university.comment}</ToolCard>

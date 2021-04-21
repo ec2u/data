@@ -46,6 +46,7 @@ public final class EC2U {
 
 	public static final IRI schac=iri(Name, "schac");
 	public static final IRI country=iri(Name, "country");
+	public static final IRI location=iri(Name, "location");
 	public static final IRI image=iri(Name, "image");
 	public static final IRI inception=iri(Name, "inception");
 	public static final IRI students=iri(Name, "students");
@@ -65,7 +66,7 @@ public final class EC2U {
 					.value(schac, literal("uc.pt"))
 					.value(OWL.SAMEAS, iri("http://www.wikidata.org/entity/Q368643"))
 
-					.value(image, iri(Base, "/images/coimbra.png"))
+					.value(image, iri(Base, "/blobs/coimbra.png"))
 
 					.value(RDFS.LABEL, literal("University of Coimbra", "en"))
 					.value(RDFS.COMMENT, literal("Focused on the future and recognized as major promoter of change,"
@@ -78,7 +79,7 @@ public final class EC2U {
 					.value(schac, literal("uaic.ro"))
 					.value(OWL.SAMEAS, iri("http://www.wikidata.org/entity/Q1523902"))
 
-					.value(image, iri(Base, "/images/iasi.png"))
+					.value(image, iri(Base, "/blobs/iasi.png"))
 
 					.value(RDFS.LABEL, literal("University of Iasi", "en"))
 					.value(RDFS.COMMENT, literal("Alexandru Ioan Cuza University of Iasi, the first modern "
@@ -103,7 +104,7 @@ public final class EC2U {
 					.value(schac, literal("uni-jena.de"))
 					.value(OWL.SAMEAS, iri("http://www.wikidata.org/entity/Q154561"))
 
-					.value(image, iri(Base, "/images/jena.png"))
+					.value(image, iri(Base, "/blobs/jena.png"))
 
 					.value(RDFS.LABEL, literal("University of Jena", "en"))
 					.value(RDFS.COMMENT, literal("Founded in 1558, the Friedrich Schiller University Jena is one of"
@@ -119,7 +120,7 @@ public final class EC2U {
 					.value(schac, literal("unipv.it"))
 					.value(OWL.SAMEAS, iri("http://www.wikidata.org/entity/Q219317"))
 
-					.value(image, iri(Base, "/images/pavia.png"))
+					.value(image, iri(Base, "/blobs/pavia.png"))
 
 					.value(RDFS.LABEL, literal("University of Pavia", "en"))
 					.value(RDFS.COMMENT, literal("The University of Pavia (UNIPV) is one of the world’s oldest  "
@@ -132,7 +133,7 @@ public final class EC2U {
 					.value(schac, literal("univ-poitiers.fr"))
 					.value(OWL.SAMEAS, iri("http://www.wikidata.org/entity/Q661056"))
 
-					.value(image, iri(Base, "/images/poitiers.png"))
+					.value(image, iri(Base, "/blobs/poitiers.png"))
 
 					.value(RDFS.LABEL, literal("University of Poitiers", "en"))
 					.value(RDFS.COMMENT, literal("Founded in 1431, the University of Poitiers is a "
@@ -151,7 +152,7 @@ public final class EC2U {
 					.value(schac, literal("usal.es"))
 					.value(OWL.SAMEAS, iri("http://www.wikidata.org/entity/Q308963"))
 
-					.value(image, iri(Base, "/images/salamanca.png"))
+					.value(image, iri(Base, "/blobs/salamanca.png"))
 
 					.value(RDFS.LABEL, literal("University of Salamanca", "en"))
 					.value(RDFS.COMMENT, literal("The University of Salamanca was founded in 1218 and is one of the "
@@ -170,7 +171,7 @@ public final class EC2U {
 					.value(schac, literal("utu.fi"))
 					.value(OWL.SAMEAS, iri("http://www.wikidata.org/entity/Q501841"))
 
-					.value(image, iri(Base, "/images/turku.png"))
+					.value(image, iri(Base, "/blobs/turku.png"))
 
 					.value(RDFS.LABEL, literal("University of Turku", "en"))
 					.value(RDFS.COMMENT, literal("The University of Turku (UTU) is an international research "

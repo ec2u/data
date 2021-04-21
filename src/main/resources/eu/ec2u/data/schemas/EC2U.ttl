@@ -25,6 +25,11 @@ void:rootResource rdf:type owl:AnnotationProperty .
 #    Object Properties
 #################################################################
 
+###  http://www.wikidata.org/prop/direct/P131
+wdt:P131 rdf:type owl:ObjectProperty ;
+         rdfs:subPropertyOf ec2u:location .
+
+
 ###  http://www.wikidata.org/prop/direct/P17
 wdt:P17 rdf:type owl:ObjectProperty ;
         rdfs:subPropertyOf ec2u:country .
@@ -41,6 +46,10 @@ ec2u:country rdf:type owl:ObjectProperty .
 
 ###  https://data.ec2u.eu/terms#image
 ec2u:image rdf:type owl:ObjectProperty .
+
+
+###  https://data.ec2u.eu/terms#location
+ec2u:location rdf:type owl:ObjectProperty .
 
 
 #################################################################

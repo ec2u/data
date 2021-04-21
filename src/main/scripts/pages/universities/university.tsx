@@ -23,9 +23,13 @@ const University={
 
 	image: "",
 	inception: "",
-	students: 0,
 
 	country: {
+		id: "",
+		label: ""
+	},
+
+	location: {
 		id: "",
 		label: ""
 	}
@@ -67,17 +71,17 @@ export default function ToolUniversity() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function side({ inception, students, country }: typeof University) {
+function side({ inception, country, location }: typeof University) {
 	return <dl>
 
 		<dt>Country</dt>
 		<dd><a href={country.id}>{country.label}</a></dd>
 
+		<dt>Location</dt>
+		<dd><a href={location.id}>{location.label}</a></dd>
+
 		<dt>Inception</dt>
 		<dd>{inception && inception.substr(0, 4) || "-"}</dd>
-
-		<dt>Students</dt>
-		<dd>{students && students.toLocaleString() || "-"}</dd>
 
 	</dl>;
 }

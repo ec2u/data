@@ -12,6 +12,7 @@ export interface Props {
 
 	site: JSX.Element | string
 	name?: JSX.Element | string
+	icon?: (JSX.Element | string)
 
 	tags?: (JSX.Element | string)[]
 
@@ -25,6 +26,7 @@ export default function ToolCard({
 
 	site,
 	name,
+	icon,
 
 	tags=[],
 
@@ -40,7 +42,10 @@ export default function ToolCard({
 				<nav>{tags.map(tag => <span><Tag/>{tag}</span>)}</nav>
 			</header>
 
-			<section>{children}</section>
+			<section>
+				{typeof icon === "string" ? <img src={icon}/> : icon}
+				<div>{children}</div>
+			</section>
 
 		</Custom>
 	);
