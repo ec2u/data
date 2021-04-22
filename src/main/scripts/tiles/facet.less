@@ -4,10 +4,6 @@
 
 tool-facet {
 
-	display: grid;
-	grid-template-columns: min-content 1fr min-content;
-	grid-column-gap: 0.5em;
-	align-items: center;
 	white-space: nowrap;
 
 	* + & {
@@ -19,24 +15,22 @@ tool-facet {
 		margin: 0;
 	}
 
-	> button {
-		margin-bottom: 0.25rem;
-		color: #999;
-	}
+	> header {
 
-	> h1 {
-		grid-column: span 2;
-		margin-bottom: 0.25rem;
-		font-weight: 700;
-	}
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 
-	> input {
-		justify-self: center;
-	}
+		> button:first-child {
+			color: #999;
+		}
 
-	> small {
-		font-size: 66%;
-		color: #999;
+		> h1 {
+			padding: 0 0.25em;
+			margin-right: auto;
+			font-weight: 700;
+		}
+
 	}
 
 }

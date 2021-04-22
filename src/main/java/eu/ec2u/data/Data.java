@@ -122,8 +122,8 @@ public final class Data {
 										router()
 
 												.path("/concepts/*", new Concepts())
-												.path("/resources/*", new Resources())
 												.path("/universities/*", new Universities())
+												.path("/*", new Resources())
 
 								))
 

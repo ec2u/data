@@ -4,7 +4,6 @@
 
 import { ToolSearch } from "@metreeca/tile/tiles/search";
 import ToolCard from "../../tiles/card";
-import ToolFacet from "../../tiles/facet";
 import ToolPage from "../../tiles/page";
 
 
@@ -17,12 +16,12 @@ export default function ToolStructures() {
 
 			name={<ToolSearch path="" placeholder="Discover Structures" state={[{}, () => {}]}/>}
 
-			side={(
+			/*side={(
 				<>
 					<ToolFacet name={"University"}/>
 					<ToolFacet name={"Type"}/>
 				</>
-			)}
+			)}*/
 
 		>
 

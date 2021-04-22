@@ -2,6 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
+import { useQuery } from "@metreeca/tile/hooks/query";
 import { Custom } from "@metreeca/tile/tiles/custom";
 import { Bookmark, BookOpen, Home, MapPin, Tool, Users } from "@metreeca/tile/tiles/icon";
 import { ToolSearch } from "@metreeca/tile/tiles/search";
@@ -10,20 +11,53 @@ import ToolPage from "../tiles/page";
 import "./home.less";
 
 
+const Resources={
+
+	contains: [{
+
+		id: "",
+
+		type: [""],
+
+		label: "",
+		image: "",
+		comment: "",
+
+		university: {
+			id: "",
+			label: ""
+		}
+
+	}]
+
+};
+
+const Query={
+
+	"~label": "",
+
+	"university": [],
+	"type": [],
+
+	".order": "",
+
+	".offset": 0,
+	".limit": 20
+
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function ToolHome() {
+
+	const [query, putQuery]=useQuery(Query);
+
 	return (
 
 		<ToolPage
 
-			name={<ToolSearch path="" placeholder="Discover Skills and Resources" state={[{}, () => {}]}/>}
-
-			side={(
-				<>
-					<ToolFacet name={"University"}/>
-				</>
-			)}
+			name={<ToolSearch path="" placeholder="Discover Skills and Resources" state={[query, putQuery]}/>}
+			side={facets(query, putQuery)}
 
 		>
 
@@ -44,4 +78,17 @@ export default function ToolHome() {
 
 	);
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function facets(query: typeof Query, putQuery: (delta: Partial<typeof query>) => void) {
+
+	return <>
+
+		<ToolFacet name={"University"} path={"university"} query={[query, putQuery]}/>
+		<ToolFacet name={"Collection"} path={"type"} query={[query, putQuery]}/>
+
+	</>;
 }
