@@ -5,7 +5,7 @@
 import { Custom } from "@metreeca/tile/tiles/custom";
 import { Tag } from "@metreeca/tile/tiles/icon";
 import { ComponentChildren, JSX } from "preact";
-import "./card.less";
+import "./card.css";
 
 
 export interface Props {

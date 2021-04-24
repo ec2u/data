@@ -8,26 +8,26 @@ tool-home {
 	margin: 5% auto;
 	font-size: 200%;
 
-	> ul {
+	& > ul {
 
 		margin: 0;
 		padding: 0;
 
-		> li {
+		& > li {
 
 			list-style: none;
 			display: table-row;
 
-			> * {
+			& > * {
 				display: table-cell;
 				padding: 0 0.25em;
 			}
 
-			> :first-child {
+			& > :first-child {
 				text-align: right;
 			}
 
-			> :last-child {
+			& > :last-child {
 				width: 60%;
 				text-align: left;
 			}

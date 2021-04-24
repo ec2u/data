@@ -8,7 +8,7 @@ import { Custom } from "@metreeca/tile/tiles/custom";
 import { ToolSpinner } from "@metreeca/tile/tiles/spinner";
 import { useEffect } from "preact/hooks";
 import ToolPage from "../../tiles/page";
-import "./university.less";
+import "./university.css";
 
 
 const University={

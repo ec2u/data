@@ -6,26 +6,26 @@ tool-facet {
 
 	white-space: nowrap;
 
-	* + & {
+	&:not(:first-child) {
 		margin-top: 1em;
 	}
 
-	* {
+	& * {
 		padding: 0;
 		margin: 0;
 	}
 
-	> header {
+	& > header {
 
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 
-		> button:first-child {
+		& > button:first-child {
 			color: #999;
 		}
 
-		> h1 {
+		& > h1 {
 			padding: 0 0.25em;
 			margin-right: auto;
 			font-weight: 700;

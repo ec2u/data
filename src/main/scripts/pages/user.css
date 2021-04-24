@@ -4,7 +4,7 @@
 
 tool-user {
 
-	> ul {
+	& > ul {
 
 		padding: 0;
 		margin: 0;
@@ -23,7 +23,7 @@ tool-user {
 		font-size: 200%;
 		color: #999;
 
-		> li {
+		& > li {
 
 			padding: 0;
 			margin: 0;

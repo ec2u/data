@@ -8,33 +8,33 @@ tool-card {
 	flex-direction: column;
 	align-items: stretch;
 
-	* + & {
+	&:not(:first-child) {
 		margin-top: 1.5em;
 	}
 
-	> header {
+	& > header {
 
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 
-		> h1 {
+		& > h1 {
 
 			font-weight: 700;
 
-			> * + *::before {
+			& > * + *::before {
 				content: "›";
 				margin: 0 0.25em;
 			}
 
 		}
 
-		> nav {
+		& > nav {
 
 			margin-left: auto;
 			font-size: 75%;
 
-			> * {
+			& > * {
 
 				display: inline-flex;
 				flex-direction: row;
@@ -47,7 +47,7 @@ tool-card {
 
 				margin-left: 0.25em;
 
-				> svg {
+				& > svg {
 					width: 1em;
 					height: 1em;
 					margin-right: 0.25em;
@@ -60,18 +60,18 @@ tool-card {
 
 	}
 
-	> section {
+	& > section {
 
 		margin-top: 0.75em;
 		font-size: 90%;
 
-		> img:first-child {
+		& > img:first-child {
 			float: left;
 			width: 7.55em;
 			margin-right: 1.5em;
 		}
 
-		> div {
+		& > div {
 			overflow: hidden;
 		}
 

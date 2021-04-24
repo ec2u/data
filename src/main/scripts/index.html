@@ -8,6 +8,8 @@
 
 	<head>
 
+		<base href="/" target="_blank">
+
 		<title>EC2U</title>
 
 		<meta name="copyright" content="&copy; 2021 EC2U Consortium">
@@ -16,9 +18,11 @@
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+		<link rel="icon" type="image/svg+xml" href="./index.svg"/>
+
 		<style>
 
-			html {
+			:root {
 
 				--tool-loader-color-one: #BFA635;
 				--tool-loader-color-two: #1C275D;
@@ -34,7 +38,7 @@
 				overflow: hidden;
 			}
 
-			body > :empty {
+			body > script:only-child {
 				display: block;
 				width: 15vh;
 				height: 15vh;
@@ -44,8 +48,8 @@
 				animation: loader-rotate 2s infinite linear;
 			}
 
-			body > :empty::before,
-			body > :empty::after {
+			body > script:only-child::before,
+			body > script:only-child::after {
 				content: '';
 				position: absolute;
 				left: 0;
@@ -57,12 +61,12 @@
 				animation: loader-bounce 2s infinite ease-in-out;
 			}
 
-			body > :empty::before {
+			body > script:only-child::before {
 				top: 0;
 				background-color: var(--tool-loader-color-one);
 			}
 
-			body > :empty::after {
+			body > script:only-child::after {
 				bottom: 0;
 				background-color: var(--tool-loader-color-two);
 				animation-delay: -1s;
@@ -84,12 +88,11 @@
 			}
 
 		</style>
-
 	</head>
 
 	<body>
 
-		<tool-page></tool-page>
+		<script type="module" src="./index.tsx"></script>
 
 	</body>
 

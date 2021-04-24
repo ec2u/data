@@ -5,7 +5,7 @@
 import { Custom } from "@metreeca/tile/tiles/custom";
 import { ComponentChild, ComponentChildren } from "preact";
 import { useState } from "preact/hooks";
-import "./page.less";
+import "./page.css";
 
 const title=document.title;
 const icon=(document.querySelector("link[rel=icon]") as HTMLLinkElement).href; // !!! handle nulls

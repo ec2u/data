@@ -9,7 +9,7 @@ import { X } from "@metreeca/tile/tiles/icon";
 import { ToolOptions } from "@metreeca/tile/tiles/options";
 import { ChevronDown, ChevronRight, RefreshCw } from "preact-feather";
 import { useState } from "preact/hooks";
-import "./facet.less";
+import "./facet.css";
 
 export interface Props {
 

@@ -5,7 +5,7 @@
 import { Custom } from "@metreeca/tile/tiles/custom";
 import { LogOut } from "@metreeca/tile/tiles/icon";
 import ToolPage from "../tiles/page";
-import "./user.less";
+import "./user.css";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -11,9 +11,9 @@ tool-page {
 	flex-direction: row;
 	align-items: stretch;
 
-	> * {
+	& > * {
 
-		position: relative; // support page-relative content positioning
+		position: relative; /* support page-relative content positioning */
 
 		display: flex;
 		flex-direction: column;
@@ -22,7 +22,7 @@ tool-page {
 		overflow-x: hidden;
 		overflow-y: auto;
 
-		> header {
+		& > header {
 
 			flex-shrink: 0;
 
@@ -37,29 +37,29 @@ tool-page {
 
 			height: 4rem;
 
-			box-shadow: 0 0 0.5rem 0.5rem #FFF; // !!! factor
+			box-shadow: 0 0 0.5rem 0.5rem #FFF; /* !!! factor */
 
 			white-space: nowrap;
 			font-size: 125%;
 
-			> h1 {
+			& > h1 {
 
 				flex-grow: 1;
 
-				> * + a::before {
+				& > * + a::before {
 
 					content: "›";
 					padding: 0 0.25em;
 
 				}
 
-				> a::before {
+				& > a::before {
 					text-decoration: none !important;
 				}
 
 			}
 
-			> nav {
+			& > nav {
 
 				display: flex;
 				flex-direction: row;
@@ -69,7 +69,7 @@ tool-page {
 
 		}
 
-		> section {
+		& > section {
 
 			flex-grow: 1;
 
@@ -80,7 +80,7 @@ tool-page {
 
 	}
 
-	> aside {
+	& > aside {
 
 		flex-shrink: 0;
 
@@ -90,18 +90,18 @@ tool-page {
 		border-color: #EEE;
 		background-color: #F4F5F6;
 
-		> * {
+		& > * {
 
 			padding-left: 1.5rem;
 			padding-right: 1.5rem;
 
 		}
 
-		> header {
+		& > header {
 
-			box-shadow: 0 0 0.5rem 0.5rem #F4F5F6; // !!! factor
+			box-shadow: 0 0 0.5rem 0.5rem #F4F5F6; /* !!! factor */
 
-			> a {
+			& > a {
 
 				width: 1em;
 				height: 1em;
@@ -116,27 +116,27 @@ tool-page {
 
 			}
 
-			> h1 {
+			& > h1 {
 				padding-left: 0.75em;
 			}
 
 		}
 
-		> section {
+		& > section {
 
 			font-size: 90%;
 
-			> a > img {
+			& > a > img {
 				width: 100%;
 			}
 
-			> dl {
+			& > dl {
 
 				display: grid;
 				grid-template-columns: auto 1fr;
 				grid-column-gap: 0.75em;
 
-				> dt {
+				& > dt {
 					text-align: right;
 				}
 			}
@@ -145,11 +145,11 @@ tool-page {
 
 	}
 
-	> main {
+	& > main {
 
 		flex-grow: 1;
 
-		> * {
+		& > * {
 
 			max-width: 75rem;
 

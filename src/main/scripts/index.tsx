@@ -4,10 +4,9 @@
 
 import { Graph } from "@metreeca/tile";
 import { LinkGraph } from "@metreeca/tile/graphs/link";
-import "@metreeca/tile/index.less";
+import "@metreeca/tile/index.css";
 import { Router } from "@metreeca/tile/nests/router";
 import { render } from "preact";
-import "./index.less";
 import ToolAbout from "./pages/about";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";

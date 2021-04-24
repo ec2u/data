@@ -21,7 +21,7 @@ tool-about {
 	font-size: 200%;
 	color: #999;
 
-	> li {
+	& > li {
 
 		list-style: none;
 

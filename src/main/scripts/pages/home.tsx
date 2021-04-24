@@ -8,7 +8,7 @@ import { Bookmark, BookOpen, Home, MapPin, Tool, Users } from "@metreeca/tile/ti
 import { ToolSearch } from "@metreeca/tile/tiles/search";
 import ToolFacet from "../tiles/facet";
 import ToolPage from "../tiles/page";
-import "./home.less";
+import "./home.css";
 
 
 const Resources={

@@ -6,7 +6,7 @@ import { swap } from "@metreeca/tile/nests/router";
 import { Custom } from "@metreeca/tile/tiles/custom";
 import { X } from "@metreeca/tile/tiles/icon";
 import ToolPage from "../tiles/page";
-import "./none.less";
+import "./none.css";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
