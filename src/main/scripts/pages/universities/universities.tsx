@@ -4,11 +4,11 @@
 
 import { useEntry } from "@metreeca/tile/hooks/entry";
 import { useQuery } from "@metreeca/tile/hooks/query";
-import { Custom } from "@metreeca/tile/tiles/custom";
 import { ToolSearch } from "@metreeca/tile/tiles/search";
-import { ToolSpinner } from "@metreeca/tile/tiles/spinner";
-import ToolCard from "../../tiles/card";
-import ToolPage from "../../tiles/page";
+import { ToolSpin } from "@metreeca/tile/tiles/spin";
+import { createElement } from "preact";
+import { ToolCard } from "../../tiles/card";
+import { ToolPage } from "../../tiles/page";
 
 
 const Universities={
@@ -41,7 +41,7 @@ const Query={
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function ToolUniversities() {
+export function ToolUniversities() {
 
 	const [query, putQuery]=useQuery(Query);
 
@@ -49,8 +49,8 @@ export default function ToolUniversities() {
 
 		<ToolPage
 
-			name={<ToolSearch path={"label"} placeholder="Discover Universities" state={[query, putQuery]}/>}
-			side={side()}
+			item={<ToolSearch path={"label"} placeholder="Discover Universities" state={[query, putQuery]}/>}
+			pane={side()}
 
 		>
 
@@ -66,7 +66,7 @@ export default function ToolUniversities() {
 
 function side() {
 	return <a href={"https://tinyurl.com/ygm9chxw"}>
-		<img src={"/blobs/ec2u.png"} alt={"EC2U Locations"}/>
+		{/*<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"}/>*/}
 	</a>;
 }
 
@@ -74,7 +74,7 @@ function main(query: typeof Query) {
 
 	const universities=useEntry("", Universities, query);
 
-	return <Custom tag={"tool-universities"}>
+	return createElement("tool-universities", {}, <>
 
 		{universities.then(universities => universities.contains.map(university =>
 
@@ -85,7 +85,7 @@ function main(query: typeof Query) {
 				tags={[<a href={"/universities/"}>University</a>]}
 
 			>{university.comment}</ToolCard>
-		)) || <caption><ToolSpinner size="3em"/></caption>}
+		)) || <ToolSpin size="3em"/>}
 
-	</Custom>;
+	</>);
 }

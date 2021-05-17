@@ -2,12 +2,13 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
+import { useEntry } from "@metreeca/tile/hooks/entry";
 import { useQuery } from "@metreeca/tile/hooks/query";
-import { Custom } from "@metreeca/tile/tiles/custom";
-import { Bookmark, BookOpen, Home, MapPin, Tool, Users } from "@metreeca/tile/tiles/icon";
+import { MapPin } from "@metreeca/tile/tiles/icon";
+import { ToolOptions } from "@metreeca/tile/tiles/options";
 import { ToolSearch } from "@metreeca/tile/tiles/search";
-import ToolFacet from "../tiles/facet";
-import ToolPage from "../tiles/page";
+import { createElement } from "preact";
+import { ToolPage } from "../tiles/page";
 import "./home.css";
 
 
@@ -56,39 +57,45 @@ export default function ToolHome() {
 
 		<ToolPage
 
-			name={<ToolSearch path="" placeholder="Discover Skills and Resources" state={[query, putQuery]}/>}
-			side={facets(query, putQuery)}
+			item={<ToolSearch path="label" placeholder="Discover Skills and Resources" state={[query, putQuery]}/>}
+			pane={side(query, putQuery)}
 
-		>
+		>{
 
-			<Custom tag="tool-home">
+			Object.keys(query) ? main(query) : main(query)
 
-				<ul>
-					<li><span>7</span><a href="/universities/"><MapPin/></a><span>Universities</span></li>
-					<li><span>99</span><a href="/structures/"><Home/></a><span>Structures</span></li>
-					<li><span>123</span><a href="/structures/"><Bookmark/></a><span>Subjects</span></li>
-					<li><span>2'300</span><a href="/structures/"><Tool/></a><span>Projects</span></li>
-					<li><span>4'200</span><a href="/structures/"><Users/></a><span>People</span></li>
-					<li><span>567'890</span><a href="/structures/"><BookOpen/></a><span>Publications</span></li>
-				</ul>
-
-			</Custom>
-
-		</ToolPage>
+		}</ToolPage>
 
 	);
-
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function facets(query: typeof Query, putQuery: (delta: Partial<typeof query>) => void) {
-
+function side(query: typeof Query, putQuery: (delta: Partial<typeof query>) => void) {
 	return <>
 
-		<ToolFacet name={"University"} path={"university"} query={[query, putQuery]}/>
-		<ToolFacet name={"Collection"} path={"type"} query={[query, putQuery]}/>
+		<ToolOptions label="University" path="university" state={[query, putQuery]}/>
+		<ToolOptions label="Collection" path="type" state={[query, putQuery]}/>
 
 	</>;
+}
+
+
+function main(query: typeof Query) {
+
+	const resources=useEntry("", Resources, query);
+
+	return createElement("tool-home", {}, <>
+
+		<ul>
+			<li><span>7</span><a href="/universities/"><MapPin/></a><span>Universities</span></li>
+			{/*<li><span>99</span><a href="/structures/"><Home/></a><span>Structures</span></li>*/}
+			{/*<li><span>123</span><a href="/structures/"><Bookmark/></a><span>Subjects</span></li>*/}
+			{/*<li><span>2'300</span><a href="/structures/"><Tool/></a><span>Projects</span></li>*/}
+			{/*<li><span>4'200</span><a href="/structures/"><Users/></a><span>People</span></li>*/}
+			{/*<li><span>567'890</span><a href="/structures/"><BookOpen/></a><span>Publications</span></li>*/}
+		</ul>
+
+	</>);
 }

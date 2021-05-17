@@ -3,11 +3,11 @@
  */
 
 import { useEntry } from "@metreeca/tile/hooks/entry";
-import { title } from "@metreeca/tile/nests/router";
-import { Custom } from "@metreeca/tile/tiles/custom";
-import { ToolSpinner } from "@metreeca/tile/tiles/spinner";
+import { useRouter } from "@metreeca/tile/nests/router";
+import { ToolSpin } from "@metreeca/tile/tiles/spin";
+import { createElement } from "preact";
 import { useEffect } from "preact/hooks";
-import ToolPage from "../../tiles/page";
+import { ToolPage } from "../../tiles/page";
 import "./university.css";
 
 
@@ -39,24 +39,26 @@ const University={
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function ToolUniversity() {
+export function ToolUniversity() {
+
+	const { name }=useRouter();
 
 	const university=useEntry("", University);
 
-	useEffect(() => university.then(university => title(university.label)));
+	useEffect(() => university.then(university => { name(university.label); }));
 
 	return university.then(university => (
 
 		<ToolPage
 
-			name={(
+			item={(
 				<>
 					<a href={"/universities/"}>Universities</a>
 					<a href={university.id}>{university.label}</a>
 				</>
 			)}
 
-			side={side(university)}
+			pane={side(university)}
 
 		>
 
@@ -64,7 +66,7 @@ export default function ToolUniversity() {
 
 		</ToolPage>
 
-	)) || <ToolSpinner size="3em"/>;
+	)) || <ToolSpin size="3em"/>;
 
 }
 
@@ -87,11 +89,11 @@ function side({ inception, country, location }: typeof University) {
 }
 
 function main({ label, comment, image }: typeof University) {
-	return <Custom tag="tool-university">
+	return createElement("tool-university", {}, <>
 
 		{image && <img src={image} alt={`Image of ${label}`}/>}
 
 		<p>{comment}</p>
 
-	</Custom>;
+	</>);
 }

@@ -3,18 +3,20 @@
  */
 
 import { Graph } from "@metreeca/tile";
+import "@metreeca/tile/fonts/quicksand.css";
 import { LinkGraph } from "@metreeca/tile/graphs/link";
 import "@metreeca/tile/index.css";
 import { Router } from "@metreeca/tile/nests/router";
 import { render } from "preact";
+import "./index.css";
 import ToolAbout from "./pages/about";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
 import ToolStructure from "./pages/structures/structure";
-import ToolStructures from "./pages/structures/structures";
-import ToolUniversities from "./pages/universities/universities";
-import ToolUniversity from "./pages/universities/university";
-import ToolUser from "./pages/user";
+import { ToolStructures } from "./pages/structures/structures";
+import { ToolUniversities } from "./pages/universities/universities";
+import { ToolUniversity } from "./pages/universities/university";
+import { ToolUser } from "./pages/user";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

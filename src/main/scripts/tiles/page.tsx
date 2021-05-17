@@ -2,79 +2,60 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { Custom } from "@metreeca/tile/tiles/custom";
+import { copy } from "@metreeca/tile/nests/router";
+import { Heart } from "@metreeca/tile/tiles/icon";
+import { ToolPage as BasePage, ToolPane } from "@metreeca/tile/tiles/page";
 import { ComponentChild, ComponentChildren } from "preact";
 import { useState } from "preact/hooks";
-import "./page.css";
-
-const title=document.title;
-const icon=(document.querySelector("link[rel=icon]") as HTMLLinkElement).href; // !!! handle nulls
-const copy=(document.querySelector("meta[name=copyright]") as HTMLMetaElement).content; // !!! handle nulls
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export interface Props {
+export function ToolPage({
 
-	name?: ComponentChild
-	menu?: ComponentChild
-	side?: ComponentChild
-
-	children?: ComponentChildren
-
-}
-
-export default function ToolPage({
-
-	name,
+	item,
 	menu,
-	side,
+	pane,
 
 	children
 
-}: Props) {
+}: {
+
+	item?: ComponentChild
+	menu?: ComponentChild
+	pane?: ComponentChild
+
+	children?: ComponentChildren
+
+}) {
 
 	const [hidden, setHidden]=useState(false);
 
-	return (
-		<Custom tag="tool-page">
+	return <BasePage item={item} menu={menu} user={<small>
+		<a href={"/about"}><Heart/></a>
+	</small>}
 
-			<aside>
+		pane={<ToolPane
 
-				<header>
+			header={<a onClick={e => {
 
-					<a href={"/"} title={title} style={{ backgroundImage: `url(${icon})` }} onClick={e => {
+				if ( e.shiftKey ) {
 
-						if ( e.shiftKey ) {
+					e.preventDefault();
+					setHidden(!hidden);
 
-							e.preventDefault();
-							setHidden(!hidden);
+				}
 
-						}
+			}}><strong>EC2U Connect Centre</strong></a>}
 
-					}}/>
+			footer={<small>{copy}</small>}
 
-					<h1><a href={"/"}>EC2U Knowledge Hub</a></h1>
+		>{
 
-				</header>
+			hidden ? <Hidden/> : pane
 
-				<section>{hidden ? <Hidden/> : side}</section>
+		}</ToolPane>}
 
-			</aside>
-
-			<main>
-
-				<header>
-					<h1>{name}</h1>
-					<nav>{menu}</nav>
-				</header>
-
-				<section>{children}</section>
-
-			</main>
-
-		</Custom>
-	);
+	>{children}</BasePage>;
 
 }
 

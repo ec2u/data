@@ -2,35 +2,28 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { Custom } from "@metreeca/tile/tiles/custom";
 import { LogOut } from "@metreeca/tile/tiles/icon";
-import ToolPage from "../tiles/page";
+import { ToolPlaceholder } from "@metreeca/tile/tiles/placeholder";
+import { ToolPage } from "../tiles/page";
 import "./user.css";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function ToolUser() {
-	return (
+export function ToolUser() {
+	return <ToolPage menu={<button title="Log out"><LogOut/></button>}>
 
-		<ToolPage
+		<ToolPlaceholder>
 
-			menu={<button title="Log out"><LogOut/></button>}
+			<ul>
 
-		>
-			<Custom tag="tool-user">
+				<li>Tino Faussone!!</li>
+				<li>tino.faussone@example.edu</li>
+				<li>University of Example</li>
 
-				<ul>
+			</ul>
 
-					<li>Tino Faussone</li>
-					<li>tino.faussone@example.edu</li>
-					<li>University of Example</li>
+		</ToolPlaceholder>
 
-				</ul>
-
-			</Custom>
-
-		</ToolPage>
-
-	);
+	</ToolPage>;
 
 }

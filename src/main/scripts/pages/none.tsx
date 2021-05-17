@@ -2,27 +2,30 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { swap } from "@metreeca/tile/nests/router";
-import { Custom } from "@metreeca/tile/tiles/custom";
+import { useRouter } from "@metreeca/tile/nests/router";
 import { X } from "@metreeca/tile/tiles/icon";
-import ToolPage from "../tiles/page";
+import { createElement } from "preact";
+import { ToolPage } from "../tiles/page";
 import "./none.css";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function ToolNone() {
+
+	const { swap }=useRouter();
+
 	return (
 
 		<ToolPage
 
-			name="404 | Not Found"
+			item="404 | Not Found"
 
 			menu={<button title="Remove from History" onClick={() => swap("/")}><X/></button>}
 
 		>
 
-			<Custom tag={"tool-none"}/>
+			{createElement("tool-none", {})}
 
 		</ToolPage>
 

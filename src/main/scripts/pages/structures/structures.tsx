@@ -3,18 +3,18 @@
  */
 
 import { ToolSearch } from "@metreeca/tile/tiles/search";
-import ToolCard from "../../tiles/card";
-import ToolPage from "../../tiles/page";
+import { ToolCard } from "../../tiles/card";
+import { ToolPage } from "../../tiles/page";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function ToolStructures() {
+export function ToolStructures() {
 	return (
 
 		<ToolPage
 
-			name={<ToolSearch path="" placeholder="Discover Structures" state={[{}, () => {}]}/>}
+			item={<ToolSearch path="" placeholder="Discover Structures" state={[{}, () => {}]}/>}
 
 			/*side={(
 				<>

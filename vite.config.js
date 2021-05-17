@@ -41,15 +41,21 @@ export default defineConfig({ // https://vitejs.dev/config/
 	},
 
 	build: {
+
 		outDir: dist,
 		assetsDir: ".",
-		emptyOutDir: true
+		emptyOutDir: true,
+
+		rollupOptions: {
+			output: { manualChunks: undefined }
+		}
+
 	},
 
 	server: {
-		proxy: {
-			"^/.*": { target: "http://localhost:8080/" }
-		}
+		port: 6800,
+		open: "/index.html", // open static asset
+		proxy: { "^(/[-\\w]*)+(\\?.*)?$": { target: "http://localhost:8080/" } } // proxy routes+queries
 	}
 
 });

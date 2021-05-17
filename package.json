@@ -5,7 +5,7 @@
 		"build": "vite build"
 	},
 	"dependencies": {
-		"@metreeca/tile": "^0.0.2"
+		"@metreeca/tile": "^0.0.6"
 	},
 	"devDependencies": {
 		"@preact/preset-vite": "^2.1.0",

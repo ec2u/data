@@ -20,12 +20,14 @@
 
 		<link rel="icon" type="image/svg+xml" href="./index.svg"/>
 
+		<script type="module" src="./index.tsx"></script>
+
 		<style>
 
 			:root {
 
-				--tool-loader-color-one: #BFA635;
-				--tool-loader-color-two: #1C275D;
+				--tool--color-accent-lite: #BFA635;
+				--tool--color-accent-dark: #1C275D;
 
 			}
 
@@ -38,18 +40,18 @@
 				overflow: hidden;
 			}
 
-			body > script:only-child {
+			body > tool-page:empty {
 				display: block;
-				width: 15vh;
-				height: 15vh;
+				width: 10vh;
+				height: 10vh;
 				margin: 40vh auto auto;
 				overflow: visible;
 				text-align: center;
 				animation: loader-rotate 2s infinite linear;
 			}
 
-			body > script:only-child::before,
-			body > script:only-child::after {
+			body > tool-page:empty::before,
+			body > tool-page:empty::after {
 				content: '';
 				position: absolute;
 				left: 0;
@@ -61,14 +63,14 @@
 				animation: loader-bounce 2s infinite ease-in-out;
 			}
 
-			body > script:only-child::before {
+			body > tool-page:empty::before {
 				top: 0;
-				background-color: var(--tool-loader-color-one);
+				background-color: var(--tool--color-accent-dark);
 			}
 
-			body > script:only-child::after {
+			body > tool-page:empty::after {
 				bottom: 0;
-				background-color: var(--tool-loader-color-two);
+				background-color: var(--tool--color-accent-lite);
 				animation-delay: -1s;
 			}
 
@@ -88,11 +90,12 @@
 			}
 
 		</style>
+
 	</head>
 
 	<body>
 
-		<script type="module" src="./index.tsx"></script>
+		<tool-page></tool-page>
 
 	</body>
 

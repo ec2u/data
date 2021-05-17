@@ -3,7 +3,7 @@
  */
 
 import { Edit } from "@metreeca/tile/tiles/icon";
-import ToolPage from "../../tiles/page";
+import { ToolPage } from "../../tiles/page";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@ export default function ToolStructure() {
 
 		<ToolPage
 
-			name={(
+			item={(
 				<>
 					<a href={"/structures/"}>Structures</a>
 					<a href={"/structures/123"}>University of Neverland</a>
