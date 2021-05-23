@@ -3,7 +3,7 @@
  */
 
 import { LogOut } from "@metreeca/tile/tiles/icon";
-import { ToolPlaceholder } from "@metreeca/tile/tiles/placeholder";
+import { ToolPlaceholder } from "@metreeca/tile/tiles/loaders/placeholder";
 import { ToolPage } from "../tiles/page";
 import "./user.css";
 
@@ -16,7 +16,7 @@ export function ToolUser() {
 
 			<ul>
 
-				<li>Tino Faussone!!</li>
+				<li>Tino Faussone</li>
 				<li>tino.faussone@example.edu</li>
 				<li>University of Example</li>
 

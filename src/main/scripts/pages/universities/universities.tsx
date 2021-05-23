@@ -2,16 +2,20 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { useEntry } from "@metreeca/tile/hooks/entry";
+import { Query } from "@metreeca/tile/graphs";
 import { useQuery } from "@metreeca/tile/hooks/query";
-import { ToolSearch } from "@metreeca/tile/tiles/search";
-import { ToolSpin } from "@metreeca/tile/tiles/spin";
+import { useEntry, useKeywords } from "@metreeca/tile/nests/connector";
+import { ToolInput } from "@metreeca/tile/tiles/controls/input";
+import { Search } from "@metreeca/tile/tiles/icon";
+import { ToolSpin } from "@metreeca/tile/tiles/loaders/spin";
 import { createElement } from "preact";
 import { ToolCard } from "../../tiles/card";
 import { ToolPage } from "../../tiles/page";
 
 
 const Universities={
+
+	id: "",
 
 	contains: [{
 
@@ -28,28 +32,22 @@ const Universities={
 
 };
 
-const Query={
-
-	"~label": "",
-
-	".order": "label",
-	".offset": 0,
-	".limit": 20
-
-};
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function ToolUniversities() {
 
-	const [query, putQuery]=useQuery(Query);
+	const [query, putQuery]=useQuery({ ".limit": 20 });
 
 	return (
 
 		<ToolPage
 
-			item={<ToolSearch path={"label"} placeholder="Discover Universities" state={[query, putQuery]}/>}
+			item={<ToolInput rule menu={<Search/>}
+				placeholder="Universities"
+				value={useKeywords("label", [query, putQuery])}
+			/>}
+
 			pane={side()}
 
 		>
@@ -70,22 +68,18 @@ function side() {
 	</a>;
 }
 
-function main(query: typeof Query) {
+function main(query: Query) {
 
 	const universities=useEntry("", Universities, query);
 
-	return createElement("tool-universities", {}, <>
+	return universities.then(universities => createElement("tool-universities", {}, universities.contains.map(university =>
 
-		{universities.then(universities => universities.contains.map(university =>
+		<ToolCard
 
-			<ToolCard
+			site={<a href={university.id}>{university.label}</a>}
+			icon={university.image}
+			tags={[<a href={"/universities/"}>University</a>]}
 
-				site={<a href={university.id}>{university.label}</a>}
-				icon={university.image}
-				tags={[<a href={"/universities/"}>University</a>]}
-
-			>{university.comment}</ToolCard>
-		)) || <ToolSpin size="3em"/>}
-
-	</>);
+		>{university.comment}</ToolCard>
+	))) || <ToolSpin/>;
 }

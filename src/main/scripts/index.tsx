@@ -2,13 +2,12 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { Graph } from "@metreeca/tile";
 import "@metreeca/tile/fonts/quicksand.css";
 import { LinkGraph } from "@metreeca/tile/graphs/link";
 import "@metreeca/tile/index.css";
+import { Connector } from "@metreeca/tile/nests/connector";
 import { Router } from "@metreeca/tile/nests/router";
 import { render } from "preact";
-import "./index.css";
 import ToolAbout from "./pages/about";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
@@ -23,7 +22,7 @@ import { ToolUser } from "./pages/user";
 
 render((
 
-	<Graph.Provider value={LinkGraph()}>
+	<Connector value={LinkGraph()}>
 
 		<Router routes={{
 
@@ -41,6 +40,6 @@ render((
 
 		}}/>
 
-	</Graph.Provider>
+	</Connector>
 
 ), document.body);

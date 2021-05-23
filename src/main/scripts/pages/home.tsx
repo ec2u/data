@@ -2,17 +2,22 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { useEntry } from "@metreeca/tile/hooks/entry";
+import { Query } from "@metreeca/tile/graphs";
 import { useQuery } from "@metreeca/tile/hooks/query";
-import { MapPin } from "@metreeca/tile/tiles/icon";
-import { ToolOptions } from "@metreeca/tile/tiles/options";
-import { ToolSearch } from "@metreeca/tile/tiles/search";
+import { useEntry, useKeywords, useOptions } from "@metreeca/tile/nests/connector";
+import { ToolInput } from "@metreeca/tile/tiles/controls/input";
+import { ToolField } from "@metreeca/tile/tiles/fields/field";
+import { ToolOptions } from "@metreeca/tile/tiles/fields/options";
+import { MapPin, Search } from "@metreeca/tile/tiles/icon";
 import { createElement } from "preact";
+import { StateUpdater } from "preact/hooks";
 import { ToolPage } from "../tiles/page";
 import "./home.css";
 
 
 const Resources={
+
+	id: "",
 
 	contains: [{
 
@@ -33,31 +38,22 @@ const Resources={
 
 };
 
-const Query={
-
-	"~label": "",
-
-	"university": [],
-	"type": [],
-
-	".order": "",
-
-	".offset": 0,
-	".limit": 20
-
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function ToolHome() {
 
-	const [query, putQuery]=useQuery(Query);
+	const [query, putQuery]=useQuery({ ".limit": 20 });
 
 	return (
 
 		<ToolPage
 
-			item={<ToolSearch path="label" placeholder="Discover Skills and Resources" state={[query, putQuery]}/>}
+			item={<ToolInput rule menu={<Search/>}
+				placeholder="Discover EC2U Skills and Resources"
+				value={useKeywords("label", [query, putQuery])}
+			/>}
+
 			pane={side(query, putQuery)}
 
 		>{
@@ -72,17 +68,22 @@ export default function ToolHome() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function side(query: typeof Query, putQuery: (delta: Partial<typeof query>) => void) {
+function side(query: Query, setQuery: StateUpdater<Query>) {
 	return <>
 
-		<ToolOptions label="University" path="university" state={[query, putQuery]}/>
-		<ToolOptions label="Collection" path="type" state={[query, putQuery]}/>
+		<ToolField name={"University"} selector={<ToolOptions value={useOptions(
+			"", "university", [query, setQuery]
+		)}/>}/>
+
+		<ToolField name={"Collection"} selector={<ToolOptions value={useOptions(
+			"", "type", [query, setQuery]
+		)}/>}/>
 
 	</>;
 }
 
 
-function main(query: typeof Query) {
+function main(query: Query) {
 
 	const resources=useEntry("", Resources, query);
 

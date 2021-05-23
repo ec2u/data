@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { ToolSearch } from "@metreeca/tile/tiles/search";
+import { ToolInput } from "@metreeca/tile/tiles/controls/input";
 import { ToolCard } from "../../tiles/card";
 import { ToolPage } from "../../tiles/page";
 
@@ -14,7 +14,7 @@ export function ToolStructures() {
 
 		<ToolPage
 
-			item={<ToolSearch path="" placeholder="Discover Structures" state={[{}, () => {}]}/>}
+			item={<ToolInput placeholder="Discover Structures" value={["", () => {}]}/>}
 
 			/*side={(
 				<>

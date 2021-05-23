@@ -4,7 +4,8 @@
 
 import { copy } from "@metreeca/tile/nests/router";
 import { Heart } from "@metreeca/tile/tiles/icon";
-import { ToolPage as BasePage, ToolPane } from "@metreeca/tile/tiles/page";
+import { ToolPage as BasePage } from "@metreeca/tile/tiles/page";
+import { ToolPane } from "@metreeca/tile/tiles/pane";
 import { ComponentChild, ComponentChildren } from "preact";
 import { useState } from "preact/hooks";
 
@@ -36,7 +37,7 @@ export function ToolPage({
 
 		pane={<ToolPane
 
-			header={<a onClick={e => {
+			header={<a href={"/"} onClick={e => {
 
 				if ( e.shiftKey ) {
 

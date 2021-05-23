@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Back" type="Application" factoryName="Application">
+  <configuration default="false" name="Server" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="eu.ec2u.data.Data" />
     <module name="data" />
     <option name="VM_PARAMETERS" value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:50" />

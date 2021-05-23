@@ -2,9 +2,9 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { useEntry } from "@metreeca/tile/hooks/entry";
+import { useEntry } from "@metreeca/tile/nests/connector";
 import { useRouter } from "@metreeca/tile/nests/router";
-import { ToolSpin } from "@metreeca/tile/tiles/spin";
+import { ToolSpin } from "@metreeca/tile/tiles/loaders/spin";
 import { createElement } from "preact";
 import { useEffect } from "preact/hooks";
 import { ToolPage } from "../../tiles/page";
@@ -54,7 +54,7 @@ export function ToolUniversity() {
 			item={(
 				<>
 					<a href={"/universities/"}>Universities</a>
-					<a href={university.id}>{university.label}</a>
+					<span>{university.label}</span>
 				</>
 			)}
 
