@@ -1,11 +1,11 @@
 {
 	"private": true,
 	"scripts": {
-		"start": "vite",
+		"start": "vite --open",
 		"build": "vite build"
 	},
 	"dependencies": {
-		"@metreeca/tile": "^0.0.6"
+		"@metreeca/tile": "^0.0.10"
 	},
 	"devDependencies": {
 		"@preact/preset-vite": "^2.1.0",

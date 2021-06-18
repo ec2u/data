@@ -14,20 +14,13 @@ export default function ToolAbout() {
 
 	const { back }=useRouter();
 
-	return (
+	return ( // !!! populate from html metadata
 
-		<ToolPage
+		<ToolPage item={"v1.10.2+20210710"}
 
 			menu={<button title="Close" onClick={back}><X/></button>}
 
 		>
-
-			<ul> {/* !!! populate from html metadata */}
-
-				<li>EC2U Connect Centre</li>
-				<li>v1.10.2+20210710</li>
-
-			</ul>
 
 		</ToolPage>
 

@@ -53,8 +53,6 @@ export default defineConfig({ // https://vitejs.dev/config/
 	},
 
 	server: {
-		port: 6800,
-		open: "/index.html", // open static asset
 		proxy: { "^(/[-\\w]*)+(\\?.*)?$": { target: "http://localhost:8080/" } } // proxy routes+queries
 	}
 

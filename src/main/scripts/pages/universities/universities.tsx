@@ -64,7 +64,7 @@ export function ToolUniversities() {
 
 function side() {
 	return <a href={"https://tinyurl.com/ygm9chxw"}>
-		{/*<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"}/>*/}
+		<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"}/>
 	</a>;
 }
 
