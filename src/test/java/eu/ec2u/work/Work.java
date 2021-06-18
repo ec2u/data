@@ -21,9 +21,9 @@ import static com.metreeca.rest.services.Engine.engine;
 import static com.metreeca.rest.services.Fetcher.fetcher;
 
 
-final class Work {
+public final class Work {
 
-	static void exec(final Runnable... tasks) {
+	public static void exec(final Runnable... tasks) {
 		new Toolbox()
 
 				.set(storage(), () -> Paths.get("data"))

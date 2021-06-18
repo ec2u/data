@@ -1,0 +1,3 @@
+cron:
+  url: /_cron/events
+  schedule: every 24 hours synchronized

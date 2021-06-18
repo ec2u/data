@@ -19,7 +19,6 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.sail.SailConnection;
@@ -74,7 +73,7 @@ public final class Data {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static void main(final String... args) {
-		new GCPServer().context(Base).delegate(context -> context
+		new GCPServer().context(Base).delegate(toolbox -> toolbox
 
 				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
 				.set(graph(), () -> production() ? memory() : local())
@@ -113,6 +112,8 @@ public final class Data {
 										sparql().query().update(root)
 								))
 
+								.path("/_cron/*", new Cron())
+
 								.path("/*", asset(
 
 										publisher(resource(Data.class, "/static"))
@@ -140,9 +141,6 @@ public final class Data {
 		return new Graph(new HTTPRepository("http://localhost:7200/repositories/ec2u"));
 	}
 
-	public static Graph remote() {
-		return new Graph(new SPARQLRepository("https://data.ec2u.eu/sparql"));
-	}
 
 	public static Graph memory() {
 
