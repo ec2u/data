@@ -10,8 +10,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.ec2u</groupId>
-	<artifactId>data</artifactId>
+	<artifactId>ec2u-kxta</artifactId>
 	<version>0.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<name>EC2U Testbed</name>
 	<description>EC2U Connect Centre development and testing environment.</description>
@@ -52,6 +53,8 @@
 	</issueManagement>
 
 	<properties>
+
+		<main>eu.ec2u.data.Data</main>
 
 		<java.version>11</java.version>
 		<maven.version>3.6</maven.version>
@@ -314,23 +317,53 @@
 
 			</plugin>
 
-			<plugin> <!-- https://maven.apache.org/plugins/maven-project-info-reports-plugin/ -->
+			<plugin> <!-- http://maven.apache.org/plugins/maven-shade-plugin/ -->
 
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.1.1</version>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+
+				<configuration>
+
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+
+					<transformers>
+
+						<transformer
+								implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"
+						>
+							<mainClass>${main}</mainClass>
+						</transformer>
+
+						<transformer
+								implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"
+						/>
+
+					</transformers>
+
+					<filters> <!-- ;( exclude JAR signatures (https://stackoverflow.com/a/55215382/) -->
+						<filter>
+							<artifact>*:*</artifact>
+							<excludes>
+								<exclude>META-INF/*.SF</exclude>
+								<exclude>META-INF/*.DSA</exclude>
+								<exclude>META-INF/*.RSA</exclude>
+							</excludes>
+						</filter>
+					</filters>
+
+				</configuration>
 
 				<executions>
+
 					<execution>
 
-						<id>generate dependency reports</id>
-						<phase>site</phase>
-
 						<goals>
-							<goal>dependencies</goal>
+							<goal>shade</goal>
 						</goals>
 
 					</execution>
+
 				</executions>
 
 			</plugin>

@@ -1,3 +1,4 @@
 cron:
-  url: /_cron/events
-  schedule: every 24 hours synchronized
+  - description: "nightly event crawling"
+    url: /_cron/events
+    schedule: every 24 hours synchronized

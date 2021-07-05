@@ -35,9 +35,6 @@ public final class Events extends Delegator {
 				field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
 
-				field(RDFS.LABEL, repeatable(), localized()),
-				field(RDFS.COMMENT, multiple(), localized()),
-
 				field(Schema.name, repeatable(), localized()),
 				field(Schema.description, multiple(), localized()),
 
