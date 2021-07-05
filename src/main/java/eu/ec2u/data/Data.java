@@ -125,6 +125,7 @@ public final class Data {
 												.path("/", new Resources())
 												.path("/concepts/*", new Concepts())
 												.path("/universities/*", new Universities())
+												.path("/events/*", new Events())
 
 								))
 
@@ -140,7 +141,6 @@ public final class Data {
 	public static Graph local() {
 		return new Graph(new HTTPRepository("http://localhost:7200/repositories/ec2u"));
 	}
-
 
 	public static Graph memory() {
 
