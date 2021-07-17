@@ -31,7 +31,10 @@ public final class EC2U {
 
 	public static final IRI ontologies=iri(Base, "/ontologies/");
 	public static final IRI taxonomies=iri(Base, "/taxonomies/");
+	public static final IRI wikidata=iri(Base, "wikidata");
+
 	public static final IRI universities=iri(Base, "/universities/");
+	public static final IRI events=iri(Base, "/events/");
 
 
 	//// Vocabulary ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,10 +58,17 @@ public final class EC2U {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	public static final IRI Event=iri(Name, "Event");
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static final IRI Theme=iri(Name, "Theme");
 
 
 	//// Master Map ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static final IRI Turku=iri(Base, "/universities/7");
 
 	public static final Map<String, Frame> Universities=unmodifiableMap(Stream.of(
 
@@ -135,7 +145,7 @@ public final class EC2U {
 							+"beyond (Castile and León) and the “Alma Mater” of nearly all historical Latin American "
 							+"universities.", "en")),
 
-			frame(iri(Base, "/universities/7"))
+			frame(Turku)
 
 					.value(schac, literal("utu.fi"))
 					.value(OWL.SAMEAS, iri("http://www.wikidata.org/entity/Q501841"))

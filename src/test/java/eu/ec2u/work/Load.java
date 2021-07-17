@@ -25,7 +25,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static com.metreeca.json.Values.iri;
 import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.resource;
 import static com.metreeca.rest.Toolbox.service;
@@ -42,6 +41,7 @@ final class Load {
 
 			@Override public void run() {
 				service(graph()).update(task(connection -> {
+
 					try {
 
 						connection.clearNamespaces();
@@ -74,7 +74,6 @@ final class Load {
 
 					} catch ( final URISyntaxException ignored ) {
 
-
 					} catch ( final IOException e ) {
 
 						throw new UncheckedIOException(e);
@@ -84,23 +83,6 @@ final class Load {
 				}));
 			}
 		});
-	}
-
-	@Test void universities() {
-		exec(() -> Xtream
-
-				.from(EC2U.Universities.values())
-
-				.flatMap(Frame::model)
-
-				.batch(0) // avoid multiple truth-maintenance rounds
-
-				.forEach(new Upload()
-						.clear(true)
-						.contexts(EC2U.universities)
-				)
-
-		);
 	}
 
 	@Test void ontologies() {
@@ -170,13 +152,30 @@ final class Load {
 		})));
 	}
 
+	@Test void universities() {
+		exec(() -> Xtream
+
+				.from(EC2U.Universities.values())
+
+				.flatMap(Frame::model)
+
+				.batch(0) // avoid multiple truth-maintenance rounds
+
+				.forEach(new Upload()
+						.clear(true)
+						.contexts(EC2U.universities)
+				)
+
+		);
+	}
+
 	@Test void wikidata() {
 		exec(() -> Xtream
 
 				.of("?item wdt:P463 wd:Q105627243") // <member of> <EC2U>
 
 				.sink(new WikidataMirror()
-						.contexts(iri(EC2U.Name, "wikidata"))
+						.contexts(EC2U.wikidata)
 				)
 		);
 	}
