@@ -8,29 +8,43 @@ import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rest.services.Logger;
 
-import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.w3c.dom.*;
 
 import java.net.URI;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
+import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.Toolbox.service;
+import static com.metreeca.rest.Xtream.entry;
 import static com.metreeca.rest.services.Logger.logger;
 
 import static java.lang.String.format;
-import static java.util.Collections.emptyMap;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 
 public final class Microdata implements Function<Node, Stream<Frame>> {
+
+	private static final String Id="id";
 
 	private static final String ItemScope="itemscope";
 	private static final String ItemId="itemid";
 	private static final String ItemType="itemtype";
+	private static final String ItemProp="itemprop";
+	private static final String ItemRef="itemref";
+
+	private static final Pattern SpacePattern=Pattern.compile("[\t\n\f\r ]+");
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,66 +55,130 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override public Stream<Frame> apply(final Node node) {
-		return node == null ? Stream.empty() : items(node, ids(node));
+		return node instanceof Document ? items(((Document)node).getDocumentElement())
+				: node instanceof Element ? items((Element)node)
+				: Stream.empty();
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Map<String, Node> ids(final Node node) {
-		return emptyMap(); // !!!
+	private Stream<Frame> items(final Element element) {
+		return items(element, false, ids(element));
+	}
+
+	private Stream<Frame> items(final Element element, final boolean scoped, final Map<String, Element> ids) {
+		if ( element.hasAttribute(ItemScope) ) {
+
+			final Entry<Frame, Stream<Frame>> item=item(element, ids);
+
+			return Stream.concat(Stream.of(item.getKey()), item.getValue());
+
+		} else {
+
+			final boolean scoping=scoped || attribute(element, Id).filter(ids::containsKey).isPresent();
+
+			if ( element.hasAttribute(ItemId) ) {
+				logger.warning(this, format("%s requires %s", ItemId, ItemScope)); // !!! report open tag
+			}
+
+			if ( element.hasAttribute(ItemType) ) {
+				logger.warning(this, format("%s requires %s", ItemType, ItemScope)); // !!! report open tag
+			}
+
+			if ( element.hasAttribute(ItemRef) ) {
+				logger.warning(this, format("%s outside %s", ItemRef, ItemScope)); // !!! report open tag
+			}
+
+			if ( element.hasAttribute(ItemProp) && !(scoping) ) {
+				logger.warning(this, format("%s outside %s", ItemProp, ItemScope)); // !!! report open tag
+			}
+
+			return children(element).flatMap(child -> items(child, scoping, ids));
+
+		}
 	}
 
 
-	private Stream<Frame> items(final Node node, final Map<String, Node> ids) {
-		return node instanceof Document ? items(((Document)node), ids)
-				: node instanceof Element ? items(((Element)node), ids)
-				: Stream.empty();
-	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Stream<Frame> items(final Document document, final Map<String, Node> ids) {
-		return items(document.getDocumentElement(), ids);
-	}
+	private Entry<Frame, Stream<Frame>> item(final Element element, final Map<String, Element> ids) {
 
-	private Stream<Frame> items(final Element element, final Map<String, Node> ids) {
-
-		final boolean scoped=element.hasAttribute(ItemScope);
-		final boolean typed=element.hasAttribute(ItemType);
-		final boolean identified=element.hasAttribute(ItemId);
-
-		if ( typed && !scoped ) {
-			logger.warning(this, "itemtype requires itemscope"); // !!! report open tag
+		if ( element.hasAttribute(ItemId) && !element.hasAttribute(ItemType) ) {
+			logger.warning(this, format("%s requires %s", ItemId, ItemType)); // !!! report open tag
 		}
 
-		if ( identified && !scoped ) {
-			logger.warning(this, "itemid requires itemscope"); // !!! report open tag
+		final Resource id=id(element);
+		final List<IRI> types=types(element).collect(toList());
+
+		final String vocabulary=types.stream().findFirst().map(IRI::getNamespace).orElse(Terms.stringValue());
+
+		Frame frame=frame(id).values(RDF.TYPE, types);
+		Stream<Frame> nested=Stream.empty();
+
+		final Collection<Element> visited=new HashSet<>(singleton(element));
+		final Queue<Element> pending=Stream.concat(children(element), attribute(element, ItemRef).stream()
+
+				.flatMap(refs -> Arrays.stream(SpacePattern.split(refs)))
+
+				.map(ref -> {
+
+					final Element target=ids.get(ref);
+
+					if ( target == null ) {
+						logger.warning(this, format("undefined %s <%s>", ItemRef, ref));
+					}
+
+					return target;
+
+				})
+
+				.filter(Objects::nonNull)
+
+		).collect(toCollection(ArrayDeque::new));
+
+		while ( !pending.isEmpty() ) {
+
+			final Element current=pending.remove();
+			final List<IRI> props=props(current, vocabulary).collect(toList());
+
+			if ( !visited.add(current) ) {
+
+				logger.warning(this, format("%s cycle", ItemRef)); // !!! report open tag
+
+			} else if ( current.hasAttribute(ItemScope) ) {
+
+				final Entry<Frame, Stream<Frame>> value=item(current, ids);
+
+				for (final IRI prop : props) {
+					frame=frame.frames(prop, value.getKey());
+				}
+
+				nested=Stream.concat(nested, props.isEmpty()
+						? Stream.concat(Stream.of(value.getKey()), value.getValue())
+						: value.getValue()
+				);
+
+			} else {
+
+				final Optional<Value> value=value(current);
+
+				for (final IRI prop : props) {
+					frame=frame.value(prop, value);
+				}
+
+				pending.addAll(children(current).collect(toList()));
+
+			}
+
 		}
 
-		if ( identified && !typed ) {
-			logger.warning(this, "itemid requires itemtype"); // !!! report open tag
-		}
-
-		return scoped ? Stream.of(item(element, ids)) : Stream
-				.of(element.getChildNodes())
-				.flatMap(list -> IntStream.range(0, list.getLength()).mapToObj(list::item))
-				.flatMap(node -> items(node, ids));
-	}
-
-	private Frame item(final Element element, final Map<String, Node> ids) {
-
-		final Set<Node> visited=new HashSet<>();
-		final Queue<Node> pending=new ArrayDeque<>();
-
-		return frame(id(element))
-				.values(RDF.TYPE, types(element));
+		return entry(frame, nested);
 	}
 
 
-	private IRI id(final Element element) {
+	private Resource id(final Element element) { // !!! refactor
 		return attribute(element, ItemId)
-
-				.map(String::trim)
-				.filter(value -> checkNotEmpty(ItemId, value))
 
 				.map(id -> Optional.ofNullable(element.getBaseURI())
 
@@ -120,7 +198,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 							try { return base.resolve(id); } catch ( final IllegalArgumentException e ) {
 
-								logger.warning(this, format("malformed itemid <%s>", id)); // !!! report open tag
+								logger.warning(this, format("malformed %s <%s>", ItemId, id)); // !!! report open tag
 
 								return null;
 
@@ -132,21 +210,31 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 						.orElse(id)
 				)
 
-				.filter(id -> checkAbsolute(ItemId, id))
+				.filter(id -> {
+
+					if ( AbsoluteIRIPattern.matcher(id).matches() ) { return true; } else {
+
+						logger.warning(this, format("malformed %s <%s>", ItemId, id)); // !!! report open tag
+
+						return false;
+					}
+
+				})
 
 				.map(Values::iri)
-				.orElseGet(Values::iri);
+				.map(Resource.class::cast)
+
+				.orElseGet(Values::bnode);
 	}
 
-
 	private Stream<IRI> types(final Element element) {
-		return attribute(element, ItemType)
 
-				.map(String::trim)
-				.filter(value -> checkNotEmpty(ItemType, value))
+		final AtomicReference<String> vocabulary=new AtomicReference<>();
+		final Set<IRI> types=ConcurrentHashMap.newKeySet();
 
-				.stream()
-				.flatMap(type -> Arrays.stream(type.split("[\t\n\f\r ]+")))
+		return attribute(element, ItemType).stream()
+
+				.flatMap(type -> Arrays.stream(SpacePattern.split(type)))
 
 				.map(type -> {
 
@@ -162,36 +250,232 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 				.filter(Objects::nonNull)
 
-				// !!! schema uniqueness
+				.peek(type -> {
 
-				;
+					if ( !types.add(type) ) {
+						logger.warning(this, format("repeated %s value <%s>", ItemType, type));
+					}
+
+				})
+
+				.peek(type -> vocabulary.accumulateAndGet(type.getNamespace(), (current, merged) -> {
+
+					if ( current == null || current.equals(merged) ) {
+
+						return merged;
+
+					} else {
+
+						logger.warning(this, format("multiple %s vocabularies <%s>", ItemType, merged));
+
+						return current;
+
+					}
+
+				}));
 	}
 
+	private Stream<IRI> props(final Element element, final String vocabulary) {
+
+		final Set<IRI> props=ConcurrentHashMap.newKeySet();
+
+		return attribute(element, ItemProp).stream()
+
+				.flatMap(type -> Arrays.stream(SpacePattern.split(type)))
+
+				.map(prop -> {
+
+					try {
+
+						return iri(URI.create(vocabulary).resolve(prop));
+
+					} catch ( final IllegalArgumentException e ) {
+
+						logger.warning(this, format("malformed %s <%s>", ItemProp, prop));
+
+						return null;
+
+					}
+
+				})
+
+				.filter(Objects::nonNull)
+
+				.peek(prop -> {
+
+					if ( !props.add(prop) ) {
+						logger.warning(this, format("repeated %s value <%s>", ItemProp, prop));
+					}
+
+				});
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private Optional<Value> value(final Element element) {
+		return element.getTagName().equalsIgnoreCase("meta") ? text(element, "content")
+
+				: element.getTagName().equalsIgnoreCase("audio") ? link(element, "src")
+				: element.getTagName().equalsIgnoreCase("embed") ? link(element, "src")
+				: element.getTagName().equalsIgnoreCase("iframe") ? link(element, "src")
+				: element.getTagName().equalsIgnoreCase("img") ? link(element, "src")
+				: element.getTagName().equalsIgnoreCase("source") ? link(element, "src")
+				: element.getTagName().equalsIgnoreCase("track") ? link(element, "src")
+				: element.getTagName().equalsIgnoreCase("video") ? link(element, "src")
+
+				: element.getTagName().equalsIgnoreCase("a") ? link(element, "href")
+				: element.getTagName().equalsIgnoreCase("area") ? link(element, "href")
+				: element.getTagName().equalsIgnoreCase("link") ? link(element, "href")
+
+				: element.getTagName().equalsIgnoreCase("object") ? link(element, "data")
+
+				: element.getTagName().equalsIgnoreCase("data") ? text(element, "value")
+				: element.getTagName().equalsIgnoreCase("meter") ? number(element, "value")
+				: element.getTagName().equalsIgnoreCase("time") ? temporal(element, "datetime")
+
+				: text(element.getTextContent()).map(Values::literal);
+	}
+
+	private Optional<Value> link(final Element element, final String attribute) {
+		return attribute(element, attribute, true)
+				.map(value -> {
+
+					try {
+
+						return URI.create(Optional.ofNullable(element.getBaseURI()).orElse(Values.Base)).resolve(value);
+
+					} catch ( final IllegalArgumentException e ) {
+
+						logger.warning(this, format("malformed %s URL attribute <%s>", attribute, value));
+
+						return null;
+					}
+
+				})
+				.map(Values::iri);
+	}
+
+	private Optional<Value> number(final Element element, final String attribute) {
+		return attribute(element, attribute, true)
+				.map(value -> {
+
+					try {
+
+						return Double.parseDouble(value);
+
+					} catch ( final NumberFormatException e ) {
+
+						logger.warning(this, format("malformed %s float attribute <%s>", attribute, value));
+
+						return null;
+					}
+
+				})
+				.map(Values::literal);
+	}
+
+	private Optional<Value> temporal(final Element element, final String attribute) {
+		return attribute(element, attribute, true)
+				.map(Optional::of)
+				.orElseGet(() -> text(element.getTextContent()))
+				.map(value -> {
+
+					final List<Function<String, Literal>> parsers=asList(
+							v -> literal(literal(v).temporalAccessorValue()),
+							v -> literal(literal(v).temporalAmountValue())
+					);
+
+					for (final Function<String, Literal> parser : parsers) {
+						try { return parser.apply(value); } catch ( final RuntimeException ignored ) {}
+					}
+
+					logger.warning(this, format("malformed %s time value <%s>", attribute, value));
+
+					return literal(value); // support custom post-processing converters
+
+				});
+	}
+
+	private Optional<Value> text(final Element element, final String attribute) {
+		return attribute(element, attribute, true).map(Values::literal);
+	}
+
+	private Optional<String> text(final String value) {
+		return Optional.of(value).map(String::trim).filter(v -> !v.isEmpty());
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private String tag(final Element element) {
+
+		final StringBuilder builder=new StringBuilder(100);
+
+		builder.append("<").append(element.getTagName().toLowerCase(Locale.ROOT));
+
+		final NamedNodeMap attributes=element.getAttributes();
+
+		for (int i=0; i < attributes.getLength(); ++i) {
+			builder.append(" ").append(attributes.item(i).getNodeName())
+					.append("='").append(attributes.item(i).getNodeValue()).append("'");
+		}
+
+		builder.append("/>");
+
+		return builder.toString();
+	}
 
 	private Optional<String> attribute(final Element element, final String attribute) {
-		return element.hasAttribute(attribute)
-				? Optional.of(element.getAttribute(attribute))
-				: Optional.empty();
+		return attribute(element, attribute, false);
 	}
 
+	private Optional<String> attribute(final Element element, final String attribute, final boolean required) {
+		return Optional.of(element.getAttribute(attribute)).map(String::trim).filter(value -> {
 
-	private boolean checkNotEmpty(final String attribute, final String value) {
-		if ( value.isEmpty() ) {
+			final boolean empty=value.isEmpty();
+			final boolean defined=element.hasAttribute(attribute);
 
-			logger.warning(this, String.format("empty %s", attribute)); // !!! report open tag
+			if ( empty && defined ) {
+				logger.warning(this, format("empty %s attribute", attribute)); // !!! report open tag
+			}
 
-			return false;
+			if ( required && !defined ) {
+				logger.warning(this, format("missing %s attribute", attribute)); // !!! report open tag
+			}
 
-		} else { return true; }
+			return !empty;
+
+		});
 	}
 
-	private boolean checkAbsolute(final String attribute, final String url) {
-		if ( Values.AbsoluteIRIPattern.matcher(url).matches() ) { return true; } else {
+	private Stream<Element> children(final Node node) {
+		return Stream.of(node.getChildNodes())
+				.flatMap(list -> IntStream.range(0, list.getLength()).mapToObj(list::item))
+				.filter(Element.class::isInstance)
+				.map(Element.class::cast);
+	}
 
-			logger.warning(this, format("malformed %s <%s>", attribute, url)); // !!! report open tag
+	private Map<String, Element> ids(final Element element) {
 
-			return false;
+		final Map<String, Element> ids=new HashMap<>();
+		final Set<String> refs=new HashSet<>();
+
+		final Queue<Element> pending=new ArrayDeque<>(singleton(element));
+
+		while ( !pending.isEmpty() ) {
+
+			final Element current=pending.remove();
+
+			attribute(current, Id).ifPresent(id -> ids.put(id, current));
+			attribute(current, ItemRef).ifPresent(refs::add);
+
+			children(current).forEach(pending::add);
 		}
+
+		ids.keySet().retainAll(refs); // retain ids only if actually referenced from itemref
+
+		return ids;
 	}
 
 }
