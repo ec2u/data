@@ -1,0 +1,58 @@
+_:597f9b23c90b7e55
+    a <https://schema.org/WebPage> .
+
+_:597f9b23c90b7e56
+    a                             <http://schema.org/Event> ;
+    <http://schema.org/name>      "Abbonamento Musei: visite speciali per i titolari" ;
+    <http://schema.org/image>
+                                  <http://www.vivipavia.it/contents/instance10/files/photo/18251_170_AndreaTaccani620.jpg> ;
+    <http://schema.org/location>  _:597f9b23c90b7e57 ;
+    <http://schema.org/startDate> "22/05/2021" ;
+    <http://schema.org/endDate>   "04/09/2021" .
+
+_:597f9b23c90b7e57
+    a                           <http://schema.org/Place> ;
+    <http://schema.org/name>    "Università" ;
+    <http://schema.org/address> _:597f9b23c90b7e58 .
+
+_:597f9b23c90b7e58
+    a                                 <http://schema.org/PostalAddress> ;
+    <http://schema.org/streetAddress> "Corso Strada Nuova 65, Pavia" .
+
+_:597f9b23c90b7e59
+    a                            <https://schema.org/LocalBusiness> ;
+    <https://schema.org/address> _:597f9b23c90b7e5a ;
+    <https://schema.org/image>   <http://www.vivipavia.it/contents/instance10/images/vivipavia/logo-comune-pv.png> ;
+    <https://schema.org/name>    "Comune di Pavia" .
+
+_:597f9b23c90b7e5a
+    a                                   <http://schema.org/PostalAddress> ;
+    <http://schema.org/streetAddress>   "Palazzo del Broletto, Via Paratici 21" ;
+    <http://schema.org/postalCode>      "27100" ;
+    <http://schema.org/addressLocality> "Pavia" ;
+    <http://schema.org/telephone>       "+39 0382.399343" ;
+    <http://schema.org/faxNumber>       "+39 0382.399244" ;
+    <http://schema.org/email>           "cultura@comune.pv.it" .
+
+_:597f9b23c90b7e5b
+    a                        <http://schema.org/Organization> ;
+    <http://schema.org/url>  <http://www.vivipavia.it/site/home.html> ;
+    <http://schema.org/logo> <http://www.vivipavia.it/contents/instance10/images/vivipavia/logo-vivipavia.png> .
+
+_:597f9b23c90b7e5c
+    a                                   <http://schema.org/BreadcrumbList> ;
+    <http://schema.org/itemListElement> _:597f9b23c90b7e5d, _:597f9b23c90b7e5e .
+
+_:597f9b23c90b7e5d
+    a                            <http://schema.org/ListItem> ;
+    <http://schema.org/item>     """Home
+ /""", <http://www.vivipavia.it/site/home.html> ;
+    <http://schema.org/position> "1" ;
+    <http://schema.org/name>     "Home" .
+
+_:597f9b23c90b7e5e
+    a                            <http://schema.org/ListItem> ;
+    <http://schema.org/item>     """Eventi
+ /""", <http://www.vivipavia.it/site/home/eventi.html> ;
+    <http://schema.org/position> "2" ;
+    <http://schema.org/name>     "Eventi" .

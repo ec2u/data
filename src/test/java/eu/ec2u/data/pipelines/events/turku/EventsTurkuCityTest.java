@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.pipelines.events;
+package eu.ec2u.data.pipelines.events.turku;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rdf4j.actions.Upload;
@@ -16,6 +16,7 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -27,12 +28,14 @@ import static com.metreeca.rest.formats.JSONFormat.json;
 
 import static eu.ec2u.work.Work.exec;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+
 final class EventsTurkuCityTest {
 
 	@Test void test() {
 		exec(() -> Xtream
 
-				.of("2021-07-01") // !!! last sync
+				.of(LocalDate.now().format(ISO_LOCAL_DATE))// !!! last update
 
 				.flatMap(new Fill<String>()
 						.model("https://api.turku.fi/linkedevents/v1/event/"
@@ -63,12 +66,14 @@ final class EventsTurkuCityTest {
 				.flatMap(Collection::stream)
 				.map(JsonValue::asJsonObject)
 
-				//.limit(1) // !!!
+				.limit(1) // !!!
 
 				.map(this::convert)
 				.flatMap(Frame::model)
 
 				.batch(100_000)
+
+				.peek(System.out::println)
 
 				.forEach(new Upload()
 						.clear(true) // !!! incremental sync

@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.pipelines.events;
+package eu.ec2u.data.pipelines.events.turku;
 
 import static com.metreeca.rest.Response.OK;
 
