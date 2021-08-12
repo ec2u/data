@@ -8,7 +8,7 @@ import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rest.*;
 import com.metreeca.rest.handlers.Delegator;
 
-import eu.ec2u.data.schemas.EC2U;
+import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -34,7 +34,6 @@ import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
-import static eu.ec2u.data.schemas.EC2U.University;
 import static org.eclipse.rdf4j.common.iteration.Iterations.asList;
 
 public final class Resources extends Delegator {
@@ -42,22 +41,22 @@ public final class Resources extends Delegator {
 	public Resources() {
 		delegate(driver(relate(
 
-				filter(clazz(EC2U.Resource)),
+				filter(clazz(Data.Resource)),
 
 				field(RDF.TYPE, repeatable(), datatype(IRIType)),
 
 				field(RDFS.LABEL, required(), localized("en")),
 				field(RDFS.COMMENT, optional(), localized("en")),
 
-				field(EC2U.image, optional(), datatype(IRIType)),
+				field(Data.image, optional(), datatype(IRIType)),
 
-				field(EC2U.university, optional(),
+				field(Data.university, optional(),
 						field(RDFS.LABEL, required(), localized("en"))
 				)
 
 		)).wrap(router().get(handler(request -> !request.query().isEmpty(), relator(), driver(
 
-				field("universities", University, optional(), datatype(XSD.INTEGER))
+				field("universities", Data.University, optional(), datatype(XSD.INTEGER))
 
 		).wrap(new Virtual(
 

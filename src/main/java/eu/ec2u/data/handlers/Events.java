@@ -6,8 +6,8 @@ package eu.ec2u.data.handlers;
 
 import com.metreeca.rest.handlers.Delegator;
 
-import eu.ec2u.data.schemas.EC2U;
-import eu.ec2u.data.schemas.Schema;
+import eu.ec2u.data.Data;
+import eu.ec2u.work.annotations.Schema;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.json.Shape.optional;
@@ -26,9 +26,9 @@ public final class Events extends Delegator {
 	public Events() {
 		delegate(driver(relate(
 
-				filter(clazz(EC2U.Event)),
+				filter(clazz(Data.Event)),
 
-				field(EC2U.university, required(),
+				field(Data.university, required(),
 						field(RDFS.LABEL, repeatable(), localized())
 				),
 

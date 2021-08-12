@@ -11,8 +11,7 @@ import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 import com.metreeca.xml.actions.XPath;
 
-import eu.ec2u.data.schemas.EC2U;
-import eu.ec2u.data.schemas.EWP;
+import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.junit.jupiter.api.Test;
 
@@ -82,7 +81,7 @@ final class Crawl {
 
 						.flatMap(new XPath<>(host -> host.strings("_:institutions-covered/_:hei-id")
 
-								.filter(EC2U.Universities::containsKey)
+								.filter(Data.Universities::containsKey)
 
 								.flatMap(hei -> host.nodes("_:apis-implemented/*")
 
@@ -103,7 +102,7 @@ final class Crawl {
 
 				.forEach(new Upload()
 						.clear(true)
-						.contexts(iri(EC2U.Base, "/ewp/"))
+						.contexts(iri(Data.Base, "/ewp/"))
 				)
 
 		);
@@ -122,7 +121,7 @@ final class Crawl {
 				.value(RDF.TYPE, EWP.Host)
 				.value(RDFS.LABEL, literal(label))
 
-				.value(EC2U.university, EC2U.Universities.get(hei).focus())
+				.value(Data.university, Data.Universities.get(hei))
 
 				.value(EWP.hei, literal(hei))
 				.frame(EWP.network, network)

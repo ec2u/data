@@ -12,8 +12,8 @@ import com.metreeca.rest.services.Logger;
 import com.metreeca.rest.services.Store;
 
 import eu.ec2u.data.handlers.*;
-import eu.ec2u.data.schemas.EC2U;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -26,10 +26,12 @@ import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
 import java.io.*;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import static com.metreeca.gcp.GCPServer.production;
+import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.Values.uuid;
 import static com.metreeca.rdf4j.handlers.Graphs.graphs;
 import static com.metreeca.rdf4j.handlers.SPARQL.sparql;
@@ -65,12 +67,68 @@ public final class Data {
 	public static final String root="root"; // root role
 
 
-	static {
-		debug.log("com.metreeca");
-	}
+	//// Contexts //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static final IRI ontologies=iri(Base, "/ontologies/");
+	public static final IRI taxonomies=iri(Base, "/taxonomies/");
+	public static final IRI wikidata=iri(Base, "wikidata");
+
+	public static final IRI universities=iri(Base, "/universities/");
+	public static final IRI events=iri(Base, "/events/");
+
+
+	//// Resources /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static final IRI Resource=iri(Name, "Resource");
+
+	public static final IRI university=iri(Name, "university");
+
+
+	//// Universities //////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static final IRI University=iri(Name, "University");
+
+	public static final IRI schac=iri(Name, "schac");
+	public static final IRI country=iri(Name, "country");
+	public static final IRI location=iri(Name, "location");
+	public static final IRI image=iri(Name, "image");
+	public static final IRI inception=iri(Name, "inception");
+	public static final IRI students=iri(Name, "students");
+
+	public static final IRI Coimbra=iri(Base, "/universities/1");
+	public static final IRI Iasi=iri(Base, "/universities/2");
+	public static final IRI Jena=iri(Base, "/universities/3");
+	public static final IRI Pavia=iri(Base, "/universities/4");
+	public static final IRI Poitiers=iri(Base, "/universities/5");
+	public static final IRI Salamanca=iri(Base, "/universities/6");
+	public static final IRI Turku=iri(Base, "/universities/7");
+
+	public static final Map<String, IRI> Universities=Map.of( // !!! load from ontology
+			"uc.pt", Coimbra,
+			"uaic.ro", Iasi,
+			"uni-jena.de", Jena,
+			"unipv.it", Pavia,
+			"univ-poitiers.fr", Poitiers,
+			"usal.es", Salamanca,
+			"utu.fi", Turku
+	);
+
+
+	//// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static final IRI Event=iri(Name, "Event");
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static final IRI Theme=iri(Name, "Theme");
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	static {
+		debug.log("com.metreeca");
+	}
 
 	public static void main(final String... args) {
 		new GCPServer().context(Base).delegate(toolbox -> toolbox
@@ -90,7 +148,7 @@ public final class Data {
 					if ( production() ) {
 						try {
 							connection.clear();
-							connection.add(resource(Data.class, ".brf"), EC2U.Base, RDFFormat.BINARY);
+							connection.add(resource(Data.class, ".brf"), Data.Base, RDFFormat.BINARY);
 						} catch ( final IOException e ) {
 							throw new UncheckedIOException(e);
 						}
@@ -145,7 +203,7 @@ public final class Data {
 	public static Graph memory() {
 
 		final String blob="graph.brf.gz";
-		final String base=EC2U.Base;
+		final String base=Data.Base;
 		final RDFFormat format=RDFFormat.BINARY;
 
 		final Store store=service(store());

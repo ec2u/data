@@ -10,7 +10,6 @@ import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Logger;
 import com.metreeca.rest.services.Logger.Level;
 
-import eu.ec2u.data.schemas.Schema;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.jupiter.api.Nested;

@@ -10,8 +10,8 @@ import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 import com.metreeca.rest.formats.JSONFormat;
 
-import eu.ec2u.data.schemas.EC2U;
-import eu.ec2u.data.schemas.Schema;
+import eu.ec2u.data.Data;
+import eu.ec2u.work.annotations.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ final class EventsTurkuCityTest {
 	@Test void test() {
 		exec(() -> Xtream
 
-				.of(LocalDate.now().format(ISO_LOCAL_DATE))// !!! last update
+				.of(LocalDate.now().minusDays(7).format(ISO_LOCAL_DATE)) // !!! last update
 
 				.flatMap(new Fill<String>()
 						.model("https://api.turku.fi/linkedevents/v1/event/"
@@ -66,18 +66,14 @@ final class EventsTurkuCityTest {
 				.flatMap(Collection::stream)
 				.map(JsonValue::asJsonObject)
 
-				.limit(1) // !!!
-
 				.map(this::convert)
 				.flatMap(Frame::model)
 
 				.batch(100_000)
 
-				.peek(System.out::println)
-
 				.forEach(new Upload()
 						.clear(true) // !!! incremental sync
-						.contexts(EC2U.events)
+						.contexts(Data.events)
 				)
 
 		);
@@ -101,7 +97,7 @@ final class EventsTurkuCityTest {
 
 		final String id=event.getString("@id");
 
-		return frame(iri(EC2U.events, md5(id)))
+		return frame(iri(Data.events, md5(id)))
 
 				.value(RDF.TYPE, Schema.Event)
 				.value(OWL.SAMEAS, iri(id))
@@ -109,7 +105,7 @@ final class EventsTurkuCityTest {
 				.value(DCTERMS.CREATED, dateTime(event, "created_time"))
 				.value(DCTERMS.MODIFIED, dateTime(event, "last_modified_time"))
 
-				.value(EC2U.university, EC2U.Turku)
+				.value(Data.university, Data.Turku)
 
 				.values(Schema.name, locals(event, "name"))
 				.values(Schema.description, locals(event, "description"))

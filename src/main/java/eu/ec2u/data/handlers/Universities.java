@@ -6,7 +6,7 @@ package eu.ec2u.data.handlers;
 
 import com.metreeca.rest.handlers.Delegator;
 
-import eu.ec2u.data.schemas.EC2U;
+import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.json.Shape.optional;
@@ -27,13 +27,13 @@ public final class Universities extends Delegator {
 	public Universities() {
 		delegate(driver(relate(
 
-				filter(clazz(EC2U.University)),
+				filter(clazz(Data.University)),
 
 				field(RDFS.LABEL, required(), localized("en")),
 				field(RDFS.COMMENT, optional(), localized("en")),
 
-				field(EC2U.schac, required(), datatype(XSD.STRING)),
-				field(EC2U.image, optional(), datatype(IRIType)),
+				field(Data.schac, required(), datatype(XSD.STRING)),
+				field(Data.image, optional(), datatype(IRIType)),
 
 				link(OWL.SAMEAS,
 
@@ -42,16 +42,16 @@ public final class Universities extends Delegator {
 
 						detail(
 
-								field(EC2U.country, optional(),
+								field(Data.country, optional(),
 										field(RDFS.LABEL, optional(), localized("en"))
 								),
 
-								field(EC2U.location, optional(),
+								field(Data.location, optional(),
 										field(RDFS.LABEL, optional(), localized("en"))
 								),
 
-								field(EC2U.inception, optional(), datatype(XSD.DATETIME)),
-								field(EC2U.students, optional(), datatype(XSD.DECIMAL))
+								field(Data.inception, optional(), datatype(XSD.DATETIME)),
+								field(Data.students, optional(), datatype(XSD.DECIMAL))
 						)
 
 				)

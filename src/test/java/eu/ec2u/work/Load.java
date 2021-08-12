@@ -4,7 +4,6 @@
 
 package eu.ec2u.work;
 
-import com.metreeca.json.Frame;
 import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Update;
@@ -12,7 +11,6 @@ import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rest.Xtream;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.schemas.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
@@ -90,7 +88,7 @@ final class Load {
 
 				.from(
 
-						Xtream.of(".ttl", "EWP.ttl").map(path -> resource(EC2U.class, path).toString()),
+						Xtream.of(".ttl").map(path -> resource(Data.class, path).toString()),
 						Xtream.of(SKOS.NAMESPACE)
 
 				)
@@ -101,7 +99,7 @@ final class Load {
 
 				.forEach(new Upload()
 						.clear(true)
-						.contexts(EC2U.ontologies)
+						.contexts(Data.ontologies)
 				)
 		);
 	}
@@ -121,7 +119,7 @@ final class Load {
 
 					.forEach(new Upload()
 							.clear(true)
-							.contexts(EC2U.taxonomies)
+							.contexts(Data.taxonomies)
 					);
 
 			Xtream
@@ -145,28 +143,11 @@ final class Load {
 					)
 
 					.forEach(new Update()
-							.base(EC2U.Base)
-							.insert(EC2U.taxonomies)
+							.base(Data.Base)
+							.insert(Data.taxonomies)
 					);
 
 		})));
-	}
-
-	@Test void universities() {
-		exec(() -> Xtream
-
-				.from(EC2U.Universities.values())
-
-				.flatMap(Frame::model)
-
-				.batch(0) // avoid multiple truth-maintenance rounds
-
-				.forEach(new Upload()
-						.clear(true)
-						.contexts(EC2U.universities)
-				)
-
-		);
 	}
 
 	@Test void wikidata() {
@@ -175,7 +156,7 @@ final class Load {
 				.of("?item wdt:P463 wd:Q105627243") // <member of> <EC2U>
 
 				.sink(new WikidataMirror()
-						.contexts(EC2U.wikidata)
+						.contexts(Data.wikidata)
 				)
 		);
 	}

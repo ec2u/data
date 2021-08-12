@@ -7,7 +7,7 @@ package eu.ec2u.data.handlers;
 import com.metreeca.json.Shape;
 import com.metreeca.rest.handlers.Delegator;
 
-import eu.ec2u.data.schemas.EC2U;
+import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
@@ -34,7 +34,7 @@ public final class Concepts extends Delegator {
 	public Concepts() {
 		delegate(driver(relate(
 
-				filter(clazz(EC2U.Theme)),
+				filter(clazz(Data.Theme)),
 
 				link(OWL.SAMEAS,
 

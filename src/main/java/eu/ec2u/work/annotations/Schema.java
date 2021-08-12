@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.schemas;
+package eu.ec2u.work.annotations;
 
 import com.metreeca.json.Values;
 
@@ -41,7 +41,7 @@ public final class Schema {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Upgrades unsecure {@value #NameLegacy} references.
+	 * Upgrades legacy {@value #NameLegacy} references.
 	 *
 	 * @param model
 	 *

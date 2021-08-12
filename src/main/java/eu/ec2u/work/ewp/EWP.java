@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.schemas;
+package eu.ec2u.work.ewp;
 
 import org.eclipse.rdf4j.model.IRI;
 

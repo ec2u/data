@@ -8,9 +8,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 
-import eu.ec2u.data.schemas.Schema;
-import eu.ec2u.work.annotations.Microdata;
-import eu.ec2u.work.annotations.NormalizeDate;
+import eu.ec2u.work.annotations.*;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFFormat;
