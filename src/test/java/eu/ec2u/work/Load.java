@@ -46,7 +46,7 @@ final class Load {
 
 						connection.setNamespace("skos", SKOS.NAMESPACE);
 
-						Files.walk(Paths.get(resource(Data.class, "schemas").toURI()))
+						Files.walk(Paths.get(resource(Data.class, "").toURI()))
 								.filter(path -> path.toString().endsWith(".ttl"))
 								.forEach(path -> {
 									try {
@@ -80,6 +80,7 @@ final class Load {
 
 				}));
 			}
+
 		});
 	}
 

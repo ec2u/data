@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.work.annotations;
+package eu.ec2u.work.link;
 
 import com.metreeca.json.Values;
 
@@ -26,16 +26,23 @@ public final class Schema {
 	//// Thing /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static final IRI name=term("name");
-
+	public static final IRI image=term("image");
 	public static final IRI description=term("description");
+	public static final IRI disambiguatingDescription=term("disambiguatingDescription");
 
 
 	//// Event /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static final IRI Event=term("Event");
 
+	public static final IRI url=term("url");
+	public static final IRI isAccessibleForFree=term("isAccessibleForFree");
+	public static final IRI eventStatus=term("eventStatus");
 	public static final IRI startDate=term("startDate");
 	public static final IRI endDate=term("endDate");
+
+
+	public enum EventStatus {EventCancelled, EventMovedOnline, EventPostponed, EventRescheduled, EventScheduled}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

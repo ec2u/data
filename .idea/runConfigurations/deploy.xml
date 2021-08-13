@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="deploy" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
@@ -11,7 +10,6 @@
           </option>
           <option name="goals">
             <list>
-              <option value="-DskipTests=false" />
               <option value="clean" />
               <option value="validate" />
               <option value="deploy" />
@@ -29,4 +27,3 @@
     <method v="2" />
   </configuration>
 </component>
-

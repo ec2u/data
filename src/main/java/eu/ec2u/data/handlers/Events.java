@@ -7,7 +7,7 @@ package eu.ec2u.data.handlers;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.work.annotations.Schema;
+import eu.ec2u.work.link.Schema;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.json.Shape.optional;

@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.work.annotations;
+package eu.ec2u.work.link;
 
 import com.metreeca.json.Values;
 
