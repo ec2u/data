@@ -4,12 +4,12 @@
 
 package eu.ec2u.work.link;
 
-import com.metreeca.json.Frame;
 import com.metreeca.rest.Toolbox;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Logger;
 import com.metreeca.rest.services.Logger.Level;
 
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.jupiter.api.Nested;
@@ -27,7 +27,6 @@ import static com.metreeca.xml.formats.HTMLFormat.html;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.stream.Collectors.toList;
 
 // https://html.spec.whatwg.org/multipage/microdata.html
 
@@ -59,11 +58,12 @@ final class MicrodataTest {
 	}
 
 
-	private Xtream<Frame> scan(final String document) {
+	private Xtream<Statement> scan(final String document) {
 		return Xtream.of(document)
 
-				.optMap(html -> html(new ByteArrayInputStream(html.getBytes(UTF_8)), UTF_8.name(), "http://example"
-						+ ".net/").get())
+				.optMap(html -> html(
+						new ByteArrayInputStream(html.getBytes(UTF_8)), UTF_8.name(), "http://example.net/"
+				).get())
 
 				.flatMap(new Microdata());
 	}
@@ -80,11 +80,26 @@ final class MicrodataTest {
 		}
 
 		@Test void testScanTopLevelItems() {
-			exec(() -> assertThat(scan("<div><div itemscope/><div itemscope/></div>")).hasSize(2));
+			exec(() -> assertThat(scan("<div>"
+							+"<div itemscope itemtype='https:/schema.org/Thing'/>"
+							+"<div itemscope itemtype='https:/schema.org/Thing'/>"
+							+"</div>")
+							.map(Statement::getSubject)
+							.distinct()
+					)
+							.hasSize(2)
+			);
 		}
 
 		@Test void testScanNestedUnlinkedItems() {
-			exec(() -> assertThat(scan("<div itemscope><div itemscope></div></div>")).hasSize(2));
+			exec(() -> assertThat(scan("<div itemscope itemtype='https:/schema.org/Thing'>"
+							+"<div itemscope itemtype='https:/schema.org/Thing'></div>"
+							+"</div>")
+							.map(Statement::getSubject)
+							.distinct()
+					)
+							.hasSize(2)
+			);
 		}
 
 	}
@@ -98,7 +113,7 @@ final class MicrodataTest {
 					+" itemid=' http://example.net/id\t'"
 					+" itemtype='https:/schema.org/Thing'"
 					+"/>"))
-					.extracting(Frame::focus)
+					.extracting(Statement::getSubject)
 					.containsExactly(iri("http://example.net/id"))
 			);
 		}
@@ -125,12 +140,12 @@ final class MicrodataTest {
 
 		@Test void testResolveId() {
 			exec(() -> assertThat(scan(
-					"<div itemscope"
-							+" itemid='id'"
-							+" itemtype='https:/schema.org/Thing'"
-							+"/>"
+							"<div itemscope"
+									+" itemid='id'"
+									+" itemtype='https:/schema.org/Thing'"
+									+"/>"
 					))
-							.extracting(Frame::focus)
+							.extracting(Statement::getSubject)
 							.containsExactly(iri("http://example.net/id"))
 			);
 		}
@@ -139,7 +154,7 @@ final class MicrodataTest {
 
 		@Test void testGenerateUniqueFallbackId() {
 			exec(() -> assertThat(scan("<div itemscope/>"))
-					.extracting(Frame::focus)
+					.extracting(Statement::getSubject)
 					.extracting(Value::stringValue)
 					.allMatch(id -> id.startsWith("urn:uuid:"))
 			);
@@ -175,7 +190,8 @@ final class MicrodataTest {
 			exec(() -> assertThat(scan("<div itemscope"
 					+" itemtype=' https:/schema.org/Thing\t\thttps:/schema.org/Event'"
 					+"/>"))
-					.flatExtracting(frame -> frame.values(RDF.TYPE).collect(toList()))
+					.filteredOn(s -> s.getPredicate().equals(RDF.TYPE))
+					.extracting(Statement::getObject)
 					.containsExactly(iri("https:/schema.org/Thing"), iri("https:/schema.org/Event"))
 			);
 		}
@@ -191,7 +207,8 @@ final class MicrodataTest {
 			exec(() -> assertThat(scan("<div itemscope"
 					+" itemtype='https:/schema.org/Thing https:/schema.org/Thing'"
 					+"/>"))
-					.flatExtracting(frame -> frame.values(RDF.TYPE).collect(toList()))
+					.filteredOn(s -> s.getPredicate().equals(RDF.TYPE))
+					.extracting(Statement::getObject)
 					.containsExactly(iri("https:/schema.org/Thing"))
 			);
 		}
@@ -253,7 +270,7 @@ final class MicrodataTest {
 							+"<span itemprop='x y'>value</span>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.traits().keySet())
+							.extracting(Statement::getPredicate)
 							.containsExactly(term("x"), term("y"))
 			);
 		}
@@ -322,7 +339,8 @@ final class MicrodataTest {
 							+"/>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(iri("http://example.net/id"))
 			);
 		}
@@ -339,11 +357,12 @@ final class MicrodataTest {
 					+"\t</address>\n"
 					+"</div>"))
 
-					.flatMap(frame -> frame.model().collect(toList())).contains(statement(
+					.contains(statement(
 							iri("https://example.net/address"),
 							Schema.term("streetAddress"),
 							literal("address")
-					)));
+					))
+			);
 		}
 
 
@@ -355,7 +374,8 @@ final class MicrodataTest {
 							+"<meta itemprop='name' content='value'>"
 							+"</head>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(literal("value"))
 			);
 		}
@@ -365,7 +385,8 @@ final class MicrodataTest {
 							+"\t<meta itemprop='name'>\n"
 							+"<head/>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 
 			)).isFalse();
@@ -382,7 +403,8 @@ final class MicrodataTest {
 							+"<img itemprop='name' src='id'>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(iri("http://example.net/id"))
 			);
 		}
@@ -392,7 +414,8 @@ final class MicrodataTest {
 							+"<img itemprop='name' src='\t'>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 			);
 		}
@@ -402,7 +425,8 @@ final class MicrodataTest {
 							+"<img itemprop='name' src='/ /'>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 
 			)).isFalse();
@@ -418,7 +442,8 @@ final class MicrodataTest {
 							+"<a itemprop='name' href='id'>value</a>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(iri("http://example.net/id"))
 			);
 		}
@@ -428,7 +453,8 @@ final class MicrodataTest {
 							+"<a itemprop='name' href='\t'>value</a>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 			);
 		}
@@ -438,7 +464,8 @@ final class MicrodataTest {
 							+"<a itemprop='name' href='/ /'>value</a>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 
 			)).isFalse();
@@ -454,7 +481,8 @@ final class MicrodataTest {
 							+"<object itemprop='name' data='id'>value</object>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(iri("http://example.net/id"))
 			);
 		}
@@ -464,7 +492,8 @@ final class MicrodataTest {
 							+"<object itemprop='name' data='\t'>value</object>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 			);
 		}
@@ -474,7 +503,8 @@ final class MicrodataTest {
 							+"<object itemprop='name' data='/ /'>value</object>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 
 			)).isFalse();
@@ -489,7 +519,8 @@ final class MicrodataTest {
 							+"<data itemprop='name' value='value'>text</data>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(literal("value"))
 			);
 		}
@@ -499,7 +530,8 @@ final class MicrodataTest {
 							+"<data itemprop='name' value='\t'>text</data>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 			);
 		}
@@ -513,7 +545,8 @@ final class MicrodataTest {
 							+"<meter itemprop='name' value='0.1'>text</meter>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(literal(0.1))
 			);
 		}
@@ -523,7 +556,8 @@ final class MicrodataTest {
 							+"<meter itemprop='name' value='\t'>text</meter>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 			);
 		}
@@ -533,7 +567,8 @@ final class MicrodataTest {
 							+"<meter itemprop='name' value='---'>text</meter>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 			);
 		}
@@ -546,7 +581,8 @@ final class MicrodataTest {
 							+"<time itemprop='name' datetime='2021-07-18'>text</time>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(literal(LocalDate.of(2021, 7, 18)))
 			);
 		}
@@ -556,7 +592,8 @@ final class MicrodataTest {
 							+"<time itemprop='name'>2021-07-18</time>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(literal(LocalDate.of(2021, 7, 18)))
 			);
 		}
@@ -566,7 +603,8 @@ final class MicrodataTest {
 							+"<time itemprop='name' datetime='\t'>\t</time>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 			);
 		}
@@ -576,7 +614,8 @@ final class MicrodataTest {
 							+"<time itemprop='name' datetime='malformed'>text</time>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(literal("malformed"))
 			)).isFalse();
 		}
@@ -589,7 +628,8 @@ final class MicrodataTest {
 							+"<span itemprop='name'>value</span>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(literal("value"))
 			);
 		}
@@ -599,7 +639,8 @@ final class MicrodataTest {
 							+"<span itemprop='name'></span>"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.isEmpty()
 			);
 		}
@@ -614,7 +655,8 @@ final class MicrodataTest {
 							+"\t<div itemscope itemref='name'></div>\n"
 							+"</div>"
 					))
-							.flatExtracting(frame -> frame.values(term("name")).collect(toList()))
+							.filteredOn(s -> s.getPredicate().equals(term("name")))
+							.extracting(Statement::getObject)
 							.containsExactly(literal("value"))
 			);
 		}

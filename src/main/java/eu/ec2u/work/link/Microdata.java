@@ -4,7 +4,6 @@
 
 package eu.ec2u.work.link;
 
-import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rest.services.Logger;
 
@@ -22,7 +21,6 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Xtream.entry;
@@ -34,7 +32,7 @@ import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
-public final class Microdata implements Function<Node, Stream<Frame>> {
+public final class Microdata implements Function<Node, Stream<Statement>> {
 
 	private static final String Id="id";
 
@@ -54,7 +52,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	@Override public Stream<Frame> apply(final Node node) {
+	@Override public Stream<Statement> apply(final Node node) {
 		return node instanceof Document ? items(((Document)node).getDocumentElement())
 				: node instanceof Element ? items((Element)node)
 				: Stream.empty();
@@ -63,16 +61,14 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Stream<Frame> items(final Element element) {
+	private Stream<Statement> items(final Element element) {
 		return items(element, false, ids(element));
 	}
 
-	private Stream<Frame> items(final Element element, final boolean scoped, final Map<String, Element> ids) {
+	private Stream<Statement> items(final Element element, final boolean scoped, final Map<String, Element> ids) {
 		if ( element.hasAttribute(ItemScope) ) {
 
-			final Entry<Frame, Stream<Frame>> item=item(element, ids);
-
-			return Stream.concat(Stream.of(item.getKey()), item.getValue());
+			return item(element, ids).getValue();
 
 		} else {
 
@@ -102,7 +98,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Entry<Frame, Stream<Frame>> item(final Element element, final Map<String, Element> ids) {
+	private Map.Entry<Resource, Stream<Statement>> item(final Element element, final Map<String, Element> ids) {
 
 		if ( element.hasAttribute(ItemId) && !element.hasAttribute(ItemType) ) {
 			logger.warning(this, format("%s requires %s", ItemId, ItemType)); // !!! report open tag
@@ -113,8 +109,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 		final String vocabulary=types.stream().findFirst().map(IRI::getNamespace).orElse(Terms.stringValue());
 
-		Frame frame=frame(id).values(RDF.TYPE, types);
-		Stream<Frame> nested=Stream.empty();
+		Stream<Statement> model=types.stream().map(type -> statement(id, RDF.TYPE, type));
 
 		final Collection<Element> visited=new HashSet<>(singleton(element));
 		final Queue<Element> pending=Stream.concat(children(element), attribute(element, ItemRef).stream()
@@ -148,24 +143,20 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 			} else if ( current.hasAttribute(ItemScope) ) {
 
-				final Entry<Frame, Stream<Frame>> value=item(current, ids);
+				final Entry<Resource, Stream<Statement>> value=item(current, ids);
 
-				for (final IRI prop : props) {
-					frame=frame.frames(prop, value.getKey());
-				}
-
-				nested=Stream.concat(nested, props.isEmpty()
-						? Stream.concat(Stream.of(value.getKey()), value.getValue())
-						: value.getValue()
+				model=Stream.concat(model, props.stream()
+						.map(prop -> statement(id, prop, value.getKey()))
 				);
+
+				model=Stream.concat(model, value.getValue());
 
 			} else {
 
-				final Optional<Value> value=value(current);
 
-				for (final IRI prop : props) {
-					frame=frame.value(prop, value);
-				}
+				model=Stream.concat(model, value(current).stream().flatMap(value -> props.stream()
+						.map(prop -> statement(id, prop, value)))
+				);
 
 				pending.addAll(children(current).collect(toList()));
 
@@ -173,7 +164,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 		}
 
-		return entry(frame, nested);
+		return entry(id, model);
 	}
 
 
@@ -184,7 +175,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 						.map(base -> {
 
-							try { return URI.create(base); } catch ( final IllegalArgumentException e ) {
+							try {return URI.create(base);} catch ( final IllegalArgumentException e ) {
 
 								logger.warning(this, format("malformed base URI <%s>", base));
 
@@ -196,7 +187,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 						.map(base -> {
 
-							try { return base.resolve(id); } catch ( final IllegalArgumentException e ) {
+							try {return base.resolve(id);} catch ( final IllegalArgumentException e ) {
 
 								logger.warning(this, format("malformed %s <%s>", ItemId, id)); // !!! report open tag
 
@@ -212,7 +203,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 				.filter(id -> {
 
-					if ( AbsoluteIRIPattern.matcher(id).matches() ) { return true; } else {
+					if ( AbsoluteIRIPattern.matcher(id).matches() ) {return true;} else {
 
 						logger.warning(this, format("malformed %s <%s>", ItemId, id)); // !!! report open tag
 
@@ -238,7 +229,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 				.map(type -> {
 
-					try { return iri(URI.create(type)); } catch ( final IllegalArgumentException e ) {
+					try {return iri(URI.create(type));} catch ( final IllegalArgumentException e ) {
 
 						logger.warning(this, format("malformed %s <%s>", ItemType, type));
 
@@ -272,7 +263,9 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 
 					}
 
-				}));
+				}))
+
+				.distinct();
 	}
 
 	private Stream<IRI> props(final Element element, final String vocabulary) {
@@ -387,7 +380,7 @@ public final class Microdata implements Function<Node, Stream<Frame>> {
 					);
 
 					for (final Function<String, Literal> parser : parsers) {
-						try { return parser.apply(value); } catch ( final RuntimeException ignored ) {}
+						try {return parser.apply(value);} catch ( final RuntimeException ignored ) {}
 					}
 
 					logger.warning(this, format("malformed %s time value <%s>", attribute, value));
