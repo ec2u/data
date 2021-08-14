@@ -4,6 +4,7 @@
 
 package eu.ec2u.data.handlers;
 
+import com.metreeca.json.Values;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.Data;
@@ -28,15 +29,48 @@ public final class Events extends Delegator {
 
 				filter(clazz(Data.Event)),
 
+				field(RDFS.LABEL, repeatable(), localized()),
+				field(RDFS.COMMENT, multiple(), localized()),
+
 				field(Data.university, required(),
 						field(RDFS.LABEL, repeatable(), localized())
 				),
 
+				field(DCTERMS.PUBLISHER, optional(),
+						field(RDFS.LABEL, multiple(), localized())
+				),
+
+				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
+				field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
 
+				field(Schema.url, optional(), datatype(Values.IRIType)),
 				field(Schema.name, repeatable(), localized()),
+				field(Schema.disambiguatingDescription, multiple(), localized()),
 				field(Schema.description, multiple(), localized()),
+				field(Schema.image, multiple(), datatype(Values.IRIType)),
+
+				field(Schema.organizer, optional(),
+						field(RDFS.LABEL, multiple(), localized())
+				),
+
+				field(Schema.isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
+				field(Schema.eventStatus, optional(), datatype(Values.IRIType)),
+
+				field(Schema.location, optional(),
+						field(RDFS.LABEL, multiple(), localized())
+				),
+
+				field(Schema.eventAttendanceMode, optional(), datatype(Values.IRIType)),
+
+
+				field(Schema.audience, optional(),
+						field(RDFS.LABEL, multiple(), localized())
+				),
+
+				field(Schema.inLanguage, optional(), datatype(XSD.STRING)),
+				field(Schema.typicalAgeRange, optional(), datatype(XSD.STRING)),
 
 				field(Schema.startDate, optional(), datatype(XSD.DATETIME)),
 				field(Schema.endDate, optional(), datatype(XSD.DATETIME))

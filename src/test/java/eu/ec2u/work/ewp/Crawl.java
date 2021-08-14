@@ -27,7 +27,7 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.Xtream.entry;
 import static com.metreeca.xml.formats.XMLFormat.xml;
 
-import static eu.ec2u.work.Work.exec;
+import static eu.ec2u.data.pipelines.Work.exec;
 
 import static java.lang.String.format;
 import static java.util.function.Function.identity;

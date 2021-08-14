@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.pipelines.events.turku;
+package eu.ec2u.data.pipelines.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
@@ -12,11 +12,10 @@ import com.metreeca.rest.actions.Fill;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.work.link.*;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
-import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
@@ -25,28 +24,47 @@ import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.formats.JSONFormat.json;
 
-import static eu.ec2u.work.Work.exec;
-
+import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 
-final class EventsTurkuCityTest {
+public final class EventsTurkuCity implements Runnable {
 
-	private static final IRI Publisher=iri("https://kalenteri.turku.fi/en/events/calendar");
+	private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
+			.values(RDFS.LABEL,
+					literal("City of Turku Event's Calendar", "en"),
+					literal("Turun kaupungin tapahtumakalenteri", "fi")
+			);
 
 
-	@Test void test() {
-		exec(() -> Xtream
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				.of(LocalDate.of(2021, 8, 1).format(ISO_LOCAL_DATE)) // !!! last update
+	private final Instant updated;
 
-				.flatMap(new Fill<String>()
+
+	public EventsTurkuCity(final Instant updated) {
+
+		if ( updated == null ) {
+			throw new NullPointerException("null update");
+		}
+
+		this.updated=updated;
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override public void run() {
+		Xtream
+
+				.of(updated)
+
+				.flatMap(new Fill<Instant>()
 						.model("https://api.turku.fi/linkedevents/v1/event/"
 								+"?last_modified_since={since}"
-								+"&show_deleted=True"
 						)
-						.value("since", date -> date)
+						.value("since", date -> LocalDate.ofInstant(date, UTC).format(ISO_LOCAL_DATE))
 				)
 
 				.loop(events -> Xtream.of(events)
@@ -60,29 +78,28 @@ final class EventsTurkuCityTest {
 				.map(new JSONPath<>(this::convert))
 
 				.flatMap(Frame::model)
-
 				.batch(100_000)
 
-				.peek(new Report())
+				.peek(new Report()) // !!!
 
 				.forEach(new Upload()
-						.clear(true) // !!! incremental sync
+						// .clear(true) // !!! incremental sync
 						.contexts(Data.events)
-				)
-
-		);
+				);
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	private Frame convert(final JSONPath.Processor event) {
 
 		final String id=event.string("@id").orElseThrow();
 
 		final Collection<Literal> name=event.entries("name").map(this::local).collect(toSet());
-		final Collection<Literal> description=event.entries("short_description").map(this::local).collect(toSet());
+		final Collection<Literal> description=event.entries("short_description")
+				.map(this::local)
+				// !!! .map(new Untag())
+				.collect(toSet());
 
 		return frame(iri(Data.events, md5(id)))
 
@@ -92,7 +109,7 @@ final class EventsTurkuCityTest {
 
 				.value(Data.university, Data.Turku)
 
-				.value(DCTERMS.PUBLISHER, Publisher)
+				.frame(DCTERMS.PUBLISHER, Publisher)
 				.value(DCTERMS.SOURCE, iri(id))
 				.value(DCTERMS.ISSUED, event.string("date_published").map(this::dateTime))
 				.value(DCTERMS.CREATED, event.string("created_time").map(this::dateTime))
@@ -146,5 +163,6 @@ final class EventsTurkuCityTest {
 	private Literal dateTime(final String value) {
 		return literal(value, XSD.DATETIME);
 	}
+
 
 }

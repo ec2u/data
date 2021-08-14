@@ -36,8 +36,14 @@ public final class Schema {
 	public static final IRI Event=term("Event");
 
 	public static final IRI url=term("url");
+	public static final IRI organizer=term("organizer");
 	public static final IRI isAccessibleForFree=term("isAccessibleForFree");
 	public static final IRI eventStatus=term("eventStatus");
+	public static final IRI location=term("location");
+	public static final IRI eventAttendanceMode=term("eventAttendanceMode");
+	public static final IRI inLanguage=term("inLanguage");
+	public static final IRI audience=term("audience");
+	public static final IRI typicalAgeRange=term("typicalAgeRange");
 	public static final IRI startDate=term("startDate");
 	public static final IRI endDate=term("endDate");
 

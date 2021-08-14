@@ -2,7 +2,7 @@
  * Copyright © 2020 Metreeca srl. All rights reserved.
  */
 
-package eu.ec2u.work;
+package eu.ec2u.data.pipelines;
 
 import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rdf.actions.Retrieve;
@@ -29,7 +29,7 @@ import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.services.Logger.logger;
 
-import static eu.ec2u.work.Work.exec;
+import static eu.ec2u.data.pipelines.Work.exec;
 
 
 final class Load {

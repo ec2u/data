@@ -103,11 +103,6 @@ schema:name
 #    Classes
 #################################################################
 
-###  http://www.w3.org/ns/dcat#Resource
-dcat:Resource
-    rdf:type owl:Class .
-
-
 ###  https://data.ec2u.eu/terms#Course
 ec2u:Course
     rdf:type        owl:Class ;
@@ -122,8 +117,7 @@ ec2u:Event
 
 ###  https://data.ec2u.eu/terms#Resource
 ec2u:Resource
-    rdf:type        owl:Class ;
-    rdfs:subClassOf dcat:Resource .
+    rdf:type owl:Class .
 
 
 ###  https://data.ec2u.eu/terms#Theme

@@ -9,10 +9,9 @@ import { Connector } from "@metreeca/tile/nests/connector";
 import { Router } from "@metreeca/tile/nests/router";
 import { render } from "preact";
 import ToolAbout from "./pages/about";
+import { ToolEvents } from "./pages/events/events";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
-import ToolStructure from "./pages/structures/structure";
-import { ToolStructures } from "./pages/structures/structures";
 import { ToolUniversities } from "./pages/universities/universities";
 import { ToolUniversity } from "./pages/universities/university";
 import { ToolUser } from "./pages/user";
@@ -33,8 +32,7 @@ render((
 			"/universities/": ToolUniversities,
 			"/universities/{code}": ToolUniversity,
 
-			"/structures/": ToolStructures,
-			"/structures/{code}": ToolStructure,
+			"/events/": ToolEvents,
 
 			"*": ToolNone
 

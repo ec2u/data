@@ -91,7 +91,7 @@ function main(query: Query) {
 
 		<ul>
 			<li><span>7</span><a href="/universities/"><MapPin/></a><span>Universities</span></li>
-			{/*<li><span>99</span><a href="/structures/"><Home/></a><span>Structures</span></li>*/}
+			<li><span>#</span><a href="/events/"><MapPin/></a><span>Events</span></li>
 			{/*<li><span>123</span><a href="/structures/"><Bookmark/></a><span>Subjects</span></li>*/}
 			{/*<li><span>2'300</span><a href="/structures/"><Tool/></a><span>Projects</span></li>*/}
 			{/*<li><span>4'200</span><a href="/structures/"><Users/></a><span>People</span></li>*/}

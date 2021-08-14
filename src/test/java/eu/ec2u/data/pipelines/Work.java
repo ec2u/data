@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.work;
+package eu.ec2u.data.pipelines;
 
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Toolbox;

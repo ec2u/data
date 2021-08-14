@@ -10,18 +10,14 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.metreeca.json.Values.statement;
 
-public final class NormalizeDate implements Function<Statement, Statement> {
+import static java.time.ZoneOffset.UTC;
 
-	private static final Pattern DatePattern=Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
-	private static final DateTimeFormatter DateFormatter=DateTimeFormatter.ofPattern("d/M/yyyy");
+public final class DateExtend implements Function<Statement, Statement> {
 
 	@Override public Statement apply(final Statement statement) {
 		return Optional.of(statement.getObject())
@@ -29,13 +25,10 @@ public final class NormalizeDate implements Function<Statement, Statement> {
 				.filter(Value::isLiteral)
 				.map(Literal.class::cast)
 
-				.filter(object -> object.getDatatype().equals(XSD.STRING))
-				.map(Value::stringValue)
+				.filter(object -> object.getDatatype().equals(XSD.DATE))
+				.map(Literal::temporalAccessorValue)
 
-				.map(DatePattern::matcher)
-				.filter(Matcher::matches)
-				.map(Matcher::group)
-				.map(date -> LocalDate.parse(date, DateFormatter))
+				.map(date -> LocalDate.from(date).atStartOfDay(UTC))
 
 				.map(Values::literal)
 				.map(date -> statement(statement.getSubject(), statement.getPredicate(), date))
