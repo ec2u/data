@@ -6,74 +6,61 @@ package eu.ec2u.data.pipelines.events.pavia;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
+import com.metreeca.rest.actions.Fill;
 
 import eu.ec2u.work.link.*;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
 import static eu.ec2u.work.Work.exec;
 
+import static java.util.stream.Collectors.toList;
+
 final class EventsPaviaCityTest {
 
 	@Test void test() {
-		exec(() -> {
-					Xtream
+		exec(() -> Xtream
 
-							.of(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))) // !!! last update
+				.of(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))) // !!! last update
 
-							.flatMap(new Fill<String>()
-									.model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
-											+"?new=yes"
-											+"&instance=10"
-											+"&channel=34"
-											+"&size=9999"
-											+"&node=4613"
-											+"&fromDate=%{date}"
-									)
-									.value("date")
-							)
+				.flatMap(new Fill<String>()
+						.model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
+								+"?new=yes"
+								+"&instance=10"
+								+"&channel=34"
+								+"&size=9999"
+								+"&node=4613"
+								+"&fromDate=%{date}"
+						)
+						.value("date")
+				)
 
-							.optMap(new Query())
-							.optMap(new Fetch())
-							.optMap(new Parse<>(html()))
+				.optMap(new GET<>(html()))
+				.flatMap(new Microdata())
 
-							.flatMap(new Microdata())
+				.map(frame -> frame(frame.focus(), Schema.normalize(frame.model()).collect(toList())))
 
-							.map(frame -> frame(frame.focus(),
-									Schema.normalize(frame.model()).collect(Collectors.toList())))
+				.filter(frame -> frame.values(RDF.TYPE).anyMatch(Schema.Event::equals))
+				.flatMap(frame -> frame.strings(Schema.url))
 
-							.filter(frame -> frame.values(RDF.TYPE).anyMatch(type -> type.equals(Schema.Event)))
-							.flatMap(frame -> frame.values(Schema.term("url")))
-							.map(Value::stringValue)
+				.skip(10).limit(1) // !!!
 
-							.skip(10)
-							.limit(1) // !!!
+				.optMap(new GET<>(html()))
+				.flatMap(new Microdata())
 
-							.optMap(new Query())
-							.optMap(new Fetch())
-							.optMap(new Parse<>(html()))
+				.flatMap(Frame::model)
+				.map(new NormalizeDate())
+				.batch(0)
 
-							.flatMap(new Microdata())
+				.map(new Report())
 
-							.flatMap(Frame::model)
-
-							.map(new NormalizeDate())
-
-							.batch(0)
-
-							.map(new Report())
-
-							.forEach(System.out::println);
-				}
+				.forEach(System.out::println)
 
 		);
 	}

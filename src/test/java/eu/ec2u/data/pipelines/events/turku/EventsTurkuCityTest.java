@@ -8,8 +8,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
-import com.metreeca.rest.formats.JSONFormat;
+import com.metreeca.rest.actions.Fill;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.work.link.*;
@@ -19,9 +18,8 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.*;
-
-import javax.json.JsonObject;
+import java.util.Collection;
+import java.util.Map;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
@@ -51,12 +49,12 @@ final class EventsTurkuCityTest {
 						.value("since", date -> date)
 				)
 
-				.loop(events -> fetch(events)
-						.flatMap(new JSONPath<>(json -> json.string("meta.next")))
-						.stream()
+				.loop(events -> Xtream.of(events)
+						.optMap(new GET<>(json()))
+						.optMap(new JSONPath<>(json -> json.string("meta.next")))
 				)
 
-				.optMap(this::fetch)
+				.optMap(new GET<>(json()))
 				.flatMap(new JSONPath<>(json -> json.values("data.*")))
 
 				.map(new JSONPath<>(this::convert))
@@ -140,17 +138,6 @@ final class EventsTurkuCityTest {
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private Optional<JsonObject> fetch(final String page) {
-		return Optional.of(page)
-
-				.flatMap(new Query(request -> request
-						.header("Accept", JSONFormat.MIME)
-				))
-
-				.flatMap(new Fetch())
-				.flatMap(new Parse<>(json()));
-	}
 
 	private Literal local(final Map.Entry<String, JSONPath.Processor> entry) {
 		return literal(entry.getValue().string("").orElseThrow(), entry.getKey());
