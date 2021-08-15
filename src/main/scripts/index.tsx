@@ -43,4 +43,4 @@ render((
 
 	</React.StrictMode>
 
-), document.body);
+), document.body.firstElementChild);

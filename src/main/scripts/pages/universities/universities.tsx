@@ -21,8 +21,8 @@ const Universities={
 	contains: [{
 
 		id: "",
-		label: "",
-		comment: "",
+		label: { en: "" },
+		comment: { en: "" },
 		image: "",
 
 		schac: "",
@@ -65,7 +65,7 @@ export function ToolUniversities() {
 
 function side() {
 	return <a href={"https://tinyurl.com/ygm9chxw"}>
-		<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"}/>
+		<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"} style={{ width: "100%" }}/>
 	</a>;
 }
 
@@ -75,12 +75,12 @@ function main(query: Query) {
 
 	return universities.then(universities => createElement("tool-universities", {}, universities.contains.map(university =>
 
-		<ToolCard
+		<ToolCard key={university.id}
 
-			site={<a href={university.id}>{university.label}</a>}
+			site={<a href={university.id}>{university.label.en}</a>}
 			icon={university.image}
 			tags={[<a href={"/universities/"}>University</a>]}
 
-		>{university.comment}</ToolCard>
+		>{university.comment.en}</ToolCard>
 	))) || <ToolSpin/>;
 }

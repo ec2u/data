@@ -5,6 +5,7 @@
 package eu.ec2u.data;
 
 import com.metreeca.gcp.GCPServer;
+import com.metreeca.json.Shape;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.services.Cache.FileCache;
@@ -33,6 +34,7 @@ import java.util.zip.GZIPOutputStream;
 import static com.metreeca.gcp.GCPServer.production;
 import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.Values.uuid;
+import static com.metreeca.json.shapes.Localized.localized;
 import static com.metreeca.rdf4j.handlers.Graphs.graphs;
 import static com.metreeca.rdf4j.handlers.SPARQL.sparql;
 import static com.metreeca.rdf4j.services.Graph.graph;
@@ -65,6 +67,11 @@ public final class Data {
 	public static final String Name=Base+"terms#";
 
 	public static final String root="root"; // root role
+
+
+	public static Shape multilingual() {
+		return localized("en", "pt", "ro", "de", "it", "fr", "es", "fi");
+	}
 
 
 	//// Contexts //////////////////////////////////////////////////////////////////////////////////////////////////////

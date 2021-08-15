@@ -24,9 +24,9 @@ export function ToolCard({
 
 	site: ReactNode | string
 	name?: ReactNode | string
-	icon?: (ReactNode | string)
+	icon?: ReactNode | string
 
-	tags?: (ReactNode | string)[]
+	tags?: string[]
 
 	children?: ReactNode
 
@@ -36,7 +36,7 @@ export function ToolCard({
 
 		<header>
 			<h1>{site}{name}</h1>
-			<nav>{tags.map(tag => <span><Tag/>{tag}</span>)}</nav>
+			<nav>{tags.map(tag => <span key={tag}><Tag/>{tag}</span>)}</nav>
 		</header>
 
 		<section>

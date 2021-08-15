@@ -17,10 +17,11 @@ import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Guard.*;
 import static com.metreeca.json.shapes.Link.link;
-import static com.metreeca.json.shapes.Localized.localized;
 import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
+
+import static eu.ec2u.data.Data.multilingual;
 
 public final class Universities extends Delegator {
 
@@ -29,8 +30,8 @@ public final class Universities extends Delegator {
 
 				filter(clazz(Data.University)),
 
-				field(RDFS.LABEL, required(), localized("en")),
-				field(RDFS.COMMENT, optional(), localized("en")),
+				field(RDFS.LABEL, required(), multilingual()),
+				field(RDFS.COMMENT, optional(), multilingual()),
 
 				field(Data.schac, required(), datatype(XSD.STRING)),
 				field(Data.image, optional(), datatype(IRIType)),
@@ -43,11 +44,11 @@ public final class Universities extends Delegator {
 						detail(
 
 								field(Data.country, optional(),
-										field(RDFS.LABEL, optional(), localized("en"))
+										field(RDFS.LABEL, optional(), multilingual())
 								),
 
 								field(Data.location, optional(),
-										field(RDFS.LABEL, optional(), localized("en"))
+										field(RDFS.LABEL, optional(), multilingual())
 								),
 
 								field(Data.inception, optional(), datatype(XSD.DATETIME)),

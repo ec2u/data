@@ -14,8 +14,8 @@ import "./university.css";
 const University={
 
 	id: "",
-	label: "",
-	comment: "",
+	label: { en: "" },
+	comment: { en: "" },
 
 	schac: "",
 	lat: 0,
@@ -26,12 +26,12 @@ const University={
 
 	country: {
 		id: "",
-		label: ""
+		label: { en: "" }
 	},
 
 	location: {
 		id: "",
-		label: ""
+		label: { en: "" }
 	}
 
 };
@@ -45,18 +45,16 @@ export function ToolUniversity() {
 
 	const university=useEntry("", University);
 
-	useEffect(() => university.then(university => { name(university.label); }));
+	useEffect(() => university.then(university => { name(university.label.en); }));
 
 	return university.then(university => (
 
 		<ToolPage
 
-			item={(
-				<>
-					<a href={"/universities/"}>Universities</a>
-					<span>{university.label}</span>
-				</>
-			)}
+			item={<>
+				<a href={"/universities/"}>Universities</a>
+				<span>{university.label.en}</span>
+			</>}
 
 			pane={side(university)}
 
@@ -66,7 +64,7 @@ export function ToolUniversity() {
 
 		</ToolPage>
 
-	)) || <ToolSpin size="3em"/>;
+	)) || <ToolSpin/>;
 
 }
 
@@ -77,10 +75,10 @@ function side({ inception, country, location }: typeof University) {
 	return <dl>
 
 		<dt>Country</dt>
-		<dd><a href={country.id}>{country.label}</a></dd>
+		<dd><a href={country.id}>{country.label.en}</a></dd>
 
 		<dt>Location</dt>
-		<dd><a href={location.id}>{location.label}</a></dd>
+		<dd><a href={location.id}>{location.label.en}</a></dd>
 
 		<dt>Inception</dt>
 		<dd>{inception && inception.substr(0, 4) || "-"}</dd>
@@ -91,9 +89,9 @@ function side({ inception, country, location }: typeof University) {
 function main({ label, comment, image }: typeof University) {
 	return createElement("tool-university", {}, <>
 
-		{image && <img src={image} alt={`Image of ${label}`}/>}
+		{image && <img src={image} alt={`Image of ${label.en}`}/>}
 
-		<p>{comment}</p>
+		<p>{comment.en}</p>
 
 	</>);
 }
