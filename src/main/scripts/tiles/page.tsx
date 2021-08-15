@@ -6,8 +6,8 @@ import { copy } from "@metreeca/tile/nests/router";
 import { Heart } from "@metreeca/tile/tiles/icon";
 import { ToolPage as BasePage } from "@metreeca/tile/tiles/page";
 import { ToolPane } from "@metreeca/tile/tiles/pane";
-import { ComponentChild, ComponentChildren } from "preact";
-import { useState } from "preact/hooks";
+import * as React from "react";
+import { ReactNode, useState } from "react";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,11 +21,11 @@ export function ToolPage({
 
 }: {
 
-	item?: ComponentChild
-	menu?: ComponentChild
-	pane?: ComponentChild
+	item?: ReactNode
+	menu?: ReactNode
+	pane?: ReactNode
 
-	children?: ComponentChildren
+	children: ReactNode
 
 }) {
 

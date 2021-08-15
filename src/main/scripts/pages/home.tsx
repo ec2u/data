@@ -3,14 +3,15 @@
  */
 
 import { Query } from "@metreeca/tile/graphs";
+import { StateUpdater } from "@metreeca/tile/hooks";
 import { useQuery } from "@metreeca/tile/hooks/query";
 import { useEntry, useKeywords, useOptions } from "@metreeca/tile/nests/connector";
 import { ToolInput } from "@metreeca/tile/tiles/controls/input";
 import { ToolField } from "@metreeca/tile/tiles/fields/field";
 import { ToolOptions } from "@metreeca/tile/tiles/fields/options";
 import { MapPin, Search } from "@metreeca/tile/tiles/icon";
-import { createElement } from "preact";
-import { StateUpdater } from "preact/hooks";
+import * as React from "react";
+import { createElement } from "react";
 import { ToolPage } from "../tiles/page";
 import "./home.css";
 

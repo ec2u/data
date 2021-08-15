@@ -3,7 +3,8 @@
  */
 
 import { Tag } from "@metreeca/tile/tiles/icon";
-import { ComponentChildren, createElement, JSX } from "preact";
+import * as React from "react";
+import { createElement, ReactNode } from "react";
 import "./card.css";
 
 
@@ -21,13 +22,13 @@ export function ToolCard({
 
 }: {
 
-	site: JSX.Element | string
-	name?: JSX.Element | string
-	icon?: (JSX.Element | string)
+	site: ReactNode | string
+	name?: ReactNode | string
+	icon?: (ReactNode | string)
 
-	tags?: (JSX.Element | string)[]
+	tags?: (ReactNode | string)[]
 
-	children?: ComponentChildren
+	children?: ReactNode
 
 }) {
 

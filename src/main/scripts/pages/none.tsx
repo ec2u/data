@@ -4,7 +4,8 @@
 
 import { useRouter } from "@metreeca/tile/nests/router";
 import { X } from "@metreeca/tile/tiles/icon";
-import { createElement } from "preact";
+import * as React from "react";
+import { createElement } from "react";
 import { ToolPage } from "../tiles/page";
 import "./none.css";
 

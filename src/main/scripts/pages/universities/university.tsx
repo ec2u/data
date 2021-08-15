@@ -5,8 +5,8 @@
 import { useEntry } from "@metreeca/tile/nests/connector";
 import { useRouter } from "@metreeca/tile/nests/router";
 import { ToolSpin } from "@metreeca/tile/tiles/loaders/spin";
-import { createElement } from "preact";
-import { useEffect } from "preact/hooks";
+import * as React from "react";
+import { createElement, useEffect } from "react";
 import { ToolPage } from "../../tiles/page";
 import "./university.css";
 

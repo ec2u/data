@@ -25,6 +25,7 @@ public final class Schema {
 
 	//// Thing /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	public static final IRI url=term("url");
 	public static final IRI name=term("name");
 	public static final IRI image=term("image");
 	public static final IRI description=term("description");
@@ -35,7 +36,6 @@ public final class Schema {
 
 	public static final IRI Event=term("Event");
 
-	public static final IRI url=term("url");
 	public static final IRI organizer=term("organizer");
 	public static final IRI isAccessibleForFree=term("isAccessibleForFree");
 	public static final IRI eventStatus=term("eventStatus");

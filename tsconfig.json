@@ -7,12 +7,12 @@
 		"target": "ES2020",
 		"module": "ES2020",
 		"lib": [ "ES2020", "DOM" ],
-		"jsx": "react-jsx",
-		"jsxImportSource": "preact",
+		"jsx": "react",
 		"moduleResolution": "node",
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		"declaration": false,
 		"removeComments": true
-	}
+	},
+	"include": [ "src/main/scripts" ]
 }

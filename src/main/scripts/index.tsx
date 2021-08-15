@@ -7,37 +7,40 @@ import { LinkGraph } from "@metreeca/tile/graphs/link";
 import "@metreeca/tile/index.css";
 import { Connector } from "@metreeca/tile/nests/connector";
 import { Router } from "@metreeca/tile/nests/router";
-import { render } from "preact";
+import * as React from "react";
+import { render } from "react-dom";
 import ToolAbout from "./pages/about";
 import { ToolEvents } from "./pages/events/events";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
 import { ToolUniversities } from "./pages/universities/universities";
 import { ToolUniversity } from "./pages/universities/university";
-import { ToolUser } from "./pages/user";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 render((
 
-	<Connector value={LinkGraph()}>
+	<React.StrictMode>
 
-		<Router routes={{
+		<Connector value={LinkGraph()}>
 
-			"/": ToolHome,
-			"/user": ToolUser,
-			"/about": ToolAbout,
+			<Router routes={{
 
-			"/universities/": ToolUniversities,
-			"/universities/{code}": ToolUniversity,
+				"/": ToolHome,
+				"/about": ToolAbout,
 
-			"/events/": ToolEvents,
+				"/universities/": ToolUniversities,
+				"/universities/{code}": ToolUniversity,
 
-			"*": ToolNone
+				"/events/": ToolEvents,
 
-		}}/>
+				"*": ToolNone
 
-	</Connector>
+			}}/>
+
+		</Connector>
+
+	</React.StrictMode>
 
 ), document.body);

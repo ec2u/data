@@ -8,7 +8,8 @@ import { useEntry, useKeywords } from "@metreeca/tile/nests/connector";
 import { ToolInput } from "@metreeca/tile/tiles/controls/input";
 import { Search } from "@metreeca/tile/tiles/icon";
 import { ToolSpin } from "@metreeca/tile/tiles/loaders/spin";
-import { createElement } from "preact";
+import * as React from "react";
+import { createElement } from "react";
 import { ToolCard } from "../../tiles/card";
 import { ToolPage } from "../../tiles/page";
 
