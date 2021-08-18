@@ -4,18 +4,17 @@
 
 package eu.ec2u.work.link;
 
-import com.metreeca.json.Values;
-
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.metreeca.json.Values.literal;
 import static com.metreeca.json.Values.statement;
 
 public final class DateNormalize implements Function<Statement, Statement> {
@@ -24,21 +23,18 @@ public final class DateNormalize implements Function<Statement, Statement> {
 	private static final DateTimeFormatter DateFormatter=DateTimeFormatter.ofPattern("d/M/yyyy");
 
 	@Override public Statement apply(final Statement statement) {
-		return Optional.of(statement.getObject())
-
-				.filter(Value::isLiteral)
-				.map(Literal.class::cast)
+		return literal(statement.getObject())
 
 				.filter(object -> object.getDatatype().equals(XSD.STRING))
-				.map(Value::stringValue)
 
+				.map(Value::stringValue)
 				.map(DatePattern::matcher)
 				.filter(Matcher::matches)
+
 				.map(Matcher::group)
 				.map(date -> LocalDate.parse(date, DateFormatter))
 
-				.map(Values::literal)
-				.map(date -> statement(statement.getSubject(), statement.getPredicate(), date))
+				.map(date -> statement(statement.getSubject(), statement.getPredicate(), literal(date)))
 
 				.orElse(statement);
 	}

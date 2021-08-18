@@ -6,13 +6,13 @@ package eu.ec2u.work.link;
 
 import com.metreeca.json.Values;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.function.Function;
 
+import static com.metreeca.json.Values.literal;
 import static com.metreeca.json.Values.statement;
 
 import static java.time.ZoneOffset.UTC;
@@ -20,18 +20,14 @@ import static java.time.ZoneOffset.UTC;
 public final class DateExtend implements Function<Statement, Statement> {
 
 	@Override public Statement apply(final Statement statement) {
-		return Optional.of(statement.getObject())
-
-				.filter(Value::isLiteral)
-				.map(Literal.class::cast)
+		return literal(statement.getObject())
 
 				.filter(object -> object.getDatatype().equals(XSD.DATE))
-				.map(Literal::temporalAccessorValue)
 
+				.flatMap(Values::temporalAccessor)
 				.map(date -> LocalDate.from(date).atStartOfDay(UTC))
 
-				.map(Values::literal)
-				.map(date -> statement(statement.getSubject(), statement.getPredicate(), date))
+				.map(date -> statement(statement.getSubject(), statement.getPredicate(), literal(date)))
 
 				.orElse(statement);
 	}

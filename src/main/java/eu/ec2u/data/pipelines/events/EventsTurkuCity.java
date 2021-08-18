@@ -6,24 +6,31 @@ package eu.ec2u.data.pipelines.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
-import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rest.Xtream;
+import com.metreeca.rest.actions.Clean;
 import com.metreeca.rest.actions.Fill;
+import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.handlers.Events;
 import eu.ec2u.work.link.*;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.time.Instant;
+import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.formats.JSONFormat.json;
+import static com.metreeca.xml.formats.HTMLFormat.html;
 
+import static eu.ec2u.data.pipelines.Work.exec;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
@@ -38,18 +45,8 @@ public final class EventsTurkuCity implements Runnable {
 			);
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private final Instant updated;
-
-
-	public EventsTurkuCity(final Instant updated) {
-
-		if ( updated == null ) {
-			throw new NullPointerException("null update");
-		}
-
-		this.updated=updated;
+	public static void main(final String... args) {
+		exec(new EventsTurkuCity());
 	}
 
 
@@ -58,13 +55,17 @@ public final class EventsTurkuCity implements Runnable {
 	@Override public void run() {
 		Xtream
 
-				.of(updated)
+				.of(LocalDate // !!! last update
+						.of(2021, 8, 1)
+						.atStartOfDay(UTC)
+						.toInstant()
+				)
 
-				.flatMap(new Fill<Instant>()
+				.flatMap(new Fill<c>()
 						.model("https://api.turku.fi/linkedevents/v1/event/"
 								+"?last_modified_since={since}"
 						)
-						.value("since", date -> LocalDate.ofInstant(date, UTC).format(ISO_LOCAL_DATE))
+						.value("since", updated -> LocalDate.ofInstant(updated, UTC).format(ISO_LOCAL_DATE))
 				)
 
 				.loop(events -> Xtream.of(events)
@@ -77,15 +78,20 @@ public final class EventsTurkuCity implements Runnable {
 
 				.map(new JSONPath<>(this::convert))
 
+				.optMap(new Validate(Events.Shape))
+
+
+				.limit(3)
+
 				.flatMap(Frame::model)
-				.batch(100_000)
+				.batch(0)
 
-				.peek(new Report()) // !!!
+				.forEach(new Report()); // !!!
 
-				.forEach(new Upload()
-						// .clear(true) // !!! incremental sync
-						.contexts(Data.events)
-				);
+		//.forEach(new Upload()
+		//		// .clear(true) // !!! incremental sync
+		//		.contexts(Data.events)
+		//);
 	}
 
 
@@ -95,10 +101,17 @@ public final class EventsTurkuCity implements Runnable {
 
 		final String id=event.string("@id").orElseThrow();
 
-		final Collection<Literal> name=event.entries("name").map(this::local).collect(toSet());
-		final Collection<Literal> description=event.entries("short_description")
+		final Collection<Literal> name=event.entries("name")
+				.filter(entry -> Data.langs.contains(entry.getKey()))
 				.map(this::local)
-				// !!! .map(new Untag())
+				.map(this::normalize)
+				.collect(toSet());
+
+		final Collection<Literal> description=event.entries("short_description")
+				.filter(entry -> Data.langs.contains(entry.getKey()))
+				.map(this::local)
+				.map(this::untag)
+				.map(this::normalize)
 				.collect(toSet());
 
 		return frame(iri(Data.events, md5(id)))
@@ -111,18 +124,23 @@ public final class EventsTurkuCity implements Runnable {
 
 				.frame(DCTERMS.PUBLISHER, Publisher)
 				.value(DCTERMS.SOURCE, iri(id))
-				.value(DCTERMS.ISSUED, event.string("date_published").map(this::dateTime))
-				.value(DCTERMS.CREATED, event.string("created_time").map(this::dateTime))
-				.value(DCTERMS.MODIFIED, event.string("last_modified_time").map(this::dateTime))
+				.value(DCTERMS.ISSUED, event.string("date_published").map(v -> literal(v, XSD.DATETIME)))
+				.value(DCTERMS.CREATED, event.string("created_time").map(v -> literal(v, XSD.DATETIME)))
+				.value(DCTERMS.MODIFIED, event.string("last_modified_time").map(v -> literal(v, XSD.DATETIME)))
 
 				// !!! keywords
 
 				.value(Schema.url, event.string("info_url").map(Values::iri))
 
 				.values(Schema.name, name)
-				.values(Schema.disambiguatingDescription, description)
-				.values(Schema.description, event.entries("description").map(this::local))
 				.values(Schema.image, event.strings("images.*.url").map(Values::iri))
+				.values(Schema.disambiguatingDescription, description)
+
+				.values(Schema.description, event.entries("description")
+						.filter(entry -> Data.langs.contains(entry.getKey()))
+						.map(this::local)
+						.map(this::untag)
+				)
 
 				// !!! provider
 				// !!! offers
@@ -144,8 +162,8 @@ public final class EventsTurkuCity implements Runnable {
 				// !!! location
 				// !!! is_virtualevent
 
-				.value(Schema.startDate, event.string("start_time").map(this::dateTime))
-				.value(Schema.endDate, event.string("end_time").map(this::dateTime))
+				.value(Schema.startDate, event.string("start_time").map(v -> literal(v, XSD.DATETIME)))
+				.value(Schema.endDate, event.string("end_time").map(v -> literal(v, XSD.DATETIME)))
 
 				// !!! in_language
 
@@ -161,9 +179,24 @@ public final class EventsTurkuCity implements Runnable {
 		return literal(entry.getValue().string("").orElseThrow(), entry.getKey());
 	}
 
-	private Literal dateTime(final String value) {
-		return literal(value, XSD.DATETIME);
+
+	private Literal normalize(final Literal literal) {
+		return normalize(literal, Clean::normalize);
 	}
 
+	private Literal normalize(final Literal literal, final UnaryOperator<String> normalizer) {
+		return literal.getLanguage()
+				.map(lang -> literal(normalizer.apply(literal.stringValue()), lang))
+				.orElseGet(() -> literal(normalizer.apply(literal.stringValue()), literal.getDatatype()));
+	}
+
+
+	private Literal untag(final Literal literal) {
+		return normalize(literal, text -> html(new ByteArrayInputStream(text.getBytes(UTF_8)), UTF_8.name(), "").fold(
+
+				error -> text, value -> new Untag().apply(value)
+
+		));
+	}
 
 }

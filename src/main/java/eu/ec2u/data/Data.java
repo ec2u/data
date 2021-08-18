@@ -27,7 +27,7 @@ import org.eclipse.rdf4j.sail.SailException;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
 import java.io.*;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -60,6 +60,8 @@ import static com.metreeca.rest.wrappers.Server.server;
 
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSet;
 
 public final class Data {
 
@@ -68,9 +70,13 @@ public final class Data {
 
 	public static final String root="root"; // root role
 
+	public static final Set<String> langs=unmodifiableSet(new LinkedHashSet<>(asList(
+			"en", "pt", "ro", "de", "it", "fr", "es", "fi"
+	)));
+
 
 	public static Shape multilingual() {
-		return localized("en", "pt", "ro", "de", "it", "fr", "es", "fi");
+		return localized(langs);
 	}
 
 

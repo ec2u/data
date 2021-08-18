@@ -10,6 +10,7 @@ import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.Fill;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.handlers.Events;
 import eu.ec2u.work.link.*;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -23,6 +24,8 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
+import static eu.ec2u.data.pipelines.Work.exec;
+
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
 
@@ -35,18 +38,8 @@ public final class EventsPaviaCity implements Runnable {
 			);
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private final Instant updated;
-
-
-	public EventsPaviaCity(final Instant updated) {
-
-		if ( updated == null ) {
-			throw new NullPointerException("null updated");
-		}
-
-		this.updated=updated;
+	public static void main(final String... args) {
+		exec(new EventsPaviaCity());
 	}
 
 
@@ -55,9 +48,13 @@ public final class EventsPaviaCity implements Runnable {
 	@Override public void run() {
 		Xtream
 
-				.of(LocalDate.ofInstant(updated, UTC).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+				.of(LocalDate // !!! last update
+						.of(2021, 8, 1)
+						.atStartOfDay(UTC)
+						.toInstant()
+				)
 
-				.flatMap(new Fill<String>()
+				.flatMap(new Fill<Instant>()
 						.model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
 								+"?new=yes"
 								+"&instance=10"
@@ -66,7 +63,9 @@ public final class EventsPaviaCity implements Runnable {
 								+"&node=4613"
 								+"&fromDate=%{date}"
 						)
-						.value("date")
+						.value("date", updated -> LocalDate.ofInstant(updated, UTC)
+								.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+						)
 				)
 
 				.optMap(new GET<>(html()))
@@ -86,11 +85,14 @@ public final class EventsPaviaCity implements Runnable {
 						.map(Schema::normalize)
 						.map(new DateNormalize())
 						.map(new DateExtend())
+						.map(new TextLocalize())
 
 						.batch(0)
 
 						.flatMap(model -> frame(Schema.Event, model) // !!! skolemize references
+
 								.frames(inverse(RDF.TYPE))
+
 								.map(event -> refocus(event, iri(Data.events, md5(url)))
 										.value(RDF.TYPE, Data.Event)
 										.values(RDFS.LABEL, event.values(Schema.name))
@@ -98,8 +100,11 @@ public final class EventsPaviaCity implements Runnable {
 										.value(DCTERMS.SOURCE, iri(url))
 										.value(Data.university, Data.Pavia)
 								)
+
 						)
 				)
+
+				.optMap(new Validate(Events.Shape))
 
 				.flatMap(Frame::model)
 				.batch(100_000)
