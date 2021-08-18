@@ -10,6 +10,7 @@ import { Router } from "@metreeca/tile/nests/router";
 import * as React from "react";
 import { render } from "react-dom";
 import ToolAbout from "./pages/about";
+import { ToolEvent } from "./pages/events/event";
 import { ToolEvents } from "./pages/events/events";
 import ToolHome from "./pages/home";
 import ToolNone from "./pages/none";
@@ -34,6 +35,7 @@ render((
 				"/universities/{code}": ToolUniversity,
 
 				"/events/": ToolEvents,
+				"/events/{code}": ToolEvent,
 
 				"*": ToolNone
 

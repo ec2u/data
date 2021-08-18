@@ -3,31 +3,31 @@
  */
 
 import { Query } from "@metreeca/tile/graphs";
+import { StateUpdater } from "@metreeca/tile/hooks";
 import { useQuery } from "@metreeca/tile/hooks/query";
-import { useEntry, useKeywords } from "@metreeca/tile/nests/connector";
+import { useEntry, useKeywords, useOptions } from "@metreeca/tile/nests/connector";
 import { ToolInput } from "@metreeca/tile/tiles/controls/input";
+import { ToolField } from "@metreeca/tile/tiles/fields/field";
+import { ToolOptions } from "@metreeca/tile/tiles/fields/options";
 import { Search } from "@metreeca/tile/tiles/icon";
 import { ToolSpin } from "@metreeca/tile/tiles/loaders/spin";
+import { ToolPane } from "@metreeca/tile/tiles/pane";
 import * as React from "react";
 import { createElement } from "react";
 import { ToolCard } from "../../tiles/card";
 import { ToolPage } from "../../tiles/page";
 
 
-const Universities={
+const Events={
 
 	id: "",
 
 	contains: [{
 
 		id: "",
-		label: "",
-		comment: "",
-		image: "",
-
-		schac: "",
-		lat: 0,
-		long: 0
+		label: { en: "" },
+		comment: { en: "" },
+		image: ""
 
 	}]
 
@@ -38,18 +38,18 @@ const Universities={
 
 export function ToolEvents() {
 
-	const [query, putQuery]=useQuery({ ".limit": 20 });
+	const [query, putQuery]=useQuery({
+		".order": "startDate",
+		".limit": 20
+	});
 
 	return (
 
 		<ToolPage
 
-			item={<ToolInput rule menu={<Search/>}
-				placeholder="Events"
-				value={useKeywords("label", [query, putQuery])}
-			/>}
+			item={"Events"}
 
-			pane={side()}
+			pane={side([query, putQuery])}
 
 		>
 
@@ -63,24 +63,31 @@ export function ToolEvents() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function side() {
-	return <a href={"https://tinyurl.com/ygm9chxw"}>
-		<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"}/>
-	</a>;
+function side([query, setQuery]: [query: Query, setQuery: StateUpdater<Query>]) {
+	return <ToolPane header={<ToolInput rule menu={<Search/>}
+		placeholder="Search"
+		value={useKeywords("label", [query, setQuery])}
+	/>}>
+
+		<ToolField expanded name={"University"} selector={<ToolOptions value={useOptions(
+			"", "university", [query, setQuery]
+		)}/>}/>
+
+	</ToolPane>;
 }
 
 function main(query: Query) {
 
-	const events=useEntry("", Universities, query);
+	const events=useEntry("", Events, query);
 
 	return events.then(events => createElement("tool-events", {}, events.contains.map(event =>
 
-		<ToolCard
+		<ToolCard key={event.id}
 
-			site={<a href={event.id}>{event.label}</a>}
-			icon={event.image}
-			tags={[<a href={"/universities/"}>University</a>]}
+			site={<a href={event.id}>{event.label?.en}</a>}
+			icon={event.image?.[0]}
+			tags={{ Event: "/events/" }}
 
-		>{event.comment}</ToolCard>
+		>{event.comment?.en}</ToolCard>
 	))) || <ToolSpin/>;
 }

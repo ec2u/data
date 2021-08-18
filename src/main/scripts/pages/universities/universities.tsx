@@ -79,7 +79,7 @@ function main(query: Query) {
 
 			site={<a href={university.id}>{university.label.en}</a>}
 			icon={university.image}
-			tags={[<a href={"/universities/"}>University</a>]}
+			tags={{ University: "/universities/" }}
 
 		>{university.comment.en}</ToolCard>
 	))) || <ToolSpin/>;

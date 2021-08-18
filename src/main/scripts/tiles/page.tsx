@@ -3,7 +3,7 @@
  */
 
 import { copy } from "@metreeca/tile/nests/router";
-import { Heart } from "@metreeca/tile/tiles/icon";
+import { Calendar, Heart, MapPin } from "@metreeca/tile/tiles/icon";
 import { ToolPage as BasePage } from "@metreeca/tile/tiles/page";
 import { ToolPane } from "@metreeca/tile/tiles/pane";
 import * as React from "react";
@@ -23,6 +23,7 @@ export function ToolPage({
 
 	item?: ReactNode
 	menu?: ReactNode
+
 	pane?: ReactNode
 
 	children: ReactNode
@@ -31,9 +32,12 @@ export function ToolPage({
 
 	const [hidden, setHidden]=useState(false);
 
-	return <BasePage item={item} menu={menu} user={<small>
-		<a href={"/about"}><Heart/></a>
-	</small>}
+	return <BasePage item={item} menu={menu}
+
+		side={<>
+			<a href={"/universities/"}><MapPin/></a>
+			<a href={"/events/"}><Calendar/></a>
+		</>}
 
 		pane={<ToolPane
 
@@ -55,6 +59,8 @@ export function ToolPage({
 			hidden ? <Hidden/> : pane
 
 		}</ToolPane>}
+
+		user={<small><a href={"/about"}><Heart/></a></small>}
 
 	>{children}</BasePage>;
 

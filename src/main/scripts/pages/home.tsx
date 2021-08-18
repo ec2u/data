@@ -9,7 +9,7 @@ import { useEntry, useKeywords, useOptions } from "@metreeca/tile/nests/connecto
 import { ToolInput } from "@metreeca/tile/tiles/controls/input";
 import { ToolField } from "@metreeca/tile/tiles/fields/field";
 import { ToolOptions } from "@metreeca/tile/tiles/fields/options";
-import { MapPin, Search } from "@metreeca/tile/tiles/icon";
+import { Calendar, MapPin, Search } from "@metreeca/tile/tiles/icon";
 import * as React from "react";
 import { createElement } from "react";
 import { ToolPage } from "../tiles/page";
@@ -55,7 +55,7 @@ export default function ToolHome() {
 				value={useKeywords("label", [query, putQuery])}
 			/>}
 
-			pane={side(query, putQuery)}
+			pane={side([query, putQuery])}
 
 		>{
 
@@ -69,7 +69,7 @@ export default function ToolHome() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function side(query: Query, setQuery: StateUpdater<Query>) {
+function side([query, setQuery]: [query: Query, setQuery: StateUpdater<Query>]) {
 	return <>
 
 		<ToolField name={"University"} selector={<ToolOptions value={useOptions(
@@ -91,8 +91,8 @@ function main(query: Query) {
 	return createElement("tool-home", {}, <>
 
 		<ul>
-			<li><span>7</span><a href="/universities/"><MapPin/></a><span>Universities</span></li>
-			<li><span>#</span><a href="/events/"><MapPin/></a><span>Events</span></li>
+			<li><span>7</span><span><MapPin/></span><a href="/universities/">Universities</a></li>
+			<li><span>#</span><span><Calendar/></span><a href="/events/">Events</a></li>
 			{/*<li><span>123</span><a href="/structures/"><Bookmark/></a><span>Subjects</span></li>*/}
 			{/*<li><span>2'300</span><a href="/structures/"><Tool/></a><span>Projects</span></li>*/}
 			{/*<li><span>4'200</span><a href="/structures/"><Users/></a><span>People</span></li>*/}

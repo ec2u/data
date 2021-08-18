@@ -7,6 +7,11 @@ import * as React from "react";
 import { createElement, ReactNode } from "react";
 import "./card.css";
 
+export interface Tags {
+
+	[label: string]: string;
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +21,7 @@ export function ToolCard({
 	name,
 	icon,
 
-	tags=[],
+	tags={},
 
 	children
 
@@ -26,7 +31,7 @@ export function ToolCard({
 	name?: ReactNode | string
 	icon?: ReactNode | string
 
-	tags?: string[]
+	tags?: Tags
 
 	children?: ReactNode
 
@@ -36,7 +41,9 @@ export function ToolCard({
 
 		<header>
 			<h1>{site}{name}</h1>
-			<nav>{tags.map(tag => <span key={tag}><Tag/>{tag}</span>)}</nav>
+			<nav>{Object.entries(tags).map(([label, id]) =>
+				<a key={label} href={id}><Tag/>{label}</a>
+			)}</nav>
 		</header>
 
 		<section>
