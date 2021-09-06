@@ -9,7 +9,7 @@ import com.metreeca.json.Values;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.work.link.Schema;
+import eu.ec2u.work.Schema;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.json.Shape.optional;
@@ -32,7 +32,10 @@ public final class Events extends Delegator {
 
 			filter(clazz(Data.Event)),
 
-			hidden(field(RDF.TYPE, all(Data.Event), range(Data.Event, Schema.Event))),
+			hidden(
+					field(RDF.TYPE, all(Data.Event), range(Data.Event, Schema.Event)),
+					field(Data.retrieved, required(), datatype(XSD.DATETIME))
+			),
 
 			field(RDFS.LABEL, multilingual()),
 			field(RDFS.COMMENT, multilingual()),

@@ -2,14 +2,13 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.pipelines;
+package eu.ec2u.data.loaders;
 
+import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Toolbox;
 import com.metreeca.rest.services.Cache.FileCache;
 import com.metreeca.rest.services.Fetcher.CacheFetcher;
-
-import eu.ec2u.data.Data;
 
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -20,8 +19,10 @@ import static com.metreeca.rest.services.Cache.cache;
 import static com.metreeca.rest.services.Engine.engine;
 import static com.metreeca.rest.services.Fetcher.fetcher;
 
+import static eu.ec2u.data.Data.local;
 
-public final class Work {
+
+public final class Loaders {
 
 	public static void exec(final Runnable... tasks) {
 		new Toolbox()
@@ -30,7 +31,7 @@ public final class Work {
 				.set(fetcher(), CacheFetcher::new)
 
 				.set(cache(), () -> new FileCache().ttl(Duration.ofDays(1))) // !!!
-				.set(graph(), Data::local)
+				.set(graph(), () -> new Graph(local()))
 
 				.set(engine(), GraphEngine::new)
 
@@ -38,5 +39,10 @@ public final class Work {
 
 				.clear();
 	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private Loaders() {}
 
 }

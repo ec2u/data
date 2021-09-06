@@ -6,30 +6,26 @@ package eu.ec2u.data;
 
 import com.metreeca.gcp.GCPServer;
 import com.metreeca.json.Shape;
+import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
+import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Cache.FileCache;
-import com.metreeca.rest.services.Logger;
-import com.metreeca.rest.services.Store;
 
 import eu.ec2u.data.handlers.*;
-import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import eu.ec2u.work.GCPRepository;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.sail.SailConnection;
-import org.eclipse.rdf4j.sail.SailException;
-import org.eclipse.rdf4j.sail.memory.MemoryStore;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import static com.metreeca.gcp.GCPServer.production;
 import static com.metreeca.json.Values.iri;
@@ -44,24 +40,21 @@ import static com.metreeca.rest.MessageException.status;
 import static com.metreeca.rest.Response.SeeOther;
 import static com.metreeca.rest.Toolbox.resource;
 import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.Xtream.*;
+import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
 import static com.metreeca.rest.handlers.Publisher.publisher;
 import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.services.Cache.cache;
 import static com.metreeca.rest.services.Engine.engine;
 import static com.metreeca.rest.services.Logger.Level.debug;
-import static com.metreeca.rest.services.Logger.logger;
-import static com.metreeca.rest.services.Logger.time;
-import static com.metreeca.rest.services.Store.store;
 import static com.metreeca.rest.wrappers.Bearer.bearer;
 import static com.metreeca.rest.wrappers.CORS.cors;
 import static com.metreeca.rest.wrappers.Server.server;
 
-import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.Map.entry;
 
 public final class Data {
 
@@ -80,11 +73,20 @@ public final class Data {
 	}
 
 
+	public static Repository local() {
+		return new HTTPRepository("http://localhost:7200/repositories/ec2u");
+	}
+
+	public static Repository memory() {
+		return new GCPRepository();
+	}
+
+
 	//// Contexts //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static final IRI ontologies=iri(Base, "/ontologies/");
 	public static final IRI taxonomies=iri(Base, "/taxonomies/");
-	public static final IRI wikidata=iri(Base, "wikidata");
+	public static final IRI wikidata=iri(Base, "/wikidata");
 
 	public static final IRI universities=iri(Base, "/universities/");
 	public static final IRI events=iri(Base, "/events/");
@@ -95,6 +97,7 @@ public final class Data {
 	public static final IRI Resource=iri(Name, "Resource");
 
 	public static final IRI university=iri(Name, "university");
+	public static final IRI retrieved=iri(Name, "retrieved");
 
 
 	//// Universities //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,16 +118,6 @@ public final class Data {
 	public static final IRI Poitiers=iri(Base, "/universities/5");
 	public static final IRI Salamanca=iri(Base, "/universities/6");
 	public static final IRI Turku=iri(Base, "/universities/7");
-
-	public static final Map<String, IRI> Universities=Map.of( // !!! load from ontology
-			"uc.pt", Coimbra,
-			"uaic.ro", Iasi,
-			"uni-jena.de", Jena,
-			"unipv.it", Pavia,
-			"univ-poitiers.fr", Poitiers,
-			"usal.es", Salamanca,
-			"utu.fi", Turku
-	);
 
 
 	//// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,27 +140,17 @@ public final class Data {
 		new GCPServer().context(Base).delegate(toolbox -> toolbox
 
 				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
-				.set(graph(), () -> production() ? memory() : local())
+				.set(graph(), () -> new Graph(production() ? memory() : local()))
 
 				.set(engine(), GraphEngine::new)
 
-				.set(keywords(), () -> map(
+				.set(keywords(), () -> Map.ofEntries(
 						entry("@id", "id"),
 						entry("@type", "type")
 				))
 
-				.exec(() -> service(graph()).update(task(connection -> { // !!! remove
-
-					if ( production() ) {
-						try {
-							connection.clear();
-							connection.add(resource(Data.class, ".brf"), Data.Base, RDFFormat.BINARY);
-						} catch ( final IOException e ) {
-							throw new UncheckedIOException(e);
-						}
-					}
-
-				})))
+				.exec(Data::prefixes)
+				.exec(Data::ontologies)
 
 				.get(() -> server()
 
@@ -183,7 +166,7 @@ public final class Data {
 										sparql().query().update(root)
 								))
 
-								.path("/_cron/*", new Cron())
+								.path("/cron/*", new Cron())
 
 								.path("/*", asset(
 
@@ -209,77 +192,57 @@ public final class Data {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static Graph local() {
-		return new Graph(new HTTPRepository("http://localhost:7200/repositories/ec2u"));
-	}
+	private static void prefixes() {
+		service(graph()).update(task(connection -> {
 
-	public static Graph memory() {
+			connection.clearNamespaces();
 
-		final String blob="graph.brf.gz";
-		final String base=Data.Base;
-		final RDFFormat format=RDFFormat.BINARY;
-
-		final Store store=service(store());
-		final Logger logger=service(logger());
-
-		final MemoryStore memory=new MemoryStore();
-		final Repository repository=new SailRepository(memory);
-
-		try (
-				final RepositoryConnection connection=repository.getConnection();
-				final InputStream input=new GZIPInputStream(store.read(blob))
-		) {
-
-			time(() -> {
-
+			Xtream.of(resource(Data.class, ".ttl")).forEach(path -> {
 				try {
 
-					connection.add(input, base, format);
+					Rio.createParser(RDFFormat.TURTLE).setRDFHandler(new AbstractRDFHandler() {
+
+						@Override public void handleNamespace(final String prefix, final String uri) {
+
+							connection.setNamespace(prefix, uri);
+
+						}
+
+					}).parse(path.openStream());
 
 				} catch ( final IOException e ) {
+
 					throw new UncheckedIOException(e);
+
 				}
 
-			}).apply(t -> logger.info(Data.class, format(
+			});
 
-					"loaded <%,d> statements in <%,d> ms", connection.size(), t
+		}));
+	}
 
-			)));
+	private static void ontologies() {
+		Xtream
 
-		} catch ( final IOException e ) {
-			throw new UncheckedIOException(e);
-		}
+				.of(
 
-		memory.addSailChangedListener(event -> {
-			if ( event.statementsAdded() || event.statementsRemoved() ) {
+						RDF.NAMESPACE,
+						RDFS.NAMESPACE,
+						OWL.NAMESPACE,
+						SKOS.NAMESPACE,
 
-				try (
-						final SailConnection connection=event.getSail().getConnection();
-						final OutputStream output=new GZIPOutputStream(store.write(blob));
-						final CloseableIteration<? extends Statement, SailException> statements=
-								connection.getStatements(
-										null, null, null, true
-								)
-				) {
+						resource(Data.class, ".ttl").toString()
 
-					time(() ->
+				)
 
-							Rio.write(() -> statements.stream().map(Statement.class::cast).iterator(), output, format)
+				.bagMap(new Retrieve())
 
-					).apply(t -> logger.info(Data.class, format(
+				.batch(0) // avoid multiple truth-maintenance rounds
 
-							"dumped <%,d> statements in <%,d> ms", connection.size(), t
-
-					)));
-
-				} catch ( final IOException e ) {
-					throw new UncheckedIOException(e);
-				}
-
-			}
-		});
-
-		return new Graph(repository);
+				.forEach(new Upload()
+						.clear(true)
+						.contexts(ontologies)
+				);
 	}
 
 }

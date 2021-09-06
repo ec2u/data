@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.work.link;
+package eu.ec2u.work;
 
 import com.metreeca.rest.Format;
 import com.metreeca.rest.actions.*;

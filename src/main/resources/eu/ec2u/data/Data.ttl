@@ -9,6 +9,7 @@
 @prefix dcat:   <http://www.w3.org/ns/dcat#> .
 @prefix ec2u:   <https://data.ec2u.eu/terms#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
 @prefix void:   <http://rdfs.org/ns/void#> .
 @prefix schema: <https://schema.org/> .
 @base <https://data.ec2u.eu/terms#> .

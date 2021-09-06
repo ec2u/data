@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.work.link;
+package eu.ec2u.work;
 
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;

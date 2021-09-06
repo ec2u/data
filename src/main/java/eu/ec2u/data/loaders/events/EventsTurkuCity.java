@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.pipelines.events;
+package eu.ec2u.data.loaders.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
@@ -12,13 +12,12 @@ import com.metreeca.rest.actions.Fill;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.handlers.Events;
-import eu.ec2u.work.link.*;
+import eu.ec2u.work.*;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.io.ByteArrayInputStream;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.UnaryOperator;
@@ -28,7 +27,8 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.formats.JSONFormat.json;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static eu.ec2u.data.pipelines.Work.exec;
+import static eu.ec2u.data.loaders.Loaders.exec;
+import static eu.ec2u.data.loaders.events.Events.synced;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
@@ -46,26 +46,24 @@ public final class EventsTurkuCity implements Runnable {
 
 
 	public static void main(final String... args) {
-		exec(new EventsTurkuCity());
+		exec(() -> new EventsTurkuCity().run());
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	private final ZonedDateTime now=ZonedDateTime.now(UTC);
+
 	@Override public void run() {
-		Xtream
+		Xtream.of(synced(Publisher.focus()))
 
-				.of(LocalDate // !!! last update
-						.of(2021, 8, 1)
-						.atStartOfDay(UTC)
-						.toInstant()
-				)
-
-				.flatMap(new Fill<c>()
+				.flatMap(new Fill<Instant>()
 						.model("https://api.turku.fi/linkedevents/v1/event/"
 								+"?last_modified_since={since}"
 						)
-						.value("since", updated -> LocalDate.ofInstant(updated, UTC).format(ISO_LOCAL_DATE))
+						.value("since", synced ->
+								LocalDate.ofInstant(synced, UTC).format(ISO_LOCAL_DATE)
+						)
 				)
 
 				.loop(events -> Xtream.of(events)
@@ -78,20 +76,7 @@ public final class EventsTurkuCity implements Runnable {
 
 				.map(new JSONPath<>(this::convert))
 
-				.optMap(new Validate(Events.Shape))
-
-
-				.limit(3)
-
-				.flatMap(Frame::model)
-				.batch(0)
-
-				.forEach(new Report()); // !!!
-
-		//.forEach(new Upload()
-		//		// .clear(true) // !!! incremental sync
-		//		.contexts(Data.events)
-		//);
+				.sink(Events::upload);
 	}
 
 
@@ -121,6 +106,7 @@ public final class EventsTurkuCity implements Runnable {
 				.values(RDFS.COMMENT, description)
 
 				.value(Data.university, Data.Turku)
+				.value(Data.retrieved, literal(now))
 
 				.frame(DCTERMS.PUBLISHER, Publisher)
 				.value(DCTERMS.SOURCE, iri(id))

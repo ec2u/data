@@ -35,6 +35,7 @@ import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
 import static org.eclipse.rdf4j.common.iteration.Iterations.asList;
+import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
 public final class Resources extends Delegator {
 
@@ -56,7 +57,8 @@ public final class Resources extends Delegator {
 
 		)).wrap(router().get(handler(request -> !request.query().isEmpty(), relator(), driver(
 
-				field("universities", Data.University, optional(), datatype(XSD.INTEGER))
+				field("universities", Data.University, optional(), datatype(XSD.INTEGER)),
+				field("events", Data.Event, optional(), datatype(XSD.INTEGER))
 
 		).wrap(new Virtual(
 
@@ -66,7 +68,7 @@ public final class Resources extends Delegator {
 						+"\n"
 						+"select ?t (count(distinct ?r) as ?c) {\n"
 						+"\t\n"
-						+"\t\tvalues ?t { :University }\n"
+						+"\t\tvalues ?t { :University :Event }\n"
 						+"\n"
 						+"\t\t?r a ?t\n"
 						+"\n"
@@ -100,9 +102,11 @@ public final class Resources extends Delegator {
 		@Override public Future<Response> handle(final Request request) {
 			return request.reply(response -> response.status(OK)
 					.set(shape(), request.get(shape()))
-					.body(jsonld(), frame(iri(request.item()), graph.<List<Statement>>query(connection ->
-							asList(configure(request, connection.prepareGraphQuery(query)).evaluate())
-					)))
+					.body(jsonld(), frame(iri(request.item()),
+							graph.<List<Statement>>query(connection -> asList(configure(request,
+											connection.prepareGraphQuery(SPARQL, query, request.base())
+									).evaluate())
+							)))
 			);
 		}
 

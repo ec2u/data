@@ -12,6 +12,7 @@ import com.metreeca.rest.actions.*;
 import com.metreeca.xml.actions.XPath;
 
 import eu.ec2u.data.Data;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.junit.jupiter.api.Test;
 
@@ -27,13 +28,25 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.Xtream.entry;
 import static com.metreeca.xml.formats.XMLFormat.xml;
 
-import static eu.ec2u.data.pipelines.Work.exec;
+import static eu.ec2u.data.Data.*;
+import static eu.ec2u.data.loaders.Loaders.exec;
 
 import static java.lang.String.format;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 final class Crawl {
+
+	private static final Map<String, IRI> Universities=Map.of(
+			"uc.pt", Coimbra,
+			"uaic.ro", Iasi,
+			"uni-jena.de", Jena,
+			"unipv.it", Pavia,
+			"univ-poitiers.fr", Poitiers,
+			"usal.es", Salamanca,
+			"utu.fi", Turku
+	);
+
 
 	@Test void echo() {
 		exec(() -> Xtream
@@ -81,7 +94,7 @@ final class Crawl {
 
 						.flatMap(new XPath<>(host -> host.strings("_:institutions-covered/_:hei-id")
 
-								.filter(Data.Universities::containsKey)
+								.filter(Universities::containsKey)
 
 								.flatMap(hei -> host.nodes("_:apis-implemented/*")
 
@@ -121,7 +134,7 @@ final class Crawl {
 				.value(RDF.TYPE, EWP.Host)
 				.value(RDFS.LABEL, literal(label))
 
-				.value(Data.university, Data.Universities.get(hei))
+				.value(Data.university, Universities.get(hei))
 
 				.value(EWP.hei, literal(hei))
 				.frame(EWP.network, network)

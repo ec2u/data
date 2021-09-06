@@ -2,21 +2,18 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.pipelines.events;
+package eu.ec2u.data.loaders.events;
 
 import com.metreeca.json.Frame;
-import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.Fill;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.handlers.Events;
-import eu.ec2u.work.link.*;
+import eu.ec2u.work.*;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.time.Instant;
-import java.time.LocalDate;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 import static com.metreeca.json.Frame.frame;
@@ -24,7 +21,8 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static eu.ec2u.data.pipelines.Work.exec;
+import static eu.ec2u.data.loaders.Loaders.exec;
+import static eu.ec2u.data.loaders.events.Events.synced;
 
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
@@ -39,20 +37,17 @@ public final class EventsPaviaCity implements Runnable {
 
 
 	public static void main(final String... args) {
-		exec(new EventsPaviaCity());
+		exec(() -> new EventsPaviaCity().run());
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	@Override public void run() {
-		Xtream
+	private final ZonedDateTime now=ZonedDateTime.now(UTC);
 
-				.of(LocalDate // !!! last update
-						.of(2021, 8, 1)
-						.atStartOfDay(UTC)
-						.toInstant()
-				)
+
+	@Override public void run() {
+		Xtream.of(synced(Publisher.focus()))
 
 				.flatMap(new Fill<Instant>()
 						.model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
@@ -63,7 +58,8 @@ public final class EventsPaviaCity implements Runnable {
 								+"&node=4613"
 								+"&fromDate=%{date}"
 						)
-						.value("date", updated -> LocalDate.ofInstant(updated, UTC)
+						.value("date", synced -> LocalDate.ofInstant(synced, UTC)
+								.atStartOfDay(UTC)
 								.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 						)
 				)
@@ -94,27 +90,21 @@ public final class EventsPaviaCity implements Runnable {
 								.frames(inverse(RDF.TYPE))
 
 								.map(event -> refocus(event, iri(Data.events, md5(url)))
+
 										.value(RDF.TYPE, Data.Event)
 										.values(RDFS.LABEL, event.values(Schema.name))
+
+										.value(Data.university, Data.Pavia)
+										.value(Data.retrieved, literal(now))
+
 										.frame(DCTERMS.PUBLISHER, Publisher)
 										.value(DCTERMS.SOURCE, iri(url))
-										.value(Data.university, Data.Pavia)
 								)
 
 						)
 				)
 
-				.optMap(new Validate(Events.Shape))
-
-				.flatMap(Frame::model)
-				.batch(100_000)
-
-				.peek(new Report()) // !!!
-
-				.forEach(new Upload()
-						// .clear(true) // !!! incremental sync
-						.contexts(Data.events)
-				);
+				.sink(Events::upload);
 	}
 
 

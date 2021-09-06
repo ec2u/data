@@ -13,7 +13,7 @@ import postcssNesting from "postcss-nesting";
 const base=process.env.base || ".";
 
 const code=resolve(process.env.code || "src/main/scripts/");
-const dist=resolve(process.env.dist || "target/scripts");
+const dist=resolve(process.env.dist || "target/scripts/");
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

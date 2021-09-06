@@ -1,4 +1,9 @@
 cron:
+
+  - description: "nightly wikidata sync"
+    url: /cron/wikidata
+    schedule: every day 00:00
+
   - description: "nightly event crawling"
-    url: /_cron/events
-    schedule: every 24 hours synchronized
+    url: /cron/events
+    schedule: every day 00:00
