@@ -2,37 +2,37 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.loaders.events;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rdf4j.actions.TupleQuery;
-import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.ports.Events;
 import eu.ec2u.work.Validate;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.metreeca.json.Values.literal;
-import static com.metreeca.json.Values.resource;
 import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.services.Logger.logger;
 import static com.metreeca.rest.services.Logger.time;
 
-import static eu.ec2u.data.loaders.Loaders.exec;
+import static eu.ec2u.data.tasks.Loaders.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
 import static java.lang.String.format;
 
-public final class Events implements Runnable {
+public final class EventsAll implements Runnable {
 
 	public static Instant synced(final Value publisher) {
 		return Xtream
@@ -71,26 +71,38 @@ public final class Events implements Runnable {
 	public static void upload(final Xtream<Frame> events) {
 		events
 
-				.optMap(new Validate(eu.ec2u.data.handlers.Events.Shape))
+				.optMap(new Validate(Events.Shape))
 
-				.peek(frame -> service(graph()).update(task(connection ->
-						resource(frame.focus()).ifPresent(resource ->
-								connection.remove(resource, null, null, Data.events)
-						)
-				)))
+				.batch(1000)
 
-				.flatMap(Frame::model)
+				.forEach(batch -> {
 
-				.batch(100_000)
+					final List<Resource> subjects=batch.stream()
+							.map(Frame::focus)
+							.filter(Resource.class::isInstance)
+							.map(Resource.class::cast)
+							.collect(Collectors.toList());
 
-				.forEach(new Upload()
-						.contexts(Data.events)
-				);
+					final List<Statement> statements=batch.stream()
+							.flatMap(Frame::model)
+							.collect(Collectors.toList());
+
+					service(graph()).update(task(connection -> {
+
+						subjects.forEach(subject ->
+								connection.remove(subject, null, null, Data.events)
+						);
+
+						connection.add(statements, Data.events);
+
+					}));
+
+				});
 	}
 
 
 	public static void main(final String... args) {
-		exec(() -> new Events().run());
+		exec(() -> new EventsAll().run());
 	}
 
 
@@ -129,6 +141,9 @@ public final class Events implements Runnable {
 	}
 
 	private void purge() {
+
+		logger.info(this, "removing stale events");
+
 		exec(() -> graph.update(task(connection -> connection
 
 				.prepareUpdate(SPARQL, ""
@@ -159,6 +174,9 @@ public final class Events implements Runnable {
 	}
 
 	private void collect() {
+
+		logger.info(this, "collecting garbage");
+
 		exec(() -> graph.update(task(connection -> {
 
 			for (long size=0, next; (next=connection.size()) != size; size=next) {

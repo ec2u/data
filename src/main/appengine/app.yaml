@@ -5,5 +5,7 @@ handlers:
     script: auto
     secure: always
 
+instance_class: "F4"
+
 automatic_scaling:
   max_idle_instances: 1 # prevent conflicts when dumping rdf to storage bucket

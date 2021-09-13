@@ -13,7 +13,7 @@ import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Cache.FileCache;
 
-import eu.ec2u.data.handlers.*;
+import eu.ec2u.data.ports.*;
 import eu.ec2u.work.GCPRepository;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -231,7 +231,7 @@ public final class Data {
 						OWL.NAMESPACE,
 						SKOS.NAMESPACE,
 
-						resource(Data.class, ".ttl").toString()
+						resource(Data.class, ".ttl").toExternalForm()
 
 				)
 

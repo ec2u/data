@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.loaders.events;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
@@ -21,8 +21,8 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static eu.ec2u.data.loaders.Loaders.exec;
-import static eu.ec2u.data.loaders.events.Events.synced;
+import static eu.ec2u.data.tasks.Loaders.exec;
+import static eu.ec2u.data.tasks.events.EventsAll.synced;
 
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
@@ -104,7 +104,7 @@ public final class EventsPaviaCity implements Runnable {
 						)
 				)
 
-				.sink(Events::upload);
+				.sink(EventsAll::upload);
 	}
 
 

@@ -104,26 +104,32 @@ public final class GCPRepository implements Repository {
 
 		delegate.init();
 
-		try (
-				final RepositoryConnection connection=delegate.getConnection();
-				final InputStream input=new GZIPInputStream(store.read(blob))
-		) {
+		try {
 
-			time(() -> {
+			if ( store.has(blob) ) {
+				try (
+						final RepositoryConnection connection=delegate.getConnection();
+						final InputStream input=new GZIPInputStream(store.read(blob))
+				) {
 
-				try {
+					time(() -> {
 
-					connection.add(input, format);
+						try {
 
-				} catch ( final IOException e ) {
-					throw new UncheckedIOException(e);
+							connection.add(input, format);
+
+						} catch ( final IOException e ) {
+							throw new UncheckedIOException(e);
+						}
+
+					}).apply(t -> logger.info(Data.class, format(
+
+							"loaded <%,d> statements in <%,d> ms", connection.size(), t
+
+					)));
+
 				}
-
-			}).apply(t -> logger.info(Data.class, format(
-
-					"loaded <%,d> statements in <%,d> ms", connection.size(), t
-
-			)));
+			}
 
 		} catch ( final IOException e ) {
 			throw new UncheckedIOException(e);

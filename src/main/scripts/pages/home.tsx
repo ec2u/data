@@ -2,13 +2,13 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { Query } from "@metreeca/tile/graphs";
+import { Frame, Query } from "@metreeca/tile/graphs";
 import { StateUpdater } from "@metreeca/tile/hooks";
 import { useQuery } from "@metreeca/tile/hooks/query";
 import { useEntry, useKeywords, useOptions } from "@metreeca/tile/nests/connector";
 import { ToolInput } from "@metreeca/tile/tiles/controls/input";
-import { ToolField } from "@metreeca/tile/tiles/fields/field";
-import { ToolOptions } from "@metreeca/tile/tiles/fields/options";
+import { ToolField } from "@metreeca/tile/tiles/controls/field";
+import { ToolOptions } from "@metreeca/tile/tiles/facets/options";
 import { Calendar, MapPin, Search } from "@metreeca/tile/tiles/icon";
 import * as React from "react";
 import { createElement } from "react";
@@ -23,8 +23,6 @@ const Resources={
 	contains: [{
 
 		id: "",
-
-		type: [""],
 
 		label: "",
 		image: "",

@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.handlers;
+package eu.ec2u.data.ports;
 
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rest.*;

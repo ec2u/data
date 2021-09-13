@@ -2,14 +2,14 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.loaders;
+package eu.ec2u.data.tasks;
 
 import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rest.Xtream;
 
 import eu.ec2u.data.Data;
 
-import static eu.ec2u.data.loaders.Loaders.exec;
+import static eu.ec2u.data.tasks.Loaders.exec;
 
 public final class Wikidata implements Runnable {
 

@@ -2,7 +2,7 @@
  * Copyright © 2020 Metreeca srl. All rights reserved.
  */
 
-package eu.ec2u.data.loaders;
+package eu.ec2u.data.tasks;
 
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Update;
@@ -15,7 +15,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Xtream.task;
 
-import static eu.ec2u.data.loaders.Loaders.exec;
+import static eu.ec2u.data.tasks.Loaders.exec;
 
 
 final class Concepts {

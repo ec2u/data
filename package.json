@@ -5,7 +5,7 @@
 		"build": "vite build"
 	},
 	"dependencies": {
-		"@metreeca/tile": "file:../../../Products/Tile/dist.tar"
+		"@metreeca/tile": "^0.0.12"
 	},
 	"devDependencies": {
 		"@types/node": "^16.6.0",

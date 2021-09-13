@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.loaders.events;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
@@ -27,8 +27,8 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.formats.JSONFormat.json;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static eu.ec2u.data.loaders.Loaders.exec;
-import static eu.ec2u.data.loaders.events.Events.synced;
+import static eu.ec2u.data.tasks.Loaders.exec;
+import static eu.ec2u.data.tasks.events.EventsAll.synced;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
@@ -76,7 +76,7 @@ public final class EventsTurkuCity implements Runnable {
 
 				.map(new JSONPath<>(this::convert))
 
-				.sink(Events::upload);
+				.sink(EventsAll::upload);
 	}
 
 
