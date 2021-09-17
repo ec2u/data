@@ -15,7 +15,7 @@ export interface Tags {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ToolCard({
+export function DataCard({
 
 	site,
 	name,
@@ -37,7 +37,7 @@ export function ToolCard({
 
 }) {
 
-	return createElement("tool-card", {}, <>
+	return createElement("data-card", {}, <>
 
 		<header>
 			<h1>{site}{name}</h1>

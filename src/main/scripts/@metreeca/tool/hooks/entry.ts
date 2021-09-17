@@ -17,6 +17,7 @@
 import { useEffect, useReducer, useState } from "react";
 import { blank, Blank, Entry, Error, frame, Frame, Query, State, url } from "../bases";
 import { useGraph } from "../nests/graph";
+import { useRouter } from "../nests/router";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,32 +39,36 @@ export function useEntry<V extends Frame=Frame, E extends Error=Error>(id: strin
 ] {
 
 	const graph=useGraph();
+	const { peek }=useRouter();
+
 	const [entry, setEntry]=useState<Entry<typeof model, E>>({});
 
 	const [, update]=useReducer(v => v+1, 0);
 
-	useEffect(() => { graph.get(id, model, query).then(setEntry).catch(setEntry); }, [url(id, query)]);
+	const target=id || peek();
 
-	useEffect(() => graph.observe(id, model, update), [entry]);
+	useEffect(() => { graph.get(target, model, query).then(setEntry).catch(setEntry); }, [url(target, query)]);
+
+	useEffect(() => graph.observe(target, model, update), [entry]);
 
 	return [entry, (state, action=() => {}) => {
 
 		if ( blank(state) ) {
 
-			graph.delete(id)
+			graph.delete(target)
 				.then(() => action({}))
 				.catch(action);
 
 		} else if ( frame(state) ) {
 
-			graph.put(id, state)
-				.then(() => action({ id }))
+			graph.put(target, state)
+				.then(() => action({ id: target }))
 				.catch(action);
 
 		} else {
 
-			graph.post(id, state)
-				.then(location => () => action({ id: location || id }))
+			graph.post(target, state)
+				.then(location => () => action({ id: location || target }))
 				.catch(action);
 
 		}

@@ -235,10 +235,6 @@ tool-page {
 				box-shadow: var(--tool-page--header-box-shadow) var(--tool-page-pane-background-color);
 			}
 
-			& > section {
-				font-size: 85%;
-			}
-
 			& > footer {
 				color: #999;
 			}

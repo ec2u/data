@@ -3,61 +3,53 @@
  */
 
 import * as React from "react";
+import { useEffect } from "react";
 import { freeze } from "../../@metreeca/tool";
+import { blank, frame, probe, string } from "../../@metreeca/tool/bases";
 import { useEntry } from "../../@metreeca/tool/hooks/entry";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
+import { DataPage } from "../../tiles/page";
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const Event=freeze({
 
 	id: "/events/{code}",
 
+	image: "",
 	label: { en: "Event" },
-	comment: { en: "" },
-	image: ""
+	comment: { en: "" }
 
 });
 
-export function ToolEvent() {
+
+export function DataEvent() {
 
 	const { name }=useRouter();
 
 	const [event]=useEntry("", Event);
 
-	/*useEffect(() => name(event.label?.en));
+	useEffect(() => { frame(event) && name(string(event.label)); });
 
-	 return event.then(event => (
+	return <DataPage
 
-	 <ToolPage
+		item={<>
+			<a href={"/events/"}>Events</a>
+			<span>{frame(event) && string(event.label)}</span>
+		</>}
 
-	 item={<>
-	 <a href={"/events/"}>Events</a>
-	 <span>{event.label?.en}</span>
-	 </>}
+		menu={blank(event) && <ToolSpin/>}
 
-	 >
+	>{probe(event, {
 
-	 {main(event)}
+		frame: ({ image, label, comment }) => <>
 
-	 </ToolPage>
+			{image && <img src={image} alt={`Image of ${string(label)}`}/>}
 
-	 )) ||*/
-	return <ToolSpin/>;
+			<p>{string(comment)}</p>
+
+		</>
+
+	})}</DataPage>;
 
 }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// function main({ label, comment, image }: typeof Event) {
-// 	return createElement("tool-event", {}, <>
-//
-// 		{image && <img src={image} alt={`Image of ${label?.en}`}/>}
-//
-// 		<p>{comment?.en}</p>
-//
-// 	</>);
-// }

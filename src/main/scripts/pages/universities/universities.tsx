@@ -4,10 +4,10 @@
 
 import * as React from "react";
 import { freeze } from "../../@metreeca/tool";
-import { Query } from "../../@metreeca/tool/bases";
+import { blank, probe, string } from "../../@metreeca/tool/bases";
 import { useEntry } from "../../@metreeca/tool/hooks/entry";
-import { useQuery } from "../../@metreeca/tool/hooks/query";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
+import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
 
 
@@ -34,45 +34,33 @@ export const Universities=freeze({
 });
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export function DataUniversities() {
 
-export function ToolUniversities() {
-
-	const [query, putQuery]=useQuery({ ".limit": 20 });
+	const [universities]=useEntry("", Universities);
 
 	return (
 
-		<DataPage
+		<DataPage item={string(Universities.label)} menu={blank(universities) && <ToolSpin/>}
 
-			// item={<ToolInput rule menu={<Search/>}
-			// 	placeholder="Universities"
-			// 	value={useKeywords("label", [query, putQuery])}
-			// />}
+		>{probe(universities, {
 
-		>
+			frame: ({ contains }) => contains.map(({ id, label, image, comment }) =>
 
-			{main(query)}
+				<DataCard key={id}
 
-		</DataPage>
+					site={<a href={id}>{string(label)}</a>}
+					icon={image}
+					tags={{ University: Universities.id }}
+
+				>
+					{string(comment)}
+
+				</DataCard>
+			),
+
+			error: error => <span>{error.status}</span>
+
+		})}</DataPage>
 
 	);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function main(query: Query) {
-
-	const universities=useEntry("", Universities, query);
-
-	return <ToolSpin/> /*universities.then(universities => createElement("tool-universities", {}, universities.contains.map(university =>
-
-	 <ToolCard key={university.id}
-
-	 site={<a href={university.id}>{university.label.en}</a>}
-	 icon={university.image}
-	 tags={{ University: "/universities/" }}
-
-	 >{university.comment.en}</ToolCard>
-	 ))) ||*/;
 }

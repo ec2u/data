@@ -3,15 +3,21 @@
  */
 
 import * as React from "react";
+import { useEffect } from "react";
 import { freeze } from "../../@metreeca/tool";
+import { blank, frame, probe, string } from "../../@metreeca/tool/bases";
+import { useEntry } from "../../@metreeca/tool/hooks/entry";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
+import { DataPage } from "../../tiles/page";
+import { Universities } from "./universities";
 
 
 export const University=freeze({
 
 	id: "/universities/{code}",
 
+	image: "",
 	label: { en: "University" },
 	comment: { en: "" },
 
@@ -19,7 +25,6 @@ export const University=freeze({
 	lat: 0,
 	long: 0,
 
-	image: "",
 	inception: "",
 
 	country: {
@@ -35,65 +40,50 @@ export const University=freeze({
 });
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function ToolUniversity() {
+export function DataUniversity() {
 
 	const { name }=useRouter();
 
-	// const university=useEntry("", University);
+	const [university]=useEntry("", University);
 
-	// useEffect(() => university.then(university => { name(university.label.en); }));
+	useEffect(() => { frame(university) && name(string(university.label)); });
 
-	return <ToolSpin/> /*university.then(university => (
+	return <DataPage
 
-	 <ToolPage
+		item={<>
+			<a href={Universities.id}>{string(Universities.label)}</a>
+			<span>{frame(university) && string(university.label)}</span>
+		</>}
 
-	 item={<>
-	 <a href={"/universities/"}>Universities</a>
-	 <span>{university.label.en}</span>
-	 </>}
+		menu={blank(university) && <ToolSpin/>}
 
-	 pane={side(university)}
+	>{probe(university, {
 
-	 >
+		frame: ({
 
-	 {main(university)}
+			image, label, comment,
+			inception, country, location
 
-	 </ToolPage>
+		}) => <>
 
-	 )) ||*/;
+			{image && <img src={image} alt={`Image of ${string(label)}`}/>}
 
+			<p>{string(comment)}</p>
+
+			<dl>
+
+				<dt>Inception</dt>
+				<dd>{inception && inception.substr(0, 4) || "-"}</dd>
+
+				<dt>Country</dt>
+				<dd><a href={country.id}>{string(country.label)}</a></dd>
+
+				<dt>Location</dt>
+				<dd><a href={location.id}>{string(location.label)}</a></dd>
+
+			</dl>
+
+		</>
+
+	})}</DataPage>;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
- function side({ inception, country, location }: typeof University) {
- return <dl>
-
- <dt>Country</dt>
- <dd><a href={country.id}>{country.label.en}</a></dd>
-
- <dt>Location</dt>
- <dd><a href={location.id}>{location.label.en}</a></dd>
-
- <dt>Inception</dt>
- <dd>{inception && inception.substr(0, 4) || "-"}</dd>
-
- </dl>;
- }
- */
-
-/*
- function main({ label, comment, image }: typeof University) {
- return createElement("tool-university", {}, <>
-
- {image && <img src={image} alt={`Image of ${label.en}`}/>}
-
- <p>{comment.en}</p>
-
- </>);
- }
- */

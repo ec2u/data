@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ReactNode } from "react";
 import { Immutable } from "../index";
 
 export type Entry<V extends Frame=Frame, E extends Error=Error>=Blank | V | E
@@ -36,7 +37,7 @@ export interface Error {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Field=undefined | Value | Immutable<[Value]>;
+export type Field=undefined | Value | Immutable<Value[]>;
 export type Value=Plain | Langs | Frame
 export type Plain=boolean | number | string
 
@@ -51,6 +52,7 @@ export interface Frame extends State {
 	readonly id: string;
 
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -70,11 +72,11 @@ export interface Query {
 	readonly ".terms"?: string; // !!! items
 	readonly ".stats"?: string; // !!! range
 
-	readonly ".order"?: string | ReadonlyArray<string>;
+	readonly ".order"?: string | Immutable<string[]>;
 	readonly ".offset"?: number;
 	readonly ".limit"?: number;
 
-	readonly [path: string]: Field;
+	readonly [path: string]: undefined | Plain | Immutable<Plain[]>;
 
 }
 
@@ -121,14 +123,28 @@ export function frame(value: Field | State | Entry): value is Frame {
 	return typeof value === "object" && "id" in value;
 }
 
-export function array(value: Field | State | Entry): value is Immutable<[Value]> {
+export function array(value: Field | State | Entry): value is Immutable<Value[]> {
 	return Array.isArray(value);
 }
 
 
+export function probe<V extends Frame=Frame, E extends Error=Error>(entry: Entry<V, E>, cases: {
+
+	blank?: ReactNode | (() => ReactNode)
+	frame?: ReactNode | ((frame: V) => ReactNode)
+	error?: ReactNode | ((error: E) => ReactNode)
+
+}) {
+	return blank(entry) ? typeof cases.blank === "function" ? cases.blank() : cases.blank
+		: frame(entry) ? typeof cases.frame === "function" ? cases.frame(entry) : cases.frame
+			: error(entry) ? typeof cases.error === "function" ? cases.error(entry) : cases.error
+				: undefined;
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function string(value: Value, locales: string[]=["en"]): string {
+export function string(value: undefined | Value, locales: string[]=["en"]): string {
 	return typeof value === "boolean" ? value.toString()
 		: typeof value === "number" ? value.toLocaleString()
 			: typeof value === "string" ? value

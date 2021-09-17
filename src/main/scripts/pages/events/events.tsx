@@ -4,11 +4,15 @@
 
 import * as React from "react";
 import { freeze } from "../../@metreeca/tool";
+import { blank, probe, Query, string } from "../../@metreeca/tool/bases";
+import { Updater } from "../../@metreeca/tool/hooks";
+import { useEntry } from "../../@metreeca/tool/hooks/entry";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
+import { ToolPane } from "../../@metreeca/tool/tiles/pane";
+import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
+import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const Events=freeze({
 
@@ -22,33 +26,53 @@ export const Events=freeze({
 
 		label: { en: "" },
 		comment: { en: "" },
-		image: ""
+		image: "",
+
+		university: {
+			id: "",
+			label: { en: "" }
+		}
 
 	}]
 
 });
 
 
-export function ToolEvents() {
+export function DataEvents() {
 
-	const [query, putQuery]=useQuery({
+	const [query, putQuery]=useQuery<Query>({
 		".order": "startDate",
 		".limit": 20
 	});
 
+
+	const [events]=useEntry("", Events, query);
+
 	return (
 
-		<DataPage item={<input type={"search"} placeholder={"Discover EC2U Events"}
-			value={""} onChange={() => {}}/>
-		}
+		<DataPage item={string(Events.label)}
 
-			// pane={side([query, putQuery])}
+			menu={blank(events) && <ToolSpin/>}
+			pane={side([query, putQuery])}
 
-		>
+		>{probe(events, {
 
-			{/*{main(query)}*/}
+			frame: ({ contains }) => contains.map(({ id, label, image, comment, university }) =>
 
-		</DataPage>
+				<DataCard key={id}
+
+					site={<a href={university.id}>{string(university.label)}</a>}
+					name={<a href={id}>{string(label)}</a>}
+					icon={image?.[0]}
+					tags={{ Event: Events.id }}
+
+				>
+
+					{string(comment)}
+
+				</DataCard>)
+
+		})}</DataPage>
 
 	);
 }
@@ -56,33 +80,17 @@ export function ToolEvents() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
- function side([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
- return <ToolPane header={<ToolInput rule menu={<Search/>}
- placeholder="Search"
- value={useKeywords("label", [query, setQuery])}
- />}>
+function side([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
+	return <ToolPane /*header={<ToolInput rule menu={<Search/>}
+	 placeholder="Search"
+	 value={useKeywords("label", [query, setQuery])}
+	 />}*/>
 
- {/!*<ToolField expanded name={"University"} selector={<ToolOptions value={useOptions(*!/}
- {/!*	"", "university", [query, setQuery]*!/}
- {/!*)}/>}/>*!/}
+		{/*<ToolField expanded name={"University"} selector={<ToolOptions value={useOptions(*/}
+		{/*	"", "university", [query, setQuery]*/}
+		{/*)}/>}/>*/}
 
- </ToolPane>;
- }
+	</ToolPane>;
+}
 
- function main(query: Query) {
 
- const events=useEntry("", Events, query);
-
- return events.then(events => createElement("tool-events", {}, events.contains.map(event =>
-
- <ToolCard key={event.id}
-
- site={<a href={event.id}>{event.label?.en}</a>}
- icon={event.image?.[0]}
- tags={{ Event: "/events/" }}
-
- >{event.comment?.en}</ToolCard>
- ))) || <ToolSpin/>;
- }
- */

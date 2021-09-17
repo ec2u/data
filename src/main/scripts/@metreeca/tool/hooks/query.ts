@@ -15,17 +15,17 @@
  */
 
 import { useEffect, useState } from "react";
+import { Immutable } from "../index";
 import { Updater } from "./index";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-export type Value=boolean | number | string | ReadonlyArray<Value>
+export type Value=undefined | boolean | number | string
 
 export interface Query {
 
-	readonly [key: string]: Value;
+	readonly [key: string]: Value | Immutable<Value[]>;
 
 }
 

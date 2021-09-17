@@ -5,6 +5,7 @@
 import * as React from "react";
 import { ReactNode, useState } from "react";
 import { ToolPage } from "../@metreeca/tool/tiles/page";
+import { Home } from "../pages/home";
 import { ToolResources } from "../panes/resources";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +33,7 @@ export function DataPage({
 	const [hidden, setHidden]=useState(false);
 
 	return <ToolPage item={[<
-		a href={"https://ec2u.eu/"}>EC2U</a>,
+		a href={Home.id}>EC2U</a>,
 		typeof item === "string" ? <span>{item}</span> : item
 	]}
 

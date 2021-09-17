@@ -35,7 +35,7 @@ export function LinkGraph(): Graph {
 
 			const key=url(id, query);
 
-			return cache[key] || (cache[key]=fetch(id, {
+			return cache[key] || (cache[key]=fetch(key, {
 
 				headers: { Accept: "application/json" } // !!! interceptor for session management
 
