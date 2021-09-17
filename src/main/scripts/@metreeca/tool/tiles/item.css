@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-:root {
-
-	--tool-item-border-radius-edit: 0.25em;
-	--tool-item-padding-edit: 0.25em;
-
-}
-
 tool-item {
 
 	display: flex;

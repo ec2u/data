@@ -15,7 +15,7 @@
  */
 
 import { useEffect, useReducer, useState } from "react";
-import { blank, Blank, Entry, Error, frame, Frame, Query, State, Value } from "../bases";
+import { blank, Blank, Entry, Error, frame, Frame, Query, State, url } from "../bases";
 import { useGraph } from "../nests/graph";
 
 
@@ -27,11 +27,11 @@ export function useEntry<V extends Frame=Frame, E extends Error=Error>(id: strin
 
 	setEntry: {
 
-		(state: State, action?: (location?: string) => void): void // post
+		<E extends Error=Error>(state: State, action?: (entry: Entry<Frame, E>) => void): void // post
 
-		(state: typeof model, action?: (location?: string) => void): void // put
+		<E extends Error=Error>(state: typeof model, action?: (entry: Entry<Frame, E>) => void): void // put
 
-		(blank: Blank, action?: (location?: string) => void): void // delete
+		<E extends Error=Error>(blank: Blank, action?: (entry: Entry<Frame, E>) => void): void // delete
 
 	}
 
@@ -42,13 +42,7 @@ export function useEntry<V extends Frame=Frame, E extends Error=Error>(id: strin
 
 	const [, update]=useReducer(v => v+1, 0);
 
-	const url1=url(id, query || {});
-
-	useEffect(() => {
-		graph.get(url1, model)
-			.then(setEntry)
-			.catch(setEntry);
-	}, [url]);
+	useEffect(() => { graph.get(id, model, query).then(setEntry).catch(setEntry); }, [url(id, query)]);
 
 	useEffect(() => graph.observe(id, model, update), [entry]);
 
@@ -57,46 +51,23 @@ export function useEntry<V extends Frame=Frame, E extends Error=Error>(id: strin
 		if ( blank(state) ) {
 
 			graph.delete(id)
-				.then(() => action(""))
-				.catch(() => action());
+				.then(() => action({}))
+				.catch(action);
 
 		} else if ( frame(state) ) {
 
 			graph.put(id, state)
-				.then(() => action(""))
-				.catch(() => action());
+				.then(() => action({ id }))
+				.catch(action);
 
 		} else {
 
 			graph.post(id, state)
-				.then(location => action(location || ""))
-				.catch(() => action());
+				.then(location => () => action({ id: location || id }))
+				.catch(action);
 
 		}
 
 	}];
 
-}
-
-
-function url(id: string, query: Query) {
-
-	const search: any={};
-
-	function scan(value: undefined | Value | ReadonlyArray<Value>): undefined | Value | ReadonlyArray<Value> {
-		return Array.isArray(value) ? value.length && value.map(scan).filter(v => v !== undefined) as ReadonlyArray<Value>
-			: value ? value : undefined;
-	}
-
-	Object.getOwnPropertyNames(query).forEach(key => {
-
-		const value=scan(query[key]);
-
-		if ( key.startsWith(".") ? value : value !== undefined ) {
-			search[key]=value;
-		}
-
-	});
-
-	return Object.getOwnPropertyNames(search).length ? `${id}?${encodeURIComponent(JSON.stringify(search))}` : id;
 }

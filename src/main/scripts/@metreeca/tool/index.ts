@@ -16,7 +16,7 @@
 
 export type Primitive=undefined | null | boolean | string | number | Function
 
-type Immutable<T>=
+export type Immutable<T>=
 	T extends Primitive ? T
 		: T extends Array<infer U> ? ReadonlyArray<Immutable<U>>
 			: { readonly [K in keyof T]: Immutable<T[K]> }

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Immutable } from "../index";
+
 export type Entry<V extends Frame=Frame, E extends Error=Error>=Blank | V | E
 
 export interface Blank {
@@ -34,7 +36,7 @@ export interface Error {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Field=undefined | Value | ReadonlyArray<Value>;
+export type Field=undefined | Value | Immutable<[Value]>;
 export type Value=Plain | Langs | Frame
 export type Plain=boolean | number | string
 
@@ -81,14 +83,14 @@ export interface Query {
 
 export interface Graph {
 
-	get<V extends Frame=Frame>(id: string, model: V): Promise<typeof model>;
+	get<V extends Frame=Frame>(id: string, model: V, query?: Query): Promise<typeof model>;
 
 
-	post(id: string, state: State): Promise<string>;
+	post(id: string, state: State): Promise<string>; // rejected with Error
 
-	put(id: string, state: State): Promise<void>;
+	put(id: string, state: State): Promise<void>; // rejected with Error
 
-	delete(id: string): Promise<void>;
+	delete(id: string): Promise<void>; // rejected with Error
 
 
 	observe(id: string, model: Frame, observer: (frame?: typeof model) => void): () => void;
@@ -119,7 +121,7 @@ export function frame(value: Field | State | Entry): value is Frame {
 	return typeof value === "object" && "id" in value;
 }
 
-export function array(value: Field | State | Entry): value is ReadonlyArray<Value> {
+export function array(value: Field | State | Entry): value is Immutable<[Value]> {
 	return Array.isArray(value);
 }
 
@@ -149,4 +151,46 @@ export function label(id: string) {
 		.replace(/([a-z-0-9])([A-Z])/g, "$1 $2") // split camel-case words
 		.replace(/[-_]+/g, " ") // split kebab-case words
 		.replace(/\b[a-z]/g, $0 => $0.toUpperCase()); // capitalize words
+}
+
+
+/**
+ * Merges an id and an optional query into an URL.
+ *
+ * @param id
+ * @param query
+ *
+ * @return
+ */
+export function url(id: string, query?: Query) {
+
+	function clean(value: any): any {
+		return array(value) ? value.length && value.map(clean).filter(v => v !== undefined)
+			: value ? value
+				: undefined;
+	}
+
+	if ( query ) {
+
+		const search: any={};
+
+		Object.getOwnPropertyNames(query || {}).forEach(key => {
+
+			const value=clean(query[key]);
+
+			if ( key.startsWith(".") ? value : value !== undefined ) {
+				search[key]=value;
+			}
+
+		});
+
+		return Object.getOwnPropertyNames(search).length
+			? `${id}?${encodeURIComponent(JSON.stringify(search))}`
+			: id;
+
+	} else {
+
+		return id;
+
+	}
 }

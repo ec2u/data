@@ -12,6 +12,7 @@ import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Cache.FileCache;
+import com.metreeca.rest.services.Fetcher.CacheFetcher;
 
 import eu.ec2u.data.ports.*;
 import eu.ec2u.work.GCPRepository;
@@ -46,6 +47,7 @@ import static com.metreeca.rest.handlers.Publisher.publisher;
 import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.services.Cache.cache;
 import static com.metreeca.rest.services.Engine.engine;
+import static com.metreeca.rest.services.Fetcher.fetcher;
 import static com.metreeca.rest.services.Logger.Level.debug;
 import static com.metreeca.rest.wrappers.Bearer.bearer;
 import static com.metreeca.rest.wrappers.CORS.cors;
@@ -142,6 +144,7 @@ public final class Data {
 				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
 				.set(graph(), () -> new Graph(production() ? memory() : local()))
 
+				.set(fetcher(), CacheFetcher::new)
 				.set(engine(), GraphEngine::new)
 
 				.set(keywords(), () -> Map.ofEntries(

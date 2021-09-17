@@ -15,11 +15,11 @@
  */
 
 import { freeze } from "../index";
-import { Frame, Graph, State } from "./index";
+import { array, Frame, Graph, Query, State, string, url } from "./index";
 
 export function LinkGraph(): Graph {
 
-	const cache: { [url: string]: Frame }={}; // !!! TTL / size limits / …
+	const cache: { [url: string]: any }={}; // !!! TTL / size limits / …
 
 	const observers=new Set<(frame?: Frame) => void>();
 
@@ -31,9 +31,11 @@ export function LinkGraph(): Graph {
 
 	return freeze({
 
-		get(id: string, model: Frame): Promise<typeof model> {
+		get<V extends Frame=Frame>(id: string, model: V, query?: Query): Promise<typeof model> {
 
-			return fetch(id, {
+			const key=url(id, query);
+
+			return cache[key] || (cache[key]=fetch(id, {
 
 				headers: { Accept: "application/json" } // !!! interceptor for session management
 
@@ -43,12 +45,11 @@ export function LinkGraph(): Graph {
 
 					if ( response.ok ) {
 
-						const value=freeze({ ...prune(model), ...json }); // !!! fill missing properties from model
+						const value=freeze({ ...defaults(model), ...json }); // !!! fill missing properties from model
 
 						notify(value);
 
-						return value as typeof model;
-
+						return value;
 
 					} else {
 
@@ -76,21 +77,21 @@ export function LinkGraph(): Graph {
 
 					});
 
-				});
+				}));
 
 		},
 
 
 		post(id: string, state: State): Promise<string> {
-			throw new Error("to be implemented");
+			throw new Error("to be implemented"); //  !!! invalidate cache
 		},
 
 		put(id: string, state: State): Promise<void> {
-			throw new Error("to be implemented");
+			throw new Error("to be implemented"); //  !!! invalidate cache
 		},
 
 		delete(id: string): Promise<void> {
-			throw new Error("to be implemented");
+			throw new Error("to be implemented"); //  !!! invalidate cache
 		},
 
 
@@ -110,20 +111,39 @@ export function LinkGraph(): Graph {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function prune<T>(model: any): any { // !!! generic type
-	if ( Array.isArray(model) ) {
+/**
+ * Recursively replaces model fields with their default value.
+ *
+ * @param model
+ *
+ * @return
+ */
+function defaults(model: any): any {
+	if ( typeof model === "boolean" ) {
 
-		return [];
+		return false;
+
+	} else if ( typeof model === "number" ) {
+
+		return 0;
+
+	} else if ( typeof model === "string" ) {
+
+		return "";
 
 	} else if ( typeof model === "object" ) {
 
 		return Object.getOwnPropertyNames(model).reduce((object: any, key) => {
 
-			object[key]=prune(model[key]);
+			object[key]=defaults((model as any)[key]);
 
 			return object;
 
 		}, {});
+
+	} else if ( array(model) ) {
+
+		return [];
 
 	} else {
 
