@@ -2,20 +2,20 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import "@metreeca/tile/fonts/quicksand.css";
-import { LinkGraph } from "@metreeca/tile/graphs/link";
-import "@metreeca/tile/index.css";
-import { Connector } from "@metreeca/tile/nests/connector";
-import { Router } from "@metreeca/tile/nests/router";
 import * as React from "react";
 import { render } from "react-dom";
-import ToolAbout from "./pages/about";
-import { ToolEvent } from "./pages/events/event";
-import { ToolEvents } from "./pages/events/events";
-import ToolHome from "./pages/home";
+import { LinkGraph } from "./@metreeca/tool/bases/link";
+import "./@metreeca/tool/fonts/quicksand.css";
+import "./@metreeca/tool/index.css";
+import { ToolGraph } from "./@metreeca/tool/nests/graph";
+import { ToolRouter } from "./@metreeca/tool/nests/router";
+import DataAbout, { About } from "./pages/about";
+import { Event, ToolEvent } from "./pages/events/event";
+import { Events, ToolEvents } from "./pages/events/events";
+import DataHome, { Home } from "./pages/home";
 import ToolNone from "./pages/none";
-import { ToolUniversities } from "./pages/universities/universities";
-import { ToolUniversity } from "./pages/universities/university";
+import { ToolUniversities, Universities } from "./pages/universities/universities";
+import { ToolUniversity, University } from "./pages/universities/university";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,24 +24,24 @@ render((
 
 	<React.StrictMode>
 
-		<Connector value={LinkGraph()}>
+		<ToolGraph value={LinkGraph()}>
 
-			<Router routes={{
+			<ToolRouter routes={{
 
-				"/": ToolHome,
-				"/about": ToolAbout,
+				[Home.id]: DataHome,
+				[About.id]: DataAbout,
 
-				"/universities/": ToolUniversities,
-				"/universities/{code}": ToolUniversity,
+				[Universities.id]: ToolUniversities,
+				[University.id]: ToolUniversity,
 
-				"/events/": ToolEvents,
-				"/events/{code}": ToolEvent,
+				[Events.id]: ToolEvents,
+				[Event.id]: ToolEvent,
 
 				"*": ToolNone
 
 			}}/>
 
-		</Connector>
+		</ToolGraph>
 
 	</React.StrictMode>
 

@@ -2,71 +2,62 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { useEntry } from "@metreeca/tile/nests/connector";
-import { useRouter } from "@metreeca/tile/nests/router";
-import { ToolSpin } from "@metreeca/tile/tiles/loaders/spin";
 import * as React from "react";
-import { createElement, useEffect } from "react";
-import { ToolPage } from "../../tiles/page";
-
-
-const Event={
-
-	id: "",
-	label: { en: "" },
-	comment: { en: "" },
-	image: ""
-
-};
+import { freeze } from "../../@metreeca/tool";
+import { useEntry } from "../../@metreeca/tool/hooks/entry";
+import { useRouter } from "../../@metreeca/tool/nests/router";
+import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const Event=freeze({
+
+	id: "/events/{code}",
+
+	label: { en: "Event" },
+	comment: { en: "" },
+	image: ""
+
+});
 
 export function ToolEvent() {
 
 	const { name }=useRouter();
 
-	const event=useEntry("", Event);
+	const [event]=useEntry("", Event);
 
-	useEffect(() => event.then(event => { name(event.label?.en); }));
+	/*useEffect(() => name(event.label?.en));
 
-	return event.then(event => (
+	 return event.then(event => (
 
-		<ToolPage
+	 <ToolPage
 
-			item={<>
-				<a href={"/events/"}>Events</a>
-				<span>{event.label?.en}</span>
-			</>}
+	 item={<>
+	 <a href={"/events/"}>Events</a>
+	 <span>{event.label?.en}</span>
+	 </>}
 
-			pane={side(event)}
+	 >
 
-		>
+	 {main(event)}
 
-			{main(event)}
+	 </ToolPage>
 
-		</ToolPage>
-
-	)) || <ToolSpin/>;
+	 )) ||*/
+	return <ToolSpin/>;
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function side({}: typeof Event) {
-	return <dl>
-
-
-	</dl>;
-}
-
-function main({ label, comment, image }: typeof Event) {
-	return createElement("tool-event", {}, <>
-
-		{image && <img src={image} alt={`Image of ${label?.en}`}/>}
-
-		<p>{comment?.en}</p>
-
-	</>);
-}
+// function main({ label, comment, image }: typeof Event) {
+// 	return createElement("tool-event", {}, <>
+//
+// 		{image && <img src={image} alt={`Image of ${label?.en}`}/>}
+//
+// 		<p>{comment?.en}</p>
+//
+// 	</>);
+// }

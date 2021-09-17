@@ -1,0 +1,49 @@
+/*
+ * Copyright © 2020-2021 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@375;500;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@375&display=swap');
+
+body {
+	font-family: Quicksand, Helvetica, Arial, sans-serif;
+	font-weight: 375;
+	line-height: 1.2;
+}
+
+h1, h2, h3 {
+	font-weight: 700;
+}
+
+dt, th {
+	font-size: 90%;
+	font-weight: 700;
+}
+
+code {
+	font-family: Inconsolata, Courier, monospace;
+}
+
+strong {
+	font-weight: 700;
+}
+
+a {
+	font-weight: 500;
+}
+
+button {
+	font-weight: 500;
+}

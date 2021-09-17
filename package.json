@@ -4,8 +4,10 @@
 		"start": "vite --open /index.html",
 		"build": "vite build"
 	},
-	"dependencies": {
-		"@metreeca/tile": "^0.0.12"
+	"peerDependencies": {
+		"lucide-react": "^0.15.30",
+		"react": "^17.0.0",
+		"react-dom": "^17.0.0"
 	},
 	"devDependencies": {
 		"@types/node": "^16.6.0",

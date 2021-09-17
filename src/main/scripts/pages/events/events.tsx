@@ -2,39 +2,32 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { Query } from "@metreeca/tile/graphs";
-import { StateUpdater } from "@metreeca/tile/hooks";
-import { useQuery } from "@metreeca/tile/hooks/query";
-import { useEntry, useKeywords, useOptions } from "@metreeca/tile/nests/connector";
-import { ToolInput } from "@metreeca/tile/tiles/controls/input";
-import { ToolField } from "@metreeca/tile/tiles/controls/field";
-import { ToolOptions } from "@metreeca/tile/tiles/facets/options";
-import { Search } from "@metreeca/tile/tiles/icon";
-import { ToolSpin } from "@metreeca/tile/tiles/loaders/spin";
-import { ToolPane } from "@metreeca/tile/tiles/pane";
 import * as React from "react";
-import { createElement } from "react";
-import { ToolCard } from "../../tiles/card";
-import { ToolPage } from "../../tiles/page";
+import { freeze } from "../../@metreeca/tool";
+import { useQuery } from "../../@metreeca/tool/hooks/query";
+import { DataPage } from "../../tiles/page";
 
 
-const Events={
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	id: "",
+export const Events=freeze({
+
+	id: "/events/",
+
+	label: { en: "Events" },
 
 	contains: [{
 
 		id: "",
+
 		label: { en: "" },
 		comment: { en: "" },
 		image: ""
 
 	}]
 
-};
+});
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function ToolEvents() {
 
@@ -45,17 +38,17 @@ export function ToolEvents() {
 
 	return (
 
-		<ToolPage
+		<DataPage item={<input type={"search"} placeholder={"Discover EC2U Events"}
+			value={""} onChange={() => {}}/>
+		}
 
-			item={"Events"}
-
-			pane={side([query, putQuery])}
+			// pane={side([query, putQuery])}
 
 		>
 
-			{main(query)}
+			{/*{main(query)}*/}
 
-		</ToolPage>
+		</DataPage>
 
 	);
 }
@@ -63,31 +56,33 @@ export function ToolEvents() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function side([query, setQuery]: [query: Query, setQuery: StateUpdater<Query>]) {
-	return <ToolPane header={<ToolInput rule menu={<Search/>}
-		placeholder="Search"
-		value={useKeywords("label", [query, setQuery])}
-	/>}>
+/*
+ function side([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
+ return <ToolPane header={<ToolInput rule menu={<Search/>}
+ placeholder="Search"
+ value={useKeywords("label", [query, setQuery])}
+ />}>
 
-		<ToolField expanded name={"University"} selector={<ToolOptions value={useOptions(
-			"", "university", [query, setQuery]
-		)}/>}/>
+ {/!*<ToolField expanded name={"University"} selector={<ToolOptions value={useOptions(*!/}
+ {/!*	"", "university", [query, setQuery]*!/}
+ {/!*)}/>}/>*!/}
 
-	</ToolPane>;
-}
+ </ToolPane>;
+ }
 
-function main(query: Query) {
+ function main(query: Query) {
 
-	const events=useEntry("", Events, query);
+ const events=useEntry("", Events, query);
 
-	return events.then(events => createElement("tool-events", {}, events.contains.map(event =>
+ return events.then(events => createElement("tool-events", {}, events.contains.map(event =>
 
-		<ToolCard key={event.id}
+ <ToolCard key={event.id}
 
-			site={<a href={event.id}>{event.label?.en}</a>}
-			icon={event.image?.[0]}
-			tags={{ Event: "/events/" }}
+ site={<a href={event.id}>{event.label?.en}</a>}
+ icon={event.image?.[0]}
+ tags={{ Event: "/events/" }}
 
-		>{event.comment?.en}</ToolCard>
-	))) || <ToolSpin/>;
-}
+ >{event.comment?.en}</ToolCard>
+ ))) || <ToolSpin/>;
+ }
+ */

@@ -2,9 +2,9 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { Tag } from "@metreeca/tile/tiles/icon";
 import * as React from "react";
 import { createElement, ReactNode } from "react";
+import { Tag } from "../@metreeca/tool/tiles/icon";
 import "./card.css";
 
 export interface Tags {

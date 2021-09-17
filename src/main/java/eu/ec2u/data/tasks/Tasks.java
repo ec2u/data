@@ -22,7 +22,7 @@ import static com.metreeca.rest.services.Fetcher.fetcher;
 import static eu.ec2u.data.Data.local;
 
 
-public final class Loaders {
+public final class Tasks {
 
 	public static void exec(final Runnable... tasks) {
 		new Toolbox()
@@ -30,7 +30,7 @@ public final class Loaders {
 				.set(storage(), () -> Paths.get("data"))
 				.set(fetcher(), CacheFetcher::new)
 
-				.set(cache(), () -> new FileCache().ttl(Duration.ofDays(1))) // !!!
+				.set(cache(), () -> new FileCache().ttl(Duration.ofDays(1)))
 				.set(graph(), () -> new Graph(local()))
 
 				.set(engine(), GraphEngine::new)
@@ -43,6 +43,6 @@ public final class Loaders {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Loaders() {}
+	private Tasks() { }
 
 }

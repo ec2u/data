@@ -2,20 +2,19 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { copy } from "@metreeca/tile/nests/router";
-import { Calendar, Heart, MapPin } from "@metreeca/tile/tiles/icon";
-import { ToolPage as BasePage } from "@metreeca/tile/tiles/page";
-import { ToolPane } from "@metreeca/tile/tiles/pane";
 import * as React from "react";
 import { ReactNode, useState } from "react";
+import { ToolPage } from "../@metreeca/tool/tiles/page";
+import { ToolResources } from "../panes/resources";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ToolPage({
+export function DataPage({
+
+	pane,
 
 	item,
 	menu,
-	pane,
 
 	children
 
@@ -32,37 +31,39 @@ export function ToolPage({
 
 	const [hidden, setHidden]=useState(false);
 
-	return <BasePage item={item} menu={menu}
+	return <ToolPage item={[<
+		a href={"https://ec2u.eu/"}>EC2U</a>,
+		typeof item === "string" ? <span>{item}</span> : item
+	]}
 
-		side={<>
-			<a href={"/universities/"}><MapPin/></a>
-			<a href={"/events/"}><Calendar/></a>
-		</>}
+		menu={menu}
 
-		pane={<ToolPane
+		pane={<ToolResources/>}
 
-			header={<a href={"/"} onClick={e => {
+		/*
+		 pane={<ToolPane
 
-				if ( e.shiftKey ) {
+		 header={<a href={"/"} onClick={e => {
 
-					e.preventDefault();
-					setHidden(!hidden);
+		 if ( e.shiftKey ) {
 
-				}
+		 e.preventDefault();
+		 setHidden(!hidden);
 
-			}}><strong>EC2U Connect Centre</strong></a>}
+		 }
 
-			footer={<small>{copy}</small>}
+		 }}><strong>EC2U Connect Centre</strong></a>}
 
-		>{
+		 footer={<small>{copy}</small>}
 
-			hidden ? <Hidden/> : pane
+		 >{
 
-		}</ToolPane>}
+		 hidden ? <Hidden/> : pane
 
-		user={<small><a href={"/about"}><Heart/></a></small>}
+		 }</ToolPane>}
+		 */
 
-	>{children}</BasePage>;
+	>{children}</ToolPage>;
 
 }
 

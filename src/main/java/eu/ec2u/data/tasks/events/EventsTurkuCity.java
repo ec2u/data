@@ -27,7 +27,7 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.formats.JSONFormat.json;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static eu.ec2u.data.tasks.Loaders.exec;
+import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.events.EventsAll.synced;
 
 import static java.nio.charset.StandardCharsets.UTF_8;

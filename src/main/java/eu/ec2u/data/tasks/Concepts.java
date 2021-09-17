@@ -15,7 +15,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Xtream.task;
 
-import static eu.ec2u.data.tasks.Loaders.exec;
+import static eu.ec2u.data.tasks.Tasks.exec;
 
 
 final class Concepts {

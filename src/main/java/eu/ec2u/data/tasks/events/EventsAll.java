@@ -27,7 +27,7 @@ import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.services.Logger.logger;
 import static com.metreeca.rest.services.Logger.time;
 
-import static eu.ec2u.data.tasks.Loaders.exec;
+import static eu.ec2u.data.tasks.Tasks.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
 import static java.lang.String.format;

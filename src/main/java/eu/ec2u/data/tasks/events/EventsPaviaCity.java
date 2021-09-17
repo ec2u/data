@@ -21,7 +21,7 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static eu.ec2u.data.tasks.Loaders.exec;
+import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.events.EventsAll.synced;
 
 import static java.time.ZoneOffset.UTC;

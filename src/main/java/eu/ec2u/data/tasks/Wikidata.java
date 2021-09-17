@@ -9,7 +9,7 @@ import com.metreeca.rest.Xtream;
 
 import eu.ec2u.data.Data;
 
-import static eu.ec2u.data.tasks.Loaders.exec;
+import static eu.ec2u.data.tasks.Tasks.exec;
 
 public final class Wikidata implements Runnable {
 

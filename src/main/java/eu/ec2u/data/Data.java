@@ -149,7 +149,7 @@ public final class Data {
 						entry("@type", "type")
 				))
 
-				.exec(Data::prefixes)
+				.exec(Data::namespaces)
 				.exec(Data::ontologies)
 
 				.get(() -> server()
@@ -192,7 +192,7 @@ public final class Data {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private static void prefixes() {
+	private static void namespaces() {
 		service(graph()).update(task(connection -> {
 
 			connection.clearNamespaces();
