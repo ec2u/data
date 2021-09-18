@@ -79,7 +79,7 @@ export function ToolPage({
 
 }) {
 
-	const { peek, link }=useRouter();
+	const { name, peek, link }=useRouter();
 
 	const [tray, setTray]=useState(false);
 
@@ -98,7 +98,7 @@ export function ToolPage({
 
 			<nav>
 
-				<header>{head || <a href={"/"} {...logo}/>}</header>
+				<header>{head || <a title={name()} href={"/"} {...logo}/>}</header>
 
 				<section>{side}</section>
 
