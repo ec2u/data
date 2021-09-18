@@ -4,7 +4,6 @@
 
 import * as React from "react";
 import { createElement, ReactNode } from "react";
-import { Tag } from "../@metreeca/tool/tiles/icon";
 import "./card.css";
 
 export interface Tags {
@@ -19,7 +18,7 @@ export function DataCard({
 
 	name,
 
-	tags={},
+	tags,
 	icon,
 	info,
 
@@ -29,7 +28,7 @@ export function DataCard({
 
 	name?: ReactNode | string
 
-	tags?: Tags
+	tags?: ReactNode | string
 	icon?: ReactNode | string
 	info?: ReactNode | string
 
@@ -49,9 +48,7 @@ export function DataCard({
 
 		<nav>
 
-			<header>{Object.entries(tags).map(([label, id]) =>
-				<a key={label} href={id}><Tag/>{label}</a>
-			)}</header>
+			<header>{tags}</header>
 
 			<figure>{typeof icon === "string" ? <img src={icon}/> : icon}</figure>
 

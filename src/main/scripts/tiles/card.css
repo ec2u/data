@@ -56,7 +56,7 @@ data-card {
 
 		flex-shrink: 0;
 
-		max-width: 20%;
+		width: 12.5em;
 
 		display: flex;
 		flex-direction: column;
@@ -65,32 +65,7 @@ data-card {
 		font-size: 90%;
 
 		& > header {
-
 			margin-left: auto;
-			font-size: 66%;
-
-			& > * {
-
-				display: inline-flex;
-				flex-direction: row;
-				align-items: center;
-
-				padding: 0.25em 0.75em;
-				border-style: solid;
-				border-radius: 1em;
-				background-color: #F4F5F6;
-
-				margin-left: 0.25em;
-
-				& > svg {
-					width: 1em;
-					height: 1em;
-					margin-right: 0.25em;
-					stroke: #333;
-				}
-
-			}
-
 		}
 
 		& > figure {

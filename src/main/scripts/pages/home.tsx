@@ -40,7 +40,7 @@ export default function DataHome() {
 
 		<DataPage item={"Connect Centre"} menu={<a href={About.id} title={`About ${string(Home.label)}`}><Heart/></a>}>
 
-			{<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"} style={{ width: "100%" }}/>}
+			{<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"} style={{ width: "100%", maxWidth: "50em" }}/>}
 
 		</DataPage>
 

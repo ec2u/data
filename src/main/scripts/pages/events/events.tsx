@@ -8,15 +8,19 @@ import { freeze } from "../../@metreeca/tool";
 import { blank, probe, Query, string } from "../../@metreeca/tool/bases";
 import { Updater } from "../../@metreeca/tool/hooks";
 import { useEntry } from "../../@metreeca/tool/hooks/entry";
+import { useItems } from "../../@metreeca/tool/hooks/items";
 import { useKeywords } from "../../@metreeca/tool/hooks/keywords";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
 import { useRouter } from "../../@metreeca/tool/nests/router";
+import { ToolItems } from "../../@metreeca/tool/tiles/facets/items";
 import { ToolSearch } from "../../@metreeca/tool/tiles/inputs/search";
 import { ToolPane } from "../../@metreeca/tool/tiles/pane";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataFiltersButton } from "../../panes/filters";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
+import { DataTags } from "../../tiles/tags";
+import { Event } from "./event";
 
 
 export const Events=freeze({
@@ -89,7 +93,7 @@ export function DataEvents() {
 				</>}
 
 				icon={image?.[0]}
-				tags={{ Event: Events.id }}
+				tags={<DataTags values={Event}/>}
 
 			>
 
@@ -112,13 +116,13 @@ function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
 	const [keywords, setKeywords]=useKeywords("label", [query, setQuery]);
 
-	// const [items, setItems]=useItems("", "university", [query, setQuery]);
+	const [items, setItems]=useItems("", "university", [query, setQuery]);
 
 	return <ToolPane header={<ToolSearch icon rule placeholder={"Search"}
 		auto={500} value={keywords} onChange={setKeywords}
 	/>}>
 
-		{/*<ToolItems value={[items, setItems]}/>*/}
+		<ToolItems value={[items, setItems]}/>
 
 	</ToolPane>;
 }

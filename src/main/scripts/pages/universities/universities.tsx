@@ -11,6 +11,7 @@ import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
+import { DataTags } from "../../tiles/tags";
 
 
 export const Universities=freeze({
@@ -58,7 +59,7 @@ export function DataUniversities() {
 
 				name={<a href={id}>{string(label)}</a>}
 				icon={image}
-				tags={{ University: Universities.id }}
+				tags={<DataTags values={Universities}/>}
 
 			>
 				{string(comment)}
