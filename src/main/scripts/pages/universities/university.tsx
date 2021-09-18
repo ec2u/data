@@ -27,6 +27,7 @@ export const University=freeze({
 	long: 0,
 
 	inception: "",
+	students: 0,
 
 	country: {
 		id: "",
@@ -65,7 +66,8 @@ export function DataUniversity() {
 		frame: ({
 
 			image, label, comment,
-			inception, country, location
+			inception, students,
+			country, location
 
 		}) => (
 
@@ -83,6 +85,9 @@ export function DataUniversity() {
 
 					<dt>City</dt>
 					<dd><a href={location.id}>{string(location.label)}</a></dd>
+
+					{/*<dt>Students</dt>*/}
+					{/*<dd>{string(students)}</dd>*/}
 
 				</dl>}
 

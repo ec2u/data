@@ -19,8 +19,6 @@ import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataFiltersButton } from "../../panes/filters";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
-import { DataTags } from "../../tiles/tags";
-import { Event } from "./event";
 
 
 export const Events=freeze({
@@ -86,14 +84,14 @@ export function DataEvents() {
 
 			<DataCard key={id}
 
-				name={<>
-					<span>{string(university.label).replace("University of ", "")}</span>
-					<span>{startDate.substr(0, 10)}</span>
-					<a href={id}>{string(label)}</a>
-				</>}
+				name={<a href={id}>{string(label)}</a>}
 
 				icon={image?.[0]}
-				tags={<DataTags values={Event}/>}
+				tags={<>
+					<span>{string(university.label).replace("University of ", "")}</span>
+					<span> / </span>
+					<span>{startDate.substr(0, 10)}</span>
+				</>}
 
 			>
 

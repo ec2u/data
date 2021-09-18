@@ -11,7 +11,6 @@ import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
-import { DataTags } from "../../tiles/tags";
 
 
 export const Universities=freeze({
@@ -24,13 +23,14 @@ export const Universities=freeze({
 
 		id: "",
 
+		image: "",
 		label: { en: "" },
 		comment: { en: "" },
-		image: "",
 
-		schac: "",
-		lat: 0,
-		long: 0
+		country: {
+			id: "",
+			label: { en: "" }
+		}
 
 	}]
 
@@ -53,13 +53,13 @@ export function DataUniversities() {
 
 	>{probe(universities, {
 
-		frame: ({ contains }) => contains.map(({ id, label, image, comment }) => (
+		frame: ({ contains }) => contains.map(({ id, label, image, comment, country }) => (
 
 			<DataCard key={id}
 
 				name={<a href={id}>{string(label)}</a>}
 				icon={image}
-				tags={<DataTags values={Universities}/>}
+				tags={<span>{string(country)}</span>}
 
 			>
 				{string(comment)}

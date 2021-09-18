@@ -20,7 +20,8 @@ data-card {
 
 		& > :first-child {
 
-			margin-bottom: 2ex;
+			margin-bottom: 1.5ex;
+			font-weight: 500;
 
 			&:empty {
 				display: none;
@@ -40,8 +41,6 @@ data-card {
 		flex-grow: 1;
 
 		& > h1 {
-
-			font-weight: 500;
 
 			& > * + *::before {
 				content: "›";
@@ -66,6 +65,7 @@ data-card {
 
 		& > header {
 			margin-left: auto;
+			color: #999;
 		}
 
 		& > figure {

@@ -38,21 +38,21 @@ public final class Universities extends Delegator {
 
 				link(OWL.SAMEAS,
 
-						field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
-						field(WGS84.LONG, optional(), datatype(XSD.DECIMAL)),
+						field(Data.country, optional(),
+								field(RDFS.LABEL, optional(), multilingual())
+						),
 
 						detail(
-
-								field(Data.country, optional(),
-										field(RDFS.LABEL, optional(), multilingual())
-								),
 
 								field(Data.location, optional(),
 										field(RDFS.LABEL, optional(), multilingual())
 								),
 
+								field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
+								field(WGS84.LONG, optional(), datatype(XSD.DECIMAL)),
+
 								field(Data.inception, optional(), datatype(XSD.DATETIME)),
-								field(Data.students, optional(), datatype(XSD.DECIMAL))
+								field(Data.students, optional(), datatype(XSD.INTEGER))
 						)
 
 				)

@@ -16,7 +16,10 @@
 
 import { Immutable } from "../index";
 
-export type Entry<V extends Frame=Frame, E extends Error=Error>=Blank | V | E
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Entry<V extends Frame=Frame, E extends Error=Error>=V | E | Blank
 
 export interface Blank {
 

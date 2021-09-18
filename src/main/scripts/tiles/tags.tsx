@@ -10,14 +10,14 @@ import "./tags.css";
 
 export function DataTags({
 
-	values
+	children
 
 }: {
 
-	values: Value | Value[]
+	children: Value | Value[]
 
 }) {
-	return createElement("data-tags", {}, (array(values) ? values : [values]).map(value => frame(value)
+	return createElement("data-tags", {}, (array(children) ? children : [children]).map(value => frame(value)
 		? <a key={value.id} href={value.id}><Tag/>{string(value.label)}</a>
 		: <span key={string(value)}><Tag/>{string(value)}</span>
 	));
