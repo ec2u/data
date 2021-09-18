@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Value } from "../bases";
+import { Value } from "../../bases";
 
 
 const Range={

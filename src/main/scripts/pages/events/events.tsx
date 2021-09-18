@@ -3,22 +3,25 @@
  */
 
 import * as React from "react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useReducer } from "react";
 import { freeze } from "../../@metreeca/tool";
 import { blank, probe, Query, string } from "../../@metreeca/tool/bases";
 import { Updater } from "../../@metreeca/tool/hooks";
-import { useEntry } from "../../@metreeca/tool/hooks/entry";
-import { useItems } from "../../@metreeca/tool/hooks/items";
-import { useKeywords } from "../../@metreeca/tool/hooks/keywords";
+import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
+import { useItems } from "../../@metreeca/tool/hooks/queries/items";
+import { useKeywords } from "../../@metreeca/tool/hooks/queries/keywords";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolItems } from "../../@metreeca/tool/tiles/facets/items";
+import { ToolFacet } from "../../@metreeca/tool/tiles/inputs/facet";
 import { ToolSearch } from "../../@metreeca/tool/tiles/inputs/search";
+import { CancelIcon } from "../../@metreeca/tool/tiles/page";
 import { ToolPane } from "../../@metreeca/tool/tiles/pane";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataFiltersButton } from "../../panes/filters";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
+import { University } from "../universities/university";
 
 
 export const Events=freeze({
@@ -62,9 +65,9 @@ export function DataEvents() {
 	});
 
 
-	const [events]=useEntry("", Events, query);
+	const [, update]=useReducer(v => v+1, 0);
 
-	const [pane, setPane]=useState<ReactNode>(facets([query, setQuery]));
+	const [events]=useEntry("", Events, query);
 
 
 	useEffect(() => { name(string(Events.label)); });
@@ -74,9 +77,9 @@ export function DataEvents() {
 
 		menu={blank(events) && <ToolSpin/>}
 
-		side={<DataFiltersButton onClick={() => setPane(facets([query, setQuery]))}/>}
+		side={<DataFiltersButton onClick={update}/>}
 
-		pane={pane}
+		pane={facets([query, setQuery])}
 
 	>{probe(events, {
 
@@ -114,13 +117,29 @@ function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
 	const [keywords, setKeywords]=useKeywords("label", [query, setQuery]);
 
-	const [items, setItems]=useItems("", "university", [query, setQuery]);
+	const [universities, setUniversities]=useItems("", "university", [query, setQuery]);
 
-	return <ToolPane header={<ToolSearch icon rule placeholder={"Search"}
-		auto={500} value={keywords} onChange={setKeywords}
-	/>}>
+	return <ToolPane
 
-		<ToolItems value={[items, setItems]}/>
+		header={<ToolSearch icon rule placeholder={"Search"}
+			auto={500} value={keywords} onChange={setKeywords}
+		/>}
+
+		footer={"123 matches"}
+
+	>
+
+		<ToolFacet expanded name={string(University.label)}
+			menu={<button title={"Clear filter"} onClick={() => {}}><CancelIcon/></button>}
+		>
+			<ToolItems value={[universities, setUniversities]}/>
+		</ToolFacet>
+
+		<ToolFacet expanded name={"Date"}
+			menu={<button title={"Clear filter"} onClick={() => {}}><CancelIcon/></button>}
+		>
+			<ToolItems value={[universities, setUniversities]}/>
+		</ToolFacet>
 
 	</ToolPane>;
 }

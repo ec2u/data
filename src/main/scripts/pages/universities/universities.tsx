@@ -6,7 +6,7 @@ import * as React from "react";
 import { ReactNode, useEffect } from "react";
 import { freeze } from "../../@metreeca/tool";
 import { blank, probe, string } from "../../@metreeca/tool/bases";
-import { useEntry } from "../../@metreeca/tool/hooks/entry";
+import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataCard } from "../../tiles/card";

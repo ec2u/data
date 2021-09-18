@@ -14,37 +14,57 @@
  * limitations under the License.
  */
 
-tool-items {
+tool-facet {
 
-	display: grid;
-	grid-template-columns: auto 1fr auto;
-	align-items: baseline;
-	justify-items: stretch;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 
-	grid-row-gap: 0.25ex;
+	& > header {
 
-	& > * {
+		flex: 0 0;
 
-		display: contents;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 
-		&.unavailable > * {
-			color: var(--tool--color-disabled) !important;
+		white-space: nowrap;
+		font-weight: 500;
+
+		& > button {
+			margin-right: 0.25em;
+			transform: translateX(-10%);
 		}
 
-		& > input {
-			align-self: center;
+		& > nav {
+			margin-left: auto;
 		}
 
-		& > a, & > span {
-			padding: 0 0.5em;
-			overflow: hidden;
-			text-overflow: ellipsis;
+	}
+
+	& > section {
+
+		flex: 1 0;
+
+		font-size: 85%;
+	}
+
+	&.collapsed {
+
+		& > section {
+			display: none;
 		}
 
-		& > var {
-			text-align: right;
-			font-size: 80%;
-			color: #999;
+	}
+
+	&.expanded {
+
+		&:not(:last-child) {
+			margin-bottom: 2ex;
+		}
+
+		& > header {
+			margin-bottom: 0.5ex;
 		}
 
 	}

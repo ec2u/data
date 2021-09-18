@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { frame, langs, Plain, probe, Query, string, Value } from "../bases";
-import { freeze, Immutable } from "../index";
+import { frame, langs, Plain, probe, Query, string, Value } from "../../bases";
+import { freeze, Immutable } from "../../index";
+import { Updater } from "../index";
 import { useEntry } from "./entry";
-import { Updater } from "./index";
 
 const ItemsModel=freeze({
 
@@ -69,8 +69,8 @@ export function useItems(id: string, path: string, [query, setQuery]: [Query, Up
 
 	const baseline=probe(useEntry(id, ItemsModel, { ".terms": path })[0], { // computed ignoring all facets
 
-		blank: [...ItemsModel.terms],
-		error: [...ItemsModel.terms],
+		blank: [],
+		error: [],
 
 		frame: ({ terms }) => terms
 
@@ -88,8 +88,8 @@ export function useItems(id: string, path: string, [query, setQuery]: [Query, Up
 		}, { ".terms": path })
 	)[0], { // computed ignoring this facet
 
-		blank: [...ItemsModel.terms],
-		error: [...ItemsModel.terms],
+		blank: [],
+		error: [],
 
 		frame: ({ terms }) => terms
 

@@ -15,9 +15,9 @@
  */
 
 import { useEffect, useReducer, useState } from "react";
-import { blank, Blank, Entry, Error, frame, Frame, Query, State, url } from "../bases";
-import { useGraph } from "../nests/graph";
-import { useRouter } from "../nests/router";
+import { blank, Blank, Entry, Error, frame, Frame, Query, State, url } from "../../bases";
+import { useGraph } from "../../nests/graph";
+import { useRouter } from "../../nests/router";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

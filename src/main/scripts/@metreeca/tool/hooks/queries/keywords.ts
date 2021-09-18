@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { first, Query, string } from "../bases";
-import { normalize } from "../index";
-import { Updater } from "./index";
+import { first, Query, string } from "../../bases";
+import { normalize } from "../../index";
+import { Updater } from "../index";
 
 
 export type Keywords=string;

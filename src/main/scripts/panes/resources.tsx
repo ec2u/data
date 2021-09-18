@@ -6,7 +6,7 @@ import * as React from "react";
 import { ReactNode } from "react";
 import { blank, frame, string } from "../@metreeca/tool/bases";
 import { Updater } from "../@metreeca/tool/hooks";
-import { useEntry } from "../@metreeca/tool/hooks/entry";
+import { useEntry } from "../@metreeca/tool/hooks/queries/entry";
 import { Calendar, Database, Library, MapPin } from "../@metreeca/tool/tiles/icon";
 import { ToolSearch } from "../@metreeca/tool/tiles/inputs/search";
 import { ToolItem } from "../@metreeca/tool/tiles/item";

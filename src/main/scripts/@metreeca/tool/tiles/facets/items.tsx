@@ -37,12 +37,7 @@ export function ToolItems({
 
 			selected, value, count
 
-		}) => createElement("tool-item", {
-
-			key: string(value),
-			class: count ? "available" : "unavailable"
-
-		}, <>
+		}) => <div key={string(value)} className={count ? "available" : "unavailable"}>
 
 			<input type="checkbox" checked={selected} disabled={!count}
 				onChange={e => setItems({ value, selected: e.currentTarget.checked })}
@@ -55,6 +50,6 @@ export function ToolItems({
 
 			<var>{count}</var>
 
-		</>))
+		</div>)
 	);
 }
