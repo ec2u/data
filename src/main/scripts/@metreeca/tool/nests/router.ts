@@ -379,8 +379,8 @@ export function ToolRouter({
 				},
 
 				children: [
-					createElement("tool-source", {}, linking?.cache && component),
-					createElement("tool-target", {}, linking?.cache || component)
+					createElement("tool-source", { key: "source" }, linking?.cache && component),
+					createElement("tool-target", { key: "target" }, linking?.cache || component)
 				]
 
 			});
