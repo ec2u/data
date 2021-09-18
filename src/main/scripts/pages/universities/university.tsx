@@ -9,6 +9,7 @@ import { blank, frame, probe, string } from "../../@metreeca/tool/bases";
 import { useEntry } from "../../@metreeca/tool/hooks/entry";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
+import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
 import { Universities } from "./universities";
 
@@ -66,26 +67,31 @@ export function DataUniversity() {
 			image, label, comment,
 			inception, country, location
 
-		}) => <>
+		}) => (
 
-			{image && <img src={image} alt={`Image of ${string(label)}`}/>}
+			<DataCard
 
-			<p>{string(comment)}</p>
+				icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
 
-			<dl>
+				info={<dl>
 
-				<dt>Inception</dt>
-				<dd>{inception && inception.substr(0, 4) || "-"}</dd>
+					<dt>Inception</dt>
+					<dd>{inception && inception.substr(0, 4) || "-"}</dd>
 
-				<dt>Country</dt>
-				<dd><a href={country.id}>{string(country.label)}</a></dd>
+					<dt>Country</dt>
+					<dd><a href={country.id}>{string(country.label)}</a></dd>
 
-				<dt>Location</dt>
-				<dd><a href={location.id}>{string(location.label)}</a></dd>
+					<dt>City</dt>
+					<dd><a href={location.id}>{string(location.label)}</a></dd>
 
-			</dl>
+				</dl>}
 
-		</>
+			>
 
+				<p>{string(comment)}</p>
+
+			</DataCard>
+
+		)
 	})}</DataPage>;
 }

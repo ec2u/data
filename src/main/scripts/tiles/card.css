@@ -5,20 +5,39 @@
 data-card {
 
 	display: flex;
-	flex-direction: column;
-	align-items: stretch;
+	flex-direction: row;
+	align-items: start;
 
 	max-width: 50em;
+
+	grid-column-gap: 1.5em;
 
 	&:not(:first-child) {
 		margin-top: 1.5em;
 	}
 
-	& > header {
+	& > * {
 
-		display: flex;
-		flex-direction: row;
-		align-items: center;
+		& > :first-child {
+
+			margin-bottom: 2ex;
+
+			&:empty {
+				display: none;
+			}
+
+		}
+
+		& > :first-child + * {
+			margin-top: 0;
+			padding-top: 0;
+		}
+
+	}
+
+	& > div {
+
+		flex-grow: 1;
 
 		& > h1 {
 
@@ -31,7 +50,21 @@ data-card {
 
 		}
 
-		& > nav {
+	}
+
+	& > nav {
+
+		flex-shrink: 0;
+
+		max-width: 20%;
+
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+
+		font-size: 90%;
+
+		& > header {
 
 			margin-left: auto;
 			font-size: 66%;
@@ -60,18 +93,34 @@ data-card {
 
 		}
 
-	}
+		& > figure {
 
-	& > section {
+			& > img:first-child {
+				width: 100%;
+			}
 
-		margin-top: 0.75em;
-		font-size: 90%;
+		}
 
-		& > img:first-child {
-			float: right;
-			width: 10em;
-			margin-left: 1.5em;
-			margin-bottom: 1.5ex;
+		& > figure + dl {
+
+			display: grid;
+			grid-template-columns: min-content 1fr;
+			grid-template-rows: min-content;
+			grid-column-gap: 0.5em;
+			grid-row-gap: 0.25em;
+
+			margin-top: 2ex;
+
+			& > * {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			& > dd {
+				text-align: right;
+			}
+
 		}
 
 	}

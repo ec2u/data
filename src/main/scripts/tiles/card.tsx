@@ -19,17 +19,19 @@ export function DataCard({
 
 	name,
 
-	icon,
 	tags={},
+	icon,
+	info,
 
 	children
 
 }: {
 
-	name: ReactNode | string
+	name?: ReactNode | string
 
-	icon?: ReactNode | string
 	tags?: Tags
+	icon?: ReactNode | string
+	info?: ReactNode | string
 
 	children?: ReactNode
 
@@ -37,22 +39,25 @@ export function DataCard({
 
 	return createElement("data-card", {}, <>
 
-		<header>
+		<div>
 
 			<h1>{name}</h1>
 
-			<nav>{Object.entries(tags).map(([label, id]) =>
-				<a key={label} href={id}><Tag/>{label}</a>
-			)}</nav>
-
-		</header>
-
-		<section>
-
-			{typeof icon === "string" ? <img src={icon}/> : icon}
 			{children}
 
-		</section>
+		</div>
+
+		<nav>
+
+			<header>{Object.entries(tags).map(([label, id]) =>
+				<a key={label} href={id}><Tag/>{label}</a>
+			)}</header>
+
+			<figure>{typeof icon === "string" ? <img src={icon}/> : icon}</figure>
+
+			{info}
+
+		</nav>
 
 	</>);
 

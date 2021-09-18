@@ -3,7 +3,7 @@
  */
 
 import * as React from "react";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { freeze } from "../../@metreeca/tool";
 import { blank, probe, string } from "../../@metreeca/tool/bases";
 import { useEntry } from "../../@metreeca/tool/hooks/entry";
@@ -52,7 +52,7 @@ export function DataUniversities() {
 
 	>{probe(universities, {
 
-		frame: ({ contains }) => contains.map(({ id, label, image, comment }) =>
+		frame: ({ contains }) => contains.map(({ id, label, image, comment }) => (
 
 			<DataCard key={id}
 
@@ -64,7 +64,8 @@ export function DataUniversities() {
 				{string(comment)}
 
 			</DataCard>
-		),
+
+		)) as ReactNode,
 
 		error: error => <span>{error.status}</span>
 

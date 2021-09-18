@@ -9,6 +9,7 @@ import { blank, frame, probe, string } from "../../@metreeca/tool/bases";
 import { useEntry } from "../../@metreeca/tool/hooks/entry";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
+import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
 
 
@@ -18,7 +19,9 @@ export const Event=freeze({
 
 	image: "",
 	label: { en: "Event" },
-	comment: { en: "" }
+	comment: { en: "" },
+
+	startDate: ""
 
 });
 
@@ -44,14 +47,32 @@ export function DataEvent() {
 
 	>{probe(event, {
 
-		frame: ({ image, label, comment }) => <>
+		frame: ({
 
-			{image && <img src={image} alt={`Image of ${string(label)}`}/>}
+			image, label, comment,
 
-			<p>{string(comment)}</p>
+			startDate
 
-		</>
+		}) => (
 
+			<DataCard
+
+				icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
+
+				info={<dl>
+
+					<dt>Start Date</dt>
+					<dd>{startDate}</dd>
+
+				</dl>}
+
+			>
+
+				<p>{string(comment)}</p>
+
+			</DataCard>
+
+		)
 	})}</DataPage>;
 
 }
