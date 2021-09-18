@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { frame, langs, Plain, string, Value } from "../bases";
+import { frame, langs, Plain, probe, Query, string, Value } from "../bases";
+import { freeze, Immutable } from "../index";
+import { useEntry } from "./entry";
+import { Updater } from "./index";
 
-const Items=({
+const ItemsModel=freeze({
 
 	id: "",
 
-	terms: [{
+	terms: [{ // !!! rename
 
 		id: "", // !!! review
 
@@ -32,85 +35,114 @@ const Items=({
 
 });
 
-export function focus(value: Value, locales: string[]=["en"]): Plain {
-	return frame(value) ? value.id
-		: langs(value) ? string(value, locales)
-			: value;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// export interface Items extends ReadonlyArray<{
-//
-// 	readonly selected: boolean
-// 	readonly value: Value
-// 	readonly count: number
-//
-// }> {}
-//
-// export interface ItemsUpdater {
-//
-// 	(items?: { value: Value, selected: boolean }): void;
-//
-// }
-//
-//
-// export function useItems(id: string, path: string, [query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]): [Items, ItemsUpdater] {
-//
-// 	const any=`?${path}`;
-//
-// 	const selection=new Set(Object
-// 		.getOwnPropertyNames(query)
-// 		.filter(key => key === path || key === any)
-// 		.map(key => query[key])
-// 		.flatMap(value => Array.isArray(value) ? value : [value])
-// 		.map(focus)
-// 	);
-//
-//
-// 	const baseline=useTerms(id, path); // computed ignoring all facets
-//
-// 	const matching=useTerms(id, path, Object // computed ignoring this facet
-// 		.getOwnPropertyNames(query)
-// 		.filter(key => key !== path && key !== any)
-// 		.reduce((object, key, index, keys) => {
-//
-// 			(object as any)[key]=query[key];
-//
-// 			return object;
-//
-// 		}, {})
-// 	);
-//
-//
-// 	const items=matching.data(({ terms: matching }) => baseline.data(({ terms: baseline }) => [
-//
-// 		...matching, ...baseline
-// 			.filter(term => !matching.some(match => focus(term.value) === focus(match.value)))
-// 			.map(term => ({ ...term, count: 0 }))
-//
-// 	])).map(term => ({ ...term, selected: selection.has(focus(term.value)) }));
-//
-// 	return [items, item => {
-//
-// 		if ( item === undefined ) { // clear
-//
-// 			setQuery({ ...query, [path]: undefined, [any]: undefined, ".offset": 0 });
-//
-// 		} else { // set
-//
-// 			const update: Set<Plain>=new Set(selection);
-//
-// 			if ( item.selected ) {
-// 				update.add(focus(item.value));
-// 			} else {
-// 				update.delete(focus(item.value));
-// 			}
-//
-// 			setQuery({ ...query, [path]: [...update], [any]: undefined, ".offset": 0 });
-//
-// 		}
-//
-// 	}];
-//
-// }
+export interface Items extends Immutable<{
+
+	selected: boolean
+	value: Value
+	count: number
+
+}[]> {}
+
+
+export interface ItemsUpdater {
+
+	(items: { value: Value, selected: boolean } /*| { value: Value, selected: boolean }[]*/): void;
+
+}
+
+
+export function useItems(id: string, path: string, [query, setQuery]: [Query, Updater<Query>]): [Items, ItemsUpdater] {
+
+	const any=`?${path}`;
+
+	const selection=new Set(Object
+		.getOwnPropertyNames(query)
+		.filter(key => key === path || key === any)
+		.map(key => query[key])
+		.flatMap(value => Array.isArray(value) ? value : [value])
+		.map(focus)
+	);
+
+
+	const baseline=probe(useEntry(id, ItemsModel, { ".terms": path })[0], { // computed ignoring all facets
+
+		blank: [...ItemsModel.terms],
+		error: [...ItemsModel.terms],
+
+		frame: ({ terms }) => terms
+
+	}) || [];
+
+	const matching=probe(useEntry(id, ItemsModel, Object
+		.getOwnPropertyNames(query)
+		.filter(key => key !== path && key !== any)
+		.reduce((object, key, index, keys) => {
+
+			(object as any)[key]=query[key];
+
+			return object;
+
+		}, { ".terms": path })
+	)[0], { // computed ignoring this facet
+
+		blank: [...ItemsModel.terms],
+		error: [...ItemsModel.terms],
+
+		frame: ({ terms }) => terms
+
+	}) || [];
+
+
+	const items=[...matching, ...baseline
+
+		.filter(item => !matching.some(match => focus(item.value) === focus(match.value)))
+		.map(item => ({ ...item, count: 0 }))
+
+	]
+		.map(term => ({ ...term, selected: selection.has(focus(term.value)) }))
+		.sort(sort);
+
+
+	return [items, items => {
+
+		if ( items === undefined ) { // clear
+
+			setQuery({ ...query, [path]: undefined, [any]: undefined, ".offset": 0 });
+
+		} else { // set
+
+			const update: Set<Plain>=new Set(selection);
+
+			if ( items.selected ) {
+				update.add(focus(items.value));
+			} else {
+				update.delete(focus(items.value));
+			}
+
+			setQuery({ ...query, [path]: [...update], [any]: undefined, ".offset": 0 });
+
+		}
+
+	}];
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function focus(value: Value): Plain {
+	return frame(value) ? value.id
+		: langs(value) ? string(value) // !!! locales?
+			: value;
+}
+
+function sort(x: Items[number], y: Items[number]): number {
+	return x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
+		: x.count > y.count ? -1 : x.count < y.count ? +1
+			: string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase());
+}
+
+

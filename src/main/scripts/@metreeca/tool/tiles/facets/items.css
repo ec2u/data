@@ -1,0 +1,51 @@
+/*
+ * Copyright © 2020-2021 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+tool-items {
+
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	align-items: center;
+	justify-items: stretch;
+
+	& > * {
+
+		display: contents;
+
+		&.unavailable > * {
+			color: var(--tool--color-disabled) !important;
+		}
+
+		& > * {
+			margin-top: 0.1em;
+			font-size: 90%;
+		}
+
+		& > a, & > span {
+			padding: 0 0.5em;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		& > var {
+			text-align: right;
+			font-size: 75%;
+			color: #999;
+		}
+
+	}
+
+}

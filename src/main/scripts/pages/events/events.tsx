@@ -11,10 +11,10 @@ import { useEntry } from "../../@metreeca/tool/hooks/entry";
 import { useKeywords } from "../../@metreeca/tool/hooks/keywords";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
 import { useRouter } from "../../@metreeca/tool/nests/router";
-import { Filter } from "../../@metreeca/tool/tiles/icon";
 import { ToolSearch } from "../../@metreeca/tool/tiles/inputs/search";
 import { ToolPane } from "../../@metreeca/tool/tiles/pane";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
+import { DataFiltersButton } from "../../panes/filters";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
 
@@ -47,13 +47,18 @@ export const Events=freeze({
 
 export function DataEvents() {
 
+
 	const { name }=useRouter();
 
 	const [query, setQuery]=useQuery<Query>({
+
 		"~label": "",
+
 		".order": "startDate",
 		".limit": 20
+
 	});
+
 
 	const [events]=useEntry("", Events, query);
 
@@ -67,7 +72,7 @@ export function DataEvents() {
 
 		menu={blank(events) && <ToolSpin/>}
 
-		side={<button title={"Filters"} onClick={() => setPane(facets([query, setQuery]))}><Filter/></button>}
+		side={<DataFiltersButton onClick={() => setPane(facets([query, setQuery]))}/>}
 
 		pane={pane}
 
@@ -103,14 +108,13 @@ function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
 	const [keywords, setKeywords]=useKeywords("label", [query, setQuery]);
 
+	// const [items, setItems]=useItems("", "university", [query, setQuery]);
+
 	return <ToolPane header={<ToolSearch icon rule placeholder={"Search"}
 		auto={500} value={keywords} onChange={setKeywords}
 	/>}>
 
-
-		{/*<ToolField expanded name={"University"} selector={<ToolOptions value={useOptions(*/}
-		{/*	"", "university", [query, setQuery]*/}
-		{/*)}/>}/>*/}
+		{/*<ToolItems value={[items, setItems]}/>*/}
 
 	</ToolPane>;
 }
