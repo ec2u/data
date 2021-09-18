@@ -150,11 +150,22 @@ export function first(field: Field): undefined | Value {
 }
 
 export function string(value: undefined | Value, locales: Immutable<string[]>=navigator.languages): string {
+
+	function _frame(frame: Frame) {
+		return langs(frame.label) ? _langs(frame.label)
+			: frame.label || label(frame.id) || "";
+	}
+
+	function _langs(langs: Langs) {
+		return locales.map(locale => langs[locale]).filter(string => string)[0]
+			|| langs.en || Object.values(langs)[0] || "";
+	}
+
 	return typeof value === "boolean" ? value.toString()
-		: typeof value === "number" ? value.toLocaleString()
+		: typeof value === "number" ? value.toLocaleString(locales as string[])
 			: typeof value === "string" ? value
-				: frame(value) ? string(value.label || "", locales) || label(value.id)
-					: langs(value) ? locales.map(locale => value[locale]).filter(string => string)[0] || ""
+				: frame(value) ? _frame(value)
+					: langs(value) ? _langs(value)
 						: "";
 }
 

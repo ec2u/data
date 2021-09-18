@@ -50,6 +50,7 @@ export function DataEvents() {
 	const { name }=useRouter();
 
 	const [query, setQuery]=useQuery<Query>({
+		"~label": "",
 		".order": "startDate",
 		".limit": 20
 	});
@@ -77,7 +78,7 @@ export function DataEvents() {
 			<DataCard key={id}
 
 				name={<>
-					<a href={university.id}>{string(university.label).replace("University of ", "")}</a>
+					<span>{string(university.label).replace("University of ", "")}</span>
 					<span>{startDate.substr(0, 10)}</span>
 					<a href={id}>{string(label)}</a>
 				</>}

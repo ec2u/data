@@ -41,6 +41,7 @@ import static com.metreeca.rest.MessageException.status;
 import static com.metreeca.rest.Response.SeeOther;
 import static com.metreeca.rest.Toolbox.resource;
 import static com.metreeca.rest.Toolbox.service;
+import static com.metreeca.rest.Wrapper.preprocessor;
 import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
 import static com.metreeca.rest.handlers.Publisher.publisher;
@@ -159,6 +160,8 @@ public final class Data {
 
 						.with(cors())
 						.with(bearer(uuid() /* !!! service(vault()).get("eu-ec2u-data").orElse(uuid())*/, root))
+
+						.with(preprocessor(request -> request.header("Accept-Language", "")))
 
 						.wrap(router()
 
