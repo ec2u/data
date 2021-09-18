@@ -29,16 +29,17 @@ export const Events=freeze({
 
 		id: "",
 
+		image: "",
 		label: { en: "" },
 		comment: { en: "" },
-		image: "",
 
 		university: {
 			id: "",
 			label: { en: "" }
 		},
 
-		startDate: ""
+		startDate: "",
+		endDate: ""
 
 	}]
 
@@ -46,7 +47,6 @@ export const Events=freeze({
 
 
 export function DataEvents() {
-
 
 	const { name }=useRouter();
 
@@ -78,7 +78,7 @@ export function DataEvents() {
 
 	>{probe(events, {
 
-		frame: ({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) =>
+		frame: ({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
 
 			<DataCard key={id}
 
@@ -95,7 +95,11 @@ export function DataEvents() {
 
 				{string(comment)}
 
-			</DataCard>)
+			</DataCard>
+
+		)) as ReactNode,
+
+		error: error => <span>{error.status}</span>
 
 	})}</DataPage>;
 

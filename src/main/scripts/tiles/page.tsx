@@ -9,6 +9,10 @@ import { ToolPage } from "../@metreeca/tool/tiles/page";
 import { Home } from "../pages/home";
 import { DataResourcesButton, DataResourcesPane } from "../panes/resources";
 
+
+const ResourcesPane: ReactNode=<DataResourcesPane/>;
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function DataPage({
@@ -33,7 +37,7 @@ export function DataPage({
 
 }) {
 
-	const [active, setActive]=useProp(pane || <DataResourcesPane/> as ReactNode);
+	const [active, setActive]=useProp(pane || ResourcesPane); // ;( use constant to avoid infinite useEffect loops
 
 	return <ToolPage
 
