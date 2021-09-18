@@ -16,9 +16,7 @@ import { Home } from "./home";
 
 export const About=freeze({
 
-	id: "/about",
-
-	label: { en: `About ${string(Home.label)}` }
+	id: "/about"
 
 });
 

@@ -38,7 +38,7 @@ export const Home=freeze({
 export default function DataHome() {
 	return (
 
-		<DataPage item={"Connect Centre"} menu={<a href={About.id} title={string(About.label)}><Heart/></a>}>
+		<DataPage item={"Connect Centre"} menu={<a href={About.id} title={`About ${string(Home.label)}`}><Heart/></a>}>
 
 			{<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"} style={{ width: "100%" }}/>}
 
