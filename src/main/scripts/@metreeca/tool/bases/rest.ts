@@ -15,7 +15,7 @@
  */
 
 import { freeze } from "../index";
-import { array, Frame, Graph, Query, State, string, url } from "./index";
+import { Frame, Graph, Query, State, string, url } from "./index";
 
 export function RESTGraph(): Graph {
 
@@ -45,7 +45,7 @@ export function RESTGraph(): Graph {
 
 					if ( response.ok ) {
 
-						const value=freeze({ ...defaults(model), ...json }); // !!! fill missing properties from model
+						const value=freeze({ ...defaults(model), ...json }); // fill missing properties from model
 
 						notify(value);
 
@@ -133,6 +133,10 @@ function defaults(model: any): any {
 
 		return "";
 
+	} else if ( Array.isArray(model) ) {
+
+		return [];
+
 	} else if ( typeof model === "object" ) {
 
 		return Object.getOwnPropertyNames(model).reduce((object: any, key) => {
@@ -142,10 +146,6 @@ function defaults(model: any): any {
 			return object;
 
 		}, {});
-
-	} else if ( array(model) ) {
-
-		return [];
 
 	} else {
 
