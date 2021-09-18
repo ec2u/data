@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ReactNode } from "react";
 import { Immutable } from "../index";
 
 export type Entry<V extends Frame=Frame, E extends Error=Error>=Blank | V | E
@@ -128,22 +127,21 @@ export function array(value: Field | State | Entry): value is Immutable<Value[]>
 }
 
 
-export function probe<V extends Frame=Frame, E extends Error=Error>(entry: Entry<V, E>, cases: {
+export function probe<V extends Frame=Frame, E extends Error=Error, R=any>(entry: Entry<V, E>, cases: {
 
-	blank?: ReactNode | (() => ReactNode)
-	frame?: ReactNode | ((frame: V) => ReactNode)
-	error?: ReactNode | ((error: E) => ReactNode)
+	blank?: R | (() => R)
+	frame?: R | ((frame: V) => R)
+	error?: R | ((error: E) => R)
 
-}) {
-	return blank(entry) ? typeof cases.blank === "function" ? cases.blank() : cases.blank
-		: frame(entry) ? typeof cases.frame === "function" ? cases.frame(entry) : cases.frame
-			: error(entry) ? typeof cases.error === "function" ? cases.error(entry) : cases.error
+}): undefined | R {
+	return blank(entry) ? cases.blank instanceof Function ? cases.blank() : cases.blank
+		: frame(entry) ? cases.frame instanceof Function ? cases.frame(entry) : cases.frame
+			: error(entry) ? cases.error instanceof Function ? cases.error(entry) : cases.error
 				: undefined;
-
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function first(field: Field): undefined | Value {
 	return array(field) ? field[0] : field;
