@@ -14,40 +14,24 @@
  * limitations under the License.
  */
 
-tool-item {
+import { first, Query, string } from "../bases";
+import { normalize } from "../index";
+import { Updater } from "./index";
 
-	display: flex;
-	flex-direction: row;
-	align-items: baseline;
-	white-space: nowrap;
 
-	grid-column-gap: 0.33em;
+export type Keywords=string;
 
-	& > :empty {
-		display: none;
-	}
+export type KeywordsUpdater=(keywords: string) => void;
 
-	& > span {
 
-		flex-grow: 1;
+export function useKeywords(path: string, [query, setQuery]: [Query, Updater<Query>]): [Keywords, KeywordsUpdater] {
 
-		overflow: hidden;
-		text-overflow: ellipsis;
+	const like=`~${path}`;
 
-	}
+	const keywords=string(first(query[like]) || "");
 
-	& > nav {
-
-		flex-shrink: 0;
-
-		display: flex;
-		flex-direction: row;
-		align-items: baseline;
-
-		grid-column-gap: 0.25em;
-
-		font-size: 90%;
-
-	}
+	return [normalize(keywords), (keywords: string) =>
+		setQuery({ ...query, [like]: normalize(keywords) })
+	];
 
 }

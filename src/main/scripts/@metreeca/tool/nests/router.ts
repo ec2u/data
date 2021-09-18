@@ -20,6 +20,7 @@ import { report } from "../index";
 
 const ActiveAttribute="active";
 const NativeAttribute="native";
+const TargetAttibute="target";
 
 const RouterContext=createContext<Router>(router({ store: path(), update: () => {} }));
 
@@ -193,7 +194,7 @@ export interface Linker {
  */
 export function path(): Store {
 	return (route?: string) => route === undefined
-		? location.href.startsWith(base) ? location.href.substr(base.length-1) : location.href
+		? location.href.startsWith(base) ? location.pathname : location.href
 		: route ? `${base}${route.startsWith("/") ? route.substr(1) : route}` : location.href;
 }
 
@@ -265,7 +266,10 @@ export function ToolRouter({
 
 			const anchor=(e.target as Element).closest("a");
 
-			if ( anchor && anchor.getAttribute(NativeAttribute) === null ) { // only non-native anchors
+			if ( anchor
+				&& anchor.getAttribute(NativeAttribute) === null // only non-native anchors
+				&& anchor.getAttribute(TargetAttibute) === null // only local anchors
+			) {
 
 				const href=anchor.href;
 				const file="file:///";

@@ -48,7 +48,7 @@ export function DataUniversities() {
 
 				<DataCard key={id}
 
-					site={<a href={id}>{string(label)}</a>}
+					name={<a href={id}>{string(label)}</a>}
 					icon={image}
 					tags={{ University: Universities.id }}
 

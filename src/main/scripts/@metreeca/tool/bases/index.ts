@@ -144,7 +144,12 @@ export function probe<V extends Frame=Frame, E extends Error=Error>(entry: Entry
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function string(value: undefined | Value, locales: string[]=["en"]): string {
+
+export function first(field: Field): undefined | Value {
+	return array(field) ? field[0] : field;
+}
+
+export function string(value: undefined | Value, locales: Immutable<string[]>=navigator.languages): string {
 	return typeof value === "boolean" ? value.toString()
 		: typeof value === "number" ? value.toLocaleString()
 			: typeof value === "string" ? value

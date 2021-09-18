@@ -22,7 +22,7 @@ data-card {
 
 		& > h1 {
 
-			font-weight: 700;
+			font-weight: 500;
 
 			& > * + *::before {
 				content: "›";
@@ -34,7 +34,7 @@ data-card {
 		& > nav {
 
 			margin-left: auto;
-			font-size: 75%;
+			font-size: 66%;
 
 			& > * {
 
@@ -68,13 +68,10 @@ data-card {
 		font-size: 90%;
 
 		& > img:first-child {
-			float: left;
-			width: 7.55em;
-			margin-right: 1.5em;
-		}
-
-		& > div {
-			overflow: hidden;
+			float: right;
+			width: 10em;
+			margin-left: 1.5em;
+			margin-bottom: 1.5ex;
 		}
 
 	}

@@ -3,19 +3,20 @@
  */
 
 import * as React from "react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { ToolPage } from "../@metreeca/tool/tiles/page";
 import { Home } from "../pages/home";
-import { ToolResources } from "../panes/resources";
+import { DataResourcesButton, DataResourcesPane } from "../panes/resources";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function DataPage({
 
-	pane,
-
 	item,
 	menu,
+
+	side,
+	pane,
 
 	children
 
@@ -24,59 +25,33 @@ export function DataPage({
 	item?: ReactNode
 	menu?: ReactNode
 
+	side?: ReactNode
 	pane?: ReactNode
 
 	children: ReactNode
 
 }) {
 
-	const [hidden, setHidden]=useState(false);
+	const [active, setActive]=useState<ReactNode>();
 
-	return <ToolPage item={[<
-		a href={Home.id}>EC2U</a>,
-		typeof item === "string" ? <span>{item}</span> : item
-	]}
+	useEffect(() => { setActive(pane || <DataResourcesPane/>); }, [pane]);
+
+	return <ToolPage
+
+		item={<><a href={Home.id}>EC2U</a> {typeof item === "string" ? <span>{item}</span> : item}</>}
 
 		menu={menu}
 
-		pane={<ToolResources/>}
+		side={<><DataResourcesButton onClick={setActive}/> {side}</>}
 
-		/*
-		 pane={<ToolPane
+		pane={active}
 
-		 header={<a href={"/"} onClick={e => {
+	>
 
-		 if ( e.shiftKey ) {
+		{children}
 
-		 e.preventDefault();
-		 setHidden(!hidden);
+	</ToolPage>;
 
-		 }
-
-		 }}><strong>EC2U Connect Centre</strong></a>}
-
-		 footer={<small>{copy}</small>}
-
-		 >{
-
-		 hidden ? <Hidden/> : pane
-
-		 }</ToolPane>}
-		 */
-
-	>{children}</ToolPage>;
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function Hidden() {
-	return (
-		<ul>
-			<li><a href="/ewp/" target={"_blank"}>EWP APIs</a></li>
-			<li><a href="/sparql" target={"_blank"}>SPARQL</a></li>
-		</ul>
-	);
 }
 
 

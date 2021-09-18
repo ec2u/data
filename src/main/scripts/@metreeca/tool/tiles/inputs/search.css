@@ -14,39 +14,62 @@
  * limitations under the License.
  */
 
-tool-item {
+
+tool-search {
+
+	width: 100%;
 
 	display: flex;
 	flex-direction: row;
 	align-items: baseline;
 	white-space: nowrap;
 
-	grid-column-gap: 0.33em;
+	& > input {
 
-	& > :empty {
-		display: none;
-	}
 
-	& > span {
+		width: 100%;
+		padding: 0.25ex 0;
 
-		flex-grow: 1;
+		&.rule {
 
-		overflow: hidden;
-		text-overflow: ellipsis;
+			--side: 1em;
+
+			border-bottom-style: solid
+		}
+
+		&:not(.rule) {
+
+			--side: 1.5em;
+
+			border-style: solid;
+			border-radius: 2ex;
+
+		}
+
+		&:not(:first-child) {
+			padding-left: var(--side);
+			margin-left: calc(-0.75 * var(--side));
+		}
+
+		&:not(:last-child) {
+			padding-right: var(--side);
+			margin-right: calc(-0.75 * var(--side));
+		}
 
 	}
 
 	& > nav {
 
-		flex-shrink: 0;
+		z-index: 1;
 
-		display: flex;
-		flex-direction: row;
-		align-items: baseline;
+		&:first-child {
+			pointer-events: none;
+			transform: translateY(5%);
+		}
 
-		grid-column-gap: 0.25em;
-
-		font-size: 90%;
+		&:last-child {
+			transform: scale(0.9) translateY(5%);
+		}
 
 	}
 

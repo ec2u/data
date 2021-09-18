@@ -17,20 +17,18 @@ export interface Tags {
 
 export function DataCard({
 
-	site,
 	name,
-	icon,
 
+	icon,
 	tags={},
 
 	children
 
 }: {
 
-	site: ReactNode | string
-	name?: ReactNode | string
-	icon?: ReactNode | string
+	name: ReactNode | string
 
+	icon?: ReactNode | string
 	tags?: Tags
 
 	children?: ReactNode
@@ -40,15 +38,20 @@ export function DataCard({
 	return createElement("data-card", {}, <>
 
 		<header>
-			<h1>{site}{name}</h1>
+
+			<h1>{name}</h1>
+
 			<nav>{Object.entries(tags).map(([label, id]) =>
 				<a key={label} href={id}><Tag/>{label}</a>
 			)}</nav>
+
 		</header>
 
 		<section>
+
 			{typeof icon === "string" ? <img src={icon}/> : icon}
-			<div>{children}</div>
+			{children}
+
 		</section>
 
 	</>);
