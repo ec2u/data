@@ -15,7 +15,8 @@
  */
 
 import * as React from "react";
-import { createElement, ReactNode, useEffect, useState } from "react";
+import { createElement, ReactNode, useEffect } from "react";
+import { useProp } from "../../hooks/prop";
 import { classes } from "../../index";
 import { Search, X } from "../icon";
 import "./search.css";
@@ -53,9 +54,9 @@ export function ToolSearch({
 
 }) {
 
-	let input: null | HTMLInputElement;
+	let input: null | HTMLInputElement; // !!! review
 
-	const [state, setState]=useState("");
+	const [state, setState]=useProp(value);
 
 
 	useEffect(() => {

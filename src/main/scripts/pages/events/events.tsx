@@ -3,13 +3,14 @@
  */
 
 import * as React from "react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { freeze } from "../../@metreeca/tool";
 import { blank, probe, Query, string } from "../../@metreeca/tool/bases";
 import { Updater } from "../../@metreeca/tool/hooks";
 import { useEntry } from "../../@metreeca/tool/hooks/entry";
 import { useKeywords } from "../../@metreeca/tool/hooks/keywords";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
+import { useRouter } from "../../@metreeca/tool/nests/router";
 import { Filter } from "../../@metreeca/tool/tiles/icon";
 import { ToolSearch } from "../../@metreeca/tool/tiles/inputs/search";
 import { ToolPane } from "../../@metreeca/tool/tiles/pane";
@@ -46,49 +47,52 @@ export const Events=freeze({
 
 export function DataEvents() {
 
+	const { name }=useRouter();
+
 	const [query, setQuery]=useQuery<Query>({
 		".order": "startDate",
 		".limit": 20
 	});
 
-	const [pane, setPane]=useState<ReactNode>(facets([query, setQuery]));
-
 	const [events]=useEntry("", Events, query);
 
-	return (
+	const [pane, setPane]=useState<ReactNode>(facets([query, setQuery]));
 
-		<DataPage item={string(Events.label)}
 
-			menu={blank(events) && <ToolSpin/>}
+	useEffect(() => { name(string(Events.label)); });
 
-			side={<button title={"Filters"} onClick={() => setPane(facets([query, setQuery]))}><Filter/></button>}
 
-			pane={pane}
+	return <DataPage item={string(Events.label)}
 
-		>{probe(events, {
+		menu={blank(events) && <ToolSpin/>}
 
-			frame: ({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) =>
+		side={<button title={"Filters"} onClick={() => setPane(facets([query, setQuery]))}><Filter/></button>}
 
-				<DataCard key={id}
+		pane={pane}
 
-					name={<>
-						<a href={university.id}>{string(university.label).replace("University of ", "")}</a>
-						<span>{startDate.substr(0, 10)}</span>
-						<a href={id}>{string(label)}</a>
-					</>}
+	>{probe(events, {
 
-					icon={image?.[0]}
-					tags={{ Event: Events.id }}
+		frame: ({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) =>
 
-				>
+			<DataCard key={id}
 
-					{string(comment)}
+				name={<>
+					<a href={university.id}>{string(university.label).replace("University of ", "")}</a>
+					<span>{startDate.substr(0, 10)}</span>
+					<a href={id}>{string(label)}</a>
+				</>}
 
-				</DataCard>)
+				icon={image?.[0]}
+				tags={{ Event: Events.id }}
 
-		})}</DataPage>
+			>
 
-	);
+				{string(comment)}
+
+			</DataCard>)
+
+	})}</DataPage>;
+
 }
 
 

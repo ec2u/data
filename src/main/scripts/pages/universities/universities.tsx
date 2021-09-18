@@ -3,9 +3,11 @@
  */
 
 import * as React from "react";
+import { useEffect } from "react";
 import { freeze } from "../../@metreeca/tool";
 import { blank, probe, string } from "../../@metreeca/tool/bases";
 import { useEntry } from "../../@metreeca/tool/hooks/entry";
+import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
@@ -36,31 +38,36 @@ export const Universities=freeze({
 
 export function DataUniversities() {
 
+	const { name }=useRouter();
+
 	const [universities]=useEntry("", Universities);
 
-	return (
 
-		<DataPage item={string(Universities.label)} menu={blank(universities) && <ToolSpin/>}
+	useEffect(() => { name(string(Universities.label)); });
 
-		>{probe(universities, {
 
-			frame: ({ contains }) => contains.map(({ id, label, image, comment }) =>
+	return <DataPage item={string(Universities.label)}
 
-				<DataCard key={id}
+		menu={blank(universities) && <ToolSpin/>}
 
-					name={<a href={id}>{string(label)}</a>}
-					icon={image}
-					tags={{ University: Universities.id }}
+	>{probe(universities, {
 
-				>
-					{string(comment)}
+		frame: ({ contains }) => contains.map(({ id, label, image, comment }) =>
 
-				</DataCard>
-			),
+			<DataCard key={id}
 
-			error: error => <span>{error.status}</span>
+				name={<a href={id}>{string(label)}</a>}
+				icon={image}
+				tags={{ University: Universities.id }}
 
-		})}</DataPage>
+			>
+				{string(comment)}
 
-	);
+			</DataCard>
+		),
+
+		error: error => <span>{error.status}</span>
+
+	})}</DataPage>;
+
 }

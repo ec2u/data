@@ -3,7 +3,8 @@
  */
 
 import * as React from "react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
+import { useProp } from "../@metreeca/tool/hooks/prop";
 import { ToolPage } from "../@metreeca/tool/tiles/page";
 import { Home } from "../pages/home";
 import { DataResourcesButton, DataResourcesPane } from "../panes/resources";
@@ -32,9 +33,7 @@ export function DataPage({
 
 }) {
 
-	const [active, setActive]=useState<ReactNode>();
-
-	useEffect(() => { setActive(pane || <DataResourcesPane/>); }, [pane]);
+	const [active, setActive]=useProp(pane || <DataResourcesPane/> as ReactNode);
 
 	return <ToolPage
 

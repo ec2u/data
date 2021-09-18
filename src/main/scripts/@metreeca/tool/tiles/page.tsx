@@ -88,7 +88,7 @@ export function ToolPage({
 
 	return createElement("tool-page", {
 
-		disabled: disabled
+		disabled: disabled ? "" : undefined
 
 	}, <>
 

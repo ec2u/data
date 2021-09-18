@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { render } from "react-dom";
-import { LinkGraph } from "./@metreeca/tool/bases/link";
+import { RESTGraph } from "./@metreeca/tool/bases/rest";
 import "./@metreeca/tool/fonts/quicksand.css";
 import "./@metreeca/tool/index.css";
 import { ToolGraph } from "./@metreeca/tool/nests/graph";
@@ -17,14 +17,11 @@ import ToolNone from "./pages/none";
 import { DataUniversities, Universities } from "./pages/universities/universities";
 import { DataUniversity, University } from "./pages/universities/university";
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 render((
 
 	<React.StrictMode>
 
-		<ToolGraph value={LinkGraph()}>
+		<ToolGraph value={RESTGraph()}>
 
 			<ToolRouter routes={{
 

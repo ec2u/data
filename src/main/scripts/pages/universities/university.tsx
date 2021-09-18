@@ -46,7 +46,9 @@ export function DataUniversity() {
 
 	const [university]=useEntry("", University);
 
+
 	useEffect(() => { frame(university) && name(string(university.label)); });
+
 
 	return <DataPage
 

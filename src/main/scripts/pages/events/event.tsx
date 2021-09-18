@@ -29,7 +29,9 @@ export function DataEvent() {
 
 	const [event]=useEntry("", Event);
 
+
 	useEffect(() => { frame(event) && name(string(event.label)); });
+
 
 	return <DataPage
 

@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-import { createContext, createElement, ReactNode, useContext } from "react";
-import { Graph } from "../bases";
-import { RESTGraph } from "../bases/rest";
 
-const GraphContext=createContext<Graph>(RESTGraph());
+import { useEffect, useState } from "react";
+import { Updater } from "./index";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function useGraph(): Graph {
-	return useContext(GraphContext);
-}
+export function useProp<V>(initial: V): [V, Updater<V>] {
 
-export function ToolGraph(props: {
+	const wrapper=typeof initial === "function" ? () => initial : initial;
 
-	value: Graph
+	const [state, setState]=useState<V>(wrapper);
 
-	children: ReactNode
+	useEffect(() => setState(wrapper), [initial]);
 
-}) {
-
-	return createElement(GraphContext.Provider, props);
+	return [state, setState];
 
 }

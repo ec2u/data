@@ -17,7 +17,7 @@
 import { freeze } from "../index";
 import { array, Frame, Graph, Query, State, string, url } from "./index";
 
-export function LinkGraph(): Graph {
+export function RESTGraph(): Graph {
 
 	const cache: { [url: string]: any }={}; // !!! TTL / size limits / …
 
@@ -52,6 +52,8 @@ export function LinkGraph(): Graph {
 						return value;
 
 					} else {
+
+						delete cache[key];
 
 						throw freeze({
 
