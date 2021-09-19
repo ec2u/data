@@ -37,6 +37,7 @@ export const CreateIcon=(props: IconProps) => <Plus {...props}/>;
 export const UpdateIcon=(props: IconProps) => <Check {...props}/>;
 export const DeleteIcon=(props: IconProps) => <Trash {...props}/>;
 
+export const ClearIcon=(props: IconProps) => <X {...props}/>;
 export const CancelIcon=(props: IconProps) => <X {...props}/>;
 export const ConfigureIcon=(props: IconProps) => <Settings {...props}/>;
 

@@ -18,7 +18,8 @@ import * as React from "react";
 import { createElement, ReactNode, useEffect } from "react";
 import { useProp } from "../../hooks/prop";
 import { classes } from "../../index";
-import { Search, X } from "../icon";
+import { Search } from "../icon";
+import { ClearIcon } from "../page";
 import "./search.css";
 
 export function ToolSearch({
@@ -107,7 +108,7 @@ export function ToolSearch({
 		/>
 
 		{state && <nav>
-			<button title="Clear" onClick={clear}><X/></button>
+			<button title="Clear" onClick={clear}><ClearIcon/></button>
 		</nav> || menu && <nav>{menu}</nav>}
 
 	</>);

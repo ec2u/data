@@ -13,9 +13,10 @@ import { useKeywords } from "../../@metreeca/tool/hooks/queries/keywords";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolItems } from "../../@metreeca/tool/tiles/facets/items";
+import { ToolRange } from "../../@metreeca/tool/tiles/facets/range";
 import { ToolFacet } from "../../@metreeca/tool/tiles/inputs/facet";
 import { ToolSearch } from "../../@metreeca/tool/tiles/inputs/search";
-import { CancelIcon } from "../../@metreeca/tool/tiles/page";
+import { ClearIcon } from "../../@metreeca/tool/tiles/page";
 import { ToolPane } from "../../@metreeca/tool/tiles/pane";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataFiltersButton } from "../../panes/filters";
@@ -129,16 +130,16 @@ function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
 	>
 
-		<ToolFacet expanded name={string(University.label)}
-			menu={<button title={"Clear filter"} onClick={() => {}}><CancelIcon/></button>}
+		<ToolFacet name={string(University.label)}
+			menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
 		>
 			<ToolItems value={[universities, setUniversities]}/>
 		</ToolFacet>
 
-		<ToolFacet expanded name={"Date"}
-			menu={<button title={"Clear filter"} onClick={() => {}}><CancelIcon/></button>}
+		<ToolFacet name={"Date"}
+			menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
 		>
-			<ToolItems value={[universities, setUniversities]}/>
+			<ToolRange pattern={"\\d{4}-\\d{2}-\\d{2}"} value={[{}, () => {}]}/>
 		</ToolFacet>
 
 	</ToolPane>;

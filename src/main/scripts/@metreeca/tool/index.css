@@ -155,6 +155,29 @@ input {
 		border-color: var(--tool--color-invalid);
 	}
 
+	&[type=search]::-webkit-search-cancel-button {
+
+		--size: 0.8em;
+
+		-webkit-appearance: none;
+
+		margin: 0;
+		padding: 0;
+
+		height: var(--size);
+		width: var(--size);
+
+		background: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPg0KICA8bGluZSB4MT0iMTgiIHkxPSI2IiB4Mj0iNiIgeTI9IjE4Ij48L2xpbmU+DQogIDxsaW5lIHgxPSI2IiB5MT0iNiIgeDI9IjE4IiB5Mj0iMTgiPjwvbGluZT4NCjwvc3ZnPg==');
+		background-repeat: no-repeat;
+		background-position: 50%;
+		background-size: contain;
+
+		opacity: 0.75;
+		pointer-events: all;
+
+		transform: translateX(10%);
+	}
+
 }
 
 button {
