@@ -46,7 +46,7 @@ export default defineConfig({ // https://vitejs.dev/config/
 	},
 
 	server: {
-		proxy: { "^(?!$|/[_@]|.*\\.\\w+$).*": { target: "http://localhost:8080/" } } // non-service / extensionless URLs
+		proxy: { "^(?!$|/[_@]|.*\\.\\w+$).*$": { target: "http://localhost:8080/" } } // exclude empty/vite/file URLs
 	}
 
 });

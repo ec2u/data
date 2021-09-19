@@ -44,6 +44,7 @@ import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Wrapper.preprocessor;
 import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
+import static com.metreeca.rest.handlers.Packer.packer;
 import static com.metreeca.rest.handlers.Publisher.publisher;
 import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.services.Cache.cache;
@@ -64,7 +65,9 @@ public final class Data {
 	public static final String Base="https://data.ec2u.eu/";
 	public static final String Name=Base+"terms#";
 
+
 	public static final String root="root"; // root role
+
 
 	public static final Set<String> langs=unmodifiableSet(new LinkedHashSet<>(asList(
 			"en", "pt", "ro", "de", "it", "fr", "es", "fi"
@@ -178,9 +181,10 @@ public final class Data {
 
 								.path("/*", asset(
 
-										publisher(resource(Data.class, "/static"))
+										production()
 
-												.fallback("/index.html"),
+												? publisher("/static").fallback("/index.html")
+												: packer(),
 
 										router()
 
