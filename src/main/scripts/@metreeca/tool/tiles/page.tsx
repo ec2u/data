@@ -16,10 +16,10 @@
 
 import * as React from "react";
 import { createElement, ReactNode, useState } from "react";
-import { classes } from "..";
 import { Frame } from "../bases";
 import { icon, useRouter } from "../nests/router";
 import { Check, Edit3, IconProps, Link2, Menu, MoreHorizontal, Plus, Settings, Trash, X } from "./icon";
+import { classes } from "./index";
 import "./page.css";
 
 const logo={ style: { backgroundImage: `url(${icon})` } };

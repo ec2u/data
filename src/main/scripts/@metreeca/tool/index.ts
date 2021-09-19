@@ -24,22 +24,6 @@ export type Immutable<T>=
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Creates a conditional `className` attribute spread.
- *
- * @param classes
- *
- * @return
- */
-export function classes(classes: { [name: string]: boolean }): { className: string } {
-	return {
-		className: Object.entries(classes)
-			.filter(entry => entry[1])
-			.map(entry => entry[0])
-			.join(" ")
-	};
-}
-
 export function normalize(text: string): string {
 	return text.trim().replace(/\s+/g, " ");
 }
@@ -56,20 +40,6 @@ export function like(keywords: string): RegExp {
 		.reduce((pattern, stem) => `${pattern}\\b${stem}.*`, ".*"), "i");
 }
 
-
-/**
- * Reports unhandled errors
- *
- * @param message
- */
-export function report(message: string): void {
-
-	const color=document.body.style.backgroundColor;
-
-	document.body.style.backgroundColor="red";
-
-	setTimeout(() => document.body.style.backgroundColor=color, 300);
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -89,4 +59,19 @@ export function freeze<T=any>(value: T): Immutable<typeof value> {
 		return value as any;
 
 	}
+}
+
+
+/**
+ * Reports unhandled errors
+ *
+ * @param message
+ */
+export function report(message: string): void {
+
+	const color=document.body.style.backgroundColor;
+
+	document.body.style.backgroundColor="red";
+
+	setTimeout(() => document.body.style.backgroundColor=color, 300);
 }
