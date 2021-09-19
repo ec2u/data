@@ -138,8 +138,8 @@ export function probe<V extends Frame=Frame, E extends Error=Error, R=any>(entry
 
 }): undefined | R {
 	return blank(entry) ? cases.blank instanceof Function ? cases.blank() : cases.blank
-		: frame(entry) ? cases.frame instanceof Function ? cases.frame(entry) : cases.frame
-			: error(entry) ? cases.error instanceof Function ? cases.error(entry) : cases.error
+		: error(entry) ? cases.error instanceof Function ? cases.error(entry) : cases.error
+			: frame(entry) ? cases.frame instanceof Function ? cases.frame(entry) : cases.frame
 				: undefined;
 }
 

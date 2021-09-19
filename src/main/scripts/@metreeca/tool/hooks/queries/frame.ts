@@ -14,30 +14,41 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from "react";
-import { Initial, Updater } from "./index";
+import { Frame, Query } from "../../bases";
+import { Updater } from "../index";
+import { useEntry } from "./entry";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function useStorage<T=any>(persist: boolean, key: string, initial: Initial<T>): [T, Updater<T>] {
+export interface FrameUpdater {
 
-	const storage=persist ? localStorage : sessionStorage;
 
-	// !!! listen to storage events
+	(): void;
 
-	const item=storage.getItem(key);
+}
 
-	const [state, setState]=useState<T>(item === null ? initial : JSON.parse(item));
 
-	useEffect(() => state === undefined
+export function useFrame<V extends Frame=Frame>(
+	id: string, model: V,
+	[query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
+): [
 
-			? storage.removeItem(key)
-			: storage.setItem(key, JSON.stringify(state)),
+	typeof model,
+	FrameUpdater
 
-		[state]
-	);
+] {
 
-	return [state, setState];
+	const [entry]=useEntry<V>(id, model, query);
+
+	return [model, () => {}];
+
+	// return <any>probe<Frame, Error, [Frame, FrameUpdater]>(entry, {
+	//
+	// 	frame: frame => [frame, () => {}],
+	// 	error: error => [{ id }, () => {}],
+	// 	blank: () => [{ id }, () => {}]
+	//
+	// });
 
 }

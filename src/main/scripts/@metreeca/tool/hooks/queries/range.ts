@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import { Value } from "../../bases";
+import { first, frame, Plain, Query, string, Value } from "../../bases";
+import { Updater } from "../index";
+import { useFrame } from "./frame";
 
 
 const Range={
@@ -26,7 +28,7 @@ const Range={
 	min: {} as Value,
 	max: {} as Value,
 
-	stats: [{
+	stats: [{ // !!! rename
 
 		id: "",
 
@@ -43,6 +45,8 @@ const Range={
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export interface Range {
+
+	readonly count: number;
 
 	readonly type?: string;
 
@@ -61,48 +65,86 @@ export interface RangeUpdater {
 }
 
 
-// export function useRange(
-// 	id: string, path: string, [query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
-// ): [Range, RangeUpdater] {
-//
-// 	const gte=`>=${path}`;
-// 	const lte=`<=${path}`;
-//
-// 	const queryElement=query[gte];
-// 	const lower=single(queryElement);
-// 	const upper=single(query[lte]);
-//
-// 	const entry=useEntry(id, Range, {
-// 		...query, ".stats": path, ".order": undefined, ".offset": undefined, ".limit": undefined
-// 	});
-//
-// 	const range=entry.data(({ stats: [stat] }) => ({
-//
-// 		type: stat?.id,
-//
-// 		min: stat?.min,
-// 		max: stat?.max,
-//
-// 		lower,
-// 		upper
-//
-// 	}));
-//
-// 	return [range, range => {
-//
-// 		if ( range === undefined ) { // clear
-//
-// 			setQuery({ ...query, [lte]: undefined, [gte]: undefined, ".offset": 0 });
-//
-// 		} else { // set
-//
-// 			setQuery({ ...query, [lte]: single(range.lower), [gte]: single(range.upper), ".offset": 0 });
-//
-// 		}
-//
-// 	}];
-//
-// }
+export function useRange(
+	id: string, path: string,
+	[query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
+): [
 
+	Range,
+	RangeUpdater
+
+] {
+
+	const gte=`>=${path}`;
+	const lte=`<=${path}`;
+
+	const lower=first(query[gte]);
+	const upper=first(query[lte]);
+
+
+	const [{ count, stats: [{ id: type, min, max }] }]=useFrame(id, Range, [{
+
+		...query,
+
+		".stats": path,
+
+		".order": undefined,
+		".offset": undefined,
+		".limit": undefined
+
+	}, setQuery]);
+
+	return [{
+
+		count,
+
+		type,
+
+		min,
+		max,
+
+		lower,
+		upper
+
+	}, range => {
+
+		if ( range === undefined ) { // clear
+
+			setQuery({
+
+				...query,
+
+				[lte]: undefined,
+				[gte]: undefined,
+
+				".offset": 0 // reset pagination
+
+			});
+
+		} else { // set
+
+			setQuery({
+
+				...query,
+
+				[lte]: plain(first(range.lower)),
+				[gte]: plain(first(range.upper)),
+
+				".offset": 0 // reset pagination
+
+			});
+
+		}
+
+	}];
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function plain(value: undefined | Value): undefined | Plain {
+	return frame(value) ? value.id : string(value);
+}
 
 

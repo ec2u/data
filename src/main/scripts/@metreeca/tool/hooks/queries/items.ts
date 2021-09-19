@@ -54,7 +54,15 @@ export interface ItemsUpdater {
 }
 
 
-export function useItems(id: string, path: string, [query, setQuery]: [Query, Updater<Query>]): [Items, ItemsUpdater] {
+export function useItems(
+	id: string, path: string,
+	[query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
+): [
+
+	Items,
+	ItemsUpdater
+
+] {
 
 	const any=`?${path}`;
 
@@ -66,6 +74,8 @@ export function useItems(id: string, path: string, [query, setQuery]: [Query, Up
 		.map(focus)
 	);
 
+
+	// !!! factor
 
 	const baseline=probe(useEntry(id, ItemsModel, { ".terms": path })[0], { // computed ignoring all facets
 

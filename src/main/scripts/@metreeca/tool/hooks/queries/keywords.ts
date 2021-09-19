@@ -24,7 +24,15 @@ export type Keywords=string;
 export type KeywordsUpdater=(keywords: string) => void;
 
 
-export function useKeywords(path: string, [query, setQuery]: [Query, Updater<Query>]): [Keywords, KeywordsUpdater] {
+export function useKeywords(
+	path: string,
+	[query, setQuery]: [Query, Updater<Query>]
+): [
+
+	Keywords,
+	KeywordsUpdater
+
+] {
 
 	const like=`~${path}`;
 

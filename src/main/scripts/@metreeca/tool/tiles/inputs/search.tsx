@@ -22,6 +22,11 @@ import { Search } from "../icon";
 import { ClearIcon } from "../page";
 import "./search.css";
 
+const AutoDelay=500;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function ToolSearch({
 
 	icon=false,
@@ -31,7 +36,7 @@ export function ToolSearch({
 
 	placeholder,
 
-	auto=0,
+	auto,
 
 	value,
 	onChange=() => {}
@@ -48,7 +53,7 @@ export function ToolSearch({
 	/**
 	 * The delay in ms before changes are auto-submitted after the last edit; 0 to disable.
 	 */
-	auto?: number
+	auto?: boolean | number
 
 	value: string
 	onChange?: (value: string) => void
@@ -64,7 +69,7 @@ export function ToolSearch({
 
 		if ( auto ) {
 
-			const timeout=setTimeout(() => onChange(state), auto);
+			const timeout=setTimeout(() => onChange(state), auto === true ? AutoDelay : auto || 0);
 
 			return () => clearTimeout(timeout);
 

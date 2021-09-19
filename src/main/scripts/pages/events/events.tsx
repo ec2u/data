@@ -10,10 +10,10 @@ import { Updater } from "../../@metreeca/tool/hooks";
 import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
 import { useItems } from "../../@metreeca/tool/hooks/queries/items";
 import { useKeywords } from "../../@metreeca/tool/hooks/queries/keywords";
+import { useRange } from "../../@metreeca/tool/hooks/queries/range";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolItems } from "../../@metreeca/tool/tiles/facets/items";
-import { ToolRange } from "../../@metreeca/tool/tiles/facets/range";
 import { ToolFacet } from "../../@metreeca/tool/tiles/inputs/facet";
 import { ToolSearch } from "../../@metreeca/tool/tiles/inputs/search";
 import { ClearIcon } from "../../@metreeca/tool/tiles/page";
@@ -120,29 +120,29 @@ function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
 	const [universities, setUniversities]=useItems("", "university", [query, setQuery]);
 
+	const [{ count }]=useRange("", "");
+
 	return <ToolPane
 
 		header={<ToolSearch icon rule placeholder={"Search"}
-			auto={500} value={keywords} onChange={setKeywords}
+			auto value={keywords} onChange={setKeywords}
 		/>}
 
-		footer={"123 matches"}
+		footer={count === 0 ? "no matches" : count === 1 ? "1 match" : `${count} matches`}
 
 	>
 
-		<ToolFacet name={string(University.label)}
+		<ToolFacet expanded name={string(University.label)}
 			menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
 		>
 			<ToolItems value={[universities, setUniversities]}/>
 		</ToolFacet>
 
-		<ToolFacet name={"Date"}
-			menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
-		>
-			<ToolRange pattern={"\\d{4}-\\d{2}-\\d{2}"} value={[{}, () => {}]}/>
-		</ToolFacet>
+		{/*<ToolFacet name={"Date"}
+		 menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
+		 >
+		 <ToolRange pattern={"\\d{4}-\\d{2}-\\d{2}"} value={[{}, () => {}]}/>
+		 </ToolFacet>*/}
 
 	</ToolPane>;
 }
-
-
