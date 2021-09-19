@@ -161,7 +161,9 @@ public final class Data {
 						.with(cors())
 						.with(bearer(uuid() /* !!! service(vault()).get("eu-ec2u-data").orElse(uuid())*/, root))
 
-						.with(preprocessor(request -> request.header("Accept-Language", "")))
+						.with(preprocessor(request -> // disable language negotiation
+								request.header("Accept-Language", "")
+						))
 
 						.wrap(router()
 

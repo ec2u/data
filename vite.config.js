@@ -23,6 +23,8 @@ export default defineConfig({ // https://vitejs.dev/config/
 	root: code,
 	base: base.replace(/^([^./])|([^/])$/g, "$2/$1"), // add leading/trailing slashes
 
+	publicDir: "files",
+
 	plugins: [reactRefresh()],
 
 	css: {
