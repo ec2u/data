@@ -9,8 +9,8 @@ import { blank, probe, Query, string } from "../../@metreeca/tool/bases";
 import { Updater } from "../../@metreeca/tool/hooks";
 import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
 import { useItems } from "../../@metreeca/tool/hooks/queries/items";
-import { useKeywords } from "../../@metreeca/tool/hooks/queries/keywords";
 import { useRange } from "../../@metreeca/tool/hooks/queries/range";
+import { useSearch } from "../../@metreeca/tool/hooks/queries/search";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolItems } from "../../@metreeca/tool/tiles/facets/items";
@@ -116,7 +116,7 @@ export function DataEvents() {
 
 function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
-	const [keywords, setKeywords]=useKeywords("label", [query, setQuery]);
+	const [keywords, setKeywords]=useSearch("label", [query, setQuery]);
 
 	const [universities, setUniversities]=useItems("", "university", [query, setQuery]);
 

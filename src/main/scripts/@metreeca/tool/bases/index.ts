@@ -19,7 +19,38 @@ import { Immutable } from "../index";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export interface Graph {
+
+	get<V extends Frame=Frame>(id: string, model: V, query?: Query): Promise<typeof model>;
+
+
+	post(id: string, state: State): Promise<string>; // rejected with Error
+
+	put(id: string, state: State): Promise<void>; // rejected with Error
+
+	delete(id: string): Promise<void>; // rejected with Error
+
+
+	observe(id: string, model: Frame, observer: (frame?: typeof model) => void): () => void;
+
+}
+
+
 export type Entry<V extends Frame=Frame, E extends Error=Error>=V | E | Blank
+
+
+export function probe<V extends Frame=Frame, E extends Error=Error, R=any>(entry: Entry<V, E>, cases: {
+
+	blank?: R | (() => R)
+	frame?: R | ((frame: V) => R)
+	error?: R | ((error: E) => R)
+
+}): undefined | R {
+	return blank(entry) ? cases.blank instanceof Function ? cases.blank() : cases.blank
+		: error(entry) ? cases.error instanceof Function ? cases.error(entry) : cases.error
+			: frame(entry) ? cases.frame instanceof Function ? cases.frame(entry) : cases.frame
+				: undefined;
+}
 
 export interface Blank {
 
@@ -82,24 +113,7 @@ export interface Query {
 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export interface Graph {
-
-	get<V extends Frame=Frame>(id: string, model: V, query?: Query): Promise<typeof model>;
-
-
-	post(id: string, state: State): Promise<string>; // rejected with Error
-
-	put(id: string, state: State): Promise<void>; // rejected with Error
-
-	delete(id: string): Promise<void>; // rejected with Error
-
-
-	observe(id: string, model: Frame, observer: (frame?: typeof model) => void): () => void;
-
-}
+export type QueryState=[Query, (query: Query) => void]
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,20 +141,6 @@ export function frame(value: Field | State | Entry): value is Frame {
 
 export function array(value: Field | State | Entry): value is Immutable<Value[]> {
 	return Array.isArray(value);
-}
-
-
-export function probe<V extends Frame=Frame, E extends Error=Error, R=any>(entry: Entry<V, E>, cases: {
-
-	blank?: R | (() => R)
-	frame?: R | ((frame: V) => R)
-	error?: R | ((error: E) => R)
-
-}): undefined | R {
-	return blank(entry) ? cases.blank instanceof Function ? cases.blank() : cases.blank
-		: error(entry) ? cases.error instanceof Function ? cases.error(entry) : cases.error
-			: frame(entry) ? cases.frame instanceof Function ? cases.frame(entry) : cases.frame
-				: undefined;
 }
 
 
