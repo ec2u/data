@@ -16,7 +16,7 @@
 
 import { useEffect, useReducer, useState } from "react";
 import { blank, Blank, Entry, Error, frame, Frame, Query, State, url } from "../../bases";
-import { useGraph } from "../../nests/graph";
+import { useDriver } from "../../nests/driver";
 import { useRouter } from "../../nests/router";
 
 
@@ -38,7 +38,7 @@ export function useEntry<V extends Frame=Frame, E extends Error=Error>(id: strin
 
 ] {
 
-	const graph=useGraph();
+	const graph=useDriver();
 	const { peek }=useRouter();
 
 	const [entry, setEntry]=useState<Entry<typeof model, E>>({});

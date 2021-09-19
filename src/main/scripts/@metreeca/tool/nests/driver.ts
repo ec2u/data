@@ -18,16 +18,16 @@ import { createContext, createElement, ReactNode, useContext } from "react";
 import { Graph } from "../bases";
 import { RESTGraph } from "../bases/rest";
 
-const GraphContext=createContext<Graph>(RESTGraph());
+const DriverContext=createContext<Graph>(RESTGraph());
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function useGraph(): Graph {
-	return useContext(GraphContext);
+export function useDriver(): Graph {
+	return useContext(DriverContext);
 }
 
-export function ToolGraph(props: {
+export function ToolDriver(props: {
 
 	value: Graph
 
@@ -35,6 +35,6 @@ export function ToolGraph(props: {
 
 }) {
 
-	return createElement(GraphContext.Provider, props);
+	return createElement(DriverContext.Provider, props);
 
 }
