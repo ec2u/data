@@ -15,11 +15,14 @@
  */
 
 import * as React from "react";
-import { createElement } from "react";
+import { createElement, FormEvent } from "react";
 import { Value } from "../../bases";
-import { trailing } from "../../events";
+import { useLeading } from "../../hooks/events/leading";
 import { Range, RangeUpdater } from "../../hooks/queries/range";
 import "./range.css";
+
+
+const AutoDelay=1000;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,17 +43,33 @@ export function ToolRange({
 
 }) {
 
+	const validate=useLeading(AutoDelay, (e: FormEvent<HTMLInputElement>) => {
+
+		const target=e.currentTarget;
+		const bound=target.nextElementSibling ? "lower" : "upper";
+		const value=target.value;
+
+		if ( target.checkValidity() ) {
+			setRange({ lower, upper, [bound]: value });
+		}
+
+	});
+
+
 	function string(value?: Value) { return value ? format(value) : ""; }
+
 
 	return createElement("tool-range", {}, <>
 
-		<input type="search" pattern={pattern} placeholder={string(min)} defaultValue={string(lower)} onInput={trailing(500, e => {
-			if ( e.currentTarget.checkValidity() ) { setRange({ lower, upper: e.currentTarget.value }); }
-		})}/>
+		<input type="search"
+			pattern={pattern} placeholder={string(min)}
+			defaultValue={string(lower)} onInput={validate}
+		/>
 
-		<input type="search" pattern={pattern} placeholder={string(max)} defaultValue={string(upper)} onInput={trailing(500, e => {
-			if ( e.currentTarget.checkValidity() ) { setRange({ lower: e.currentTarget.value, upper }); }
-		})}/>
+		<input type="search"
+			pattern={pattern} placeholder={string(max)}
+			defaultValue={string(upper)} onInput={validate}
+		/>
 
 	</>);
 
