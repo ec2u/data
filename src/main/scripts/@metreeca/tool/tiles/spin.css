@@ -34,19 +34,26 @@ tool-spin {
 	padding: calc(max(1.5ex, min(var(--tool-spin-size), 3em)) / 2);
 	margin: auto;
 
-	& > svg[viewBox="0 0 24 24"] {
+	& > button {
 
-		position: absolute;
-
-		left: 0;
-		top: 0;
 		width: 100%;
 		height: 100%;
 
-		color: var(--tool-spin-color);
-		stroke-width: var(--tool-spin-thickness);
+		& > svg[viewBox="0 0 24 24"] {
 
-		animation: tool-spin var(--tool-spin-period) infinite linear;
+			position: absolute;
+
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+
+			color: var(--tool-spin-color);
+			stroke-width: var(--tool-spin-thickness);
+
+			animation: tool-spin var(--tool-spin-period) infinite linear;
+
+		}
 
 	}
 
