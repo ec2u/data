@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { freeze } from "../index";
-import { Frame, Graph, Query, State } from "./index";
+import { Graph } from "./index";
 
 export function MockGraph({
 
@@ -27,44 +26,46 @@ export function MockGraph({
 
 }>={}): Graph {
 
-	const cache: { [id: string]: any }={};
+	throw ";( to be implemented";
 
-	const observers=new Set<(frame?: Frame) => void>();
-
-
-	function notify(frame?: Frame) {
-		observers.forEach(observer => observer(frame));
-	}
-
-
-	return freeze({
-
-		get<V extends Frame=Frame>(id: string, model: V, query?: Query): Promise<typeof model> {
-			return cache[id] || (cache[id]=model);
-		},
-
-
-		post(id: string, state: State): Promise<string> {
-			throw new Error("to be implemented");
-		},
-
-		put(id: string, state: State): Promise<void> {
-			throw new Error("to be implemented");
-		},
-
-		delete(id: string): Promise<void> {
-			throw new Error("to be implemented");
-		},
-
-
-		observe(id: string, model: Frame, observer: (frame?: Frame) => void): () => void {
-
-			observers.add(observer);
-
-			return () => observers.delete(observer);
-
-		}
-
-	});
+	// const cache: { [id: string]: any }={};
+	//
+	// const observers=new Set<(frame?: Frame) => void>();
+	//
+	//
+	// function notify(frame?: Frame) {
+	// 	observers.forEach(observer => observer(frame));
+	// }
+	//
+	//
+	// return freeze({
+	//
+	// 	get<V extends Frame=Frame>(id: string, model: V, query?: Query): Promise<typeof model> {
+	// 		return cache[id] || (cache[id]=model);
+	// 	},
+	//
+	//
+	// 	post(id: string, state: State): Promise<string> {
+	// 		throw new Error("to be implemented");
+	// 	},
+	//
+	// 	put(id: string, state: State): Promise<void> {
+	// 		throw new Error("to be implemented");
+	// 	},
+	//
+	// 	delete(id: string): Promise<void> {
+	// 		throw new Error("to be implemented");
+	// 	},
+	//
+	//
+	// 	observe(id: string, model: Frame, observer: (frame?: Frame) => void): () => void {
+	//
+	// 		observers.add(observer);
+	//
+	// 		return () => observers.delete(observer);
+	//
+	// 	}
+	//
+	// });
 
 }

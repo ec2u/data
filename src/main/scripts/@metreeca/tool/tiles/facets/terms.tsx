@@ -17,23 +17,23 @@
 import * as React from "react";
 import { createElement } from "react";
 import { frame, string } from "../../bases";
-import { Items, ItemsUpdater } from "../../hooks/items";
-import "./items.css";
+import { Terms, TermsUpdater } from "../../hooks/queries/terms";
+import "./terms.css";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ToolItems({
+export function ToolTerms({
 
 	value: [items, setItems]
 
 }: {
 
-	value: [Items, ItemsUpdater]
+	value: [Terms, TermsUpdater]
 
 }) {
 
-	return createElement("tool-items", {}, items.map(({
+	return createElement("tool-terms", {}, items.map(({
 
 			selected, value, count
 

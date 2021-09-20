@@ -3,8 +3,7 @@
  */
 
 import * as React from "react";
-import { freeze } from "../@metreeca/tool";
-import { string } from "../@metreeca/tool/bases";
+import { freeze, string } from "../@metreeca/tool/bases";
 import { Heart } from "../@metreeca/tool/tiles/icon";
 import { DataPage } from "../tiles/page";
 import { About } from "./about";

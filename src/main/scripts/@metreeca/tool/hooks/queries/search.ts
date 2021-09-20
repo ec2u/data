@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-import { first, QueryState, string } from "../../bases";
+import { Query, string, value } from "../../bases";
 import { normalize } from "../../index";
 
 
 export type Search=string;
 
-export type SearchState=[Search, (search: Search) => void]
+export type SearchUpdater=(search: Search) => void
 
 
-export function useSearch(path: string, [query, setQuery]: QueryState): SearchState {
+export function useSearch(
+	path: string, [query, setQuery]: [Query, (query: Query) => void]
+): [
+	search: Search, setSearch: SearchUpdater
+] {
 
 	const like=`~${path}`;
 
-	const search=string(first(query[like]));
+	const search=string(value(query[like]));
 
 	return [normalize(search), (search: string) =>
 		setQuery({ ...query, [like]: normalize(search) })

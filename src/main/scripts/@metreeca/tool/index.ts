@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-export type Primitive=undefined | null | boolean | string | number | Function
-
-export type Immutable<T>=
-	T extends Primitive ? T
-		: T extends Array<infer U> ? ReadonlyArray<Immutable<U>>
-			: { readonly [K in keyof T]: Immutable<T[K]> }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function normalize(text: string): string {
 	return text.trim().replace(/\s+/g, " ");
@@ -42,25 +33,6 @@ export function like(keywords: string): RegExp {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function freeze<T=any>(value: T): Immutable<typeof value> {
-	if ( typeof value === "object" ) {
-
-		return Object.freeze(Object.getOwnPropertyNames(value as any).reduce((object: any, key) => {
-
-			object[key]=freeze((value as any)[key]);
-
-			return object;
-
-		}, Array.isArray(value) ? [] : {}));
-
-	} else {
-
-		return value as any;
-
-	}
-}
-
 
 /**
  * Reports unhandled errors

@@ -16,39 +16,63 @@
 
 import { Frame, Query } from "../../bases";
 import { Updater } from "../index";
-import { useEntry } from "./entry";
+import { EntryUpdater, useEntry } from "./entry";
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export function useFrame<F extends Frame=Frame>(
+	id: string, model: F, [query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
+): [
+	frame: typeof model, setFrame: EntryUpdater
+] {
 
-export interface FrameUpdater {
+	const [entry, setEntry]=useEntry<F>(id, model, [query, setQuery]);
 
+	const fallback=defaults(model);
 
-	(): void;
+	return [entry.frame(frame => ({ ...fallback, ...frame })) || fallback, setEntry];
 
 }
 
 
-export function useFrame<V extends Frame=Frame>(
-	id: string, model: V,
-	[query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
-): [
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	typeof model,
-	FrameUpdater
+/**
+ * Recursively replaces model fields with their default value.
+ *
+ * @param model
+ *
+ * @return
+ */
+function defaults(model: any): any {
+	if ( typeof model === "boolean" ) {
 
-] {
+		return false;
 
-	const [entry]=useEntry<V>(id, model, query);
+	} else if ( typeof model === "number" ) {
 
-	return [model, () => {}];
+		return 0;
 
-	// return <any>probe<Frame, Error, [Frame, FrameUpdater]>(entry, {
-	//
-	// 	frame: frame => [frame, () => {}],
-	// 	error: error => [{ id }, () => {}],
-	// 	blank: () => [{ id }, () => {}]
-	//
-	// });
+	} else if ( typeof model === "string" ) {
 
+		return "";
+
+	} else if ( Array.isArray(model) ) {
+
+		return [];
+
+	} else if ( typeof model === "object" ) {
+
+		return Object.getOwnPropertyNames(model).reduce((object: any, key) => {
+
+			object[key]=defaults((model as any)[key]);
+
+			return object;
+
+		}, {});
+
+	} else {
+
+		return model;
+
+	}
 }

@@ -3,17 +3,16 @@
  */
 
 import * as React from "react";
-import { ReactNode, useEffect, useReducer } from "react";
-import { freeze } from "../../@metreeca/tool";
-import { blank, probe, Query, string } from "../../@metreeca/tool/bases";
+import { useEffect, useReducer } from "react";
+import { freeze, Query, string } from "../../@metreeca/tool/bases";
 import { Updater } from "../../@metreeca/tool/hooks";
 import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
-import { useItems } from "../../@metreeca/tool/hooks/queries/items";
 import { useRange } from "../../@metreeca/tool/hooks/queries/range";
 import { useSearch } from "../../@metreeca/tool/hooks/queries/search";
+import { useTerms } from "../../@metreeca/tool/hooks/queries/terms";
 import { useQuery } from "../../@metreeca/tool/hooks/query";
 import { useRouter } from "../../@metreeca/tool/nests/router";
-import { ToolItems } from "../../@metreeca/tool/tiles/facets/items";
+import { ToolTerms } from "../../@metreeca/tool/tiles/facets/terms";
 import { ToolFacet } from "../../@metreeca/tool/tiles/inputs/facet";
 import { ToolSearch } from "../../@metreeca/tool/tiles/inputs/search";
 import { ClearIcon } from "../../@metreeca/tool/tiles/page";
@@ -68,7 +67,7 @@ export function DataEvents() {
 
 	const [, update]=useReducer(v => v+1, 0);
 
-	const [events]=useEntry("", Events, query);
+	const [{ fetch, frame, error }]=useEntry("", Events, [query, setQuery]);
 
 
 	useEffect(() => { name(string(Events.label)); });
@@ -76,15 +75,15 @@ export function DataEvents() {
 
 	return <DataPage item={string(Events.label)}
 
-		menu={blank(events) && <ToolSpin/>}
+		menu={fetch(abort => <ToolSpin abort={abort}/>)}
 
 		side={<DataFiltersButton onClick={update}/>}
 
 		pane={facets([query, setQuery])}
 
-	>{probe(events, {
+	>
 
-		frame: ({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
+		{frame(({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
 
 			<DataCard key={id}
 
@@ -103,11 +102,11 @@ export function DataEvents() {
 
 			</DataCard>
 
-		)) as ReactNode,
+		)))}
 
-		error: error => <span>{error.status}</span>
+		{error(error => <span>{error.status}</span>)} {/* !!! */}
 
-	})}</DataPage>;
+	</DataPage>;
 
 }
 
@@ -116,16 +115,16 @@ export function DataEvents() {
 
 function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
-	const [keywords, setKeywords]=useSearch("label", [query, setQuery]);
+	const [search, setSearch]=useSearch("label", [query, setQuery]);
 
-	const [universities, setUniversities]=useItems("", "university", [query, setQuery]);
+	const [universities, setUniversities]=useTerms("", "university", [query, setQuery]);
 
-	const [{ count }]=useRange("", "");
+	const [{ count }]=useRange("", "label"); // !!! root path
 
 	return <ToolPane
 
 		header={<ToolSearch icon rule placeholder={"Search"}
-			auto value={keywords} onChange={setKeywords}
+			auto value={search} onChange={setSearch}
 		/>}
 
 		footer={count === 0 ? "no matches" : count === 1 ? "1 match" : `${count} matches`}
@@ -135,7 +134,7 @@ function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 		<ToolFacet expanded name={string(University.label)}
 			menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
 		>
-			<ToolItems value={[universities, setUniversities]}/>
+			<ToolTerms value={[universities, setUniversities]}/>
 		</ToolFacet>
 
 		{/*<ToolFacet name={"Date"}

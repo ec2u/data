@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-import { first, frame, Plain, Query, string, Value } from "../../bases";
+import { frame, freeze, Plain, Query, string, value, Value } from "../../bases";
 import { Updater } from "../index";
 import { useFrame } from "./frame";
 
 
-const Range={
+const Stats=freeze({
 
 	id: "",
 
 	count: 0,
 
-	min: {} as Value,
-	max: {} as Value,
+	min: {},
+	max: {},
 
-	stats: [{ // !!! rename
+	stats: [{
 
 		id: "",
 
 		count: 0,
 
-		min: {} as Value,
-		max: {} as Value
+		min: {},
+		max: {}
 
 	}]
 
-};
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,23 +66,19 @@ export interface RangeUpdater {
 
 
 export function useRange(
-	id: string, path: string,
-	[query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
+	id: string, path: string, [query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
 ): [
-
-	Range,
-	RangeUpdater
-
+	range: Range, setRange: RangeUpdater
 ] {
 
 	const gte=`>=${path}`;
 	const lte=`<=${path}`;
 
-	const lower=first(query[gte]);
-	const upper=first(query[lte]);
+	const lower=value(query[gte]);
+	const upper=value(query[lte]);
 
 
-	const [{ count, stats: [{ id: type, min, max }] }]=useFrame(id, Range, [{
+	const [{ count, stats: [stats] }]=useFrame(id, Stats, [{
 
 		...query,
 
@@ -94,14 +90,15 @@ export function useRange(
 
 	}, setQuery]);
 
+
 	return [{
 
 		count,
 
-		type,
+		type: stats?.id,
 
-		min,
-		max,
+		min: stats?.min,
+		max: stats?.min,
 
 		lower,
 		upper
@@ -127,8 +124,8 @@ export function useRange(
 
 				...query,
 
-				[lte]: plain(first(range.lower)),
-				[gte]: plain(first(range.upper)),
+				[lte]: plain(value(range.lower)),
+				[gte]: plain(value(range.upper)),
 
 				".offset": 0 // reset pagination
 

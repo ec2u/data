@@ -14,65 +14,46 @@
  * limitations under the License.
  */
 
-import { useEffect, useReducer, useState } from "react";
-import { blank, Blank, Entry, Error, frame, Frame, Query, State, url } from "../../bases";
+import { useEffect, useReducer } from "react";
+import { Blank, Entry, Error, Frame, Query, State } from "../../bases";
 import { useDriver } from "../../nests/driver";
 import { useRouter } from "../../nests/router";
+import { Updater } from "../index";
+
+export interface EntryUpdater {
+
+	<E extends Error=Error>(state: State): Entry<Frame, E>; // post
+
+	<E extends Error=Error>(state: Frame): Entry<Frame, E>; // put
+
+	<E extends Error=Error>(blank: Blank): Entry<Frame, E>; // delete
+
+}
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function useEntry<V extends Frame=Frame, E extends Error=Error>(id: string, model: V, query?: Query): [
-
-	entry: Entry<typeof model, E>,
-
-	setEntry: {
-
-		<E extends Error=Error>(state: State, action?: (entry: Entry<Frame, E>) => void): void // post
-
-		<E extends Error=Error>(state: typeof model, action?: (entry: Entry<Frame, E>) => void): void // put
-
-		<E extends Error=Error>(blank: Blank, action?: (entry: Entry<Frame, E>) => void): void // delete
-
-	}
-
+export function useEntry<F extends Frame=Frame, E extends Error=Error>(
+	id: string, model: F, [query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
+): [
+	entry: Entry<typeof model, E>, setEntry: EntryUpdater
 ] {
 
 	const graph=useDriver();
 	const { peek }=useRouter();
-
-	const [entry, setEntry]=useState<Entry<typeof model, E>>({});
-
 	const [, update]=useReducer(v => v+1, 0);
 
-	const target=id || peek();
 
-	useEffect(() => { graph.get(target, model, query).then(setEntry).catch(setEntry); }, [url(target, query)]);
+	const focus=id || peek();
 
-	useEffect(() => graph.observe(target, model, update), [entry]);
+	const entry=graph.get<F, E>(focus, model, query);
 
-	return [entry, (state, action=() => {}) => {
 
-		if ( blank(state) ) {
+	useEffect(() => graph.observe(focus, update), [entry]);
 
-			graph.delete(target)
-				.then(() => action({}))
-				.catch(action);
 
-		} else if ( frame(state) ) {
-
-			graph.put(target, state)
-				.then(() => action({ id: target }))
-				.catch(action);
-
-		} else {
-
-			graph.post(target, state)
-				.then(location => () => action({ id: location || target }))
-				.catch(action);
-
-		}
-
-	}];
+	return [entry, (state) =>
+		Object.keys(state).length === 0 ? graph.delete(focus)
+			: "id" in state ? graph.put(focus, state)
+				: graph.post(focus, state)
+	];
 
 }

@@ -4,8 +4,7 @@
 
 import * as React from "react";
 import { useEffect } from "react";
-import { freeze } from "../../@metreeca/tool";
-import { blank, frame, probe, string } from "../../@metreeca/tool/bases";
+import { freeze, string } from "../../@metreeca/tool/bases";
 import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
@@ -46,57 +45,61 @@ export function DataUniversity() {
 
 	const { name }=useRouter();
 
-	const [university]=useEntry("", University);
+	const [{ fetch, frame, error }]=useEntry("", University);
 
 
-	useEffect(() => { frame(university) && name(string(university.label)); });
+	useEffect(() => { frame(({ label }) => name(string(label))); });
 
 
 	return <DataPage
 
 		item={<>
 			<a href={Universities.id}>{string(Universities.label)}</a>
-			<span>{frame(university) && string(university.label)}</span>
+			<span>{frame(({ label }) => string(label))}</span>
 		</>}
 
-		menu={blank(university) && <ToolSpin/>}
+		menu={fetch(abort => <ToolSpin abort={abort}/>)}
 
-	>{probe(university, {
+	>
 
-		frame: ({
+		{frame(({
 
-			image, label, comment,
-			inception, students,
-			country, location
+				image, label, comment,
+				inception, students,
+				country, location
 
-		}) => (
+			}) => (
 
-			<DataCard
+				<DataCard
 
-				icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
+					icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
 
-				info={<dl>
+					info={<dl>
 
-					<dt>Inception</dt>
-					<dd>{inception && inception.substr(0, 4) || "-"}</dd>
+						<dt>Inception</dt>
+						<dd>{inception && inception.substr(0, 4) || "-"}</dd>
 
-					<dt>Country</dt>
-					<dd><a href={country.id}>{string(country.label)}</a></dd>
+						<dt>Country</dt>
+						<dd><a href={country.id}>{string(country.label)}</a></dd>
 
-					<dt>City</dt>
-					<dd><a href={location.id}>{string(location.label)}</a></dd>
+						<dt>City</dt>
+						<dd><a href={location.id}>{string(location.label)}</a></dd>
 
-					{/*<dt>Students</dt>*/}
-					{/*<dd>{string(students)}</dd>*/}
+						{/*<dt>Students</dt>*/}
+						{/*<dd>{string(students)}</dd>*/}
 
-				</dl>}
+					</dl>}
 
-			>
+				>
 
-				<p>{string(comment)}</p>
+					<p>{string(comment)}</p>
 
-			</DataCard>
+				</DataCard>
 
-		)
-	})}</DataPage>;
+			)
+		)}
+
+		{error(error => <span>{error.status}</span>)} {/* !!! */}
+
+	</DataPage>;
 }

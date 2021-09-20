@@ -14,56 +14,43 @@
  * limitations under the License.
  */
 
-import { Immutable } from "../index";
+
+export type Primitive=undefined | null | boolean | string | number | Function
+
+export type Immutable<T>=
+	T extends Primitive ? T
+		: T extends Array<infer U> ? ReadonlyArray<Immutable<U>>
+			: { readonly [K in keyof T]: Immutable<T[K]> }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export interface Graph {
 
-	get<V extends Frame=Frame>(id: string, model: V, query?: Query): Promise<typeof model>;
+	get<F extends Frame=Frame, E extends Error=Error>(id: string, model: F, query?: Query): Entry<typeof model, E>;
 
 
-	post(id: string, state: State): Promise<string>; // rejected with Error
+	post<E extends Error=Error>(id: string, state: State): Entry<Frame, E>;
 
-	put(id: string, state: State): Promise<void>; // rejected with Error
+	put<E extends Error=Error>(id: string, state: State): Entry<Frame, E>;
 
-	delete(id: string): Promise<void>; // rejected with Error
-
-
-	observe(id: string, model: Frame, observer: (frame?: typeof model) => void): () => void;
-
-}
+	delete<E extends Error=Error>(id: string): Entry<Frame, E>;
 
 
-export type Entry<V extends Frame=Frame, E extends Error=Error>=V | E | Blank
-
-
-export function probe<V extends Frame=Frame, E extends Error=Error, R=any>(entry: Entry<V, E>, cases: {
-
-	blank?: R | (() => R)
-	frame?: R | ((frame: V) => R)
-	error?: R | ((error: E) => R)
-
-}): undefined | R {
-	return blank(entry) ? cases.blank instanceof Function ? cases.blank() : cases.blank
-		: error(entry) ? cases.error instanceof Function ? cases.error(entry) : cases.error
-			: frame(entry) ? cases.frame instanceof Function ? cases.frame(entry) : cases.frame
-				: undefined;
-}
-
-export interface Blank {
-
-	readonly [field: string]: never;
+	observe(id: string, observer: () => void): () => void;
 
 }
 
-export interface Error {
+export interface Entry<F extends Frame=Frame, E extends Error=Error> {
 
-	readonly status: number;
-	readonly reason: string;
+	blank<V>(mapper: () => undefined | V): undefined | V; // first fetch | error | deleted
 
-	readonly detail: any;
+	fetch<V>(mapper: (abort: () => void) => undefined | V): undefined | V;
+
+
+	frame<V>(mapper: (frame: F) => undefined | V): undefined | V;
+
+	error<V>(mapper: (error: E) => undefined | V): undefined | V;
 
 }
 
@@ -89,21 +76,24 @@ export interface Frame extends State {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export interface State {
+export interface Blank {
 
-	readonly type?: string;
-	readonly image?: string;
-	readonly label?: string | Langs;
-	readonly comment?: string | Langs;
+	readonly [field: string]: never;
+
+}
+
+export interface State {
 
 	readonly [field: string]: Field;
 
 }
 
+
 export interface Query {
 
-	readonly ".terms"?: string; // !!! items
-	readonly ".stats"?: string; // !!! range
+	readonly ".links"?: string;
+	readonly ".terms"?: string;
+	readonly ".stats"?: string;
 
 	readonly ".order"?: string | Immutable<string[]>;
 	readonly ".offset"?: number;
@@ -113,63 +103,49 @@ export interface Query {
 
 }
 
-export type QueryState=[Query, (query: Query) => void]
+export interface Error<S extends State=State> {
 
+	readonly status: number;
+	readonly reason: string;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	readonly detail: S;
 
-export function blank(value: Field | State | Entry): value is Blank {
-	return typeof value === "object" && Object.keys(value).length === 0;
-}
-
-export function error(value: Field | State | Entry): value is Error {
-	return typeof value === "object" && "status" in value && "reason" in value && "detail" in value;
-}
-
-
-export function plain(value: Field | State | Entry): value is Plain {
-	return typeof value === "boolean" || typeof value === "number" || typeof value === "string";
-}
-
-export function langs(value: Field | State | Entry): value is Langs {
-	return typeof value === "object" && !("id" in value);
-}
-
-export function frame(value: Field | State | Entry): value is Frame {
-	return typeof value === "object" && "id" in value;
-}
-
-export function array(value: Field | State | Entry): value is Immutable<Value[]> {
-	return Array.isArray(value);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function first(field: Field): undefined | Value {
-	return array(field) ? field[0] : field;
+export function array(field: Field): field is Immutable<Value[]> {
+	return Array.isArray(field);
 }
 
-export function string(value: undefined | Value, locales: Immutable<string[]>=navigator.languages): string {
+export function plain(field: Field): field is Plain {
+	return typeof field === "boolean" || typeof field === "number" || typeof field === "string";
+}
 
-	function _frame(frame: Frame) {
-		return langs(frame.label) ? _langs(frame.label)
-			: frame.label || label(frame.id) || "";
-	}
+export function langs(field: Field): field is Langs {
+	return typeof field === "object" && !("id" in field);
+}
 
-	function _langs(langs: Langs) {
-		return locales.map(locale => langs[locale]).filter(string => string)[0]
-			|| langs.en || Object.values(langs)[0] || "";
-	}
+export function frame(field: Field): field is Frame {
+	return typeof field === "object" && "id" in field;
+}
 
-	return typeof value === "boolean" ? value.toString()
-		: typeof value === "number" ? value.toLocaleString(locales as string[])
-			: typeof value === "string" ? value
-				: frame(value) ? _frame(value)
-					: langs(value) ? _langs(value)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function value(field: Field): undefined | Value {
+	return array(field) ? undefined : field;
+}
+
+export function string(field: undefined | Field, locales: readonly string[]=navigator.languages): string {
+	return typeof field === "boolean" ? field.toString()
+		: typeof field === "number" ? field.toLocaleString(locales as string[])
+			: typeof field === "string" ? field
+				: frame(field) ? string(field.label, locales) || label(field.id) || ""
+					: langs(field) ? locales.map(l => field[l]).filter(s => s)[0] || field.en || Object.values(field)[0] || ""
 						: "";
 }
-
 
 /**
  * Guesses a resource label from its id.
@@ -224,6 +200,27 @@ export function url(id: string, query?: Query) {
 	} else {
 
 		return id;
+
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function freeze<T=any>(value: T): Immutable<typeof value> {
+	if ( typeof value === "object" ) {
+
+		return Object.freeze(Object.getOwnPropertyNames(value as any).reduce((object: any, key) => {
+
+			object[key]=freeze((value as any)[key]);
+
+			return object;
+
+		}, Array.isArray(value) ? [] : {}));
+
+	} else {
+
+		return value as any;
 
 	}
 }

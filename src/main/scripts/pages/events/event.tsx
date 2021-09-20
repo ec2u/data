@@ -4,8 +4,7 @@
 
 import * as React from "react";
 import { useEffect } from "react";
-import { freeze } from "../../@metreeca/tool";
-import { blank, frame, probe, string } from "../../@metreeca/tool/bases";
+import { freeze, string } from "../../@metreeca/tool/bases";
 import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
 import { useRouter } from "../../@metreeca/tool/nests/router";
 import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
@@ -30,24 +29,24 @@ export function DataEvent() {
 
 	const { name }=useRouter();
 
-	const [event]=useEntry("", Event);
+	const [{ fetch, frame, error }]=useEntry("", Event);
 
 
-	useEffect(() => { frame(event) && name(string(event.label)); });
+	useEffect(() => { frame(({ label }) => name(string(label))); });
 
 
 	return <DataPage
 
 		item={<>
 			<a href={"/events/"}>Events</a>
-			<span>{frame(event) && string(event.label)}</span>
+			<span>{frame(({ label }) => string(label))}</span>
 		</>}
 
-		menu={blank(event) && <ToolSpin/>}
+		menu={fetch(abort => <ToolSpin abort={abort}/>)}
 
-	>{probe(event, {
+	>
 
-		frame: ({
+		{frame(({
 
 			image, label, comment,
 
@@ -72,7 +71,10 @@ export function DataEvent() {
 
 			</DataCard>
 
-		)
-	})}</DataPage>;
+		))}
+
+		{error(error => <span>{error.status}</span>)} {/* !!! */}
+
+	</DataPage>;
 
 }

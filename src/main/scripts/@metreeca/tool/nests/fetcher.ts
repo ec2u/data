@@ -104,7 +104,7 @@ function wrapper(fetcher: Fetcher): Fetcher {
 
 			.catch(reason => new Response("{}", { // error to synthetic response conversion
 
-				// !!! should report aborts with AbortError but the class is not defined anywhere
+				// !!! aborts should be reported with AbortError but the class is not defined anywhere
 				// !!! see https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
 
 				status: reason.constructor && reason.constructor.name === "AbortError" ? FetchAbort : FetchError,

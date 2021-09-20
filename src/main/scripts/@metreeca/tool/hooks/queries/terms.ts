@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { frame, langs, Plain, probe, Query, string, Value } from "../../bases";
-import { freeze, Immutable } from "../../index";
+import { frame, freeze, langs, Plain, Query, string, Value } from "../../bases";
 import { Updater } from "../index";
-import { useEntry } from "./entry";
+import { useFrame } from "./frame";
 
-const ItemsModel=freeze({
+
+const Terms=freeze({
 
 	id: "",
 
-	terms: [{ // !!! rename
+	terms: [{
 
-		id: "", // !!! review
+		id: "",
 
-		value: {} as Value,
+		value: {},
 
 		count: 0
 
@@ -38,30 +38,25 @@ const ItemsModel=freeze({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export interface Items extends Immutable<{
+export interface Terms extends ReadonlyArray<{
 
-	selected: boolean
-	value: Value
-	count: number
+	readonly selected: boolean
+	readonly value: Value
+	readonly count: number
 
-}[]> {}
+}> {}
 
-
-export interface ItemsUpdater {
+export interface TermsUpdater {
 
 	(items: { value: Value, selected: boolean } /*| { value: Value, selected: boolean }[]*/): void;
 
 }
 
 
-export function useItems(
-	id: string, path: string,
-	[query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
+export function useTerms(
+	id: string, path: string, [query, setQuery]: [Query, Updater<Query>]=[{}, () => {}]
 ): [
-
-	Items,
-	ItemsUpdater
-
+	terms: Terms, setTerms: TermsUpdater
 ] {
 
 	const any=`?${path}`;
@@ -75,36 +70,26 @@ export function useItems(
 	);
 
 
-	// !!! factor
+	const [{ terms: baseline }]=useFrame(id, Terms, [{ // computed ignoring all facets
 
-	const baseline=probe(useEntry(id, ItemsModel, { ".terms": path })[0], { // computed ignoring all facets
+		".terms": path
 
-		blank: [],
-		error: [],
+	}, setQuery]);
 
-		frame: ({ terms }) => terms
+	const [{ terms: matching }]=useFrame(id, Terms, [{ // computed ignoring this facet
 
-	}) || [];
+		...query,
 
-	const matching=probe(useEntry(id, ItemsModel, Object
-		.getOwnPropertyNames(query)
-		.filter(key => key !== path && key !== any)
-		.reduce((object, key, index, keys) => {
+		".terms": path,
 
-			(object as any)[key]=query[key];
+		[path]: undefined,
+		[any]: undefined,
 
-			return object;
+		".order": undefined,
+		".offset": undefined,
+		".limit": undefined
 
-		}, { ".terms": path })
-	)[0], { // computed ignoring this facet
-
-		blank: [],
-		error: [],
-
-		frame: ({ terms }) => terms
-
-	}) || [];
-
+	}, setQuery]);
 
 	const items=[...matching, ...baseline
 
@@ -149,7 +134,7 @@ function focus(value: Value): Plain {
 			: value;
 }
 
-function sort(x: Items[number], y: Items[number]): number {
+function sort(x: Terms[number], y: Terms[number]): number {
 	return x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
 		: x.count > y.count ? -1 : x.count < y.count ? +1
 			: string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase());

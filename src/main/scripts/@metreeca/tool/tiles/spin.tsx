@@ -30,7 +30,9 @@ export function ToolSpin({
 	size="100%",
 	thickness="2.5%",
 	color="#999",
-	period="1.5s"
+	period="1.5s",
+
+	abort
 
 }: {
 
@@ -40,6 +42,8 @@ export function ToolSpin({
 	thickness?: string
 	color?: string
 	period?: string,
+
+	abort?: () => void
 
 }) {
 
@@ -54,6 +58,6 @@ export function ToolSpin({
 
 		}
 
-	}, icon);
+	}, <button title={abort && "Abort operations"} onClick={abort || (() => {})}>{icon}</button>);
 
 }

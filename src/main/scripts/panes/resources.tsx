@@ -4,25 +4,24 @@
 
 import * as React from "react";
 import { ReactNode } from "react";
-import { blank, frame, string } from "../@metreeca/tool/bases";
+import { freeze, string } from "../@metreeca/tool/bases";
 import { Updater } from "../@metreeca/tool/hooks";
 import { useEntry } from "../@metreeca/tool/hooks/queries/entry";
 import { Calendar, Database, Library, MapPin } from "../@metreeca/tool/tiles/icon";
 import { ToolSearch } from "../@metreeca/tool/tiles/inputs/search";
 import { ToolItem } from "../@metreeca/tool/tiles/item";
 import { ToolPane } from "../@metreeca/tool/tiles/pane";
-import { ToolSpin } from "../@metreeca/tool/tiles/spin";
 import { Events } from "../pages/events/events";
 import { Universities } from "../pages/universities/universities";
 
-const Resources={
+const Resources=freeze({
 
 	id: "/",
 
 	universities: 0,
 	events: 0
 
-};
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +44,7 @@ export function DataResourcesButton({
 
 export function DataResourcesPane() {
 
-	const [resources]=useEntry("/", Resources);
+	const [{ frame }]=useEntry("/", Resources);
 
 	return <ToolPane header={<ToolSearch icon rule placeholder={"Search"}
 		value={""} onChange={() => {}}
@@ -53,12 +52,12 @@ export function DataResourcesPane() {
 
 		<ToolItem icon={<MapPin/>}
 			name={<a href={Universities.id}>{string(Universities.label)}</a>}
-			menu={blank(resources) ? <ToolSpin/> : frame(resources) ? resources.universities : "?"}
+			menu={frame(({ universities }) => string(universities))}
 		/>
 
 		<ToolItem icon={<Calendar/>}
 			name={<a href={Events.id}>{string(Events.label)}</a>}
-			menu={blank(resources) ? <ToolSpin/> : frame(resources) ? resources.events : "?"}
+			menu={frame(({ events }) => string(events))}
 		/>
 
 	</ToolPane>;

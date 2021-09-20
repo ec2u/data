@@ -14,94 +14,165 @@
  * limitations under the License.
  */
 
-import { freeze } from "../index";
-import { Frame, Graph, Query, State, string, url } from "./index";
+import { Entry, Error, Frame, freeze, Graph, Query, State, url } from "./index";
 
 export function RESTGraph(): Graph {
 
-	const cache: { [url: string]: any }={}; // !!! TTL / size limits / …
-
-	const observers=new Set<(frame?: Frame) => void>();
+	const fetcher=fetch; // !!! configurable
 
 
-	function notify(frame?: Frame) {
-		observers.forEach(observer => observer(frame));
+	const cache=new Map<string, Entry>(); // !!! TTL / size limits / …
+
+	const observers=new Map<string, Set<() => void>>();
+
+
+	function notify(id: string) {
+		observers.get(id)?.forEach(observer => observer());
 	}
 
 
 	return freeze({
 
-		get<V extends Frame=Frame>(id: string, model: V, query?: Query): Promise<typeof model> {
+		get<F extends Frame=Frame, E extends Error=Error>(id: string, model: F, query?: Query): Entry<typeof model, E> {
 
 			const key=url(id, query);
 
-			return cache[key] || (cache[key]=fetch(key, {
+			let entry=cache.get(key) as Entry<F, E>;
 
-				headers: { Accept: "application/json" } // !!! interceptor for session management
+			if ( !entry ) {
 
-			})
+				const controller=new AbortController();
 
-				.then(response => response.json().then(json => {
 
-					if ( response.ok ) {
+				cache.set(key, entry=freeze({
 
-						const value=freeze({ ...defaults(model), ...json }); // fill missing properties from model
+					blank<V>(mapper: () => undefined | V): undefined | V {
+						return mapper();
+					},
 
-						notify(value);
+					fetch<V>(mapper: (abort: () => void) => undefined | V): undefined | V {
+						return mapper(controller.abort);
+					},
 
-						return value;
 
-					} else {
+					frame<V>(mapper: (frame: F) => undefined | V): undefined | V {
+						return undefined;
+					},
 
-						delete cache[key];
-
-						throw freeze({
-
-							status: response.status,
-							reason: response.statusText,
-
-							detail: json
-
-						});
-
+					error<V>(mapper: (error: E) => undefined | V): undefined | V {
+						return undefined;
 					}
-
-				}))
-
-				.catch(reason => { // !!! handle network/abort responses (see useFetcher)
-
-					throw freeze({
-
-						status: 0,
-						reason: "fetch error",
-
-						detail: reason
-
-					});
 
 				}));
 
+
+				fetcher(key, {
+
+					headers: { Accept: "application/json" }, // !!! interceptor for session management
+
+					signal: controller.signal
+
+				})
+
+					.catch(reason => new Response("{}", { // error to synthetic response conversion
+
+						status: 0,
+						statusText: String(reason)
+
+					}))
+
+					.then(response => response.json().then(json => {
+
+						if ( response.ok ) {
+
+							const frame=freeze(json);
+
+							cache.set(key, freeze({
+
+								blank<V>(mapper: () => undefined | V): undefined | V {
+									return undefined;
+								},
+
+								fetch<V>(mapper: (abort: () => void) => undefined | V): undefined | V {
+									return undefined;
+								},
+
+
+								frame<V>(mapper: (frame: F) => undefined | V): undefined | V {
+									return mapper(frame);
+								},
+
+								error<V>(mapper: (error: E) => undefined | V): undefined | V {
+									return undefined;
+								}
+
+							}));
+
+						} else {
+
+							const error=<E>freeze({
+
+								status: response.status,
+								reason: response.statusText,
+
+								detail: json
+
+							});
+
+							cache.set(key, freeze({
+
+								blank<V>(mapper: () => undefined | V): undefined | V {
+									return mapper();
+								},
+
+								fetch<V>(mapper: (abort: () => void) => undefined | V): undefined | V {
+									return undefined;
+								},
+
+
+								frame<V>(mapper: (frame: F) => undefined | V): undefined | V {
+									return undefined;
+								},
+
+								error<V>(mapper: (error: E) => undefined | V): undefined | V {
+									return mapper(error);
+								}
+
+							}));
+
+						}
+
+						notify(id);
+
+					}));
+
+			}
+
+			return entry;
+
 		},
 
 
-		post(id: string, state: State): Promise<string> {
-			throw new Error("to be implemented"); //  !!! invalidate cache
+		post<E extends Error=Error>(id: string, state: State): Entry<Frame, E> {
+			throw "to be implemented"; //  !!! invalidate cache // notify observers
 		},
 
-		put(id: string, state: State): Promise<void> {
-			throw new Error("to be implemented"); //  !!! invalidate cache
+		put<E extends Error=Error>(id: string, state: State): Entry<Frame, E> {
+			throw "to be implemented"; //  !!! invalidate cache // notify observers
 		},
 
-		delete(id: string): Promise<void> {
-			throw new Error("to be implemented"); //  !!! invalidate cache
+		delete<E extends Error=Error>(id: string): Entry<Frame, E> {
+			throw "to be implemented"; //  !!! invalidate cache // notify observers
 		},
 
 
-		observe(id: string, model: Frame, observer: (frame?: Frame) => void): () => void {
+		observe(id: string, observer: () => void): () => void {
 
-			observers.add(observer);
+			if ( !observers.get(id)?.add(observer) ) {
+				observers.set(id, new Set([observer]));
+			}
 
-			return () => observers.delete(observer);
+			return () => observers.get(id)?.delete(observer);
 
 		}
 
@@ -109,47 +180,3 @@ export function RESTGraph(): Graph {
 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/**
- * Recursively replaces model fields with their default value.
- *
- * @param model
- *
- * @return
- */
-function defaults(model: any): any {
-	if ( typeof model === "boolean" ) {
-
-		return false;
-
-	} else if ( typeof model === "number" ) {
-
-		return 0;
-
-	} else if ( typeof model === "string" ) {
-
-		return "";
-
-	} else if ( Array.isArray(model) ) {
-
-		return [];
-
-	} else if ( typeof model === "object" ) {
-
-		return Object.getOwnPropertyNames(model).reduce((object: any, key) => {
-
-			object[key]=defaults((model as any)[key]);
-
-			return object;
-
-		}, {});
-
-	} else {
-
-		return model;
-
-	}
-}
