@@ -102,6 +102,7 @@ public final class EventsTurkuCity implements Runnable {
 		return frame(iri(Data.events, md5(id)))
 
 				.value(RDF.TYPE, Data.Event)
+
 				.values(RDFS.LABEL, name)
 				.values(RDFS.COMMENT, description)
 

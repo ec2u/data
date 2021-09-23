@@ -55,28 +55,32 @@ public final class Resources extends Delegator {
 						field(RDFS.LABEL, required(), localized("en"))
 				)
 
-		)).wrap(router().get(handler(request -> !request.query().isEmpty(), relator(), driver(
+		)).wrap(router()
 
-				field("universities", Data.University, optional(), datatype(XSD.INTEGER)),
-				field("events", Data.Event, optional(), datatype(XSD.INTEGER))
+				.get(handler(request -> !request.query().isEmpty(), relator(), driver(
 
-		).wrap(new Virtual(
+						field("universities", Data.University, optional(), datatype(XSD.INTEGER)),
+						field("events", Data.Event, optional(), datatype(XSD.INTEGER))
 
-				"prefix : <terms#>\n"
-						+"\n"
-						+"construct { $this ?t ?c } where {\n"
-						+"\n"
-						+"select ?t (count(distinct ?r) as ?c) {\n"
-						+"\t\n"
-						+"\t\tvalues ?t { :University :Event }\n"
-						+"\n"
-						+"\t\t?r a ?t\n"
-						+"\n"
-						+"\t} group by ?t"
-						+"\n"
-						+"}"
+				).wrap(new Virtual(
 
-		))))));
+						"prefix : </terms/>\n"
+								+"\n"
+								+"construct { $this ?t ?c } where {\n"
+								+"\n"
+								+"select ?t (count(distinct ?r) as ?c) {\n"
+								+"\n"
+								+"\t\tvalues ?t { :University :Event }\n"
+								+"\n"
+								+"\t\t?r a ?t\n"
+								+"\n"
+								+"\t} group by ?t\n"
+								+"\n"
+								+"}"
+
+				))))
+
+		));
 	}
 
 
@@ -102,12 +106,11 @@ public final class Resources extends Delegator {
 		@Override public Future<Response> handle(final Request request) {
 			return request.reply(response -> response.status(OK)
 					.set(shape(), request.get(shape()))
-					.body(jsonld(), frame(iri(request.item()),
-							graph.<List<Statement>>query(connection -> asList(configure(request,
-											connection.prepareGraphQuery(SPARQL, query, request.base())
-									).evaluate())
-							)))
-			);
+					.body(jsonld(), frame(iri(request.item()), graph.<List<Statement>>query(connection ->
+							asList(configure(request,
+									connection.prepareGraphQuery(SPARQL, query, request.base())
+							).evaluate())
+					))));
 		}
 
 	}

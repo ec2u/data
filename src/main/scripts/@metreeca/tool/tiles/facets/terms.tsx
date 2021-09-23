@@ -25,7 +25,7 @@ import "./terms.css";
 
 export function ToolTerms({
 
-	value: [items, setItems]
+	value: [terms, setTerms]
 
 }: {
 
@@ -33,14 +33,14 @@ export function ToolTerms({
 
 }) {
 
-	return createElement("tool-terms", {}, items.map(({
+	return createElement("tool-terms", {}, terms.map(({
 
 			selected, value, count
 
 		}) => <div key={string(value)} className={count ? "available" : "unavailable"}>
 
 			<input type="checkbox" checked={selected} disabled={!count}
-				onChange={e => setItems({ value, selected: e.currentTarget.checked })}
+				onChange={e => setTerms({ value, selected: e.currentTarget.checked })}
 			/>
 
 			{frame(value)

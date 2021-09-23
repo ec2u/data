@@ -7,6 +7,7 @@ import { ReactNode } from "react";
 import { freeze, string } from "../@metreeca/tool/bases";
 import { Updater } from "../@metreeca/tool/hooks";
 import { useEntry } from "../@metreeca/tool/hooks/queries/entry";
+import { root } from "../@metreeca/tool/nests/router";
 import { Calendar, Database, Library, MapPin } from "../@metreeca/tool/tiles/icon";
 import { ToolSearch } from "../@metreeca/tool/tiles/inputs/search";
 import { ToolItem } from "../@metreeca/tool/tiles/item";
@@ -65,6 +66,8 @@ export function DataResourcesPane() {
 
 export function DataHiddenPane() {
 	return <ToolPane>
-		<ToolItem icon={<Database/>} name={<a href="/sparql" target={"_blank"}>SPARQL</a>}/>
+		<ToolItem icon={<Database/>}
+			name={<a href={`https://demo.metreeca.com/self/#endpoint=${root}sparql`} target={"_blank"}>SPARQL</a>}
+		/>
 	</ToolPane>;
 }

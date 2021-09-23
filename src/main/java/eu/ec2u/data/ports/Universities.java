@@ -52,7 +52,7 @@ public final class Universities extends Delegator {
 								field(WGS84.LONG, optional(), datatype(XSD.DECIMAL)),
 
 								field(Data.inception, optional(), datatype(XSD.DATETIME)),
-								field(Data.students, optional(), datatype(XSD.INTEGER))
+								field(Data.students, optional(), datatype(XSD.DECIMAL))
 						)
 
 				)

@@ -7,8 +7,8 @@ package eu.ec2u.data.tasks;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Toolbox;
-import com.metreeca.rest.services.Cache.FileCache;
-import com.metreeca.rest.services.Fetcher.CacheFetcher;
+import com.metreeca.rest.services.Cache;
+import com.metreeca.rest.services.Fetcher;
 
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -21,16 +21,15 @@ import static com.metreeca.rest.services.Fetcher.fetcher;
 
 import static eu.ec2u.data.Data.local;
 
-
 public final class Tasks {
 
 	public static void exec(final Runnable... tasks) {
 		new Toolbox()
 
 				.set(storage(), () -> Paths.get("data"))
-				.set(fetcher(), CacheFetcher::new)
+				.set(fetcher(), Fetcher.CacheFetcher::new)
 
-				.set(cache(), () -> new FileCache().ttl(Duration.ofDays(1)))
+				.set(cache(), () -> new Cache.FileCache().ttl(Duration.ofDays(1)))
 				.set(graph(), () -> new Graph(local()))
 
 				.set(engine(), GraphEngine::new)

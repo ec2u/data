@@ -6,26 +6,19 @@ package eu.ec2u.data;
 
 import com.metreeca.gcp.GCPServer;
 import com.metreeca.json.Shape;
-import com.metreeca.rdf.actions.Retrieve;
-import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
-import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Cache.FileCache;
 import com.metreeca.rest.services.Fetcher.CacheFetcher;
 
 import eu.ec2u.data.ports.*;
+import eu.ec2u.data.tasks.Namespaces;
+import eu.ec2u.data.tasks.Ontologies;
 import eu.ec2u.work.GCPRepository;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.*;
 
 import static com.metreeca.gcp.GCPServer.production;
@@ -39,10 +32,7 @@ import static com.metreeca.rest.Handler.asset;
 import static com.metreeca.rest.Handler.route;
 import static com.metreeca.rest.MessageException.status;
 import static com.metreeca.rest.Response.SeeOther;
-import static com.metreeca.rest.Toolbox.resource;
-import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Wrapper.preprocessor;
-import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
 import static com.metreeca.rest.handlers.Packer.packer;
 import static com.metreeca.rest.handlers.Publisher.publisher;
@@ -63,7 +53,7 @@ import static java.util.Map.entry;
 public final class Data {
 
 	public static final String Base="https://data.ec2u.eu/";
-	public static final String Name=Base+"terms#";
+	public static final String Name=Base+"terms/";
 
 
 	public static final String root="root"; // root role
@@ -91,10 +81,10 @@ public final class Data {
 	//// Contexts //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static final IRI ontologies=iri(Base, "/ontologies/");
-	public static final IRI taxonomies=iri(Base, "/taxonomies/");
+	public static final IRI concepts=iri(Base, "/concepts/");
 	public static final IRI wikidata=iri(Base, "/wikidata");
+	public static final IRI inferences=iri(Base, "/inferences");
 
-	public static final IRI universities=iri(Base, "/universities/");
 	public static final IRI events=iri(Base, "/events/");
 
 
@@ -156,8 +146,8 @@ public final class Data {
 						entry("@type", "type")
 				))
 
-				.exec(Data::namespaces)
-				.exec(Data::ontologies)
+				.exec(new Namespaces())
+				.exec(new Ontologies())
 
 				.get(() -> server()
 
@@ -199,62 +189,6 @@ public final class Data {
 				)
 
 		).start();
-	}
-
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private static void namespaces() {
-		service(graph()).update(task(connection -> {
-
-			connection.clearNamespaces();
-
-			Xtream.of(resource(Data.class, ".ttl")).forEach(path -> {
-				try {
-
-					Rio.createParser(RDFFormat.TURTLE).setRDFHandler(new AbstractRDFHandler() {
-
-						@Override public void handleNamespace(final String prefix, final String uri) {
-
-							connection.setNamespace(prefix, uri);
-
-						}
-
-					}).parse(path.openStream());
-
-				} catch ( final IOException e ) {
-
-					throw new UncheckedIOException(e);
-
-				}
-
-			});
-
-		}));
-	}
-
-	private static void ontologies() {
-		Xtream
-
-				.of(
-
-						RDF.NAMESPACE,
-						RDFS.NAMESPACE,
-						OWL.NAMESPACE,
-						SKOS.NAMESPACE,
-
-						resource(Data.class, ".ttl").toExternalForm()
-
-				)
-
-				.bagMap(new Retrieve())
-
-				.batch(0) // avoid multiple truth-maintenance rounds
-
-				.forEach(new Upload()
-						.clear(true)
-						.contexts(ontologies)
-				);
 	}
 
 }

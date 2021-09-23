@@ -12,6 +12,7 @@ import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.ports.Events;
+import eu.ec2u.data.tasks.Inferences;
 import eu.ec2u.work.Validate;
 import org.eclipse.rdf4j.model.*;
 
@@ -37,7 +38,7 @@ public final class EventsAll implements Runnable {
 	public static Instant synced(final Value publisher) {
 		return Xtream
 
-				.of("prefix ec2u: <terms#>\n"
+				.of("prefix ec2u: </terms/>\n"
 						+"\n"
 						+"prefix dct: <http://purl.org/dc/terms/>\n"
 						+"prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
@@ -47,8 +48,7 @@ public final class EventsAll implements Runnable {
 						+"\n"
 						+"\t?event a ec2u:Event;\n"
 						+"\t\tdct:publisher ?publisher;\n"
-						+"\t\tec2u:retrieved ?retrieved."
-						+"\n"
+						+"\t\tec2u:retrieved ?retrieved.\n"
 						+"}"
 				)
 
@@ -117,6 +117,8 @@ public final class EventsAll implements Runnable {
 		run(new EventsPaviaCity());
 		run(new EventsTurkuCity());
 
+		run(new Inferences());
+
 		purge();
 		collect();
 
@@ -129,9 +131,8 @@ public final class EventsAll implements Runnable {
 		try {
 
 			time(task).apply(t -> logger.info(task.getClass(), format(
-					"executedin <%,d> ms", t
+					"executed in <%,d> ms", t
 			)));
-
 
 		} catch ( final RuntimeException e ) {
 
@@ -147,7 +148,7 @@ public final class EventsAll implements Runnable {
 		exec(() -> graph.update(task(connection -> connection
 
 				.prepareUpdate(SPARQL, ""
-						+"prefix : <terms#>\n"
+						+"prefix : </terms/>\n"
 						+"prefix schema: <https://schema.org/>\n"
 						+"\n"
 						+"delete {\n"

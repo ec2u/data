@@ -35,12 +35,12 @@ final class Concepts {
 
 					.forEach(new Upload()
 							.clear(true)
-							.contexts(Data.taxonomies)
+							.contexts(Data.concepts)
 					);
 
 			Xtream
 
-					.of("prefix ec2u: <terms#>\n"
+					.of("prefix ec2u: </terms/>\n"
 							+"prefix owl: <http://www.w3.org/2002/07/owl#>\n"
 							+"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
 							+"\n"
@@ -60,7 +60,7 @@ final class Concepts {
 
 					.forEach(new Update()
 							.base(Data.Base)
-							.insert(Data.taxonomies)
+							.insert(Data.concepts)
 					);
 
 		})));

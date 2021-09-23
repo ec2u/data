@@ -119,7 +119,7 @@ function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
 	const [universities, setUniversities]=useTerms("", "university", [query, setQuery]);
 
-	const [{ count }]=useRange("", "label"); // !!! root path
+	const [{ count }]=useRange("", "label", [query, setQuery]);
 
 	return <ToolPane
 

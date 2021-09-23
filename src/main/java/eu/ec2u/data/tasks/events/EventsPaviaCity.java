@@ -79,6 +79,7 @@ public final class EventsPaviaCity implements Runnable {
 						.flatMap(new Microdata())
 
 						.map(Schema::normalize)
+
 						.map(new DateNormalize())
 						.map(new DateExtend())
 						.map(new TextLocalize())
@@ -92,6 +93,7 @@ public final class EventsPaviaCity implements Runnable {
 								.map(event -> refocus(event, iri(Data.events, md5(url)))
 
 										.value(RDF.TYPE, Data.Event)
+
 										.values(RDFS.LABEL, event.values(Schema.name))
 
 										.value(Data.university, Data.Pavia)

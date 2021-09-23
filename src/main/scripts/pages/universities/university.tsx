@@ -13,6 +13,10 @@ import { DataPage } from "../../tiles/page";
 import { Universities } from "./universities";
 
 
+function optional<T>(value: T): undefined | typeof value {
+	return value;
+}
+
 export const University=freeze({
 
 	id: "/universities/{code}",
@@ -25,18 +29,18 @@ export const University=freeze({
 	lat: 0,
 	long: 0,
 
-	inception: "",
-	students: 0,
+	inception: optional(""),
+	students: optional(0),
 
-	country: {
+	country: optional({
 		id: "",
 		label: { en: "" }
-	},
+	}),
 
-	location: {
+	location: optional({
 		id: "",
 		label: { en: "" }
-	}
+	})
 
 });
 
@@ -80,13 +84,13 @@ export function DataUniversity() {
 						<dd>{inception && inception.substr(0, 4) || "-"}</dd>
 
 						<dt>Country</dt>
-						<dd><a href={country.id}>{string(country.label)}</a></dd>
+						<dd>{country && <a href={country.id}>{string(country.label)}</a>}</dd>
 
 						<dt>City</dt>
-						<dd><a href={location.id}>{string(location.label)}</a></dd>
+						<dd>{location && <a href={location.id}>{string(location.label)}</a>}</dd>
 
-						{/*<dt>Students</dt>*/}
-						{/*<dd>{string(students)}</dd>*/}
+						<dt>Students</dt>
+						<dd>{students && string(students)}</dd>
 
 					</dl>}
 
