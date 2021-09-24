@@ -2,10 +2,10 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
+import { useProp } from "@metreeca/tool/hooks/prop";
+import { ToolPage } from "@metreeca/tool/tiles/page";
 import * as React from "react";
 import { ReactNode } from "react";
-import { useProp } from "../@metreeca/tool/hooks/prop";
-import { ToolPage } from "../@metreeca/tool/tiles/page";
 import { Home } from "../pages/home";
 import { DataResourcesButton, DataResourcesPane } from "../panes/resources";
 

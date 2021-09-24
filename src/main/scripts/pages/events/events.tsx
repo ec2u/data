@@ -2,22 +2,22 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
+import { freeze, Query, string } from "@metreeca/tool/bases";
+import { Updater } from "@metreeca/tool/hooks";
+import { useEntry } from "@metreeca/tool/hooks/queries/entry";
+import { useRange } from "@metreeca/tool/hooks/queries/range";
+import { useSearch } from "@metreeca/tool/hooks/queries/search";
+import { useTerms } from "@metreeca/tool/hooks/queries/terms";
+import { useQuery } from "@metreeca/tool/hooks/query";
+import { useRouter } from "@metreeca/tool/nests/router";
+import { ToolTerms } from "@metreeca/tool/tiles/facets/terms";
+import { ToolFacet } from "@metreeca/tool/tiles/inputs/facet";
+import { ToolSearch } from "@metreeca/tool/tiles/inputs/search";
+import { ClearIcon } from "@metreeca/tool/tiles/page";
+import { ToolPane } from "@metreeca/tool/tiles/pane";
+import { ToolSpin } from "@metreeca/tool/tiles/spin";
 import * as React from "react";
 import { useEffect, useReducer } from "react";
-import { freeze, Query, string } from "../../@metreeca/tool/bases";
-import { Updater } from "../../@metreeca/tool/hooks";
-import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
-import { useRange } from "../../@metreeca/tool/hooks/queries/range";
-import { useSearch } from "../../@metreeca/tool/hooks/queries/search";
-import { useTerms } from "../../@metreeca/tool/hooks/queries/terms";
-import { useQuery } from "../../@metreeca/tool/hooks/query";
-import { useRouter } from "../../@metreeca/tool/nests/router";
-import { ToolTerms } from "../../@metreeca/tool/tiles/facets/terms";
-import { ToolFacet } from "../../@metreeca/tool/tiles/inputs/facet";
-import { ToolSearch } from "../../@metreeca/tool/tiles/inputs/search";
-import { ClearIcon } from "../../@metreeca/tool/tiles/page";
-import { ToolPane } from "../../@metreeca/tool/tiles/pane";
-import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataFiltersButton } from "../../panes/filters";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";

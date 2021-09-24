@@ -2,12 +2,12 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
+import { freeze, string } from "@metreeca/tool/bases";
+import { useEntry } from "@metreeca/tool/hooks/queries/entry";
+import { useRouter } from "@metreeca/tool/nests/router";
+import { ToolSpin } from "@metreeca/tool/tiles/spin";
 import * as React from "react";
 import { useEffect } from "react";
-import { freeze, string } from "../../@metreeca/tool/bases";
-import { useEntry } from "../../@metreeca/tool/hooks/queries/entry";
-import { useRouter } from "../../@metreeca/tool/nests/router";
-import { ToolSpin } from "../../@metreeca/tool/tiles/spin";
 import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
 import { Universities } from "./universities";

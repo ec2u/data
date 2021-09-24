@@ -2,16 +2,16 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
+import { freeze, string } from "@metreeca/tool/bases";
+import { Updater } from "@metreeca/tool/hooks";
+import { useEntry } from "@metreeca/tool/hooks/queries/entry";
+import { root } from "@metreeca/tool/nests/router";
+import { Calendar, Database, Library, MapPin } from "@metreeca/tool/tiles/icon";
+import { ToolSearch } from "@metreeca/tool/tiles/inputs/search";
+import { ToolItem } from "@metreeca/tool/tiles/item";
+import { ToolPane } from "@metreeca/tool/tiles/pane";
 import * as React from "react";
 import { ReactNode } from "react";
-import { freeze, string } from "../@metreeca/tool/bases";
-import { Updater } from "../@metreeca/tool/hooks";
-import { useEntry } from "../@metreeca/tool/hooks/queries/entry";
-import { root } from "../@metreeca/tool/nests/router";
-import { Calendar, Database, Library, MapPin } from "../@metreeca/tool/tiles/icon";
-import { ToolSearch } from "../@metreeca/tool/tiles/inputs/search";
-import { ToolItem } from "../@metreeca/tool/tiles/item";
-import { ToolPane } from "../@metreeca/tool/tiles/pane";
 import { Events } from "../pages/events/events";
 import { Universities } from "../pages/universities/universities";
 

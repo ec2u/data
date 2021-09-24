@@ -2,10 +2,10 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
+import { useRouter } from "@metreeca/tool/nests/router";
+import { CancelIcon } from "@metreeca/tool/tiles/page";
 import * as React from "react";
 import { createElement } from "react";
-import { useRouter } from "../@metreeca/tool/nests/router";
-import { CancelIcon } from "../@metreeca/tool/tiles/page";
 import { DataPage } from "../tiles/page";
 import { Home } from "./home";
 import "./none.css";
