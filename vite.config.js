@@ -3,6 +3,7 @@
  */
 
 import {resolve} from "path";
+import {readdirSync} from "fs";
 import {defineConfig} from "vite";
 
 import reactRefresh from "@vitejs/plugin-react-refresh";
@@ -18,7 +19,7 @@ const dist=resolve(process.env.dist || "target/scripts/");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default defineConfig({ // https://vitejs.dev/config/
+export default defineConfig(({ command, mode }) => ({ // https://vitejs.dev/config/
 
 	root: code,
 	base: base.replace(/^([^./])|([^/])$/g, "$2/$1"), // add leading/trailing slashes
@@ -45,8 +46,17 @@ export default defineConfig({ // https://vitejs.dev/config/
 
 	},
 
+	resolve: mode === "production" ? {} : {
+		alias: readdirSync(".")
+			.filter(file => file === "aliases.json")
+			.map(file => require(resolve(file)))
+			.flatMap(aliases => Object.entries(aliases).map(([pack, path]) => ({
+				find: new RegExp(`^${pack}/(.*)$`), replacement: `${path}/$1`
+			})))
+	},
+
 	server: {
 		proxy: { "^(?!$|/[_@]|.*\\.\\w+(\\?.*)?$).*$": { target: "http://localhost:8080/" } } // no empty/vite/file URLs
 	}
 
-});
+}));
