@@ -15,7 +15,7 @@
 
 <https://data.ec2u.eu/terms/>
     rdf:type          owl:Ontology ;
-    void:rootResource ec2u:Event, ec2u:Theme, ec2u:University .
+    void:rootResource ec2u:Event, ec2u:University .
 
 #################################################################
 #    Annotation properties

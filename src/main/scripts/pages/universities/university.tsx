@@ -59,7 +59,7 @@ export function DataUniversity() {
 
 		item={<>
 			<a href={Universities.id}>{string(Universities.label)}</a>
-			<span>{frame(({ label }) => string(label))}</span>
+			{frame(({ label }) => <span>{string(label)}</span>)}
 		</>}
 
 		menu={fetch(abort => <ToolSpin abort={abort}/>)}

@@ -1,9 +1,25 @@
 cron:
 
-  - description: "nightly wikidata sync"
+  - description: "wikidata - nightly sync"
     url: /cron/wikidata
     schedule: every day 00:00
 
-  - description: "nightly event crawling"
-    url: /cron/events
+  - description: "events › pavia › city - nightly crawling"
+    url: /cron/events/pavia/city
     schedule: every day 00:00
+
+  - description: "events › turku › city - nightly crawling"
+    url: /cron/events/turku/city
+    schedule: every day 00:00
+
+  - description: "events - nightly housekeeping"
+    url: /cron/events/
+    schedule: every day 00:10
+
+  - description: "system - nightly housekeeping"
+    url: /cron/chores
+    schedule: every day 00:15
+
+  - description: "system - nightly housekeeping"
+    url: /cron/inferences
+    schedule: every day 00:20

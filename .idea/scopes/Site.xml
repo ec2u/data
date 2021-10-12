@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Site" pattern="file[data]:src/main/scripts//*" />
+</component>

@@ -11,8 +11,6 @@ import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.ports.Events;
-import eu.ec2u.data.tasks.Inferences;
 import eu.ec2u.work.Validate;
 import org.eclipse.rdf4j.model.*;
 
@@ -26,14 +24,11 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.services.Logger.logger;
-import static com.metreeca.rest.services.Logger.time;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
-import static java.lang.String.format;
-
-public final class EventsAll implements Runnable {
+public final class Events implements Runnable {
 
 	public static Instant synced(final Value publisher) {
 		return Xtream
@@ -71,7 +66,7 @@ public final class EventsAll implements Runnable {
 	public static void upload(final Xtream<Frame> events) {
 		events
 
-				.optMap(new Validate(Events.Shape))
+				.optMap(new Validate(eu.ec2u.data.ports.Events.Shape))
 
 				.batch(1000)
 
@@ -102,7 +97,7 @@ public final class EventsAll implements Runnable {
 
 
 	public static void main(final String... args) {
-		exec(() -> new EventsAll().run());
+		exec(() -> new Events().run());
 	}
 
 
@@ -113,36 +108,13 @@ public final class EventsAll implements Runnable {
 
 
 	@Override public void run() {
-
-		run(new EventsPaviaCity());
-		run(new EventsTurkuCity());
-
-		run(new Inferences());
-
 		purge();
-		collect();
-
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private void run(final Runnable task) {
-		try {
-
-			time(task).apply(t -> logger.info(task.getClass(), format(
-					"executed in <%,d> ms", t
-			)));
-
-		} catch ( final RuntimeException e ) {
-
-			service(logger()).warning(task.getClass(), "failed", e);
-
-		}
-	}
-
 	private void purge() {
-
 		logger.info(this, "removing stale events");
 
 		exec(() -> graph.update(task(connection -> connection
@@ -175,38 +147,6 @@ public final class EventsAll implements Runnable {
 				.execute()
 
 		)));
-	}
-
-	private void collect() {
-
-		logger.info(this, "collecting garbage");
-
-		exec(() -> graph.update(task(connection -> {
-
-			for (long size=0, next; (next=connection.size()) != size; size=next) {
-
-				connection
-
-						.prepareUpdate(""
-								+"prefix void: <http://rdfs.org/ns/void#>\n"
-								+"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-								+"\n"
-								+"delete { ?garbage ?p ?o } where {\n"
-								+"\n"
-								+"\t?garbage ?p ?o\n"
-								+"\n"
-								+"\tfilter not exists { ?s ?q ?garbage } # not referenced\n"
-								+"\tfilter not exists { ?garbage a?/rdfs:subClassOf*/^void:rootResource [] }\n"
-								+"\tfilter not exists { ?garbage a?/rdfs:subClassOf* rdfs:Resource }\n"
-								+"\n"
-								+"}"
-						)
-
-						.execute();
-
-			}
-
-		})));
 	}
 
 }
