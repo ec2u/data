@@ -8,7 +8,6 @@ import com.metreeca.json.Frame;
 import com.metreeca.rdf4j.actions.TupleQuery;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.Validate;
 import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.Data;
@@ -25,7 +24,6 @@ import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.services.Logger.logger;
 
-import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
@@ -66,37 +64,34 @@ public final class Events implements Runnable {
 				.orElseGet(() -> Instant.now().minus(Duration.ofDays(30)));
 	}
 
-	public static void upload(final Xtream<Frame> events) {
-		events
 
-				.optMap(new Validate(Event()))
-
-				.batch(1000)
-
-				.forEach(batch -> replace(batch, Data.events));
+	public static void upload(final IRI context, final Collection<Frame> frames) {
+		upload(context, Xtream.from(frames));
 	}
 
-	public static void replace(final Collection<Frame> frames, final IRI context) {
+	public static void upload(final IRI context, final Xtream<Frame> frames) {
+		frames.batch(1000).forEach(batch -> {
 
-		final List<Resource> subjects=frames.stream()
-				.map(Frame::focus)
-				.filter(Resource.class::isInstance)
-				.map(Resource.class::cast)
-				.collect(toList());
+			final List<Resource> subjects=batch.stream()
+					.map(Frame::focus)
+					.filter(Resource.class::isInstance)
+					.map(Resource.class::cast)
+					.collect(toList());
 
-		final List<Statement> statements=frames.stream()
-				.flatMap(Frame::model)
-				.collect(toList());
+			final List<Statement> statements=batch.stream()
+					.flatMap(Frame::model)
+					.collect(toList());
 
-		service(graph()).update(task(connection -> {
+			service(graph()).update(task(connection -> {
 
-			subjects.forEach(subject ->
-					connection.remove(subject, null, null, context)
-			);
+				subjects.forEach(subject ->
+						connection.remove(subject, null, null, context)
+				);
 
-			connection.add(statements, context);
+				connection.add(statements, context);
 
-		}));
+			}));
+		});
 	}
 
 

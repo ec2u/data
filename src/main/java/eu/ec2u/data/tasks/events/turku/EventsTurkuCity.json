@@ -3,659 +3,758 @@
 		"count": 4127,
 		"next": "https://api.turku.fi/linkedevents/v1/event/?last_modified_since=2021-01-01&page=2&show_deleted=True",
 		"previous": null
-	}, "data": [
-	{
-		"id": "954959", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954959/" }, "keywords": [
-		{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" },
-		{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/naytelma/" },
-		{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
-		{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/teatteri/" }
-	], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954954/" }, "event_status": "EventScheduled",
-		"external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/832109824371914", "language": "fi" },
-			{ "name": "Tickets", "link": "https://teatteriakseli.fi/pekka/", "language": "fi" }
-		], "offers": [
-		{ "is_free": false, "price": { "fi": "<p>Kaikki liput 15 €</p>\n" }, "info_url": null, "description": null }
-	], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:55.328806Z",
-		"last_modified_time": "2021-07-05T02:13:14.789702Z", "date_published": null,
-		"start_time": "2021-07-10T13:00:00Z", "end_time": "2021-07-10T13:00:00Z", "super_event_type": null,
-		"name": { "fi": "(Kesä)Teatteri Akseli: Pekka Töpöhäntä" }, "provider": null, "info_url": null,
-		"short_description": {
-			"fi": "Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n"
-		}, "description": {
-		"fi": "<p>Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n</p><p>Rakastettava koko perheen Pekka Töpöhäntä!</p>\n<p>Teatteri Akseli ja ohjaaja Kauno Takarautio tuovat Turun Puolalanpuistoon klassikkosadun kissasta ilman häntää. Pekka Töpöhäntä (käsikirjoitus Göstä Knutsson ja dramatisointi Helena Anttonen) on lasten ja aikuisten rakastama tarina erilaisuudesta ja ystävyyden voimasta. Kiusaaminen on edelleen liian usein toistuva ilmiö, johon tässäkin näytelmässä tartutaan suorastaan hännän mitalla. Jokainen meistä on yksilö, myös Pekka ja pihan valtias Monni, joiden tie vie erilaisuuden kautta toisen hyväksymiseen. Näytelmä on hauska ja positiivinen kertomus eräästä yhteisöstä, josta löytyy mielenkiintoista hahmoa lähtöön jos toiseenkin. Pekka Töpöhäntä sopii mainiosti koko perheelle!</p>\n<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
-	}, "location_extra_info": {
-		"fi": "<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
-	}, "@id": "https://api.turku.fi/linkedevents/v1/event/954959/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
+	},
+	"data": [
 		{
-			"id": 28623, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:55.321668Z",
-			"last_modified_time": "2021-07-05T02:11:55.321688Z",
-			"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/dsc_0194_3.jpg?itok=O0swBssu",
-			"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-			"@id": "https://api.turku.fi/linkedevents/v1/image/28623/", "@context": "http://schema.org",
-			"@type": "ImageObject"
-		}
-	]
-	}, {
-		"id": "955013", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955013/" },
-		"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" } ],
-		"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/926779/" }, "event_status": "EventScheduled",
-		"external_links": [
-			{
-				"name": "Tickets", "link": "https://www.lippu.fi/event/13630780/?affiliate=ADV&language=fi",
-				"language": "fi"
-			}
-		], "offers": [ ], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
-		"audience": [ ], "custom_data": null, "created_time": "2021-07-05T02:11:53.271897Z",
-		"last_modified_time": "2021-07-05T02:13:14.379088Z", "date_published": null,
-		"start_time": "2022-04-02T16:00:00Z", "end_time": "2022-04-02T16:00:00Z", "super_event_type": null,
-		"name": { "en": "SHOW MUST GO ON", "fi": "SHOW MUST GO ON", "sv": "SHOW MUST GO ON" }, "provider": null,
-		"info_url": null, "short_description": null, "description": {
+			"@id": "https://api.turku.fi/linkedevents/v1/event/954959/",
+			"@context": "http://schema.org",
+			"@type": "Event/LinkedEvent",
+			"id": "954959",
+			"location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954959/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/naytelma/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/teatteri/" }
+			],
+			"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954954/" },
+			"event_status": "EventScheduled",
+			"external_links": [
+				{
+					"name": "Facebook",
+					"link": "https://www.facebook.com/events/832109824371914",
+					"language": "fi"
+				},
+				{
+					"name": "Tickets",
+					"link": "https://teatteriakseli.fi/pekka/",
+					"language": "fi"
+				}
+			],
+			"offers": [
+				{
+					"is_free": false, "price": { "fi": "<p>Kaikki liput 15 €</p>\n" },
+					"info_url": null,
+					"description": null
+				}
+			],
+			"data_source": "turku",
+			"publisher": "ytj:0204819-8",
+			"sub_events": [ ],
+			"in_language": [ ],
+			"audience": [ ],
+			"custom_data": null,
+			"created_time": "2021-07-05T02:11:55.328806Z",
+			"last_modified_time": "2021-07-05T02:13:14.789702Z",
+			"date_published": null,
+			"start_time": "2021-07-10T13:00:00Z",
+			"end_time": "2021-07-10T13:00:00Z",
+			"super_event_type": null,
+			"name": { "fi": "(Kesä)Teatteri Akseli: Pekka Töpöhäntä" },
+			"provider": null,
+			"info_url": null,
+			"short_description": {
+				"fi": "Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n"
+			},
+			"description": {
+				"fi": "<p>Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n</p><p>Rakastettava koko perheen Pekka Töpöhäntä!</p>\n<p>Teatteri Akseli ja ohjaaja Kauno Takarautio tuovat Turun Puolalanpuistoon klassikkosadun kissasta ilman häntää. Pekka Töpöhäntä (käsikirjoitus Göstä Knutsson ja dramatisointi Helena Anttonen) on lasten ja aikuisten rakastama tarina erilaisuudesta ja ystävyyden voimasta. Kiusaaminen on edelleen liian usein toistuva ilmiö, johon tässäkin näytelmässä tartutaan suorastaan hännän mitalla. Jokainen meistä on yksilö, myös Pekka ja pihan valtias Monni, joiden tie vie erilaisuuden kautta toisen hyväksymiseen. Näytelmä on hauska ja positiivinen kertomus eräästä yhteisöstä, josta löytyy mielenkiintoista hahmoa lähtöön jos toiseenkin. Pekka Töpöhäntä sopii mainiosti koko perheelle!</p>\n<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
+			},
+			"location_extra_info": {
+				"fi": "<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
+			},
+			"images": [
+				{
+					"id": 28623, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:55.321668Z",
+					"last_modified_time": "2021-07-05T02:11:55.321688Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/dsc_0194_3.jpg?itok=O0swBssu",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28623/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		},
+		{
+			"id": "955013", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955013/" },
+			"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" } ],
+			"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/926779/" },
+			"event_status": "EventScheduled",
+			"external_links": [
+				{
+					"name": "Tickets", "link": "https://www.lippu.fi/event/13630780/?affiliate=ADV&language=fi",
+					"language": "fi"
+				}
+			], "offers": [ ], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ],
+			"in_language": [ ],
+			"audience": [ ], "custom_data": null, "created_time": "2021-07-05T02:11:53.271897Z",
+			"last_modified_time": "2021-07-05T02:13:14.379088Z", "date_published": null,
+			"start_time": "2022-04-02T16:00:00Z", "end_time": "2022-04-02T16:00:00Z", "super_event_type": null,
+			"name": { "en": "SHOW MUST GO ON", "fi": "SHOW MUST GO ON", "sv": "SHOW MUST GO ON" }, "provider": null,
+			"info_url": null, "short_description": null, "description": {
 			"en": "<p>Show Must Go On on Queen-yhtyeen musiikkiin perustuva spektaakkeli huippulaulajineen, bändin tyylille uskollisine pukuineen ja valoineen. Esitys on samalla kunnianosoitus kaikkien aikojen karismaattisimman laulajan, Freddie Mercuryn muistolle.<br /><br />Mercuryä esittää Mikael Saari, jonka hurmaavaa Queen-tulkintaa on kuultu aiemmin muun muassa Tähdet Tähdet -laulukilpailussa. Suuri yleisö muistaa Mikaelin myös UMK-kilpailun finaalista, jossa hän on ollut mukana jo peräti kaksi kertaa. Lisäksi Mikael on tullut katsojille tutuksi Suomen isoimpien teatterien lavoilla esiintyen ja useita musikaalirooleja tehden.<br /><br />Queen-yhtyeen rinnalla kulkee myös tarina suomalaisen Bohemians-yhtyeen hullunhauskasta retkestä maailmanvalloitukseen. Bohemians tulkitsee upeasti Queenin musiikkia, mutta muutoin ei Lontoon matkalta kommelluksia puutu.<br /><br />Mukana on Queenin värikylläiseen soundimaailmaan ammattimaisesti heittäytyvä yhtye. Mitkään sanat eivät riitä kuvaamaan tätä esitystä, joten paras vaihtoehtosi on saapua paikalle ja kokea se itse! Esityksen on nähnyt jo 100.000 katsojaa! Showssa kuullaan Queenin elämää suuremmat hitit kuten I Want It All, Bohemian Rhapsody, We Are The Champions, Show Must Go On, Under Pressure, ja monta muuta.<br /><br />Esiintyjät<br />Freddie Mercury: Mikael Saari<br />Brian May: Erik Valkama<br />John Deacon: Tuomas Viiliäinen<br />Roger Taylor: Simo Stenman<br />Mikko: Ville Karhi<br />Pete: Rafael Järvinen<br />Carita: Elisa Lairikko<br />Kasper: Valtteri Mönkö<br />Kitara: Erik Valkama<br />Basso: Tuomas Viiliäinen<br />Rummut: Simo Stenman<br />Koskettimet: Risto Lassila<br />2. kitara: Sami Tenhunen<br /><br />Kesto<br />Väliaikoineen n. 2 tuntia 40 minuuttia<br /><br />Tuotanto Suomen Musiikkiteatteri<br /><a href=\"https://www.musiikkiteatteri.fi/ohjelmisto/show-must-go-on/\" target=\"_blank\">www.musiikkiteatteri.fi</a><br /><br /></p>\n",
 			"fi": "<p>Show Must Go On on Queen-yhtyeen musiikkiin perustuva spektaakkeli huippulaulajineen, bändin tyylille uskollisine pukuineen ja valoineen. Esitys on samalla kunnianosoitus kaikkien aikojen karismaattisimman laulajan, Freddie Mercuryn muistolle.<br /><br />Mercuryä esittää Mikael Saari, jonka hurmaavaa Queen-tulkintaa on kuultu aiemmin muun muassa Tähdet Tähdet -laulukilpailussa. Suuri yleisö muistaa Mikaelin myös UMK-kilpailun finaalista, jossa hän on ollut mukana jo peräti kaksi kertaa. Lisäksi Mikael on tullut katsojille tutuksi Suomen isoimpien teatterien lavoilla esiintyen ja useita musikaalirooleja tehden.<br /><br />Queen-yhtyeen rinnalla kulkee myös tarina suomalaisen Bohemians-yhtyeen hullunhauskasta retkestä maailmanvalloitukseen. Bohemians tulkitsee upeasti Queenin musiikkia, mutta muutoin ei Lontoon matkalta kommelluksia puutu.<br /><br />Mukana on Queenin värikylläiseen soundimaailmaan ammattimaisesti heittäytyvä yhtye. Mitkään sanat eivät riitä kuvaamaan tätä esitystä, joten paras vaihtoehtosi on saapua paikalle ja kokea se itse! Esityksen on nähnyt jo 100.000 katsojaa! Showssa kuullaan Queenin elämää suuremmat hitit kuten I Want It All, Bohemian Rhapsody, We Are The Champions, Show Must Go On, Under Pressure, ja monta muuta.<br /><br />Esiintyjät<br />Freddie Mercury: Mikael Saari<br />Brian May: Erik Valkama<br />John Deacon: Tuomas Viiliäinen<br />Roger Taylor: Simo Stenman<br />Mikko: Ville Karhi<br />Pete: Rafael Järvinen<br />Carita: Elisa Lairikko<br />Kasper: Valtteri Mönkö<br />Kitara: Erik Valkama<br />Basso: Tuomas Viiliäinen<br />Rummut: Simo Stenman<br />Koskettimet: Risto Lassila<br />2. kitara: Sami Tenhunen<br /><br />Kesto<br />Väliaikoineen n. 2 tuntia 40 minuuttia<br /><br />Tuotanto Suomen Musiikkiteatteri<br /><a href=\"https://www.musiikkiteatteri.fi/ohjelmisto/show-must-go-on/\" target=\"_blank\">www.musiikkiteatteri.fi</a><br /><br /></p>\n",
 			"sv": "<p>Show Must Go On on Queen-yhtyeen musiikkiin perustuva spektaakkeli huippulaulajineen, bändin tyylille uskollisine pukuineen ja valoineen. Esitys on samalla kunnianosoitus kaikkien aikojen karismaattisimman laulajan, Freddie Mercuryn muistolle.<br /><br />Mercuryä esittää Mikael Saari, jonka hurmaavaa Queen-tulkintaa on kuultu aiemmin muun muassa Tähdet Tähdet -laulukilpailussa. Suuri yleisö muistaa Mikaelin myös UMK-kilpailun finaalista, jossa hän on ollut mukana jo peräti kaksi kertaa. Lisäksi Mikael on tullut katsojille tutuksi Suomen isoimpien teatterien lavoilla esiintyen ja useita musikaalirooleja tehden.<br /><br />Queen-yhtyeen rinnalla kulkee myös tarina suomalaisen Bohemians-yhtyeen hullunhauskasta retkestä maailmanvalloitukseen. Bohemians tulkitsee upeasti Queenin musiikkia, mutta muutoin ei Lontoon matkalta kommelluksia puutu.<br /><br />Mukana on Queenin värikylläiseen soundimaailmaan ammattimaisesti heittäytyvä yhtye. Mitkään sanat eivät riitä kuvaamaan tätä esitystä, joten paras vaihtoehtosi on saapua paikalle ja kokea se itse! Esityksen on nähnyt jo 100.000 katsojaa! Showssa kuullaan Queenin elämää suuremmat hitit kuten I Want It All, Bohemian Rhapsody, We Are The Champions, Show Must Go On, Under Pressure, ja monta muuta.<br /><br />Esiintyjät<br />Freddie Mercury: Mikael Saari<br />Brian May: Erik Valkama<br />John Deacon: Tuomas Viiliäinen<br />Roger Taylor: Simo Stenman<br />Mikko: Ville Karhi<br />Pete: Rafael Järvinen<br />Carita: Elisa Lairikko<br />Kasper: Valtteri Mönkö<br />Kitara: Erik Valkama<br />Basso: Tuomas Viiliäinen<br />Rummut: Simo Stenman<br />Koskettimet: Risto Lassila<br />2. kitara: Sami Tenhunen<br /><br />Kesto<br />Väliaikoineen n. 2 tuntia 40 minuuttia<br /><br />Tuotanto Suomen Musiikkiteatteri<br /><a href=\"https://www.musiikkiteatteri.fi/ohjelmisto/show-must-go-on/\" target=\"_blank\">www.musiikkiteatteri.fi</a><br /><br /></p>\n"
 		}, "location_extra_info": { "fi": "Turun Konserttitalo, Aninkaistenkatu 9" },
-		"@id": "https://api.turku.fi/linkedevents/v1/event/955013/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [ ]
-	}, {
-		"id": "954829", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954829/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/seili/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/risteily/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/trips/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/cruisesandtours/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/yleisopurjehdukset/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954828/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/134960322061000", "language": "fi" }, {
-				"name": "Signup",
-				"link": "https://visitnaantali.com/tapahtuma/seilin-risteily-perinnepurjelaiva-inga-lillilla/",
-				"language": "fi"
-			}, {
-				"name": "Tickets",
-				"link": "https://visitnaantali.com/tapahtuma/seilin-risteily-perinnepurjelaiva-inga-lillilla/",
-				"language": "fi"
-			}
-		], "offers": [
-			{
-				"is_free": false,
-				"price": { "fi": "<p>69 €/aikuinen<br />\n39 €/lapsi 4-12v.<br />\n10 €/lapsi alle 4v.</p>\n" },
-				"info_url": null, "description": null
-			}
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:52.412169Z",
-		"last_modified_time": "2021-07-05T02:13:14.089382Z", "date_published": null,
-		"start_time": "2021-07-29T08:00:00Z", "end_time": "2021-07-29T16:00:00Z", "super_event_type": null,
-		"name": { "fi": "Seilin risteily perinnepurjelaiva Inga-Lillillä" }, "provider": null, "info_url": null,
-		"short_description": { "fi": "Risteilypäivät torstaisin 29.7. ja 12.8. klo 11.00-19.00\n" }, "description": {
-			"fi": "<p>Risteilypäivät torstaisin 29.7. ja 12.8. klo 11.00-19.00\n</p><p>Päiväretken aikana noustaan nostalgisen perinnepurjelaivan Inga-Lillin kannelle ja koetaan lumoava saaristo sekä Seilin historiallinen saari.</p>\n<p>Aluksella nautitaan herkullista lohikeittoa (L) sekä kahvi/tee leivoksen kera upeissa saaristomaisemissa. Seilin kiehtovaan historiaan tutustutaan opastetulla kävelykierroksella.</p>\n"
-		}, "location_extra_info": {
-			"fi": "<p>Lähtölaituri sijaitsee Naantali Campingin läheisyydessä sataman puolella noin 1,5 km vanhasta kaupungista.</p>\n"
-		}, "@id": "https://api.turku.fi/linkedevents/v1/event/954829/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28621, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:52.393199Z",
-				"last_modified_time": "2021-07-05T02:11:52.393220Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/inga-lill2.jpg?itok=YggAUuTf",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28621/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954609", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954609/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/harrastusryhma/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/voimistelu/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/hyvinvointijaterveys/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/asahi/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turkuonthemove/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954608/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/801506573890130", "language": "fi" }
-		],
-		"offers": [ { "is_free": true, "price": { "fi": "<p>Ilmainen</p>\n" }, "info_url": null, "description": null } ],
-		"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:49.073322Z",
-		"last_modified_time": "2021-07-05T02:13:13.288109Z", "date_published": null,
-		"start_time": "2021-07-05T14:30:00Z", "end_time": "2021-07-11T09:00:00Z", "super_event_type": null,
-		"name": { "fi": "Tule mukaan harjoittelemaan asahia" }, "provider": null, "info_url": null,
-		"short_description": {
-			"fi": "Suomalaisen terveysliikunta-asahin ohjaajat kiertävät Turku ja vetävät ilmaisia asahi-tunteja. Tule mukaan tutustumaan suomalaiseen asahiin. Asahi on terveysliikuntaa kaikille.\n"
-		}, "description": {
-			"fi": "<p>Suomalaisen terveysliikunta-asahin ohjaajat kiertävät Turku ja vetävät ilmaisia asahi-tunteja. Tule mukaan tutustumaan suomalaiseen asahiin. Asahi on terveysliikuntaa kaikille.\n</p><p>Tule mukaan suomalaiseen asahiin ja voi hyvin! Kokeneet asahi-ohjaajamme kiertävät Turkua, Naantalia ja Raisiota ja tarjoamme mahdollisuuden tutustua ilmaiseen asahiin. Asahi on suomalaista terveysliikuntaa, joka sopii kaikille. Asahi perustuu tutkittuun tietoon liikunnan terveysvaikutuksista. Nyt sinulla on mahdollisuus kokeilla ja kysyä lisää. Ohjaajina Asahin pääkouluttaja Risto Lehto, kouluttaja Kirsi Vainio, B-lisenssiohjaajat Kirsi Mikkonen ja Petteri Koittola. Tutustu toimintaan <a href=\"https://www.terveysliikunta.fi/asahi/\">https://www.terveysliikunta.fi/asahi/</a></p>\n<p>Tule mukaan:<br />\n- 5.7. klo 17.30 Kupittaan paviljongin vieressä<br />\n- 6.7. klo 17.30 Littoisten urheilukenttä/kaivopuisto<br />\n- 6.7. klo 17.00 Pakkarinpuisto, Turku<br />\n- 6.7. klo 17.30 Raision keskuspuisto<br />\n- 7.7. klo 17.30 Naantalin kirkon puisto<br />\n- 8.7. klo 17.30 Pakkarinpuisto, Turku<br />\n- 8.7. klo 17.30 Teräsrautelan kenttä<br />\n- 9.7. klo 17.30 Ylhäisten puisto, Raisio<br />\n- 11.7. klo 11.15 Tallimäenpuisto, Puutarhakatu 45, Turku</p>\n"
-		}, "location_extra_info": {
-			"fi": "<p>- 5.7. klo 17.30 Kupittaan paviljongin vieressä<br />\n- 6.7. klo 17.30 Littoisten urheilukenttä/kaivopuisto<br />\n- 6.7. klo 17.00 Pakkarinpuisto, Turku<br />\n- 6.7. klo 17.30 Raision keskuspuisto<br />\n- 7.7. klo 17.30 Naantalin kirkon puisto<br />\n- 8.7. klo 17.30 Pakkarinpuisto, Turku<br />\n- 8.7. klo 17.30 Teräsrautelan kenttä<br />\n- 9.7. klo 17.30 Ylhäisten puisto, Raisio<br />\n- 11.7. kl"
-		}, "@id": "https://api.turku.fi/linkedevents/v1/event/954609/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28619, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:49.066777Z",
-				"last_modified_time": "2021-07-05T02:11:49.066799Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/20210610_173920.jpg?itok=US4Dg-Tq",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28619/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954860", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954860/" },
-		"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" } ],
-		"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954855/" }, "event_status": "EventScheduled",
-		"external_links": [ ], "offers": [ { "is_free": true, "price": null, "info_url": null, "description": null } ],
-		"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
-		"audience": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/childfamilies/" } ], "custom_data": null,
-		"created_time": "2021-07-05T02:11:46.453248Z", "last_modified_time": "2021-07-05T02:13:12.754858Z",
-		"date_published": null, "start_time": "2021-09-29T14:30:00Z", "end_time": "2021-09-29T16:00:00Z",
-		"super_event_type": null, "name": { "fi": "Pieni matka, isot elämykset" }, "provider": null, "info_url": null,
-		"short_description": null, "description": {
-			"fi": "<p>Lausteen lapsiperheille on suunnattu tekemistä kerran viikossa, jossa yhdessä päästään toimimaan mm. luonnon helmassa. Toiminta on maksutonta matalalla kynnyksellä mukaansa tempaavaa. Mukana järjestämässä vapaa-aikatoimiala ja alueen paikalliset toimijat kuten MLL, Partiolaiset, Koulu ja Päiväkodit.</p>\n"
-		}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/954860/",
-		"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28617, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:46.446840Z",
-				"last_modified_time": "2021-07-05T02:11:46.446859Z",
-				"url": "https://www.turku.fi/sites/default/files/thumbnails/image/juliste_a4_aluetyoprojekti_lauste_v2_vedos_1.png",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28617/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954815", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954815/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/historia/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kavelykierros/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turkuday/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turku2021/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954813/" },
-		"event_status": "EventScheduled", "external_links": [
-			{
-				"name": "Facebook", "link": "https://www.facebook.com/Tarinoita-Varjoisilta-Kujilta-239005569515913",
-				"language": "fi"
-			}, { "name": "Signup", "link": "http://cluster015.ovh.net/~eduart/", "language": "fi" }
-		], "offers": [
-			{
-				"is_free": false, "price": {
-				"fi": "<p>15€/henkilö. Toivomme korttimaksua. </p>\n<p>Noudatamme AVI:n tapahtumaohjeistusta. Osallistuthan vain täysin terveenä.</p>\n"
-			}, "info_url": null, "description": null
-			}
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:44.801712Z",
-		"last_modified_time": "2021-07-05T02:13:12.401665Z", "date_published": null,
-		"start_time": "2021-07-08T15:00:00Z", "end_time": "2021-07-08T15:00:00Z", "super_event_type": null,
-		"name": { "en": "Stories of shadowed alleys", "fi": "Tarinoita varjoisilta kujilta" }, "provider": null,
-		"info_url": null, "short_description": {
-			"en": "Dramatised tour in early 20th century crime stories  and ghost stories in Turku.\n",
-			"fi": "Dramatisoitu kävelykieros 1920-luvun Turun rikos- ja kummitushistoriaan.\n"
-		}, "description": {
-			"en": "<p>Dramatised tour in early 20th century crime stories  and ghost stories in Turku.\n</p><p>About 1,8 km tour throuh the most peautiful parks in Turku, you'll hear stories of actual crimes and their, not always fair trials in 1920s due the civil war wounds. </p>\n<p>Some stairs during the walk. Duration approx. 1h 20min.</p>\n<p>Please do not attend if showing any symptoms of covid19. We follow AVI's safety guidelines.</p>\n",
-			"fi": "<p>Dramatisoitu kävelykieros 1920-luvun Turun rikos- ja kummitushistoriaan.\n</p><p>Noin 1,8 km matkalla Itsenäisydenaukiolta läpi Samppalinnanmäen Tähtitornin juurelle kuullaan pääosin 1920 luvulla Turussa tapahtuneista rikoksista ja niiden henkilökohtaloista. Aikaan, jolloin sisällissodan haavat olivat vielä selvästi näkyvillä ja kaikki eivät olleet yhtä tasa-arvoisia lain edessä kuin nyt. Kesto noin 1h 20 min. Sisältää portaita. </p>\n<p>Esitykset torstaisin klo 18 alkaen: 8.7., 15.7., 22.7., 29.7., 12.8 (Taiteiden yö),<br />\nSu 19.9 (Turun päivä) </p>\n<p>Noudatamme AVI:n tapahtumaohjeistusta. Osallistuthan vain täysin terveenä.</p>\n"
-		}, "location_extra_info": {
-			"fi": "<p>Lähtö Itsenäisyydenaukiolta Taivaan vaunujen vierestä. (Iso sininen taideteos kaupungin teatterin ja Väinö Aaltosen museon välissä)</p>\n"
-		}, "@id": "https://api.turku.fi/linkedevents/v1/event/954815/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28615, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:44.792605Z",
-				"last_modified_time": "2021-07-05T02:11:44.792629Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/kieltolainpaatti.jpg?itok=fkdE9Hpp",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28615/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954801", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954801/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/risteily/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/risteilyalus/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/purjehdus/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/trips/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/cruisesandtours/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954800/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/456520588717637", "language": "fi" }, {
-				"name": "Signup", "link": "https://visitnaantali.com/tapahtuma/yleisopurjehdus-perinnepurjelaivalla/",
-				"language": "fi"
-			}, {
-				"name": "Tickets", "link": "https://visitnaantali.com/tapahtuma/yleisopurjehdus-perinnepurjelaivalla/",
-				"language": "fi"
-			}
-		], "offers": [
-			{
-				"is_free": false,
-				"price": { "fi": "<p>39 €/aikuinen<br />\n20 €/lapsi 4-12v<br />\n5 €/lapsi alle 4-v</p>\n" },
-				"info_url": null, "description": null
-			}
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:42.369917Z",
-		"last_modified_time": "2021-07-05T02:13:11.876798Z", "date_published": null,
-		"start_time": "2021-07-21T14:00:00Z", "end_time": "2021-07-21T17:00:00Z", "super_event_type": null,
-		"name": { "fi": "Yleisöpurjehdus perinnepurjelaivalla" }, "provider": null, "info_url": null,
-		"short_description": {
-			"fi": "Perinnepurjelaiva Inga-Lilllin yleisöristeilyt toteutetaan keskiviikkoisin 21.7. ja 4.8.2021 klo 17.00-20.00.\n"
-		}, "description": {
-			"fi": "<p>Perinnepurjelaiva Inga-Lilllin yleisöristeilyt toteutetaan keskiviikkoisin 21.7. ja 4.8.2021 klo 17.00-20.00.\n</p><p>Koe ainutlaatuinen elämys perinnepurjelaiva Inga-Lilillä Naantalin kauniissa saaristossa. Kaljaasi Inga-Lill on viimeisimpiä aidon talonpoikaispurjehduksen edustajia Suomessa. Risteily Inga-Lillillä tarjoaakin mieleenpainuvan tavan nauttia Airiston kauniista saaristoluonnosta.</p>\n<p>Perinnepurjelaivan yleisöristeilyt toteutetaan muutamana iltana kesässä. Inga-Lillin lähtölaituri sijaitsee Naantalin Campingin läheisyydessä. Risteilylle lähteviä pyydetään saapumaan paikalle 15 minuuttia ennen lähtöaikaa.</p>\n<p>Purjehduksen aikana nautitaan herkullista lohikeittoa (L) sekä kahvi/tee leivoksen kera upeissa Airiston saaristomaisemissa.</p>\n"
-		}, "location_extra_info": {
-			"fi": "<p>Lähtö Naantali Campingin läheisyydestä sataman puolelta. Etäisyys Naantalin vanhan kaupungin rannasta noin 1,5 km</p>\n"
-		}, "@id": "https://api.turku.fi/linkedevents/v1/event/954801/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28613, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:42.364046Z",
-				"last_modified_time": "2021-07-05T02:11:42.364062Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/inga-lill_perinnepurjelaiva_0.jpg?itok=5deWDYEh",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28613/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954614", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954614/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/harrastusryhma/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/voimistelu/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/hyvinvointijaterveys/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/asahi/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turkuonthemove/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954608/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/801506573890130", "language": "fi" }
-		],
-		"offers": [ { "is_free": true, "price": { "fi": "<p>Ilmainen</p>\n" }, "info_url": null, "description": null } ],
-		"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:42.186389Z",
-		"last_modified_time": "2021-07-05T02:13:11.824401Z", "date_published": null,
-		"start_time": "2021-07-11T08:15:00Z", "end_time": "2021-07-11T09:00:00Z", "super_event_type": null,
-		"name": { "fi": "Tule mukaan harjoittelemaan asahia" }, "provider": null, "info_url": null,
-		"short_description": {
-			"fi": "Suomalaisen terveysliikunta-asahin ohjaajat kiertävät Turku ja vetävät ilmaisia asahi-tunteja. Tule mukaan tutustumaan suomalaiseen asahiin. Asahi on terveysliikuntaa kaikille.\n"
-		}, "description": {
-			"fi": "<p>Suomalaisen terveysliikunta-asahin ohjaajat kiertävät Turku ja vetävät ilmaisia asahi-tunteja. Tule mukaan tutustumaan suomalaiseen asahiin. Asahi on terveysliikuntaa kaikille.\n</p><p>Tule mukaan suomalaiseen asahiin ja voi hyvin! Kokeneet asahi-ohjaajamme kiertävät Turkua, Naantalia ja Raisiota ja tarjoamme mahdollisuuden tutustua ilmaiseen asahiin. Asahi on suomalaista terveysliikuntaa, joka sopii kaikille. Asahi perustuu tutkittuun tietoon liikunnan terveysvaikutuksista. Nyt sinulla on mahdollisuus kokeilla ja kysyä lisää. Ohjaajina Asahin pääkouluttaja Risto Lehto, kouluttaja Kirsi Vainio, B-lisenssiohjaajat Kirsi Mikkonen ja Petteri Koittola. Tutustu toimintaan <a href=\"https://www.terveysliikunta.fi/asahi/\">https://www.terveysliikunta.fi/asahi/</a></p>\n<p>Tule mukaan:<br />\n- 5.7. klo 17.30 Kupittaan paviljongin vieressä<br />\n- 6.7. klo 17.30 Littoisten urheilukenttä/kaivopuisto<br />\n- 6.7. klo 17.00 Pakkarinpuisto, Turku<br />\n- 6.7. klo 17.30 Raision keskuspuisto<br />\n- 7.7. klo 17.30 Naantalin kirkon puisto<br />\n- 8.7. klo 17.30 Pakkarinpuisto, Turku<br />\n- 8.7. klo 17.30 Teräsrautelan kenttä<br />\n- 9.7. klo 17.30 Ylhäisten puisto, Raisio<br />\n- 11.7. klo 11.15 Tallimäenpuisto, Puutarhakatu 45, Turku</p>\n"
-		}, "location_extra_info": {
-			"fi": "<p>- 5.7. klo 17.30 Kupittaan paviljongin vieressä<br />\n- 6.7. klo 17.30 Littoisten urheilukenttä/kaivopuisto<br />\n- 6.7. klo 17.00 Pakkarinpuisto, Turku<br />\n- 6.7. klo 17.30 Raision keskuspuisto<br />\n- 7.7. klo 17.30 Naantalin kirkon puisto<br />\n- 8.7. klo 17.30 Pakkarinpuisto, Turku<br />\n- 8.7. klo 17.30 Teräsrautelan kenttä<br />\n- 9.7. klo 17.30 Ylhäisten puisto, Raisio<br />\n- 11.7. kl"
-		}, "@id": "https://api.turku.fi/linkedevents/v1/event/954614/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28612, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:42.179253Z",
-				"last_modified_time": "2021-07-05T02:11:42.179273Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/20210610_173920.jpg?itok=US4Dg-Tq",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28612/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954660", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954660/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turunmuseokeskus/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kivakesakulmilla/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kivakesa/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kivaloma/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954657/" },
-		"event_status": "EventScheduled", "external_links": [ ], "offers": [
-			{ "is_free": true, "price": { "fi": "<p>Tapahtuma on maksuton</p>" }, "info_url": null, "description": null }
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/youth/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/childfamilies/" }
-		], "custom_data": null, "created_time": "2021-07-05T02:11:37.910726Z",
-		"last_modified_time": "2021-07-05T02:13:10.931272Z", "date_published": null,
-		"start_time": "2021-07-19T10:00:00Z", "end_time": "2021-07-19T11:30:00Z", "super_event_type": null,
-		"name": { "fi": "Turun museokeskuksen työpajat Runosmäessä: Nappityöpaja" }, "provider": null, "info_url": null,
-		"short_description": null, "description": {
-			"fi": "<p>Työpajat Runosmäen kirjaston/nuorisotilan pihalla maanantaisin 5.7.–22.7. klo 13–14.30. Huom! Viimeinen työpaja poikkeuksellisesti torstaina 22.7.! Työpajat on suunnattu alakouluikäisille, mutta sopivat hyvin myös yläkoululaisille. Ei ennakkoilmoittautumista.</p>\n<h2>Vitamiinipommi luonnosta!</h2>\n<p>Ma 5.7. klo 13-14.30  <br />Apteekkimuseo &amp; Qwenselin talon pajassa valmistetaan nokkosjauhetta itse tekemällä.</p>\n<h2>Tietoja ja taitoja 1800-luvun malliin! </h2>\n<p>Ma 12.7. klo 13-14.30<br />Luostarinmäen museokorttelin oppaat kertovat elämästä 200 vuotta sitten ja yhdessä ratkotaan visaisia pulmia. Käsityöläisen johdolla pääset kokemaan käsillä tekemisen iloa huovutuksen parissa! Järjestää Luostarinmäki</p>\n<h2>Nappityöpaja</h2>\n<p>Ma 19.7. klo 13-14.30<br />Turun linnan tarjoamassa työpajassa valmistetaan kauniita puisia nappeja perinteistä pumppuporaa apuna käyttäen.</p>\n<h2>Mielikuvituksen puutarha. Kesäkivaa WAMista!</h2>\n<p><strong>Huom!</strong> To 22.7.<strong> </strong>klo 13-14.30<br />Työpajassa taiteillaan viehkeitä silkkipaperikukkasia sekä mielikuvituksellisia puutarhan asukkeja. Työpaja on saanut inspiraationsa WAMissa esillä olevan Anu Pentikin näyttelyn luontoteemoista. Järjestää WAM</p>\n"
-		}, "location_extra_info": { "fi": "<p>Työpajat Runosmäen kirjaston/nuorisotilan pihalla</p>" },
-		"@id": "https://api.turku.fi/linkedevents/v1/event/954660/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28611, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:37.904126Z",
-				"last_modified_time": "2021-07-05T02:11:37.904145Z",
-				"url": "https://www.turku.fi/sites/default/files/thumbnails/image/runosmaki_museotyopaja_vaaka_0.jpg",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28611/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954965", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954965/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/naytelma/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/teatteri/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954954/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/832109824371914", "language": "fi" },
-			{ "name": "Tickets", "link": "https://teatteriakseli.fi/pekka/", "language": "fi" }
-		], "offers": [
-			{ "is_free": false, "price": { "fi": "<p>Kaikki liput 15 €</p>\n" }, "info_url": null, "description": null }
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:35.077746Z",
-		"last_modified_time": "2021-07-05T02:13:10.415817Z", "date_published": null,
-		"start_time": "2021-07-24T13:00:00Z", "end_time": "2021-07-24T13:00:00Z", "super_event_type": null,
-		"name": { "fi": "(Kesä)Teatteri Akseli: Pekka Töpöhäntä" }, "provider": null, "info_url": null,
-		"short_description": {
-			"fi": "Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n"
-		}, "description": {
-			"fi": "<p>Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n</p><p>Rakastettava koko perheen Pekka Töpöhäntä!</p>\n<p>Teatteri Akseli ja ohjaaja Kauno Takarautio tuovat Turun Puolalanpuistoon klassikkosadun kissasta ilman häntää. Pekka Töpöhäntä (käsikirjoitus Göstä Knutsson ja dramatisointi Helena Anttonen) on lasten ja aikuisten rakastama tarina erilaisuudesta ja ystävyyden voimasta. Kiusaaminen on edelleen liian usein toistuva ilmiö, johon tässäkin näytelmässä tartutaan suorastaan hännän mitalla. Jokainen meistä on yksilö, myös Pekka ja pihan valtias Monni, joiden tie vie erilaisuuden kautta toisen hyväksymiseen. Näytelmä on hauska ja positiivinen kertomus eräästä yhteisöstä, josta löytyy mielenkiintoista hahmoa lähtöön jos toiseenkin. Pekka Töpöhäntä sopii mainiosti koko perheelle!</p>\n<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
-		}, "location_extra_info": {
-			"fi": "<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
-		}, "@id": "https://api.turku.fi/linkedevents/v1/event/954965/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28610, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:35.071731Z",
-				"last_modified_time": "2021-07-05T02:11:35.071748Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/dsc_0194_3.jpg?itok=O0swBssu",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28610/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "955000", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955000/" },
-		"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" } ],
-		"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/932403/" }, "event_status": "EventScheduled",
-		"external_links": [
-			{
-				"name": "Tickets", "link": "https://www.lippu.fi/event/13380679/?affiliate=ADV&language=fi",
-				"language": "fi"
-			}
-		], "offers": [ ], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
-		"audience": [ ], "custom_data": null, "created_time": "2021-07-05T02:11:33.902732Z",
-		"last_modified_time": "2021-07-05T02:13:10.135940Z", "date_published": null,
-		"start_time": "2021-10-02T11:00:00Z", "end_time": "2021-10-02T11:00:00Z", "super_event_type": null,
-		"name": { "en": "TAIPALEENJOKI - OOPPERA", "fi": "TAIPALEENJOKI - OOPPERA", "sv": "TAIPALEENJOKI - OOPPERA" },
-		"provider": null, "info_url": null, "short_description": null, "description": {
-			"en": "<p>Taipaleenjoki-ooppera<br /><br />Joulukuun alussa Leningradin Sotilaspiirin komentaja Kirill A. Meretskov oli kääntänyt Karjalan kannaksen suuren hyökkäyksen painopisteen Viipurin suunnasta itäiselle Kannakselle. Suomalaisten kova vastarinta alkuperäisellä hyökkäyslinjalla Kannaksella oli yllättänyt puna-armeijan, ja hyökkäysvoimat kaksinkertaistettiin, mutta läpimurtoa ei siitä huolimatta tapahtunut. Suomi säilytti itsenäisyytensä, mutta jäljelle jäi tragedia.<br /><br />Taipaleenjoki-ooppera kertoo inhimillisen tarinan Taipaleen taisteluista kansallisrunoilijamme Yrjö Jylhän silmin ja tunnoin. Jylhä koki rintaman kauheudet niiden kokonaisuudessaan johdettuaan Kempin rykmentin 1 pataljoonan toista komppanjaa. Sodan kokemukset saivat lopulta Jylhän riistämään oman henkensä vuonna 1956. Taipaleenjoki-oopperaa on esitetty viimeksi Ilmajoen Musiikkijuhlilla täysille katsomoille vuosina 20102012.</p>\n",
-			"fi": "<p>Taipaleenjoki-ooppera<br /><br />Joulukuun alussa Leningradin Sotilaspiirin komentaja Kirill A. Meretskov oli kääntänyt Karjalan kannaksen suuren hyökkäyksen painopisteen Viipurin suunnasta itäiselle Kannakselle. Suomalaisten kova vastarinta alkuperäisellä hyökkäyslinjalla Kannaksella oli yllättänyt puna-armeijan, ja hyökkäysvoimat kaksinkertaistettiin, mutta läpimurtoa ei siitä huolimatta tapahtunut. Suomi säilytti itsenäisyytensä, mutta jäljelle jäi tragedia.<br /><br />Taipaleenjoki-ooppera kertoo inhimillisen tarinan Taipaleen taisteluista kansallisrunoilijamme Yrjö Jylhän silmin ja tunnoin. Jylhä koki rintaman kauheudet niiden kokonaisuudessaan johdettuaan Kempin rykmentin 1 pataljoonan toista komppanjaa. Sodan kokemukset saivat lopulta Jylhän riistämään oman henkensä vuonna 1956. Taipaleenjoki-oopperaa on esitetty viimeksi Ilmajoen Musiikkijuhlilla täysille katsomoille vuosina 20102012.</p>\n",
-			"sv": "<p>Taipaleenjoki-ooppera<br /><br />Joulukuun alussa Leningradin Sotilaspiirin komentaja Kirill A. Meretskov oli kääntänyt Karjalan kannaksen suuren hyökkäyksen painopisteen Viipurin suunnasta itäiselle Kannakselle. Suomalaisten kova vastarinta alkuperäisellä hyökkäyslinjalla Kannaksella oli yllättänyt puna-armeijan, ja hyökkäysvoimat kaksinkertaistettiin, mutta läpimurtoa ei siitä huolimatta tapahtunut. Suomi säilytti itsenäisyytensä, mutta jäljelle jäi tragedia.<br /><br />Taipaleenjoki-ooppera kertoo inhimillisen tarinan Taipaleen taisteluista kansallisrunoilijamme Yrjö Jylhän silmin ja tunnoin. Jylhä koki rintaman kauheudet niiden kokonaisuudessaan johdettuaan Kempin rykmentin 1 pataljoonan toista komppanjaa. Sodan kokemukset saivat lopulta Jylhän riistämään oman henkensä vuonna 1956. Taipaleenjoki-oopperaa on esitetty viimeksi Ilmajoen Musiikkijuhlilla täysille katsomoille vuosina 20102012.</p>\n"
-		}, "location_extra_info": { "fi": "Turun Konserttitalo, Aninkaistenkatu 9" },
-		"@id": "https://api.turku.fi/linkedevents/v1/event/955000/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [ ]
-	}, {
-		"id": "954837", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954837/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/purjehdus/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/trips/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/cruisesandtours/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/pienirengastie/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/opastus/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954836/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/4037772056288793", "language": "fi" }, {
-				"name": "Signup",
-				"link": "https://visitnaantali.com/tapahtuma/saarihyppely-retki-pienelle-rengastielle/", "language": "fi"
-			}, {
-				"name": "Tickets",
-				"link": "https://visitnaantali.com/tapahtuma/saarihyppely-retki-pienelle-rengastielle/", "language": "fi"
-			}
-		], "offers": [
-			{
-				"is_free": false, "price": { "fi": "<p>15.7 49 €/hlö<br />\n29.7 79 €/hlö<br />\n12.8 79 €/hlö</p>\n" },
-				"info_url": null, "description": null
-			}
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:28.583240Z",
-		"last_modified_time": "2021-07-05T02:13:09.014947Z", "date_published": null,
-		"start_time": "2021-07-15T08:00:00Z", "end_time": "2021-07-15T15:15:00Z", "super_event_type": null,
-		"name": { "fi": "Saarihyppely -retki Pienelle Rengastielle" }, "provider": null, "info_url": null,
-		"short_description": { "fi": "Saarihyppely -retki Pienelle Rengastielle torstaisin 15.7, 29.7 ja 12.8\n" },
-		"description": {
-			"fi": "<p>Saarihyppely -retki Pienelle Rengastielle torstaisin 15.7, 29.7 ja 12.8\n</p><p>Bussikuljetuksella ja yhteysaluksella pääset kätevästi päiväksi saaristoon.</p>\n<p>Charter- sekä paikallisbussilla, yhteisaluksella ja purjelaivalla toteutettavilla päiväretkillä koetaan lumoava saaristo 120 km pituisella Pienellä Rengastiellä. Nämä kolme retkivaihtoehtoa ovat täydellinen valinta matkailijoille, joilla ei ole omaa autoa ja jotka haluavat tutustua saaristoon ympäristöystävällisellä tavalla. </p>\n<p>Retken aikana koetaan komeita saaristosiltoja, lystikkäitä lossimatkoja sekä aitoja saariston maaseutumaisemia. Paikallinen saaristo-opas on mukana 15.7. lähdöllä Turusta Nauvoon asti viihdyttäen matkantekoa mielenkiintoisilla tarinoilla sekä historiatiedoilla. Nauvossa on mahdollisuus tutustua viihtyisän vierasvenesataman putiikkeihin, kahviloihin ja maistella kesäterassien tarjontaa ennen paluumatkaa. 29.7. ja 12.8. lähdöillä ei ole opasta mukana.</p>\n"
-		}, "location_extra_info": { "fi": "<p>Tarkat lähtö- ja paluupaikat löydät Visit Naantalin kotisivuilta</p>\n" },
-		"@id": "https://api.turku.fi/linkedevents/v1/event/954837/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28608, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:28.575336Z",
-				"last_modified_time": "2021-07-05T02:11:28.575368Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/saaristo_my_stay_1.jpg?itok=V-cl304D",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28608/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954866", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954866/" },
-		"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" } ],
-		"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954855/" }, "event_status": "EventScheduled",
-		"external_links": [ ], "offers": [ { "is_free": true, "price": null, "info_url": null, "description": null } ],
-		"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
-		"audience": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/childfamilies/" } ], "custom_data": null,
-		"created_time": "2021-07-05T02:11:23.289384Z", "last_modified_time": "2021-07-05T02:13:07.932559Z",
-		"date_published": null, "start_time": "2021-11-10T15:30:00Z", "end_time": "2021-11-10T17:00:00Z",
-		"super_event_type": null, "name": { "fi": "Pieni matka, isot elämykset" }, "provider": null, "info_url": null,
-		"short_description": null, "description": {
-			"fi": "<p>Lausteen lapsiperheille on suunnattu tekemistä kerran viikossa, jossa yhdessä päästään toimimaan mm. luonnon helmassa. Toiminta on maksutonta matalalla kynnyksellä mukaansa tempaavaa. Mukana järjestämässä vapaa-aikatoimiala ja alueen paikalliset toimijat kuten MLL, Partiolaiset, Koulu ja Päiväkodit.</p>\n"
-		}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/954866/",
-		"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28605, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:23.283761Z",
-				"last_modified_time": "2021-07-05T02:11:23.283777Z",
-				"url": "https://www.turku.fi/sites/default/files/thumbnails/image/juliste_a4_aluetyoprojekti_lauste_v2_vedos_1.png",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28605/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954818", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954818/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/historia/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kavelykierros/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turkuday/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turku2021/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954813/" },
-		"event_status": "EventScheduled", "external_links": [
-			{
-				"name": "Facebook", "link": "https://www.facebook.com/Tarinoita-Varjoisilta-Kujilta-239005569515913",
-				"language": "fi"
-			}, { "name": "Signup", "link": "http://cluster015.ovh.net/~eduart/", "language": "fi" }
-		], "offers": [
-			{
-				"is_free": false, "price": {
-				"fi": "<p>15€/henkilö. Toivomme korttimaksua. </p>\n<p>Noudatamme AVI:n tapahtumaohjeistusta. Osallistuthan vain täysin terveenä.</p>\n"
-			}, "info_url": null, "description": null
-			}
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:22.532900Z",
-		"last_modified_time": "2021-07-05T02:13:07.781104Z", "date_published": null,
-		"start_time": "2021-07-29T15:00:00Z", "end_time": "2021-07-29T15:00:00Z", "super_event_type": null,
-		"name": { "en": "Stories of shadowed alleys", "fi": "Tarinoita varjoisilta kujilta" }, "provider": null,
-		"info_url": null, "short_description": {
-			"en": "Dramatised tour in early 20th century crime stories  and ghost stories in Turku.\n",
-			"fi": "Dramatisoitu kävelykieros 1920-luvun Turun rikos- ja kummitushistoriaan.\n"
-		}, "description": {
-			"en": "<p>Dramatised tour in early 20th century crime stories  and ghost stories in Turku.\n</p><p>About 1,8 km tour throuh the most peautiful parks in Turku, you'll hear stories of actual crimes and their, not always fair trials in 1920s due the civil war wounds. </p>\n<p>Some stairs during the walk. Duration approx. 1h 20min.</p>\n<p>Please do not attend if showing any symptoms of covid19. We follow AVI's safety guidelines.</p>\n",
-			"fi": "<p>Dramatisoitu kävelykieros 1920-luvun Turun rikos- ja kummitushistoriaan.\n</p><p>Noin 1,8 km matkalla Itsenäisydenaukiolta läpi Samppalinnanmäen Tähtitornin juurelle kuullaan pääosin 1920 luvulla Turussa tapahtuneista rikoksista ja niiden henkilökohtaloista. Aikaan, jolloin sisällissodan haavat olivat vielä selvästi näkyvillä ja kaikki eivät olleet yhtä tasa-arvoisia lain edessä kuin nyt. Kesto noin 1h 20 min. Sisältää portaita. </p>\n<p>Esitykset torstaisin klo 18 alkaen: 8.7., 15.7., 22.7., 29.7., 12.8 (Taiteiden yö),<br />\nSu 19.9 (Turun päivä) </p>\n<p>Noudatamme AVI:n tapahtumaohjeistusta. Osallistuthan vain täysin terveenä.</p>\n"
-		}, "location_extra_info": {
-			"fi": "<p>Lähtö Itsenäisyydenaukiolta Taivaan vaunujen vierestä. (Iso sininen taideteos kaupungin teatterin ja Väinö Aaltosen museon välissä)</p>\n"
-		}, "@id": "https://api.turku.fi/linkedevents/v1/event/954818/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28604, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:22.526751Z",
-				"last_modified_time": "2021-07-05T02:11:22.526775Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/kieltolainpaatti.jpg?itok=fkdE9Hpp",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28604/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "955058", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955058/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/ruisrock/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/museum/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/historia&amp;museot/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/955054/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/sibeliusmuseum", "language": "fi" },
-			{ "name": "Signup", "link": "http://www.sibeliusmuseum.fi/fi/sibeliusmuseo/", "language": "fi" }
-		], "offers": [
-			{
-				"is_free": false, "price": {
-				"fi": "<p>Yleisöopastukset kuuluvat sisäänpääsymaksun hintaan:<br />\nAikuiset 7 €<br />\nOpiskelijat, eläkeläiset, työttömät 5 €<br />\nAlle 18 v. ilmaiseksi</p>\n<p>Voimassaolevat edut:<br />\nPääsylipun maksuvälineenä käyvät sekä Museum Walk , ICOM-kortti, Smartum, Eazybreak että Museokortti.</p>\n<p>Museo on Vammaiskorttikohde. Henkilökohtainen avustaja pääsee veloituksetta museoon.</p>\n"
-			}, "info_url": null, "description": null
-			}
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:17.165181Z",
-		"last_modified_time": "2021-07-05T02:13:06.525267Z", "date_published": null,
-		"start_time": "2021-07-10T11:00:00Z", "end_time": "2021-07-10T11:00:00Z", "super_event_type": null,
-		"name": { "fi": "Yleisöopastukset Sibelius-museossa" }, "provider": null, "info_url": null,
-		"short_description": {
-			"fi": "Heinä- ja elokuussa Sibelius-museo järjestää avoimia opastettuja kierroksia Ruisrock 1970 – miten kaikki alkoi -näyttelyyn.\n"
-		}, "description": {
-			"fi": "<p>Heinä- ja elokuussa Sibelius-museo järjestää avoimia opastettuja kierroksia Ruisrock 1970 – miten kaikki alkoi -näyttelyyn.\n</p><p>Opastuksen aikana tutustumme näyttelyn taustaan ja teemoihin.<br />\nAvoimet yleisöopastukset kuuluvat sisäänpääsymaksun hintaan ja kesto on noin 30 min.<br />\nVaraa paikkasi verkossa: <a href=\"http://www.sibeliusmuseum.fi/fi/sibeliusmuseo/\">www.sibeliusmuseum.fi/fi/sibeliusmuseo/</a><br />\nEnintään 10 henkilöä/opastus!<br />\nMuutokset mahdollisia.</p>\n"
-		}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/955058/",
-		"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28603, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:17.159242Z",
-				"last_modified_time": "2021-07-05T02:11:17.159258Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/ruisrock1970_1320x990px.png?itok=odoz09Ur",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28603/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "955005", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955005/" },
-		"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" } ],
-		"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/946397/" }, "event_status": "EventScheduled",
-		"external_links": [
-			{
-				"name": "Tickets", "link": "https://www.lippu.fi/event/13711299/?affiliate=ADV&language=fi",
-				"language": "fi"
-			}
-		], "offers": [ ], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
-		"audience": [ ], "custom_data": null, "created_time": "2021-07-05T02:11:16.241889Z",
-		"last_modified_time": "2021-07-05T02:13:06.348871Z", "date_published": null,
-		"start_time": "2021-10-26T16:00:00Z", "end_time": "2021-10-26T16:00:00Z", "super_event_type": null,
-		"name": { "en": "DIANDRA - ON HETKI", "fi": "DIANDRA - ON HETKI", "sv": "DIANDRA - ON HETKI" }, "provider": null,
-		"info_url": null, "short_description": null, "description": null,
-		"location_extra_info": { "fi": "Turun Konserttitalo, Aninkaistenkatu 9" },
-		"@id": "https://api.turku.fi/linkedevents/v1/event/955005/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [ ]
-	}, {
-		"id": "954964", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954964/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/naytelma/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/teatteri/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954954/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/832109824371914", "language": "fi" },
-			{ "name": "Tickets", "link": "https://teatteriakseli.fi/pekka/", "language": "fi" }
-		], "offers": [
-			{ "is_free": false, "price": { "fi": "<p>Kaikki liput 15 €</p>\n" }, "info_url": null, "description": null }
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:13.594723Z",
-		"last_modified_time": "2021-07-05T02:13:05.783209Z", "date_published": null,
-		"start_time": "2021-07-22T15:00:00Z", "end_time": "2021-07-22T15:00:00Z", "super_event_type": null,
-		"name": { "fi": "(Kesä)Teatteri Akseli: Pekka Töpöhäntä" }, "provider": null, "info_url": null,
-		"short_description": {
-			"fi": "Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n"
-		}, "description": {
-			"fi": "<p>Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n</p><p>Rakastettava koko perheen Pekka Töpöhäntä!</p>\n<p>Teatteri Akseli ja ohjaaja Kauno Takarautio tuovat Turun Puolalanpuistoon klassikkosadun kissasta ilman häntää. Pekka Töpöhäntä (käsikirjoitus Göstä Knutsson ja dramatisointi Helena Anttonen) on lasten ja aikuisten rakastama tarina erilaisuudesta ja ystävyyden voimasta. Kiusaaminen on edelleen liian usein toistuva ilmiö, johon tässäkin näytelmässä tartutaan suorastaan hännän mitalla. Jokainen meistä on yksilö, myös Pekka ja pihan valtias Monni, joiden tie vie erilaisuuden kautta toisen hyväksymiseen. Näytelmä on hauska ja positiivinen kertomus eräästä yhteisöstä, josta löytyy mielenkiintoista hahmoa lähtöön jos toiseenkin. Pekka Töpöhäntä sopii mainiosti koko perheelle!</p>\n<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
-		}, "location_extra_info": {
-			"fi": "<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
-		}, "@id": "https://api.turku.fi/linkedevents/v1/event/954964/", "@context": "http://schema.org",
-		"@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28601, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:13.587803Z",
-				"last_modified_time": "2021-07-05T02:11:13.587827Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/dsc_0194_3.jpg?itok=O0swBssu",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28601/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "955065", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955065/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/ruisrock/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/museum/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/historia&amp;museot/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/955054/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/sibeliusmuseum", "language": "fi" },
-			{ "name": "Signup", "link": "http://www.sibeliusmuseum.fi/fi/sibeliusmuseo/", "language": "fi" }
-		], "offers": [
-			{
-				"is_free": false, "price": {
-				"fi": "<p>Yleisöopastukset kuuluvat sisäänpääsymaksun hintaan:<br />\nAikuiset 7 €<br />\nOpiskelijat, eläkeläiset, työttömät 5 €<br />\nAlle 18 v. ilmaiseksi</p>\n<p>Voimassaolevat edut:<br />\nPääsylipun maksuvälineenä käyvät sekä Museum Walk , ICOM-kortti, Smartum, Eazybreak että Museokortti.</p>\n<p>Museo on Vammaiskorttikohde. Henkilökohtainen avustaja pääsee veloituksetta museoon.</p>\n"
-			}, "info_url": null, "description": null
-			}
-		], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
-		"custom_data": null, "created_time": "2021-07-05T02:11:10.168551Z",
-		"last_modified_time": "2021-07-05T02:13:05.088090Z", "date_published": null,
-		"start_time": "2021-08-07T11:00:00Z", "end_time": "2021-08-07T11:00:00Z", "super_event_type": null,
-		"name": { "fi": "Yleisöopastukset Sibelius-museossa" }, "provider": null, "info_url": null,
-		"short_description": {
-			"fi": "Heinä- ja elokuussa Sibelius-museo järjestää avoimia opastettuja kierroksia Ruisrock 1970 – miten kaikki alkoi -näyttelyyn.\n"
-		}, "description": {
-			"fi": "<p>Heinä- ja elokuussa Sibelius-museo järjestää avoimia opastettuja kierroksia Ruisrock 1970 – miten kaikki alkoi -näyttelyyn.\n</p><p>Opastuksen aikana tutustumme näyttelyn taustaan ja teemoihin.<br />\nAvoimet yleisöopastukset kuuluvat sisäänpääsymaksun hintaan ja kesto on noin 30 min.<br />\nVaraa paikkasi verkossa: <a href=\"http://www.sibeliusmuseum.fi/fi/sibeliusmuseo/\">www.sibeliusmuseum.fi/fi/sibeliusmuseo/</a><br />\nEnintään 10 henkilöä/opastus!<br />\nMuutokset mahdollisia.</p>\n"
-		}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/955065/",
-		"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28600, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:10.162377Z",
-				"last_modified_time": "2021-07-05T02:11:10.162396Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/ruisrock1970_1320x990px.png?itok=odoz09Ur",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28600/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "954867", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954867/" },
-		"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" } ],
-		"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954855/" }, "event_status": "EventScheduled",
-		"external_links": [ ], "offers": [ { "is_free": true, "price": null, "info_url": null, "description": null } ],
-		"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
-		"audience": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/childfamilies/" } ], "custom_data": null,
-		"created_time": "2021-07-05T02:11:09.976735Z", "last_modified_time": "2021-07-05T02:13:05.044185Z",
-		"date_published": null, "start_time": "2021-11-17T15:30:00Z", "end_time": "2021-11-17T17:00:00Z",
-		"super_event_type": null, "name": { "fi": "Pieni matka, isot elämykset" }, "provider": null, "info_url": null,
-		"short_description": null, "description": {
-			"fi": "<p>Lausteen lapsiperheille on suunnattu tekemistä kerran viikossa, jossa yhdessä päästään toimimaan mm. luonnon helmassa. Toiminta on maksutonta matalalla kynnyksellä mukaansa tempaavaa. Mukana järjestämässä vapaa-aikatoimiala ja alueen paikalliset toimijat kuten MLL, Partiolaiset, Koulu ja Päiväkodit.</p>\n"
-		}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/954867/",
-		"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28599, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:09.971009Z",
-				"last_modified_time": "2021-07-05T02:11:09.971026Z",
-				"url": "https://www.turku.fi/sites/default/files/thumbnails/image/juliste_a4_aluetyoprojekti_lauste_v2_vedos_1.png",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28599/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}, {
-		"id": "955077", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955077/" }, "keywords": [
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/joulukonsertti/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/music/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/keyensemble/" },
-			{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turku2021/" }
-		], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/955076/" },
-		"event_status": "EventScheduled", "external_links": [
-			{ "name": "Facebook", "link": "https://www.facebook.com/events/554368179274434/", "language": "fi" },
-			{ "name": "Tickets", "link": "http://www.keyensemble.fi/osta/liput/", "language": "fi" }
-		], "offers": [ ], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
-		"audience": [ ], "custom_data": null, "created_time": "2021-07-05T02:11:04.809744Z",
-		"last_modified_time": "2021-07-05T02:13:03.857813Z", "date_published": null,
-		"start_time": "2021-12-18T17:30:00Z", "end_time": "2021-12-18T17:30:00Z", "super_event_type": null,
-		"name": { "fi": "J. S. Bach: Jouluoratorio", "sv": "J. S. Bach: Juloratoriet" }, "provider": null,
-		"info_url": null, "short_description": {
-			"fi": "Osa 1: Kantaatit I–III, Turun Martinkirkko la 18.12.2021 klo 19.30\nOsa 2: Kantaatit IV–VI, Turun Martinkirkko su 02.01.2022 klo 19.30\n",
-			"sv": "Del 1: Kantaterna I–III, Martinskyrkan i Åbo lö 18.12.2021 kl. 19.30\nDel 2: Kantaterna IV–VI, Martinskyrkan i Åbo sö 02.01.2022 kl. 19.30\n"
-		}, "description": {
-			"fi": "<p>Osa 1: Kantaatit I–III, Turun Martinkirkko la 18.12.2021 klo 19.30\nOsa 2: Kantaatit IV–VI, Turun Martinkirkko su 02.01.2022 klo 19.30\n</p><p>Turussa ei ole esitetty Bachin Jouluoratoriota kokonaisuudessaan miesmuistiin ja kolme ensimmäistä kantaattiakin vain pari kertaa koko tällä vuosituhannella. Key Ensemblellä on jo pitkään ollut haaveena korjata tämä puute ja kuoron taiteellinen johtaja Teemu Honkanen iloitseekin saadessaan pitkän pestinsä viimeisenä produktiona vihdoin toteuttaa erilaisten vastoinkäymisten jälkeen tämä hänen lapsuutensa rakas suosikkiteos.</p>\n<p>– Mikä musiikki sopisikaan paremmin juhlistamaan raskaan ja synkän kulkutautikauden selättämistä ja paluuta vanhaan, hyväksi havaittuun elävään konserttikulttuuriin kuin juuri Bachin riemullinen Jouluoratorio, hän toteaa.</p>\n<p>Orkesterina esityksessä toimii paikallisista ammattisoittajista koottu, moderneilla instrumenteilla soittava Käsinpoimintaorkesteri ja solistiosuuksista vastaavat pääosin Key Ensemblen omat laulajavoimat.</p>\n<p>Teoksen esityskieli on perinteisesti saksa, mutta se tekstitetään yleisölle tällä kertaa sekä suomeksi että ruotsiksi.</p>\n<p>Key Ensemble<br />\nKäsinpoimintaorkesteri<br />\nTeemu Honkanen, johtaja</p>\n<p>Julisteen kuva: Hanna Varis: Angel Dora</p>\n<p>Lipunmyynti avataan syyskuussa. Huom! Key Ensemblen lahjakortit käyvät maksuvälineenä tähän konserttiin.</p>\n<p>Turku viettää Euroopan kulttuuripääkaupungin kymmenvuotisjuhlaa vuonna 2021. Jouluoratorio toteutetaan osana merkkivuoden ohjelmaa.</p>\n",
-			"sv": "<p>Del 1: Kantaterna I–III, Martinskyrkan i Åbo lö 18.12.2021 kl. 19.30\nDel 2: Kantaterna IV–VI, Martinskyrkan i Åbo sö 02.01.2022 kl. 19.30\n</p><p>I Åbo har Bachs Juloratorium inte framförts i sin helhet på mannaminne och de tre första kantaterna bara ett par gånger på detta årtusende. Key Ensemble har redan länge drömt om att råda bot på denna brist och körens konstnärlige ledare Teemu Honkanen är glad att som sista produktion under sin långa anställning få framföra sin barndoms älsklingsverk.</p>\n<p>Som orkester vid framförandet medverkar en handplockad ensemble, bestående av lokala proffsmusiker, som spelar på moderna instrument. För solistinslagen står till största delen sångare ur Key Ensembles egna led.</p>\n<p>Verket framförs traditionsenligt på tyska, men textas denna gång för publiken på både finska och svenska.</p>\n<p>Key Ensemble<br />\nHandplockad orkester<br />\nTeemu Honkanen, dirigent</p>\n<p>Obs! Key Ensembles presentkort tas emot som betalning vid denna konsert.</p>\n<p>Affischbild: Hanna Varis: Angel Dora</p>\n<p>Åbo firar europeiska kulturhuvudstadsårets tioårsjubileum år 2021. Juloratoriet är en del av jubileumsårets program.</p>\n"
-		}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/955077/",
-		"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
-			{
-				"id": 28598, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:04.803420Z",
-				"last_modified_time": "2021-07-05T02:11:04.803442Z",
-				"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/jouluoratorio_1320x505.png?itok=4CYdC8g8",
-				"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
-				"@id": "https://api.turku.fi/linkedevents/v1/image/28598/", "@context": "http://schema.org",
-				"@type": "ImageObject"
-			}
-		]
-	}
-]
+			"@id": "https://api.turku.fi/linkedevents/v1/event/955013/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [ ]
+		}, {
+			"id": "954829", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954829/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/seili/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/risteily/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/trips/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/cruisesandtours/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/yleisopurjehdukset/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954828/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/events/134960322061000", "language": "fi" }, {
+					"name": "Signup",
+					"link": "https://visitnaantali.com/tapahtuma/seilin-risteily-perinnepurjelaiva-inga-lillilla/",
+					"language": "fi"
+				}, {
+					"name": "Tickets",
+					"link": "https://visitnaantali.com/tapahtuma/seilin-risteily-perinnepurjelaiva-inga-lillilla/",
+					"language": "fi"
+				}
+			], "offers": [
+				{
+					"is_free": false,
+					"price": { "fi": "<p>69 €/aikuinen<br />\n39 €/lapsi 4-12v.<br />\n10 €/lapsi alle 4v.</p>\n" },
+					"info_url": null, "description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:52.412169Z",
+			"last_modified_time": "2021-07-05T02:13:14.089382Z", "date_published": null,
+			"start_time": "2021-07-29T08:00:00Z", "end_time": "2021-07-29T16:00:00Z", "super_event_type": null,
+			"name": { "fi": "Seilin risteily perinnepurjelaiva Inga-Lillillä" }, "provider": null, "info_url": null,
+			"short_description": { "fi": "Risteilypäivät torstaisin 29.7. ja 12.8. klo 11.00-19.00\n" }, "description": {
+				"fi": "<p>Risteilypäivät torstaisin 29.7. ja 12.8. klo 11.00-19.00\n</p><p>Päiväretken aikana noustaan nostalgisen perinnepurjelaivan Inga-Lillin kannelle ja koetaan lumoava saaristo sekä Seilin historiallinen saari.</p>\n<p>Aluksella nautitaan herkullista lohikeittoa (L) sekä kahvi/tee leivoksen kera upeissa saaristomaisemissa. Seilin kiehtovaan historiaan tutustutaan opastetulla kävelykierroksella.</p>\n"
+			}, "location_extra_info": {
+				"fi": "<p>Lähtölaituri sijaitsee Naantali Campingin läheisyydessä sataman puolella noin 1,5 km vanhasta kaupungista.</p>\n"
+			}, "@id": "https://api.turku.fi/linkedevents/v1/event/954829/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28621, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:52.393199Z",
+					"last_modified_time": "2021-07-05T02:11:52.393220Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/inga-lill2.jpg?itok=YggAUuTf",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28621/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954609", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954609/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/harrastusryhma/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/voimistelu/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/hyvinvointijaterveys/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/asahi/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turkuonthemove/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954608/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/events/801506573890130", "language": "fi" }
+			],
+			"offers": [
+				{ "is_free": true, "price": { "fi": "<p>Ilmainen</p>\n" }, "info_url": null, "description": null }
+			],
+			"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:49.073322Z",
+			"last_modified_time": "2021-07-05T02:13:13.288109Z", "date_published": null,
+			"start_time": "2021-07-05T14:30:00Z", "end_time": "2021-07-11T09:00:00Z", "super_event_type": null,
+			"name": { "fi": "Tule mukaan harjoittelemaan asahia" }, "provider": null, "info_url": null,
+			"short_description": {
+				"fi": "Suomalaisen terveysliikunta-asahin ohjaajat kiertävät Turku ja vetävät ilmaisia asahi-tunteja. Tule mukaan tutustumaan suomalaiseen asahiin. Asahi on terveysliikuntaa kaikille.\n"
+			}, "description": {
+				"fi": "<p>Suomalaisen terveysliikunta-asahin ohjaajat kiertävät Turku ja vetävät ilmaisia asahi-tunteja. Tule mukaan tutustumaan suomalaiseen asahiin. Asahi on terveysliikuntaa kaikille.\n</p><p>Tule mukaan suomalaiseen asahiin ja voi hyvin! Kokeneet asahi-ohjaajamme kiertävät Turkua, Naantalia ja Raisiota ja tarjoamme mahdollisuuden tutustua ilmaiseen asahiin. Asahi on suomalaista terveysliikuntaa, joka sopii kaikille. Asahi perustuu tutkittuun tietoon liikunnan terveysvaikutuksista. Nyt sinulla on mahdollisuus kokeilla ja kysyä lisää. Ohjaajina Asahin pääkouluttaja Risto Lehto, kouluttaja Kirsi Vainio, B-lisenssiohjaajat Kirsi Mikkonen ja Petteri Koittola. Tutustu toimintaan <a href=\"https://www.terveysliikunta.fi/asahi/\">https://www.terveysliikunta.fi/asahi/</a></p>\n<p>Tule mukaan:<br />\n- 5.7. klo 17.30 Kupittaan paviljongin vieressä<br />\n- 6.7. klo 17.30 Littoisten urheilukenttä/kaivopuisto<br />\n- 6.7. klo 17.00 Pakkarinpuisto, Turku<br />\n- 6.7. klo 17.30 Raision keskuspuisto<br />\n- 7.7. klo 17.30 Naantalin kirkon puisto<br />\n- 8.7. klo 17.30 Pakkarinpuisto, Turku<br />\n- 8.7. klo 17.30 Teräsrautelan kenttä<br />\n- 9.7. klo 17.30 Ylhäisten puisto, Raisio<br />\n- 11.7. klo 11.15 Tallimäenpuisto, Puutarhakatu 45, Turku</p>\n"
+			}, "location_extra_info": {
+				"fi": "<p>- 5.7. klo 17.30 Kupittaan paviljongin vieressä<br />\n- 6.7. klo 17.30 Littoisten urheilukenttä/kaivopuisto<br />\n- 6.7. klo 17.00 Pakkarinpuisto, Turku<br />\n- 6.7. klo 17.30 Raision keskuspuisto<br />\n- 7.7. klo 17.30 Naantalin kirkon puisto<br />\n- 8.7. klo 17.30 Pakkarinpuisto, Turku<br />\n- 8.7. klo 17.30 Teräsrautelan kenttä<br />\n- 9.7. klo 17.30 Ylhäisten puisto, Raisio<br />\n- 11.7. kl"
+			}, "@id": "https://api.turku.fi/linkedevents/v1/event/954609/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28619, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:49.066777Z",
+					"last_modified_time": "2021-07-05T02:11:49.066799Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/20210610_173920.jpg?itok=US4Dg-Tq",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28619/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954860", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954860/" },
+			"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" } ],
+			"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954855/" },
+			"event_status": "EventScheduled",
+			"external_links": [ ],
+			"offers": [ { "is_free": true, "price": null, "info_url": null, "description": null } ],
+			"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/childfamilies/" } ],
+			"custom_data": null,
+			"created_time": "2021-07-05T02:11:46.453248Z", "last_modified_time": "2021-07-05T02:13:12.754858Z",
+			"date_published": null, "start_time": "2021-09-29T14:30:00Z", "end_time": "2021-09-29T16:00:00Z",
+			"super_event_type": null, "name": { "fi": "Pieni matka, isot elämykset" }, "provider": null,
+			"info_url": null,
+			"short_description": null, "description": {
+				"fi": "<p>Lausteen lapsiperheille on suunnattu tekemistä kerran viikossa, jossa yhdessä päästään toimimaan mm. luonnon helmassa. Toiminta on maksutonta matalalla kynnyksellä mukaansa tempaavaa. Mukana järjestämässä vapaa-aikatoimiala ja alueen paikalliset toimijat kuten MLL, Partiolaiset, Koulu ja Päiväkodit.</p>\n"
+			}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/954860/",
+			"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28617, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:46.446840Z",
+					"last_modified_time": "2021-07-05T02:11:46.446859Z",
+					"url": "https://www.turku.fi/sites/default/files/thumbnails/image/juliste_a4_aluetyoprojekti_lauste_v2_vedos_1.png",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28617/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954815", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954815/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/historia/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kavelykierros/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turkuday/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turku2021/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954813/" },
+			"event_status": "EventScheduled", "external_links": [
+				{
+					"name": "Facebook", "link": "https://www.facebook.com/Tarinoita-Varjoisilta-Kujilta-239005569515913",
+					"language": "fi"
+				}, { "name": "Signup", "link": "http://cluster015.ovh.net/~eduart/", "language": "fi" }
+			], "offers": [
+				{
+					"is_free": false, "price": {
+					"fi": "<p>15€/henkilö. Toivomme korttimaksua. </p>\n<p>Noudatamme AVI:n tapahtumaohjeistusta. Osallistuthan vain täysin terveenä.</p>\n"
+				}, "info_url": null, "description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:44.801712Z",
+			"last_modified_time": "2021-07-05T02:13:12.401665Z", "date_published": null,
+			"start_time": "2021-07-08T15:00:00Z", "end_time": "2021-07-08T15:00:00Z", "super_event_type": null,
+			"name": { "en": "Stories of shadowed alleys", "fi": "Tarinoita varjoisilta kujilta" }, "provider": null,
+			"info_url": null, "short_description": {
+				"en": "Dramatised tour in early 20th century crime stories  and ghost stories in Turku.\n",
+				"fi": "Dramatisoitu kävelykieros 1920-luvun Turun rikos- ja kummitushistoriaan.\n"
+			}, "description": {
+				"en": "<p>Dramatised tour in early 20th century crime stories  and ghost stories in Turku.\n</p><p>About 1,8 km tour throuh the most peautiful parks in Turku, you'll hear stories of actual crimes and their, not always fair trials in 1920s due the civil war wounds. </p>\n<p>Some stairs during the walk. Duration approx. 1h 20min.</p>\n<p>Please do not attend if showing any symptoms of covid19. We follow AVI's safety guidelines.</p>\n",
+				"fi": "<p>Dramatisoitu kävelykieros 1920-luvun Turun rikos- ja kummitushistoriaan.\n</p><p>Noin 1,8 km matkalla Itsenäisydenaukiolta läpi Samppalinnanmäen Tähtitornin juurelle kuullaan pääosin 1920 luvulla Turussa tapahtuneista rikoksista ja niiden henkilökohtaloista. Aikaan, jolloin sisällissodan haavat olivat vielä selvästi näkyvillä ja kaikki eivät olleet yhtä tasa-arvoisia lain edessä kuin nyt. Kesto noin 1h 20 min. Sisältää portaita. </p>\n<p>Esitykset torstaisin klo 18 alkaen: 8.7., 15.7., 22.7., 29.7., 12.8 (Taiteiden yö),<br />\nSu 19.9 (Turun päivä) </p>\n<p>Noudatamme AVI:n tapahtumaohjeistusta. Osallistuthan vain täysin terveenä.</p>\n"
+			}, "location_extra_info": {
+				"fi": "<p>Lähtö Itsenäisyydenaukiolta Taivaan vaunujen vierestä. (Iso sininen taideteos kaupungin teatterin ja Väinö Aaltosen museon välissä)</p>\n"
+			}, "@id": "https://api.turku.fi/linkedevents/v1/event/954815/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28615, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:44.792605Z",
+					"last_modified_time": "2021-07-05T02:11:44.792629Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/kieltolainpaatti.jpg?itok=fkdE9Hpp",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28615/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954801", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954801/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/risteily/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/risteilyalus/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/purjehdus/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/trips/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/cruisesandtours/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954800/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/events/456520588717637", "language": "fi" }, {
+					"name": "Signup",
+					"link": "https://visitnaantali.com/tapahtuma/yleisopurjehdus-perinnepurjelaivalla/",
+					"language": "fi"
+				}, {
+					"name": "Tickets",
+					"link": "https://visitnaantali.com/tapahtuma/yleisopurjehdus-perinnepurjelaivalla/",
+					"language": "fi"
+				}
+			], "offers": [
+				{
+					"is_free": false,
+					"price": { "fi": "<p>39 €/aikuinen<br />\n20 €/lapsi 4-12v<br />\n5 €/lapsi alle 4-v</p>\n" },
+					"info_url": null, "description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:42.369917Z",
+			"last_modified_time": "2021-07-05T02:13:11.876798Z", "date_published": null,
+			"start_time": "2021-07-21T14:00:00Z", "end_time": "2021-07-21T17:00:00Z", "super_event_type": null,
+			"name": { "fi": "Yleisöpurjehdus perinnepurjelaivalla" }, "provider": null, "info_url": null,
+			"short_description": {
+				"fi": "Perinnepurjelaiva Inga-Lilllin yleisöristeilyt toteutetaan keskiviikkoisin 21.7. ja 4.8.2021 klo 17.00-20.00.\n"
+			}, "description": {
+				"fi": "<p>Perinnepurjelaiva Inga-Lilllin yleisöristeilyt toteutetaan keskiviikkoisin 21.7. ja 4.8.2021 klo 17.00-20.00.\n</p><p>Koe ainutlaatuinen elämys perinnepurjelaiva Inga-Lilillä Naantalin kauniissa saaristossa. Kaljaasi Inga-Lill on viimeisimpiä aidon talonpoikaispurjehduksen edustajia Suomessa. Risteily Inga-Lillillä tarjoaakin mieleenpainuvan tavan nauttia Airiston kauniista saaristoluonnosta.</p>\n<p>Perinnepurjelaivan yleisöristeilyt toteutetaan muutamana iltana kesässä. Inga-Lillin lähtölaituri sijaitsee Naantalin Campingin läheisyydessä. Risteilylle lähteviä pyydetään saapumaan paikalle 15 minuuttia ennen lähtöaikaa.</p>\n<p>Purjehduksen aikana nautitaan herkullista lohikeittoa (L) sekä kahvi/tee leivoksen kera upeissa Airiston saaristomaisemissa.</p>\n"
+			}, "location_extra_info": {
+				"fi": "<p>Lähtö Naantali Campingin läheisyydestä sataman puolelta. Etäisyys Naantalin vanhan kaupungin rannasta noin 1,5 km</p>\n"
+			}, "@id": "https://api.turku.fi/linkedevents/v1/event/954801/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28613, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:42.364046Z",
+					"last_modified_time": "2021-07-05T02:11:42.364062Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/inga-lill_perinnepurjelaiva_0.jpg?itok=5deWDYEh",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28613/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954614", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954614/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/harrastusryhma/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/voimistelu/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/hyvinvointijaterveys/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/asahi/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turkuonthemove/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954608/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/events/801506573890130", "language": "fi" }
+			],
+			"offers": [
+				{ "is_free": true, "price": { "fi": "<p>Ilmainen</p>\n" }, "info_url": null, "description": null }
+			],
+			"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:42.186389Z",
+			"last_modified_time": "2021-07-05T02:13:11.824401Z", "date_published": null,
+			"start_time": "2021-07-11T08:15:00Z", "end_time": "2021-07-11T09:00:00Z", "super_event_type": null,
+			"name": { "fi": "Tule mukaan harjoittelemaan asahia" }, "provider": null, "info_url": null,
+			"short_description": {
+				"fi": "Suomalaisen terveysliikunta-asahin ohjaajat kiertävät Turku ja vetävät ilmaisia asahi-tunteja. Tule mukaan tutustumaan suomalaiseen asahiin. Asahi on terveysliikuntaa kaikille.\n"
+			}, "description": {
+				"fi": "<p>Suomalaisen terveysliikunta-asahin ohjaajat kiertävät Turku ja vetävät ilmaisia asahi-tunteja. Tule mukaan tutustumaan suomalaiseen asahiin. Asahi on terveysliikuntaa kaikille.\n</p><p>Tule mukaan suomalaiseen asahiin ja voi hyvin! Kokeneet asahi-ohjaajamme kiertävät Turkua, Naantalia ja Raisiota ja tarjoamme mahdollisuuden tutustua ilmaiseen asahiin. Asahi on suomalaista terveysliikuntaa, joka sopii kaikille. Asahi perustuu tutkittuun tietoon liikunnan terveysvaikutuksista. Nyt sinulla on mahdollisuus kokeilla ja kysyä lisää. Ohjaajina Asahin pääkouluttaja Risto Lehto, kouluttaja Kirsi Vainio, B-lisenssiohjaajat Kirsi Mikkonen ja Petteri Koittola. Tutustu toimintaan <a href=\"https://www.terveysliikunta.fi/asahi/\">https://www.terveysliikunta.fi/asahi/</a></p>\n<p>Tule mukaan:<br />\n- 5.7. klo 17.30 Kupittaan paviljongin vieressä<br />\n- 6.7. klo 17.30 Littoisten urheilukenttä/kaivopuisto<br />\n- 6.7. klo 17.00 Pakkarinpuisto, Turku<br />\n- 6.7. klo 17.30 Raision keskuspuisto<br />\n- 7.7. klo 17.30 Naantalin kirkon puisto<br />\n- 8.7. klo 17.30 Pakkarinpuisto, Turku<br />\n- 8.7. klo 17.30 Teräsrautelan kenttä<br />\n- 9.7. klo 17.30 Ylhäisten puisto, Raisio<br />\n- 11.7. klo 11.15 Tallimäenpuisto, Puutarhakatu 45, Turku</p>\n"
+			}, "location_extra_info": {
+				"fi": "<p>- 5.7. klo 17.30 Kupittaan paviljongin vieressä<br />\n- 6.7. klo 17.30 Littoisten urheilukenttä/kaivopuisto<br />\n- 6.7. klo 17.00 Pakkarinpuisto, Turku<br />\n- 6.7. klo 17.30 Raision keskuspuisto<br />\n- 7.7. klo 17.30 Naantalin kirkon puisto<br />\n- 8.7. klo 17.30 Pakkarinpuisto, Turku<br />\n- 8.7. klo 17.30 Teräsrautelan kenttä<br />\n- 9.7. klo 17.30 Ylhäisten puisto, Raisio<br />\n- 11.7. kl"
+			}, "@id": "https://api.turku.fi/linkedevents/v1/event/954614/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28612, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:42.179253Z",
+					"last_modified_time": "2021-07-05T02:11:42.179273Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/20210610_173920.jpg?itok=US4Dg-Tq",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28612/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954660", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954660/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turunmuseokeskus/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kivakesakulmilla/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kivakesa/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kivaloma/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954657/" },
+			"event_status": "EventScheduled", "external_links": [ ], "offers": [
+				{
+					"is_free": true, "price": { "fi": "<p>Tapahtuma on maksuton</p>" }, "info_url": null,
+					"description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ], "audience": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/youth/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/childfamilies/" }
+			], "custom_data": null, "created_time": "2021-07-05T02:11:37.910726Z",
+			"last_modified_time": "2021-07-05T02:13:10.931272Z", "date_published": null,
+			"start_time": "2021-07-19T10:00:00Z", "end_time": "2021-07-19T11:30:00Z", "super_event_type": null,
+			"name": { "fi": "Turun museokeskuksen työpajat Runosmäessä: Nappityöpaja" }, "provider": null,
+			"info_url": null,
+			"short_description": null, "description": {
+				"fi": "<p>Työpajat Runosmäen kirjaston/nuorisotilan pihalla maanantaisin 5.7.–22.7. klo 13–14.30. Huom! Viimeinen työpaja poikkeuksellisesti torstaina 22.7.! Työpajat on suunnattu alakouluikäisille, mutta sopivat hyvin myös yläkoululaisille. Ei ennakkoilmoittautumista.</p>\n<h2>Vitamiinipommi luonnosta!</h2>\n<p>Ma 5.7. klo 13-14.30  <br />Apteekkimuseo &amp; Qwenselin talon pajassa valmistetaan nokkosjauhetta itse tekemällä.</p>\n<h2>Tietoja ja taitoja 1800-luvun malliin! </h2>\n<p>Ma 12.7. klo 13-14.30<br />Luostarinmäen museokorttelin oppaat kertovat elämästä 200 vuotta sitten ja yhdessä ratkotaan visaisia pulmia. Käsityöläisen johdolla pääset kokemaan käsillä tekemisen iloa huovutuksen parissa! Järjestää Luostarinmäki</p>\n<h2>Nappityöpaja</h2>\n<p>Ma 19.7. klo 13-14.30<br />Turun linnan tarjoamassa työpajassa valmistetaan kauniita puisia nappeja perinteistä pumppuporaa apuna käyttäen.</p>\n<h2>Mielikuvituksen puutarha. Kesäkivaa WAMista!</h2>\n<p><strong>Huom!</strong> To 22.7.<strong> </strong>klo 13-14.30<br />Työpajassa taiteillaan viehkeitä silkkipaperikukkasia sekä mielikuvituksellisia puutarhan asukkeja. Työpaja on saanut inspiraationsa WAMissa esillä olevan Anu Pentikin näyttelyn luontoteemoista. Järjestää WAM</p>\n"
+			}, "location_extra_info": { "fi": "<p>Työpajat Runosmäen kirjaston/nuorisotilan pihalla</p>" },
+			"@id": "https://api.turku.fi/linkedevents/v1/event/954660/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28611, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:37.904126Z",
+					"last_modified_time": "2021-07-05T02:11:37.904145Z",
+					"url": "https://www.turku.fi/sites/default/files/thumbnails/image/runosmaki_museotyopaja_vaaka_0.jpg",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28611/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954965", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954965/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/naytelma/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/teatteri/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954954/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/events/832109824371914", "language": "fi" },
+				{ "name": "Tickets", "link": "https://teatteriakseli.fi/pekka/", "language": "fi" }
+			], "offers": [
+				{
+					"is_free": false, "price": { "fi": "<p>Kaikki liput 15 €</p>\n" }, "info_url": null,
+					"description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:35.077746Z",
+			"last_modified_time": "2021-07-05T02:13:10.415817Z", "date_published": null,
+			"start_time": "2021-07-24T13:00:00Z", "end_time": "2021-07-24T13:00:00Z", "super_event_type": null,
+			"name": { "fi": "(Kesä)Teatteri Akseli: Pekka Töpöhäntä" }, "provider": null, "info_url": null,
+			"short_description": {
+				"fi": "Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n"
+			}, "description": {
+				"fi": "<p>Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n</p><p>Rakastettava koko perheen Pekka Töpöhäntä!</p>\n<p>Teatteri Akseli ja ohjaaja Kauno Takarautio tuovat Turun Puolalanpuistoon klassikkosadun kissasta ilman häntää. Pekka Töpöhäntä (käsikirjoitus Göstä Knutsson ja dramatisointi Helena Anttonen) on lasten ja aikuisten rakastama tarina erilaisuudesta ja ystävyyden voimasta. Kiusaaminen on edelleen liian usein toistuva ilmiö, johon tässäkin näytelmässä tartutaan suorastaan hännän mitalla. Jokainen meistä on yksilö, myös Pekka ja pihan valtias Monni, joiden tie vie erilaisuuden kautta toisen hyväksymiseen. Näytelmä on hauska ja positiivinen kertomus eräästä yhteisöstä, josta löytyy mielenkiintoista hahmoa lähtöön jos toiseenkin. Pekka Töpöhäntä sopii mainiosti koko perheelle!</p>\n<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
+			}, "location_extra_info": {
+				"fi": "<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
+			}, "@id": "https://api.turku.fi/linkedevents/v1/event/954965/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28610, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:35.071731Z",
+					"last_modified_time": "2021-07-05T02:11:35.071748Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/dsc_0194_3.jpg?itok=O0swBssu",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28610/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "955000", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955000/" },
+			"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" } ],
+			"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/932403/" },
+			"event_status": "EventScheduled",
+			"external_links": [
+				{
+					"name": "Tickets", "link": "https://www.lippu.fi/event/13380679/?affiliate=ADV&language=fi",
+					"language": "fi"
+				}
+			], "offers": [ ], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ],
+			"in_language": [ ],
+			"audience": [ ], "custom_data": null, "created_time": "2021-07-05T02:11:33.902732Z",
+			"last_modified_time": "2021-07-05T02:13:10.135940Z", "date_published": null,
+			"start_time": "2021-10-02T11:00:00Z", "end_time": "2021-10-02T11:00:00Z", "super_event_type": null,
+			"name": {
+				"en": "TAIPALEENJOKI - OOPPERA", "fi": "TAIPALEENJOKI - OOPPERA", "sv": "TAIPALEENJOKI - OOPPERA"
+			},
+			"provider": null, "info_url": null, "short_description": null, "description": {
+				"en": "<p>Taipaleenjoki-ooppera<br /><br />Joulukuun alussa Leningradin Sotilaspiirin komentaja Kirill A. Meretskov oli kääntänyt Karjalan kannaksen suuren hyökkäyksen painopisteen Viipurin suunnasta itäiselle Kannakselle. Suomalaisten kova vastarinta alkuperäisellä hyökkäyslinjalla Kannaksella oli yllättänyt puna-armeijan, ja hyökkäysvoimat kaksinkertaistettiin, mutta läpimurtoa ei siitä huolimatta tapahtunut. Suomi säilytti itsenäisyytensä, mutta jäljelle jäi tragedia.<br /><br />Taipaleenjoki-ooppera kertoo inhimillisen tarinan Taipaleen taisteluista kansallisrunoilijamme Yrjö Jylhän silmin ja tunnoin. Jylhä koki rintaman kauheudet niiden kokonaisuudessaan johdettuaan Kempin rykmentin 1 pataljoonan toista komppanjaa. Sodan kokemukset saivat lopulta Jylhän riistämään oman henkensä vuonna 1956. Taipaleenjoki-oopperaa on esitetty viimeksi Ilmajoen Musiikkijuhlilla täysille katsomoille vuosina 20102012.</p>\n",
+				"fi": "<p>Taipaleenjoki-ooppera<br /><br />Joulukuun alussa Leningradin Sotilaspiirin komentaja Kirill A. Meretskov oli kääntänyt Karjalan kannaksen suuren hyökkäyksen painopisteen Viipurin suunnasta itäiselle Kannakselle. Suomalaisten kova vastarinta alkuperäisellä hyökkäyslinjalla Kannaksella oli yllättänyt puna-armeijan, ja hyökkäysvoimat kaksinkertaistettiin, mutta läpimurtoa ei siitä huolimatta tapahtunut. Suomi säilytti itsenäisyytensä, mutta jäljelle jäi tragedia.<br /><br />Taipaleenjoki-ooppera kertoo inhimillisen tarinan Taipaleen taisteluista kansallisrunoilijamme Yrjö Jylhän silmin ja tunnoin. Jylhä koki rintaman kauheudet niiden kokonaisuudessaan johdettuaan Kempin rykmentin 1 pataljoonan toista komppanjaa. Sodan kokemukset saivat lopulta Jylhän riistämään oman henkensä vuonna 1956. Taipaleenjoki-oopperaa on esitetty viimeksi Ilmajoen Musiikkijuhlilla täysille katsomoille vuosina 20102012.</p>\n",
+				"sv": "<p>Taipaleenjoki-ooppera<br /><br />Joulukuun alussa Leningradin Sotilaspiirin komentaja Kirill A. Meretskov oli kääntänyt Karjalan kannaksen suuren hyökkäyksen painopisteen Viipurin suunnasta itäiselle Kannakselle. Suomalaisten kova vastarinta alkuperäisellä hyökkäyslinjalla Kannaksella oli yllättänyt puna-armeijan, ja hyökkäysvoimat kaksinkertaistettiin, mutta läpimurtoa ei siitä huolimatta tapahtunut. Suomi säilytti itsenäisyytensä, mutta jäljelle jäi tragedia.<br /><br />Taipaleenjoki-ooppera kertoo inhimillisen tarinan Taipaleen taisteluista kansallisrunoilijamme Yrjö Jylhän silmin ja tunnoin. Jylhä koki rintaman kauheudet niiden kokonaisuudessaan johdettuaan Kempin rykmentin 1 pataljoonan toista komppanjaa. Sodan kokemukset saivat lopulta Jylhän riistämään oman henkensä vuonna 1956. Taipaleenjoki-oopperaa on esitetty viimeksi Ilmajoen Musiikkijuhlilla täysille katsomoille vuosina 20102012.</p>\n"
+			}, "location_extra_info": { "fi": "Turun Konserttitalo, Aninkaistenkatu 9" },
+			"@id": "https://api.turku.fi/linkedevents/v1/event/955000/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [ ]
+		}, {
+			"id": "954837", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954837/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/purjehdus/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/trips/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/cruisesandtours/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/pienirengastie/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/opastus/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954836/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/events/4037772056288793", "language": "fi" }, {
+					"name": "Signup",
+					"link": "https://visitnaantali.com/tapahtuma/saarihyppely-retki-pienelle-rengastielle/",
+					"language": "fi"
+				}, {
+					"name": "Tickets",
+					"link": "https://visitnaantali.com/tapahtuma/saarihyppely-retki-pienelle-rengastielle/",
+					"language": "fi"
+				}
+			], "offers": [
+				{
+					"is_free": false,
+					"price": { "fi": "<p>15.7 49 €/hlö<br />\n29.7 79 €/hlö<br />\n12.8 79 €/hlö</p>\n" },
+					"info_url": null, "description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:28.583240Z",
+			"last_modified_time": "2021-07-05T02:13:09.014947Z", "date_published": null,
+			"start_time": "2021-07-15T08:00:00Z", "end_time": "2021-07-15T15:15:00Z", "super_event_type": null,
+			"name": { "fi": "Saarihyppely -retki Pienelle Rengastielle" }, "provider": null, "info_url": null,
+			"short_description": { "fi": "Saarihyppely -retki Pienelle Rengastielle torstaisin 15.7, 29.7 ja 12.8\n" },
+			"description": {
+				"fi": "<p>Saarihyppely -retki Pienelle Rengastielle torstaisin 15.7, 29.7 ja 12.8\n</p><p>Bussikuljetuksella ja yhteysaluksella pääset kätevästi päiväksi saaristoon.</p>\n<p>Charter- sekä paikallisbussilla, yhteisaluksella ja purjelaivalla toteutettavilla päiväretkillä koetaan lumoava saaristo 120 km pituisella Pienellä Rengastiellä. Nämä kolme retkivaihtoehtoa ovat täydellinen valinta matkailijoille, joilla ei ole omaa autoa ja jotka haluavat tutustua saaristoon ympäristöystävällisellä tavalla. </p>\n<p>Retken aikana koetaan komeita saaristosiltoja, lystikkäitä lossimatkoja sekä aitoja saariston maaseutumaisemia. Paikallinen saaristo-opas on mukana 15.7. lähdöllä Turusta Nauvoon asti viihdyttäen matkantekoa mielenkiintoisilla tarinoilla sekä historiatiedoilla. Nauvossa on mahdollisuus tutustua viihtyisän vierasvenesataman putiikkeihin, kahviloihin ja maistella kesäterassien tarjontaa ennen paluumatkaa. 29.7. ja 12.8. lähdöillä ei ole opasta mukana.</p>\n"
+			},
+			"location_extra_info": { "fi": "<p>Tarkat lähtö- ja paluupaikat löydät Visit Naantalin kotisivuilta</p>\n" },
+			"@id": "https://api.turku.fi/linkedevents/v1/event/954837/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28608, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:28.575336Z",
+					"last_modified_time": "2021-07-05T02:11:28.575368Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/saaristo_my_stay_1.jpg?itok=V-cl304D",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28608/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954866", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954866/" },
+			"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" } ],
+			"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954855/" },
+			"event_status": "EventScheduled",
+			"external_links": [ ],
+			"offers": [ { "is_free": true, "price": null, "info_url": null, "description": null } ],
+			"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/childfamilies/" } ],
+			"custom_data": null,
+			"created_time": "2021-07-05T02:11:23.289384Z", "last_modified_time": "2021-07-05T02:13:07.932559Z",
+			"date_published": null, "start_time": "2021-11-10T15:30:00Z", "end_time": "2021-11-10T17:00:00Z",
+			"super_event_type": null, "name": { "fi": "Pieni matka, isot elämykset" }, "provider": null,
+			"info_url": null,
+			"short_description": null, "description": {
+				"fi": "<p>Lausteen lapsiperheille on suunnattu tekemistä kerran viikossa, jossa yhdessä päästään toimimaan mm. luonnon helmassa. Toiminta on maksutonta matalalla kynnyksellä mukaansa tempaavaa. Mukana järjestämässä vapaa-aikatoimiala ja alueen paikalliset toimijat kuten MLL, Partiolaiset, Koulu ja Päiväkodit.</p>\n"
+			}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/954866/",
+			"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28605, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:23.283761Z",
+					"last_modified_time": "2021-07-05T02:11:23.283777Z",
+					"url": "https://www.turku.fi/sites/default/files/thumbnails/image/juliste_a4_aluetyoprojekti_lauste_v2_vedos_1.png",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28605/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954818", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954818/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/historia/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/kavelykierros/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turkuday/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turku2021/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954813/" },
+			"event_status": "EventScheduled", "external_links": [
+				{
+					"name": "Facebook", "link": "https://www.facebook.com/Tarinoita-Varjoisilta-Kujilta-239005569515913",
+					"language": "fi"
+				}, { "name": "Signup", "link": "http://cluster015.ovh.net/~eduart/", "language": "fi" }
+			], "offers": [
+				{
+					"is_free": false, "price": {
+					"fi": "<p>15€/henkilö. Toivomme korttimaksua. </p>\n<p>Noudatamme AVI:n tapahtumaohjeistusta. Osallistuthan vain täysin terveenä.</p>\n"
+				}, "info_url": null, "description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:22.532900Z",
+			"last_modified_time": "2021-07-05T02:13:07.781104Z", "date_published": null,
+			"start_time": "2021-07-29T15:00:00Z", "end_time": "2021-07-29T15:00:00Z", "super_event_type": null,
+			"name": { "en": "Stories of shadowed alleys", "fi": "Tarinoita varjoisilta kujilta" }, "provider": null,
+			"info_url": null, "short_description": {
+				"en": "Dramatised tour in early 20th century crime stories  and ghost stories in Turku.\n",
+				"fi": "Dramatisoitu kävelykieros 1920-luvun Turun rikos- ja kummitushistoriaan.\n"
+			}, "description": {
+				"en": "<p>Dramatised tour in early 20th century crime stories  and ghost stories in Turku.\n</p><p>About 1,8 km tour throuh the most peautiful parks in Turku, you'll hear stories of actual crimes and their, not always fair trials in 1920s due the civil war wounds. </p>\n<p>Some stairs during the walk. Duration approx. 1h 20min.</p>\n<p>Please do not attend if showing any symptoms of covid19. We follow AVI's safety guidelines.</p>\n",
+				"fi": "<p>Dramatisoitu kävelykieros 1920-luvun Turun rikos- ja kummitushistoriaan.\n</p><p>Noin 1,8 km matkalla Itsenäisydenaukiolta läpi Samppalinnanmäen Tähtitornin juurelle kuullaan pääosin 1920 luvulla Turussa tapahtuneista rikoksista ja niiden henkilökohtaloista. Aikaan, jolloin sisällissodan haavat olivat vielä selvästi näkyvillä ja kaikki eivät olleet yhtä tasa-arvoisia lain edessä kuin nyt. Kesto noin 1h 20 min. Sisältää portaita. </p>\n<p>Esitykset torstaisin klo 18 alkaen: 8.7., 15.7., 22.7., 29.7., 12.8 (Taiteiden yö),<br />\nSu 19.9 (Turun päivä) </p>\n<p>Noudatamme AVI:n tapahtumaohjeistusta. Osallistuthan vain täysin terveenä.</p>\n"
+			}, "location_extra_info": {
+				"fi": "<p>Lähtö Itsenäisyydenaukiolta Taivaan vaunujen vierestä. (Iso sininen taideteos kaupungin teatterin ja Väinö Aaltosen museon välissä)</p>\n"
+			}, "@id": "https://api.turku.fi/linkedevents/v1/event/954818/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28604, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:22.526751Z",
+					"last_modified_time": "2021-07-05T02:11:22.526775Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/kieltolainpaatti.jpg?itok=fkdE9Hpp",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28604/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "955058", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955058/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/ruisrock/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/museum/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/historia&amp;museot/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/955054/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/sibeliusmuseum", "language": "fi" },
+				{ "name": "Signup", "link": "http://www.sibeliusmuseum.fi/fi/sibeliusmuseo/", "language": "fi" }
+			], "offers": [
+				{
+					"is_free": false, "price": {
+					"fi": "<p>Yleisöopastukset kuuluvat sisäänpääsymaksun hintaan:<br />\nAikuiset 7 €<br />\nOpiskelijat, eläkeläiset, työttömät 5 €<br />\nAlle 18 v. ilmaiseksi</p>\n<p>Voimassaolevat edut:<br />\nPääsylipun maksuvälineenä käyvät sekä Museum Walk , ICOM-kortti, Smartum, Eazybreak että Museokortti.</p>\n<p>Museo on Vammaiskorttikohde. Henkilökohtainen avustaja pääsee veloituksetta museoon.</p>\n"
+				}, "info_url": null, "description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:17.165181Z",
+			"last_modified_time": "2021-07-05T02:13:06.525267Z", "date_published": null,
+			"start_time": "2021-07-10T11:00:00Z", "end_time": "2021-07-10T11:00:00Z", "super_event_type": null,
+			"name": { "fi": "Yleisöopastukset Sibelius-museossa" }, "provider": null, "info_url": null,
+			"short_description": {
+				"fi": "Heinä- ja elokuussa Sibelius-museo järjestää avoimia opastettuja kierroksia Ruisrock 1970 – miten kaikki alkoi -näyttelyyn.\n"
+			}, "description": {
+				"fi": "<p>Heinä- ja elokuussa Sibelius-museo järjestää avoimia opastettuja kierroksia Ruisrock 1970 – miten kaikki alkoi -näyttelyyn.\n</p><p>Opastuksen aikana tutustumme näyttelyn taustaan ja teemoihin.<br />\nAvoimet yleisöopastukset kuuluvat sisäänpääsymaksun hintaan ja kesto on noin 30 min.<br />\nVaraa paikkasi verkossa: <a href=\"http://www.sibeliusmuseum.fi/fi/sibeliusmuseo/\">www.sibeliusmuseum.fi/fi/sibeliusmuseo/</a><br />\nEnintään 10 henkilöä/opastus!<br />\nMuutokset mahdollisia.</p>\n"
+			}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/955058/",
+			"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28603, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:17.159242Z",
+					"last_modified_time": "2021-07-05T02:11:17.159258Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/ruisrock1970_1320x990px.png?itok=odoz09Ur",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28603/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "955005", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955005/" },
+			"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" } ],
+			"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/946397/" },
+			"event_status": "EventScheduled",
+			"external_links": [
+				{
+					"name": "Tickets", "link": "https://www.lippu.fi/event/13711299/?affiliate=ADV&language=fi",
+					"language": "fi"
+				}
+			], "offers": [ ], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ],
+			"in_language": [ ],
+			"audience": [ ], "custom_data": null, "created_time": "2021-07-05T02:11:16.241889Z",
+			"last_modified_time": "2021-07-05T02:13:06.348871Z", "date_published": null,
+			"start_time": "2021-10-26T16:00:00Z", "end_time": "2021-10-26T16:00:00Z", "super_event_type": null,
+			"name": { "en": "DIANDRA - ON HETKI", "fi": "DIANDRA - ON HETKI", "sv": "DIANDRA - ON HETKI" },
+			"provider": null,
+			"info_url": null, "short_description": null, "description": null,
+			"location_extra_info": { "fi": "Turun Konserttitalo, Aninkaistenkatu 9" },
+			"@id": "https://api.turku.fi/linkedevents/v1/event/955005/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [ ]
+		}, {
+			"id": "954964", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954964/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/naytelma/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/theatreandotherperfomanceart/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/teatteri/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954954/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/events/832109824371914", "language": "fi" },
+				{ "name": "Tickets", "link": "https://teatteriakseli.fi/pekka/", "language": "fi" }
+			], "offers": [
+				{
+					"is_free": false, "price": { "fi": "<p>Kaikki liput 15 €</p>\n" }, "info_url": null,
+					"description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:13.594723Z",
+			"last_modified_time": "2021-07-05T02:13:05.783209Z", "date_published": null,
+			"start_time": "2021-07-22T15:00:00Z", "end_time": "2021-07-22T15:00:00Z", "super_event_type": null,
+			"name": { "fi": "(Kesä)Teatteri Akseli: Pekka Töpöhäntä" }, "provider": null, "info_url": null,
+			"short_description": {
+				"fi": "Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n"
+			}, "description": {
+				"fi": "<p>Pekka Töpöhäntä on koko perheelle sopiva näytelmä erilaisuudesta ja ystävyyden voimasta yli keinotekoisten rajojen. Esityskausi heinäkuussa Puolalanpuistossa!\n</p><p>Rakastettava koko perheen Pekka Töpöhäntä!</p>\n<p>Teatteri Akseli ja ohjaaja Kauno Takarautio tuovat Turun Puolalanpuistoon klassikkosadun kissasta ilman häntää. Pekka Töpöhäntä (käsikirjoitus Göstä Knutsson ja dramatisointi Helena Anttonen) on lasten ja aikuisten rakastama tarina erilaisuudesta ja ystävyyden voimasta. Kiusaaminen on edelleen liian usein toistuva ilmiö, johon tässäkin näytelmässä tartutaan suorastaan hännän mitalla. Jokainen meistä on yksilö, myös Pekka ja pihan valtias Monni, joiden tie vie erilaisuuden kautta toisen hyväksymiseen. Näytelmä on hauska ja positiivinen kertomus eräästä yhteisöstä, josta löytyy mielenkiintoista hahmoa lähtöön jos toiseenkin. Pekka Töpöhäntä sopii mainiosti koko perheelle!</p>\n<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
+			}, "location_extra_info": {
+				"fi": "<p>Näytökset heinäkuussa Puolalanpuistossa ( Puolalanpuisto 7 ) Turun Rakennusperinteen Ystävät ry:n viihtyisässä pihapiirissä. Käynti Rauhankadun alusta tai Puutarhakatu 5 kohdalta.</p>\n"
+			}, "@id": "https://api.turku.fi/linkedevents/v1/event/954964/", "@context": "http://schema.org",
+			"@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28601, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:13.587803Z",
+					"last_modified_time": "2021-07-05T02:11:13.587827Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/dsc_0194_3.jpg?itok=O0swBssu",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28601/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "955065", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955065/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/ruisrock/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/museum/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/guidedtoursandsightseeingtours/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/historia&amp;museot/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/955054/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/sibeliusmuseum", "language": "fi" },
+				{ "name": "Signup", "link": "http://www.sibeliusmuseum.fi/fi/sibeliusmuseo/", "language": "fi" }
+			], "offers": [
+				{
+					"is_free": false, "price": {
+					"fi": "<p>Yleisöopastukset kuuluvat sisäänpääsymaksun hintaan:<br />\nAikuiset 7 €<br />\nOpiskelijat, eläkeläiset, työttömät 5 €<br />\nAlle 18 v. ilmaiseksi</p>\n<p>Voimassaolevat edut:<br />\nPääsylipun maksuvälineenä käyvät sekä Museum Walk , ICOM-kortti, Smartum, Eazybreak että Museokortti.</p>\n<p>Museo on Vammaiskorttikohde. Henkilökohtainen avustaja pääsee veloituksetta museoon.</p>\n"
+				}, "info_url": null, "description": null
+				}
+			], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ ],
+			"custom_data": null, "created_time": "2021-07-05T02:11:10.168551Z",
+			"last_modified_time": "2021-07-05T02:13:05.088090Z", "date_published": null,
+			"start_time": "2021-08-07T11:00:00Z", "end_time": "2021-08-07T11:00:00Z", "super_event_type": null,
+			"name": { "fi": "Yleisöopastukset Sibelius-museossa" }, "provider": null, "info_url": null,
+			"short_description": {
+				"fi": "Heinä- ja elokuussa Sibelius-museo järjestää avoimia opastettuja kierroksia Ruisrock 1970 – miten kaikki alkoi -näyttelyyn.\n"
+			}, "description": {
+				"fi": "<p>Heinä- ja elokuussa Sibelius-museo järjestää avoimia opastettuja kierroksia Ruisrock 1970 – miten kaikki alkoi -näyttelyyn.\n</p><p>Opastuksen aikana tutustumme näyttelyn taustaan ja teemoihin.<br />\nAvoimet yleisöopastukset kuuluvat sisäänpääsymaksun hintaan ja kesto on noin 30 min.<br />\nVaraa paikkasi verkossa: <a href=\"http://www.sibeliusmuseum.fi/fi/sibeliusmuseo/\">www.sibeliusmuseum.fi/fi/sibeliusmuseo/</a><br />\nEnintään 10 henkilöä/opastus!<br />\nMuutokset mahdollisia.</p>\n"
+			}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/955065/",
+			"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28600, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:10.162377Z",
+					"last_modified_time": "2021-07-05T02:11:10.162396Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/ruisrock1970_1320x990px.png?itok=odoz09Ur",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28600/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "954867", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000954867/" },
+			"keywords": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/lapsiperheet/" } ],
+			"super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/954855/" },
+			"event_status": "EventScheduled",
+			"external_links": [ ],
+			"offers": [ { "is_free": true, "price": null, "info_url": null, "description": null } ],
+			"data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ], "in_language": [ ],
+			"audience": [ { "@id": "https://api.turku.fi/linkedevents/v1/keyword/childfamilies/" } ],
+			"custom_data": null,
+			"created_time": "2021-07-05T02:11:09.976735Z", "last_modified_time": "2021-07-05T02:13:05.044185Z",
+			"date_published": null, "start_time": "2021-11-17T15:30:00Z", "end_time": "2021-11-17T17:00:00Z",
+			"super_event_type": null, "name": { "fi": "Pieni matka, isot elämykset" }, "provider": null,
+			"info_url": null,
+			"short_description": null, "description": {
+				"fi": "<p>Lausteen lapsiperheille on suunnattu tekemistä kerran viikossa, jossa yhdessä päästään toimimaan mm. luonnon helmassa. Toiminta on maksutonta matalalla kynnyksellä mukaansa tempaavaa. Mukana järjestämässä vapaa-aikatoimiala ja alueen paikalliset toimijat kuten MLL, Partiolaiset, Koulu ja Päiväkodit.</p>\n"
+			}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/954867/",
+			"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28599, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:09.971009Z",
+					"last_modified_time": "2021-07-05T02:11:09.971026Z",
+					"url": "https://www.turku.fi/sites/default/files/thumbnails/image/juliste_a4_aluetyoprojekti_lauste_v2_vedos_1.png",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28599/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}, {
+			"id": "955077", "location": { "@id": "https://api.turku.fi/linkedevents/v1/place/1000955077/" },
+			"keywords": [
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/joulukonsertti/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/music/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/keyensemble/" },
+				{ "@id": "https://api.turku.fi/linkedevents/v1/keyword/turku2021/" }
+			], "super_event": { "@id": "https://api.turku.fi/linkedevents/v1/event/955076/" },
+			"event_status": "EventScheduled", "external_links": [
+				{ "name": "Facebook", "link": "https://www.facebook.com/events/554368179274434/", "language": "fi" },
+				{ "name": "Tickets", "link": "http://www.keyensemble.fi/osta/liput/", "language": "fi" }
+			], "offers": [ ], "data_source": "turku", "publisher": "ytj:0204819-8", "sub_events": [ ],
+			"in_language": [ ],
+			"audience": [ ], "custom_data": null, "created_time": "2021-07-05T02:11:04.809744Z",
+			"last_modified_time": "2021-07-05T02:13:03.857813Z", "date_published": null,
+			"start_time": "2021-12-18T17:30:00Z", "end_time": "2021-12-18T17:30:00Z", "super_event_type": null,
+			"name": { "fi": "J. S. Bach: Jouluoratorio", "sv": "J. S. Bach: Juloratoriet" }, "provider": null,
+			"info_url": null, "short_description": {
+				"fi": "Osa 1: Kantaatit I–III, Turun Martinkirkko la 18.12.2021 klo 19.30\nOsa 2: Kantaatit IV–VI, Turun Martinkirkko su 02.01.2022 klo 19.30\n",
+				"sv": "Del 1: Kantaterna I–III, Martinskyrkan i Åbo lö 18.12.2021 kl. 19.30\nDel 2: Kantaterna IV–VI, Martinskyrkan i Åbo sö 02.01.2022 kl. 19.30\n"
+			}, "description": {
+				"fi": "<p>Osa 1: Kantaatit I–III, Turun Martinkirkko la 18.12.2021 klo 19.30\nOsa 2: Kantaatit IV–VI, Turun Martinkirkko su 02.01.2022 klo 19.30\n</p><p>Turussa ei ole esitetty Bachin Jouluoratoriota kokonaisuudessaan miesmuistiin ja kolme ensimmäistä kantaattiakin vain pari kertaa koko tällä vuosituhannella. Key Ensemblellä on jo pitkään ollut haaveena korjata tämä puute ja kuoron taiteellinen johtaja Teemu Honkanen iloitseekin saadessaan pitkän pestinsä viimeisenä produktiona vihdoin toteuttaa erilaisten vastoinkäymisten jälkeen tämä hänen lapsuutensa rakas suosikkiteos.</p>\n<p>– Mikä musiikki sopisikaan paremmin juhlistamaan raskaan ja synkän kulkutautikauden selättämistä ja paluuta vanhaan, hyväksi havaittuun elävään konserttikulttuuriin kuin juuri Bachin riemullinen Jouluoratorio, hän toteaa.</p>\n<p>Orkesterina esityksessä toimii paikallisista ammattisoittajista koottu, moderneilla instrumenteilla soittava Käsinpoimintaorkesteri ja solistiosuuksista vastaavat pääosin Key Ensemblen omat laulajavoimat.</p>\n<p>Teoksen esityskieli on perinteisesti saksa, mutta se tekstitetään yleisölle tällä kertaa sekä suomeksi että ruotsiksi.</p>\n<p>Key Ensemble<br />\nKäsinpoimintaorkesteri<br />\nTeemu Honkanen, johtaja</p>\n<p>Julisteen kuva: Hanna Varis: Angel Dora</p>\n<p>Lipunmyynti avataan syyskuussa. Huom! Key Ensemblen lahjakortit käyvät maksuvälineenä tähän konserttiin.</p>\n<p>Turku viettää Euroopan kulttuuripääkaupungin kymmenvuotisjuhlaa vuonna 2021. Jouluoratorio toteutetaan osana merkkivuoden ohjelmaa.</p>\n",
+				"sv": "<p>Del 1: Kantaterna I–III, Martinskyrkan i Åbo lö 18.12.2021 kl. 19.30\nDel 2: Kantaterna IV–VI, Martinskyrkan i Åbo sö 02.01.2022 kl. 19.30\n</p><p>I Åbo har Bachs Juloratorium inte framförts i sin helhet på mannaminne och de tre första kantaterna bara ett par gånger på detta årtusende. Key Ensemble har redan länge drömt om att råda bot på denna brist och körens konstnärlige ledare Teemu Honkanen är glad att som sista produktion under sin långa anställning få framföra sin barndoms älsklingsverk.</p>\n<p>Som orkester vid framförandet medverkar en handplockad ensemble, bestående av lokala proffsmusiker, som spelar på moderna instrument. För solistinslagen står till största delen sångare ur Key Ensembles egna led.</p>\n<p>Verket framförs traditionsenligt på tyska, men textas denna gång för publiken på både finska och svenska.</p>\n<p>Key Ensemble<br />\nHandplockad orkester<br />\nTeemu Honkanen, dirigent</p>\n<p>Obs! Key Ensembles presentkort tas emot som betalning vid denna konsert.</p>\n<p>Affischbild: Hanna Varis: Angel Dora</p>\n<p>Åbo firar europeiska kulturhuvudstadsårets tioårsjubileum år 2021. Juloratoriet är en del av jubileumsårets program.</p>\n"
+			}, "location_extra_info": null, "@id": "https://api.turku.fi/linkedevents/v1/event/955077/",
+			"@context": "http://schema.org", "@type": "Event/LinkedEvent", "images": [
+				{
+					"id": 28598, "license": "event_only", "name": "", "created_time": "2021-07-05T02:11:04.803420Z",
+					"last_modified_time": "2021-07-05T02:11:04.803442Z",
+					"url": "https://www.turku.fi/sites/default/files/styles/event_node/public/images/event_ext/jouluoratorio_1320x505.png?itok=4CYdC8g8",
+					"cropping": "", "photographer_name": null, "data_source": "turku", "publisher": "ytj:0204819-8",
+					"@id": "https://api.turku.fi/linkedevents/v1/image/28598/", "@context": "http://schema.org",
+					"@type": "ImageObject"
+				}
+			]
+		}
+	]
 }

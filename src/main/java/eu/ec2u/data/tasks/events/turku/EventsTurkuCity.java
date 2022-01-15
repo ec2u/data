@@ -6,15 +6,15 @@ package eu.ec2u.data.tasks.events.turku;
 
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
-import com.metreeca.rdf.schemes.Schema;
-import com.metreeca.rdf4j.actions.TupleQuery;
+import com.metreeca.rdf.schemas.Schema;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.tasks.events.Events;
+import eu.ec2u.data.ports.Universities;
 import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.io.ByteArrayInputStream;
@@ -28,17 +28,23 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.formats.JSONFormat.json;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
+import static eu.ec2u.data.Data.multilingual;
+import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
-import static eu.ec2u.data.tasks.events.Events.replace;
 import static eu.ec2u.data.tasks.events.Events.synced;
+import static eu.ec2u.data.tasks.events.Events.upload;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public final class EventsTurkuCity implements Runnable {
+
+	static { System.setProperty("com.sun.security.enableAIAcaIssuers", "true"); }
+
 
 	private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
 			.values(RDFS.LABEL,
@@ -56,166 +62,171 @@ public final class EventsTurkuCity implements Runnable {
 
 	private final ZonedDateTime now=ZonedDateTime.now(UTC);
 
+
 	@Override public void run() {
 
-		Xtream.of(synced(Publisher.focus()))
+		final List<Frame> events=Xtream.of(synced(Publisher.focus()))
 
-				.flatMap(new Fill<Instant>()
-						.model("https://api.turku.fi/linkedevents/v1/event/"
-								+"?last_modified_since={since}"
-						)
-						.value("since", synced ->
-								LocalDate.ofInstant(synced, UTC).format(ISO_LOCAL_DATE)
-						)
-				)
+				.flatMap(this::crawl)
+				.flatMap(this::event)
 
-				.loop(es -> Xtream.of(es)
-						.optMap(new GET<>(json()))
-						.optMap(new JSONPath<>(json -> json.string("meta.next")))
-				)
+				.optMap(new Validate(Event()))
 
-				.optMap(new GET<>(json()))
-				.flatMap(new JSONPath<>(json -> json.values("data.*")))
+				.collect(toList());
 
-				.map(new JSONPath<>(this::event))
+		final List<Frame> locations=Xtream.from(events)
 
-				.sink(Events::upload);
+				.optMap(event -> event.value(Schema.location))
+				.optMap(Values::iri)
+				.map(Value::stringValue)
 
+				.flatMap(this::location)
 
-		Xtream.of(""
-						+"prefix schema: <https://schema.org/>\n"
-						+"prefix dct: <http://purl.org/dc/terms/>\n"
-						+"\n"
-						+"select distinct ?location {\n"
-						+"\n"
-						+"\t[] a schema:Event;\n"
-						+"\t\tdct:publisher ?publisher;\n"
-						+"\t\tschema:location/schema:url ?location.\n"
-						+"\n"
-						+"}"
+				.optMap(new Validate(Schema.Location(multilingual())))
 
-				)
+				.collect(toList());
 
-				.flatMap(new TupleQuery()
-								.binding("publisher", Publisher.focus())
-						//.dflt(Data.events)
-				)
-
-				.map(bindings -> bindings
-						.getValue("location")
-						.stringValue()
-				)
-
-				.optMap(new GET<>(json()))
-				.map(new JSONPath<>(this::location))
-
-				.batch(100)
-
-				.forEach(batch -> replace(batch, Data.events));
-
+		upload(Data.events, events);
+		upload(Data.locations, locations);
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Frame event(final JSONPath.Processor event) {
+	private Xtream<String> crawl(final Instant synced) {
+		return Xtream.of(synced)
 
-		final String id=event.string("@id").orElseThrow();
-
-		final Collection<Literal> name=local(event.entries("name"));
-
-		final Collection<Literal> description=event.entries("short_description")
-				.filter(entry -> Data.langs.contains(entry.getKey()))
-				.map(this::local)
-				.map(this::untag)
-				.map(this::normalize)
-				.collect(toSet());
-
-		return frame(iri(Data.events, md5(id)))
-
-				.value(RDF.TYPE, Data.Event)
-
-				.values(RDFS.LABEL, name)
-				.values(RDFS.COMMENT, description)
-
-				.value(Data.university, Data.Turku)
-				.value(Data.retrieved, literal(now))
-
-				.frame(DCTERMS.PUBLISHER, Publisher)
-				.value(DCTERMS.SOURCE, iri(id))
-				.value(DCTERMS.ISSUED, event.string("date_published").map(v -> literal(v, XSD.DATETIME)))
-				.value(DCTERMS.CREATED, event.string("created_time").map(v -> literal(v, XSD.DATETIME)))
-				.value(DCTERMS.MODIFIED, event.string("last_modified_time").map(v -> literal(v, XSD.DATETIME)))
-
-				// !!! keywords
-
-				.value(Schema.url, event.string("info_url").map(Values::iri))
-
-				.values(Schema.name, name)
-				.values(Schema.image, event.strings("images.*.url").map(Values::iri))
-				.values(Schema.disambiguatingDescription, description)
-
-				.values(Schema.description, event.entries("description")
-						.filter(entry -> Data.langs.contains(entry.getKey()))
-						.map(this::local)
-						.map(this::untag)
+				.flatMap(new Fill<Instant>()
+						.model("https://api.turku.fi/linkedevents/v1/event/"
+								+"?last_modified_since={since}"
+						)
+						.value("since", since ->
+								LocalDate.ofInstant(since, UTC).format(ISO_LOCAL_DATE)
+						)
 				)
 
-				// !!! provider
-				// !!! offers
-
-				.value(Schema.isAccessibleForFree, event.bools("offers.*.is_free")
-						.filter(v -> v)
-						.findFirst()
-						.map(Values::literal)
-				)
-
-				.value(Schema.eventStatus, event.string("event_status")
-						.filter(v -> stream(Schema.EventStatus.values()).map(Enum::name).anyMatch(v::equals))
-						.map(status -> iri(Schema.Namespace, status))
-				)
-
-				// !!! is_virtualevent
-				// !!! super_events
-				// !!! sub_events
-
-				.frame(Schema.location, event.string("location.@id").map(Values::iri).map(iri ->
-						frame(iri(Data.locations, md5(iri.stringValue())))
-								.value(Schema.url, iri)
-				))
-
-				.value(Schema.startDate, event.string("start_time").map(v -> literal(v, XSD.DATETIME)))
-				.value(Schema.endDate, event.string("end_time").map(v -> literal(v, XSD.DATETIME)))
-
-				// !!! in_language
-
-				.values(Schema.audience, event.strings("audience.*.@id").map(Values::iri)) // !!! mapping
-
-				;
+				.loop(batch -> Xtream.of(batch)
+						.optMap(new GET<>(json()))
+						.optMap(new JSONPath<>(json -> json.string("meta.next")))
+				);
 	}
 
-	private Frame location(final JSONPath.Processor location) {
 
-		final String id=location.string("@id").orElseThrow();
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private Xtream<Frame> event(final String url) {
+		return Xtream.of(url)
+
+				.optMap(new GET<>(json()))
+				.flatMap(new JSONPath<>(json -> json.values("data.*")))
+
+				.map(new JSONPath<>(json -> {
+
+					final String id=json.string("@id").orElseThrow();
+
+					final Collection<Literal> name=local(json.entries("name"));
+
+					final Collection<Literal> description=json.entries("short_description")
+							.filter(entry -> Data.langs.contains(entry.getKey()))
+							.map(this::local)
+							.map(this::untag)
+							.map(this::normalize)
+							.collect(toSet());
+
+					return frame(iri(Data.events, md5(id)))
+
+							.value(RDF.TYPE, Data.Event)
+
+							.values(RDFS.LABEL, name)
+							.values(RDFS.COMMENT, description)
+
+							.value(Data.university, Universities.Turku)
+							.value(Data.retrieved, literal(now))
+
+							.frame(DCTERMS.PUBLISHER, Publisher)
+							.value(DCTERMS.SOURCE, iri(id))
+							.value(DCTERMS.ISSUED, json.string("date_published").map(v -> literal(v, XSD.DATETIME)))
+							.value(DCTERMS.CREATED, json.string("created_time").map(v -> literal(v, XSD.DATETIME)))
+							.value(DCTERMS.MODIFIED, json.string("last_modified_time").map(v -> literal(v,
+									XSD.DATETIME)))
+
+							// !!! keywords
+
+							.value(Schema.url, json.string("info_url").map(Values::iri))
+
+							.values(Schema.name, name)
+							.values(Schema.image, json.strings("images.*.url").map(Values::iri))
+							.values(Schema.disambiguatingDescription, description)
+							.values(Schema.description, json.entries("description")
+									.filter(entry -> Data.langs.contains(entry.getKey()))
+									.map(this::local)
+									.map(this::untag)
+							)
+
+							// !!! provider
+							// !!! offers
+
+							.value(Schema.isAccessibleForFree, json.bools("offers.*.is_free")
+									.filter(v -> v)
+									.findFirst()
+									.map(Values::literal)
+							)
+
+							.value(Schema.eventStatus, json.string("event_status")
+									.filter(v -> stream(Schema.EventStatus.values()).map(Enum::name).anyMatch(v::equals))
+									.map(status -> iri(Schema.Namespace, status))
+							)
+
+							// !!! is_virtualevent
+							// !!! super_events
+							// !!! sub_events
+
+							.frame(Schema.location, json.string("location.@id").map(Values::iri).map(iri ->
+									frame(iri(Data.locations, md5(iri.stringValue())))
+											.value(Schema.url, iri)
+							))
+
+							.value(Schema.startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME)))
+							.value(Schema.endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
+
+							// !!! in_language
+
+							.values(Schema.audience, json.strings("audience.*.@id").map(Values::iri)); // !!! mapping
+
+				}));
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private Xtream<Frame> location(final String url) {
+		return Xtream.of(url)
+
+				.optMap(new GET<>(json()))
+
+				.map(new JSONPath<>(this::location));
+	}
+
+	private Frame location(final JSONPath.Processor json) {
+
+		final String id=json.string("@id").orElseThrow();
 
 		return frame(iri(Data.locations, md5(id)))
 
-				.value(RDF.TYPE, location.string("@type").map(Schema::term).orElse(Schema.Place))
+				.value(RDF.TYPE, json.string("@type").map(Schema::term).orElse(Schema.Place))
 
 				.value(Schema.url, iri(id))
 
 				.frame(Schema.address, frame(iri())
-						.values(Schema.addressCountry, local(location.entries("address_country")))
-						.values(Schema.addressRegion, local(location.entries("address_region")))
-						.values(Schema.addressLocality, local(location.entries("address_locality")))
-						.values(Schema.postalCode, local(location.entries("postal_code")))
-						.values(Schema.streetAddress, local(location.entries("street_address")))
+						.values(Schema.addressCountry, local(json.entries("address_country")))
+						.values(Schema.addressRegion, local(json.entries("address_region")))
+						.values(Schema.addressLocality, local(json.entries("address_locality")))
+						.values(Schema.postalCode, local(json.entries("postal_code")))
+						.values(Schema.streetAddress, local(json.entries("street_address")))
 				)
 
-				.value(Schema.longitude, location.decimal("position.coordinates.0").map(Values::literal))
-				.value(Schema.latitude, location.decimal("position.coordinates.1").map(Values::literal))
-
-				;
+				.value(Schema.longitude, json.decimal("position.coordinates.0").map(Values::literal))
+				.value(Schema.latitude, json.decimal("position.coordinates.1").map(Values::literal));
 	}
 
 

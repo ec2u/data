@@ -141,14 +141,6 @@ public final class Data {
 	public static final IRI inception=iri(Name, "inception");
 	public static final IRI students=iri(Name, "students");
 
-	public static final IRI Coimbra=iri(Base, "/universities/1");
-	public static final IRI Iasi=iri(Base, "/universities/2");
-	public static final IRI Jena=iri(Base, "/universities/3");
-	public static final IRI Pavia=iri(Base, "/universities/4");
-	public static final IRI Poitiers=iri(Base, "/universities/5");
-	public static final IRI Salamanca=iri(Base, "/universities/6");
-	public static final IRI Turku=iri(Base, "/universities/7");
-
 
 	//// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

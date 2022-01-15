@@ -5,7 +5,7 @@
 package eu.ec2u.data.ports;
 
 import com.metreeca.json.Shape;
-import com.metreeca.rdf.schemes.Schema;
+import com.metreeca.rdf.schemas.Schema;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.Data;

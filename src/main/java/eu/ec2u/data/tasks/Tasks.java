@@ -4,14 +4,21 @@
 
 package eu.ec2u.data.tasks;
 
+import com.metreeca.json.Frame;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Toolbox;
 import com.metreeca.rest.services.Cache;
 import com.metreeca.rest.services.Fetcher;
 
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
+
+import java.io.*;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.stream.Collectors;
 
 import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.storage;
@@ -37,6 +44,25 @@ public final class Tasks {
 				.exec(tasks)
 
 				.clear();
+	}
+
+
+	public static String format(final Frame frame) {
+		return format(frame.model().collect(Collectors.toList()));
+	}
+
+	public static String format(final Iterable<Statement> model) {
+		try ( final StringWriter writer=new StringWriter() ) {
+
+			Rio.write(model, writer, RDFFormat.TURTLE);
+
+			return writer.toString();
+
+		} catch ( final IOException e ) {
+
+			throw new UncheckedIOException(e);
+
+		}
 	}
 
 

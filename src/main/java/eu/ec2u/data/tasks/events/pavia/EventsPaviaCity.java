@@ -9,15 +9,13 @@ import com.metreeca.rdf.actions.Localize;
 import com.metreeca.rdf.actions.Normalize;
 import com.metreeca.rdf.actions.Normalize.DateToDateTime;
 import com.metreeca.rdf.actions.Normalize.StringToDate;
-import com.metreeca.rdf.schemes.Schema;
+import com.metreeca.rdf.schemas.Schema;
 import com.metreeca.rdf4j.actions.Microdata;
 import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.Fill;
-import com.metreeca.rest.actions.GET;
+import com.metreeca.rest.actions.*;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.tasks.events.Events;
-import org.eclipse.rdf4j.model.*;
+import eu.ec2u.data.ports.Universities;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
@@ -28,11 +26,12 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
+import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.events.Events.synced;
+import static eu.ec2u.data.tasks.events.Events.upload;
 
 import static java.time.ZoneOffset.UTC;
-import static java.util.stream.Collectors.toList;
 
 public final class EventsPaviaCity implements Runnable {
 
@@ -56,6 +55,18 @@ public final class EventsPaviaCity implements Runnable {
 	@Override public void run() {
 		Xtream.of(synced(Publisher.focus()))
 
+				.flatMap(this::crawl)
+				.flatMap(this::event)
+
+				.sink(events -> upload(Data.events, events));
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private Xtream<String> crawl(final Instant synced) {
+		return Xtream.of(synced)
+
 				.flatMap(new Fill<Instant>()
 						.model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
 								+"?new=yes"
@@ -65,7 +76,7 @@ public final class EventsPaviaCity implements Runnable {
 								+"&node=4613"
 								+"&fromDate=%{date}"
 						)
-						.value("date", synced -> LocalDate.ofInstant(synced, UTC)
+						.value("date", date -> LocalDate.ofInstant(date, UTC)
 								.atStartOfDay(UTC)
 								.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 						)
@@ -78,78 +89,87 @@ public final class EventsPaviaCity implements Runnable {
 
 				.flatMap(model -> frame(Schema.Event, model)
 						.strings(seq(inverse(RDF.TYPE), Schema.url))
-				)
-
-				.flatMap(url -> Xtream.of(url)
-
-						.optMap(new GET<>(html()))
-						.flatMap(new Microdata())
-
-						.map(Schema::normalize)
-
-						.map(new Normalize(
-								new StringToDate(),
-								new DateToDateTime()
-						))
-
-						.map(new Localize("it"))
-
-						.batch(0)
-
-						.flatMap(model -> frame(Schema.Event, model) // !!! skolemize references
-
-								.frames(inverse(RDF.TYPE))
-
-								.map(event -> refocus(event, iri(Data.events, md5(url)))
-
-										.value(RDF.TYPE, Data.Event)
-
-										.values(RDFS.LABEL, event.values(Schema.name))
-
-										.value(Data.university, Data.Pavia)
-										.value(Data.retrieved, literal(now))
-
-										.frame(DCTERMS.PUBLISHER, Publisher)
-										.value(DCTERMS.SOURCE, iri(url))
-								)
-
-						)
-
-						.peek(frame -> frame.model().forEachOrdered(v -> System.out.println(v)))
-
-				)
-
-				.sink(Events::upload);
+				);
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Frame refocus(final Frame frame, final IRI target) {
-		return frame(target, frame.model()
-				.map(statement -> rewrite(frame.focus(), target, statement))
-				.collect(toList())
-		);
+	private Xtream<Frame> event(final String url) {
+		return Xtream.of(url)
+
+				.optMap(new GET<>(html()))
+				.flatMap(new Microdata())
+
+				.map(new Normalize(
+						new StringToDate(),
+						new DateToDateTime()
+				))
+
+				.map(new Localize("it"))
+
+				.batch(0)
+
+				.flatMap(model -> frame(Schema.Event, model)
+
+						.frames(inverse(RDF.TYPE))
+						.map(frame -> event(frame.value(DCTERMS.SOURCE, iri(url))))
+
+				)
+
+				.optMap(new Validate(Event()));
 	}
 
-	private Statement rewrite(final Value source, final IRI target, final Statement statement) {
-		return statement(
-				rewrite(source, target, statement.getSubject()),
-				rewrite(source, target, statement.getPredicate()),
-				rewrite(source, target, statement.getObject())
-		);
+	private Frame event(final Frame frame) {
+		return frame(iri(Data.events, frame.skolemize(DCTERMS.SOURCE)))
+
+				.values(RDF.TYPE, Data.Event, Schema.Event)
+				.values(RDFS.LABEL, frame.values(Schema.name))
+
+				.value(Data.university, Universities.Pavia)
+				.value(Data.retrieved, literal(now))
+
+				.frame(DCTERMS.PUBLISHER, Publisher)
+				.value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
+
+				.values(Schema.name, frame.values(Schema.name))
+				.values(Schema.description, frame.values(Schema.description))
+				.values(Schema.disambiguatingDescription, frame.values(Schema.disambiguatingDescription))
+				.values(Schema.image, frame.values(Schema.image))
+				.values(Schema.url, frame.values(Schema.url))
+
+				.value(Schema.startDate, frame.value(Schema.startDate))
+				.value(Schema.endDate, frame.value(Schema.endDate))
+				.value(Schema.eventStatus, frame.value(Schema.eventStatus))
+				.value(Schema.typicalAgeRange, frame.value(Schema.typicalAgeRange))
+
+				.frame(Schema.location, frame.frame(Schema.location).map(this::location));
 	}
 
-	private Value rewrite(final Value source, final Value target, final Value value) {
-		return value.equals(source) ? target : value;
+	private Frame location(final Frame frame) {
+		return frame(iri(Data.locations, md5(frame.skolemize(Schema.name))))
+
+				.values(RDF.TYPE, frame.values(RDF.TYPE))
+				.values(RDFS.LABEL, frame.values(Schema.name))
+
+				.value(Schema.name, frame.value(Schema.name))
+				.frame(Schema.address, frame.frame(Schema.address).map(this::address));
 	}
 
-	private Resource rewrite(final Value source, final Resource target, final Resource value) {
-		return value.equals(source) ? target : value;
-	}
+	private Frame address(final Frame frame) {
+		return frame(iri(Data.locations, frame.skolemize(Schema.addressLocality, Schema.streetAddress)))
 
-	private IRI rewrite(final Value source, final IRI target, final IRI value) {
-		return value.equals(source) ? target : value;
+				.values(RDF.TYPE, frame.values(RDF.TYPE))
+
+				.value(Schema.addressCountry, frame.value(Schema.addressCountry)) // !!! default
+				.value(Schema.addressRegion, frame.value(Schema.addressRegion)) // !!! default
+				.value(Schema.addressLocality, frame.value(Schema.addressLocality)) // !!! default
+				.value(Schema.postalCode, frame.value(Schema.postalCode).orElseGet(() -> literal("27100")))
+
+				.value(Schema.email, frame.value(Schema.email))
+				.value(Schema.telephone, frame.value(Schema.telephone))
+				.value(Schema.faxNumber, frame.value(Schema.faxNumber))
+				.value(Schema.streetAddress, frame.value(Schema.streetAddress));
 	}
 
 }
