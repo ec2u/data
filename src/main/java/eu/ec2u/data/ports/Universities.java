@@ -1,9 +1,11 @@
 /*
- * Copyright © 2021 EC2U Consortium. All rights reserved.
+ * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
 package eu.ec2u.data.ports;
 
+import com.metreeca.json.Shape;
+import com.metreeca.json.shapes.Localized;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.Data;
@@ -21,17 +23,15 @@ import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
-import static eu.ec2u.data.Data.multilingual;
-
 public final class Universities extends Delegator {
 
-	public Universities() {
-		delegate(driver(relate(
+	public static Shape University() {
+		return relate(
 
 				filter(clazz(Data.University)),
 
-				field(RDFS.LABEL, required(), multilingual()),
-				field(RDFS.COMMENT, optional(), multilingual()),
+				field(RDFS.LABEL, required(), Localized.localized(Data.langs)),
+				field(RDFS.COMMENT, optional(), Localized.localized(Data.langs)),
 
 				field(Data.schac, required(), datatype(XSD.STRING)),
 				field(Data.image, optional(), datatype(IRIType)),
@@ -39,13 +39,13 @@ public final class Universities extends Delegator {
 				link(OWL.SAMEAS,
 
 						field(Data.country, optional(),
-								field(RDFS.LABEL, optional(), multilingual())
+								field(RDFS.LABEL, optional(), Localized.localized(Data.langs))
 						),
 
 						detail(
 
 								field(Data.location, optional(),
-										field(RDFS.LABEL, optional(), multilingual())
+										field(RDFS.LABEL, optional(), Localized.localized(Data.langs))
 								),
 
 								field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
@@ -57,7 +57,12 @@ public final class Universities extends Delegator {
 
 				)
 
-		)).wrap(router()
+		);
+	}
+
+
+	public Universities() {
+		delegate(driver(University()).wrap(router()
 
 				.path("/", router()
 						.get(relator())

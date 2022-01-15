@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 EC2U Consortium. All rights reserved.
+ * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
 package eu.ec2u.data.tasks;
@@ -19,7 +19,7 @@ import static com.metreeca.rest.services.Cache.cache;
 import static com.metreeca.rest.services.Engine.engine;
 import static com.metreeca.rest.services.Fetcher.fetcher;
 
-import static eu.ec2u.data.Data.local;
+import static eu.ec2u.data.Data.development;
 
 public final class Tasks {
 
@@ -30,7 +30,7 @@ public final class Tasks {
 				.set(fetcher(), Fetcher.CacheFetcher::new)
 
 				.set(cache(), () -> new Cache.FileCache().ttl(Duration.ofDays(1)))
-				.set(graph(), () -> new Graph(local()))
+				.set(graph(), () -> new Graph(development()))
 
 				.set(engine(), GraphEngine::new)
 

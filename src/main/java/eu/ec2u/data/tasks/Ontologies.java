@@ -12,11 +12,13 @@ import eu.ec2u.data.Data;
 
 import static com.metreeca.rest.Toolbox.resource;
 
+import static eu.ec2u.data.tasks.Tasks.exec;
+
 
 public final class Ontologies implements Runnable {
 
 	public static void main(final String... args) {
-		Tasks.exec(() -> new Ontologies().run());
+		exec(() -> new Ontologies().run());
 	}
 
 

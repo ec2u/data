@@ -1,39 +1,38 @@
-@prefix :       <https://data.ec2u.eu/terms/> .
-@prefix wd:     <http://www.wikidata.org/entity/> .
-@prefix dct:    <http://purl.org/dc/terms/> .
-@prefix owl:    <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix wdt:    <http://www.wikidata.org/prop/direct/> .
-@prefix xml:    <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
-@prefix ec2u:   <https://data.ec2u.eu/terms/> .
-@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
-@prefix void:   <http://rdfs.org/ns/void#> .
+@prefix : <https://data.ec2u.eu/terms/> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ec2u: <https://data.ec2u.eu/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix schema: <https://schema.org/> .
-@base <https://data.ec2u.eu/terms/> .
+@base <http://www.w3.org/2002/07/owl#> .
 
-<https://data.ec2u.eu/terms/>
-    rdf:type          owl:Ontology ;
-    void:rootResource ec2u:Event, ec2u:University .
+[ rdf:type owl:Ontology ;
+   void:rootResource ec2u:Event ,
+                     ec2u:University
+ ] .
 
 #################################################################
 #    Annotation properties
 #################################################################
 
 ###  http://rdfs.org/ns/void#rootResource
-void:rootResource
-    rdf:type owl:AnnotationProperty .
+void:rootResource rdf:type owl:AnnotationProperty .
 
 
 ###  https://data.ec2u.eu/terms/image
-ec2u:image
-    rdf:type owl:AnnotationProperty .
+ec2u:image rdf:type owl:AnnotationProperty .
 
 
 ###  https://data.ec2u.eu/terms/schac
-ec2u:schac
-    rdf:type owl:AnnotationProperty .
+ec2u:schac rdf:type owl:AnnotationProperty .
 
 
 #################################################################
@@ -41,82 +40,88 @@ ec2u:schac
 #################################################################
 
 ###  http://www.w3.org/2002/07/owl#sameAs
-owl:sameAs
-    rdf:type owl:ObjectProperty, owl:SymmetricProperty .
+owl:sameAs rdf:type owl:ObjectProperty ,
+                    owl:SymmetricProperty .
 
 
 ###  http://www.wikidata.org/prop/direct/P131
-wdt:P131
-    rdf:type           owl:ObjectProperty ;
-    rdfs:subPropertyOf ec2u:location .
+wdt:P131 rdf:type owl:ObjectProperty ;
+         rdfs:subPropertyOf ec2u:location .
 
 
 ###  http://www.wikidata.org/prop/direct/P17
-wdt:P17
-    rdf:type           owl:ObjectProperty ;
-    rdfs:subPropertyOf ec2u:country .
+wdt:P17 rdf:type owl:ObjectProperty ;
+        rdfs:subPropertyOf ec2u:country .
 
 
 ###  http://www.wikidata.org/prop/direct/P18
-wdt:P18
-    rdf:type           owl:ObjectProperty ;
-    rdfs:subPropertyOf ec2u:image .
+wdt:P18 rdf:type owl:ObjectProperty ;
+        rdfs:subPropertyOf ec2u:image .
 
 
 ###  https://data.ec2u.eu/terms/country
-ec2u:country
-    rdf:type owl:ObjectProperty .
+ec2u:country rdf:type owl:ObjectProperty .
 
 
 ###  https://data.ec2u.eu/terms/image
-ec2u:image
-    rdf:type owl:ObjectProperty .
+ec2u:image rdf:type owl:ObjectProperty .
 
 
 ###  https://data.ec2u.eu/terms/location
-ec2u:location
-    rdf:type owl:ObjectProperty .
+ec2u:location rdf:type owl:ObjectProperty .
 
 
 ###  https://data.ec2u.eu/terms/university
-ec2u:university
-    rdf:type owl:ObjectProperty .
+ec2u:university rdf:type owl:ObjectProperty .
 
 
 #################################################################
 #    Data properties
 #################################################################
 
+###  http://www.w3.org/2003/01/geo/wgs84_pos#lat
+wgs84:lat rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3.org/2003/01/geo/wgs84_pos#long
+wgs84:long rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf owl:topDataProperty .
+
+
 ###  http://www.wikidata.org/prop/direct/P2196
-wdt:P2196
-    rdf:type           owl:DatatypeProperty ;
-    rdfs:subPropertyOf ec2u:students .
+wdt:P2196 rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf ec2u:students .
 
 
 ###  http://www.wikidata.org/prop/direct/P571
-wdt:P571
-    rdf:type           owl:DatatypeProperty ;
-    rdfs:subPropertyOf ec2u:inception .
+wdt:P571 rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf ec2u:inception .
 
 
 ###  https://data.ec2u.eu/terms/inception
-ec2u:inception
-    rdf:type owl:DatatypeProperty .
+ec2u:inception rdf:type owl:DatatypeProperty .
 
 
 ###  https://data.ec2u.eu/terms/students
-ec2u:students
-    rdf:type owl:DatatypeProperty .
+ec2u:students rdf:type owl:DatatypeProperty .
 
 
 ###  https://schema.org/description
-schema:description
-    rdf:type owl:DatatypeProperty .
+schema:description rdf:type owl:DatatypeProperty .
+
+
+###  https://schema.org/latitude
+schema:latitude rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf wgs84:lat .
+
+
+###  https://schema.org/longitude
+schema:longitude rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf wgs84:long .
 
 
 ###  https://schema.org/name
-schema:name
-    rdf:type owl:DatatypeProperty .
+schema:name rdf:type owl:DatatypeProperty .
 
 
 #################################################################
@@ -124,43 +129,37 @@ schema:name
 #################################################################
 
 ###  https://data.ec2u.eu/terms/Course
-ec2u:Course
-    rdf:type        owl:Class ;
-    rdfs:subClassOf ec2u:Resource .
+ec2u:Course rdf:type owl:Class ;
+            rdfs:subClassOf ec2u:Resource .
 
 
 ###  https://data.ec2u.eu/terms/Event
-ec2u:Event
-    rdf:type        owl:Class ;
-    rdfs:subClassOf ec2u:Resource, schema:Event .
+ec2u:Event rdf:type owl:Class ;
+           rdfs:subClassOf ec2u:Resource ,
+                           schema:Event .
 
 
 ###  https://data.ec2u.eu/terms/Resource
-ec2u:Resource
-    rdf:type owl:Class .
+ec2u:Resource rdf:type owl:Class .
 
 
 ###  https://data.ec2u.eu/terms/Theme
-ec2u:Theme
-    rdf:type        owl:Class ;
-    rdfs:subClassOf ec2u:Resource .
+ec2u:Theme rdf:type owl:Class ;
+           rdfs:subClassOf ec2u:Resource .
 
 
 ###  https://data.ec2u.eu/terms/Unit
-ec2u:Unit
-    rdf:type        owl:Class ;
-    rdfs:subClassOf ec2u:Resource .
+ec2u:Unit rdf:type owl:Class ;
+          rdfs:subClassOf ec2u:Resource .
 
 
 ###  https://data.ec2u.eu/terms/University
-ec2u:University
-    rdf:type        owl:Class ;
-    rdfs:subClassOf ec2u:Resource .
+ec2u:University rdf:type owl:Class ;
+                rdfs:subClassOf ec2u:Resource .
 
 
 ###  https://schema.org/Event
-schema:Event
-    rdf:type owl:Class .
+schema:Event rdf:type owl:Class .
 
 
 #################################################################
@@ -168,122 +167,108 @@ schema:Event
 #################################################################
 
 ###  http://www.wikidata.org/entity/Q1523902
-wd:Q1523902
-    rdf:type   owl:NamedIndividual ;
-    owl:sameAs <https://data.ec2u.eu/universities/2> .
+wd:Q1523902 rdf:type owl:NamedIndividual ;
+            owl:sameAs <https://data.ec2u.eu/universities/uaic.ro> .
 
 
 ###  http://www.wikidata.org/entity/Q154561
-wd:Q154561
-    rdf:type   owl:NamedIndividual ;
-    owl:sameAs <https://data.ec2u.eu/universities/3> .
+wd:Q154561 rdf:type owl:NamedIndividual ;
+           owl:sameAs <https://data.ec2u.eu/universities/uni-jena.de> .
 
 
 ###  http://www.wikidata.org/entity/Q219317
-wd:Q219317
-    rdf:type   owl:NamedIndividual ;
-    owl:sameAs <https://data.ec2u.eu/universities/4> .
+wd:Q219317 rdf:type owl:NamedIndividual ;
+           owl:sameAs <https://data.ec2u.eu/universities/unipv.it> .
 
 
 ###  http://www.wikidata.org/entity/Q308963
-wd:Q308963
-    rdf:type   owl:NamedIndividual ;
-    owl:sameAs <https://data.ec2u.eu/universities/6> .
+wd:Q308963 rdf:type owl:NamedIndividual ;
+           owl:sameAs <https://data.ec2u.eu/universities/usal.es> .
 
 
 ###  http://www.wikidata.org/entity/Q368643
-wd:Q368643
-    rdf:type   owl:NamedIndividual ;
-    owl:sameAs <https://data.ec2u.eu/universities/1> .
+wd:Q368643 rdf:type owl:NamedIndividual ;
+           owl:sameAs <https://data.ec2u.eu/universities/uc.pt> .
 
 
 ###  http://www.wikidata.org/entity/Q501841
-wd:Q501841
-    rdf:type   owl:NamedIndividual ;
-    owl:sameAs <https://data.ec2u.eu/universities/7> .
+wd:Q501841 rdf:type owl:NamedIndividual ;
+           owl:sameAs <https://data.ec2u.eu/universities/utu.fi> .
 
 
 ###  http://www.wikidata.org/entity/Q661056
-wd:Q661056
-    rdf:type   owl:NamedIndividual ;
-    owl:sameAs <https://data.ec2u.eu/universities/5> .
+wd:Q661056 rdf:type owl:NamedIndividual ;
+           owl:sameAs <https://data.ec2u.eu/universities/univ-poitiers.fr> .
 
 
-###  https://data.ec2u.eu/universities/1
-<https://data.ec2u.eu/universities/1>
-    rdf:type        owl:NamedIndividual, ec2u:University ;
-    ec2u:university <https://data.ec2u.eu/universities/1> ;
-    rdfs:comment
-                    "Focused on the future and recognized as major promoter of change, the University of Coimbra has more than 7 centuries of experience in the creation and dissemination of knowledge, culture, science and technology through study, teaching, cutting-edge research and innovation in the most diverse areas of knowledge."@en ;
-    rdfs:label      "University of Coimbra"@en ;
-    ec2u:image      <https://data.ec2u.eu/blobs/uc.pt.png> ;
-    ec2u:schac      "uc.pt" .
+###  https://data.ec2u.eu/universities/uaic.ro
+<https://data.ec2u.eu/universities/uaic.ro> rdf:type owl:NamedIndividual ,
+                                                     ec2u:University ;
+                                            ec2u:university <https://data.ec2u.eu/universities/uaic.ro> ;
+                                            rdfs:comment "Alexandru Ioan Cuza University of Iasi, the first modern university founded in Romania (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, education and institutional transparency. With about 23000 students and 2000 full-time staff in its 15 faculties, our university’s academic offer includes 80 degrees at bachelor level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered in English as well)."@en ;
+                                            rdfs:label "University of Iasi"@en ;
+                                            ec2u:image <https://data.ec2u.eu/blobs/uaic.ro.png> ;
+                                            ec2u:schac "uaic.ro" .
 
 
-###  https://data.ec2u.eu/universities/2
-<https://data.ec2u.eu/universities/2>
-    rdf:type        owl:NamedIndividual, ec2u:University ;
-    ec2u:university <https://data.ec2u.eu/universities/2> ;
-    rdfs:comment
-                    "Alexandru Ioan Cuza University of Iasi, the first modern university founded in Romania (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, education and institutional transparency. With about 23000 students and 2000 full-time staff in its 15 faculties, our university’s academic offer includes 80 degrees at bachelor level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered in English as well)."@en ;
-    rdfs:label      "University of Iasi"@en ;
-    ec2u:image      <https://data.ec2u.eu/blobs/uaic.ro.png> ;
-    ec2u:schac      "uaic.ro" .
+###  https://data.ec2u.eu/universities/uc.pt
+<https://data.ec2u.eu/universities/uc.pt> rdf:type owl:NamedIndividual ,
+                                                   ec2u:University ;
+                                          ec2u:university <https://data.ec2u.eu/universities/uc.pt> ;
+                                          rdfs:comment "Focused on the future and recognized as major promoter of change, the University of Coimbra has more than 7 centuries of experience in the creation and dissemination of knowledge, culture, science and technology through study, teaching, cutting-edge research and innovation in the most diverse areas of knowledge."@en ;
+                                          rdfs:label "University of Coimbra"@en ;
+                                          ec2u:image <https://data.ec2u.eu/blobs/uc.pt.png> ;
+                                          ec2u:schac "uc.pt" .
 
 
-###  https://data.ec2u.eu/universities/3
-<https://data.ec2u.eu/universities/3>
-    rdf:type        owl:NamedIndividual, ec2u:University ;
-    ec2u:university <https://data.ec2u.eu/universities/3> ;
-    rdfs:comment
-                    "Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities in Germany. Once the centre of German philosophical thought, it has become a broad-based, research-intensive institution with a global reach and a thriving international community of more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide."@en ;
-    rdfs:label      "University of Jena"@en ;
-    ec2u:image      <https://data.ec2u.eu/blobs/uni-jena.de.png> ;
-    ec2u:schac      "uni-jena.de" .
+###  https://data.ec2u.eu/universities/uni-jena.de
+<https://data.ec2u.eu/universities/uni-jena.de> rdf:type owl:NamedIndividual ,
+                                                         ec2u:University ;
+                                                ec2u:university <https://data.ec2u.eu/universities/uni-jena.de> ;
+                                                rdfs:comment "Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities in Germany. Once the centre of German philosophical thought, it has become a broad-based, research-intensive institution with a global reach and a thriving international community of more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide."@en ;
+                                                rdfs:label "University of Jena"@en ;
+                                                ec2u:image <https://data.ec2u.eu/blobs/uni-jena.de.png> ;
+                                                ec2u:schac "uni-jena.de" .
 
 
-###  https://data.ec2u.eu/universities/4
-<https://data.ec2u.eu/universities/4>
-    rdf:type        owl:NamedIndividual, ec2u:University ;
-    ec2u:university <https://data.ec2u.eu/universities/4> ;
-    rdfs:comment
-                    "The University of Pavia (UNIPV) is one of the world’s oldest  academic institutions : it was founded in 1361 and until the 20th century it was the only University in the Milan Area and the region of Lombardy."@en ;
-    rdfs:label      "University of Pavia"@en ;
-    ec2u:image      <https://data.ec2u.eu/blobs/unipv.it.png> ;
-    ec2u:schac      "unipv.it" .
+###  https://data.ec2u.eu/universities/unipv.it
+<https://data.ec2u.eu/universities/unipv.it> rdf:type owl:NamedIndividual ,
+                                                      ec2u:University ;
+                                             ec2u:university <https://data.ec2u.eu/universities/unipv.it> ;
+                                             rdfs:comment "The University of Pavia (UNIPV) is one of the world’s oldest  academic institutions : it was founded in 1361 and until the 20th century it was the only University in the Milan Area and the region of Lombardy."@en ;
+                                             rdfs:label "University of Pavia"@en ;
+                                             ec2u:image <https://data.ec2u.eu/blobs/unipv.it.png> ;
+                                             ec2u:schac "unipv.it" .
 
 
-###  https://data.ec2u.eu/universities/5
-<https://data.ec2u.eu/universities/5>
-    rdf:type        owl:NamedIndividual, ec2u:University ;
-    ec2u:university <https://data.ec2u.eu/universities/5> ;
-    rdfs:comment
-                    "Founded in 1431, the University of Poitiers is a multidisciplinary university which enrols 29 000 students, 4200 of which are international students from 120 different countries, supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and  is above the national average with 16% of foreign students."@en ;
-    rdfs:label      "University of Poitiers"@en ;
-    ec2u:image      <https://data.ec2u.eu/blobs/univ-poitiers.fr.png> ;
-    ec2u:schac      "univ-poitiers.fr" .
+###  https://data.ec2u.eu/universities/univ-poitiers.fr
+<https://data.ec2u.eu/universities/univ-poitiers.fr> rdf:type owl:NamedIndividual ,
+                                                              ec2u:University ;
+                                                     ec2u:university <https://data.ec2u.eu/universities/univ-poitiers.fr> ;
+                                                     rdfs:comment "Founded in 1431, the University of Poitiers is a multidisciplinary university which enrols 29 000 students, 4200 of which are international students from 120 different countries, supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and  is above the national average with 16% of foreign students."@en ;
+                                                     rdfs:label "University of Poitiers"@en ;
+                                                     ec2u:image <https://data.ec2u.eu/blobs/univ-poitiers.fr.png> ;
+                                                     ec2u:schac "univ-poitiers.fr" .
 
 
-###  https://data.ec2u.eu/universities/6
-<https://data.ec2u.eu/universities/6>
-    rdf:type        owl:NamedIndividual, ec2u:University ;
-    ec2u:university <https://data.ec2u.eu/universities/6> ;
-    rdfs:comment
-                    "The University of Salamanca was founded in 1218 and is one of the three oldest universities in Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. In 2011, it was awarded the Campus of International Excellence status. It is the university of reference in its region and beyond (Castile and León) and the “Alma Mater” of nearly all historical Latin American universities."@en ;
-    rdfs:label      "University of Salamanca"@en ;
-    ec2u:image      <https://data.ec2u.eu/blobs/usal.es.png> ;
-    ec2u:schac      "usal.es" .
+###  https://data.ec2u.eu/universities/usal.es
+<https://data.ec2u.eu/universities/usal.es> rdf:type owl:NamedIndividual ,
+                                                     ec2u:University ;
+                                            ec2u:university <https://data.ec2u.eu/universities/usal.es> ;
+                                            rdfs:comment "The University of Salamanca was founded in 1218 and is one of the three oldest universities in Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. In 2011, it was awarded the Campus of International Excellence status. It is the university of reference in its region and beyond (Castile and León) and the “Alma Mater” of nearly all historical Latin American universities."@en ;
+                                            rdfs:label "University of Salamanca"@en ;
+                                            ec2u:image <https://data.ec2u.eu/blobs/usal.es.png> ;
+                                            ec2u:schac "usal.es" .
 
 
-###  https://data.ec2u.eu/universities/7
-<https://data.ec2u.eu/universities/7>
-    rdf:type        owl:NamedIndividual, ec2u:University ;
-    ec2u:university <https://data.ec2u.eu/universities/7> ;
-    rdfs:comment
-                    "The University of Turku (UTU) is an international research university and an active academic community of 25,000 students and staff members from over 100 different countries.  The University’s main campus is located in the historical city centre of Turku – close to the unique nature and archipelago of Southwest Finland. As one of the leading universities in Finland, the University of Turku offers study and research opportunities in seven faculties and seven special units. Thanks to the outstanding services, compact campus and active academic society, international students and scholars feel at home from the very beginning of their stay at the University of Turku, Finland!"@en ;
-    rdfs:label      "University of Turku"@en ;
-    ec2u:image      <https://data.ec2u.eu/blobs/utu.fi.png> ;
-    ec2u:schac      "utu.fi" .
+###  https://data.ec2u.eu/universities/utu.fi
+<https://data.ec2u.eu/universities/utu.fi> rdf:type owl:NamedIndividual ,
+                                                    ec2u:University ;
+                                           ec2u:university <https://data.ec2u.eu/universities/utu.fi> ;
+                                           rdfs:comment "The University of Turku (UTU) is an international research university and an active academic community of 25,000 students and staff members from over 100 different countries.  The University’s main campus is located in the historical city centre of Turku – close to the unique nature and archipelago of Southwest Finland. As one of the leading universities in Finland, the University of Turku offers study and research opportunities in seven faculties and seven special units. Thanks to the outstanding services, compact campus and active academic society, international students and scholars feel at home from the very beginning of their stay at the University of Turku, Finland!"@en ;
+                                           rdfs:label "University of Turku"@en ;
+                                           ec2u:image <https://data.ec2u.eu/blobs/utu.fi.png> ;
+                                           ec2u:schac "utu.fi" .
 
 
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi

@@ -1,27 +1,27 @@
 /*
- * Copyright © 2021 EC2U Consortium. All rights reserved.
+ * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
 package eu.ec2u.data.tasks.events.turku;
 
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
+import com.metreeca.rdf.schemes.Schema;
+import com.metreeca.rdf4j.actions.TupleQuery;
 import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.Clean;
-import com.metreeca.rest.actions.Fill;
+import com.metreeca.rest.actions.*;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.tasks.events.Events;
-import eu.ec2u.work.*;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.io.ByteArrayInputStream;
 import java.time.*;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
@@ -29,6 +29,7 @@ import static com.metreeca.rest.formats.JSONFormat.json;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.events.Events.replace;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -56,6 +57,7 @@ public final class EventsTurkuCity implements Runnable {
 	private final ZonedDateTime now=ZonedDateTime.now(UTC);
 
 	@Override public void run() {
+
 		Xtream.of(synced(Publisher.focus()))
 
 				.flatMap(new Fill<Instant>()
@@ -67,7 +69,7 @@ public final class EventsTurkuCity implements Runnable {
 						)
 				)
 
-				.loop(events -> Xtream.of(events)
+				.loop(es -> Xtream.of(es)
 						.optMap(new GET<>(json()))
 						.optMap(new JSONPath<>(json -> json.string("meta.next")))
 				)
@@ -75,23 +77,52 @@ public final class EventsTurkuCity implements Runnable {
 				.optMap(new GET<>(json()))
 				.flatMap(new JSONPath<>(json -> json.values("data.*")))
 
-				.map(new JSONPath<>(this::convert))
+				.map(new JSONPath<>(this::event))
 
 				.sink(Events::upload);
+
+
+		Xtream.of(""
+						+"prefix schema: <https://schema.org/>\n"
+						+"prefix dct: <http://purl.org/dc/terms/>\n"
+						+"\n"
+						+"select distinct ?location {\n"
+						+"\n"
+						+"\t[] a schema:Event;\n"
+						+"\t\tdct:publisher ?publisher;\n"
+						+"\t\tschema:location/schema:url ?location.\n"
+						+"\n"
+						+"}"
+
+				)
+
+				.flatMap(new TupleQuery()
+								.binding("publisher", Publisher.focus())
+						//.dflt(Data.events)
+				)
+
+				.map(bindings -> bindings
+						.getValue("location")
+						.stringValue()
+				)
+
+				.optMap(new GET<>(json()))
+				.map(new JSONPath<>(this::location))
+
+				.batch(100)
+
+				.forEach(batch -> replace(batch, Data.events));
+
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Frame convert(final JSONPath.Processor event) {
+	private Frame event(final JSONPath.Processor event) {
 
 		final String id=event.string("@id").orElseThrow();
 
-		final Collection<Literal> name=event.entries("name")
-				.filter(entry -> Data.langs.contains(entry.getKey()))
-				.map(this::local)
-				.map(this::normalize)
-				.collect(toSet());
+		final Collection<Literal> name=local(event.entries("name"));
 
 		final Collection<Literal> description=event.entries("short_description")
 				.filter(entry -> Data.langs.contains(entry.getKey()))
@@ -141,14 +172,17 @@ public final class EventsTurkuCity implements Runnable {
 
 				.value(Schema.eventStatus, event.string("event_status")
 						.filter(v -> stream(Schema.EventStatus.values()).map(Enum::name).anyMatch(v::equals))
-						.map(status -> iri(Schema.Name, status))
+						.map(status -> iri(Schema.Namespace, status))
 				)
 
+				// !!! is_virtualevent
 				// !!! super_events
 				// !!! sub_events
 
-				// !!! location
-				// !!! is_virtualevent
+				.frame(Schema.location, event.string("location.@id").map(Values::iri).map(iri ->
+						frame(iri(Data.locations, md5(iri.stringValue())))
+								.value(Schema.url, iri)
+				))
 
 				.value(Schema.startDate, event.string("start_time").map(v -> literal(v, XSD.DATETIME)))
 				.value(Schema.endDate, event.string("end_time").map(v -> literal(v, XSD.DATETIME)))
@@ -160,8 +194,40 @@ public final class EventsTurkuCity implements Runnable {
 				;
 	}
 
+	private Frame location(final JSONPath.Processor location) {
+
+		final String id=location.string("@id").orElseThrow();
+
+		return frame(iri(Data.locations, md5(id)))
+
+				.value(RDF.TYPE, location.string("@type").map(Schema::term).orElse(Schema.Place))
+
+				.value(Schema.url, iri(id))
+
+				.frame(Schema.address, frame(iri())
+						.values(Schema.addressCountry, local(location.entries("address_country")))
+						.values(Schema.addressRegion, local(location.entries("address_region")))
+						.values(Schema.addressLocality, local(location.entries("address_locality")))
+						.values(Schema.postalCode, local(location.entries("postal_code")))
+						.values(Schema.streetAddress, local(location.entries("street_address")))
+				)
+
+				.value(Schema.longitude, location.decimal("position.coordinates.0").map(Values::literal))
+				.value(Schema.latitude, location.decimal("position.coordinates.1").map(Values::literal))
+
+				;
+	}
+
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private Set<Literal> local(final Stream<Map.Entry<String, JSONPath.Processor>> values) {
+		return values
+				.filter(entry -> Data.langs.contains(entry.getKey()))
+				.map(this::local)
+				.map(this::normalize)
+				.collect(toSet());
+	}
 
 	private Literal local(final Map.Entry<String, JSONPath.Processor> entry) {
 		return literal(entry.getValue().string("").orElseThrow(), entry.getKey());

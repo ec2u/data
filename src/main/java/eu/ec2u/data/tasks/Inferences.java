@@ -27,15 +27,17 @@ public final class Inferences implements Runnable {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override public void run() {
-		service(graph()).update(task(connection ->
+		service(graph()).update(task(connection -> {
 
-				Xtream.of(text(Inferences.class, ".ql"))
-						.forEach(new Update()
-								.base(Data.Base)
-								.insert(Data.inferences)
-						)
+			connection.clear(Data.inferences);
 
-		));
+			Xtream.of(text(Inferences.class, ".ql"))
+					.forEach(new Update()
+							.base(Data.Base)
+							.insert(Data.inferences)
+					);
+
+		}));
 	}
 
 }

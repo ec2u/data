@@ -1,5 +1,4 @@
 /@
-/aliases.json
 
 /data/
 /target/
@@ -10,3 +9,4 @@
 ~*
 
 *.iml
+*.http

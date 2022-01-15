@@ -1,16 +1,22 @@
 /*
- * Copyright © 2021 EC2U Consortium. All rights reserved.
+ * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
 package eu.ec2u.data.tasks.events.pavia;
 
 import com.metreeca.json.Frame;
+import com.metreeca.rdf.actions.Localize;
+import com.metreeca.rdf.actions.Normalize;
+import com.metreeca.rdf.actions.Normalize.DateToDateTime;
+import com.metreeca.rdf.actions.Normalize.StringToDate;
+import com.metreeca.rdf.schemes.Schema;
+import com.metreeca.rdf4j.actions.Microdata;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.Fill;
+import com.metreeca.rest.actions.GET;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.tasks.events.Events;
-import eu.ec2u.work.*;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -81,9 +87,12 @@ public final class EventsPaviaCity implements Runnable {
 
 						.map(Schema::normalize)
 
-						.map(new DateNormalize())
-						.map(new DateExtend())
-						.map(new TextLocalize())
+						.map(new Normalize(
+								new StringToDate(),
+								new DateToDateTime()
+						))
+
+						.map(new Localize("it"))
 
 						.batch(0)
 
@@ -105,6 +114,9 @@ public final class EventsPaviaCity implements Runnable {
 								)
 
 						)
+
+						.peek(frame -> frame.model().forEachOrdered(v -> System.out.println(v)))
+
 				)
 
 				.sink(Events::upload);

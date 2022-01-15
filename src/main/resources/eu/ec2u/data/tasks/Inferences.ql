@@ -9,7 +9,7 @@ insert {  ?i a ?c } where {
 
 insert {  ?s ?q ?o } where {
 
-    ?p rdfs:subPropertyOf+ ?q.
+    ?p rdfs:subPropertyOf+ ?q filter (!strstarts(str(?q), str(owl:)))
     ?s ?p ?o.
 
 };

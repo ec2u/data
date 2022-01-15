@@ -1,18 +1,17 @@
 /*
- * Copyright © 2021 EC2U Consortium. All rights reserved.
+ * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
 package eu.ec2u.data.ports;
 
 import com.metreeca.json.Shape;
-import com.metreeca.json.Values;
+import com.metreeca.rdf.schemes.Schema;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.work.Schema;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
-import static com.metreeca.json.Shape.optional;
 import static com.metreeca.json.Shape.required;
 import static com.metreeca.json.shapes.All.all;
 import static com.metreeca.json.shapes.Clazz.clazz;
@@ -28,65 +27,27 @@ import static eu.ec2u.data.Data.multilingual;
 
 public final class Events extends Delegator {
 
-	public static final Shape Shape=relate(
+	public static Shape Event() {
+		return relate(
 
-			filter(clazz(Data.Event)),
+				filter(clazz(Data.Event)),
 
-			hidden(
-					field(RDF.TYPE, all(Data.Event), range(Data.Event, Schema.Event)),
-					field(Data.retrieved, required(), datatype(XSD.DATETIME))
-			),
+				hidden(
+						field(RDF.TYPE, all(Data.Event), range(Data.Event, Schema.Event)),
+						field(Data.retrieved, required(), datatype(XSD.DATETIME))
+				),
 
-			field(RDFS.LABEL, multilingual()),
-			field(RDFS.COMMENT, multilingual()),
+				Data.Meta(),
+				Data.Resource(),
 
-			field(Data.university, required(),
-					field(RDFS.LABEL, multilingual())
-			),
+				Schema.Event(multilingual())
 
-			field(DCTERMS.PUBLISHER, optional(),
-					field(RDFS.LABEL, multilingual())
-			),
+		);
+	}
 
-			field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
-			field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
-			field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
-			field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
-
-			field(Schema.url, optional(), datatype(Values.IRIType)),
-			field(Schema.name, multilingual()),
-			field(Schema.disambiguatingDescription, multilingual()),
-			field(Schema.description, multilingual()),
-			field(Schema.image, multiple(), datatype(Values.IRIType)),
-
-			field(Schema.organizer, optional(),
-					field(RDFS.LABEL, multilingual())
-			),
-
-			field(Schema.isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
-			field(Schema.eventStatus, optional(), datatype(Values.IRIType)),
-
-			field(Schema.location, multiple(),
-					field(RDFS.LABEL, multilingual())
-			),
-
-			field(Schema.eventAttendanceMode, multiple(), datatype(Values.IRIType)),
-
-
-			field(Schema.audience, multiple(),
-					field(RDFS.LABEL, multilingual())
-			),
-
-			field(Schema.inLanguage, multiple(), datatype(XSD.STRING)),
-			field(Schema.typicalAgeRange, multiple(), datatype(XSD.STRING)),
-
-			field(Schema.startDate, optional(), datatype(XSD.DATETIME)),
-			field(Schema.endDate, optional(), datatype(XSD.DATETIME))
-
-	);
 
 	public Events() {
-		delegate(driver(Shape).wrap(router()
+		delegate(driver(Event()).wrap(router()
 
 				.path("/", router()
 						.get(relator())
