@@ -34,7 +34,6 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.terms.EC2U.multilingual;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
@@ -81,7 +80,7 @@ public final class EventsTurkuCity implements Runnable {
 
 				.flatMap(this::location)
 
-				.optMap(new Validate(Schema.Location(multilingual())))
+				.optMap(new Validate(Schema.Location()))
 
 				.collect(toList());
 
@@ -139,7 +138,7 @@ public final class EventsTurkuCity implements Runnable {
 					.values(RDFS.COMMENT, description)
 
 					.value(EC2U.university, Universities.Turku)
-					.value(EC2U.retrieved, literal(now))
+					.value(EC2U.updated, literal(now))
 
 					.frame(DCTERMS.PUBLISHER, Publisher)
 					.value(DCTERMS.SOURCE, iri(id))

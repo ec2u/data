@@ -36,11 +36,11 @@ public final class Events implements Runnable {
 						+"prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
 						+"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
 						+"\n"
-						+"select (max(?retrieved) as ?synced) where {\n"
+						+"select (max(?updated) as ?synced) where {\n"
 						+"\n"
 						+"\t?event a ec2u:Event;\n"
 						+"\t\tdct:publisher ?publisher;\n"
-						+"\t\tec2u:retrieved ?retrieved.\n"
+						+"\t\tec2u:updated ?updated.\n"
 						+"}"
 				)
 

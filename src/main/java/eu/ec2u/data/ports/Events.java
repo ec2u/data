@@ -32,12 +32,10 @@ public final class Events extends Delegator {
 
 				hidden(
 						field(RDF.TYPE, all(EC2U.Event), range(EC2U.Event, Schema.Event)),
-						field(EC2U.retrieved, required(), datatype(XSD.DATETIME))
+						field(EC2U.updated, required(), datatype(XSD.DATETIME))
 				),
 
-				EC2U.Meta(),
 				EC2U.Resource(),
-
 				Schema.Event()
 
 		);

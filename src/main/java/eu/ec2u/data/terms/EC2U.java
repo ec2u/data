@@ -52,23 +52,8 @@ public final class EC2U {
 	public static final IRI Resource=iri(Name, "Resource");
 
 	public static final IRI university=iri(Name, "university");
-	public static final IRI retrieved=iri(Name, "retrieved");
+	public static final IRI updated=iri(Name, "updated");
 
-
-	public static Shape Meta() {
-		return and(
-
-				field(DCTERMS.PUBLISHER, optional(),
-						field(RDFS.LABEL, multilingual())
-				),
-
-				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
-				field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
-				field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
-				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME))
-
-		);
-	}
 
 	public static Shape Resource() {
 		return and(
@@ -78,7 +63,18 @@ public final class EC2U {
 
 				field(university, required(),
 						field(RDFS.LABEL, multilingual())
-				)
+				),
+
+				field(updated, optional(), datatype(XSD.DATETIME)),
+
+
+				field(DCTERMS.PUBLISHER, optional(),
+						field(RDFS.LABEL, multilingual())
+				),
+
+				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
+				field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
+				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME))
 
 		);
 	}

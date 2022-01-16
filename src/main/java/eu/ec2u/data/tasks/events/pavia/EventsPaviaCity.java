@@ -107,7 +107,9 @@ public final class EventsPaviaCity implements Runnable {
 
 						.flatMap(model -> frame(Schema.Event, model)
 								.values(inverse(RDF.TYPE))
-								.map(event -> frame(iri(url), model))
+								.map(event -> frame(event, model)
+										.value(DCTERMS.SOURCE, iri(url))
+								)
 						)
 
 				);
@@ -117,22 +119,22 @@ public final class EventsPaviaCity implements Runnable {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private Frame event(final Frame frame) {
-		return frame(iri(EC2U.events, frame.skolemize()))
+		return frame(iri(EC2U.events, frame.skolemize(DCTERMS.SOURCE)))
 
 				.values(RDF.TYPE, EC2U.Event, Schema.Event)
 				.values(RDFS.LABEL, frame.values(Schema.name))
 
 				.value(EC2U.university, Universities.Pavia)
-				.value(EC2U.retrieved, literal(now))
+				.value(EC2U.updated, literal(now))
 
 				.frame(DCTERMS.PUBLISHER, Publisher)
-				.value(DCTERMS.SOURCE, frame.focus())
+				.value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
 
 				.values(Schema.name, frame.values(Schema.name))
 				.values(Schema.description, frame.values(Schema.description))
 				.values(Schema.disambiguatingDescription, frame.values(Schema.disambiguatingDescription))
 				.values(Schema.image, frame.values(Schema.image))
-				.values(Schema.url, frame.values(Schema.url))
+				.values(Schema.url, frame.values(DCTERMS.SOURCE))
 
 				.value(Schema.startDate, frame.value(Schema.startDate))
 				.value(Schema.endDate, frame.value(Schema.endDate))

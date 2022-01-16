@@ -104,7 +104,7 @@ public final class Data {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static void main(final String... args) {
-		new GCPServer().context(EC2U.Base).delegate(toolbox -> toolbox(toolbox)
+		new GCPServer().delegate(toolbox -> toolbox(toolbox)
 
 				.exec(new Namespaces())
 				.exec(new Ontologies())
@@ -136,12 +136,14 @@ public final class Data {
 												? publisher("/static").fallback("/index.html")
 												: packer(),
 
-										router()
+										preprocessor(request -> request.base(EC2U.Base)).wrap(router()
 
 												.path("/", new Resources())
 												.path("/concepts/*", new Concepts())
 												.path("/universities/*", new Universities())
 												.path("/events/*", new Events())
+
+										)
 
 								))
 
