@@ -110,7 +110,7 @@ public final class EventsTurkuCity implements Runnable {
 
 				.optMap(new GET<>(json()))
 
-				.flatMap(new JSONPath<>(json -> json.values("EC2U.*")));
+				.flatMap(new JSONPath<>(json -> json.values("data.*")));
 	}
 
 
@@ -126,6 +126,7 @@ public final class EventsTurkuCity implements Runnable {
 			final Collection<Literal> description=json.entries("short_description")
 					.filter(entry -> EC2U.langs.contains(entry.getKey()))
 					.map(this::local)
+					.flatMap(Optional::stream)
 					.map(this::untag)
 					.map(this::normalize)
 					.collect(toSet());
@@ -157,6 +158,7 @@ public final class EventsTurkuCity implements Runnable {
 					.values(Schema.description, json.entries("description")
 							.filter(entry -> EC2U.langs.contains(entry.getKey()))
 							.map(this::local)
+							.flatMap(Optional::stream)
 							.map(this::untag)
 					)
 
@@ -233,12 +235,13 @@ public final class EventsTurkuCity implements Runnable {
 		return values
 				.filter(entry -> EC2U.langs.contains(entry.getKey()))
 				.map(this::local)
+				.flatMap(Optional::stream)
 				.map(this::normalize)
 				.collect(toSet());
 	}
 
-	private Literal local(final Map.Entry<String, JSONPath.Processor> entry) {
-		return literal(entry.getValue().string("").orElseThrow(), entry.getKey());
+	private Optional<Literal> local(final Map.Entry<String, JSONPath.Processor> entry) {
+		return entry.getValue().string("").map(text -> literal(text, entry.getKey()));
 	}
 
 
