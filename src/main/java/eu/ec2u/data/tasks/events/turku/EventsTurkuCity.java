@@ -27,6 +27,7 @@ import javax.json.JsonValue;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
+import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.rest.formats.JSONFormat.json;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
@@ -74,11 +75,14 @@ public final class EventsTurkuCity implements Runnable {
 
 		final List<Frame> locations=Xtream.from(events)
 
-				.optMap(event -> event.value(Schema.location))
+				.optMap(event -> event.value(seq(Schema.location, Schema.url)))
 				.optMap(Values::iri)
 				.map(Value::stringValue)
+				.distinct()
 
-				.flatMap(this::location)
+				.optMap(new GET<>(json()))
+
+				.map(new JSONPath<>(this::location))
 
 				.optMap(new Validate(Schema.Location()))
 
@@ -155,12 +159,7 @@ public final class EventsTurkuCity implements Runnable {
 					.values(Schema.name, name)
 					.values(Schema.image, json.strings("images.*.url").map(Values::iri))
 					.values(Schema.disambiguatingDescription, description)
-					.values(Schema.description, json.entries("description")
-							.filter(entry -> EC2U.langs.contains(entry.getKey()))
-							.map(this::local)
-							.flatMap(Optional::stream)
-							.map(this::untag)
-					)
+					.values(Schema.description, local(json.entries("description")))
 
 					// !!! provider
 					// !!! offers
@@ -181,8 +180,7 @@ public final class EventsTurkuCity implements Runnable {
 					// !!! sub_events
 
 					.frame(Schema.location, json.string("location.@id").map(Values::iri).map(iri ->
-							frame(iri(EC2U.locations, md5(iri.stringValue())))
-									.value(Schema.url, iri)
+							frame(iri(EC2U.locations, md5(iri.stringValue()))).value(Schema.url, iri)
 					))
 
 					.value(Schema.startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME)))
@@ -195,17 +193,6 @@ public final class EventsTurkuCity implements Runnable {
 		}));
 	}
 
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private Xtream<Frame> location(final String url) {
-		return Xtream.of(url)
-
-				.optMap(new GET<>(json()))
-
-				.map(new JSONPath<>(this::location));
-	}
-
 	private Frame location(final JSONPath.Processor json) {
 
 		final String id=json.string("@id").orElseThrow();
@@ -215,6 +202,9 @@ public final class EventsTurkuCity implements Runnable {
 				.value(RDF.TYPE, json.string("@type").map(Schema::term).orElse(Schema.Place))
 
 				.value(Schema.url, iri(id))
+
+				.values(Schema.name, local(json.entries("name")))
+				.values(Schema.description, local(json.entries("description")))
 
 				.frame(Schema.address, frame(iri())
 						.values(Schema.addressCountry, local(json.entries("address_country")))

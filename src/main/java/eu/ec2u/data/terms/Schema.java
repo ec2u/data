@@ -17,7 +17,6 @@ import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.shapes.And.and;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
-import static com.metreeca.json.shapes.Or.or;
 
 import static eu.ec2u.data.terms.EC2U.multilingual;
 
@@ -147,13 +146,16 @@ public final class Schema {
 
 	public static Shape Location() {
 
-		return or(
+		return Place();
 
-				Place(),
-				PostalAddress(),
-				VirtualLocation()
 
-		);
+		//return or(
+		//
+		//		Place(),
+		//		PostalAddress(),
+		//		VirtualLocation()
+		//
+		//);
 	}
 
 	public static Shape Place() {

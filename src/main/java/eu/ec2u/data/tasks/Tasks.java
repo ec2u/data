@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Xtream.task;
+import static com.metreeca.rest.services.Logger.logger;
+import static com.metreeca.rest.services.Logger.time;
 
 import static eu.ec2u.data.Data.toolbox;
 
@@ -37,7 +39,7 @@ public final class Tasks {
 	}
 
 	public static void upload(final IRI context, final Xtream<Frame> frames) {
-		frames.batch(1000).forEach(batch -> {
+		frames.batch(1000).forEach(batch -> time(() -> {
 
 			final List<Resource> subjects=batch.stream()
 					.map(Frame::focus)
@@ -58,7 +60,10 @@ public final class Tasks {
 				connection.add(statements, context);
 
 			}));
-		});
+
+		}).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
+				"updated <%d> resources in <%s> in <%d> ms", batch.size(), context, elapsed
+		))));
 	}
 
 
