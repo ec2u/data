@@ -73,6 +73,7 @@ public final class EC2U {
 				),
 
 				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
+				field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME))
 

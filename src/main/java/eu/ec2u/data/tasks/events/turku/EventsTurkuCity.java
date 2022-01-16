@@ -95,7 +95,7 @@ public final class EventsTurkuCity implements Runnable {
 		return Xtream.of(synced)
 
 				.flatMap(new Fill<Instant>()
-						.model("https://api.turku.fi/linkedevents/v1/event/"
+						.model("https://linkedevents-api.turku.fi/v1/event/"
 								+"?last_modified_since={since}"
 						)
 						.value("since", since ->
