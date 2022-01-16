@@ -10,6 +10,7 @@ import com.metreeca.json.Shape;
 import com.metreeca.json.Values;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
+import com.metreeca.rest.Toolbox;
 import com.metreeca.rest.services.Cache.FileCache;
 import com.metreeca.rest.services.Fetcher.CacheFetcher;
 
@@ -19,15 +20,15 @@ import eu.ec2u.data.tasks.Ontologies;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.http.HTTPRepository;
+import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
 
 import static com.metreeca.json.Shape.optional;
 import static com.metreeca.json.Shape.required;
 import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.uuid;
 import static com.metreeca.json.shapes.And.and;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
@@ -39,6 +40,7 @@ import static com.metreeca.rest.Handler.asset;
 import static com.metreeca.rest.Handler.route;
 import static com.metreeca.rest.MessageException.status;
 import static com.metreeca.rest.Response.SeeOther;
+import static com.metreeca.rest.Toolbox.storage;
 import static com.metreeca.rest.Wrapper.preprocessor;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
 import static com.metreeca.rest.handlers.Packer.packer;
@@ -52,6 +54,7 @@ import static com.metreeca.rest.wrappers.Bearer.bearer;
 import static com.metreeca.rest.wrappers.CORS.cors;
 import static com.metreeca.rest.wrappers.Server.server;
 
+import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.Map.entry;
 
@@ -71,15 +74,6 @@ public final class Data {
 
 	public static Shape multilingual() {
 		return localized(langs);
-	}
-
-
-	public static Repository development() {
-		return new HTTPRepository("http://localhost:7200/repositories/ec2u");
-	}
-
-	public static Repository production() {
-		return new GCPRepository("graph");
 	}
 
 
@@ -105,7 +99,7 @@ public final class Data {
 		return and(
 
 				field(DCTERMS.PUBLISHER, optional(),
-						field(RDFS.LABEL, localized(langs))
+						field(RDFS.LABEL, multilingual())
 				),
 
 				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
@@ -119,11 +113,11 @@ public final class Data {
 	public static Shape Resource() {
 		return and(
 
-				field(RDFS.LABEL, localized(langs)),
-				field(RDFS.COMMENT, localized(langs)),
+				field(RDFS.LABEL, multilingual()),
+				field(RDFS.COMMENT, multilingual()),
 
 				field(university, required(),
-						field(RDFS.LABEL, localized(langs))
+						field(RDFS.LABEL, multilingual())
 				)
 
 		);
@@ -158,19 +152,49 @@ public final class Data {
 		debug.log("com.metreeca");
 	}
 
-	public static void main(final String... args) {
-		new GCPServer().context(Base).delegate(toolbox -> toolbox
 
-				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
-				.set(graph(), () -> new Graph(GCPServer.production() ? production() : development()))
+	public static Toolbox toolbox(final Toolbox toolbox) {
+		return toolbox
 
+				.set(storage(), () -> Paths.get(GCPServer.production() ? "" : "data"))
 				.set(fetcher(), CacheFetcher::new)
+				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
+
+				.set(graph(), () -> new Graph(database()))
 				.set(engine(), GraphEngine::new)
 
 				.set(keywords(), () -> Map.ofEntries(
 						entry("@id", "id"),
 						entry("@type", "type")
-				))
+				));
+	}
+
+
+	private static String token() {
+		return "6BA5B99EC21572ADEDB7A8E246E71";
+		// !!! return service(vault()).get("eu-ec2u-data").orElse("");
+	}
+
+	private static Repository database() {
+		if ( GCPServer.production() ) {
+
+			return new GCPRepository("graph");
+
+		} else {
+
+			final SPARQLRepository repository=new SPARQLRepository("https://ec2u.metreeca.net/sparql"); // !!! https://data.ec2u.eu/
+
+			repository.setAdditionalHttpHeaders(Map.of("Authorization", format("Bearer %s", token())));
+
+			return repository;
+		}
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static void main(final String... args) {
+		new GCPServer().context(Base).delegate(toolbox -> toolbox(toolbox)
 
 				.exec(new Namespaces())
 				.exec(new Ontologies())
@@ -178,7 +202,7 @@ public final class Data {
 				.get(() -> server()
 
 						.with(cors())
-						.with(bearer(uuid() /* !!! service(vault()).get("eu-ec2u-data").orElse(uuid())*/, root))
+						.with(bearer(token(), root))
 
 						.with(preprocessor(request -> // disable language negotiation
 								request.header("Accept-Language", "")
