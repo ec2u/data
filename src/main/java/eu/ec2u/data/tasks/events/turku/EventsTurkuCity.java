@@ -23,6 +23,8 @@ import java.util.*;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+import javax.json.JsonValue;
+
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.formats.JSONFormat.json;
@@ -31,8 +33,8 @@ import static com.metreeca.xml.formats.HTMLFormat.html;
 import static eu.ec2u.data.Data.multilingual;
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.tasks.events.Events.upload;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
@@ -42,9 +44,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public final class EventsTurkuCity implements Runnable {
-
-	static { System.setProperty("com.sun.security.enableAIAcaIssuers", "true"); }
-
 
 	private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
 			.values(RDFS.LABEL,
@@ -93,7 +92,7 @@ public final class EventsTurkuCity implements Runnable {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Xtream<String> crawl(final Instant synced) {
+	private Xtream<JsonValue> crawl(final Instant synced) {
 		return Xtream.of(synced)
 
 				.flatMap(new Fill<Instant>()
@@ -108,92 +107,91 @@ public final class EventsTurkuCity implements Runnable {
 				.loop(batch -> Xtream.of(batch)
 						.optMap(new GET<>(json()))
 						.optMap(new JSONPath<>(json -> json.string("meta.next")))
-				);
+				)
+
+				.optMap(new GET<>(json()))
+
+				.flatMap(new JSONPath<>(json -> json.values("data.*")));
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Xtream<Frame> event(final String url) {
-		return Xtream.of(url)
+	private Xtream<Frame> event(final JsonValue value) {
+		return Xtream.of(value).map(new JSONPath<>(json -> {
 
-				.optMap(new GET<>(json()))
-				.flatMap(new JSONPath<>(json -> json.values("data.*")))
+			final String id=json.string("@id").orElseThrow();
 
-				.map(new JSONPath<>(json -> {
+			final Collection<Literal> name=local(json.entries("name"));
 
-					final String id=json.string("@id").orElseThrow();
+			final Collection<Literal> description=json.entries("short_description")
+					.filter(entry -> Data.langs.contains(entry.getKey()))
+					.map(this::local)
+					.map(this::untag)
+					.map(this::normalize)
+					.collect(toSet());
 
-					final Collection<Literal> name=local(json.entries("name"));
+			return frame(iri(Data.events, md5(id)))
 
-					final Collection<Literal> description=json.entries("short_description")
+					.value(RDF.TYPE, Data.Event)
+
+					.values(RDFS.LABEL, name)
+					.values(RDFS.COMMENT, description)
+
+					.value(Data.university, Universities.Turku)
+					.value(Data.retrieved, literal(now))
+
+					.frame(DCTERMS.PUBLISHER, Publisher)
+					.value(DCTERMS.SOURCE, iri(id))
+					.value(DCTERMS.ISSUED, json.string("date_published").map(v -> literal(v, XSD.DATETIME)))
+					.value(DCTERMS.CREATED, json.string("created_time").map(v -> literal(v, XSD.DATETIME)))
+					.value(DCTERMS.MODIFIED, json.string("last_modified_time").map(v -> literal(v,
+							XSD.DATETIME)))
+
+					// !!! keywords
+
+					.value(Schema.url, json.string("info_url").map(Values::iri))
+
+					.values(Schema.name, name)
+					.values(Schema.image, json.strings("images.*.url").map(Values::iri))
+					.values(Schema.disambiguatingDescription, description)
+					.values(Schema.description, json.entries("description")
 							.filter(entry -> Data.langs.contains(entry.getKey()))
 							.map(this::local)
 							.map(this::untag)
-							.map(this::normalize)
-							.collect(toSet());
+					)
 
-					return frame(iri(Data.events, md5(id)))
+					// !!! provider
+					// !!! offers
 
-							.value(RDF.TYPE, Data.Event)
+					.value(Schema.isAccessibleForFree, json.bools("offers.*.is_free")
+							.filter(v -> v)
+							.findFirst()
+							.map(Values::literal)
+					)
 
-							.values(RDFS.LABEL, name)
-							.values(RDFS.COMMENT, description)
+					.value(Schema.eventStatus, json.string("event_status")
+							.filter(v -> stream(Schema.EventStatus.values()).map(Enum::name).anyMatch(v::equals))
+							.map(status -> iri(Schema.Namespace, status))
+					)
 
-							.value(Data.university, Universities.Turku)
-							.value(Data.retrieved, literal(now))
+					// !!! is_virtualevent
+					// !!! super_events
+					// !!! sub_events
 
-							.frame(DCTERMS.PUBLISHER, Publisher)
-							.value(DCTERMS.SOURCE, iri(id))
-							.value(DCTERMS.ISSUED, json.string("date_published").map(v -> literal(v, XSD.DATETIME)))
-							.value(DCTERMS.CREATED, json.string("created_time").map(v -> literal(v, XSD.DATETIME)))
-							.value(DCTERMS.MODIFIED, json.string("last_modified_time").map(v -> literal(v,
-									XSD.DATETIME)))
+					.frame(Schema.location, json.string("location.@id").map(Values::iri).map(iri ->
+							frame(iri(Data.locations, md5(iri.stringValue())))
+									.value(Schema.url, iri)
+					))
 
-							// !!! keywords
+					.value(Schema.startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME)))
+					.value(Schema.endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
 
-							.value(Schema.url, json.string("info_url").map(Values::iri))
+					// !!! in_language
 
-							.values(Schema.name, name)
-							.values(Schema.image, json.strings("images.*.url").map(Values::iri))
-							.values(Schema.disambiguatingDescription, description)
-							.values(Schema.description, json.entries("description")
-									.filter(entry -> Data.langs.contains(entry.getKey()))
-									.map(this::local)
-									.map(this::untag)
-							)
+					.values(Schema.audience, json.strings("audience.*.@id").map(Values::iri)); // !!! mapping
 
-							// !!! provider
-							// !!! offers
-
-							.value(Schema.isAccessibleForFree, json.bools("offers.*.is_free")
-									.filter(v -> v)
-									.findFirst()
-									.map(Values::literal)
-							)
-
-							.value(Schema.eventStatus, json.string("event_status")
-									.filter(v -> stream(Schema.EventStatus.values()).map(Enum::name).anyMatch(v::equals))
-									.map(status -> iri(Schema.Namespace, status))
-							)
-
-							// !!! is_virtualevent
-							// !!! super_events
-							// !!! sub_events
-
-							.frame(Schema.location, json.string("location.@id").map(Values::iri).map(iri ->
-									frame(iri(Data.locations, md5(iri.stringValue())))
-											.value(Schema.url, iri)
-							))
-
-							.value(Schema.startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME)))
-							.value(Schema.endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
-
-							// !!! in_language
-
-							.values(Schema.audience, json.strings("audience.*.@id").map(Values::iri)); // !!! mapping
-
-				}));
+		}));
 	}
 
 

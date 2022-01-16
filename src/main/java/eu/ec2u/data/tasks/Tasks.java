@@ -8,25 +8,32 @@ import com.metreeca.json.Frame;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Toolbox;
+import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Cache;
 import com.metreeca.rest.services.Fetcher;
 
-import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 
 import java.io.*;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.metreeca.rdf4j.services.Graph.graph;
+import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Toolbox.storage;
+import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.services.Cache.cache;
 import static com.metreeca.rest.services.Engine.engine;
 import static com.metreeca.rest.services.Fetcher.fetcher;
 
 import static eu.ec2u.data.Data.development;
+
+import static java.util.stream.Collectors.toList;
 
 public final class Tasks {
 
@@ -44,6 +51,36 @@ public final class Tasks {
 				.exec(tasks)
 
 				.clear();
+	}
+
+
+	public static void upload(final IRI context, final Collection<Frame> frames) {
+		upload(context, Xtream.from(frames));
+	}
+
+	public static void upload(final IRI context, final Xtream<Frame> frames) {
+		frames.batch(1000).forEach(batch -> {
+
+			final List<Resource> subjects=batch.stream()
+					.map(Frame::focus)
+					.filter(Resource.class::isInstance)
+					.map(Resource.class::cast)
+					.collect(toList());
+
+			final List<Statement> statements=batch.stream()
+					.flatMap(Frame::model)
+					.collect(toList());
+
+			service(graph()).update(task(connection -> {
+
+				subjects.forEach(subject ->
+						connection.remove(subject, null, null, context)
+				);
+
+				connection.add(statements, context);
+
+			}));
+		});
 	}
 
 

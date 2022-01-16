@@ -28,8 +28,8 @@ import static com.metreeca.xml.formats.HTMLFormat.html;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.tasks.events.Events.upload;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -56,7 +56,8 @@ public final class EventsPaviaCity implements Runnable {
 		Xtream.of(synced(Publisher.focus()))
 
 				.flatMap(this::crawl)
-				.flatMap(this::event)
+				.map(this::event)
+				.optMap(new Validate(Event()))
 
 				.sink(events -> upload(Data.events, events));
 	}
@@ -64,7 +65,7 @@ public final class EventsPaviaCity implements Runnable {
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Xtream<String> crawl(final Instant synced) {
+	private Xtream<Frame> crawl(final Instant synced) {
 		return Xtream.of(synced)
 
 				.flatMap(new Fill<Instant>()
@@ -89,39 +90,35 @@ public final class EventsPaviaCity implements Runnable {
 
 				.flatMap(model -> frame(Schema.Event, model)
 						.strings(seq(inverse(RDF.TYPE), Schema.url))
+				)
+
+				.flatMap(url -> Xtream.of(url)
+
+						.optMap(new GET<>(html()))
+						.flatMap(new Microdata())
+
+						.map(new Normalize(
+								new StringToDate(),
+								new DateToDateTime()
+						))
+
+						.map(new Localize("it"))
+
+						.batch(0)
+
+						.flatMap(model -> frame(Schema.Event, model)
+								.values(inverse(RDF.TYPE))
+								.map(event -> frame(iri(url), model))
+						)
+
 				);
 	}
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Xtream<Frame> event(final String url) {
-		return Xtream.of(url)
-
-				.optMap(new GET<>(html()))
-				.flatMap(new Microdata())
-
-				.map(new Normalize(
-						new StringToDate(),
-						new DateToDateTime()
-				))
-
-				.map(new Localize("it"))
-
-				.batch(0)
-
-				.flatMap(model -> frame(Schema.Event, model)
-
-						.frames(inverse(RDF.TYPE))
-						.map(frame -> event(frame.value(DCTERMS.SOURCE, iri(url))))
-
-				)
-
-				.optMap(new Validate(Event()));
-	}
-
 	private Frame event(final Frame frame) {
-		return frame(iri(Data.events, frame.skolemize(DCTERMS.SOURCE)))
+		return frame(iri(Data.events, frame.skolemize()))
 
 				.values(RDF.TYPE, Data.Event, Schema.Event)
 				.values(RDFS.LABEL, frame.values(Schema.name))
@@ -130,7 +127,7 @@ public final class EventsPaviaCity implements Runnable {
 				.value(Data.retrieved, literal(now))
 
 				.frame(DCTERMS.PUBLISHER, Publisher)
-				.value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
+				.value(DCTERMS.SOURCE, frame.focus())
 
 				.values(Schema.name, frame.values(Schema.name))
 				.values(Schema.description, frame.values(Schema.description))

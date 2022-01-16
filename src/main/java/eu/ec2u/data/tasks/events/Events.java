@@ -4,19 +4,17 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.json.Frame;
 import com.metreeca.rdf4j.actions.TupleQuery;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.Data;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collection;
-import java.util.List;
 
 import static com.metreeca.json.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
@@ -26,8 +24,6 @@ import static com.metreeca.rest.services.Logger.logger;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
-
-import static java.util.stream.Collectors.toList;
 
 public final class Events implements Runnable {
 
@@ -62,36 +58,6 @@ public final class Events implements Runnable {
 				.findFirst()
 
 				.orElseGet(() -> Instant.now().minus(Duration.ofDays(30)));
-	}
-
-
-	public static void upload(final IRI context, final Collection<Frame> frames) {
-		upload(context, Xtream.from(frames));
-	}
-
-	public static void upload(final IRI context, final Xtream<Frame> frames) {
-		frames.batch(1000).forEach(batch -> {
-
-			final List<Resource> subjects=batch.stream()
-					.map(Frame::focus)
-					.filter(Resource.class::isInstance)
-					.map(Resource.class::cast)
-					.collect(toList());
-
-			final List<Statement> statements=batch.stream()
-					.flatMap(Frame::model)
-					.collect(toList());
-
-			service(graph()).update(task(connection -> {
-
-				subjects.forEach(subject ->
-						connection.remove(subject, null, null, context)
-				);
-
-				connection.add(statements, context);
-
-			}));
-		});
 	}
 
 
