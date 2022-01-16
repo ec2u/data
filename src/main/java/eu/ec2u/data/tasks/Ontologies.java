@@ -8,7 +8,7 @@ import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rest.Xtream;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
 
 import static com.metreeca.rest.Toolbox.resource;
 
@@ -27,7 +27,7 @@ public final class Ontologies implements Runnable {
 	@Override public void run() {
 		Xtream
 
-				.of(resource(Data.class, ".ttl").toExternalForm())
+				.of(resource(EC2U.class, ".ttl").toExternalForm())
 
 				.bagMap(new Retrieve())
 
@@ -35,7 +35,7 @@ public final class Ontologies implements Runnable {
 
 				.forEach(new Upload()
 						.clear(true)
-						.contexts(Data.ontologies)
+						.contexts(EC2U.ontologies)
 				);
 	}
 

@@ -6,13 +6,13 @@ package eu.ec2u.data.tasks.events.turku;
 
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
-import com.metreeca.rdf.schemas.Schema;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 import com.metreeca.xml.actions.Untag;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -30,11 +30,11 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.rest.formats.JSONFormat.json;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static eu.ec2u.data.Data.multilingual;
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
+import static eu.ec2u.data.terms.EC2U.multilingual;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
@@ -85,8 +85,8 @@ public final class EventsTurkuCity implements Runnable {
 
 				.collect(toList());
 
-		upload(Data.events, events);
-		upload(Data.locations, locations);
+		upload(EC2U.events, events);
+		upload(EC2U.locations, locations);
 	}
 
 
@@ -111,7 +111,7 @@ public final class EventsTurkuCity implements Runnable {
 
 				.optMap(new GET<>(json()))
 
-				.flatMap(new JSONPath<>(json -> json.values("data.*")));
+				.flatMap(new JSONPath<>(json -> json.values("EC2U.*")));
 	}
 
 
@@ -125,21 +125,21 @@ public final class EventsTurkuCity implements Runnable {
 			final Collection<Literal> name=local(json.entries("name"));
 
 			final Collection<Literal> description=json.entries("short_description")
-					.filter(entry -> Data.langs.contains(entry.getKey()))
+					.filter(entry -> EC2U.langs.contains(entry.getKey()))
 					.map(this::local)
 					.map(this::untag)
 					.map(this::normalize)
 					.collect(toSet());
 
-			return frame(iri(Data.events, md5(id)))
+			return frame(iri(EC2U.events, md5(id)))
 
-					.value(RDF.TYPE, Data.Event)
+					.value(RDF.TYPE, EC2U.Event)
 
 					.values(RDFS.LABEL, name)
 					.values(RDFS.COMMENT, description)
 
-					.value(Data.university, Universities.Turku)
-					.value(Data.retrieved, literal(now))
+					.value(EC2U.university, Universities.Turku)
+					.value(EC2U.retrieved, literal(now))
 
 					.frame(DCTERMS.PUBLISHER, Publisher)
 					.value(DCTERMS.SOURCE, iri(id))
@@ -156,7 +156,7 @@ public final class EventsTurkuCity implements Runnable {
 					.values(Schema.image, json.strings("images.*.url").map(Values::iri))
 					.values(Schema.disambiguatingDescription, description)
 					.values(Schema.description, json.entries("description")
-							.filter(entry -> Data.langs.contains(entry.getKey()))
+							.filter(entry -> EC2U.langs.contains(entry.getKey()))
 							.map(this::local)
 							.map(this::untag)
 					)
@@ -180,7 +180,7 @@ public final class EventsTurkuCity implements Runnable {
 					// !!! sub_events
 
 					.frame(Schema.location, json.string("location.@id").map(Values::iri).map(iri ->
-							frame(iri(Data.locations, md5(iri.stringValue())))
+							frame(iri(EC2U.locations, md5(iri.stringValue())))
 									.value(Schema.url, iri)
 					))
 
@@ -209,7 +209,7 @@ public final class EventsTurkuCity implements Runnable {
 
 		final String id=json.string("@id").orElseThrow();
 
-		return frame(iri(Data.locations, md5(id)))
+		return frame(iri(EC2U.locations, md5(id)))
 
 				.value(RDF.TYPE, json.string("@type").map(Schema::term).orElse(Schema.Place))
 
@@ -232,7 +232,7 @@ public final class EventsTurkuCity implements Runnable {
 
 	private Set<Literal> local(final Stream<Map.Entry<String, JSONPath.Processor>> values) {
 		return values
-				.filter(entry -> Data.langs.contains(entry.getKey()))
+				.filter(entry -> EC2U.langs.contains(entry.getKey()))
 				.map(this::local)
 				.map(this::normalize)
 				.collect(toSet());

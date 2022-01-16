@@ -8,7 +8,7 @@ import com.metreeca.json.Values;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rest.services.Logger;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Collection;
@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.joining;
 public final class Chores implements Runnable {
 
 	private static Collection<IRI> locked=Set.of(
-			Data.ontologies
+			EC2U.ontologies
 	);
 
 
@@ -81,7 +81,7 @@ public final class Chores implements Runnable {
 
 								locked.stream().map(Values::format).collect(joining(", "))
 
-						), Data.Base)
+						), EC2U.Base)
 
 						.execute();
 

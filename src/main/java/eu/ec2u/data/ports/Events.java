@@ -5,10 +5,10 @@
 package eu.ec2u.data.ports;
 
 import com.metreeca.json.Shape;
-import com.metreeca.rdf.schemas.Schema;
 import com.metreeca.rest.handlers.Delegator;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
@@ -23,22 +23,22 @@ import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
-import static eu.ec2u.data.Data.multilingual;
+import static eu.ec2u.data.terms.EC2U.multilingual;
 
 public final class Events extends Delegator {
 
 	public static Shape Event() {
 		return relate(
 
-				filter(clazz(Data.Event)),
+				filter(clazz(EC2U.Event)),
 
 				hidden(
-						field(RDF.TYPE, all(Data.Event), range(Data.Event, Schema.Event)),
-						field(Data.retrieved, required(), datatype(XSD.DATETIME))
+						field(RDF.TYPE, all(EC2U.Event), range(EC2U.Event, Schema.Event)),
+						field(EC2U.retrieved, required(), datatype(XSD.DATETIME))
 				),
 
-				Data.Meta(),
-				Data.Resource(),
+				EC2U.Meta(),
+				EC2U.Resource(),
 
 				Schema.Event(multilingual())
 

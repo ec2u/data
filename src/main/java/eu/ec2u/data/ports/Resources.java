@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 EC2U Consortium. All rights reserved.
+ * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
 package eu.ec2u.data.ports;
@@ -8,7 +8,7 @@ import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rest.*;
 import com.metreeca.rest.handlers.Delegator;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -42,16 +42,16 @@ public final class Resources extends Delegator {
 	public Resources() {
 		delegate(driver(relate(
 
-				filter(clazz(Data.Resource)),
+				filter(clazz(EC2U.Resource)),
 
 				field(RDF.TYPE, repeatable(), datatype(IRIType)),
 
 				field(RDFS.LABEL, required(), localized("en")),
 				field(RDFS.COMMENT, optional(), localized("en")),
 
-				field(Data.image, optional(), datatype(IRIType)),
+				field(EC2U.image, optional(), datatype(IRIType)),
 
-				field(Data.university, optional(),
+				field(EC2U.university, optional(),
 						field(RDFS.LABEL, required(), localized("en"))
 				)
 
@@ -59,8 +59,8 @@ public final class Resources extends Delegator {
 
 				.get(handler(request -> !request.query().isEmpty(), relator(), driver(
 
-						field("universities", Data.University, optional(), datatype(XSD.INTEGER)),
-						field("events", Data.Event, optional(), datatype(XSD.INTEGER))
+						field("universities", EC2U.University, optional(), datatype(XSD.INTEGER)),
+						field("events", EC2U.Event, optional(), datatype(XSD.INTEGER))
 
 				).wrap(new Virtual(
 

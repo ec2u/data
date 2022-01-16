@@ -6,7 +6,7 @@ package eu.ec2u.data.tasks;
 
 import com.metreeca.rest.Xtream;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
@@ -36,7 +36,7 @@ public final class Namespaces implements Runnable {
 
 			connection.clearNamespaces();
 
-			Xtream.of(resource(Data.class, ".ttl")).forEach(path -> {
+			Xtream.of(resource(EC2U.class, ".ttl")).forEach(path -> {
 				try {
 
 					Rio.createParser(RDFFormat.TURTLE).setRDFHandler(new AbstractRDFHandler() {

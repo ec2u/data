@@ -7,7 +7,7 @@ package eu.ec2u.data.ports;
 import com.metreeca.json.Shape;
 import com.metreeca.rest.actions.Validate;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.LDP;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +35,7 @@ final class UniversitiesTest {
 
 			assertThat(service(engine())
 
-					.relate(frame(iri(Data.Base, "/universities/")), items(shape))
+					.relate(frame(iri(EC2U.Base, "/universities/")), items(shape))
 
 					.stream()
 					.flatMap(frame -> frame.frames(LDP.CONTAINS))

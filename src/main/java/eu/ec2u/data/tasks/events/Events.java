@@ -9,7 +9,7 @@ import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.services.Logger;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 
@@ -45,9 +45,9 @@ public final class Events implements Runnable {
 				)
 
 				.flatMap(new TupleQuery()
-						.base(Data.Base)
+						.base(EC2U.Base)
 						.binding("publisher", publisher)
-						.dflt(Data.events)
+						.dflt(EC2U.events)
 				)
 
 				.optMap(bindings -> literal(bindings.getValue("synced")))
@@ -108,7 +108,7 @@ public final class Events implements Runnable {
 						+"optional { ?e ?p ?o }\n"
 						+"\toptional { ?s ?q ?e }\n"
 						+"\n"
-						+"}", Data.Base)
+						+"}", EC2U.Base)
 
 				.execute()
 

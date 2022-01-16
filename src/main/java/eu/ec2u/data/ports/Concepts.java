@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 EC2U Consortium. All rights reserved.
+ * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
 package eu.ec2u.data.ports;
@@ -7,7 +7,7 @@ package eu.ec2u.data.ports;
 import com.metreeca.json.Shape;
 import com.metreeca.rest.handlers.Delegator;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
@@ -34,7 +34,7 @@ public final class Concepts extends Delegator {
 	public Concepts() {
 		delegate(driver(relate(
 
-				filter(clazz(Data.Theme)),
+				filter(clazz(EC2U.Theme)),
 
 				link(OWL.SAMEAS,
 

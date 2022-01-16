@@ -9,7 +9,7 @@ import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rest.Xtream;
 
-import eu.ec2u.data.Data;
+import eu.ec2u.data.terms.EC2U;
 
 import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.service;
@@ -35,7 +35,7 @@ final class Concepts {
 
 					.forEach(new Upload()
 							.clear(true)
-							.contexts(Data.concepts)
+							.contexts(EC2U.concepts)
 					);
 
 			Xtream
@@ -59,8 +59,8 @@ final class Concepts {
 					)
 
 					.forEach(new Update()
-							.base(Data.Base)
-							.insert(Data.concepts)
+							.base(EC2U.Base)
+							.insert(EC2U.concepts)
 					);
 
 		})));
