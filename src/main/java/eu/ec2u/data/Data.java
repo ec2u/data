@@ -49,6 +49,9 @@ import static java.util.Map.entry;
 
 public final class Data {
 
+	private static final boolean production=GCPServer.production();
+
+
 	private static final String root="root"; // root role
 
 
@@ -57,14 +60,16 @@ public final class Data {
 	}
 
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static Toolbox toolbox(final Toolbox toolbox) {
 		return toolbox
 
-				.set(storage(), () -> Paths.get(GCPServer.production() ? "" : "data"))
+				.set(storage(), () -> Paths.get(production ? "" : "data"))
 				.set(fetcher(), CacheFetcher::new)
 				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
 
-				.set(graph(), () -> new Graph(database()))
+				.set(graph(), () -> new Graph(repository()))
 				.set(engine(), GraphEngine::new)
 
 				.set(keywords(), () -> Map.ofEntries(
@@ -79,8 +84,8 @@ public final class Data {
 		// !!! return service(vault()).get("eu-ec2u-data").orElse("");
 	}
 
-	private static Repository database() {
-		if ( GCPServer.production() ) {
+	private static Repository repository() {
+		if ( production ) {
 
 			return new GCPRepository("graph");
 
@@ -91,6 +96,7 @@ public final class Data {
 			repository.setAdditionalHttpHeaders(Map.of("Authorization", format("Bearer %s", token())));
 
 			return repository;
+
 		}
 	}
 
@@ -125,7 +131,7 @@ public final class Data {
 
 								.path("/*", asset(
 
-										GCPServer.production()
+										production
 
 												? publisher("/static").fallback("/index.html")
 												: packer(),

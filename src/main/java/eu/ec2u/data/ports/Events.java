@@ -23,8 +23,6 @@ import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
-import static eu.ec2u.data.terms.EC2U.multilingual;
-
 public final class Events extends Delegator {
 
 	public static Shape Event() {
@@ -40,7 +38,7 @@ public final class Events extends Delegator {
 				EC2U.Meta(),
 				EC2U.Resource(),
 
-				Schema.Event(multilingual())
+				Schema.Event()
 
 		);
 	}

@@ -10,9 +10,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 import static com.metreeca.json.Shape.multiple;
 import static com.metreeca.json.Shape.optional;
 import static com.metreeca.json.Values.IRIType;
@@ -21,6 +18,8 @@ import static com.metreeca.json.shapes.And.and;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Or.or;
+
+import static eu.ec2u.data.terms.EC2U.multilingual;
 
 /**
  * Schema.org RDF vocabulary.
@@ -65,25 +64,18 @@ public final class Schema {
 	/**
 	 * Creates a thing shape.
 	 *
-	 * @param labels additional constraints for textual labels (e.g. localized names)
-	 *
 	 * @return a thing shape including {@code labels} constraints for textual labels
 	 *
 	 * @throws NullPointerException if {@code labels} is nul or contains null elements
 	 */
-	public static Shape Thing(final Shape... labels) {
-
-		if ( labels == null || Arrays.stream(labels).anyMatch(Objects::isNull) ) {
-			throw new NullPointerException("null labels");
-		}
-
+	public static Shape Thing() {
 		return and(
 
 				field(url, optional(), datatype(IRIType)),
-				field(name, labels),
+				field(name, multilingual()),
 				field(image, multiple(), datatype(IRIType)),
-				field(description, labels),
-				field(disambiguatingDescription, labels)
+				field(description, multilingual()),
+				field(disambiguatingDescription, multilingual())
 
 		);
 	}
@@ -107,36 +99,22 @@ public final class Schema {
 	public static final IRI endDate=term("endDate");
 
 
-	/**
-	 * Creates an event shape.
-	 *
-	 * @param labels additional constraints for textual labels (e.g. localized names)
-	 *
-	 * @return an event shape including {@code labels} constraints for textual labels
-	 *
-	 * @throws NullPointerException if {@code labels} is nul or contains null elements
-	 */
-	public static Shape Event(final Shape... labels) {
-
-		if ( labels == null || Arrays.stream(labels).anyMatch(Objects::isNull) ) {
-			throw new NullPointerException("null labels");
-		}
-
-		return and(Thing(labels),
+	public static Shape Event() {
+		return and(Thing(),
 
 				field(organizer, optional(),
-						field(RDFS.LABEL, labels)
+						field(RDFS.LABEL, multilingual())
 				),
 
 				field(isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
 				field(eventStatus, optional(), datatype(IRIType)),
 
-				field(location, optional(), Location(labels)),
+				field(location, optional(), Location()),
 
 				field(eventAttendanceMode, multiple(), datatype(IRIType)),
 
 				field(audience, multiple(),
-						field(RDFS.LABEL, labels)
+						field(RDFS.LABEL, multilingual())
 				),
 
 				field(inLanguage, multiple(), datatype(XSD.STRING)),
@@ -167,48 +145,21 @@ public final class Schema {
 	public static IRI streetAddress=term("streetAddress");
 
 
-	/**
-	 * Creates a location shape.
-	 *
-	 * @param labels additional constraints for textual labels (e.g. localized names)
-	 *
-	 * @return a location shape including {@code labels} constraints for textual labels
-	 *
-	 * @throws NullPointerException if {@code labels} is nul or contains null elements
-	 */
-	public static Shape Location(final Shape... labels) {
-
-		if ( labels == null || Arrays.stream(labels).anyMatch(Objects::isNull) ) {
-			throw new NullPointerException("null labels");
-		}
+	public static Shape Location() {
 
 		return or(
 
-				Place(labels),
-				PostalAddress(labels),
-				VirtualLocation(labels)
+				Place(),
+				PostalAddress(),
+				VirtualLocation()
 
 		);
 	}
 
-	/**
-	 * Creates a place shape.
-	 *
-	 * @param labels additional constraints for textual labels (e.g. localized names)
-	 *
-	 * @return a place shape including {@code labels} constraints for textual labels
-	 *
-	 * @throws NullPointerException if {@code labels} is nul or contains null elements
-	 */
-	public static Shape Place(final Shape... labels) {
+	public static Shape Place() {
+		return and(Thing(),
 
-		if ( labels == null || Arrays.stream(labels).anyMatch(Objects::isNull) ) {
-			throw new NullPointerException("null labels");
-		}
-
-		return and(Thing(labels),
-
-				field(address, optional(), PostalAddress(labels)),
+				field(address, optional(), PostalAddress()),
 
 				field(latitude, optional(), datatype(XSD.DECIMAL)),
 				field(longitude, optional(), datatype(XSD.DECIMAL))
@@ -216,22 +167,8 @@ public final class Schema {
 		);
 	}
 
-	/**
-	 * Creates a postal address shape.
-	 *
-	 * @param labels additional constraints for textual labels (e.g. localized names)
-	 *
-	 * @return a postal address shape including {@code labels} constraints for textual labels
-	 *
-	 * @throws NullPointerException if {@code labels} is nul or contains null elements
-	 */
-	public static Shape PostalAddress(final Shape... labels) {
-
-		if ( labels == null || Arrays.stream(labels).anyMatch(Objects::isNull) ) {
-			throw new NullPointerException("null labels");
-		}
-
-		return and(Thing(labels),
+	public static Shape PostalAddress() {
+		return and(Thing(),
 
 				field(addressCountry, optional(), datatype(XSD.DECIMAL)),
 				field(addressRegion, optional(), datatype(XSD.STRING)),
@@ -242,22 +179,8 @@ public final class Schema {
 		);
 	}
 
-	/**
-	 * Creates a virtual location shape.
-	 *
-	 * @param labels additional constraints for textual labels (e.g. localized names)
-	 *
-	 * @return a virtual location shape including {@code labels} constraints for textual labels
-	 *
-	 * @throws NullPointerException if {@code labels} is nul or contains null elements
-	 */
-	public static Shape VirtualLocation(final Shape... labels) {
-
-		if ( labels == null || Arrays.stream(labels).anyMatch(Objects::isNull) ) {
-			throw new NullPointerException("null labels");
-		}
-
-		return and(Thing(labels));
+	public static Shape VirtualLocation() {
+		return and(Thing());
 	}
 
 

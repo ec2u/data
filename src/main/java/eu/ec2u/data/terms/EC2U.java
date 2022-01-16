@@ -54,6 +54,7 @@ public final class EC2U {
 	public static final IRI university=iri(Name, "university");
 	public static final IRI retrieved=iri(Name, "retrieved");
 
+
 	public static Shape Meta() {
 		return and(
 
