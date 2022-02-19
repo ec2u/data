@@ -10,13 +10,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.ec2u</groupId>
-	<artifactId>ec2u-kxta</artifactId>
-	<version>0.0.0-SNAPSHOT</version>
+	<artifactId>ec2u-data</artifactId>
+	<version>${revision}</version>
 	<packaging>jar</packaging>
 
-	<name>EC2U Testbed</name>
-	<description>EC2U Connect Centre development and testing environment.</description>
-	<url>https://github.com/ec2u/kxta</url>
+	<name>EC2U Knowledge Hub</name>
+	<description>EC2U central data integration and sharing facilities.</description>
+	<url>https://github.com/ec2u/data</url>
 	<inceptionYear>2021</inceptionYear>
 
 	<organization>
@@ -24,33 +24,14 @@
 		<url>https://ec2u.eu/</url>
 	</organization>
 
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
 	<developers>
 		<developer>
 			<name>EC2U Connect Centre</name>
 			<email>cc@ec2u.eu</email>
 			<organization>EC2U Consortium</organization>
-			<organizationUrl>https://ec2u.eu/</organizationUrl>
+			<organizationUrl>https://ec2u.eu</organizationUrl>
 		</developer>
 	</developers>
-
-	<scm>
-		<connection>scm:git:git@github.com:ec2u/kxta.git</connection>
-		<developerConnection>scm:git:git@github.com:ec2u/kxta.git</developerConnection>
-		<url>https://github.com/ec2u/kxta</url>
-	</scm>
-
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/ec2u/kxta/issues</url>
-	</issueManagement>
 
 	<properties>
 
@@ -62,16 +43,23 @@
 		<node.version>14.15.4</node.version>
 		<npm.version>7.7.6</npm.version>
 
+		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+		<maven.deploy.skip>true</maven.deploy.skip> <!-- no public artifact deployment -->
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<maven.deploy.skip>true</maven.deploy.skip> <!-- no public artifact deployment -->
-		<maven.site.skip>skip</maven.site.skip> <!-- no site -->
-
-		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
-
-		<timestamp>${maven.build.timestamp}</timestamp> <!-- ;( not directly available to filtered resources -->
-
 	</properties>
+
+	<scm>
+		<connection>scm:git:git@github.com:ec2u/data.git</connection>
+		<developerConnection>scm:git:git@github.com:ec2u/data.git</developerConnection>
+		<url>https://github.com/ec2u/data</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/ec2u/data/issues</url>
+	</issueManagement>
 
 	<dependencyManagement>
 
@@ -151,6 +139,15 @@
 
 	<build>
 
+		<resources>
+
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+
+		</resources>
+
 		<plugins>
 
 			<plugin> <!-- https://maven.apache.org/enforcer/maven-enforcer-plugin/ -->
@@ -214,7 +211,7 @@
 
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.9.0</version>
 
 				<configuration>
 
@@ -225,11 +222,63 @@
 
 			</plugin>
 
-			<plugin> <!-- https://maven.apache.org/surefire/maven-surefire-plugin/ -->
+			<plugin>
+
+				<!-- https://maven.apache.org/plugins/maven-jar-plugin/ -->
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.2</version>
+
+				<configuration>
+
+					<archive>
+
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+
+					</archive>
+
+				</configuration>
+
+			</plugin>
+
+			<plugin>
+				<!-- https://maven.apache.org/surefire/maven-surefire-plugin/ -->
 
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.0</version>
+				<version>3.0.0-M5</version>
+
+			</plugin>
+
+			<plugin>
+
+				<!-- https://maven.apache.org/plugins/maven-site-plugin -->
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.10.0</version>
+
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+
+			</plugin>
+
+			<plugin>
+
+				<!-- https://maven.apache.org/plugins/maven-deploy-plugin/ -->
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.0.0-M1</version>
+
+				<configuration>
+					<skip>true</skip>
+				</configuration>
 
 			</plugin>
 
@@ -237,7 +286,7 @@
 
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.11.3</version>
+				<version>1.12.0</version>
 
 				<configuration>
 
@@ -349,35 +398,6 @@
 
 					</execution>
 
-				</executions>
-
-			</plugin>
-
-			<plugin> <!-- https://cloud.google.com/appengine/docs/standard/java/tools/maven-reference -->
-
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>appengine-maven-plugin</artifactId>
-				<version>2.4.0</version>
-
-				<configuration>
-					<projectId>${project.artifactId}</projectId>
-					<version>0</version>
-					<promote>true</promote>
-					<stopPreviousVersion>true</stopPreviousVersion>
-				</configuration>
-
-				<executions>
-					<execution>
-
-						<id>deploy-to-gae</id>
-						<phase>deploy</phase>
-
-						<goals>
-							<goal>deploy</goal>
-							<goal>deployCron</goal>
-						</goals>
-
-					</execution>
 				</executions>
 
 			</plugin>

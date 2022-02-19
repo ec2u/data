@@ -1,28 +1,18 @@
 /*
- * Copyright © 2021 EC2U Consortium. All rights reserved.
+ * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
-import {resolve} from "path";
-import {readdirSync} from "fs";
 import {defineConfig} from "vite";
-
+import {resolve} from "path";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 import postcssNesting from "postcss-nesting";
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const src=resolve(process.env.src || "src/main/javascript/");
+const out=resolve(process.env.out || "target/classes/static/");
 
-const base=process.env.base || ".";
+export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
-const code=resolve(process.env.code || "src/main/scripts/");
-const dist=resolve(process.env.dist || "target/scripts/");
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export default defineConfig(({ command, mode }) => ({ // https://vitejs.dev/config/
-
-	root: code,
-	base: base.replace(/^([^./])|([^/])$/g, "$2/$1"), // add leading/trailing slashes
+	root: src,
 
 	publicDir: "files",
 
@@ -36,27 +26,20 @@ export default defineConfig(({ command, mode }) => ({ // https://vitejs.dev/conf
 
 	build: {
 
-		outDir: dist,
+		outDir: out,
 		assetsDir: ".",
 		emptyOutDir: true,
+		minify: mode !== "development",
 
 		rollupOptions: {
-			output: { manualChunks: undefined }
+			output: { manualChunks: undefined } // no vendor chunks
 		}
 
 	},
 
-	resolve: mode === "production" ? {} : {
-		alias: readdirSync(".")
-			.filter(file => file === "aliases.json")
-			.map(file => require(resolve(file)))
-			.flatMap(aliases => Object.entries(aliases).map(([pack, path]) => ({
-				find: new RegExp(`^${pack}/(.*)$`), replacement: `${path}/$1`
-			})))
-	},
-
 	server: {
-		proxy: { "^(?!$|/[_@]|.*\\.\\w+(\\?.*)?$).*$": { target: "http://localhost:8080/" } } // no empty/vite/file URLs
+		open: "/index.html", // as asset
+		proxy: { [/^(?!^[_@]|.*\.\w+$)/]: { target: "http://localhost:8080/" } } // everything but vite/asset paths
 	}
 
 }));
