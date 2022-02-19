@@ -7,7 +7,7 @@ import { ToolPage } from "@metreeca/tool/tiles/page";
 import * as React from "react";
 import { ReactNode } from "react";
 import { Home } from "../pages/home";
-import { DataResourcesPane } from "../panes/resources";
+import { DataResourcesButton, DataResourcesPane } from "../panes/resources";
 
 
 const ResourcesPane: ReactNode=<DataResourcesPane/>;
@@ -17,43 +17,43 @@ const ResourcesPane: ReactNode=<DataResourcesPane/>;
 
 export function DataPage({
 
-	item,
-	menu,
+    item,
+    menu,
 
-	side,
-	pane,
+    side,
+    pane,
 
-	children
+    children
 
 }: {
 
-	item?: ReactNode
-	menu?: ReactNode
+    item?: ReactNode
+    menu?: ReactNode
 
-	side?: ReactNode
-	pane?: ReactNode
+    side?: ReactNode
+    pane?: ReactNode
 
-	children: ReactNode
+    children: ReactNode
 
 }) {
 
-	const [active, setActive]=useProp(pane || ResourcesPane); // ;( use constant to avoid infinite useEffect loops
+    const [active, setActive]=useProp(pane || ResourcesPane); // ;( use constant to avoid infinite useEffect loops
 
-	return <ToolPage
+    return <ToolPage
 
-		item={<><a href={Home.id}>EC2U</a> {typeof item === "string" ? <span>{item}</span> : item}</>}
+        item={<><a href={Home.id}>EC2U</a> {typeof item === "string" ? <span>{item}</span> : item}</>}
 
-		menu={menu}
+        menu={menu}
 
-		// side={<><DataResourcesButton onClick={setActive}/> {side}</>}
+        side={<><DataResourcesButton onClick={setActive}/>{side}</>}
 
-		// pane={active}
+        pane={active}
 
-	>
+    >
 
-		{children}
+        {children}
 
-	</ToolPage>;
+    </ToolPage>;
 
 }
 

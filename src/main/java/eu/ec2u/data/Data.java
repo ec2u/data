@@ -5,8 +5,7 @@
 package eu.ec2u.data;
 
 import com.metreeca.gcp.GCPServer;
-import com.metreeca.gcp.services.GCPRepository;
-import com.metreeca.gcp.services.GCPVault;
+import com.metreeca.gcp.services.*;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Toolbox;
@@ -41,6 +40,7 @@ import static com.metreeca.rest.services.Cache.cache;
 import static com.metreeca.rest.services.Engine.engine;
 import static com.metreeca.rest.services.Fetcher.fetcher;
 import static com.metreeca.rest.services.Logger.Level.debug;
+import static com.metreeca.rest.services.Store.store;
 import static com.metreeca.rest.services.Vault.vault;
 import static com.metreeca.rest.wrappers.Bearer.bearer;
 import static com.metreeca.rest.wrappers.CORS.cors;
@@ -52,7 +52,7 @@ import static java.util.Map.entry;
 
 public final class Data {
 
-	private static final boolean production=GCPServer.production();
+	private static final boolean production=true; // !!!  =GCPServer.production();
 
 
 	private static final String root="root"; // root role
@@ -69,6 +69,8 @@ public final class Data {
 		return toolbox
 
 				.set(vault(), GCPVault::new)
+				.set(store(), GCPStore::new)
+
 				.set(storage(), () -> Paths.get(production ? "" : "data"))
 				.set(fetcher(), CacheFetcher::new)
 				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
@@ -94,7 +96,7 @@ public final class Data {
 
 		} else {
 
-			final SPARQLRepository repository=new SPARQLRepository("https://ec2u.data.cc/sparql"); // !!! EC2U.Base
+			final SPARQLRepository repository=new SPARQLRepository("https://data.ec2u.cc/sparql"); // !!! EC2U.Base
 
 			repository.setAdditionalHttpHeaders(Map.of("Authorization", format("Bearer %s", token())));
 

@@ -39,7 +39,7 @@ export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
 	server: {
 		open: "/index.html", // as asset
-		proxy: { [/^(?!^[_@]|.*\.\w+$)/]: { target: "http://localhost:8080/" } } // everything but vite/asset paths
+		proxy: { "^(?!^[_@]|.*\.\w+$).*": { target: "http://localhost:8080/" } } // everything but vite/asset paths
 	}
 
 }));

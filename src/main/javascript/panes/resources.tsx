@@ -6,13 +6,12 @@ import { freeze, string } from "@metreeca/tool/bases";
 import { Updater } from "@metreeca/tool/hooks";
 import { useEntry } from "@metreeca/tool/hooks/queries/entry";
 import { root } from "@metreeca/tool/nests/router";
-import { Calendar, Database, Library, MapPin } from "@metreeca/tool/tiles/icon";
+import { Database, Library, MapPin } from "@metreeca/tool/tiles/icon";
 import { ToolSearch } from "@metreeca/tool/tiles/inputs/search";
 import { ToolItem } from "@metreeca/tool/tiles/item";
 import { ToolPane } from "@metreeca/tool/tiles/pane";
 import * as React from "react";
 import { ReactNode } from "react";
-import { Events } from "../pages/events/events";
 import { Universities } from "../pages/universities/universities";
 
 
@@ -57,10 +56,10 @@ export function DataResourcesPane() {
 			menu={frame(({ universities }) => string(universities))}
 		/>
 
-		<ToolItem icon={<Calendar/>}
-			name={<a href={Events.id}>{string(Events.label)}</a>}
-			menu={frame(({ events }) => string(events))}
-		/>
+		{/*<ToolItem icon={<Calendar/>}
+		 name={<a href={Events.id}>{string(Events.label)}</a>}
+		 menu={frame(({ events }) => string(events))}
+		 />*/}
 
 	</ToolPane>;
 }

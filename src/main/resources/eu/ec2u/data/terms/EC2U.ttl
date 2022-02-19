@@ -167,39 +167,33 @@ schema:Event rdf:type owl:Class .
 #################################################################
 
 ###  http://www.wikidata.org/entity/Q1523902
-wd:Q1523902 rdf:type owl:NamedIndividual ;
-            owl:sameAs <https://data.ec2u.eu/universities/iasi> .
+<https://data.ec2u.eu/universities/iasi> rdf:type owl:NamedIndividual ;
+            owl:sameAs wd:Q1523902 .
 
 
 ###  http://www.wikidata.org/entity/Q154561
-wd:Q154561 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/jena> .
-
+<https://data.ec2u.eu/universities/jena> rdf:type owl:NamedIndividual ;
+            owl:sameAs wd:Q154561 .
 
 ###  http://www.wikidata.org/entity/Q219317
-wd:Q219317 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/pavia> .
-
+<https://data.ec2u.eu/universities/pavia> rdf:type owl:NamedIndividual ;
+            owl:sameAs wd:Q219317 .
 
 ###  http://www.wikidata.org/entity/Q308963
-wd:Q308963 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/salamanca> .
-
+<https://data.ec2u.eu/universities/salamanca> rdf:type owl:NamedIndividual ;
+            owl:sameAs wd:Q308963 .
 
 ###  http://www.wikidata.org/entity/Q368643
-wd:Q368643 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/coimbra> .
-
+<https://data.ec2u.eu/universities/coimbra> rdf:type owl:NamedIndividual ;
+            owl:sameAs wd:Q368643 .
 
 ###  http://www.wikidata.org/entity/Q501841
-wd:Q501841 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/turku> .
-
+<https://data.ec2u.eu/universities/turku> rdf:type owl:NamedIndividual ;
+            owl:sameAs wd:Q501841 .
 
 ###  http://www.wikidata.org/entity/Q661056
-wd:Q661056 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/poitiers> .
-
+<https://data.ec2u.eu/universities/poitiers> rdf:type owl:NamedIndividual ;
+            owl:sameAs wd:Q661056 .
 
 ###  https://data.ec2u.eu/universities/coimbra
 <https://data.ec2u.eu/universities/coimbra> rdf:type owl:NamedIndividual ,
@@ -235,7 +229,7 @@ wd:Q661056 rdf:type owl:NamedIndividual ;
 <https://data.ec2u.eu/universities/pavia> rdf:type owl:NamedIndividual ,
                                                    ec2u:University ;
                                           ec2u:university <https://data.ec2u.eu/universities/pavia> ;
-                                          rdfs:comment "The University of Pavia (UNIPV) is one of the world’s oldest  academic institutions : it was founded in 1361 and until the 20th century it was the only University in the Milan Area and the region of Lombardy."@en ;
+                                          rdfs:comment "The University of Pavia (UNIPV) is one of the world’s oldest  academic institutions: it was founded in 1361 and until the 20th century it was the only University in the Milan Area and the region of Lombardy."@en ;
                                           rdfs:label "University of Pavia"@en ;
                                           ec2u:image <https://data.ec2u.eu/blobs/unipv.it.png> ;
                                           ec2u:schac "unipv.it" .
