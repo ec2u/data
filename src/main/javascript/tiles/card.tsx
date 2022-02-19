@@ -6,6 +6,7 @@ import * as React from "react";
 import { createElement, ReactNode } from "react";
 import "./card.css";
 
+
 export interface Tags {
 
 	[label: string]: string;

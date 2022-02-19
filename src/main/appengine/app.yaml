@@ -1,11 +1,11 @@
-runtime: java11
+runtime: java-gen2
 
 handlers:
   - url: .*
     script: auto
     secure: always
 
-instance_class: "F4"
+instance_class: F1
 
 automatic_scaling:
   max_idle_instances: 1 # prevent conflicts when dumping rdf to storage bucket

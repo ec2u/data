@@ -15,6 +15,7 @@ import { ReactNode } from "react";
 import { Events } from "../pages/events/events";
 import { Universities } from "../pages/universities/universities";
 
+
 const Resources=freeze({
 
 	id: "/",

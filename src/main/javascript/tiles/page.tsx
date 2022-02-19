@@ -7,7 +7,7 @@ import { ToolPage } from "@metreeca/tool/tiles/page";
 import * as React from "react";
 import { ReactNode } from "react";
 import { Home } from "../pages/home";
-import { DataResourcesButton, DataResourcesPane } from "../panes/resources";
+import { DataResourcesPane } from "../panes/resources";
 
 
 const ResourcesPane: ReactNode=<DataResourcesPane/>;
@@ -45,9 +45,9 @@ export function DataPage({
 
 		menu={menu}
 
-		side={<><DataResourcesButton onClick={setActive}/> {side}</>}
+		// side={<><DataResourcesButton onClick={setActive}/> {side}</>}
 
-		pane={active}
+		// pane={active}
 
 	>
 

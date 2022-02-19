@@ -17,6 +17,7 @@ import ToolNone from "./pages/none";
 import { DataUniversities, Universities } from "./pages/universities/universities";
 import { DataUniversity, University } from "./pages/universities/university";
 
+
 render((
 
 	<React.StrictMode>
