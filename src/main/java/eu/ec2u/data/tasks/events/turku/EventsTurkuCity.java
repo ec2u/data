@@ -8,6 +8,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
+import com.metreeca.text.actions.Normalize;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.ports.Universities;
@@ -236,7 +237,10 @@ public final class EventsTurkuCity implements Runnable {
 
 
 	private Literal normalize(final Literal literal) {
-		return normalize(literal, Clean::normalize);
+		return normalize(literal, new Normalize()
+				.space(true)
+				.smart(true)
+		);
 	}
 
 	private Literal normalize(final Literal literal, final UnaryOperator<String> normalizer) {

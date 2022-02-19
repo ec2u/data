@@ -6,6 +6,7 @@ package eu.ec2u.data;
 
 import com.metreeca.gcp.GCPServer;
 import com.metreeca.gcp.services.GCPRepository;
+import com.metreeca.gcp.services.GCPVault;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Toolbox;
@@ -29,6 +30,7 @@ import static com.metreeca.rest.Handler.asset;
 import static com.metreeca.rest.Handler.route;
 import static com.metreeca.rest.MessageException.status;
 import static com.metreeca.rest.Response.SeeOther;
+import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Toolbox.storage;
 import static com.metreeca.rest.Wrapper.preprocessor;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
@@ -39,6 +41,7 @@ import static com.metreeca.rest.services.Cache.cache;
 import static com.metreeca.rest.services.Engine.engine;
 import static com.metreeca.rest.services.Fetcher.fetcher;
 import static com.metreeca.rest.services.Logger.Level.debug;
+import static com.metreeca.rest.services.Vault.vault;
 import static com.metreeca.rest.wrappers.Bearer.bearer;
 import static com.metreeca.rest.wrappers.CORS.cors;
 import static com.metreeca.rest.wrappers.Server.server;
@@ -65,6 +68,7 @@ public final class Data {
 	public static Toolbox toolbox(final Toolbox toolbox) {
 		return toolbox
 
+				.set(vault(), GCPVault::new)
 				.set(storage(), () -> Paths.get(production ? "" : "data"))
 				.set(fetcher(), CacheFetcher::new)
 				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
@@ -80,8 +84,7 @@ public final class Data {
 
 
 	private static String token() {
-		return "6BA5B99EC21572ADEDB7A8E246E71";
-		// !!! return service(vault()).get("eu-ec2u-data").orElse("");
+		return service(vault()).get("root-key").orElse("");
 	}
 
 	private static Repository repository() {
@@ -91,7 +94,7 @@ public final class Data {
 
 		} else {
 
-			final SPARQLRepository repository=new SPARQLRepository("https://ec2u.metreeca.net/sparql"); // !!! https://data.ec2u.eu/
+			final SPARQLRepository repository=new SPARQLRepository("https://ec2u.data.cc/sparql"); // !!! EC2U.Base
 
 			repository.setAdditionalHttpHeaders(Map.of("Authorization", format("Bearer %s", token())));
 
