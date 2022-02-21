@@ -10,6 +10,9 @@ import postcssNesting from "postcss-nesting";
 const src=resolve(process.env.src || "src/main/javascript/");
 const out=resolve(process.env.out || "target/classes/static/");
 
+const server="http://localhost:8080/";
+
+
 export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
 	root: src,
@@ -38,8 +41,7 @@ export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 	},
 
 	server: {
-		open: "/index.html", // as asset
-		proxy: { "^(?!^[_@]|.*\.\w+$).*": { target: "http://localhost:8080/" } } // everything but vite/asset paths
+		proxy: { "^(/[-a-zA-Z0-9]+)*/?$": { target: server } } // only routes
 	}
 
 }));

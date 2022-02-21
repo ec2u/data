@@ -33,7 +33,6 @@ import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Toolbox.storage;
 import static com.metreeca.rest.Wrapper.preprocessor;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
-import static com.metreeca.rest.handlers.Packer.packer;
 import static com.metreeca.rest.handlers.Publisher.publisher;
 import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.services.Cache.cache;
@@ -52,115 +51,114 @@ import static java.util.Map.entry;
 
 public final class Data {
 
-	private static final boolean production=true; // !!!  =GCPServer.production();
+    private static final boolean production=true; // !!!  =GCPServer.production();
 
 
-	private static final String root="root"; // root role
+    private static final String root="root"; // root role
 
 
-	static {
-		debug.log("com.metreeca");
-	}
+    static {
+        debug.log("com.metreeca");
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static Toolbox toolbox(final Toolbox toolbox) {
-		return toolbox
+    public static Toolbox toolbox(final Toolbox toolbox) {
+        return toolbox
 
-				.set(vault(), GCPVault::new)
-				.set(store(), GCPStore::new)
+                .set(vault(), GCPVault::new)
+                .set(store(), GCPStore::new)
 
-				.set(storage(), () -> Paths.get(production ? "" : "data"))
-				.set(fetcher(), CacheFetcher::new)
-				.set(cache(), () -> new FileCache().ttl(ofDays(1)))
+                .set(storage(), () -> Paths.get("data"))
+                .set(fetcher(), CacheFetcher::new)
+                .set(cache(), () -> new FileCache().ttl(ofDays(1)))
 
-				.set(graph(), () -> new Graph(repository()))
-				.set(engine(), GraphEngine::new)
+                .set(graph(), () -> new Graph(repository()))
+                .set(engine(), GraphEngine::new)
 
-				.set(keywords(), () -> Map.ofEntries(
-						entry("@id", "id"),
-						entry("@type", "type")
-				));
-	}
-
-
-	private static String token() {
-		return service(vault()).get("root-key").orElse("");
-	}
-
-	private static Repository repository() {
-		if ( production ) {
-
-			return new GCPRepository("graph");
-
-		} else {
-
-			final SPARQLRepository repository=new SPARQLRepository("https://data.ec2u.cc/sparql"); // !!! EC2U.Base
-
-			repository.setAdditionalHttpHeaders(Map.of("Authorization", format("Bearer %s", token())));
-
-			return repository;
-
-		}
-	}
+                .set(keywords(), () -> Map.ofEntries(
+                        entry("@id", "id"),
+                        entry("@type", "type")
+                ));
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static String token() {
+        return service(vault()).get("root-key").orElse("");
+    }
 
-	public static void main(final String... args) {
-		new GCPServer().delegate(toolbox -> toolbox(toolbox)
+    private static Repository repository() {
+        if ( production ) {
 
-				.exec(new Namespaces())
-				.exec(new Ontologies())
+            return new GCPRepository("graph");
 
-				.get(() -> server()
+        } else {
 
-						.with(cors())
-						.with(bearer(token(), root))
+            final SPARQLRepository repository=new SPARQLRepository("https://data.ec2u.cc/sparql"); // !!! EC2U.Base
 
-						.with(preprocessor(request -> // disable language negotiation
-								request.header("Accept-Language", "")
-						))
+            repository.setAdditionalHttpHeaders(Map.of("Authorization", format("Bearer %s", token())));
 
-						.wrap(router()
+            return repository;
 
-								.path("/graphs", graphs().query().update(root))
-
-								.path("/sparql", route(
-										status(SeeOther, "https://apps.metreeca.com/self/#endpoint={@}"),
-										sparql().query().update(root)
-								))
-
-								.path("/cron/*", new Cron())
-
-								.path("/*", asset(
-
-										production
-
-												? publisher("/static").fallback("/index.html")
-												: packer(),
-
-										preprocessor(request -> request.base(EC2U.Base)).wrap(router()
-
-												.path("/", new Resources())
-												.path("/concepts/*", new Concepts())
-												.path("/universities/*", new Universities())
-												.path("/events/*", new Events())
-
-										)
-
-								))
-
-						)
-				)
-
-		).start();
-	}
+        }
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Data() { }
+    public static void main(final String... args) {
+        new GCPServer().delegate(toolbox -> toolbox(toolbox)
+
+                .exec(new Namespaces())
+                .exec(new Ontologies())
+
+                .get(() -> server()
+
+                        .with(cors())
+                        .with(bearer(token(), root))
+
+                        .with(preprocessor(request -> // disable language negotiation
+                                request.header("Accept-Language", "")
+                        ))
+
+                        .wrap(router()
+
+                                .path("/graphs", graphs().query().update(root))
+
+                                .path("/sparql", route(
+                                        status(SeeOther, "https://apps.metreeca.com/self/#endpoint={@}"),
+                                        sparql().query().update(root)
+                                ))
+
+                                .path("/cron/*", new Cron())
+
+                                .path("/*", asset(
+
+                                        publisher("/static")
+
+                                                .fallback("/index.html"),
+
+                                        preprocessor(request -> request.base(EC2U.Base)).wrap(router()
+
+                                                .path("/", new Resources())
+                                                .path("/concepts/*", new Concepts())
+                                                .path("/universities/*", new Universities())
+                                                .path("/events/*", new Events())
+
+                                        )
+
+                                ))
+
+                        )
+                )
+
+        ).start();
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Data() { }
 
 }

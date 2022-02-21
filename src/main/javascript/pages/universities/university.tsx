@@ -89,8 +89,10 @@ export function DataUniversity() {
 						<dt>City</dt>
 						<dd>{location && <a href={location.id}>{string(location.label)}</a>}</dd>
 
-						<dt>Students</dt>
-						<dd>{students && string(students)}</dd>
+						{students && <>
+							<dt>Students</dt>
+							<dd>{string(students)}</dd>
+						</>}
 
 					</dl>}
 
