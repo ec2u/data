@@ -51,7 +51,7 @@ import static java.util.Map.entry;
 
 public final class Data {
 
-    private static final boolean production=true; // !!!  =GCPServer.production();
+    private static final boolean production=GCPServer.production();
 
 
     private static final String root="root"; // root role

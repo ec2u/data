@@ -36,6 +36,10 @@
     <properties>
 
         <main>eu.ec2u.data.Data</main>
+        <revision>${maven.build.timestamp}</revision>
+
+        <gae.version>next</gae.version>
+        <gae.promote>false</gae.promote>
 
         <java.version>11</java.version>
         <maven.version>3.6</maven.version>
@@ -166,6 +170,8 @@
 
     <build>
 
+        <finalName>${project.artifactId}</finalName>
+
         <resources>
 
             <resource>
@@ -249,66 +255,6 @@
 
             </plugin>
 
-            <plugin>
-
-                <!-- https://maven.apache.org/plugins/maven-jar-plugin/ -->
-
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.2</version>
-
-                <configuration>
-
-                    <archive>
-
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-
-                    </archive>
-
-                </configuration>
-
-            </plugin>
-
-            <plugin>
-                <!-- https://maven.apache.org/surefire/maven-surefire-plugin/ -->
-
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-
-            </plugin>
-
-            <plugin>
-
-                <!-- https://maven.apache.org/plugins/maven-site-plugin -->
-
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.10.0</version>
-
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-
-            </plugin>
-
-            <plugin>
-
-                <!-- https://maven.apache.org/plugins/maven-deploy-plugin/ -->
-
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0-M1</version>
-
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-
-            </plugin>
-
             <plugin> <!-- https://github.com/eirslett/frontend-maven-plugin -->
 
                 <groupId>com.github.eirslett</groupId>
@@ -378,58 +324,113 @@
 
             </plugin>
 
-            <!--
-                        <plugin> &lt;!&ndash; http://maven.apache.org/plugins/maven-shade-plugin/ &ndash;&gt;
+            <plugin> <!-- https://maven.apache.org/plugins/maven-dependency-plugin/ -->
 
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-shade-plugin</artifactId>
-                            <version>3.2.4</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.2.0</version>
 
-                            <configuration>
+                <executions>
+                    <execution>
 
-                                <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
 
-                                <transformers>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
 
-                                    <transformer
-                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"
-                                    >
-                                        <mainClass>${main}</mainClass>
-                                    </transformer>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                        </configuration>
 
-                                    <transformer
-                                            implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"
-                                    />
+                    </execution>
+                </executions>
 
-                                </transformers>
+            </plugin>
 
-                                <filters> &lt;!&ndash; ;( exclude JAR signatures (https://stackoverflow.com/a/55215382/) &ndash;&gt;
-                                    <filter>
-                                        <artifact>*:*</artifact>
-                                        <excludes>
-                                            <exclude>META-INF/*.SF</exclude>
-                                            <exclude>META-INF/*.DSA</exclude>
-                                            <exclude>META-INF/*.RSA</exclude>
-                                        </excludes>
-                                    </filter>
-                                </filters>
+            <plugin>  <!-- https://maven.apache.org/plugins/maven-jar-plugin/ -->
 
-                            </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
 
-                            <executions>
+                <configuration>
 
-                                <execution>
+                    <archive>
 
-                                    <goals>
-                                        <goal>shade</goal>
-                                    </goals>
+                        <manifest>
+                            <mainClass>${main}</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>libs</classpathPrefix>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
 
-                                </execution>
+                    </archive>
 
-                            </executions>
+                </configuration>
 
-                        </plugin>
-            -->
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/surefire/maven-surefire-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/plugins/maven-site-plugin -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.10.0</version>
+
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/plugins/maven-deploy-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
+
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+
+            </plugin>
+
+            <plugin> <!-- https://cloud.google.com/appengine/docs/standard/java/tools/maven-reference -->
+
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.4.1</version>
+
+                <executions>
+                    <execution>
+
+                        <id>deploy-to-gae</id>
+                        <phase>deploy</phase>
+
+                        <goals>
+                            <goal>deploy</goal>
+                            <goal>deployCron</goal>
+                        </goals>
+
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <projectId>${project.artifactId}</projectId>
+                    <version>${gae.version}</version>
+                    <promote>${gae.promote}</promote>
+                </configuration>
+
+            </plugin>
 
         </plugins>
 
