@@ -41,7 +41,7 @@ export default function DataHome() {
 
 			menu={<a href={"https://ec2u.eu/"} target={"_blank"} title={`About EC2U`}><Site/></a>}>
 
-			{<img src={"/blobs/ec2u.eu.png"} alt={"EC2U Locations"} style={{ width: "100%", maxWidth: "50em" }}/>}
+			{<img src={"/blobs/ec2u.png"} alt={"EC2U Locations"} style={{ width: "100%", maxWidth: "50em" }}/>}
 
 		</DataPage>
 
