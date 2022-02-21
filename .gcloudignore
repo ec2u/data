@@ -1,0 +1,11 @@
+#!include:.gitignore
+
+/.git/
+/.github/
+
+/.gitignore
+/.gcloudignore
+
+/docs/
+
+/*.md
