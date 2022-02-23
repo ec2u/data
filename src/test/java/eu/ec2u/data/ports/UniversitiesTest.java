@@ -9,6 +9,7 @@ import com.metreeca.rest.actions.Validate;
 
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.LDP;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.metreeca.json.Frame.frame;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 final class UniversitiesTest {
 
-	@Test void test() {
+	@Disabled @Test void test() {
 
 		exec(() -> {
 
