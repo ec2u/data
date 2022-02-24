@@ -37,7 +37,7 @@ export const Home=freeze({
 export default function DataHome() {
 	return (
 
-		<DataPage item={"Connect Centre"}
+		<DataPage item={"European Campus of City-Universities"}
 
 			menu={<a href={"https://ec2u.eu/"} target={"_blank"} title={`About EC2U`}><Site/></a>}>
 

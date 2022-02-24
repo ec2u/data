@@ -48,7 +48,7 @@ export function DataResourcesPane() {
 
     return <ToolPane
 
-        header={<h1>EC2U Connect Centre</h1>}
+        header={<h1>Connect Centre</h1>}
         // header={<ToolSearch icon rule placeholder={"Search"} value={""} onChange={() => {}}/>}
 
     >

@@ -12,9 +12,9 @@ import com.metreeca.rest.Toolbox;
 import com.metreeca.rest.services.Cache.FileCache;
 import com.metreeca.rest.services.Fetcher.CacheFetcher;
 
+import eu.ec2u.data.ports.Concepts;
 import eu.ec2u.data.ports.*;
-import eu.ec2u.data.tasks.Namespaces;
-import eu.ec2u.data.tasks.Ontologies;
+import eu.ec2u.data.tasks.*;
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
@@ -112,6 +112,7 @@ public final class Data {
 
                 .exec(new Namespaces())
                 .exec(new Ontologies())
+                .exec(new Inferences())
 
                 .get(() -> server()
 
