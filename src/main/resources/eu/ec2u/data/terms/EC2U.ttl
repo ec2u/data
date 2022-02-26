@@ -206,7 +206,8 @@ wd:Q661056 rdf:type owl:NamedIndividual ;
                                                      ec2u:University ;
                                             ec2u:university <https://data.ec2u.eu/universities/coimbra> ;
                                             rdfs:comment "Focused on the future and recognized as major promoter of change, the University of Coimbra has more than 7 centuries of experience in the creation and dissemination of knowledge, culture, science and technology through study, teaching, cutting-edge research and innovation in the most diverse areas of knowledge."@en ;
-                                            rdfs:label "University of Coimbra"@en ;
+                                            rdfs:label "Universidade de Coimbra"@pt ,
+                                                       "University of Coimbra"@en ;
                                             ec2u:image <https://data.ec2u.eu/blobs/coimbra.png> ;
                                             ec2u:schac "uc.pt" .
 

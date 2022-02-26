@@ -57,8 +57,6 @@ public final class EventsIasiUniversity360 implements Runnable {
 
                 .optMap(new Validate(Event()))
 
-                .peek(x -> System.out.println(x))
-
                 .sink(events -> upload(EC2U.events, events));
     }
 
