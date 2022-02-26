@@ -14,7 +14,6 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import static com.metreeca.json.Shape.optional;
 import static com.metreeca.json.Shape.required;
 import static com.metreeca.json.Values.IRIType;
-import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.shapes.Clazz.clazz;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
@@ -29,63 +28,63 @@ import static eu.ec2u.data.terms.EC2U.multilingual;
 
 public final class Universities extends Delegator {
 
-	public static final IRI Coimbra=iri(EC2U.Base, "/universities/coimbra");
-	public static final IRI Iasi=iri(EC2U.Base, "/universities/iasi");
-	public static final IRI Jena=iri(EC2U.Base, "/universities/jena");
-	public static final IRI Pavia=iri(EC2U.Base, "/universities/pavia");
-	public static final IRI Poitiers=iri(EC2U.Base, "/universities/poitiers");
-	public static final IRI Salamanca=iri(EC2U.Base, "/universities/salamanca");
-	public static final IRI Turku=iri(EC2U.Base, "/universities/turku");
+    public static final IRI Coimbra=EC2U.item("/universities/coimbra");
+    public static final IRI Iasi=EC2U.item("/universities/iasi");
+    public static final IRI Jena=EC2U.item("/universities/jena");
+    public static final IRI Pavia=EC2U.item("/universities/pavia");
+    public static final IRI Poitiers=EC2U.item("/universities/poitiers");
+    public static final IRI Salamanca=EC2U.item("/universities/salamanca");
+    public static final IRI Turku=EC2U.item("/universities/turku");
 
 
-	public static Shape University() {
-		return relate(
+    public static Shape University() {
+        return relate(
 
-				filter(clazz(EC2U.University)),
+                filter(clazz(EC2U.University)),
 
-				field(RDFS.LABEL, required(), multilingual()),
-				field(RDFS.COMMENT, optional(), multilingual()),
+                field(RDFS.LABEL, required(), multilingual()),
+                field(RDFS.COMMENT, optional(), multilingual()),
 
-				field(EC2U.schac, required(), datatype(XSD.STRING)),
-				field(EC2U.image, optional(), datatype(IRIType)),
+                field(EC2U.schac, required(), datatype(XSD.STRING)),
+                field(EC2U.image, optional(), datatype(IRIType)),
 
-				link(OWL.SAMEAS,
+                link(OWL.SAMEAS,
 
-						field(EC2U.country, optional(),
-								field(RDFS.LABEL, optional(), multilingual())
-						),
+                        field(EC2U.country, optional(),
+                                field(RDFS.LABEL, optional(), multilingual())
+                        ),
 
-						detail(
+                        detail(
 
-								field(EC2U.location, optional(),
-										field(RDFS.LABEL, optional(), multilingual())
-								),
+                                field(EC2U.location, optional(),
+                                        field(RDFS.LABEL, optional(), multilingual())
+                                ),
 
-								field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
-								field(WGS84.LONG, optional(), datatype(XSD.DECIMAL)),
+                                field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
+                                field(WGS84.LONG, optional(), datatype(XSD.DECIMAL)),
 
-								field(EC2U.inception, optional(), datatype(XSD.DATETIME)),
-								field(EC2U.students, optional(), datatype(XSD.DECIMAL))
-						)
+                                field(EC2U.inception, optional(), datatype(XSD.DATETIME)),
+                                field(EC2U.students, optional(), datatype(XSD.DECIMAL))
+                        )
 
-				)
+                )
 
-		);
-	}
+        );
+    }
 
 
-	public Universities() {
-		delegate(driver(University()).wrap(router()
+    public Universities() {
+        delegate(driver(University()).wrap(router()
 
-				.path("/", router()
-						.get(relator())
-				)
+                .path("/", router()
+                        .get(relator())
+                )
 
-				.path("/{id}", router()
-						.get(relator())
-				)
+                .path("/{id}", router()
+                        .get(relator())
+                )
 
-		));
-	}
+        ));
+    }
 
 }
