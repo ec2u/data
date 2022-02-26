@@ -12,8 +12,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Set;
 
-import static com.metreeca.json.Shape.optional;
-import static com.metreeca.json.Shape.required;
+import static com.metreeca.json.Shape.*;
 import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.shapes.And.and;
 import static com.metreeca.json.shapes.Datatype.datatype;
@@ -77,13 +76,26 @@ public final class EC2U {
 
 				field(updated, optional(), datatype(XSD.DATETIME)),
 
-
 				field(DCTERMS.PUBLISHER, required(), Publisher()),
+				field(DCTERMS.SUBJECT, multiple(), Concept()),
 
 				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
 				field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME))
+
+		);
+	}
+
+	public static Shape Concept() {
+		return and(
+
+				field(SKOS.PREF_LABEL, multilingual()),
+				field(SKOS.ALT_LABEL, multilingual()),
+				field(SKOS.DEFINITION, multilingual()),
+
+				field(SKOS.BROADER, datatype(Values.IRIType)),
+				field(SKOS.NARROWER, datatype(Values.IRIType))
 
 		);
 	}

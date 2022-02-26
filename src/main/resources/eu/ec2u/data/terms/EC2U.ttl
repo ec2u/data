@@ -247,7 +247,8 @@ wd:Q661056 rdf:type owl:NamedIndividual ;
                                                       ec2u:University ;
                                              ec2u:university <https://data.ec2u.eu/universities/poitiers> ;
                                              rdfs:comment "Founded in 1431, the University of Poitiers is a multidisciplinary university which enrols 29 000 students, 4200 of which are international students from 120 different countries, supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and  is above the national average with 16% of foreign students."@en ;
-                                             rdfs:label "University of Poitiers"@en ;
+                                             rdfs:label "University of Poitiers"@en ,
+                                                        "Université de Poitiers"@fr ;
                                              ec2u:image <https://data.ec2u.eu/blobs/poitiers.png> ;
                                              ec2u:schac "univ-poitiers.fr" .
 
