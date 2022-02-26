@@ -1,6 +1,12 @@
 runtime: java11
 
 handlers:
+
+  - url: /(.*\.(html|css|js|svg|png))$
+    static_files: static/\1
+    upload: static/.*$
+    secure: always
+
   - url: .*
     script: auto
     secure: always

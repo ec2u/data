@@ -29,13 +29,13 @@ import static eu.ec2u.data.terms.EC2U.multilingual;
 
 public final class Universities extends Delegator {
 
-	public static final IRI Coimbra=iri(EC2U.Base, "/universities/uc.pt");
-	public static final IRI Iasi=iri(EC2U.Base, "/universities/uaic.ro");
-	public static final IRI Jena=iri(EC2U.Base, "/universities/uni-jena.de");
-	public static final IRI Pavia=iri(EC2U.Base, "/universities/unipv.it");
-	public static final IRI Poitiers=iri(EC2U.Base, "/universities/univ-poitiers.fr");
-	public static final IRI Salamanca=iri(EC2U.Base, "/universities/usal.es");
-	public static final IRI Turku=iri(EC2U.Base, "/universities/utu.fi");
+	public static final IRI Coimbra=iri(EC2U.Base, "/universities/coimbra");
+	public static final IRI Iasi=iri(EC2U.Base, "/universities/iasi");
+	public static final IRI Jena=iri(EC2U.Base, "/universities/jena");
+	public static final IRI Pavia=iri(EC2U.Base, "/universities/pavia");
+	public static final IRI Poitiers=iri(EC2U.Base, "/universities/poitiers");
+	public static final IRI Salamanca=iri(EC2U.Base, "/universities/salamanca");
+	public static final IRI Turku=iri(EC2U.Base, "/universities/turku");
 
 
 	public static Shape University() {

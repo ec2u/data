@@ -5,12 +5,11 @@
 import { freeze, string } from "@metreeca/tool/bases";
 import { Updater } from "@metreeca/tool/hooks";
 import { useEntry } from "@metreeca/tool/hooks/queries/entry";
-import { root } from "@metreeca/tool/nests/router";
-import { Database, Library, MapPin } from "@metreeca/tool/tiles/icon";
+import { Calendar, Library, MapPin } from "@metreeca/tool/tiles/icon";
 import { ToolItem } from "@metreeca/tool/tiles/item";
 import { ToolPane } from "@metreeca/tool/tiles/pane";
 import * as React from "react";
-import { ReactNode } from "react";
+import { Events } from "../pages/events/events";
 import { Universities } from "../pages/universities/universities";
 
 
@@ -32,12 +31,26 @@ export function DataResourcesButton({
 
 }: {
 
-    onClick: Updater<ReactNode>
+    onClick: Updater<void>
 
 }) {
 
+    function doActivate(analytics: boolean) {
+        if ( analytics ) {
+
+            window.open("/sparql", "_blank");
+
+        } else {
+
+            onClick();
+
+        }
+    }
+
     return <button title={"Resources"}
-        onClick={e => onClick(e.altKey ? <DataHiddenPane/> : <DataResourcesPane/>)}
+
+        onClick={e => doActivate(e.altKey)}
+
     ><Library/></button>;
 
 }
@@ -58,18 +71,10 @@ export function DataResourcesPane() {
             menu={frame(({ universities }) => string(universities))}
         />
 
-        {/*<ToolItem icon={<Calendar/>}
-         name={<a href={Events.id}>{string(Events.label)}</a>}
-         menu={frame(({ events }) => string(events))}
-         />*/}
-
-    </ToolPane>;
-}
-
-export function DataHiddenPane() {
-    return <ToolPane>
-        <ToolItem icon={<Database/>}
-            name={<a href={`https://apps.metreeca.com/self/#endpoint=${root}sparql`} target={"_blank"}>SPARQL</a>}
+        <ToolItem icon={<Calendar/>}
+            name={<a href={Events.id}>{string(Events.label)}</a>}
+            menu={frame(({ events }) => string(events))}
         />
+
     </ToolPane>;
 }

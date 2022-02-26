@@ -29,8 +29,8 @@ public final class Clear implements Runnable {
 
 			connection.clear();
 
-
 			return this;
+
 		});
 	}
 

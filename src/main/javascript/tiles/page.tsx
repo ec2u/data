@@ -39,13 +39,17 @@ export function DataPage({
 
     const [active, setActive]=useProp(pane || ResourcesPane); // ;( use constant to avoid infinite useEffect loops
 
+
     return <ToolPage
 
         item={<><a href={Home.id}>EC2U</a> {typeof item === "string" ? <span>{item}</span> : item}</>}
 
         menu={menu}
 
-        side={<><DataResourcesButton onClick={setActive}/>{side}</>}
+        side={<>
+            <DataResourcesButton onClick={() => setActive(<DataResourcesPane/>)}/>
+            {side}
+        </>}
 
         pane={active}
 

@@ -59,8 +59,11 @@
         <gae.version>next</gae.version>
         <gae.promote>false</gae.promote>
 
-        <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+
+        <maven.site.skip>true</maven.site.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
 
     </properties>
 
@@ -179,35 +182,6 @@
 
         <plugins>
 
-            <plugin> <!-- https://maven.apache.org/enforcer/maven-enforcer-plugin/ -->
-
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M2</version>
-
-                <configuration>
-                    <rules>
-                        <requireMavenVersion>
-                            <version>${maven.version}</version>
-                        </requireMavenVersion>
-                    </rules>
-                </configuration>
-
-                <executions>
-                    <execution>
-
-                        <id>enforce-maven</id>
-                        <phase>validate</phase>
-
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-
-                    </execution>
-                </executions>
-
-            </plugin>
-
             <plugin> <!-- https://maven.apache.org/plugins/maven-clean-plugin/ -->
 
                 <groupId>org.apache.maven.plugins</groupId>
@@ -230,6 +204,35 @@
 
                         <goals>
                             <goal>clean</goal>
+                        </goals>
+
+                    </execution>
+                </executions>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/enforcer/maven-enforcer-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0</version>
+
+                <configuration>
+                    <rules>
+                        <requireMavenVersion>
+                            <version>${maven.version}</version>
+                        </requireMavenVersion>
+                    </rules>
+                </configuration>
+
+                <executions>
+                    <execution>
+
+                        <id>enforce-maven</id>
+                        <phase>validate</phase>
+
+                        <goals>
+                            <goal>enforce</goal>
                         </goals>
 
                     </execution>
@@ -261,11 +264,6 @@
                 <configuration>
 
                     <installDirectory>${project.build.directory}</installDirectory>
-
-                    <environmentVariables>
-                        <code>${project.build.scriptSourceDirectory}</code>
-                        <dist>${project.build.outputDirectory}/static</dist>
-                    </environmentVariables>
 
                 </configuration>
 
@@ -321,6 +319,14 @@
 
             </plugin>
 
+            <plugin> <!-- https://maven.apache.org/surefire/maven-surefire-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+
+            </plugin>
+
             <plugin>  <!-- https://maven.apache.org/plugins/maven-jar-plugin/ -->
 
                 <groupId>org.apache.maven.plugins</groupId>
@@ -350,11 +356,6 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.2.0</version>
 
-                <configuration>
-                    <useBaseVersion>false</useBaseVersion> <!-- copy snapshots as referenced by manifest -->
-                    <outputDirectory>${project.build.directory}/libs</outputDirectory>
-                </configuration>
-
                 <executions>
                     <execution>
 
@@ -365,40 +366,47 @@
                             <goal>copy-dependencies</goal>
                         </goals>
 
+                        <configuration>
+                            <useBaseVersion>false</useBaseVersion> <!-- copy snapshots as referenced by manifest -->
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                        </configuration>
+
                     </execution>
                 </executions>
 
             </plugin>
 
-            <plugin> <!-- https://maven.apache.org/surefire/maven-surefire-plugin/ -->
+            <plugin> <!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->
 
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
 
-            </plugin>
+                <executions>
+                    <execution>
 
-            <plugin> <!-- https://maven.apache.org/plugins/maven-site-plugin -->
+                        <id>stage-static-assets</id>
+                        <phase>package</phase>
 
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.10.0</version>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
 
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                        <configuration>
 
-            </plugin>
+                            <outputDirectory>${project.build.directory}/appengine-staging/static</outputDirectory>
 
-            <plugin> <!-- https://maven.apache.org/plugins/maven-deploy-plugin/ -->
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.outputDirectory}/static</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
 
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                        </configuration>
 
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                    </execution>
+                </executions>
 
             </plugin>
 
