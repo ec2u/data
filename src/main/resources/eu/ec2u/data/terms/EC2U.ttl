@@ -209,8 +209,8 @@ schema:Event rdf:type owl:Class .
 <https://data.ec2u.eu/universities/iasi> rdf:type owl:NamedIndividual ,
                                                   ec2u:University ;
                                          ec2u:university <https://data.ec2u.eu/universities/iasi> ;
-                                         rdfs:comment "Alexandru Ioan Cuza University of Iasi, the first modern university founded in Romania (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, education and institutional transparency. With about 23000 students and 2000 full-time staff in its 15 faculties, our university’s academic offer includes 80 degrees at bachelor level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered in English as well)."@en ;
-                                         rdfs:label "University of Iasi"@en ;
+                                         rdfs:comment "Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, education and institutional transparency. With about 23000 students and 2000 full-time staff in its 15 faculties, our university’s academic offer includes 80 degrees at bachelor level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered in English as well)."@en ;
+                                         rdfs:label "University of Iași"@en ;
                                          ec2u:image <https://data.ec2u.eu/blobs/iasi.png> ;
                                          ec2u:schac "uaic.ro" .
 

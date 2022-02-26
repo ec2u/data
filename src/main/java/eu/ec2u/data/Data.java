@@ -95,7 +95,7 @@ public final class Data {
 
         } else {
 
-            final SPARQLRepository repository=new SPARQLRepository("https://data.ec2u.cc/sparql"); // !!! EC2U.Base
+            final SPARQLRepository repository=new SPARQLRepository(EC2U.item("/sparql").stringValue());
 
             repository.setAdditionalHttpHeaders(Map.of("Authorization", format("Bearer %s", token())));
 
