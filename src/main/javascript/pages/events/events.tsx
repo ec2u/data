@@ -35,12 +35,12 @@ export const Events=freeze({
 		id: "",
 
 		image: "",
-		label: { en: "" },
-		comment: { en: "" },
+		label: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" },
+		comment: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" },
 
 		university: {
 			id: "",
-			label: { en: "" }
+			label: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" }
 		},
 
 		startDate: "",
@@ -90,15 +90,18 @@ export function DataEvents() {
 				name={<a href={id}>{string(label)}</a>}
 
 				icon={image?.[0]}
+
 				tags={<>
 					<span>{string(university.label).replace("University of ", "")}</span>
-					<span> / </span>
-					<span>{startDate.substr(0, 10)}</span>
+					{startDate && <>
+						<span> / </span>
+						<span>{startDate.substr(0, 10)}</span>
+					</>}
 				</>}
 
 			>
 
-				{string(comment)}
+				{string(comment, ["en", "pt", "ro", "it", "fr", "es", "fi"])}
 
 			</DataCard>
 
