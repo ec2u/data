@@ -10,7 +10,11 @@ import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.tasks.*;
 import eu.ec2u.data.tasks.events.Events;
+import eu.ec2u.data.tasks.events.iasi.EventsIasiUniversity;
+import eu.ec2u.data.tasks.events.iasi.EventsIasiUniversity360;
 import eu.ec2u.data.tasks.events.pavia.EventsPaviaCity;
+import eu.ec2u.data.tasks.events.poitiers.EventsPoitiersUniversity;
+import eu.ec2u.data.tasks.events.salamanca.EventsSalamancaUniversity;
 import eu.ec2u.data.tasks.events.turku.EventsTurkuCity;
 
 import static com.metreeca.gcp.GCPServer.cron;
@@ -39,7 +43,11 @@ public final class Cron extends Delegator {
 				.path("/wikidata", execute(new Wikidata()))
 
 				.path("/events/", execute(new Events()))
+				.path("/events/iasi/university", execute(new EventsIasiUniversity()))
+				.path("/events/iasi/university/360", execute(new EventsIasiUniversity360()))
 				.path("/events/pavia/city", execute(new EventsPaviaCity()))
+				.path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
+				.path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
 				.path("/events/turku/city", execute(new EventsTurkuCity()))
 
 		)));
