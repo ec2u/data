@@ -47,6 +47,8 @@ import static java.util.stream.Collectors.toSet;
 public final class EventsTurkuCity implements Runnable {
 
 	private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
+			.value(RDF.TYPE, EC2U.Publisher)
+			.value(DCTERMS.COVERAGE, EC2U.City)
 			.values(RDFS.LABEL,
 					literal("City of Turku Event's Calendar", "en"),
 					literal("Turun kaupungin tapahtumakalenteri", "fi")

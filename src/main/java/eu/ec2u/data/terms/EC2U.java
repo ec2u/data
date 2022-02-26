@@ -19,6 +19,7 @@ import static com.metreeca.json.shapes.And.and;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Localized.localized;
+import static com.metreeca.json.shapes.Range.range;
 
 public final class EC2U {
 
@@ -77,14 +78,35 @@ public final class EC2U {
 				field(updated, optional(), datatype(XSD.DATETIME)),
 
 
-				field(DCTERMS.PUBLISHER, optional(),
-						field(RDFS.LABEL, multilingual())
-				),
+				field(DCTERMS.PUBLISHER, required(), Publisher()),
 
 				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
 				field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME))
+
+		);
+	}
+
+
+	public static final IRI College=term("College");
+	public static final IRI Association=term("Association");
+	public static final IRI City=term("City");
+	public static final IRI NGO=term("City");
+
+
+	//// Publishers ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static final IRI Publisher=term("Publisher");
+
+
+	public static Shape Publisher() {
+		return and(
+
+				field(RDFS.LABEL, multilingual()),
+				field(RDFS.COMMENT, multilingual()),
+
+				field(DCTERMS.COVERAGE, optional(), range(University, College, Association, City, NGO))
 
 		);
 	}

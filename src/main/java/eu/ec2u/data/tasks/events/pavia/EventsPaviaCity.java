@@ -16,6 +16,7 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
@@ -24,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
+import static com.metreeca.open.actions.Wikidata.wd;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
 import static eu.ec2u.data.ports.Events.Event;
@@ -35,7 +37,12 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
 
+	private static final IRI Italy=wd("Q48");
+	private static final IRI Pavia=wd("Q6259");
+
 	private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
+			.value(RDF.TYPE, EC2U.Publisher)
+			.value(DCTERMS.COVERAGE, EC2U.City)
 			.values(RDFS.LABEL,
 					literal("ViviPavia", "en"),
 					literal("ViviPavia", "it")
@@ -119,7 +126,7 @@ public final class EventsPaviaCity implements Runnable {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private Frame event(final Frame frame) {
-		return frame(iri(EC2U.events, frame.skolemize(DCTERMS.SOURCE)))
+		return frame(iri(EC2U.events, frame.skolemize(seq(DCTERMS.SOURCE))))
 
 				.values(RDF.TYPE, EC2U.Event, Schema.Event)
 				.values(RDFS.LABEL, frame.values(Schema.name))
@@ -145,7 +152,11 @@ public final class EventsPaviaCity implements Runnable {
 	}
 
 	private Frame location(final Frame frame) {
-		return frame(iri(EC2U.locations, md5(frame.skolemize(Schema.name))))
+		return frame(iri(EC2U.locations, md5(frame.skolemize(
+				seq(Schema.name),
+				seq(Schema.address, Schema.addressLocality),
+				seq(Schema.address, Schema.streetAddress)
+		))))
 
 				.values(RDF.TYPE, frame.values(RDF.TYPE))
 				.values(RDFS.LABEL, frame.values(Schema.name))
@@ -159,9 +170,9 @@ public final class EventsPaviaCity implements Runnable {
 
 				.values(RDF.TYPE, frame.values(RDF.TYPE))
 
-				.value(Schema.addressCountry, frame.value(Schema.addressCountry)) // !!! default
-				.value(Schema.addressRegion, frame.value(Schema.addressRegion)) // !!! default
-				.value(Schema.addressLocality, frame.value(Schema.addressLocality)) // !!! default
+				.value(Schema.addressCountry, frame.value(Schema.addressCountry).orElse(Italy))
+				.value(Schema.addressRegion, frame.value(Schema.addressRegion)) // !!! default (sync from Wikidata)
+				.value(Schema.addressLocality, frame.value(Schema.addressLocality).orElse(Pavia))
 				.value(Schema.postalCode, frame.value(Schema.postalCode).orElseGet(() -> literal("27100")))
 
 				.value(Schema.email, frame.value(Schema.email))
