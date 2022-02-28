@@ -20,6 +20,8 @@ export const Event=freeze({
 	label: { en: "Event" },
 	comment: { en: "" },
 
+	description: { en: "" },
+
 	startDate: ""
 
 });
@@ -48,7 +50,11 @@ export function DataEvent() {
 
 		{frame(({
 
-			image, label, comment,
+			image,
+			label,
+			comment,
+
+			description,
 
 			startDate
 
@@ -67,7 +73,7 @@ export function DataEvent() {
 
 			>
 
-				<p>{string(comment)}</p>
+				<p>{string(description)}</p>
 
 			</DataCard>
 

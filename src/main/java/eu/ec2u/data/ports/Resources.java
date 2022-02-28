@@ -103,7 +103,7 @@ public final class Resources extends Delegator {
 		}
 
 
-		@Override public Future<Response> handle(final Request request) {
+		@Override public Response handle(final Request request) {
 			return request.reply(response -> response.status(OK)
 					.set(shape(), request.get(shape()))
 					.body(jsonld(), frame(iri(request.item()), graph.<List<Statement>>query(connection ->

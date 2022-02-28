@@ -42,8 +42,8 @@ public final class Universities extends Delegator {
 
                 filter(clazz(EC2U.University)),
 
-                field(RDFS.LABEL, required(), multilingual()),
-                field(RDFS.COMMENT, optional(), multilingual()),
+                field(RDFS.LABEL, multilingual()),
+                field(RDFS.COMMENT, multilingual()),
 
                 field(EC2U.schac, required(), datatype(XSD.STRING)),
                 field(EC2U.image, optional(), datatype(IRIType)),

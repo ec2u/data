@@ -103,7 +103,7 @@ public final class Events implements Runnable {
 						+"\n"
 						+"\tbind (coalesce(?end, ?start) as ?date)\n"
 						+"\n"
-						+"\tfilter (!bound(?date) || ?date < now() )\n"
+						+"\tfilter (bound(?date) && ?date < now() )\n"
 						+"\n"
 						+"optional { ?e ?p ?o }\n"
 						+"\toptional { ?s ?q ?e }\n"

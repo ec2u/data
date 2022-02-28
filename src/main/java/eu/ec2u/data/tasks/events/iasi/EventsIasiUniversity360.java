@@ -11,7 +11,6 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
-import eu.ec2u.data.work.Work;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -26,6 +25,7 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
+import static eu.ec2u.data.work.Work.wordpress;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -76,7 +76,7 @@ public final class EventsIasiUniversity360 implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return Work.wordpress(frame, "ro")
+        return wordpress(frame, "ro")
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(EC2U.university, Universities.Iasi)
                 .value(EC2U.updated, literal(now));

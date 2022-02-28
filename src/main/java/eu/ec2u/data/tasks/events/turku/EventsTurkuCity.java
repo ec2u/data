@@ -8,20 +8,17 @@ import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
-import com.metreeca.text.actions.Normalize;
-import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
+import eu.ec2u.data.work.Work;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.io.ByteArrayInputStream;
 import java.time.*;
 import java.util.*;
-import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import javax.json.JsonValue;
@@ -30,14 +27,12 @@ import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.rest.formats.JSONFormat.json;
-import static com.metreeca.xml.formats.HTMLFormat.html;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
@@ -134,8 +129,8 @@ public final class EventsTurkuCity implements Runnable {
 					.filter(entry -> EC2U.langs.contains(entry.getKey()))
 					.map(this::local)
 					.flatMap(Optional::stream)
-					.map(this::untag)
-					.map(this::normalize)
+					.map(Work::untag)
+					.map(Work::normalize)
 					.collect(toSet());
 
 			return frame(iri(EC2U.events, md5(id)))
@@ -229,7 +224,7 @@ public final class EventsTurkuCity implements Runnable {
 				.filter(entry -> EC2U.langs.contains(entry.getKey()))
 				.map(this::local)
 				.flatMap(Optional::stream)
-				.map(this::normalize)
+				.map(Work::normalize)
 				.collect(toSet());
 	}
 
@@ -237,27 +232,5 @@ public final class EventsTurkuCity implements Runnable {
 		return entry.getValue().string("").map(text -> literal(text, entry.getKey()));
 	}
 
-
-	private Literal normalize(final Literal literal) {
-		return normalize(literal, new Normalize()
-				.space(true)
-				.smart(true)
-		);
-	}
-
-	private Literal normalize(final Literal literal, final UnaryOperator<String> normalizer) {
-		return literal.getLanguage()
-				.map(lang -> literal(normalizer.apply(literal.stringValue()), lang))
-				.orElseGet(() -> literal(normalizer.apply(literal.stringValue()), literal.getDatatype()));
-	}
-
-
-	private Literal untag(final Literal literal) {
-		return normalize(literal, text -> html(new ByteArrayInputStream(text.getBytes(UTF_8)), UTF_8.name(), "").fold(
-
-				error -> text, value -> new Untag().apply(value)
-
-		));
-	}
 
 }

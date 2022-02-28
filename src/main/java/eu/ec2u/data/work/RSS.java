@@ -3,24 +3,17 @@ package eu.ec2u.data.work;
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rest.Xtream;
-import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.actions.XPath;
-import com.metreeca.xml.formats.HTMLFormat;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.w3c.dom.Document;
 
-import java.io.ByteArrayInputStream;
 import java.time.ZonedDateTime;
-import java.util.Optional;
 import java.util.function.Function;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
-import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.services.Logger.logger;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 public final class RSS implements Function<Document, Xtream<Frame>> {
@@ -56,29 +49,7 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
                         )
 
                         .string(Description, item.string("description"))
-                        .string(Encoded, item.string("content:encoded")
-
-                                .map(html -> HTMLFormat.html(new ByteArrayInputStream(html.getBytes(UTF_8)),
-                                        UTF_8.name(), ""))
-
-                                .flatMap(either -> either.fold(
-
-                                        error -> {
-
-                                            service(logger()).warning(this, String.format(
-                                                    "malformed content / %s", error.getMessage()
-                                            ));
-
-                                            return Optional.empty();
-
-                                        },
-
-                                        Optional::of
-
-                                ))
-
-                                .map(new Untag())
-                        )
+                        .string(Encoded, item.string("content:encoded").map(Work::untag))
 
                 ));
 

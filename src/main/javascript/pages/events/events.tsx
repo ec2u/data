@@ -26,90 +26,90 @@ import { University } from "../universities/university";
 
 export const Events=freeze({
 
-	id: "/events/",
+    id: "/events/",
 
-	label: { en: "Events" },
+    label: { en: "Events" },
 
-	contains: [{
+    contains: [{
 
-		id: "",
+        id: "",
 
-		image: "",
-		label: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" },
-		comment: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" },
+        image: "",
+        label: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" },
+        comment: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" },
 
-		university: {
-			id: "",
-			label: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" }
-		},
+        university: {
+            id: "",
+            label: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" }
+        },
 
-		startDate: "",
-		endDate: ""
+        startDate: "",
+        endDate: ""
 
-	}]
+    }]
 
 });
 
 
 export function DataEvents() {
 
-	const { name }=useRouter();
+    const { name }=useRouter();
 
-	const [query, setQuery]=useQuery<Query>({
+    const [query, setQuery]=useQuery<Query>({
 
-		"~label": "",
+        "~label": "",
 
-		".order": "startDate",
-		".limit": 20
+        ".order": "startDate",
+        ".limit": 20
 
-	});
-
-
-	const [, update]=useReducer(v => v+1, 0);
-
-	const [{ fetch, frame, error }]=useEntry("", Events, [query, setQuery]);
+    });
 
 
-	useEffect(() => { name(string(Events.label)); });
+    const [, update]=useReducer(v => v+1, 0);
+
+    const [{ fetch, frame, error }]=useEntry("", Events, [query, setQuery]);
 
 
-	return <DataPage item={string(Events.label)}
+    useEffect(() => { name(string(Events.label)); });
 
-		menu={fetch(abort => <ToolSpin abort={abort}/>)}
 
-		side={<DataFiltersButton onClick={update}/>}
+    return <DataPage item={string(Events.label)}
 
-		pane={facets([query, setQuery])}
+        menu={fetch(abort => <ToolSpin abort={abort}/>)}
 
-	>
+        side={<DataFiltersButton onClick={update}/>}
 
-		{frame(({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
+        pane={facets([query, setQuery])}
 
-			<DataCard key={id}
+    >
 
-				name={<a href={id}>{string(label)}</a>}
+        {frame(({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
 
-				icon={image?.[0]}
+            <DataCard key={id}
 
-				tags={<>
-					<span>{string(university.label).replace("University of ", "")}</span>
-					{startDate && <>
-						<span> / </span>
-						<span>{startDate.substr(0, 10)}</span>
-					</>}
-				</>}
+                name={<a href={id}>{string(label)}</a>}
 
-			>
+                icon={image?.[0]}
 
-				{string(comment, ["en", "pt", "ro", "it", "fr", "es", "fi"])}
+                tags={<>
+                    <span>{string(university.label).replace("University of ", "")}</span>
+                    {startDate && <>
+                        <span> / </span>
+                        <span>{startDate.substr(0, 10)}</span>
+                    </>}
+                </>}
 
-			</DataCard>
+            >
 
-		)))}
+                {string(comment, ["en", "pt", "ro", "it", "fr", "es", "fi"])}
 
-		{error(error => <span>{error.status}</span>)} {/* !!! */}
+            </DataCard>
 
-	</DataPage>;
+        )))}
+
+        {error(error => <span>{error.status}</span>)} {/* !!! */}
+
+    </DataPage>;
 
 }
 
@@ -118,33 +118,41 @@ export function DataEvents() {
 
 function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
 
-	const [search, setSearch]=useSearch("label", [query, setQuery]);
+    const [search, setSearch]=useSearch("label", [query, setQuery]);
 
-	const [universities, setUniversities]=useTerms("", "university", [query, setQuery]);
+    const [universities, setUniversities]=useTerms("", "university", [query, setQuery]);
+    const [publishers, setPublishers]=useTerms("", "publisher", [query, setQuery]);
+    const [date, setDate]=useRange("", "startDate", [query, setQuery]);
 
-	const [{ count }]=useRange("", "label", [query, setQuery]);
+    const [{ count }]=useRange("", "updated", [query, setQuery]);
 
-	return <ToolPane
+    return <ToolPane
 
-		header={<ToolSearch icon rule placeholder={"Search"}
-			auto value={search} onChange={setSearch}
-		/>}
+        header={<ToolSearch icon rule placeholder={"Search"}
+            auto value={search} onChange={setSearch}
+        />}
 
-		footer={count === 0 ? "no matches" : count === 1 ? "1 match" : `${count} matches`}
+        footer={count === 0 ? "no matches" : count === 1 ? "1 match" : `${count} matches`}
 
-	>
+    >
 
-		<ToolFacet expanded name={string(University.label)}
-			menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
-		>
-			<ToolTerms value={[universities, setUniversities]}/>
-		</ToolFacet>
+        <ToolFacet expanded name={string(University.label)}
+            menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
+        >
+            <ToolTerms value={[universities, setUniversities]}/>
+        </ToolFacet>
 
-		{/*<ToolFacet name={"Date"}
-		 menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
-		 >
-		 <ToolRange pattern={"\\d{4}-\\d{2}-\\d{2}"} value={[{}, () => {}]}/>
-		 </ToolFacet>*/}
+        {/* <ToolFacet expanded name={"Publisher"}
+         menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
+         >
+         <ToolTerms value={[publishers, setPublishers]}/>
+         </ToolFacet>*/}
 
-	</ToolPane>;
+        {/* <ToolFacet expanded name={"Date"}
+         menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
+         >
+         <ToolRange pattern={"\\d{4}-\\d{2}-\\d{2}"} value={[date, setDate]}/>
+         </ToolFacet>*/}
+
+    </ToolPane>;
 }
