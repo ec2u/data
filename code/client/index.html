@@ -1,0 +1,102 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Copyright © 2022 EC2U Consortium. All rights reserved.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <base href="/" target="_blank">
+
+        <title>EC2U Knowledge Hub</title>
+
+        <meta name="copyright" content="&copy; 2021 EC2U Alliance">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <link rel="icon" type="image/svg+xml" href="/index.svg"/>
+
+        <script type="module" src="/index.tsx"></script>
+
+        <style>
+
+            :root {
+
+                --tool--color-accent-lite: #BFA635;
+                --tool--color-accent-dark: #1C275D;
+
+            }
+
+            html, body, data-root {
+                display: block;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            body > data-root:empty {
+                display: block;
+                width: 10vh;
+                height: 10vh;
+                margin: 40vh auto auto;
+                overflow: visible;
+                text-align: center;
+                animation: loader-rotate 2s infinite linear;
+            }
+
+            body > data-root:empty::before,
+            body > data-root:empty::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                width: 59%;
+                height: 59%;
+                display: inline-block;
+                border-radius: 100%;
+                animation: loader-bounce 2s infinite ease-in-out;
+            }
+
+            body > data-root:empty::before {
+                top: 0;
+                background-color: var(--tool--color-accent-dark);
+            }
+
+            body > data-root:empty::after {
+                bottom: 0;
+                background-color: var(--tool--color-accent-lite);
+                animation-delay: -1s;
+            }
+
+            @keyframes loader-rotate {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes loader-bounce {
+                0%, 100% {
+                    transform: scale(0.25);
+                }
+                50% {
+                    transform: scale(1);
+                }
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <data-root></data-root>
+
+    </body>
+
+</html>

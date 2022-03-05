@@ -2,26 +2,34 @@
 // https://www.typescriptlang.org/docs/handbook/compiler-options.html
 
 {
-	"compilerOptions": {
-		"baseUrl": "src/main/javascript",
-		"outDir": "target/classes/static/",
-		"strict": true,
-		"target": "ES2020",
-		"module": "ES2020",
-		"lib": [
-			"ES2020",
-			"DOM"
-		],
-		"jsx": "react",
-		"moduleResolution": "node",
-		"isolatedModules": true,
-		"resolveJsonModule": true,
-		"allowSyntheticDefaultImports": true,
-		"declaration": false,
-		"removeComments": true,
-		"preserveSymlinks": true
-	},
-	"include": [
-		"src/main/javascript"
-	]
+    "compilerOptions": {
+        "baseUrl": "code",
+        "outDir": "../KXTA/dist",
+        "paths": {
+            "@metreeca/*": [
+                "client/$/*"
+            ],
+            "@ec2u/data/*": [
+                "*"
+            ]
+        },
+        "strict": true,
+        "target": "ES2020",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "lib": [
+            "ES2020",
+            "DOM"
+        ],
+        "jsx": "react",
+        "resolveJsonModule": true,
+        "declaration": true
+    },
+    "include": [
+        "code"
+    ],
+    "exclude": [
+        "**/*.test.ts"
+    ]
 }
