@@ -54,6 +54,7 @@ public final class EC2U {
 
 	public static final IRI events=item("/events/");
 	public static final IRI locations=item("/locations/");
+	public static final IRI organizations=item("/organizations/");
 
 
 	//// Resources /////////////////////////////////////////////////////////////////////////////////////////////////////

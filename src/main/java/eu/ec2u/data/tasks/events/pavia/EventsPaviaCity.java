@@ -16,7 +16,6 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
@@ -25,20 +24,17 @@ import java.time.format.DateTimeFormatter;
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
-import static com.metreeca.open.actions.Wikidata.wd;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
+import static eu.ec2u.data.work.Work.location;
 
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
-
-	private static final IRI Italy=wd("Q48");
-	private static final IRI Pavia=wd("Q6259");
 
 	private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
 			.value(RDF.TYPE, EC2U.Publisher)
@@ -148,37 +144,8 @@ public final class EventsPaviaCity implements Runnable {
 				.value(Schema.eventStatus, frame.value(Schema.eventStatus))
 				.value(Schema.typicalAgeRange, frame.value(Schema.typicalAgeRange))
 
-				.frame(Schema.location, frame.frame(Schema.location).map(this::location));
-	}
-
-	private Frame location(final Frame frame) {
-		return frame(iri(EC2U.locations, md5(frame.skolemize(
-				seq(Schema.name),
-				seq(Schema.address, Schema.addressLocality),
-				seq(Schema.address, Schema.streetAddress)
-		))))
-
-				.values(RDF.TYPE, frame.values(RDF.TYPE))
-				.values(RDFS.LABEL, frame.values(Schema.name))
-
-				.value(Schema.name, frame.value(Schema.name))
-				.frame(Schema.address, frame.frame(Schema.address).map(this::address));
-	}
-
-	private Frame address(final Frame frame) {
-		return frame(iri(EC2U.locations, frame.skolemize(Schema.addressLocality, Schema.streetAddress)))
-
-				.values(RDF.TYPE, frame.values(RDF.TYPE))
-
-				.value(Schema.addressCountry, frame.value(Schema.addressCountry).orElse(Italy))
-				.value(Schema.addressRegion, frame.value(Schema.addressRegion)) // !!! default (sync from Wikidata)
-				.value(Schema.addressLocality, frame.value(Schema.addressLocality).orElse(Pavia))
-				.value(Schema.postalCode, frame.value(Schema.postalCode).orElseGet(() -> literal("27100")))
-
-				.value(Schema.email, frame.value(Schema.email))
-				.value(Schema.telephone, frame.value(Schema.telephone))
-				.value(Schema.faxNumber, frame.value(Schema.faxNumber))
-				.value(Schema.streetAddress, frame.value(Schema.streetAddress));
+				.frame(Schema.location, frame.frame(Schema.location).map(location -> location(location,
+                        EventsPavia.Defaults)));
 	}
 
 }

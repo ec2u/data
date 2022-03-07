@@ -28,150 +28,159 @@ import static eu.ec2u.data.terms.EC2U.multilingual;
  */
 public final class Schema {
 
-	public static final String Namespace="https://schema.org/";
+    public static final String Namespace="https://schema.org/";
 
 
-	/**
-	 * Creates a term in the schema.org namespace.
-	 *
-	 * @param id the identifer of the term to be created
-	 *
-	 * @return the schema.org term identified by {@code id}
-	 *
-	 * @throws NullPointerException if {@code id} is null
-	 */
-	public static IRI term(final String id) {
+    /**
+     * Creates a term in the schema.org namespace.
+     *
+     * @param id the identifer of the term to be created
+     *
+     * @return the schema.org term identified by {@code id}
+     *
+     * @throws NullPointerException if {@code id} is null
+     */
+    public static IRI term(final String id) {
 
-		if ( id == null ) {
-			throw new NullPointerException("null id");
-		}
+        if ( id == null ) {
+            throw new NullPointerException("null id");
+        }
 
-		return iri(Namespace, id);
-	}
-
-
-	//// Things ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public static final IRI Thing=term("Thing");
-
-	public static final IRI url=term("url");
-	public static final IRI name=term("name");
-	public static final IRI image=term("image");
-	public static final IRI description=term("description");
-	public static final IRI disambiguatingDescription=term("disambiguatingDescription");
+        return iri(Namespace, id);
+    }
 
 
-	/**
-	 * Creates a thing shape.
-	 *
-	 * @return a thing shape including {@code labels} constraints for textual labels
-	 *
-	 * @throws NullPointerException if {@code labels} is nul or contains null elements
-	 */
-	public static Shape Thing() {
-		return and(
+    //// Things ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				field(url, optional(), datatype(IRIType)),
-				field(name, multilingual()),
-				field(image, multiple(), datatype(IRIType)),
-				field(description, multilingual()),
-				field(disambiguatingDescription, multilingual())
+    public static final IRI Thing=term("Thing");
 
-		);
-	}
+    public static final IRI url=term("url");
+    public static final IRI name=term("name");
+    public static final IRI image=term("image");
+    public static final IRI description=term("description");
+    public static final IRI disambiguatingDescription=term("disambiguatingDescription");
 
 
-	//// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Creates a thing shape.
+     *
+     * @return a thing shape including {@code labels} constraints for textual labels
+     *
+     * @throws NullPointerException if {@code labels} is nul or contains null elements
+     */
+    public static Shape Thing() {
+        return and(
 
-	public enum EventStatus {EventScheduled, EventMovedOnline, EventPostponed, EventRescheduled, EventCancelled}
+                field(url, optional(), datatype(IRIType)),
+                field(name, multilingual()),
+                field(image, multiple(), datatype(IRIType)),
+                field(description, multilingual()),
+                field(disambiguatingDescription, multilingual())
 
-	public static final IRI Event=term("Event");
-
-	public static final IRI organizer=term("organizer");
-	public static final IRI isAccessibleForFree=term("isAccessibleForFree");
-	public static final IRI eventStatus=term("eventStatus");
-	public static final IRI location=term("location");
-	public static final IRI eventAttendanceMode=term("eventAttendanceMode");
-	public static final IRI inLanguage=term("inLanguage");
-	public static final IRI audience=term("audience");
-	public static final IRI typicalAgeRange=term("typicalAgeRange");
-	public static final IRI startDate=term("startDate");
-	public static final IRI endDate=term("endDate");
-
-
-	public static Shape Event() {
-		return and(Thing(),
-
-				field(organizer, optional(),
-						field(RDFS.LABEL, multilingual())
-				),
-
-				field(isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
-				field(eventStatus, optional(), datatype(IRIType)),
-
-				field(location, optional(), Location()),
-
-				field(eventAttendanceMode, multiple(), datatype(IRIType)),
-
-				field(audience, multiple(),
-						field(RDFS.LABEL, multilingual())
-				),
-
-				field(inLanguage, multiple(), datatype(XSD.STRING)),
-				field(typicalAgeRange, multiple(), datatype(XSD.STRING)),
-
-				field(startDate, optional(), datatype(XSD.DATETIME)),
-				field(endDate, optional(), datatype(XSD.DATETIME)));
-	}
+        );
+    }
 
 
-	//// Places ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //// Organizations /////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static final IRI Place=term("Place");
-	public static final IRI PostalAddress=term("PostalAddress");
-	public static final IRI VirtualLocation=term("VirtualLocation");
+    public static final IRI Organization=term("Organization");
 
-
-	public static IRI address=term("address");
-
-	public static IRI latitude=term("latitude");
-	public static IRI longitude=term("longitude");
-
-	public static IRI addressCountry=term("addressCountry");
-	public static IRI addressRegion=term("addressRegion");
-	public static IRI addressLocality=term("addressLocality");
-
-	public static IRI postalCode=term("postalCode");
-	public static IRI streetAddress=term("streetAddress");
+    public static final IRI legalName=term("legalName");
 
 
-	public static Shape Location() {
+    //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		return Place();
+    public enum EventStatus {EventScheduled, EventMovedOnline, EventPostponed, EventRescheduled, EventCancelled}
+
+    public static final IRI Event=term("Event");
+
+    public static final IRI organizer=term("organizer");
+    public static final IRI isAccessibleForFree=term("isAccessibleForFree");
+    public static final IRI eventStatus=term("eventStatus");
+    public static final IRI location=term("location");
+    public static final IRI eventAttendanceMode=term("eventAttendanceMode");
+    public static final IRI inLanguage=term("inLanguage");
+    public static final IRI audience=term("audience");
+    public static final IRI typicalAgeRange=term("typicalAgeRange");
+    public static final IRI startDate=term("startDate");
+    public static final IRI endDate=term("endDate");
 
 
-		//return or(
-		//
-		//		Place(),
-		//		PostalAddress(),
-		//		VirtualLocation()
-		//
-		//);
-	}
+    public static Shape Event() {
+        return and(Thing(),
 
-	public static Shape Place() {
-		return and(Thing(),
+                field(organizer, optional(),
+                        field(RDFS.LABEL, multilingual()),
+                        field(Schema.name, multilingual()),
+                        field(Schema.email, datatype(XSD.STRING))
+                ),
 
-				field(address, optional(), PostalAddress()),
+                field(isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
+                field(eventStatus, optional(), datatype(IRIType)),
 
-				field(latitude, optional(), datatype(XSD.DECIMAL)),
-				field(longitude, optional(), datatype(XSD.DECIMAL))
+                field(location, optional(), Location()),
 
-		);
-	}
+                field(eventAttendanceMode, multiple(), datatype(IRIType)),
 
-	public static Shape PostalAddress() {
-		return and(Thing(),
+                field(audience, multiple(),
+                        field(RDFS.LABEL, multilingual())
+                ),
+
+                field(inLanguage, multiple(), datatype(XSD.STRING)),
+                field(typicalAgeRange, multiple(), datatype(XSD.STRING)),
+
+                field(startDate, optional(), datatype(XSD.DATETIME)),
+                field(endDate, optional(), datatype(XSD.DATETIME)));
+    }
+
+
+    //// Places ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI Place=term("Place");
+    public static final IRI PostalAddress=term("PostalAddress");
+    public static final IRI VirtualLocation=term("VirtualLocation");
+
+
+    public static final IRI address=term("address");
+
+    public static final IRI latitude=term("latitude");
+    public static final IRI longitude=term("longitude");
+
+    public static final IRI addressCountry=term("addressCountry");
+    public static final IRI addressRegion=term("addressRegion");
+    public static final IRI addressLocality=term("addressLocality");
+
+    public static final IRI postalCode=term("postalCode");
+    public static final IRI streetAddress=term("streetAddress");
+
+
+    public static Shape Location() {
+
+        return Place();
+
+
+        //return or(
+        //
+        //		Place(),
+        //		PostalAddress(),
+        //		VirtualLocation()
+        //
+        //);
+    }
+
+    public static Shape Place() {
+        return and(Thing(),
+
+                field(address, optional(), PostalAddress()),
+
+                field(latitude, optional(), datatype(XSD.DECIMAL)),
+                field(longitude, optional(), datatype(XSD.DECIMAL))
+
+        );
+    }
+
+    public static Shape PostalAddress() {
+        return and(Thing(),
 
                 field(addressCountry, optional(), or(datatype(IRIType), datatype(XSD.STRING))),
                 field(addressRegion, optional(), or(datatype(IRIType), datatype(XSD.STRING))),
@@ -180,25 +189,25 @@ public final class Schema {
                 field(streetAddress, optional(), datatype(XSD.STRING))
 
         );
-	}
+    }
 
-	public static Shape VirtualLocation() {
-		return and(Thing());
-	}
-
-
-	//// ContactPoints /////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public static final IRI ContactPoint=term("ContactPoint");
+    public static Shape VirtualLocation() {
+        return and(Thing());
+    }
 
 
-	public static IRI email=term("email");
-	public static IRI telephone=term("telephone");
-	public static IRI faxNumber=term("faxNumber");
+    //// ContactPoints /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI ContactPoint=term("ContactPoint");
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static final IRI email=term("email");
+    public static final IRI telephone=term("telephone");
+    public static final IRI faxNumber=term("faxNumber");
 
-	private Schema() { }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Schema() { }
 
 }

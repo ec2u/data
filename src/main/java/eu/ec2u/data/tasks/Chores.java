@@ -28,65 +28,64 @@ import static java.util.stream.Collectors.joining;
 
 public final class Chores implements Runnable {
 
-	private static Collection<IRI> locked=Set.of(
-			EC2U.ontologies
-	);
+    private static Collection<IRI> locked=Set.of(
+            EC2U.ontologies
+    );
 
 
-	public static void main(final String... args) {
-		exec(() -> new Chores().run());
-	}
+    public static void main(final String... args) {
+        exec(() -> new Chores().run());
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private final Graph graph=service(graph());
-	private final Logger logger=service(logger());
-
-
-	@Override public void run() {
-		collect();
-	}
+    private final Graph graph=service(graph());
+    private final Logger logger=service(logger());
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override public void run() {
+        collect();
+    }
 
-	private void collect() {
 
-		logger.info(this, "collecting garbage");
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		exec(() -> graph.update(task(connection -> {
+    private void collect() {
 
-			for (long size=0, next; (next=connection.size()) != size; size=next) {
+        logger.info(this, "collecting garbage");
 
-				connection
+        exec(() -> graph.update(task(connection -> {
 
-						.prepareUpdate(SPARQL, format(
+            for (long size=0, next; (next=connection.size()) != size; size=next) {
 
-								""
-										+"prefix void: <http://rdfs.org/ns/void#>\n"
-										+"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-										+"\n"
-										+"delete { ?garbage ?p ?o } where {\n"
-										+"\n"
-										+"\tgraph ?g { ?garbage ?p ?o }\n"
-										+"\n"
-										+"\tfilter (?g not in (%s)) # not in locked graph\n"
-										+"\n"+
-										"\tfilter not exists { ?s ?q ?garbage } # not referenced\n"
-										+"\tfilter not exists { ?garbage "
-										+"a?/rdfs:subClassOf*/^void:rootResource [] } # not a root resource\n"
-										+"\n"
-										+"}",
+                connection
 
-								locked.stream().map(Values::format).collect(joining(", "))
+                        .prepareUpdate(SPARQL, format(""
 
-						), EC2U.Base)
+                                        +"prefix void: <http://rdfs.org/ns/void#>\n"
+                                        +"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                                        +"\n"
+                                        +"delete { ?garbage ?p ?o } where {\n"
+                                        +"\n"
+                                        +"\tgraph ?g { ?garbage ?p ?o }\n"
+                                        +"\n"
+                                        +"\tfilter (?g not in (%s)) # not in locked graph\n"
+                                        +"\n"+
+                                        "\tfilter not exists { ?s ?q ?garbage } # not referenced\n"
+                                        +"\tfilter not exists { ?garbage "
+                                        +"a?/rdfs:subClassOf*/^void:rootResource [] } # not a root resource\n"
+                                        +"\n"
+                                        +"}",
 
-						.execute();
+                                locked.stream().map(Values::format).collect(joining(", "))
 
-			}
+                        ), EC2U.Base)
 
-		})));
-	}
+                        .execute();
+
+            }
+
+        })));
+    }
 }

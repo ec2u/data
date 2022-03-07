@@ -16,6 +16,7 @@ import java.util.function.UnaryOperator;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
+import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
 import static eu.ec2u.data.work.RSS.*;
@@ -110,6 +111,68 @@ public final class Work {
                 error -> text, value -> new Untag().apply(value)
 
         );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static Frame organizer(final Frame frame, final String lang) {
+
+        final Optional<Value> name=frame.string(Schema.name).map(value -> literal(value, lang));
+        final Optional<Value> legalName=frame.string(Schema.legalName).map(value -> literal(value, lang));
+
+        return frame(iri(EC2U.organizations, md5(frame.skolemize(
+                seq(Schema.name),
+                seq(Schema.legalName)
+        ))))
+
+                .value(RDF.TYPE, Schema.Organization)
+                .value(RDFS.LABEL, name.or(() -> legalName))
+
+                .value(Schema.name, name)
+                .value(Schema.legalName, legalName)
+                .value(Schema.email, frame.value(Schema.email));
+    }
+
+    public static Frame location(final Frame frame, final Frame defaults) {
+        return frame(iri(EC2U.locations, md5(frame.skolemize(
+                seq(Schema.name),
+                seq(Schema.address, Schema.addressLocality),
+                seq(Schema.address, Schema.streetAddress)
+        ))))
+
+                .values(RDF.TYPE, frame.values(RDF.TYPE))
+                .values(RDFS.LABEL, frame.values(Schema.name))
+
+                .value(Schema.name, frame.value(Schema.name))
+                .value(Schema.url, frame.value(Schema.url))
+                .frame(Schema.address, frame.frame(Schema.address).map(address -> address(address, defaults)));
+    }
+
+    public static Frame address(final Frame frame, final Frame defaults) {
+
+        return frame(iri(EC2U.locations, frame.skolemize(Schema.addressLocality, Schema.streetAddress)))
+
+                .values(RDF.TYPE, frame.values(RDF.TYPE))
+
+                .value(Schema.addressCountry, frame.value(Schema.addressCountry)
+                        .or(() -> defaults.value(Schema.addressCountry))
+                )
+
+                .value(Schema.addressRegion, frame.value(Schema.addressRegion)) // !!! default (sync from Wikidata)
+
+                .value(Schema.addressLocality, frame.value(Schema.addressLocality)
+                        .or(() -> defaults.value(Schema.addressLocality))
+                )
+
+                .value(Schema.postalCode, frame.value(Schema.postalCode)
+                        .or(() -> defaults.value(Schema.postalCode))
+                )
+
+                .value(Schema.email, frame.value(Schema.email))
+                .value(Schema.telephone, frame.value(Schema.telephone))
+                .value(Schema.faxNumber, frame.value(Schema.faxNumber))
+                .value(Schema.streetAddress, frame.value(Schema.streetAddress));
     }
 
 
