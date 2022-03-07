@@ -1,0 +1,9 @@
+{
+    "name": "@metreeca/info",
+    "version": "0.0.0",
+    "description": "@metreeca/node charts and infographics widgets",
+    "dependencies": {
+        "@metreeca/core": "^0.0.0",
+        "d3": "^7.3.0"
+    }
+}

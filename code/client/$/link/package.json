@@ -1,0 +1,8 @@
+{
+    "name": "@metreeca/link",
+    "version": "0.0.0",
+    "description": "@metreeca/node REST/JSON-LD connectors",
+    "dependencies": {
+        "@metreeca/core": "^0.0.0"
+    }
+}

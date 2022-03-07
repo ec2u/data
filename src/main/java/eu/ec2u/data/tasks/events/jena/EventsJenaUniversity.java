@@ -65,8 +65,6 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .optMap(new Validate(Event()))
 
-                .peek(frame -> System.out.println(frame.focus()))
-
                 .sink(events -> upload(EC2U.events, events));
     }
 
