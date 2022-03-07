@@ -37,11 +37,11 @@ public final class Work {
     public static Frame wordpress(final Frame frame, final String lang) {
 
         final Optional<Value> label=frame.string(Title)
-                .map(text -> text.length() > TextSize ? text.substring(0, TextSize-2)+" …" : text)
+                .map(text -> clip(text, TextSize))
                 .map(text -> literal(text, lang));
 
         final Optional<Value> brief=frame.string(Encoded)
-                .map(text -> text.length() > TextSize ? text.substring(0, TextSize-2)+" …" : text)
+                .map(text -> clip(text, TextSize))
                 .map(text -> literal(text, lang));
 
         return frame(iri(EC2U.events, frame.skolemize(Link)))
@@ -64,6 +64,10 @@ public final class Work {
                 .value(Schema.disambiguatingDescription, brief)
                 .value(Schema.description, frame.value(Encoded).map(value -> localize(value, lang)))
                 .value(Schema.url, frame.value(Link));
+    }
+
+    private static String clip(final String text, final int length) {
+        return text.length() > length ? text.substring(0, length-2)+" …" : text;
     }
 
 
