@@ -1,0 +1,43 @@
+name: gae-deploy
+
+on:
+
+  push:
+
+    branches:
+      - 'release/*'
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Java environment
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          distribution: temurin
+          cache: maven
+
+      - id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - id: version
+        name: Convert trigger release branch name into GAE version id
+        run: echo ::set-output
+          name=id::$(echo ${{ github.ref_name }} | sed -r 's:release/([-a-z0-9]):\1:')
+
+      - name: Deploy to GAE
+        run: >
+          GOOGLE_APPLICATION_CREDENTIALS='${{ steps.auth.outputs.credentials_file_path }}'
+          mvn --batch-mode --update-snapshots
+          -Drevision=${{ steps.version.outputs.id }}
+          deploy

@@ -47,7 +47,7 @@
     <properties>
 
         <main>eu.ec2u.data.Data</main>
-        <revision>${maven.build.timestamp}</revision>
+        <revision>work</revision>
 
         <java.version>11</java.version>
         <maven.version>3.6</maven.version>
