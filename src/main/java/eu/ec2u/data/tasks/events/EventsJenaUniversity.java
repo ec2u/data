@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.tasks.events.jena;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
@@ -64,6 +64,8 @@ public final class EventsJenaUniversity implements Runnable {
                 .map(this::event)
 
                 .optMap(new Validate(Event()))
+
+                .peek(frame -> System.out.println(frame.format()))
 
                 .sink(events -> upload(EC2U.events, events));
     }
@@ -202,21 +204,3 @@ public final class EventsJenaUniversity implements Runnable {
     }
 
 }
-
-
-/*
-
-
-:genid-4e48b2a1f4774828ba6566657d290169-b0 {
-	<https://schema.org/organizer> : _:genid-4e48b2a1f4774828ba6566657d290169-b3 {
-		<https://schema.org/legalName> : 'Friedrich-Schiller Universität',
-		<https://schema.org/email> : 'familie@uni-jena.de',
-		a : <https://schema.org/Organization>
-	},
-	<https://schema.org/speaker> : _:genid-4e48b2a1f4774828ba6566657d290169-b4 {
-		<https://schema.org/familyName> : 'Mergole',
-		<https://schema.org/givenName> : 'Michaela',
-		a : <https://schema.org/Person>
-	},
-
- */

@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.tasks.events.iasi;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
@@ -11,6 +11,7 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
+import eu.ec2u.data.work.Work;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -25,22 +26,22 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.Work.wordpress;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsIasiUniversity360 implements Runnable {
+public final class EventsCoimbraUniversity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://360.uaic.ro/"))
+    private static final Frame Publisher=frame(iri("https://agenda.uc.pt/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("360 uaic.ro", "en")
+                    literal("Agenda UC", "en"),
+                    literal("Agenda UC", "opt")
             );
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsIasiUniversity360().run());
+        exec(() -> new EventsCoimbraUniversity().run());
     }
 
 
@@ -67,7 +68,7 @@ public final class EventsIasiUniversity360 implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://360.uaic.ro/feed")
+                        .model("https://agenda.uc.pt/feed/")
                 )
 
                 .optMap(new GET<>(xml()))
@@ -76,9 +77,9 @@ public final class EventsIasiUniversity360 implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return wordpress(frame, "ro")
+        return Work.wordpress(frame, "pt")
                 .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(EC2U.university, Universities.Iasi)
+                .value(EC2U.university, Universities.Coimbra)
                 .value(EC2U.updated, literal(now));
     }
 
