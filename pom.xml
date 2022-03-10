@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Copyright © 2022 EC2U Consortium. All rights reserved.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>eu.ec2u</groupId>
+    <artifactId>ec2u-data</artifactId>
+    <version>${revision}</version>
+    <packaging>jar</packaging>
+
+    <name>EC2U Knowledge Hub</name>
+    <description>EC2U central data integration and sharing facilities.</description>
+    <url>https://github.com/ec2u/data</url>
+    <inceptionYear>2021</inceptionYear>
+
+    <organization>
+        <name>EC2U</name>
+        <url>https://ec2u.eu/</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>EC2U Connect Centre</name>
+            <email>cc@ec2u.eu</email>
+            <organization>EC2U Consortium</organization>
+            <organizationUrl>https://ec2u.eu</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:ec2u/data.git</connection>
+        <developerConnection>scm:git:git@github.com:ec2u/data.git</developerConnection>
+        <url>https://github.com/ec2u/data</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/ec2u/data/issues</url>
+    </issueManagement>
+
+    <properties>
+
+        <main>eu.ec2u.data.Data</main>
+        <revision>${maven.build.timestamp}</revision>
+
+        <java.version>11</java.version>
+        <maven.version>3.6</maven.version>
+
+        <node.version>14.15.4</node.version>
+        <npm.version>7.7.6</npm.version>
+
+        <gae.project>${project.artifactId}</gae.project>
+        <gae.version>${revision}</gae.version>
+        <gae.promote>false</gae.promote>
+
+        <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    </properties>
+
+    <dependencyManagement>
+
+        <dependencies>
+
+            <dependency>
+                <groupId>com.metreeca</groupId>
+                <artifactId>metreeca-java</artifactId>
+                <version>0.0.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-jse</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-rest</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-xml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-open</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-gcp-rdf4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-rdf4j</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sparql</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <repositories>
+
+        <repository>
+
+            <id>central-releases</id>
+            <url>https://oss.sonatype.org/content/repositories/releases</url>
+
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+
+        </repository>
+
+        <repository>
+
+            <id>central-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+
+        </repository>
+
+    </repositories>
+
+    <build>
+
+        <resources>
+
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+
+        </resources>
+
+        <plugins>
+
+            <plugin> <!-- https://maven.apache.org/enforcer/maven-enforcer-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+
+                <configuration>
+                    <rules>
+                        <requireMavenVersion>
+                            <version>${maven.version}</version>
+                        </requireMavenVersion>
+                    </rules>
+                </configuration>
+
+                <executions>
+                    <execution>
+
+                        <id>enforce-maven</id>
+                        <phase>validate</phase>
+
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+
+                    </execution>
+                </executions>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/plugins/maven-clean-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${project.basedir}/node_modules</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+
+                <executions>
+                    <execution>
+
+                        <id>clean-work-folders</id>
+                        <phase>clean</phase>
+
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+
+                    </execution>
+                </executions>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/plugins/maven-compiler-plugin -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.9.0</version>
+
+                <configuration>
+
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+
+                </configuration>
+
+            </plugin>
+
+            <plugin> <!-- https://github.com/eirslett/frontend-maven-plugin -->
+
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.12.0</version>
+
+                <configuration>
+
+                    <installDirectory>${project.build.directory}</installDirectory>
+
+                </configuration>
+
+                <executions>
+
+                    <execution>
+
+                        <id>install-node-and-npm</id>
+                        <phase>validate</phase>
+
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+
+                        <configuration>
+                            <nodeVersion>v${node.version}</nodeVersion>
+                            <npmVersion>${npm.version}</npmVersion>
+                        </configuration>
+
+                    </execution>
+
+                    <execution>
+
+                        <id>npm-install</id>
+                        <phase>initialize</phase>
+
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+
+                    </execution>
+
+                    <execution>
+
+                        <id>npm-build</id>
+                        <phase>compile</phase>
+
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
+            <plugin>  <!-- https://maven.apache.org/plugins/maven-jar-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+
+                <configuration>
+
+                    <archive>
+
+                        <manifest>
+                            <mainClass>${main}</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>libs</classpathPrefix>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+
+                    </archive>
+
+                </configuration>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/plugins/maven-dependency-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.2.0</version>
+
+                <configuration>
+                    <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                </configuration>
+
+                <executions>
+                    <execution>
+
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+
+                    </execution>
+                </executions>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/surefire/maven-surefire-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/plugins/maven-site-plugin -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.10.0</version>
+
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+
+            </plugin>
+
+            <plugin> <!-- https://maven.apache.org/plugins/maven-deploy-plugin/ -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
+
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+
+            </plugin>
+
+            <plugin> <!-- https://cloud.google.com/appengine/docs/standard/java/tools/maven-reference -->
+
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.4.1</version>
+
+                <configuration>
+                    <projectId>${gae.project}</projectId>
+                    <version>${gae.version}</version>
+                    <promote>${gae.promote}</promote>
+                </configuration>
+
+                <executions>
+                    <execution>
+
+                        <id>deploy-to-gae</id>
+                        <phase>deploy</phase>
+
+                        <goals>
+                            <goal>deploy</goal>
+                            <goal>deployCron</goal>
+                        </goals>
+
+                    </execution>
+                </executions>
+
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>

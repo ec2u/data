@@ -2,46 +2,36 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-import { RESTGraph } from "@metreeca/tool/bases/rest";
-import "@metreeca/tool/fonts/quicksand.css";
-import "@metreeca/tool/index.css";
-import { ToolDriver } from "@metreeca/tool/nests/driver";
-import { ToolRouter } from "@metreeca/tool/nests/router";
+// import "@metreeca/tool/fonts/quicksand.css";
+// import "@metreeca/tool/index.css";
 import * as React from "react";
 import { render } from "react-dom";
 import "./index.css";
-import DataAbout, { About } from "./pages/about";
-import { DataEvent, Event } from "./pages/events/event";
-import { DataEvents, Events } from "./pages/events/events";
-import DataHome, { Home } from "./pages/home";
-import ToolNone from "./pages/none";
-import { DataUniversities, Universities } from "./pages/universities/universities";
-import { DataUniversity, University } from "./pages/universities/university";
 
 
 render((
 
-	<React.StrictMode>
+    <React.StrictMode>
 
-		<ToolDriver value={RESTGraph()}>
+        {/*<ToolDriver value={RESTGraph()}>
 
-			<ToolRouter routes={{
+         <ToolRouter routes={{
 
-				[Home.id]: DataHome,
-				[About.id]: DataAbout,
+         [Home.id]: DataHome,
+         [About.id]: DataAbout,
 
-				[Universities.id]: DataUniversities,
-				[University.id]: DataUniversity,
+         [Universities.id]: DataUniversities,
+         [University.id]: DataUniversity,
 
-				[Events.id]: DataEvents,
-				[Event.id]: DataEvent,
+         [Events.id]: DataEvents,
+         [Event.id]: DataEvent,
 
-				"*": ToolNone
+         "*": ToolNone
 
-			}}/>
+         }}/>
 
-		</ToolDriver>
+         </ToolDriver>*/}
 
-	</React.StrictMode>
+    </React.StrictMode>
 
 ), document.body.firstElementChild);

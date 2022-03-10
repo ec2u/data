@@ -3,12 +3,9 @@
 
 {
     "compilerOptions": {
-        "baseUrl": "code",
-        "outDir": "../KXTA/dist",
+        "baseUrl": "src/main/javascript",
+        "outDir": "target/classes/static",
         "paths": {
-            "@metreeca/*": [
-                "client/$/*"
-            ],
             "@ec2u/data/*": [
                 "*"
             ]
@@ -27,7 +24,7 @@
         "declaration": true
     },
     "include": [
-        "code"
+        "work/node"
     ],
     "exclude": [
         "**/*.test.ts"

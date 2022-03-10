@@ -7,14 +7,14 @@ import {resolve} from "path";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 import postcssNesting from "postcss-nesting";
 
-const src=resolve(process.env.src || "code");
-const out=resolve(process.env.out || "dist/static");
+const src=resolve(process.env.src || "src/main/javascript");
+const out=resolve(process.env.out || "target/classes/static");
 
 export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
-	root: resolve(src, "client"),
+	root: resolve(src),
 
-	publicDir: resolve(src, "static"),
+	publicDir: resolve(src, "files"),
 	cacheDir: resolve("node_modules/.vite"),
 
 	plugins: [reactRefresh()],
@@ -27,7 +27,6 @@ export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
 	resolve: {
 		alias: {
-			"@metreeca": resolve(src, "client/$"),
 			"@ec2u/data": resolve(src)
 		}
 	},
