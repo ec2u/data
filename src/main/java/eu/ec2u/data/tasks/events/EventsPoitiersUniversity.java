@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.tasks.events.salamanca;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
@@ -11,6 +11,7 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
+import eu.ec2u.data.work.Work;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -25,23 +26,22 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.Work.wordpress;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsSalamancaUniversity implements Runnable {
+public final class EventsPoitiersUniversity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://sac.usal.es/"))
+    private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("Cultural Activities Services", "en"),
-                    literal("Servicio de Actividades Culturales", "es")
+                    literal("News and Events", "en"),
+                    literal("Actualités et événements", "fr")
             );
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsSalamancaUniversity().run());
+        exec(() -> new EventsPoitiersUniversity().run());
     }
 
 
@@ -68,7 +68,7 @@ public final class EventsSalamancaUniversity implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://sac.usal.es/role-member/feed/")
+                        .model("https://www.univ-poitiers.fr/feed/")
                 )
 
                 .optMap(new GET<>(xml()))
@@ -77,9 +77,9 @@ public final class EventsSalamancaUniversity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return wordpress(frame, "es")
+        return Work.wordpress(frame, "fr")
                 .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(EC2U.university, Universities.Salamanca)
+                .value(EC2U.university, Universities.Poitiers)
                 .value(EC2U.updated, literal(now));
     }
 

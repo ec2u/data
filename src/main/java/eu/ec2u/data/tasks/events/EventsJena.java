@@ -1,4 +1,4 @@
-package eu.ec2u.data.tasks.events.jena;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 

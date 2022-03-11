@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.tasks.events.pavia;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
@@ -29,18 +29,18 @@ import static eu.ec2u.data.work.Work.wordpress;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsPaviaUniversity implements Runnable {
+public final class EventsIasiUniversity360 implements Runnable {
 
-    private static final Frame Publisher=frame(iri("http://news.unipv.it//"))
+    private static final Frame Publisher=frame(iri("https://360.uaic.ro/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("unipv.news", "en")
+                    literal("360 uaic.ro", "en")
             );
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsPaviaUniversity().run());
+        exec(() -> new EventsIasiUniversity360().run());
     }
 
 
@@ -64,11 +64,10 @@ public final class EventsPaviaUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(7929, 7891, 8086, 8251)
+        return Xtream.of(synced)
 
-                .flatMap(new Fill<Integer>()
-                        .model("http://news.unipv.it/?feed=rss2&cat={category}")
-                        .value("category")
+                .flatMap(new Fill<Instant>()
+                        .model("https://360.uaic.ro/feed")
                 )
 
                 .optMap(new GET<>(xml()))
@@ -77,9 +76,9 @@ public final class EventsPaviaUniversity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return wordpress(frame, "it")
+        return wordpress(frame, "ro")
                 .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(EC2U.university, Universities.Pavia)
+                .value(EC2U.university, Universities.Iasi)
                 .value(EC2U.updated, literal(now));
     }
 

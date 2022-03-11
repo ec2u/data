@@ -10,12 +10,7 @@ import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.tasks.*;
 import eu.ec2u.data.tasks.events.Events;
-import eu.ec2u.data.tasks.events.iasi.EventsIasiUniversity;
-import eu.ec2u.data.tasks.events.iasi.EventsIasiUniversity360;
-import eu.ec2u.data.tasks.events.pavia.EventsPaviaCity;
-import eu.ec2u.data.tasks.events.poitiers.EventsPoitiersUniversity;
-import eu.ec2u.data.tasks.events.salamanca.EventsSalamancaUniversity;
-import eu.ec2u.data.tasks.events.turku.EventsTurkuCity;
+import eu.ec2u.data.tasks.events.*;
 
 import static com.metreeca.gcp.GCPServer.cron;
 import static com.metreeca.rest.MessageException.status;

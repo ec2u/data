@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.tasks.events.iasi;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;

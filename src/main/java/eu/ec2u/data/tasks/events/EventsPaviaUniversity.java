@@ -2,7 +2,7 @@
  * Copyright © 2021 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.tasks.events.poitiers;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
@@ -11,7 +11,6 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
-import eu.ec2u.data.work.Work;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -26,22 +25,22 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
+import static eu.ec2u.data.work.Work.wordpress;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsPoitiersUniversity implements Runnable {
+public final class EventsPaviaUniversity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
+    private static final Frame Publisher=frame(iri("http://news.unipv.it//"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("News and Events", "en"),
-                    literal("Actualités et événements", "fr")
+                    literal("unipv.news", "en")
             );
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsPoitiersUniversity().run());
+        exec(() -> new EventsPaviaUniversity().run());
     }
 
 
@@ -65,10 +64,11 @@ public final class EventsPoitiersUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(synced)
+        return Xtream.of(7929, 7891, 8086, 8251)
 
-                .flatMap(new Fill<Instant>()
-                        .model("https://www.univ-poitiers.fr/feed/")
+                .flatMap(new Fill<Integer>()
+                        .model("http://news.unipv.it/?feed=rss2&cat={category}")
+                        .value("category")
                 )
 
                 .optMap(new GET<>(xml()))
@@ -77,9 +77,9 @@ public final class EventsPoitiersUniversity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return Work.wordpress(frame, "fr")
+        return wordpress(frame, "it")
                 .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(EC2U.university, Universities.Poitiers)
+                .value(EC2U.university, Universities.Pavia)
                 .value(EC2U.updated, literal(now));
     }
 

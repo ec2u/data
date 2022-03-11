@@ -2,7 +2,7 @@
  * Copyright © 2022 EC2U Consortium. All rights reserved.
  */
 
-package eu.ec2u.data.tasks.events.pavia;
+package eu.ec2u.data.tasks.events;
 
 import com.metreeca.json.Frame;
 import com.metreeca.rdf.actions.Localize;
