@@ -29,65 +29,65 @@ import static java.util.stream.Collectors.toList;
 
 public final class Tasks {
 
-	public static void exec(final Runnable... tasks) {
-		toolbox(new Toolbox()).exec(tasks).clear();
-	}
+    public static void exec(final Runnable... tasks) {
+        toolbox(new Toolbox()).exec(tasks).clear();
+    }
 
 
-	public static void upload(final IRI context, final Collection<Frame> frames) {
-		upload(context, Xtream.from(frames));
-	}
+    public static void upload(final IRI context, final Collection<Frame> frames) {
+        upload(context, Xtream.from(frames));
+    }
 
-	public static void upload(final IRI context, final Xtream<Frame> frames) {
-		frames.batch(1000).forEach(batch -> time(() -> {
+    public static void upload(final IRI context, final Xtream<Frame> frames) {
+        frames.batch(1000).forEach(batch -> time(() -> {
 
-			final List<Resource> subjects=batch.stream()
-					.map(Frame::focus)
-					.filter(Resource.class::isInstance)
-					.map(Resource.class::cast)
-					.collect(toList());
+            final List<Resource> subjects=batch.stream()
+                    .map(Frame::focus)
+                    .filter(Resource.class::isInstance)
+                    .map(Resource.class::cast)
+                    .collect(toList());
 
-			final List<Statement> statements=batch.stream()
-					.flatMap(Frame::model)
-					.collect(toList());
+            final List<Statement> statements=batch.stream()
+                    .flatMap(Frame::model)
+                    .collect(toList());
 
-			service(graph()).update(task(connection -> {
+            service(graph()).update(task(connection -> {
 
-				subjects.forEach(subject ->
-						connection.remove(subject, null, null, context)
-				);
+                subjects.forEach(subject ->
+                        connection.remove(subject, null, null, context)
+                );
 
-				connection.add(statements, context);
+                connection.add(statements, context);
 
-			}));
+            }));
 
-		}).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
-				"updated <%d> resources in <%s> in <%d> ms", batch.size(), context, elapsed
-		))));
-	}
-
-
-	public static String format(final Frame frame) {
-		return format(frame.model().collect(Collectors.toList()));
-	}
-
-	public static String format(final Iterable<Statement> model) {
-		try ( final StringWriter writer=new StringWriter() ) {
-
-			Rio.write(model, writer, RDFFormat.TURTLE);
-
-			return writer.toString();
-
-		} catch ( final IOException e ) {
-
-			throw new UncheckedIOException(e);
-
-		}
-	}
+        }).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
+                "updated <%d> resources in <%s> in <%d> ms", batch.size(), context, elapsed
+        ))));
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static String format(final Frame frame) {
+        return format(frame.model().collect(Collectors.toList()));
+    }
 
-	private Tasks() { }
+    public static String format(final Iterable<Statement> model) {
+        try ( final StringWriter writer=new StringWriter() ) {
+
+            Rio.write(model, writer, RDFFormat.TURTLE);
+
+            return writer.toString();
+
+        } catch ( final IOException e ) {
+
+            throw new UncheckedIOException(e);
+
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Tasks() { }
 
 }

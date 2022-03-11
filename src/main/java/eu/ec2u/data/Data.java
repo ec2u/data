@@ -51,10 +51,11 @@ import static java.util.Map.entry;
 
 public final class Data {
 
-    private static final boolean production=GCPServer.production();
+    private static final boolean Production=GCPServer.production();
 
 
-    private static final String root="root"; // root role
+    private static final String RootRole="root";
+    private static final String RootKey="root-key";
 
 
     static {
@@ -85,11 +86,13 @@ public final class Data {
 
 
     private static String token() {
-        return service(vault()).get("root-key").orElse("");
+        return service(vault()).get(RootKey).orElseThrow(() ->
+                new IllegalStateException(format("undefined secret <%s>", RootKey))
+        );
     }
 
     private static Repository repository() {
-        if ( production ) {
+        if ( Production ) {
 
             return new GCPRepository("graph");
 
@@ -117,7 +120,7 @@ public final class Data {
                 .get(() -> server()
 
                         .with(cors())
-                        .with(bearer(token(), root))
+                        .with(bearer(token(), RootRole))
 
                         .with(preprocessor(request -> // disable language negotiation
                                 request.header("Accept-Language", "")
@@ -125,11 +128,11 @@ public final class Data {
 
                         .wrap(router()
 
-                                .path("/graphs", graphs().query().update(root))
+                                .path("/graphs", graphs().query().update(RootRole))
 
                                 .path("/sparql", route(
                                         status(SeeOther, "https://apps.metreeca.com/self/#endpoint={@}"),
-                                        sparql().query().update(root)
+                                        sparql().query().update(RootRole)
                                 ))
 
                                 .path("/cron/*", new Cron())
