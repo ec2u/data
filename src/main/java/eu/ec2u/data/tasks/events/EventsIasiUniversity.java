@@ -77,9 +77,11 @@ public final class EventsIasiUniversity implements Runnable {
 
     private Frame event(final Frame frame) {
         return wordpress(frame, "ro")
-                .frame(DCTERMS.PUBLISHER, Publisher)
+
                 .value(EC2U.university, Universities.Iasi)
-                .value(EC2U.updated, literal(now));
+                .value(EC2U.updated, literal(now))
+
+                .frame(DCTERMS.PUBLISHER, Publisher);
     }
 
 }

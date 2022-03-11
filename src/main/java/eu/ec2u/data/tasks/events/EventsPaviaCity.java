@@ -36,116 +36,116 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
 
-	private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
-			.value(RDF.TYPE, EC2U.Publisher)
-			.value(DCTERMS.COVERAGE, EC2U.City)
-			.values(RDFS.LABEL,
-					literal("ViviPavia", "en"),
-					literal("ViviPavia", "it")
-			);
+    private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
+            .value(RDF.TYPE, EC2U.Publisher)
+            .value(DCTERMS.COVERAGE, EC2U.City)
+            .values(RDFS.LABEL,
+                    literal("ViviPavia", "en"),
+                    literal("ViviPavia", "it")
+            );
 
 
-	public static void main(final String... args) {
-		exec(() -> new EventsPaviaCity().run());
-	}
+    public static void main(final String... args) {
+        exec(() -> new EventsPaviaCity().run());
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private final ZonedDateTime now=ZonedDateTime.now(UTC);
-
-
-	@Override public void run() {
-		Xtream.of(synced(Publisher.focus()))
-
-				.flatMap(this::crawl)
-				.map(this::event)
-				.optMap(new Validate(Event()))
-
-				.sink(events -> upload(EC2U.events, events));
-	}
+    private final ZonedDateTime now=ZonedDateTime.now(UTC);
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override public void run() {
+        Xtream.of(synced(Publisher.focus()))
 
-	private Xtream<Frame> crawl(final Instant synced) {
-		return Xtream.of(synced)
+                .flatMap(this::crawl)
+                .map(this::event)
+                .optMap(new Validate(Event()))
 
-				.flatMap(new Fill<Instant>()
-						.model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
-								+"?new=yes"
-								+"&instance=10"
-								+"&channel=34"
-								+"&size=9999"
-								+"&node=4613"
-								+"&fromDate=%{date}"
-						)
-						.value("date", date -> LocalDate.ofInstant(date, UTC)
-								.atStartOfDay(UTC)
-								.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-						)
-				)
-
-				.optMap(new GET<>(html()))
-				.flatMap(new Microdata())
-				.batch(0)
-
-				.flatMap(model -> frame(Schema.Event, model)
-						.strings(seq(inverse(RDF.TYPE), Schema.url))
-				)
-
-				.flatMap(url -> Xtream.of(url)
-
-						.optMap(new GET<>(html()))
-						.flatMap(new Microdata())
-
-						.map(new Normalize(
-								new StringToDate(),
-								new DateToDateTime()
-						))
-
-						.map(new Localize("it"))
-
-						.batch(0)
-
-						.flatMap(model -> frame(Schema.Event, model)
-								.values(inverse(RDF.TYPE))
-								.map(event -> frame(event, model)
-										.value(DCTERMS.SOURCE, iri(url))
-								)
-						)
-
-				);
-	}
+                .sink(events -> upload(EC2U.events, events));
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private Frame event(final Frame frame) {
-		return frame(iri(EC2U.events, frame.skolemize(seq(DCTERMS.SOURCE))))
+    private Xtream<Frame> crawl(final Instant synced) {
+        return Xtream.of(synced)
 
-				.values(RDF.TYPE, EC2U.Event, Schema.Event)
-				.values(RDFS.LABEL, frame.values(Schema.name))
+                .flatMap(new Fill<Instant>()
+                        .model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
+                                +"?new=yes"
+                                +"&instance=10"
+                                +"&channel=34"
+                                +"&size=9999"
+                                +"&node=4613"
+                                +"&fromDate=%{date}"
+                        )
+                        .value("date", date -> LocalDate.ofInstant(date, UTC)
+                                .atStartOfDay(UTC)
+                                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                        )
+                )
 
-				.value(EC2U.university, Universities.Pavia)
-				.value(EC2U.updated, literal(now))
+                .optMap(new GET<>(html()))
+                .flatMap(new Microdata())
+                .batch(0)
 
-				.frame(DCTERMS.PUBLISHER, Publisher)
-				.value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
+                .flatMap(model -> frame(Schema.Event, model)
+                        .strings(seq(inverse(RDF.TYPE), Schema.url))
+                )
 
-				.values(Schema.name, frame.values(Schema.name))
-				.values(Schema.description, frame.values(Schema.description))
-				.values(Schema.disambiguatingDescription, frame.values(Schema.disambiguatingDescription))
-				.values(Schema.image, frame.values(Schema.image))
-				.values(Schema.url, frame.values(DCTERMS.SOURCE))
+                .flatMap(url -> Xtream.of(url)
 
-				.value(Schema.startDate, frame.value(Schema.startDate))
-				.value(Schema.endDate, frame.value(Schema.endDate))
-				.value(Schema.eventStatus, frame.value(Schema.eventStatus))
-				.value(Schema.typicalAgeRange, frame.value(Schema.typicalAgeRange))
+                        .optMap(new GET<>(html()))
+                        .flatMap(new Microdata())
 
-				.frame(Schema.location, frame.frame(Schema.location).map(location -> location(location,
+                        .map(new Normalize(
+                                new StringToDate(),
+                                new DateToDateTime()
+                        ))
+
+                        .map(new Localize("it"))
+
+                        .batch(0)
+
+                        .flatMap(model -> frame(Schema.Event, model)
+                                .values(inverse(RDF.TYPE))
+                                .map(event -> frame(event, model)
+                                        .value(DCTERMS.SOURCE, iri(url))
+                                )
+                        )
+
+                );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Frame event(final Frame frame) {
+        return frame(iri(EC2U.events, frame.skolemize(seq(DCTERMS.SOURCE))))
+
+                .values(RDF.TYPE, EC2U.Event, Schema.Event)
+                .values(RDFS.LABEL, frame.values(Schema.name))
+
+                .value(EC2U.university, Universities.Pavia)
+                .value(EC2U.updated, literal(now))
+
+                .frame(DCTERMS.PUBLISHER, Publisher)
+                .value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
+
+                .values(Schema.name, frame.values(Schema.name))
+                .values(Schema.description, frame.values(Schema.description))
+                .values(Schema.disambiguatingDescription, frame.values(Schema.disambiguatingDescription))
+                .values(Schema.image, frame.values(Schema.image))
+                .values(Schema.url, frame.values(DCTERMS.SOURCE))
+
+                .value(Schema.startDate, frame.value(Schema.startDate))
+                .value(Schema.endDate, frame.value(Schema.endDate))
+                .value(Schema.eventStatus, frame.value(Schema.eventStatus))
+                .value(Schema.typicalAgeRange, frame.value(Schema.typicalAgeRange))
+
+                .frame(Schema.location, frame.frame(Schema.location).map(location -> location(location,
                         EventsPavia.Defaults)));
-	}
+    }
 
 }

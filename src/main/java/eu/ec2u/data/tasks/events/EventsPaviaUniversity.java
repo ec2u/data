@@ -78,9 +78,11 @@ public final class EventsPaviaUniversity implements Runnable {
 
     private Frame event(final Frame frame) {
         return wordpress(frame, "it")
-                .frame(DCTERMS.PUBLISHER, Publisher)
+
                 .value(EC2U.university, Universities.Pavia)
-                .value(EC2U.updated, literal(now));
+                .value(EC2U.updated, literal(now))
+
+                .frame(DCTERMS.PUBLISHER, Publisher);
     }
 
 }

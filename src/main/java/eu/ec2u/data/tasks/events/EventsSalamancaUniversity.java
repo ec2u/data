@@ -78,9 +78,11 @@ public final class EventsSalamancaUniversity implements Runnable {
 
     private Frame event(final Frame frame) {
         return wordpress(frame, "es")
-                .frame(DCTERMS.PUBLISHER, Publisher)
+
                 .value(EC2U.university, Universities.Salamanca)
-                .value(EC2U.updated, literal(now));
+                .value(EC2U.updated, literal(now))
+
+                .frame(DCTERMS.PUBLISHER, Publisher);
     }
 
 }

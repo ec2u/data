@@ -11,7 +11,6 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
-import eu.ec2u.data.work.Work;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -26,6 +25,7 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
+import static eu.ec2u.data.work.Work.wordpress;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -77,10 +77,12 @@ public final class EventsPoitiersUniversity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return Work.wordpress(frame, "fr")
-                .frame(DCTERMS.PUBLISHER, Publisher)
+        return wordpress(frame, "fr")
+
                 .value(EC2U.university, Universities.Poitiers)
-                .value(EC2U.updated, literal(now));
+                .value(EC2U.updated, literal(now))
+
+                .frame(DCTERMS.PUBLISHER, Publisher);
     }
 
 }

@@ -145,6 +145,7 @@ public final class EventsTurkuCity implements Runnable {
 
 					.frame(DCTERMS.PUBLISHER, Publisher)
 					.value(DCTERMS.SOURCE, iri(id))
+
 					.value(DCTERMS.ISSUED, json.string("date_published").map(v -> literal(v, XSD.DATETIME)))
 					.value(DCTERMS.CREATED, json.string("created_time").map(v -> literal(v, XSD.DATETIME)))
 					.value(DCTERMS.MODIFIED, json.string("last_modified_time").map(v -> literal(v,
