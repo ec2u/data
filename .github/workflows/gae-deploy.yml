@@ -38,6 +38,4 @@ jobs:
       - name: Deploy to GAE
         run: >
           GOOGLE_APPLICATION_CREDENTIALS='${{ steps.auth.outputs.credentials_file_path }}'
-          mvn --batch-mode --update-snapshots
-          -Drevision=${{ steps.version.outputs.id }}
-          deploy
+          mvn --batch-mode -Drevision=${{ steps.version.outputs.id }} deploy
