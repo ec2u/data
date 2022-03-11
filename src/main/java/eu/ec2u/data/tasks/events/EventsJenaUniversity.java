@@ -7,7 +7,8 @@ package eu.ec2u.data.tasks.events;
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
+import com.metreeca.rest.actions.GET;
+import com.metreeca.rest.actions.Validate;
 import com.metreeca.xml.actions.XPath;
 
 import eu.ec2u.data.ports.Universities;
@@ -65,8 +66,6 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .optMap(new Validate(Event()))
 
-                .peek(frame -> System.out.println(frame.format()))
-
                 .sink(events -> upload(EC2U.events, events));
     }
 
@@ -74,12 +73,15 @@ public final class EventsJenaUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(synced)
+        return Xtream
 
-                .flatMap(new Fill<Instant>()
-                        .model("https://www.uni-jena.de/veranstaltungskalender")
+                .of(
+                        "https://www.uni-jena.de/veranstaltungskalender",
+                        "https://www.uni-jena.de/international/veranstaltungskalender",
+                        "https://www.uni-jena.de/kalenderstudiuminternational",
+                        "https://www.uni-jena.de/ec2u-veranstaltungen",
+                        "https://www.uni-jena.de/promotion-events"
                 )
-
 
                 // paginate through catalog
 
