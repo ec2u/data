@@ -330,6 +330,7 @@
                             <mainClass>${main}</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions> <!-- SNAPSHOT as maven-dependency-plugin -->
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
 
