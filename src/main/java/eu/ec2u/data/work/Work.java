@@ -19,13 +19,11 @@ import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static eu.ec2u.data.work.RSS.*;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class Work {
 
-    private static final int TextSize=320;
+    static final int TextSize=320;
 
     private static final Normalize Normalizer=new Normalize()
             .space(true)
@@ -35,39 +33,7 @@ public final class Work {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static Frame wordpress(final Frame frame, final String lang) {
-
-        final Optional<Value> label=frame.string(Title)
-                .map(text -> clip(text, TextSize))
-                .map(text -> literal(text, lang));
-
-        final Optional<Value> brief=frame.string(Encoded)
-                .map(text -> clip(text, TextSize))
-                .map(text -> literal(text, lang));
-
-        return frame(iri(EC2U.events, frame.skolemize(Link)))
-
-                .values(RDF.TYPE, EC2U.Event, Schema.Event)
-                .value(RDFS.LABEL, label)
-                .value(RDFS.COMMENT, brief)
-
-                .value(DCTERMS.ISSUED, frame.value(PubDate))
-                .value(DCTERMS.SOURCE, frame.value(Link))
-
-                .frames(DCTERMS.SUBJECT, frame.strings(Category)
-                        .map(category -> frame(iri(EC2U.concepts, md5(category)))
-                                .value(RDFS.LABEL, literal(category, lang))
-                                .value(SKOS.PREF_LABEL, literal(category, lang))
-                        )
-                )
-
-                .value(Schema.name, label)
-                .value(Schema.disambiguatingDescription, brief)
-                .value(Schema.description, frame.value(Encoded).map(value -> localize(value, lang)))
-                .value(Schema.url, frame.value(Link));
-    }
-
-    private static String clip(final String text, final int length) {
+    static String clip(final String text, final int length) {
         return text.length() > length ? text.substring(0, length-2)+" …" : text;
     }
 

@@ -11,7 +11,7 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
-import eu.ec2u.data.work.Work;
+import eu.ec2u.data.work.WordPress;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -77,7 +77,7 @@ public final class EventsCoimbraUniversity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return Work.wordpress(frame, "pt")
+        return WordPress.RSS(frame, "pt")
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(EC2U.university, Universities.Coimbra)
                 .value(EC2U.updated, literal(now));

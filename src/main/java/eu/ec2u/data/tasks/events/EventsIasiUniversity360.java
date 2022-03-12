@@ -25,7 +25,7 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.Work.wordpress;
+import static eu.ec2u.data.work.WordPress.RSS;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -76,7 +76,7 @@ public final class EventsIasiUniversity360 implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return wordpress(frame, "ro")
+        return RSS(frame, "ro")
 
                 .value(EC2U.university, Universities.Iasi)
                 .value(EC2U.updated, literal(now))
