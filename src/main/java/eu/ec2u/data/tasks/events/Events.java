@@ -16,10 +16,10 @@ import org.eclipse.rdf4j.model.Value;
 import java.time.Duration;
 import java.time.Instant;
 
+import static com.metreeca.core.Lambdas.task;
 import static com.metreeca.json.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.Xtream.task;
 import static com.metreeca.rest.services.Logger.logger;
 
 import static eu.ec2u.data.tasks.Tasks.exec;

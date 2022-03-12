@@ -1,7 +1,7 @@
 package eu.ec2u.data.work;
 
+import com.metreeca.core.Strings;
 import com.metreeca.json.Frame;
-import com.metreeca.text.actions.Normalize;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.terms.EC2U;
@@ -12,43 +12,24 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import static com.metreeca.core.Formats.SQL_TIMESTAMP;
+import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.*;
+import static com.metreeca.json.Values.iri;
+import static com.metreeca.json.Values.literal;
 import static com.metreeca.json.shifts.Seq.seq;
 
 import static java.time.ZoneOffset.UTC;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 import static java.util.function.Predicate.not;
 
 public final class Work {
 
-    private static final DateTimeFormatter SQL_TIMESTAMP=new DateTimeFormatterBuilder()
-            .parseCaseInsensitive()
-            .append(ISO_LOCAL_DATE)
-            .appendLiteral(' ')
-            .append(ISO_LOCAL_TIME)
-            .parseStrict()
-            .toFormatter();
-
-
     public static Literal timestamp(final String timestamp) {
         return literal(ZonedDateTime.of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), UTC));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final int TextSize=320;
-
-    public static String clip(final String text, final int length) {
-        return text.length() > length ? text.substring(0, length-2)+" …" : text; // !!! Values.clip()
     }
 
 
@@ -95,7 +76,7 @@ public final class Work {
 
 
     public static Literal normalize(final Literal literal) {
-        return normalize(literal, Normalize::normalize);
+        return normalize(literal, Strings::normalize);
     }
 
     public static Literal untag(final Literal literal) {
@@ -107,9 +88,6 @@ public final class Work {
                 .map(lang -> literal(normalizer.apply(literal.stringValue()), lang))
                 .orElseGet(() -> literal(normalizer.apply(literal.stringValue()), literal.getDatatype()));
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

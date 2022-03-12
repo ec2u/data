@@ -9,10 +9,10 @@ import com.metreeca.rest.Xtream;
 
 import eu.ec2u.data.terms.EC2U;
 
+import static com.metreeca.core.Lambdas.task;
 import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Toolbox.text;
-import static com.metreeca.rest.Xtream.task;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 

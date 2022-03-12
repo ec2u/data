@@ -14,10 +14,10 @@ import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
+import static com.metreeca.core.Lambdas.task;
 import static com.metreeca.rdf4j.services.Graph.graph;
 import static com.metreeca.rest.Toolbox.resource;
 import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.Xtream.task;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 

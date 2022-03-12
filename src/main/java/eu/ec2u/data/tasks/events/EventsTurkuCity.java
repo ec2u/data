@@ -23,8 +23,10 @@ import java.util.stream.Stream;
 
 import javax.json.JsonValue;
 
+import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.*;
+import static com.metreeca.json.Values.iri;
+import static com.metreeca.json.Values.literal;
 import static com.metreeca.json.shifts.Seq.seq;
 import static com.metreeca.rest.formats.JSONFormat.json;
 

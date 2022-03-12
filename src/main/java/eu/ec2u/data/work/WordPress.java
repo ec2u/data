@@ -1,5 +1,6 @@
 package eu.ec2u.data.work;
 
+import com.metreeca.core.Strings;
 import com.metreeca.json.Frame;
 
 import eu.ec2u.data.terms.EC2U;
@@ -9,8 +10,11 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Optional;
 
+import static com.metreeca.core.Identifiers.md5;
+import static com.metreeca.core.Strings.TextLength;
 import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.*;
+import static com.metreeca.json.Values.iri;
+import static com.metreeca.json.Values.literal;
 
 import static eu.ec2u.data.work.RSS.*;
 
@@ -19,11 +23,11 @@ public final class WordPress {
     public static Frame RSS(final Frame frame, final String lang) {
 
         final Optional<Value> label=frame.string(Title)
-                .map(text -> Work.clip(text, Work.TextSize))
+                .map(text -> Strings.clip(text, TextLength))
                 .map(text -> literal(text, lang));
 
         final Optional<Value> brief=frame.string(Encoded)
-                .map(text -> Work.clip(text, Work.TextSize))
+                .map(text -> Strings.clip(text, TextLength))
                 .map(text -> literal(text, lang));
 
         return frame(iri(EC2U.events, frame.skolemize(Link)))

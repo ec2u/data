@@ -1,5 +1,6 @@
 package eu.ec2u.data.work;
 
+import com.metreeca.core.Strings;
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rest.Xtream;
@@ -16,12 +17,13 @@ import java.time.*;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.metreeca.core.Identifiers.md5;
+import static com.metreeca.core.Strings.TextLength;
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.md5;
 import static com.metreeca.rest.formats.JSONFormat.json;
 
-import static eu.ec2u.data.work.Work.*;
+import static eu.ec2u.data.work.Work.localize;
 
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
@@ -119,7 +121,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 .or(() -> event.string("description"))
                 .map(Untag::untag)
                 .filter(not(String::isEmpty)) // eg single image link
-                .map(v -> clip(v, TextSize))
+                .map(v -> Strings.clip(v, TextLength))
                 .map(localize(language));
 
         final Optional<Literal> description=event.string("description")
