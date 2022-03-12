@@ -32,9 +32,26 @@ import static java.util.stream.Collectors.joining;
 
 public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
+    private static final Period Delta=Period.ofDays(90);
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final String base;
+
     private IRI country;
     private IRI locality;
     private String language; // !!! as IRI
+
+
+    public Tribe(final String base) {
+
+        if ( base == null ) {
+            throw new NullPointerException("null base");
+        }
+
+        this.base=base.endsWith("/") ? base.substring(0, base.length()-1) : base;
+    }
 
 
     public Tribe country(final IRI country) {
@@ -90,13 +107,13 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 .flatMap(new Fill<Instant>()
 
-                        .model("https://agenda.uc.pt/wp-json/tribe/events/v1/events/"
+                        .model(base+"/wp-json/tribe/events/v1/events/"
                                 +"?per_page=100"
                                 +"&start_date={start}"
                                 +"&page={page}"
                         )
 
-                        .value("start", LocalDate.now().minus(Period.ofDays(30)))
+                        .value("start", LocalDate.now().minus(Delta))
                         .value("page", 1)
 
                 )

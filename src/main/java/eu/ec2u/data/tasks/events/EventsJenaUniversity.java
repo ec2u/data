@@ -15,6 +15,7 @@ import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.Work;
+import eu.ec2u.data.work.locations.Jena;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
@@ -185,7 +186,9 @@ public final class EventsJenaUniversity implements Runnable {
                 )
 
                 .frame(Schema.location, frame.frame(Schema.location)
-                        .map(location -> location(location, EventsJena.Defaults))
+                        .map(location -> location(location, frame(bnode())
+                                .value(Schema.addressCountry, Jena.Germany)
+                                .value(Schema.addressLocality, Jena.Jena)))
 
                 );
 

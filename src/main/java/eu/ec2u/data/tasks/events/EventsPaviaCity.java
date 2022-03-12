@@ -16,6 +16,7 @@ import com.metreeca.rest.actions.*;
 import eu.ec2u.data.ports.Universities;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
+import eu.ec2u.data.work.locations.Pavia;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
@@ -144,8 +145,11 @@ public final class EventsPaviaCity implements Runnable {
                 .value(Schema.eventStatus, frame.value(Schema.eventStatus))
                 .value(Schema.typicalAgeRange, frame.value(Schema.typicalAgeRange))
 
-                .frame(Schema.location, frame.frame(Schema.location).map(location -> location(location,
-                        EventsPavia.Defaults)));
+                .frame(Schema.location, frame.frame(Schema.location).map(location ->
+                        location(location, frame(bnode())
+                                .value(Schema.addressCountry, Pavia.Italy)
+                                .value(Schema.addressLocality, Pavia.Pavia))
+                ));
     }
 
 }

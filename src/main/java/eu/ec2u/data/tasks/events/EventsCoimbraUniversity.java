@@ -23,8 +23,8 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.tasks.events.EventsCoimbra.*;
 import static eu.ec2u.data.work.Work.localize;
+import static eu.ec2u.data.work.locations.Coimbra.*;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -52,7 +52,7 @@ public final class EventsCoimbraUniversity implements Runnable {
 
         Xtream.of(synced(Publisher.focus()))
 
-                .flatMap(new Tribe()
+                .flatMap(new Tribe("https://agenda.uc.pt/")
                         .country(Coimbra)
                         .locality(Portugal)
                         .language(Portuguese)

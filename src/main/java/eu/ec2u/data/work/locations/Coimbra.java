@@ -1,11 +1,11 @@
-package eu.ec2u.data.tasks.events;
+package eu.ec2u.data.work.locations;
 
 import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.open.actions.Wikidata.wd;
 
 
-public final class EventsCoimbra {
+public final class Coimbra {
 
     public static final IRI Coimbra=wd("Q45412");
     public static final IRI Portugal=wd("Q45");
@@ -14,6 +14,6 @@ public final class EventsCoimbra {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private EventsCoimbra() { }
+    private Coimbra() { }
 
 }
