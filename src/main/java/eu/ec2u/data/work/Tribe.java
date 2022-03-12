@@ -25,6 +25,7 @@ import static com.metreeca.rest.formats.JSONFormat.json;
 
 import static eu.ec2u.data.work.Work.localize;
 
+import static java.util.Map.entry;
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
@@ -118,11 +119,17 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 )
 
-                .optMap(new GET<>(json()))
+                .scan(page -> Xtream.of(page)
 
-                .flatMap(new JSONPath<>(json -> json
-                        .paths("events.*")
-                ));
+                        .optMap(new GET<>(json()))
+                        .map(JSONPath.Processor::new)
+
+                        .map(path -> entry(
+                                path.strings("next_rest_url"),
+                                path.paths("events.*")
+                        ))
+
+                );
     }
 
 
