@@ -24,6 +24,7 @@ import static com.metreeca.rest.formats.JSONFormat.json;
 import static eu.ec2u.data.work.Work.*;
 
 import static java.util.function.Function.identity;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
 
@@ -31,7 +32,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
     private IRI country;
     private IRI locality;
-    private String language; // !!! to IRI
+    private String language; // !!! as IRI
+
 
     public Tribe country(final IRI country) {
 
@@ -105,6 +107,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
     }
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private Optional<Frame> event(final JSONPath.Processor event) {
 
         final Optional<Literal> title=event.string("title")
@@ -114,11 +118,13 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
         final Optional<Literal> excerpt=event.string("excerpt")
                 .or(() -> event.string("description"))
                 .map(Untag::untag)
+                .filter(not(String::isEmpty)) // eg single image link
                 .map(v -> clip(v, TextSize))
                 .map(localize(language));
 
         final Optional<Literal> description=event.string("description")
                 .map(Untag::untag)
+                .filter(not(String::isEmpty)) // eg single image link
                 .map(localize(language));
 
         return event.string("url").map(id -> frame(iri(EC2U.events, md5(id)))
@@ -126,7 +132,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 .value(RDF.TYPE, EC2U.Event)
 
                 .value(RDFS.LABEL, title)
-                .value(RDFS.COMMENT, description)
+                .value(RDFS.COMMENT, excerpt)
 
                 .value(DCTERMS.SOURCE, event.string("url").flatMap(Work::url).map(Values::iri))
 

@@ -46,7 +46,6 @@ public final class EventsCoimbraUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     @Override public void run() {
 
         final ZonedDateTime now=ZonedDateTime.now(UTC);
