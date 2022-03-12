@@ -62,14 +62,21 @@ public final class EC2U {
 	public static final IRI Resource=term("Resource");
 
 	public static final IRI university=term("university");
-	public static final IRI updated=term("updated");
 
+	public static final IRI created=term("created");
+	public static final IRI updated=term("updated");
+	public static final IRI deleted=term("deleted");
+
+
+	public static Shape Reference() {
+		return and(
+				field(RDFS.LABEL, multilingual()),
+				field(RDFS.COMMENT, multilingual())
+		);
+	}
 
 	public static Shape Resource() {
-		return and(
-
-				field(RDFS.LABEL, multilingual()),
-				field(RDFS.COMMENT, multilingual()),
+		return and(Reference(),
 
 				field(university, required(),
 						field(RDFS.LABEL, multilingual())
@@ -78,18 +85,19 @@ public final class EC2U {
 				field(updated, optional(), datatype(XSD.DATETIME)),
 
 				field(DCTERMS.PUBLISHER, required(), Publisher()),
-				field(DCTERMS.SUBJECT, multiple(), Concept()),
-
 				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
+
 				field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
 				field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
-				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME))
+				field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
+
+				field(DCTERMS.SUBJECT, multiple(), Concept())
 
 		);
 	}
 
 	public static Shape Concept() {
-		return and(
+		return and(Reference(),
 
 				field(SKOS.PREF_LABEL, multilingual()),
 				field(SKOS.ALT_LABEL, multilingual()),
@@ -114,10 +122,7 @@ public final class EC2U {
 
 
 	public static Shape Publisher() {
-		return and(
-
-				field(RDFS.LABEL, multilingual()),
-				field(RDFS.COMMENT, multilingual()),
+		return and(Reference(),
 
 				field(DCTERMS.COVERAGE, optional(), range(University, College, Association, City, NGO))
 

@@ -29,6 +29,9 @@ import static java.util.stream.Collectors.toList;
 
 public final class Tasks {
 
+    static { System.setProperty("com.sun.security.enableAIAcaIssuers", "true"); } // ;( retrieve missing certificates
+
+
     public static void exec(final Runnable... tasks) {
         toolbox(new Toolbox()).exec(tasks).clear();
     }

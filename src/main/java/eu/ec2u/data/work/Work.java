@@ -10,33 +10,48 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.io.ByteArrayInputStream;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.json.shifts.Seq.seq;
-import static com.metreeca.xml.formats.HTMLFormat.html;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.ZoneOffset.UTC;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 
 public final class Work {
 
-    static final int TextSize=320;
+    private static final DateTimeFormatter SQL_TIMESTAMP=new DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .append(ISO_LOCAL_DATE)
+            .appendLiteral(' ')
+            .append(ISO_LOCAL_TIME)
+            .parseStrict()
+            .toFormatter();
 
-    private static final Normalize Normalizer=new Normalize()
-            .space(true)
-            .smart(true)
-            .marks(true);
+
+    public static Literal timestamp(final String timestamp) {
+        return literal(ZonedDateTime.of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), UTC));
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static String clip(final String text, final int length) {
-        return text.length() > length ? text.substring(0, length-2)+" …" : text;
+    public static final int TextSize=320;
+
+    public static String clip(final String text, final int length) {
+        return text.length() > length ? text.substring(0, length-2)+" …" : text; // !!! Values.clip()
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static Value localize(final Value value, final String lang) {
         return literal(value)
@@ -50,12 +65,38 @@ public final class Work {
                 .orElse(value);
     }
 
+    public static Function<String, Literal> localize(final String lang) {
+        return v -> localize(v, lang);
+    }
+
+    public static Literal localize(final String v, final String lang) {
+        return literal(v, lang);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static Optional<String> url(final String url) {
+
+        if ( url == null ) {
+            throw new NullPointerException("null url");
+        }
+
+        return Optional.of(url)
+                .filter(x -> x.matches("^\\w+:.*$"))
+                .or(() -> Optional.of(url)
+                        .filter(x -> x.matches("^www\\..*$")) // !!! well-formed url
+                        .map(x -> String.format("https://%s", x))
+                );
+    }
+
+
     public static Literal normalize(final Literal literal) {
-        return normalize(literal, Normalizer);
+        return normalize(literal, Normalize::normalize);
     }
 
     public static Literal untag(final Literal literal) {
-        return normalize(literal, Work::untag);
+        return normalize(literal, Untag::untag);
     }
 
     public static Literal normalize(final Literal literal, final UnaryOperator<String> normalizer) {
@@ -66,18 +107,6 @@ public final class Work {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static String normalize(final String text) {
-        return Normalizer.apply(text);
-    }
-
-    public static String untag(final String text) {
-        return html(new ByteArrayInputStream(text.getBytes(UTF_8)), UTF_8.name(), "").fold(
-
-                error -> text, value -> new Untag().apply(value)
-
-        );
-    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

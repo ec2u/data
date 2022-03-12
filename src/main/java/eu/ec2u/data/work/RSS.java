@@ -3,6 +3,7 @@ package eu.ec2u.data.work;
 import com.metreeca.json.Frame;
 import com.metreeca.json.Values;
 import com.metreeca.rest.Xtream;
+import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.actions.XPath;
 
 import org.eclipse.rdf4j.model.IRI;
@@ -49,7 +50,7 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
                         )
 
                         .string(Description, item.string("description"))
-                        .string(Encoded, item.string("content:encoded").map(Work::untag))
+                        .string(Encoded, item.string("content:encoded").map(text -> Untag.untag(text)))
 
                 ));
 

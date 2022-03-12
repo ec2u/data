@@ -79,6 +79,19 @@ ec2u:university rdf:type owl:ObjectProperty .
 #    Data properties
 #################################################################
 
+###  http://schema.org/disambiguatingDescription
+<http://schema.org/disambiguatingDescription> rdf:type owl:DatatypeProperty ;
+                                              rdfs:subPropertyOf rdfs:comment .
+
+
+###  http://www.w3.org/2000/01/rdf-schema#comment
+rdfs:comment rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3.org/2000/01/rdf-schema#label
+rdfs:label rdf:type owl:DatatypeProperty .
+
+
 ###  http://www.w3.org/2003/01/geo/wgs84_pos#lat
 wgs84:lat rdf:type owl:DatatypeProperty .
 
@@ -121,7 +134,8 @@ schema:longitude rdf:type owl:DatatypeProperty ;
 
 
 ###  https://schema.org/name
-schema:name rdf:type owl:DatatypeProperty .
+schema:name rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf rdfs:label .
 
 
 #################################################################

@@ -19,6 +19,7 @@ import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Or.or;
 
+import static eu.ec2u.data.terms.EC2U.Reference;
 import static eu.ec2u.data.terms.EC2U.multilingual;
 
 /**
@@ -69,7 +70,7 @@ public final class Schema {
      * @throws NullPointerException if {@code labels} is nul or contains null elements
      */
     public static Shape Thing() {
-        return and(
+        return and(Reference(),
 
                 field(url, optional(), datatype(IRIType)),
                 field(name, multilingual()),
@@ -86,6 +87,18 @@ public final class Schema {
     public static final IRI Organization=term("Organization");
 
     public static final IRI legalName=term("legalName");
+
+
+    public static Shape Organization() {
+        return and(Thing(),
+
+                field(RDFS.LABEL, multilingual()),
+
+                field(Schema.legalName, multilingual()),
+                field(Schema.email, datatype(XSD.STRING)),
+                field(Schema.telephone, datatype(XSD.STRING))
+        );
+    }
 
 
     //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,28 +122,21 @@ public final class Schema {
     public static Shape Event() {
         return and(Thing(),
 
-                field(organizer, optional(),
-                        field(RDFS.LABEL, multilingual()),
-                        field(Schema.name, multilingual()),
-                        field(Schema.email, datatype(XSD.STRING))
-                ),
-
-                field(isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
                 field(eventStatus, optional(), datatype(IRIType)),
 
-                field(location, optional(), Location()),
-
-                field(eventAttendanceMode, multiple(), datatype(IRIType)),
-
-                field(audience, multiple(),
-                        field(RDFS.LABEL, multilingual())
-                ),
+                field(startDate, optional(), datatype(XSD.DATETIME)),
+                field(endDate, optional(), datatype(XSD.DATETIME)),
 
                 field(inLanguage, multiple(), datatype(XSD.STRING)),
+                field(isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
                 field(typicalAgeRange, multiple(), datatype(XSD.STRING)),
+                field(eventAttendanceMode, multiple(), datatype(IRIType)),
 
-                field(startDate, optional(), datatype(XSD.DATETIME)),
-                field(endDate, optional(), datatype(XSD.DATETIME)));
+                field(location, multiple(), Location()),
+                field(audience, multiple(), field(RDFS.LABEL, multilingual())),
+                field(organizer, multiple(), Organization())
+
+        );
     }
 
 
@@ -180,7 +186,7 @@ public final class Schema {
     }
 
     public static Shape PostalAddress() {
-        return and(Thing(),
+        return and(ContactPoint(),
 
                 field(addressCountry, optional(), or(datatype(IRIType), datatype(XSD.STRING))),
                 field(addressRegion, optional(), or(datatype(IRIType), datatype(XSD.STRING))),
@@ -204,6 +210,17 @@ public final class Schema {
     public static final IRI email=term("email");
     public static final IRI telephone=term("telephone");
     public static final IRI faxNumber=term("faxNumber");
+
+
+    public static Shape ContactPoint() {
+        return and(Thing(),
+
+                field(email, optional(), datatype(XSD.STRING)),
+                field(telephone, optional(), datatype(XSD.STRING))
+
+
+        );
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
