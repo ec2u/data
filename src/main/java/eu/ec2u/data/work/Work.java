@@ -25,6 +25,7 @@ import static com.metreeca.json.shifts.Seq.seq;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
+import static java.util.function.Predicate.not;
 
 public final class Work {
 
@@ -83,6 +84,8 @@ public final class Work {
         }
 
         return Optional.of(url)
+                .map(String::trim)
+                .filter(not(String::isEmpty))
                 .filter(x -> x.matches("^\\w+:.*$"))
                 .or(() -> Optional.of(url)
                         .filter(x -> x.matches("^www\\..*$")) // !!! well-formed url
