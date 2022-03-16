@@ -72,7 +72,7 @@ public final class Schema {
     public static Shape Thing() {
         return and(Reference(),
 
-                field(url, optional(), datatype(IRIType)),
+                field(url, multiple(), datatype(IRIType)),
                 field(name, multilingual()),
                 field(image, multiple(), datatype(IRIType)),
                 field(description, multilingual()),
