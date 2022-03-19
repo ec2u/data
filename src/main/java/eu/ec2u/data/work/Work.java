@@ -13,7 +13,6 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,14 +54,6 @@ public final class Work {
                 .map(Value.class::cast)
 
                 .orElse(value);
-    }
-
-    public static Function<String, Literal> localize(final String lang) {
-        return v -> localize(v, lang);
-    }
-
-    public static Literal localize(final String v, final String lang) {
-        return literal(v, lang);
     }
 
 

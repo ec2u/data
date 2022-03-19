@@ -44,7 +44,6 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.Work.localize;
 import static eu.ec2u.data.work.Work.timestamp;
 
 import static java.lang.String.format;
@@ -164,7 +163,7 @@ public final class EventsTurkuUniversity implements Runnable {
                         .string("")
                         .map(XPath::decode)
                         .filter(not(String::isEmpty))
-                        .map(localize(entry.getKey()))
+                        .map(text -> literal(text, entry.getKey()))
                 )
                 .collect(toList());
 
@@ -174,7 +173,7 @@ public final class EventsTurkuUniversity implements Runnable {
                         .map(Untag::untag)
                         .filter(not(String::isEmpty))
                         .map(v -> clip(v, TextLength))
-                        .map(localize(entry.getKey()))
+                        .map(text -> literal(text, entry.getKey()))
                 )
                 .collect(toList());
 
@@ -183,7 +182,7 @@ public final class EventsTurkuUniversity implements Runnable {
                         .string("")
                         .map(Untag::untag)
                         .filter(not(String::isEmpty))
-                        .map(localize(entry.getKey()))
+                        .map(text -> literal(text, entry.getKey()))
                 )
                 .collect(toList());
 
@@ -241,7 +240,7 @@ public final class EventsTurkuUniversity implements Runnable {
             return frame(iri(EC2U.locations, md5(id)))
 
                     .value(Schema.url, url)
-                    .value(Schema.name, json.string("free_text").map(localize(Turku.Language)))
+                    .value(Schema.name, json.string("free_text").map(text -> literal(text, Turku.Language)))
 
                     .frame(Schema.address, frame(iri(EC2U.locations, md5(Xtream
 
@@ -268,7 +267,7 @@ public final class EventsTurkuUniversity implements Runnable {
     private Optional<Frame> organizer(final JSONPath.Processor json) {
         return json.string("url").map(id -> frame(iri(EC2U.organizations, md5(id)))
 
-                .value(Schema.name, json.string("name").map(XPath::decode).map(localize(Turku.Language)))
+                .value(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.Language)))
                 .value(Schema.email, json.string("email").map(Values::literal))
 
         );

@@ -23,7 +23,6 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.Work.localize;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -33,8 +32,8 @@ public final class EventsCoimbraUniversity implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    localize("Agenda UC", "en"),
-                    localize("Agenda UC", Coimbra.Language)
+                    literal("Agenda UC", "en"),
+                    literal("Agenda UC", Coimbra.Language)
             );
 
 

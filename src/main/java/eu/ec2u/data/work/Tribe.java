@@ -21,9 +21,8 @@ import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.TextLength;
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.iri;
+import static com.metreeca.json.Values.literal;
 import static com.metreeca.rest.formats.JSONFormat.json;
-
-import static eu.ec2u.data.work.Work.localize;
 
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
@@ -136,19 +135,19 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
         final Optional<Literal> title=event.string("title")
                 .map(XPath::decode)
-                .map(localize(language));
+                .map(text -> literal(text, language));
 
         final Optional<Literal> excerpt=event.string("excerpt")
                 .or(() -> event.string("description"))
                 .map(Untag::untag)
                 .filter(not(String::isEmpty)) // eg single image link
                 .map(v -> Strings.clip(v, TextLength))
-                .map(localize(language));
+                .map(text -> literal(text, language));
 
         final Optional<Literal> description=event.string("description")
                 .map(Untag::untag)
                 .filter(not(String::isEmpty)) // eg single image link
-                .map(localize(language));
+                .map(text -> literal(text, language));
 
         return event.string("url").map(id -> frame(iri(EC2U.events, md5(id)))
 
@@ -188,7 +187,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
     private Optional<Frame> category(final JSONPath.Processor category) {
         return category.string("urls.self").map(self -> {
 
-            final Optional<Literal> name=category.string("name").map(localize(language));
+            final Optional<Literal> name=category.string("name").map(text -> literal(text, language));
 
             return frame(iri(EC2U.concepts, md5(self)))
 
@@ -202,7 +201,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
         return organizer.string("url").map(id -> frame(iri(EC2U.organizations, md5(id)))
 
                 .value(Schema.url, organizer.string("website").flatMap(Work::url).map(Values::iri))
-                .value(Schema.name, organizer.string("organizer").map(XPath::decode).map(localize(language)))
+                .value(Schema.name, organizer.string("organizer").map(XPath::decode).map(text -> literal(text,
+                        language)))
                 .value(Schema.email, organizer.string("email").map(Values::literal))
                 .value(Schema.telephone, organizer.string("phone").map(Values::literal))
 
@@ -221,7 +221,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
             return frame(iri(EC2U.locations, md5(id)))
 
                     .value(Schema.url, location.string("url").map(Values::iri))
-                    .value(Schema.name, location.string("venue").map(localize(language)))
+                    .value(Schema.name, location.string("venue").map(text -> literal(text, language)))
 
                     .value(Schema.latitude, location.decimal("geo_lat").map(Values::literal))
                     .value(Schema.longitude, location.decimal("geo_lng").map(Values::literal))
