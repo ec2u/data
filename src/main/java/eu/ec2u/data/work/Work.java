@@ -10,11 +10,13 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.metreeca.core.Formats.SQL_TIMESTAMP;
 import static com.metreeca.core.Identifiers.md5;
@@ -23,13 +25,21 @@ import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.Values.literal;
 import static com.metreeca.json.shifts.Seq.seq;
 
+import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
-import static java.util.function.Predicate.not;
 
 public final class Work {
 
     public static Literal timestamp(final String timestamp) {
-        return literal(ZonedDateTime.of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), UTC));
+        return timestamp(timestamp, UTC);
+    }
+
+    public static Literal timestamp(final String timestamp, final ZoneId zone) {
+        return literal(ZonedDateTime
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), zone)
+                .truncatedTo(ChronoUnit.SECONDS)
+                .withZoneSameInstant(UTC)
+        );
     }
 
 
@@ -58,20 +68,21 @@ public final class Work {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static Optional<String> url(final String url) {
+    private static final Pattern FuzzyIRIPattern=Pattern.compile("\\bhttps?:\\S+|\\bwww\\.\\S+");
 
-        if ( url == null ) {
-            throw new NullPointerException("null url");
+    public static Optional<String> url(final String text) {
+
+        if ( text == null ) {
+            throw new NullPointerException("null text");
         }
 
-        return Optional.of(url)
-                .map(String::trim)
-                .filter(not(String::isEmpty))
-                .filter(x -> x.matches("^\\w+:.*$"))
-                .or(() -> Optional.of(url)
-                        .filter(x -> x.matches("^www\\..*$")) // !!! well-formed url
-                        .map(x -> String.format("https://%s", x))
-                );
+        return Optional.of(text)
+                .map(FuzzyIRIPattern::matcher)
+                .filter(Matcher::find)
+                .map(Matcher::group)
+                .map(url -> url.replace("[", "%5B")) // !!! generalize
+                .map(url -> url.replace("]", "%5D"))
+                .map(url -> url.startsWith("http") ? url : format("https://%s", url));
     }
 
 

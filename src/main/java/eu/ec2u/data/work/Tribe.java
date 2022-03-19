@@ -132,9 +132,6 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 );
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private Optional<Frame> event(final JSONPath.Processor event) {
 
         final Optional<Literal> title=event.string("title")
