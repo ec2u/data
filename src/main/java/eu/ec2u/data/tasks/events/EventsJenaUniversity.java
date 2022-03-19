@@ -78,7 +78,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .of(
                         "https://www.uni-jena.de/veranstaltungskalender",
                         "https://www.uni-jena.de/international/veranstaltungskalender",
-                        "https://www.uni-jena.de/kalenderstudiuminternational",
+                        // !!! "https://www.uni-jena.de/kalenderstudiuminternational",
                         "https://www.uni-jena.de/ec2u-veranstaltungen",
                         "https://www.uni-jena.de/promotion-events"
                 )
