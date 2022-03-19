@@ -9,7 +9,7 @@ import com.metreeca.json.Values;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 
-import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.cities.Turku;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.Work;
@@ -142,7 +142,7 @@ public final class EventsTurkuCity implements Runnable {
 					.values(RDFS.LABEL, name)
 					.values(RDFS.COMMENT, description)
 
-					.value(EC2U.university, Universities.Turku)
+					.value(EC2U.university, Turku.University)
 					.value(EC2U.updated, literal(now))
 
 					.frame(DCTERMS.PUBLISHER, Publisher)

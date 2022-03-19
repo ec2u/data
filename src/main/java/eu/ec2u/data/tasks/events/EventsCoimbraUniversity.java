@@ -8,7 +8,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.Validate;
 
-import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.cities.Coimbra;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.Tribe;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -24,7 +24,6 @@ import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
 import static eu.ec2u.data.work.Work.localize;
-import static eu.ec2u.data.work.locations.Coimbra.*;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -35,7 +34,7 @@ public final class EventsCoimbraUniversity implements Runnable {
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
                     localize("Agenda UC", "en"),
-                    localize("Agenda UC", Portuguese)
+                    localize("Agenda UC", Coimbra.Language)
             );
 
 
@@ -53,14 +52,14 @@ public final class EventsCoimbraUniversity implements Runnable {
         Xtream.of(synced(Publisher.focus()))
 
                 .flatMap(new Tribe("https://agenda.uc.pt/")
-                        .country(Coimbra)
-                        .locality(Portugal)
-                        .language(Portuguese)
+                        .country(Coimbra.Country)
+                        .locality(Coimbra.City)
+                        .language(Coimbra.Language)
                 )
 
                 .map(event -> event
 
-                        .value(EC2U.university, Universities.Coimbra)
+                        .value(EC2U.university, Coimbra.University)
                         .value(EC2U.updated, literal(now))
 
                         .frame(DCTERMS.PUBLISHER, Publisher)

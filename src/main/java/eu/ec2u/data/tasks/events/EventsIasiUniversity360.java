@@ -8,7 +8,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 
-import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.cities.Iasi;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -78,7 +78,7 @@ public final class EventsIasiUniversity360 implements Runnable {
     private Frame event(final Frame frame) {
         return RSS(frame, "ro")
 
-                .value(EC2U.university, Universities.Iasi)
+                .value(EC2U.university, Iasi.University)
                 .value(EC2U.updated, literal(now))
 
                 .frame(DCTERMS.PUBLISHER, Publisher);

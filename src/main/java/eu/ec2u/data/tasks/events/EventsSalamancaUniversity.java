@@ -8,7 +8,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 
-import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.cities.Salamanca;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -79,7 +79,7 @@ public final class EventsSalamancaUniversity implements Runnable {
     private Frame event(final Frame frame) {
         return RSS(frame, "es")
 
-                .value(EC2U.university, Universities.Salamanca)
+                .value(EC2U.university, Salamanca.University)
                 .value(EC2U.updated, literal(now))
 
                 .frame(DCTERMS.PUBLISHER, Publisher);

@@ -12,11 +12,10 @@ import com.metreeca.rest.formats.JSONFormat;
 import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.actions.XPath;
 
-import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.cities.Turku;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.Work;
-import eu.ec2u.data.work.locations.Turku;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -87,7 +86,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 .map(event -> event
 
-                        .value(EC2U.university, Universities.Turku)
+                        .value(EC2U.university, Turku.University)
                         .value(EC2U.updated, literal(now))
 
                         .frame(DCTERMS.PUBLISHER, Publisher)

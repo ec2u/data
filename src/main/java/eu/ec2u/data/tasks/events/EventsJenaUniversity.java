@@ -11,11 +11,10 @@ import com.metreeca.rest.actions.GET;
 import com.metreeca.rest.actions.Validate;
 import com.metreeca.xml.actions.XPath;
 
-import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.cities.Jena;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.Work;
-import eu.ec2u.data.work.locations.Jena;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
@@ -149,7 +148,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .value(RDFS.LABEL, label)
                 .value(RDFS.COMMENT, label)
 
-                .value(EC2U.university, Universities.Jena)
+                .value(EC2U.university, Jena.University)
                 .value(EC2U.updated, literal(now))
 
                 .value(DCTERMS.SOURCE, frame.value(Schema.url))
@@ -187,8 +186,8 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .frame(Schema.location, frame.frame(Schema.location)
                         .map(location -> location(location, frame(bnode())
-                                .value(Schema.addressCountry, Jena.Germany)
-                                .value(Schema.addressLocality, Jena.Jena)))
+                                .value(Schema.addressCountry, Jena.Country)
+                                .value(Schema.addressLocality, Jena.City)))
 
                 );
 

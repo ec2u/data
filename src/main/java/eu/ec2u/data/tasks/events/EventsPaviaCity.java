@@ -13,10 +13,9 @@ import com.metreeca.rdf4j.actions.Microdata;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 
-import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.cities.Pavia;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
-import eu.ec2u.data.work.locations.Pavia;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
@@ -128,7 +127,7 @@ public final class EventsPaviaCity implements Runnable {
                 .values(RDF.TYPE, EC2U.Event, Schema.Event)
                 .values(RDFS.LABEL, frame.values(Schema.name))
 
-                .value(EC2U.university, Universities.Pavia)
+                .value(EC2U.university, Pavia.University)
                 .value(EC2U.updated, literal(now))
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
@@ -147,8 +146,8 @@ public final class EventsPaviaCity implements Runnable {
 
                 .frame(Schema.location, frame.frame(Schema.location).map(location ->
                         location(location, frame(bnode())
-                                .value(Schema.addressCountry, Pavia.Italy)
-                                .value(Schema.addressLocality, Pavia.Pavia))
+                                .value(Schema.addressCountry, Pavia.Country)
+                                .value(Schema.addressLocality, Pavia.City))
                 ));
     }
 

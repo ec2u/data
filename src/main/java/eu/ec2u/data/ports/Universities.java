@@ -8,7 +8,6 @@ import com.metreeca.json.Shape;
 import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.terms.EC2U;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.json.Shape.optional;
@@ -27,14 +26,6 @@ import static eu.ec2u.data.terms.EC2U.multilingual;
 
 
 public final class Universities extends Delegator {
-
-    public static final IRI Coimbra=EC2U.item("/universities/coimbra");
-    public static final IRI Iasi=EC2U.item("/universities/iasi");
-    public static final IRI Jena=EC2U.item("/universities/jena");
-    public static final IRI Pavia=EC2U.item("/universities/pavia");
-    public static final IRI Poitiers=EC2U.item("/universities/poitiers");
-    public static final IRI Salamanca=EC2U.item("/universities/salamanca");
-    public static final IRI Turku=EC2U.item("/universities/turku");
 
 
     public static Shape University() {

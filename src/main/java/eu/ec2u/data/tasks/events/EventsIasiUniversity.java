@@ -8,7 +8,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.Validate;
 
-import eu.ec2u.data.ports.Universities;
+import eu.ec2u.data.cities.Iasi;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.Tribe;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -23,7 +23,6 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.locations.Iasi.*;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -51,14 +50,14 @@ public final class EventsIasiUniversity implements Runnable {
         Xtream.of(synced(Publisher.focus()))
 
                 .flatMap(new Tribe("https://www.uaic.ro//")
-                        .country(Iasi)
-                        .locality(Romania)
-                        .language(Romanian)
+                        .country(Iasi.City)
+                        .locality(Iasi.Country)
+                        .language(Iasi.Language)
                 )
 
                 .map(event -> event
 
-                        .value(EC2U.university, Universities.Iasi)
+                        .value(EC2U.university, Iasi.University)
                         .value(EC2U.updated, literal(now))
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
