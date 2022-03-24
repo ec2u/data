@@ -11,7 +11,7 @@ public final class Poitiers {
     public static final IRI University=item("/universities/poitiers");
     public static final IRI City=wd("Q6616");
     public static final IRI Country=wd("Q142");
-    public static final IRI Language=wd("fr");
+    public static final String Language="fr";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -10,8 +10,8 @@ public final class Pavia {
 
     public static final IRI University=EC2U.item("/universities/pavia");
     public static final IRI City=wd("Q6259");
-    public static final IRI Country=wd("Q48");
-    public static final IRI Language=wd("it");
+    public static final IRI Country=wd("Q38");
+    public static final String Language="it";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -12,7 +12,7 @@ public final class Jena {
     public static final IRI University=item("/universities/jena");
     public static final IRI City=wd("Q3150");
     public static final IRI Country=wd("Q183");
-    public static final IRI Language=wd("de");
+    public static final String Language="de";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

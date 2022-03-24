@@ -128,7 +128,7 @@ public final class EventsTurkuCity implements Runnable {
 			final Collection<Literal> name=local(json.entries("name"));
 
 			final Collection<Literal> description=json.entries("short_description")
-					.filter(entry -> EC2U.langs.contains(entry.getKey()))
+					.filter(entry -> EC2U.Languages.contains(entry.getKey()))
 					.map(this::local)
 					.flatMap(Optional::stream)
 					.map(Work::untag)
@@ -224,7 +224,7 @@ public final class EventsTurkuCity implements Runnable {
 
 	private Set<Literal> local(final Stream<Map.Entry<String, JSONPath.Processor>> values) {
 		return values
-				.filter(entry -> EC2U.langs.contains(entry.getKey()))
+				.filter(entry -> EC2U.Languages.contains(entry.getKey()))
 				.map(this::local)
 				.flatMap(Optional::stream)
 				.map(Work::normalize)

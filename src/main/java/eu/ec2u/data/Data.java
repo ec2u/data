@@ -16,6 +16,7 @@ import eu.ec2u.data.ports.Concepts;
 import eu.ec2u.data.ports.*;
 import eu.ec2u.data.tasks.*;
 import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.work.Fallback;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
@@ -33,7 +34,6 @@ import static com.metreeca.rest.Toolbox.service;
 import static com.metreeca.rest.Toolbox.storage;
 import static com.metreeca.rest.Wrapper.preprocessor;
 import static com.metreeca.rest.formats.JSONLDFormat.keywords;
-import static com.metreeca.rest.handlers.Publisher.publisher;
 import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.services.Cache.cache;
 import static com.metreeca.rest.services.Engine.engine;
@@ -47,9 +47,8 @@ import static com.metreeca.rest.wrappers.Server.server;
 
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
-import static java.util.Map.entry;
 
-public final class Data {
+public final class Data implements Runnable {
 
     private static final boolean Production=GCPServer.production();
 
@@ -78,10 +77,7 @@ public final class Data {
                 .set(graph(), () -> new Graph(repository()))
                 .set(engine(), GraphEngine::new)
 
-                .set(keywords(), () -> Map.ofEntries(
-                        entry("@id", "id"),
-                        entry("@type", "type")
-                ));
+                .set(keywords(), () -> EC2U.Keywords);
     }
 
 
@@ -108,9 +104,14 @@ public final class Data {
     }
 
 
+    public static void main(final String... args) {
+        new Data().run();
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void main(final String... args) {
+    @Override public void run() {
         new GCPServer().delegate(toolbox -> toolbox(toolbox)
 
                 .exec(new Namespaces())
@@ -137,11 +138,7 @@ public final class Data {
 
                                 .path("/cron/*", new Cron())
 
-                                .path("/*", asset(
-
-                                        publisher("/static")
-
-                                                .fallback("/index.html"),
+                                .path("/*", asset(new Fallback("/index.html"),
 
                                         preprocessor(request -> request.base(EC2U.Base)).wrap(router()
 
@@ -159,10 +156,5 @@ public final class Data {
 
         ).start();
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Data() { }
 
 }

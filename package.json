@@ -24,7 +24,7 @@
         "check": "jest",
         "start": "npm run start.client",
         "start.server": "nodemon work/node/server/index.ts",
-        "start.client": "vite --open /index.html",
+        "start.client": "vite --open",
         "build": "npm run build.client",
         "build.server": "del dist && tsc",
         "build.client": "vite build"

@@ -188,9 +188,9 @@ public final class Schema {
     public static Shape PostalAddress() {
         return and(ContactPoint(),
 
-                field(addressCountry, optional(), or(datatype(IRIType), datatype(XSD.STRING))),
-                field(addressRegion, optional(), or(datatype(IRIType), datatype(XSD.STRING))),
-                field(addressLocality, optional(), or(datatype(IRIType), datatype(XSD.STRING))),
+                field(addressCountry, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
+                field(addressRegion, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
+                field(addressLocality, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
                 field(postalCode, optional(), datatype(XSD.STRING)),
                 field(streetAddress, optional(), datatype(XSD.STRING))
 

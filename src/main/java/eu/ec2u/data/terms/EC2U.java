@@ -7,9 +7,11 @@ package eu.ec2u.data.terms;
 import com.metreeca.json.Shape;
 import com.metreeca.json.Values;
 
+import eu.ec2u.data.cities.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
+import java.util.Map;
 import java.util.Set;
 
 import static com.metreeca.json.Shape.*;
@@ -20,13 +22,27 @@ import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Localized.localized;
 import static com.metreeca.json.shapes.Range.range;
 
+import static java.util.Map.entry;
+
 public final class EC2U {
 
 	public static final String Base="https://data.ec2u.eu/";
 
 
-	public static final Set<String> langs=Set.of(
-			"en", "pt", "ro", "de", "it", "fr", "es", "fi"
+	public static final Set<String> Languages=Set.of(
+			"en",
+			Coimbra.Language,
+			Iasi.Language,
+			Jena.Language,
+			Pavia.Language,
+			Poitiers.Language,
+			Salamanca.Language,
+			Turku.Language
+	);
+
+	public static final Map<String, String> Keywords=Map.ofEntries(
+			entry("@id", "id"),
+			entry("@type", "type")
 	);
 
 
@@ -40,7 +56,7 @@ public final class EC2U {
 
 
 	public static Shape multilingual() {
-		return localized(langs);
+		return localized(Languages);
 	}
 
 

@@ -10,7 +10,7 @@ public final class Salamanca {
     public static final IRI University=EC2U.item("/universities/salamanca");
     public static final IRI City=wd("Q15695");
     public static final IRI Country=wd("Q29");
-    public static final IRI Language=wd("es");
+    public static final String Language="es";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
