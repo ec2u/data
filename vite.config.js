@@ -15,7 +15,6 @@ export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 	root: resolve(src),
 
 	publicDir: resolve(src, "files"),
-	cacheDir: resolve("node_modules/.vite"),
 
 	plugins: [reactRefresh()],
 

@@ -23,9 +23,6 @@
         "resolveJsonModule": true,
         "declaration": true
     },
-    "include": [
-        "work/node"
-    ],
     "exclude": [
         "**/*.test.ts"
     ]
