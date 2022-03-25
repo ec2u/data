@@ -47,6 +47,7 @@ import static org.eclipse.rdf4j.common.iteration.Iterations.asList;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
+import static java.util.Comparator.comparing;
 
 public final class Events extends Delegator {
 
@@ -99,8 +100,8 @@ public final class Events extends Delegator {
 
 		final long limit=request.parameter(".limit")
 				.map(guarded(Long::parseLong))
-				.filter(v -> v >= 0)
-				.orElse(0L);
+				.filter(v -> v > 0) // 0 => no limit
+				.orElse(Long.MAX_VALUE);
 
 		final Instant fence=request.parameter(">updated")
 				.map(guarded(ISO_ZONED_DATE_TIME::parse))
@@ -133,6 +134,11 @@ public final class Events extends Delegator {
 						.orElse(false)
 				)
 
+				.sorted(comparing(Value::stringValue))
+
+				.skip(offset)
+				.limit(limit)
+
 				.filter(event -> JSONLDFormat.validate(event, shape, context).fold(
 
 						trace -> {
@@ -149,7 +155,7 @@ public final class Events extends Delegator {
 
 		final JsonArrayBuilder events=Json.createArrayBuilder();
 
-		(limit > 0 ? validated.limit(limit) : validated).skip(offset)
+		validated
 				.map(event -> JSONLDFormat.encode(event, shape, EC2U.Keywords, context))
 				.forEach(events::add);
 
