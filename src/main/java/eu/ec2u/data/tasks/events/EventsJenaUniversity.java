@@ -21,11 +21,15 @@ import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import java.io.ByteArrayInputStream;
 import java.time.*;
-import java.util.*;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 import static com.metreeca.rdf.formats.RDFFormat.rdf;
+import static com.metreeca.rest.Toolbox.service;
+import static com.metreeca.rest.services.Logger.logger;
 import static com.metreeca.xml.formats.HTMLFormat.html;
 
 import static eu.ec2u.data.ports.Events.Event;
@@ -36,6 +40,7 @@ import static eu.ec2u.data.work.Work.location;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
+import static java.util.stream.Collectors.toList;
 
 public final class EventsJenaUniversity implements Runnable {
 
@@ -78,7 +83,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .of(
                         "https://www.uni-jena.de/veranstaltungskalender",
                         "https://www.uni-jena.de/international/veranstaltungskalender",
-                        // !!! "https://www.uni-jena.de/kalenderstudiuminternational",
+                        "https://www.uni-jena.de/kalenderstudiuminternational",
                         "https://www.uni-jena.de/ec2u-veranstaltungen",
                         "https://www.uni-jena.de/promotion-events"
                 )
@@ -91,7 +96,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                                 // ;( pagination links are disabled under javascript control: test for page links
 
-                                .link("//div[@class='entry_wrapper unijena']//a[@class='link']/@href")
+                                .link("//div[contains(@class, 'entry_wrapper')]//a[@class='link']/@href")
                                 .isPresent()
 
                         )::apply)
@@ -105,9 +110,8 @@ public final class EventsJenaUniversity implements Runnable {
                 .optMap(new GET<>(html()))
 
                 .flatMap(new XPath<>(xpath -> xpath
-                        .links("//div[@class='entry_wrapper unijena']//a[@class='link']/@href")
+                        .links("//div[contains(@class, 'entry_wrapper')]//a[@class='link']/@href")
                 ))
-
 
                 // extract JSON-LD
 
@@ -118,19 +122,29 @@ public final class EventsJenaUniversity implements Runnable {
                 ))
 
                 .flatMap(json -> rdf(new ByteArrayInputStream(json.getBytes(UTF_8)), null, new JSONLDParser())
-                        .get()
-                        .stream()
-                        .flatMap(Collection::stream)
-                )
 
-                .map(com.metreeca.rdf.schemas.Schema::normalize)
+                        .map(model -> model.stream()
+                                .map(com.metreeca.rdf.schemas.Schema::normalize)
+                                .collect(toList())
+                        )
 
-                .batch(0)
+                        .fold(
 
-                .flatMap(model -> frame(Schema.Event, model)
-                        .values(inverse(RDF.TYPE))
-                        .map(event -> frame(event, model))
+                                error -> {
+
+                                    service(logger()).warning(this, error.toString());
+
+                                    return Stream.empty();
+
+                                },
+
+                                model -> frame(Schema.Event, model)
+                                        .frames(inverse(RDF.TYPE))
+
+                        )
+
                 );
+
     }
 
     private Frame event(final Frame frame) {
