@@ -6,10 +6,8 @@ package eu.ec2u.data.ports;
 
 import com.metreeca.json.Shape;
 import com.metreeca.json.Values;
-import com.metreeca.rest.Request;
-import com.metreeca.rest.Response;
+import com.metreeca.rest.*;
 import com.metreeca.rest.formats.JSONLDFormat;
-import com.metreeca.rest.handlers.Delegator;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
@@ -49,7 +47,7 @@ import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 import static java.util.Comparator.comparing;
 
-public final class Events extends Delegator {
+public final class Events extends Handler.Base {
 
 	public static Shape Event() {
 		return relate(

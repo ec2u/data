@@ -5,7 +5,7 @@
 package eu.ec2u.data.ports;
 
 import com.metreeca.json.Shape;
-import com.metreeca.rest.handlers.Delegator;
+import com.metreeca.rest.Handler;
 
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
@@ -22,42 +22,42 @@ import static com.metreeca.rest.handlers.Router.router;
 import static com.metreeca.rest.operators.Relator.relator;
 import static com.metreeca.rest.wrappers.Driver.driver;
 
-public final class Concepts extends Delegator {
+public final class Concepts extends Handler.Base {
 
-	private static Shape label() {
-		return field("label", SKOS.PREF_LABEL,
-				localized(), convey(lang("en", "it", "fr", "pt", "es", "fi", "ro", "de"))
-		);
-	}
+    private static Shape label() {
+        return field("label", SKOS.PREF_LABEL,
+                localized(), convey(lang("en", "it", "fr", "pt", "es", "fi", "ro", "de"))
+        );
+    }
 
 
-	public Concepts() {
-		delegate(driver(relate(
+    public Concepts() {
+        delegate(driver(relate(
 
-				filter(clazz(EC2U.Theme)),
+                filter(clazz(EC2U.Theme)),
 
-				link(OWL.SAMEAS,
+                link(OWL.SAMEAS,
 
-						label(), detail(
+                        label(), detail(
 
-								field("broader", SKOS.BROADER_TRANSITIVE, label(), link(inverse(OWL.SAMEAS))),
+                                field("broader", SKOS.BROADER_TRANSITIVE, label(), link(inverse(OWL.SAMEAS))),
 
-								field(SKOS.NARROWER, label(), link(inverse(OWL.SAMEAS))),
-								field(SKOS.RELATED, label(), link(inverse(OWL.SAMEAS)))
+                                field(SKOS.NARROWER, label(), link(inverse(OWL.SAMEAS))),
+                                field(SKOS.RELATED, label(), link(inverse(OWL.SAMEAS)))
 
-						))
+                        ))
 
-		)).wrap(router()
+        )).wrap(router()
 
-				.path("/", router()
-						.get(relator())
-				)
+                .path("/", router()
+                        .get(relator())
+                )
 
-				.path("/*", router()
-						.get(relator())
-				)
+                .path("/*", router()
+                        .get(relator())
+                )
 
-		));
-	}
+        ));
+    }
 
 }

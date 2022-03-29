@@ -5,7 +5,7 @@
 package eu.ec2u.data.ports;
 
 import com.metreeca.json.Shape;
-import com.metreeca.rest.handlers.Delegator;
+import com.metreeca.rest.Handler;
 
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -25,7 +25,7 @@ import static com.metreeca.rest.wrappers.Driver.driver;
 import static eu.ec2u.data.terms.EC2U.multilingual;
 
 
-public final class Universities extends Delegator {
+public final class Universities extends Handler.Base {
 
 
     public static Shape University() {

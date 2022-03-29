@@ -5,7 +5,6 @@
 package eu.ec2u.data.ports;
 
 import com.metreeca.rest.Handler;
-import com.metreeca.rest.handlers.Delegator;
 import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.tasks.*;
@@ -24,59 +23,59 @@ import static com.metreeca.rest.services.Logger.time;
 import static java.lang.String.format;
 
 
-public final class Cron extends Delegator {
+public final class Cron extends Handler.Base {
 
-	private final Logger logger=service(logger());
-
-
-	public Cron() {
-		delegate(cron(router().get(router()
-
-				.path("/chores", execute(new Chores()))
-				.path("/inferences", execute(new Inferences()))
-
-				.path("/wikidata", execute(new Wikidata()))
-
-				.path("/events/", execute(new Events()))
-
-				.path("/events/iasi/university", execute(new EventsIasiUniversity()))
-				.path("/events/iasi/university/360", execute(new EventsIasiUniversity360()))
-				.path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
-				.path("/events/jena/university", execute(new EventsJenaUniversity()))
-				.path("/events/pavia/university", execute(new EventsPaviaUniversity()))
-				.path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
-				.path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
-				.path("/events/turku/university", execute(new EventsTurkuUniversity()))
-
-				.path("/events/pavia/city", execute(new EventsPaviaCity()))
-				.path("/events/turku/city", execute(new EventsTurkuCity()))
-
-		)));
-	}
+    private final Logger logger=service(logger());
 
 
-	private Handler execute(final Runnable task) {
-		return request -> {
+    public Cron() {
+        delegate(cron(router().get(router()
 
-			try {
+                .path("/chores", execute(new Chores()))
+                .path("/inferences", execute(new Inferences()))
 
-				time(task).apply(t -> logger.info(task.getClass(), format(
-						"executed in <%,d> ms", t
-				)));
+                .path("/wikidata", execute(new Wikidata()))
 
-				return request.reply(status(OK));
+                .path("/events/", execute(new Events()))
 
-			} catch ( final RuntimeException e ) {
+                .path("/events/iasi/university", execute(new EventsIasiUniversity()))
+                .path("/events/iasi/university/360", execute(new EventsIasiUniversity360()))
+                .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
+                .path("/events/jena/university", execute(new EventsJenaUniversity()))
+                .path("/events/pavia/university", execute(new EventsPaviaUniversity()))
+                .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
+                .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
+                .path("/events/turku/university", execute(new EventsTurkuUniversity()))
 
-				service(logger()).warning(task.getClass(), "failed", e);
+                .path("/events/pavia/city", execute(new EventsPaviaCity()))
+                .path("/events/turku/city", execute(new EventsTurkuCity()))
 
-				return request.reply(status(BadGateway, format(
-						"task failed / %s", e.getMessage()
-				)));
+        )));
+    }
 
-			}
 
-		};
-	}
+    private Handler execute(final Runnable task) {
+        return request -> {
+
+            try {
+
+                time(task).apply(t -> logger.info(task.getClass(), format(
+                        "executed in <%,d> ms", t
+                )));
+
+                return request.reply(status(OK));
+
+            } catch ( final RuntimeException e ) {
+
+                service(logger()).warning(task.getClass(), "failed", e);
+
+                return request.reply(status(BadGateway, format(
+                        "task failed / %s", e.getMessage()
+                )));
+
+            }
+
+        };
+    }
 
 }
