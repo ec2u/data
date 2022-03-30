@@ -8,7 +8,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 
-import eu.ec2u.data.cities.Iasi;
+import eu.ec2u.data.cities.Salamanca;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -29,18 +29,18 @@ import static eu.ec2u.data.work.WordPress.RSS;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsIasiUniversity360 implements Runnable {
+public final class EventsSalamancaCity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://360.uaic.ro/"))
+    private static final Frame Publisher=frame(iri("https://salamanca.es/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("360 uaic.ro", "en")
+                    literal("Turismo de Salamanca. Portal Oficial", "es")
             );
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsIasiUniversity360().run());
+        exec(() -> new EventsSalamancaCity().run());
     }
 
 
@@ -67,7 +67,7 @@ public final class EventsIasiUniversity360 implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://360.uaic.ro/feed")
+                        .model("https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss")
                 )
 
                 .optMap(new GET<>(xml()))
@@ -76,9 +76,9 @@ public final class EventsIasiUniversity360 implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return RSS(frame, Iasi.Language)
+        return RSS(frame, Salamanca.Language)
 
-                .value(EC2U.university, Iasi.University)
+                .value(EC2U.university, Salamanca.University)
                 .value(EC2U.updated, literal(now))
 
                 .frame(DCTERMS.PUBLISHER, Publisher);

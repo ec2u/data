@@ -17,6 +17,7 @@ import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.Values.literal;
 
 import static eu.ec2u.data.work.RSS.*;
+import static eu.ec2u.data.work.Work.localize;
 
 public final class WordPress {
 
@@ -48,7 +49,7 @@ public final class WordPress {
 
                 .value(Schema.name, label)
                 .value(Schema.disambiguatingDescription, brief)
-                .value(Schema.description, frame.value(Encoded).map(value -> Work.localize(value, lang)))
+                .value(Schema.description, frame.value(Encoded).map(value -> localize(value, lang)))
                 .value(Schema.url, frame.value(Link));
     }
 

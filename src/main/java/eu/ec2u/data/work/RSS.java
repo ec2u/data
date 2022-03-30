@@ -50,7 +50,7 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
                         )
 
                         .string(Description, item.string("description"))
-                        .string(Encoded, item.string("content:encoded").map(text -> Untag.untag(text)))
+                        .string(Encoded, item.string("content:encoded").map(Untag::untag))
 
                 ));
 
