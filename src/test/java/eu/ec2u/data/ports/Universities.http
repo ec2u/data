@@ -1,0 +1,7 @@
+### Catalog
+
+GET http://localhost:8080/universities/
+
+### Details
+
+GET http://localhost:8080/universities/pavia
