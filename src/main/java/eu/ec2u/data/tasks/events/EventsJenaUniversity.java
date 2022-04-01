@@ -156,7 +156,9 @@ public final class EventsJenaUniversity implements Runnable {
                 .or(() -> frame.string(Schema.description))
                 .map(text -> localize(text, "de"));
 
-        return frame(iri(EC2U.events, frame.skolemize(Schema.url)))
+        // don't skolemize on schema:url: events are published multiple times at different locations
+
+        return frame(iri(EC2U.events, frame.skolemize(Schema.name, Schema.startDate, Schema.endDate)))
 
                 .value(RDF.TYPE, EC2U.Event)
                 .value(RDFS.LABEL, label)
