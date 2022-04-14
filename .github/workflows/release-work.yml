@@ -1,0 +1,59 @@
+name: release-work
+
+on:
+
+  push:
+
+    branches:
+      - 'release/0.0'
+
+jobs:
+
+  deploy-to-gae:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java environment
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          distribution: temurin
+          cache: maven
+
+      - id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Deploy to GAE
+        run: >
+          GOOGLE_APPLICATION_CREDENTIALS='${{ steps.auth.outputs.credentials_file_path }}'
+          mvn --batch-mode --update-snapshots
+          -Drevision={{ github.ref_name }}
+          -Dgae.version=work
+          deploy
+
+
+  publih-to-main:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Merge trigger branch into main
+        run: |
+          git config --global user.email "cc@ml.ec2u.eu"
+          git config --global user.name "EC2U Connect Centre"
+          git checkout main
+          git merge --commit --no-edit ${{ github.ref_name }}
+          git push origin main
