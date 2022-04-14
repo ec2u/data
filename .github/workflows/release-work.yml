@@ -34,12 +34,12 @@ jobs:
         run: >
           GOOGLE_APPLICATION_CREDENTIALS='${{ steps.auth.outputs.credentials_file_path }}'
           mvn --batch-mode --update-snapshots
-          -Drevision={{ github.ref_name }}
+          -Drevision=${{ github.ref_name }}
           -Dgae.version=work
           deploy
 
 
-  publih-to-main:
+  publish-to-main:
 
     runs-on: ubuntu-latest
 
