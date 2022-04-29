@@ -1,11 +1,11 @@
-/@
+/.idea/
+/.vscode/
 
-/cache/
+/data/
 /target/
-/overlays/
 /node_modules/
+
+*.iml
 
 *~
 ~*
-
-*.iml
