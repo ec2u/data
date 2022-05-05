@@ -12,5 +12,4 @@ structured data about skills, courses, research, local events and other areas of
 
 # License
 
-This project is licensed under the Apache 2.0 License – see [LICENSE](https://github.com/ec2u/card/blob/main/LICENSE)
-file for details.
+This project is licensed under the Apache 2.0 License – see [LICENSE](LICENSE) file for details.
