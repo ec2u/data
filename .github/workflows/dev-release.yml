@@ -1,11 +1,11 @@
-name: release-work
+name: work-deploy
 
 on:
 
   push:
 
     branches:
-      - 'release/0.0'
+      - 'release/dev'
 
 jobs:
 
@@ -35,25 +35,5 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS='${{ steps.auth.outputs.credentials_file_path }}'
           mvn --batch-mode --update-snapshots
           -Drevision=${{ github.ref_name }}
-          -Dgae.version=work
+          -Dgae.version=dev
           deploy
-
-
-  publish-to-main:
-
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Check out repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Merge trigger branch into main
-        run: |
-          git config --global user.email "cc@ml.ec2u.eu"
-          git config --global user.name "EC2U Connect Centre"
-          git checkout main
-          git merge --commit --no-edit ${{ github.ref_name }}
-          git push origin main
