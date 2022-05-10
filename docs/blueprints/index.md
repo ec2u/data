@@ -22,6 +22,6 @@ datatypes, which are internally mapped to implementation datatypes according to 
 | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration) | `Duration`                       | |
 | [xsd:anyURI](https://www.w3.org/TR/xmlschema-2/#anyURI)     | `URI` (relative) | `"/path"`              |
 |  | `URI` (absolute) | `“scheme:details”` |
-| [rdf:langString](https://www.w3.org/TR/rdf-schema/#ch_langstring) | ``Localized extends Map<Locale, String>`` | `{ "locale": "text" }` |
+| [rdf:langString](https://www.w3.org/TR/rdf-schema/#ch_langstring) | ``Dictionary extends Map<Locale, String>`` | `{ "locale": "text" }` |
 
 UML diagrams refer to the datatype using the Java mapping, as it is the most specific.
