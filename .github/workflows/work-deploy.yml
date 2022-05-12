@@ -5,7 +5,7 @@ on:
   push:
 
     branches:
-      - 'release/dev'
+      - 'work'
 
 jobs:
 
@@ -35,5 +35,5 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS='${{ steps.auth.outputs.credentials_file_path }}'
           mvn --batch-mode --update-snapshots
           -Drevision=${{ github.ref_name }}
-          -Dgae.version=dev
+          -Dgae.version=test
           deploy
