@@ -6,6 +6,6 @@ GET https://data.ec2u.eu/events/?.limit=10
 
 ### Bulk download
 
-https://data.ec2u.eu/events/*?.offset=1000&.limit=100
+https://data.ec2u.eu/events/*?.offset=100&.limit=100
 
 
