@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.work;
 
@@ -26,14 +26,11 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.time.*;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.core.Formats.SQL_TIMESTAMP;
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.iri;
@@ -41,24 +38,8 @@ import static com.metreeca.json.Values.literal;
 import static com.metreeca.json.shifts.Seq.seq;
 
 import static java.lang.String.format;
-import static java.time.ZoneOffset.UTC;
 
 public final class Work {
-
-    public static Literal timestamp(final String timestamp) {
-        return timestamp(timestamp, UTC);
-    }
-
-    public static Literal timestamp(final String timestamp, final ZoneId zone) {
-        return literal(ZonedDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), zone)
-                .truncatedTo(ChronoUnit.SECONDS)
-                .withZoneSameInstant(UTC)
-        );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static Value localize(final Value value, final String lang) {
         return literal(value)

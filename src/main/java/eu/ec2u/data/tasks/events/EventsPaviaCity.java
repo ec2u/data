@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.tasks.events;
 
@@ -134,6 +134,7 @@ public final class EventsPaviaCity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Frame event(final Frame frame) {
+
         return frame(iri(EC2U.events, frame.skolemize(seq(DCTERMS.SOURCE))))
 
                 .values(RDF.TYPE, EC2U.Event, Schema.Event)
@@ -153,6 +154,7 @@ public final class EventsPaviaCity implements Runnable {
 
                 .value(Schema.startDate, frame.value(Schema.startDate))
                 .value(Schema.endDate, frame.value(Schema.endDate))
+
                 .value(Schema.eventStatus, frame.value(Schema.eventStatus))
                 .value(Schema.typicalAgeRange, frame.value(Schema.typicalAgeRange))
 

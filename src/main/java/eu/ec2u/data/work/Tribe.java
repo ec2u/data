@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.work;
 
@@ -30,9 +30,11 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.metreeca.core.Formats.SQL_TIMESTAMP;
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.TextLength;
 import static com.metreeca.json.Frame.frame;
@@ -40,6 +42,7 @@ import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.Values.literal;
 import static com.metreeca.rest.formats.JSONFormat.json;
 
+import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
@@ -50,6 +53,20 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
     private static final Period Delta=Period.ofDays(90);
 
+    private static Literal instant(final String timestamp) {
+        return literal(ZonedDateTime
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), UTC)
+                .truncatedTo(ChronoUnit.SECONDS)
+        );
+    }
+
+    private static Literal datetime(final String timestamp, final ZoneOffset offset) {
+        return literal(OffsetDateTime
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), offset)
+                .truncatedTo(ChronoUnit.SECONDS)
+        );
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,6 +75,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
     private IRI country;
     private IRI locality;
     private String language; // !!! as IRI
+    private ZoneOffset zone=UTC;
 
 
     public Tribe(final String base) {
@@ -99,6 +117,17 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
         }
 
         this.language=language;
+
+        return this;
+    }
+
+    public Tribe zone(final ZoneOffset zone) {
+
+        if ( zone == null ) {
+            throw new NullPointerException("null zone");
+        }
+
+        this.zone=zone;
 
         return this;
     }
@@ -174,8 +203,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 .value(DCTERMS.SOURCE, event.string("url").flatMap(Work::url).map(Values::iri))
 
-                .value(DCTERMS.CREATED, event.string("date_utc").map(Work::timestamp))
-                .value(DCTERMS.MODIFIED, event.string("modified_utc").map(Work::timestamp))
+                .value(DCTERMS.CREATED, event.string("date_utc").map(Tribe::instant))
+                .value(DCTERMS.MODIFIED, event.string("modified_utc").map(Tribe::instant))
 
                 .frames(DCTERMS.SUBJECT, event.paths("categories.*").optMap(this::category))
 
@@ -185,8 +214,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 .value(Schema.description, description)
                 .value(Schema.disambiguatingDescription, excerpt)
 
-                .value(Schema.startDate, event.string("utc_start_date").map(Work::timestamp))
-                .value(Schema.endDate, event.string("utc_end_date").map(Work::timestamp))
+                .value(Schema.startDate, event.string("start_date").map(timestamp -> datetime(timestamp, zone)))
+                .value(Schema.endDate, event.string("end_date").map(timestamp -> datetime(timestamp, zone)))
 
                 .bool(Schema.isAccessibleForFree, event
                         .string("cost").filter(v -> v.equalsIgnoreCase("livre")) // !!! localize
