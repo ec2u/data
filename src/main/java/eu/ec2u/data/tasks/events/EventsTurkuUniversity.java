@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.tasks.events;
 
@@ -74,6 +74,7 @@ public final class EventsTurkuUniversity implements Runnable {
                     literal("University of Turku / News", "en"),
                     literal("Turun yliopisto / Ajankohtaista", "fi")
             );
+
     private static final String APIKey="key-events-turku-university";
 
 
@@ -94,7 +95,6 @@ public final class EventsTurkuUniversity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-
                 .map(event -> event
 
                         .value(EC2U.university, Turku.University)
@@ -104,11 +104,6 @@ public final class EventsTurkuUniversity implements Runnable {
                 )
 
                 .optMap(new Validate(Event()))
-
-                //.skip(1030)
-                //.limit(1)
-                //
-                //.peek(frame -> System.out.println(frame.format()))
 
                 .sink(events -> upload(EC2U.events, events));
 
