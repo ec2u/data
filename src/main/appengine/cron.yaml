@@ -1,0 +1,60 @@
+cron:
+
+  - description: "wikidata - nightly sync"
+    url: /cron/wikidata
+    schedule: every day 00:00
+
+
+  - description: "events › coimbra › university - nightly crawling"
+    url: /cron/events/coimbra/university
+    schedule: every day 00:00
+
+  - description: "events › iasi › university - nightly crawling"
+    url: /cron/events/iasi/university
+    schedule: every day 00:00
+
+  - description: "events › iasi › university › 360 - nightly crawling"
+    url: /cron/events/iasi/university/360
+    schedule: every day 00:00
+
+  - description: "events › jena › university - nightly crawling"
+    url: /cron/events/jena/university
+    schedule: every day 00:00
+
+  - description: "events › pavia › university - nightly crawling"
+    url: /cron/events/pavia/university
+    schedule: every day 00:00
+
+  - description: "events › poitiers › university - nightly crawling"
+    url: /cron/events/poitiers/university
+    schedule: every day 00:00
+
+  - description: "events › salamanca › university - nightly crawling"
+    url: /cron/events/salamanca/university
+    schedule: every day 00:00
+
+  - description: "events › turku › university - nightly crawling"
+    url: /cron/events/turku/university
+    schedule: every day 00:00
+
+
+  - description: "events › pavia › city - nightly crawling"
+    url: /cron/events/pavia/city
+    schedule: every day 00:00
+
+  - description: "events › turku › city - nightly crawling"
+    url: /cron/events/turku/city
+    schedule: every day 00:00
+
+
+  - description: "events - nightly housekeeping"
+    url: /cron/events/
+    schedule: every day 00:10
+
+  - description: "system - nightly housekeeping"
+    url: /cron/chores
+    schedule: every day 00:15
+
+  - description: "system - nightly housekeeping"
+    url: /cron/inferences
+    schedule: every day 00:20

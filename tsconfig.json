@@ -1,0 +1,29 @@
+// https://www.typescriptlang.org/docs/handbook/tsconfig-json.html
+// https://www.typescriptlang.org/docs/handbook/compiler-options.html
+
+{
+    "compilerOptions": {
+        "baseUrl": "src/main/javascript",
+        "outDir": "target/static",
+        "paths": {
+            "@ec2u/data/*": [
+                "*"
+            ]
+        },
+        "strict": true,
+        "target": "ES2020",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "lib": [
+            "ES2020",
+            "DOM"
+        ],
+        "jsx": "react",
+        "resolveJsonModule": true,
+        "declaration": true
+    },
+    "exclude": [
+        "**/*.test.ts"
+    ]
+}

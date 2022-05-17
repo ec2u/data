@@ -1,0 +1,17 @@
+runtime: java11
+
+handlers:
+
+  - url: /(.*\.(html|css|js|svg|png))$
+    static_files: static/\1
+    upload: static/.*$
+    secure: always
+
+  - url: .*
+    script: auto
+    secure: always
+
+instance_class: F4_1G # https://cloud.google.com/appengine/docs/standard#instance_classes
+
+automatic_scaling: # https://cloud.google.com/appengine/docs/standard/java-gen2/config/appref#automatic_scaling
+  max_instances: 1 # prevent conflicts when dumping rdf to storage bucket
