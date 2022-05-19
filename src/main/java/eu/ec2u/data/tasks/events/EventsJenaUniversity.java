@@ -33,8 +33,7 @@ import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import java.io.ByteArrayInputStream;
 import java.time.*;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.json.Frame.frame;
@@ -56,13 +55,44 @@ import static java.util.stream.Collectors.toList;
 
 public final class EventsJenaUniversity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://www.uni-jena.de/veranstaltungskalender"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
-            .values(RDFS.LABEL,
-                    literal("Upcoming Events", "en"),
-                    localize("Kommende Veranstaltungen", "de")
-            );
+    private static final List<Frame> Publishers=Xtream
+
+            .of(
+
+                    frame(iri("https://www.uni-jena.de/veranstaltungskalender")).values(RDFS.LABEL,
+                            literal("Jena University / Events", "en"),
+                            literal("Universität Jena / Veranstaltungen", "de")
+                    ),
+
+                    frame(iri("https://www.uni-jena.de/international/veranstaltungskalender")).values(RDFS.LABEL,
+                            literal("Jena University / International / Events", "en"),
+                            literal("Universität Jena / International / Veranstaltungen", "de")
+                    ),
+
+                    frame(iri("https://www.uni-jena.de/kalenderstudiuminternational")).values(RDFS.LABEL,
+                            literal("Jena University / Calendar Studies international / Events", "en"),
+                            literal("Universität Jena / Kalender Studium international / Veranstaltungen", "de")
+                    ),
+
+                    frame(iri("https://www.uni-jena.de/ec2u-veranstaltungen")).values(RDFS.LABEL,
+                            literal("Jena University / EC2U / Events", "en"),
+                            literal("Universität Jena / EC2U / Veranstaltungen", "de")
+                    ),
+
+                    frame(iri("https://www.uni-jena.de/promotion-events")).values(RDFS.LABEL,
+                            literal("Jena University / Academic Career / Events", "en"),
+                            literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", "de")
+                    )
+
+            )
+
+            .map(frame -> frame
+                    .value(RDF.TYPE, EC2U.Publisher)
+                    .value(DCTERMS.COVERAGE, EC2U.University)
+                    .value(EC2U.university, Jena.University)
+            )
+
+            .collect(toList());
 
 
     public static void main(final String... args) {
@@ -76,10 +106,16 @@ public final class EventsJenaUniversity implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.from(Publishers)
 
-                .flatMap(this::crawl)
-                .map(this::event)
+                .flatMap(publisher -> Xtream.of(synced(publisher.focus()))
+
+                        .flatMap(synced -> crawl(publisher, synced))
+                        .map(frame -> event(publisher, frame))
+
+                )
+
+                .distinct(Frame::focus) // events may be published multiple times by different publishers
 
                 .optMap(new Validate(Event()))
 
@@ -89,16 +125,10 @@ public final class EventsJenaUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant synced) {
+    private Xtream<Frame> crawl(final Frame publisher, final Instant synced) {
         return Xtream
 
-                .of(
-                        "https://www.uni-jena.de/veranstaltungskalender",
-                        "https://www.uni-jena.de/international/veranstaltungskalender",
-                        "https://www.uni-jena.de/kalenderstudiuminternational",
-                        "https://www.uni-jena.de/ec2u-veranstaltungen",
-                        "https://www.uni-jena.de/promotion-events"
-                )
+                .of(publisher.focus().stringValue())
 
                 // paginate through catalog
 
@@ -159,18 +189,16 @@ public final class EventsJenaUniversity implements Runnable {
 
     }
 
-    private Frame event(final Frame frame) {
+    private Frame event(final Frame publisher, final Frame frame) {
 
         final Optional<Literal> label=frame.string(Schema.name)
-                .map(text -> localize(text, "de"));
+                .map(text -> literal(text, "de"));
 
         final Optional<Literal> brief=frame.string(Schema.disambiguatingDescription)
                 .or(() -> frame.string(Schema.description))
-                .map(text -> localize(text, "de"));
+                .map(text -> literal(text, "de"));
 
-        // don't skolemize on schema:url: events are published multiple times at different locations
-
-        return frame(iri(EC2U.events, frame.skolemize(Schema.name, Schema.startDate, Schema.endDate)))
+        return frame(iri(EC2U.events, frame.skolemize(Schema.url)))
 
                 .value(RDF.TYPE, EC2U.Event)
                 .value(RDFS.LABEL, label)
@@ -197,7 +225,7 @@ public final class EventsJenaUniversity implements Runnable {
                         .map(Values::literal)
                 )
 
-                .frame(DCTERMS.PUBLISHER, Publisher)
+                .frame(DCTERMS.PUBLISHER, publisher)
 
                 .value(RDF.TYPE, Schema.Event)
 
@@ -206,7 +234,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .value(Schema.description, frame.string(Schema.description)
                         .or(() -> frame.string(Schema.disambiguatingDescription))
-                        .map(text -> localize(text, "de"))
+                        .map(text -> literal(text, "de"))
                 )
 
                 .value(Schema.image, frame.value(Schema.image))
@@ -236,10 +264,6 @@ public final class EventsJenaUniversity implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static Literal localize(final String text, final String lang) {
-        return literal(text, lang);
-    }
 
     private Optional<Literal> datetime(final Optional<String> datetime) {
         return datetime
