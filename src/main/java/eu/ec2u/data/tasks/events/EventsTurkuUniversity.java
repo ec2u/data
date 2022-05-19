@@ -33,14 +33,15 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.io.InputStream;
-import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 import javax.json.Json;
 import javax.json.JsonReader;
 
+import static com.metreeca.core.Formats.SQL_TIMESTAMP;
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.TextLength;
 import static com.metreeca.core.Strings.clip;
@@ -56,7 +57,6 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.Work.timestamp;
 
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
@@ -76,6 +76,22 @@ public final class EventsTurkuUniversity implements Runnable {
             );
 
     private static final String APIKey="key-events-turku-university";
+
+
+    private static Literal instant(final String timestamp) {
+        return literal(OffsetDateTime
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.Zone)
+                .truncatedTo(ChronoUnit.SECONDS)
+                .withOffsetSameInstant(UTC)
+        );
+    }
+
+    private static Literal datetime(final String timestamp) {
+        return literal(OffsetDateTime
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.Zone)
+                .truncatedTo(ChronoUnit.SECONDS)
+        );
+    }
 
 
     public static void main(final String... args) {
@@ -202,13 +218,8 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Work::url).map(Values::iri))
 
-                .value(DCTERMS.CREATED, json.string("published").map(timestamp ->
-                        timestamp(timestamp, Turku.TimeZone)
-                ))
-
-                .value(DCTERMS.MODIFIED, json.string("updated").map(timestamp ->
-                        timestamp(timestamp, Turku.TimeZone)
-                ))
+                .value(DCTERMS.CREATED, json.string("published").map(EventsTurkuUniversity::instant))
+                .value(DCTERMS.MODIFIED, json.string("updated").map(EventsTurkuUniversity::instant))
 
                 .value(Schema.url, json.string("additional_information.link.url")
                         .or(() -> json.string("source_link"))
@@ -220,13 +231,8 @@ public final class EventsTurkuUniversity implements Runnable {
                 .values(Schema.description, description)
                 .values(Schema.disambiguatingDescription, excerpt)
 
-                .value(Schema.startDate, json.string("start_time").map(timestamp ->
-                        timestamp(timestamp, Turku.TimeZone)
-                ))
-
-                .value(Schema.endDate, json.string("end_time").map(timestamp ->
-                        timestamp(timestamp, Turku.TimeZone)
-                ))
+                .value(Schema.startDate, json.string("start_time").map(EventsTurkuUniversity::datetime))
+                .value(Schema.endDate, json.string("end_time").map(EventsTurkuUniversity::datetime))
 
                 .frame(Schema.location, json.path("location").flatMap(this::location))
                 .frames(Schema.organizer, json.paths("additional_information.contact").optMap(this::organizer))
