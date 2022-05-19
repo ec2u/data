@@ -180,10 +180,24 @@ public final class EventsJenaUniversity implements Runnable {
                 .value(EC2U.updated, literal(now))
 
                 .value(DCTERMS.SOURCE, frame.value(Schema.url))
-                // !!! dct:issued/created/modified
+
+                .value(DCTERMS.CREATED, frame.value(Schema.dateCreated)
+                        .flatMap(Values::literal)
+                        .map(Literal::temporalAccessorValue)
+                        .map(OffsetDateTime::from)
+                        .map(v -> v.withOffsetSameInstant(UTC))
+                        .map(Values::literal)
+                )
+
+                .value(DCTERMS.MODIFIED, frame.value(Schema.dateModified)
+                        .flatMap(Values::literal)
+                        .map(Literal::temporalAccessorValue)
+                        .map(OffsetDateTime::from)
+                        .map(v -> v.withOffsetSameInstant(UTC))
+                        .map(Values::literal)
+                )
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
-                // !!! dct:subject
 
                 .value(RDF.TYPE, Schema.Event)
 
@@ -214,8 +228,8 @@ public final class EventsJenaUniversity implements Runnable {
                 .frame(Schema.location, frame.frame(Schema.location)
                         .map(location -> location(location, frame(bnode())
                                 .value(Schema.addressCountry, Jena.Country)
-                                .value(Schema.addressLocality, Jena.City)))
-
+                                .value(Schema.addressLocality, Jena.City)
+                        ))
                 );
 
     }
