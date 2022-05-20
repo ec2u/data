@@ -55,6 +55,7 @@ import static eu.ec2u.data.tasks.events.Events.synced;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static java.time.temporal.ChronoField.*;
+import static java.util.function.Predicate.not;
 
 public final class EventsPoitiersUniversity implements Runnable {
 
@@ -145,28 +146,6 @@ public final class EventsPoitiersUniversity implements Runnable {
                     .map(timestamp -> timestamp.truncatedTo(ChronoUnit.SECONDS))
                     .map(Values::literal);
 
-            final Optional<LocalDate> dateFrom=item.string("date_from")
-                    .map(EU_DATE::parse)
-                    .map(LocalDate::from);
-
-            final LocalTime hourFrom=item.string("hour_from")
-                    .map(EU_TIME::parse)
-                    .map(LocalTime::from)
-                    .map(time -> time.truncatedTo(ChronoUnit.SECONDS))
-                    .orElseGet(() -> LocalTime.of(0, 0, 0));
-
-            final Optional<LocalDate> dateTo=item.string("date_to")
-                    .map(EU_DATE::parse)
-                    .map(LocalDate::from);
-
-            final LocalTime hourTo=item.string("hour_to")
-                    .map(EU_TIME::parse)
-                    .map(LocalTime::from)
-                    .map(time -> time.truncatedTo(ChronoUnit.SECONDS))
-                    .orElseGet(() -> LocalTime.of(0, 0, 0));
-
-            final Xtream<String> category=item.strings("category");
-
             final Optional<Value> label=item.string("title")
                     .map(text -> Strings.clip(text, TextLength))
                     .map(text -> literal(text, Poitiers.Language));
@@ -178,7 +157,6 @@ public final class EventsPoitiersUniversity implements Runnable {
             final Optional<Value> brief=description
                     .map(text -> Strings.clip(text, TextLength))
                     .map(text -> literal(text, Poitiers.Language));
-
 
             return frame(iri(EC2U.events,
                     link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
@@ -196,7 +174,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                     .value(DCTERMS.ISSUED, pubDate)
                     .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
 
-                    .frames(DCTERMS.SUBJECT, category
+                    .frames(DCTERMS.SUBJECT, item.strings("category")
                             .map(c -> frame(iri(EC2U.concepts, md5(c)))
                                     .value(RDFS.LABEL, literal(c, Poitiers.Language))
                                     .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))
@@ -208,18 +186,71 @@ public final class EventsPoitiersUniversity implements Runnable {
                     .value(Schema.disambiguatingDescription, brief)
                     .value(Schema.description, description.map(value -> literal(value, Poitiers.Language)))
 
-                    .value(Schema.startDate, dateFrom
-                            .map(date -> date.atTime(hourFrom))
-                            .map(dateTime -> dateTime.atOffset(Poitiers.Zone))
-                            .map(Values::literal))
+                    .value(Schema.startDate, startDate(item))
+                    .value(Schema.endDate, endDate(item))
 
-                    .value(Schema.endDate, dateTo
-                            .map(date -> date.atTime(hourTo))
-                            .map(dateTime -> dateTime.atOffset(Poitiers.Zone))
-                            .map(Values::literal));
+                    .frame(Schema.location, location(item));
 
         }).apply(node);
 
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Optional<Literal> startDate(final XPath.Processor item) {
+
+        final Optional<LocalDate> dateFrom=item.string("date_from")
+                .map(EU_DATE::parse)
+                .map(LocalDate::from);
+
+        final LocalTime hourFrom=item.string("hour_from")
+                .map(EU_TIME::parse)
+                .map(LocalTime::from)
+                .map(time -> time.truncatedTo(ChronoUnit.SECONDS))
+                .orElseGet(() -> LocalTime.of(0, 0, 0));
+
+
+        return dateFrom
+                .map(date -> date.atTime(hourFrom))
+                .map(dateTime -> dateTime.atOffset(Poitiers.Zone))
+                .map(Values::literal);
+    }
+
+    private Optional<Literal> endDate(final XPath.Processor item) {
+
+        final Optional<LocalDate> dateTo=item.string("date_to")
+                .map(EU_DATE::parse)
+                .map(LocalDate::from);
+
+        final LocalTime hourTo=item.string("hour_to")
+                .map(EU_TIME::parse)
+                .map(LocalTime::from)
+                .map(time -> time.truncatedTo(ChronoUnit.SECONDS))
+                .orElseGet(() -> LocalTime.of(0, 0, 0));
+
+        return dateTo
+                .map(date -> date.atTime(hourTo))
+                .map(dateTime -> dateTime.atOffset(Poitiers.Zone))
+                .map(Values::literal);
+    }
+
+    private Optional<Frame> location(final XPath.Processor item) {
+
+        return item.string("place/place_name").filter(not(String::isEmpty))
+
+                .map(name -> frame(iri(EC2U.locations, md5(name)))
+
+                        .value(RDF.TYPE, Schema.Place)
+
+                        .value(Schema.name, literal(name, Poitiers.Language))
+
+                        .value(Schema.description, item.string("place/place_address")
+                                .filter(not(String::isEmpty))
+                                .map(Untag::untag)
+                                .map(value -> literal(value, Poitiers.Language))
+                        )
+                );
     }
 
 }
