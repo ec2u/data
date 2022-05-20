@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.tasks.events;
 
@@ -43,16 +43,13 @@ public final class Events implements Runnable {
 		return Xtream
 
 				.of("prefix ec2u: </terms/>\n"
-						+"\n"
-						+"prefix dct: <http://purl.org/dc/terms/>\n"
-						+"prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-						+"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-						+"\n"
-						+"select (max(?updated) as ?synced) where {\n"
+						+"prefix dct: <http://purl.org/dc/terms/>\n\n"
+						+"select (max(?modified) as ?synced) where {\n"
 						+"\n"
 						+"\t?event a ec2u:Event;\n"
 						+"\t\tdct:publisher ?publisher;\n"
-						+"\t\tec2u:updated ?updated.\n"
+						+"\t\tdct:modified ?modified.\n"
+						+"\n"
 						+"}"
 				)
 

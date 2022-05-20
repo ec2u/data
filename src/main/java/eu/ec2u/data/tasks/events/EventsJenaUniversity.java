@@ -205,7 +205,6 @@ public final class EventsJenaUniversity implements Runnable {
                 .value(RDFS.COMMENT, label)
 
                 .value(EC2U.university, Jena.University)
-                .value(EC2U.updated, literal(now))
 
                 .value(DCTERMS.SOURCE, frame.value(Schema.url))
 
@@ -223,6 +222,7 @@ public final class EventsJenaUniversity implements Runnable {
                         .map(OffsetDateTime::from)
                         .map(v -> v.withOffsetSameInstant(UTC))
                         .map(Values::literal)
+                        .orElseGet(() -> literal(now))
                 )
 
                 .frame(DCTERMS.PUBLISHER, publisher)

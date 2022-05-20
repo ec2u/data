@@ -141,10 +141,10 @@ public final class EventsPaviaCity implements Runnable {
                 .values(RDFS.LABEL, frame.values(Schema.name))
 
                 .value(EC2U.university, Pavia.University)
-                .value(EC2U.updated, literal(now))
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
+                .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
 
                 .values(Schema.name, frame.values(Schema.name))
                 .values(Schema.description, frame.values(Schema.description))

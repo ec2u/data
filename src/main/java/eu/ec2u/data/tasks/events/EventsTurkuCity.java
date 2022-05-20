@@ -155,14 +155,16 @@ public final class EventsTurkuCity implements Runnable {
                     .values(RDFS.COMMENT, description)
 
                     .value(EC2U.university, Turku.University)
-                    .value(EC2U.updated, literal(now))
 
                     .frame(DCTERMS.PUBLISHER, Publisher)
                     .value(DCTERMS.SOURCE, iri(id))
 
                     .value(DCTERMS.ISSUED, json.string("date_published").map(v -> literal(v, XSD.DATETIME)))
                     .value(DCTERMS.CREATED, json.string("created_time").map(v -> literal(v, XSD.DATETIME)))
-                    .value(DCTERMS.MODIFIED, json.string("last_modified_time").map(v -> literal(v, XSD.DATETIME)))
+                    .value(DCTERMS.MODIFIED, json.string("last_modified_time")
+                            .map(v -> literal(v, XSD.DATETIME))
+                            .orElseGet(() -> literal(now))
+                    )
 
                     // !!! keywords
 

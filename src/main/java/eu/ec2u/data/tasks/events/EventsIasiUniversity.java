@@ -71,9 +71,10 @@ public final class EventsIasiUniversity implements Runnable {
                 .map(event -> event
 
                         .value(EC2U.university, Iasi.University)
-                        .value(EC2U.updated, literal(now))
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
+                        .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
+
                 )
 
                 .optMap(new Validate(Event()))
