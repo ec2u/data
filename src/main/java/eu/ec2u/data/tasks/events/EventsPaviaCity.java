@@ -156,7 +156,6 @@ public final class EventsPaviaCity implements Runnable {
                 .value(Schema.endDate, frame.value(Schema.endDate))
 
                 .value(Schema.eventStatus, frame.value(Schema.eventStatus))
-                .value(Schema.typicalAgeRange, frame.value(Schema.typicalAgeRange))
 
                 .frame(Schema.location, frame.frame(Schema.location).map(location ->
                         location(location, frame(bnode())
