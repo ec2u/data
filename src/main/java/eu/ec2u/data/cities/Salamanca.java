@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,12 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.cities;
 
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.IRI;
+
+import java.time.ZoneId;
 
 import static com.metreeca.open.actions.Wikidata.wd;
 
@@ -27,7 +29,7 @@ public final class Salamanca {
     public static final IRI City=wd("Q15695");
     public static final IRI Country=wd("Q29");
     public static final String Language="es";
-
+    public static final ZoneId TimeZone=ZoneId.of("Europe/Madrid");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
