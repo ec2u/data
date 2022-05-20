@@ -243,5 +243,4 @@ public final class EventsTurkuCity implements Runnable {
         return entry.getValue().string("").map(text -> literal(text, entry.getKey()));
     }
 
-
 }
