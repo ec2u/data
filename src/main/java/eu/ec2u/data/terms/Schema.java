@@ -133,7 +133,6 @@ public final class Schema {
     public static final IRI eventAttendanceMode=term("eventAttendanceMode");
     public static final IRI inLanguage=term("inLanguage");
     public static final IRI audience=term("audience");
-    public static final IRI typicalAgeRange=term("typicalAgeRange");
     public static final IRI startDate=term("startDate");
     public static final IRI endDate=term("endDate");
 
@@ -148,7 +147,6 @@ public final class Schema {
 
                 field(inLanguage, multiple(), datatype(XSD.STRING)),
                 field(isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
-                field(typicalAgeRange, multiple(), datatype(XSD.STRING)),
                 field(eventAttendanceMode, multiple(), datatype(IRIType)),
 
                 field(location, multiple(), Location()),
