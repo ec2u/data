@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.ports;
 
@@ -24,8 +24,8 @@ import com.metreeca.rest.formats.JSONLDFormat;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.time.Instant;
 import java.util.List;
@@ -35,11 +35,9 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 
 import static com.metreeca.core.Lambdas.guarded;
-import static com.metreeca.json.Shape.required;
 import static com.metreeca.json.Values.pattern;
 import static com.metreeca.json.shapes.All.all;
 import static com.metreeca.json.shapes.Clazz.clazz;
-import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
 import static com.metreeca.json.shapes.Guard.*;
 import static com.metreeca.json.shapes.Range.range;
@@ -67,8 +65,7 @@ public final class Events extends Handler.Base {
 				filter(clazz(EC2U.Event)),
 
 				hidden(
-						field(RDF.TYPE, all(EC2U.Event), range(EC2U.Event, Schema.Event)),
-						field(EC2U.updated, required(), datatype(XSD.DATETIME))
+						field(RDF.TYPE, all(EC2U.Event), range(EC2U.Event, Schema.Event))
 				),
 
 				EC2U.Resource(),
@@ -133,7 +130,7 @@ public final class Events extends Handler.Base {
 				.map(IRI.class::cast)
 
 				.filter(event -> context.stream()
-						.filter(pattern(event, EC2U.updated, null))
+						.filter(pattern(event, DCTERMS.MODIFIED, null))
 						.findFirst()
 						.map(Statement::getObject)
 						.flatMap(Values::literal)

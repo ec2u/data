@@ -6,8 +6,7 @@
 /node_modules/
 
 *.iml
-*.http
-*.json
+*.private.*
 
 *~
 ~*

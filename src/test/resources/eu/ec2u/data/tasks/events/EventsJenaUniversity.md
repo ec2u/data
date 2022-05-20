@@ -1,7 +1,3 @@
----
-title: Events › University › Jena
----
-
 # Source
 
 * https://www.uni-jena.de/veranstaltungskalender

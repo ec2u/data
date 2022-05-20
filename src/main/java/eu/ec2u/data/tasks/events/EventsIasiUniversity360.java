@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.tasks.events;
 
@@ -91,9 +91,9 @@ public final class EventsIasiUniversity360 implements Runnable {
         return RSS(frame, Iasi.Language)
 
                 .value(EC2U.university, Iasi.University)
-                .value(EC2U.updated, literal(now))
 
-                .frame(DCTERMS.PUBLISHER, Publisher);
+                .frame(DCTERMS.PUBLISHER, Publisher)
+                .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));
     }
 
 }
