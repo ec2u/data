@@ -48,12 +48,12 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
+    private static final Frame Publisher=frame(iri("http://www.vivipavia.it/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("ViviPavia", "en"),
-                    literal("ViviPavia", "it")
+                    literal("Comune di Pavia / ViviPavia", "it"),
+                    literal("City of Pavia / ViviPavia", "en")
             );
 
 
