@@ -106,6 +106,9 @@ public final class EC2U {
 						field(RDFS.LABEL, multilingual())
 				),
 
+				field(DCTERMS.TITLE, multilingual()),
+				field(DCTERMS.DESCRIPTION, multilingual()),
+
 				field(DCTERMS.PUBLISHER, required(), Publisher()),
 				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
 

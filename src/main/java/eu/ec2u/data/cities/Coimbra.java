@@ -18,6 +18,7 @@ package eu.ec2u.data.cities;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 import static com.metreeca.open.actions.Wikidata.wd;
@@ -31,7 +32,8 @@ public final class Coimbra {
     public static final IRI City=wd("Q45412");
     public static final IRI Country=wd("Q45");
     public static final String Language="pt";
-    public static final ZoneOffset Zone=ZoneOffset.ofHours(0);
+    public static final ZoneOffset Zone=ZoneOffset.ofHours(0); // !!! remove
+    public static final ZoneId TimeZone=ZoneId.of("Europe/Lisbon");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

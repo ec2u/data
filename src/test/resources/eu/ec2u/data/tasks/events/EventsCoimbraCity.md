@@ -6,35 +6,38 @@
 
 # API
 
-* https://www.coimbragenda.pt/api/v1/event/
+* JSON
+  * https://www.coimbragenda.pt/api/v1/event/
 
 # Integration
 
-*
+* custom JSON converter
 
 # Content
 
-* url
-  * https://www.coimbragenda.pt/#!/category/5b87f593001ccf7ba801fae4/event/62629212ea7bb405c58e3c53
-    * category id + event id
-
-* image
-  * https://www.coimbragenda.pt/api/v1/file/62629213ea7bb405c58e3c55
-
-# Pending
-
-* initial integration
+* `schema:url`
+* `schema:name`
+* `schema:image`
+* `schema:description`
+* `schema:startDate`
+* `schema:endDate`
+* `schema:isAccessibleForFree`
+* `schema:location`
+  * `schema:name`
+  * coordinates usually not populated
+    * `schema:longitude`
+    * `schema:latitude`
 
 # Upgrades
 
-## 2022-05-23
-
-*
+| date       | notes               |
+| ---------- | ------------------- |
+| 2022-05-24 | initial integration |
 
 # Samples
 
 ```http
-GET https://www.coimbragenda.pt/api/v1/event/filter?limit=100&page=1
+GET https://www.coimbragenda.pt/api/v1/event/filter?limit=1000&page=1
 Accept: application/json
 ```
 
