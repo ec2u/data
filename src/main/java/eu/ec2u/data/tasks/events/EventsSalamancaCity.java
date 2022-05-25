@@ -37,7 +37,7 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.WordPress.RSS;
+import static eu.ec2u.data.work.WordPress.WordPress;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -88,7 +88,7 @@ public final class EventsSalamancaCity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return RSS(frame, Salamanca.Language)
+        return WordPress(frame, Salamanca.Language)
 
                 .value(EC2U.university, Salamanca.University)
 

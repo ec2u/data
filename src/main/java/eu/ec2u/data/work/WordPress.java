@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.work;
 
@@ -37,7 +37,7 @@ import static eu.ec2u.data.work.Work.localize;
 
 public final class WordPress {
 
-    public static Frame RSS(final Frame frame, final String lang) {
+    public static Frame WordPress(final Frame frame, final String lang) {
 
         final Optional<Value> label=frame.string(Title)
                 .map(text -> Strings.clip(text, TextLength))

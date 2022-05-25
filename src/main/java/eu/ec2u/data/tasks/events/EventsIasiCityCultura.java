@@ -20,7 +20,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 
-import eu.ec2u.data.cities.Pavia;
+import eu.ec2u.data.cities.Iasi;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -41,18 +41,19 @@ import static eu.ec2u.data.work.WordPress.WordPress;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsPaviaUniversity implements Runnable {
+public final class EventsIasiCityCultura implements Runnable {
 
-    private static final Frame Publisher=frame(iri("http://news.unipv.it//"))
+    private static final Frame Publisher=frame(iri("https://culturainiasi.ro/"))
             .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("unipv.news", "en")
+                    literal("Iaşul Cultural", "ro"),
+                    literal("Culture in Iasi", "en")
             );
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsPaviaUniversity().run());
+        exec(() -> new EventsIasiCityCultura().run());
     }
 
 
@@ -76,11 +77,10 @@ public final class EventsPaviaUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(7929, 7891, 8086, 8251)
+        return Xtream.of(synced)
 
-                .flatMap(new Fill<Integer>()
-                        .model("http://news.unipv.it/?feed=rss2&cat={category}")
-                        .value("category")
+                .flatMap(new Fill<Instant>()
+                        .model("https://culturainiasi.ro/feed")
                 )
 
                 .optMap(new GET<>(xml()))
@@ -89,9 +89,9 @@ public final class EventsPaviaUniversity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return WordPress(frame, "it")
+        return WordPress(frame, Iasi.Language)
 
-                .value(EC2U.university, Pavia.University)
+                .value(EC2U.university, Iasi.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

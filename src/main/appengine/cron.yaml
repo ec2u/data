@@ -42,6 +42,10 @@ cron:
     url: /cron/events/coimbra/city
     schedule: every day 00:00
 
+  - description: "events › coimbra › city - nightly crawling"
+    url: /cron/events/iasi/city-cultura
+    schedule: every day 00:00
+
   - description: "events › pavia › city - nightly crawling"
     url: /cron/events/pavia/city
     schedule: every day 00:00

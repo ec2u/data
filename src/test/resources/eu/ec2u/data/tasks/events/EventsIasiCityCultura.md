@@ -11,21 +11,18 @@
 
 # Integration
 
-*
+* standard WordPress/RSS adapter
+
+| date       | notes               |
+| ---------- | ------------------- |
+| 2022-05-25 | initial integration |
 
 # Content
 
-*
-
-# Pending
-
-* initial integration
-
-# Upgrades
-
-## 2022-05-23
-
-*
+* `schema:url`
+* `schema:name`
+* `schema:description`
+* `dct:subject`
 
 # Samples
 

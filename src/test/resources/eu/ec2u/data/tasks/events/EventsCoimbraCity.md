@@ -13,6 +13,10 @@
 
 * custom JSON converter
 
+| date       | notes               |
+| ---------- | ------------------- |
+| 2022-05-24 | initial integration |
+
 # Content
 
 * `schema:url`
@@ -27,12 +31,6 @@
   * coordinates usually not populated
     * `schema:longitude`
     * `schema:latitude`
-
-# Upgrades
-
-| date       | notes               |
-| ---------- | ------------------- |
-| 2022-05-24 | initial integration |
 
 # Samples
 
