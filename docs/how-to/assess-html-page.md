@@ -1,6 +1,7 @@
 * inspect page source
   * catalog
   * details
+* inspect search facilities for API
 * inspect network traffic for API calls
 
 # Content
@@ -19,4 +20,4 @@ pattern `itemid/itemtype/itemprop`
 
 ## JSON-LD Metadata
 
-pattern `ld+json` 
+pattern `ld+json` 

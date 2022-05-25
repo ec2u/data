@@ -189,12 +189,6 @@
 * initial survey mentions structured APIs under development
   * re-contact for updates
 
-# Upgrades
-
-## 2022-05-23
-
-*
-
 # Samples
 
 ```http
