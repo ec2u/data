@@ -23,21 +23,18 @@ Commercial site where events are published for a fee.
 
 # Integration
 
-*
+* standard WordPress/RSS adapter
+
+| date       | notes               |
+| ---------- | ------------------- |
+| 2022-05-25 | initial integration |
 
 # Content
 
-*
-
-# Pending
-
-* initial integration
-
-# Upgrades
-
-## 2022-05-23
-
-*
+* `schema:url`
+* `schema:name`
+* `schema:description`
+* `dct:subject`
 
 # Samples
 
@@ -71,6 +68,7 @@ GET https://iasi.inoras.ro/feed/
             <width>32</width>
             <height>32</height>
         </image>
+      
         <item>
             <title>MNLR Iași susține artiștii din Ucraina</title>
             <link>https://iasi.inoras.ro/2022/05/19/mnlr-iasi-sustine-artistii-din-ucraina/?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=mnlr-iasi-sustine-artistii-din-ucraina</link>
@@ -86,7 +84,7 @@ GET https://iasi.inoras.ro/feed/
             <content:encoded><![CDATA[<p>MNLR Iași s-a alăturat campaniei <em>Artiști români pentru artiști ucraineni, </em>proiect de strângere de fonduri inițiat de UNITER (Uniunea Teatrală din România) pentru susținerea artiștilor din Ucraina.</p>
 <p>Astfel, în perioada următoare, Muzeul Național al Literaturii Române Iași va găzdui o serie de spectacole-lectură după textele unor dramaturgi ucraineni contemporani, scrise după declanșarea <a href="https://iasi.inoras.ro/2022/03/03/punct-de-colecta-pentru-ucraina-la-casa-muzeelor/" target="_blank" rel="noopener noreferrer">războiului din Ucraina</a>. Spectacolele sunt susținute de actori profesioniști din Iași și coordonate de Antonella Cornici.</p>
 <p><span class="aligncenter"><img class="aligncenter wp-image-59234 size-full" src="https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/MNLR-Iași-susține-artiștii-din-Ucraina.jpg" alt="MNLR Iași susține artiștii din Ucraina" width="600" height="423" srcset="https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/MNLR-Iași-susține-artiștii-din-Ucraina.jpg 600w, https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/MNLR-Iași-susține-artiștii-din-Ucraina-300x212.jpg 300w, https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/MNLR-Iași-susține-artiștii-din-Ucraina-450x317.jpg 450w" sizes="(max-width: 600px) 100vw, 600px" /></span></p>
-<p>Primul spectacol-lectură a avut  loc miercuri, 18 mai 2022, în sala de conferințe de la Casa Muzeelor. Astfel, cu începere de la ora 16:00, publicul se va putea bucura de DICȚIONAR DE EMOȚII PE TIMP DE RĂZBOI de Elena Astasieva și PLANTĂM UN MĂR de Irina Hareț, avându-i în distribuție pe Ionuț Cornilă, Ioana Aciobăniței, Vasilica Bălăiță, regia aparținându-i Antonellei Cornici.</p>
+<p>Primul spectacol-lectură a avut  loc miercuri, 18 mai 2022, în sala de conferințe de la Casa Muzeelor. Astfel, cu începere de la ora 16:00, publicul se va putea bucura de DICȚIONAR DE EMOȚII PE TIMP DE RĂZBOI de Elena Astasieva și PLANTĂM UN MĂR de Irina Hareț, avându-i în distribuție pe Ionuț Cornilă, Ioana Aciobăniței, Vasilica Bălăiță, regia aparținându-i Antonellei Cornici.</p>
 <p>Intrarea este gratuită, dar donațiile pentru artiștii ucraineni sunt încurajate. Acestea merg în Fondul de Solidaritate Teatrală RO22RNCB0072049712860086 deschis la BCR – Sucursala Sector 1.</p>
 <p>Alte spectacole programate la MNLR Iași sunt:</p>
 <p>&nbsp;</p>
@@ -129,10 +127,10 @@ GET https://iasi.inoras.ro/feed/
             <category><![CDATA[Noutăți]]></category>
 
             <guid isPermaLink="false">https://iasi.inoras.ro/?p=59226</guid>
-            <description><![CDATA[<p>Miercuri, 18 mai 2022, ora 18, în sala „Eduard Caudella” a Universității Naționale de Arte „George Enescu” din Iași va avea loc un eveniment cultural inedit, intitulat „Folclorul din cărți”, constând în lansarea a cinci titluri de referință din domeniul folclorului muzical și al muzicii bisericești, editate sub coordonarea muzicologului Dr. Constanța Cristescu, cu sprijinul  Centrului [&#8230;]</p>
+            <description><![CDATA[<p>Miercuri, 18 mai 2022, ora 18, în sala „Eduard Caudella” a Universității Naționale de Arte „George Enescu” din Iași va avea loc un eveniment cultural inedit, intitulat „Folclorul din cărți”, constând în lansarea a cinci titluri de referință din domeniul folclorului muzical și al muzicii bisericești, editate sub coordonarea muzicologului Dr. Constanța Cristescu, cu sprijinul  Centrului [&#8230;]</p>
 <p>Articolul <a rel="nofollow" href="https://iasi.inoras.ro/2022/05/18/folclorul-din-carti-eveniment-cultural-inedit/">&#8222;Folclorul din cărți&#8221;- eveniment cultural inedit</a> apare prima dată în <a rel="nofollow" href="https://iasi.inoras.ro">In Oras - Iasi</a>.</p>
 ]]></description>
-            <content:encoded><![CDATA[<div><strong>Miercuri, 18 mai 2022, ora 18</strong>, în sala <strong>„<a href="https://iasi.inoras.ro/2021/11/27/concursul-eduard-caudella-s-a-incheiat/" target="_blank" rel="noopener noreferrer">Eduard Caudella</a>”</strong> a Universității Naționale de Arte „George Enescu” din Iași va avea loc un eveniment cultural inedit, intitulat <strong>„Folclorul din cărți”</strong>, constând în lansarea a cinci titluri de referință din domeniul folclorului muzical și al muzicii bisericești, editate sub coordonarea muzicologului Dr. Constanța Cristescu, cu sprijinul  Centrului Cultural „Bucovina” din Suceava:</div>
+            <content:encoded><![CDATA[<div><strong>Miercuri, 18 mai 2022, ora 18</strong>, în sala <strong>„<a href="https://iasi.inoras.ro/2021/11/27/concursul-eduard-caudella-s-a-incheiat/" target="_blank" rel="noopener noreferrer">Eduard Caudella</a>”</strong> a Universității Naționale de Arte „George Enescu” din Iași va avea loc un eveniment cultural inedit, intitulat <strong>„Folclorul din cărți”</strong>, constând în lansarea a cinci titluri de referință din domeniul folclorului muzical și al muzicii bisericești, editate sub coordonarea muzicologului Dr. Constanța Cristescu, cu sprijinul  Centrului Cultural „Bucovina” din Suceava:</div>
 <ul>
 <li><strong>Alexandru Voevidca, <em>Folclor muzical din Bucovina</em> – vol. IV. Cântecul vocal de joc </strong>(continuare la vol. III), <strong>Doina. Balada</strong>, ediție critică, catalog tipologic muzical și antologie de <strong>Dr. Constanța Cristescu</strong>, Editura Lidana, Suceava, 2020.</li>
 <li><strong>Constanța Cristescu, <em>Un secol de etnomuzicologie românească. Parcurs și perspectivă în sistematica repertorială</em>, </strong>Editura Muzicală, București, 2021.</li>
@@ -142,7 +140,7 @@ GET https://iasi.inoras.ro/feed/
 </ul>
 <p><span class="aligncenter"><img class="aligncenter wp-image-59227 size-full" src="https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/lansare-carte-Folclorul-din-carti.jpg" alt="lansare carte Folclorul din carti" width="600" height="849" srcset="https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/lansare-carte-Folclorul-din-carti.jpg 600w, https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/lansare-carte-Folclorul-din-carti-212x300.jpg 212w, https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/lansare-carte-Folclorul-din-carti-450x637.jpg 450w, https://iasi.inoras.ro/wp-content/uploads/sites/2/2022/05/lansare-carte-Folclorul-din-carti-565x800.jpg 565w" sizes="(max-width: 600px) 100vw, 600px" /></span></p>
 <div>
-<p>Vor lua cuvântul muzicologul dr. <strong>Constanța Cristescu</strong>, prof. univ. dr. <strong>Laura Vasiliu</strong>, conf. univ. dr. <strong>Ciprian Chițu</strong>, conf. univ. dr. <strong>Irina Zamfira Dănilă</strong> și etnomuzicologul profesor <strong>Viorel Bârleanu</strong>. Lansarea de carte va fi însoțită de ilustrare muzical-coregrafică de colecție, susținută <em>live</em> de ansamblurile folclorice „T. T. Burada” al Universității Naționale de Arte „George Enescu” din Iași (dirijor, Ciprian Chițu), „Doina Carpaților” al Casei de Cultură a Studenților din Iași (coregraf, Mihaela Cojocaru) și „Floralia &#8211; instrumental” al Universității Naționale de Arte „George Enescu” din Iași (coordonator, Irina Zamfira Dănilă).</p>
+<p>Vor lua cuvântul muzicologul dr. <strong>Constanța Cristescu</strong>, prof. univ. dr. <strong>Laura Vasiliu</strong>, conf. univ. dr. <strong>Ciprian Chițu</strong>, conf. univ. dr. <strong>Irina Zamfira Dănilă</strong> și etnomuzicologul profesor <strong>Viorel Bârleanu</strong>. Lansarea de carte va fi însoțită de ilustrare muzical-coregrafică de colecție, susținută <em>live</em> de ansamblurile folclorice „T. T. Burada” al Universității Naționale de Arte „George Enescu” din Iași (dirijor, Ciprian Chițu), „Doina Carpaților” al Casei de Cultură a Studenților din Iași (coregraf, Mihaela Cojocaru) și „Floralia &#8211; instrumental” al Universității Naționale de Arte „George Enescu” din Iași (coordonator, Irina Zamfira Dănilă).</p>
 <p>Evenimentul este coordonat de conf. univ. dr. Irina Zamfira Dănilă, de la Departamentul de Studii Muzicale teoretice din cadrul Facultății de Interpretare Muzicală, Compoziție și Studii Muzicale Teoretice a Universității Naționale de Arte „George Enescu” din Iași.</p>
 <p>La evenimentul <strong>„Folclorul din cărți” </strong>intrarea este liberă.</p>
 </div>

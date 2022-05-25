@@ -49,6 +49,7 @@ public final class Cron extends Handler.Base {
 
                 .path("/events/coimbra/city", execute(new EventsCoimbraCity()))
                 .path("/events/iasi/city-cultura", execute(new EventsIasiCityCultura()))
+                .path("/events/iasi/city-in-oras", execute(new EventsIasiCityInOras()))
                 .path("/events/pavia/city", execute(new EventsPaviaCity()))
                 .path("/events/turku/city", execute(new EventsTurkuCity()))
 
