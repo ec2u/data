@@ -143,9 +143,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
                     .value(Schema.disambiguatingDescription, disambiguatingDescription)
 
                     .value(Schema.startDate, datetime(item, "ev:startdate"))
-                    .value(Schema.endDate, datetime(item, "ev:enddate"))
-
-                    .value(Schema.inLanguage, literal(Poitiers.Language));
+                    .value(Schema.endDate, datetime(item, "ev:enddate"));
 
         });
     }

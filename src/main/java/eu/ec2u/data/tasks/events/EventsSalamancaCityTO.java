@@ -167,9 +167,7 @@ public final class EventsSalamancaCityTO implements Runnable {
                             .map(v -> FeedDateTime.parse(v, new ParsePosition(0)))
                             .map(v -> LocalDateTime.from(v).atOffset(Salamanca.TimeZone.getRules().getOffset(now)))
                             .map(Values::literal)
-                    )
-
-                    .value(Schema.inLanguage, literal(Salamanca.Language));
+                    );
 
         });
     }

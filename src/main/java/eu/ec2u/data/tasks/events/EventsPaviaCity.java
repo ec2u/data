@@ -42,7 +42,6 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.Work.location;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -157,11 +156,7 @@ public final class EventsPaviaCity implements Runnable {
 
                 .value(Schema.eventStatus, frame.value(Schema.eventStatus))
 
-                .frame(Schema.location, frame.frame(Schema.location).map(location ->
-                        location(location, frame(bnode())
-                                .value(Schema.addressCountry, Pavia.Country)
-                                .value(Schema.addressLocality, Pavia.City))
-                ));
+                .frame(Schema.location, frame.frame(Schema.location));
     }
 
 }

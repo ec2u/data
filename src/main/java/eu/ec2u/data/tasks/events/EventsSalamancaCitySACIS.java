@@ -138,9 +138,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
                     .value(Schema.url, iri(url))
                     .value(Schema.name, name)
                     .value(Schema.description, description)
-                    .value(Schema.disambiguatingDescription, disambiguatingDescription)
-
-                    .value(Schema.inLanguage, literal(Salamanca.Language));
+                    .value(Schema.disambiguatingDescription, disambiguatingDescription);
 
         });
     }
