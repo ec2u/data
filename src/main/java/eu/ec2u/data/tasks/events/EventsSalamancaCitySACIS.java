@@ -55,8 +55,8 @@ public final class EventsSalamancaCitySACIS implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", "es"),
-                    literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en")
+                    literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en"),
+                    literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.Language)
             );
 
 

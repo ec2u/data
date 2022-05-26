@@ -13,9 +13,9 @@
 
 * custom JSON converter
 
-| date       | notes               |
-| ---------- | ------------------- |
-| 2022-05-24 | initial integration |
+## 2022-05-24
+
+* initial integration
 
 # Content
 

@@ -2,10 +2,9 @@
 
 City Hall official webpage
 
-* https://www.ciudaddecultura.org/
-  * https://www.ciudaddecultura.org/es/programacion/
-  * Salamanca Ciudad de cultura
-  * Salamanca City of Culture
+* https://www.ciudaddecultura.org/es/programacion/
+  * Salamanca City of Culture and Knowledge Foundation
+  * Fundación Salamanca Ciudad de Cultura y Saberes
 
 # API
 

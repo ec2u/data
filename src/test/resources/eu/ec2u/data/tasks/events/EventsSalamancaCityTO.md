@@ -4,14 +4,11 @@
   * Oficina de Turismo de Salamanca
   * Salamanca Municipal Tourist Office
 
-# CMS
-
-* Joomla + https://www.jevents.net/
-
 # API
 
 - RSS
   * https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss
+  * Joomla + https://www.jevents.net/
 
 # Integration
 

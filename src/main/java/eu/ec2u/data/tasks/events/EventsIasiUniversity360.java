@@ -43,11 +43,12 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiUniversity360 implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://360.uaic.ro/"))
+    private static final Frame Publisher=frame(iri("https://360.uaic.ro/blog/category/evenimente/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("360 uaic.ro", "en")
+                    literal("University of Iasi / 360 Events", "en"),
+                    literal("Universitatea din Iași / 360 Evenimente", Iasi.Language)
             );
 
 

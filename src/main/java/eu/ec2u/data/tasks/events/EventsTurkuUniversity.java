@@ -72,10 +72,10 @@ public final class EventsTurkuUniversity implements Runnable {
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
                     literal("University of Turku / News", "en"),
-                    literal("Turun yliopisto / Ajankohtaista", "fi")
+                    literal("Turun yliopisto / Ajankohtaista", Turku.Language)
             );
 
-    private static final String APIKey="key-events-turku-university";
+    private static final String APIKey="key-events-turku-university"; // GCP Vault key label
 
 
     private static Literal instant(final String timestamp) {

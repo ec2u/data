@@ -1,6 +1,7 @@
 # Site
 
-* http://www.vivipavia.it/ | http://www.vivipavia.it/site/home/eventi.html
+* http://www.vivipavia.it/
+  * http://www.vivipavia.it/site/home/eventi.html
   * Comune di Pavia / ViviPavia
   * City of Pavia / ViviPavia
 
@@ -11,7 +12,8 @@
 
 # Integration
 
-* custom article crawler / extractor based on standard HTML Microdata parser
+* custom article crawler
+* extractor based on standard HTML Microdata parser
 
 # Content
 

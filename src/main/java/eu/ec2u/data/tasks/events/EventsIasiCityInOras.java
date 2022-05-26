@@ -47,8 +47,8 @@ public final class EventsIasiCityInOras implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("Iași @ InOras / Evenimente", "ro"),
-                    literal("Iasi @ InOras / Events", "en")
+                    literal("InOras / Evenimente in Iași", "ro"),
+                    literal("InOras / Events in Iasi", "en")
             );
 
 

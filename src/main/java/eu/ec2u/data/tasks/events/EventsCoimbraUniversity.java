@@ -44,8 +44,8 @@ public final class EventsCoimbraUniversity implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("Agenda UC", "en"),
-                    literal("Agenda UC", Coimbra.Language)
+                    literal("University of Coimbra / Agenda UC", "en"),
+                    literal("Universidade de Coimbra / Agenda UC", Coimbra.Language)
             );
 
 

@@ -1,8 +1,8 @@
 # Site
 
 * https://sortir.grandpoitiers.fr/
-  * Sortir Grand Poitiers
-  * Events at Grand Poitier
+  * Grand Poitiers / Sortir
+  * Grand Poitiers / Events
 
 # API
 

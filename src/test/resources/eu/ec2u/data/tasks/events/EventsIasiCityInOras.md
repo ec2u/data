@@ -3,13 +3,14 @@
 Commercial site where events are published for a fee.
 
 * https://iasi.inoras.ro/evenimente
-  * Iași @ InOras / Evenimente
-  * Iasi @ InOras / Events
+  * InOras / Evenimente in Iași
+  * InOras / Events in Iasi
 
 # API
 
-* WordPress RSS feed
+* RSS
   * https://iasi.inoras.ro/feed/
+  * Wordpress
 
 * JSON
   * undocumented SON API @ `POST https://iasi.inoras.ro/wp-admin/admin-ajax.php`
@@ -25,9 +26,9 @@ Commercial site where events are published for a fee.
 
 * standard WordPress/RSS adapter
 
-| date       | notes               |
-| ---------- | ------------------- |
-| 2022-05-25 | initial integration |
+## 2022-05-25
+
+* initial integration
 
 # Content
 

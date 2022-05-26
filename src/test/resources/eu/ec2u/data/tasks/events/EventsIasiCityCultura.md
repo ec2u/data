@@ -1,21 +1,22 @@
 # Site
 
-* https://culturainiasi.ro/
+* https://culturainiasi.ro/evenimente-culturale/
   * Iaşul Cultural
   * Culture in Iasi
 
 # API
 
-* WordPress RSS feed
+* RSS
   * https://culturainiasi.ro/feed
+  * WordPress
 
 # Integration
 
 * standard WordPress/RSS adapter
 
-| date       | notes               |
-| ---------- | ------------------- |
-| 2022-05-25 | initial integration |
+## 2022-05-25
+
+* initial integration
 
 # Content
 

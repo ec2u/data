@@ -43,12 +43,12 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiCityCultura implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://culturainiasi.ro/"))
+    private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("Iaşul Cultural", "ro"),
-                    literal("Culture in Iasi", "en")
+                    literal("Iaşul Cultural / Evenimente in Iași", "ro"),
+                    literal("Culture in Iasi / Events in Iasi", "en")
             );
 
 

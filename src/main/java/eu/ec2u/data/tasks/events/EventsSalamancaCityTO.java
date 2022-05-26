@@ -56,7 +56,7 @@ import static java.time.temporal.ChronoField.*;
 
 public final class EventsSalamancaCityTO implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://salamanca.es/"))
+    private static final Frame Publisher=frame(iri("https://salamanca.es/en/calendar"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,

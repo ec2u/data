@@ -63,8 +63,8 @@ public final class EventsPoitiersUniversity implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("University of Poitiers › News and Events", "en"),
-                    literal("Université de Poitiers › Actualités et événements", "fr")
+                    literal("University of Poitiers / News and Events", "en"),
+                    literal("Université de Poitiers / Actualités et événements", Poitiers.Language)
             );
 
 

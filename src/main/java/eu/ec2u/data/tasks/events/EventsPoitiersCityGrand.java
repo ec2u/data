@@ -55,8 +55,8 @@ public final class EventsPoitiersCityGrand implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("Sortir Grand Poitiers", "fr"),
-                    literal("Events at Grand Poitier", "en")
+                    literal("Grand Poitiers / Events", "en"),
+                    literal("Grand Poitiers / Sortir", Poitiers.Language)
             );
 
 

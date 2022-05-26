@@ -6,12 +6,22 @@
 
 # API
 
-* https://calendar.google.com/calendar/ical/c_jd0an7mstid1af3do1ija5flsk%40group.calendar.google.com/public/basic.ics
-  * Google-based iCalendar
+* iCalendar
+  * https://calendar.google.com/calendar/ical/c_jd0an7mstid1af3do1ija5flsk%40group.calendar.google.com/public/basic.ics
+  * Google-based
 
 # Integration
 
 * custom iCalendar adapter based on https://github.com/ical4j/ical4j
+
+## Pending
+
+* `STATUS` to `schema:evemtStatus` mapping
+  * requires a dictionary of possible input values
+
+## 2022-05-20
+
+* upgraded from WordPress RSS to iCalendar integration
 
 # Content
 
@@ -22,17 +32,6 @@
 * `schema:description`
 * `schema:startDate`
 * `schema:endDate`
-
-# Pending
-
-* `STATUS` to `schema:evemtStatus` mapping
-  * requires a dictionary of possible input values
-
-# Upgrades
-
-## 2022-05-20
-
-* upgraded from WordPress RSS to iCalendar integration
 
 # Samples
 

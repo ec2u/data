@@ -43,11 +43,12 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaUniversity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("http://news.unipv.it//"))
+    private static final Frame Publisher=frame(iri("http://news.unipv.it/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("unipv.news", "en")
+                    literal("University of Pavia / News", "en"),
+                    literal("Università di Pavia / News", Pavia.Language)
             );
 
 
