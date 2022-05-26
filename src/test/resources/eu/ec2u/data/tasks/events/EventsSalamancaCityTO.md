@@ -12,7 +12,21 @@
 
 - RSS
   * https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss
-    * minimal data
+
+# Integration
+
+* custom RSS adapter
+
+## 2022-05-26
+
+* initial integration
+
+# Content
+
+* `schema:url`
+* `schema:name`
+* `schema:description`
+* `schema:startDate`
 
 # Samples
 
