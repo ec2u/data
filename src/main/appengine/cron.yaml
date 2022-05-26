@@ -54,7 +54,11 @@ cron:
     url: /cron/events/pavia/city
     schedule: every day 00:00
 
-  - description: "events › pavia › poitiers › grand - nightly crawling"
+  - description: "events › poitiers > city - nightly crawling"
+    url: /cron/events/poitiers/city
+    schedule: every day 00:00
+
+  - description: "events › poitiers > city › grand - nightly crawling"
     url: /cron/events/poitiers/city/grand
     schedule: every day 00:00
 

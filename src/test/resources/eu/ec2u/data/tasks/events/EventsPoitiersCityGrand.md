@@ -17,7 +17,7 @@
 
 ## Pending
 
-filter RSS feed to include only Poitier events?
+* filter RSS feed to include only Poitier events?
 
 * ask for assistance from technical contact
 

@@ -2,6 +2,8 @@
 
 * https://www.poitiers.fr/
   * https://www.poitiers.fr/c__0_0_manifestation_0__0__voir_tous_les_evenements.html
+  * Ville de Poitiers / Evenements
+  * City of Poitiers / Events
 
 # API
 
@@ -12,6 +14,32 @@
 - ~~RSS~~
   - mentioned by site header at https://www.poitiers.fr/c__2_266__Flux_RSS.html
   - the relevant link at https://www.poitiers.fr/rss/rss_agenda.xml is 404
+
+# Integration
+
+* custom RSS adapter
+
+## Pending
+
+* initial survey mentioned som site overhaul planned
+  * ask for timeline
+  * review after overhaul is completed
+
+## 2022-05-26
+
+* initial integration
+
+# Content
+
+* ~~`schema:url`~~
+  * included in RSS feed but with broken URLs
+* `schema:name`
+* ~~`schema:image`~~
+  * included in RSS feed but with broken URLs
+* `schema:description`
+* `schema:startDate`
+* `schema:endDate`
+* `dct:subject`
 
 # Samples
 
@@ -42,7 +70,7 @@ GET https://www.poitiers.fr/rss/rss_agenda_mobile_.xml
         <item>
             <author>webmaster@mairie-poitiers.fr</author>
             <title>
-                <![CDATA[Images rÃ©vÃ©lÃ©es : Poitiers Ã  lâÃ©preuve de la photographie (1839-1914)  (Exposition documentaire)]]></title>
+                <![CDATA[Images rÃ©vÃ©lÃ©es : Poitiers Ã  lâÃ©preuve de la photographie (1839-1914)  (Exposition documentaire)]]></title>
             <link>
                 http://www.poitiers.fr/rss__0_0_Manifestation_21322__0__Images_revelees_Poitiers_a_l_epreuve_de_la_photographie_1839_1914_.html
             </link>
