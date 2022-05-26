@@ -1,18 +1,30 @@
 # Site
 
 * https://www.salamanca.com/actividades-eventos-propuestas-agenda-salamanca/
-  * SACIS Salamanca Sociedad Cooperativa de Iniciativa Social
-  * SACIS Salamanca Cooperative Society of Social Initiative
-
-# CMS
-
-* WordPress + https://www.myeventon.com/.
-  * possible upgrade https://www.myeventon.com/addons/rss-feed/
+  * SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social
+  * SACIS - Salamanca Cooperative Society of Social Initiative
 
 # API
 
 - RSS
   * https://www.salamanca.com/events/feed/
+  * WordPress + https://www.myeventon.com/
+
+# Integration
+
+## Pending
+
+* ask tech contact to improve RSS using  https://www.myeventon.com/addons/rss-feed/
+
+## 2022-05-26
+
+* initial integration
+
+# Content
+
+* `schema:url`
+* `schema:name`
+* `schema:description`
 
 # Samples
 
