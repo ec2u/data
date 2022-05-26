@@ -28,6 +28,7 @@ import com.metreeca.xml.actions.XPath;
 import eu.ec2u.data.cities.Poitiers;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
+import eu.ec2u.data.work.RSS;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.w3c.dom.Element;
@@ -53,7 +54,6 @@ import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
 import static java.time.ZoneOffset.UTC;
-import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static java.time.temporal.ChronoField.*;
 import static java.util.function.Predicate.not;
 
@@ -139,12 +139,7 @@ public final class EventsPoitiersUniversity implements Runnable {
             final Optional<IRI> link=item.link("link")
                     .map(Values::iri);
 
-            final Optional<Literal> pubDate=item.string("pubDate")
-                    .map(RFC_1123_DATE_TIME::parse)
-                    .map(OffsetDateTime::from)
-                    .map(timestamp -> timestamp.withOffsetSameInstant(UTC))
-                    .map(timestamp -> timestamp.truncatedTo(ChronoUnit.SECONDS))
-                    .map(Values::literal);
+            final Optional<Literal> pubDate=RSS.pubDate(item).map(Values::literal);
 
             final Optional<Value> label=item.string("title")
                     .map(text -> Strings.clip(text, TextLength))
@@ -213,7 +208,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return dateFrom
                 .map(date -> date.atTime(hourFrom))
-                .map(dateTime -> dateTime.atOffset(Poitiers.Zone))
+                .map(dateTime -> dateTime.atOffset(Poitiers.TimeOffset))
                 .map(Values::literal);
     }
 
@@ -231,7 +226,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return dateTo
                 .map(date -> date.atTime(hourTo))
-                .map(dateTime -> dateTime.atOffset(Poitiers.Zone))
+                .map(dateTime -> dateTime.atOffset(Poitiers.TimeOffset))
                 .map(Values::literal);
     }
 

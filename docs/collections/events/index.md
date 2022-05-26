@@ -26,3 +26,37 @@ The following properties are strongly suggested as a minimal description for eve
 | `schema:startDate`                 | `OffsetDateTime` | start date/time                 | ISO 8601 offset format (`yyyy-MM-ddThh:mm:ss+hh:mm`) strongly suggested; other formats will be automatically converted assuming the local time zone of  the publishing university; missing time is normalized to `00:00:00` |
 | `schema:endDate`                   | `OffsetDateTime` | end date/time                   | ISO 8601 offset format (`yyyy-MM-ddThh:mm:ss+hh:mm`) strongly suggested; other formats will be automatically converted assuming the local time zone of  the publishing university; missing time is normalized to `00:00:00` |
 | `schema:location`                  | URI              | location                        | reference to a location described with a least a name        |
+
+# Inbox
+
+```
+rdf:type :URI
+rdfs:label : Dictionary
+rdfs:comment : Dictionary [0..1]
+
+dct:title : Dictionary
+dct:subject : Dictionary
+dct:description : Dictionary
+dct:publisher : URI [0..1]
+dct:source : URI [0..1]
+dct:issued :Instant [0..1]
+dct:created :Instant [0..1]
+dct:modified :Instant [0..1]
+
+ec2u:university
+
+schema:url :URI [0..1]
+schema:name :Dictionary
+schema:image :URI [0..1]
+schema:description :Dictionary
+schema:disambiguatingDescription :Dictionary [0..1]
+
+schema:startDate :OffsetDateTime
+schema:endDate : OffsetDateTime [0..1]
+schema:inLanguage :String
+schema:isAccessibleForFree :Boolean [0..1]
+
+schema:eventStatus
+schema:organizer
+schema:location
+```

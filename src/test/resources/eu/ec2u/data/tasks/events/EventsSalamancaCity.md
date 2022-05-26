@@ -2,14 +2,13 @@
 
 City Hall official webpage
 
-* https://www.ciudaddecultura.org/
+* https://www.ciudaddecultura.org/ | https://www.ciudaddecultura.org/es/programacion/
   * Salamanca Ciudad de cultura
   * Salamanca City of Culture
 
 # API
 
-* https://www.ciudaddecultura.org/es/programacion/
-  * apparently no structured data available
+* apparently no structured data available
 
 # Pending
 

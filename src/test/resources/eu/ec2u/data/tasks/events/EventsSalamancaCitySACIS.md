@@ -11,9 +11,8 @@
 
 # API
 
-## RSS
-
-* https://www.salamanca.com/events/feed/
+- RSS
+  * https://www.salamanca.com/events/feed/
 
 # Samples
 

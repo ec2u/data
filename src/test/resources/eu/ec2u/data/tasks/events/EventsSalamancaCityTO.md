@@ -6,15 +6,13 @@
 
 # CMS
 
-* Joomla
-  * https://www.jevents.net/
+* Joomla + https://www.jevents.net/
 
 # API
 
-## RSS
-
-* https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss
-* minimal data
+- RSS
+  * https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss
+    * minimal data
 
 # Samples
 
