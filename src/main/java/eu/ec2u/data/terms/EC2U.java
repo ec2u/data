@@ -111,7 +111,7 @@ public final class EC2U {
 				),
 
 				field(DCTERMS.TITLE, multilingual()),
-				field(DCTERMS.DESCRIPTION, multilingual()),
+				// field(DCTERMS.DESCRIPTION, multilingual()), // !!! clashes with schema:description
 
 				field(DCTERMS.PUBLISHER, required(), Publisher()),
 				field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
