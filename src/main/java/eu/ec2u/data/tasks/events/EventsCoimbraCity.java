@@ -52,8 +52,8 @@ public final class EventsCoimbraCity implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("Câmara Municipal de Coimbra / CoimbrAgenda", "pt"),
-                    literal("Coimbra City Council / CoimbrAgenda", "en")
+                    literal("Coimbra City Council / CoimbrAgenda", "en"),
+                    literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.Language)
             );
 
     private static final Pattern FreePattern=Pattern.compile("(?i)\\blivre\\b");
@@ -94,9 +94,6 @@ public final class EventsCoimbraCity implements Runnable {
 
                 .flatMap(new JSONPath<>(json -> json.paths("data.docs.*")));
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Optional<Frame> event(final JSONPath.Processor json) {
         return json.string("categories.*._id")

@@ -31,6 +31,7 @@ import static com.metreeca.json.Values.iri;
 import static com.metreeca.json.shapes.And.and;
 import static com.metreeca.json.shapes.Datatype.datatype;
 import static com.metreeca.json.shapes.Field.field;
+import static com.metreeca.json.shapes.Guard.hidden;
 import static com.metreeca.json.shapes.Localized.localized;
 import static com.metreeca.json.shapes.Range.range;
 
@@ -94,6 +95,9 @@ public final class EC2U {
 
 	public static Shape Reference() {
 		return and(
+
+				hidden(field(RDF.TYPE)),
+
 				field(RDFS.LABEL, multilingual()),
 				field(RDFS.COMMENT, multilingual())
 		);

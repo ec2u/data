@@ -50,6 +50,10 @@ cron:
     url: /cron/events/iasi/city/in-oras
     schedule: every day 00:00
 
+  - description: "events › jena › city - nightly crawling"
+    url: /cron/events/jena/city
+    schedule: every day 00:00
+
   - description: "events › pavia › city - nightly crawling"
     url: /cron/events/pavia/city
     schedule: every day 00:00

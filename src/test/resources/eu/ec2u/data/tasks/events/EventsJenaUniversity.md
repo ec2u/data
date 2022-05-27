@@ -19,15 +19,11 @@
 
 # Integration
 
-* data extracted from schema.org-based event description embedded into each page as
-  a `<script type="application/ld+json">` HTML head element
 * no structured event index
   * event URLs are scraped crawling from the entry page and looking for links in `<div class="entry_wrapper">` body
     elements
-
-# Integration
-
-* custom crawler
+* data extracted from schema.org-based event description embedded into each page as
+  a `<script type="application/ld+json">` HTML head element
 
 ## 2022-05-19
 
