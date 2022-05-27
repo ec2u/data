@@ -86,7 +86,7 @@ public final class EventsJenaCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .optMap(new Validate(Event()))
+                .optMap(new Validate(eu.ec2u.data.ports.Events.Event()))
 
                 .sink(events -> upload(EC2U.events, events));
     }
@@ -181,8 +181,8 @@ public final class EventsJenaCity implements Runnable {
 
                     .value(DCTERMS.SOURCE, url)
                     .frame(DCTERMS.PUBLISHER, Publisher)
-                    .value(DCTERMS.CREATED, frame.value(Schema.dateCreated))
-                    .value(DCTERMS.MODIFIED, frame.value(Schema.dateModified)
+                    .value(DCTERMS.CREATED, frame.value(Schema.dateCreated).map(this::datetime))
+                    .value(DCTERMS.MODIFIED, frame.value(Schema.dateModified).map(this::datetime)
                             .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
                     )
 
@@ -194,13 +194,8 @@ public final class EventsJenaCity implements Runnable {
                     .value(Schema.description, description)
                     .value(Schema.disambiguatingDescription, disambiguatingDescription)
 
-                    .value(Schema.startDate, frame.value(Schema.startDate)
-                            .map(v -> literal(v.stringValue(), XSD.DATETIME))
-                    )
-
-                    .value(Schema.endDate, frame.value(Schema.endDate)
-                            .map(v -> literal(v.stringValue(), XSD.DATETIME))
-                    )
+                    .value(Schema.startDate, frame.value(Schema.startDate).map(this::datetime))
+                    .value(Schema.endDate, frame.value(Schema.endDate).map(this::datetime))
 
                     .frame(Schema.organizer, frame.frame(Schema.organizer)
                             .flatMap(location -> location(location, EC2U.organizations))
@@ -215,6 +210,10 @@ public final class EventsJenaCity implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Literal datetime(final Value v) {
+        return literal(v.stringValue(), XSD.DATETIME);
+    }
 
     private Optional<Frame> location(final Frame frame, final IRI locations) {
         return frame.value(Schema.url).or(() -> frame.value(Schema.name))
