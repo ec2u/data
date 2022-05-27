@@ -44,7 +44,8 @@ public final class EventsIasiUniversity implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("News and Events", "en")
+                    literal("University of Iasi / Events", "en"),
+                    literal("Universitatea din Iași / Evenimente", Iasi.Language)
             );
 
 
@@ -61,7 +62,7 @@ public final class EventsIasiUniversity implements Runnable {
 
         Xtream.of(synced(Publisher.focus()))
 
-                .flatMap(new Tribe("https://www.uaic.ro//")
+                .flatMap(new Tribe("https://www.uaic.ro/")
                         .country(Iasi.City)
                         .locality(Iasi.Country)
                         .language(Iasi.Language)

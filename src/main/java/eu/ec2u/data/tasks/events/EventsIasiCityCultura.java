@@ -20,7 +20,7 @@ import com.metreeca.json.Frame;
 import com.metreeca.rest.Xtream;
 import com.metreeca.rest.actions.*;
 
-import eu.ec2u.data.cities.Salamanca;
+import eu.ec2u.data.cities.Iasi;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.work.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -37,22 +37,23 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.WordPress.RSS;
+import static eu.ec2u.data.work.WordPress.WordPress;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsSalamancaCity implements Runnable {
+public final class EventsIasiCityCultura implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://salamanca.es/"))
+    private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
             .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("Turismo de Salamanca. Portal Oficial", "es")
+                    literal("Iaşul Cultural / Evenimente in Iași", "ro"),
+                    literal("Culture in Iasi / Events in Iasi", "en")
             );
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsSalamancaCity().run());
+        exec(() -> new EventsIasiCityCultura().run());
     }
 
 
@@ -79,7 +80,7 @@ public final class EventsSalamancaCity implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss")
+                        .model("https://culturainiasi.ro/feed")
                 )
 
                 .optMap(new GET<>(xml()))
@@ -88,9 +89,9 @@ public final class EventsSalamancaCity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return RSS(frame, Salamanca.Language)
+        return WordPress(frame, Iasi.Language)
 
-                .value(EC2U.university, Salamanca.University)
+                .value(EC2U.university, Iasi.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

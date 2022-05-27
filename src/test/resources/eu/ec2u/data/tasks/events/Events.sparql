@@ -1,0 +1,17 @@
+# https://api.triplydb.com/s/R2VXn_SDJ
+
+prefix dct:		<http://purl.org/dc/terms/>
+prefix rdfs: 	<http://www.w3.org/2000/01/rdf-schema#>
+prefix schema: 	<https://schema.org/>
+prefix ec2u:	<https://data.ec2u.eu/terms/>
+
+select ?university ?coverage ?publisher (count(?event) as ?count) {
+
+  ?event a ec2u:Event; ec2u:university ?university
+
+  optional { ?event dct:publisher ?publisher. optional { ?publisher dct:coverage ?coverage } }
+
+}
+
+group by ?university ?coverage ?publisher
+order by ?university ?coverage ?publisher

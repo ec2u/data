@@ -59,8 +59,8 @@ public final class EventsTurkuCity implements Runnable {
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("City of Turku Event's Calendar", "en"),
-                    literal("Turun kaupungin tapahtumakalenteri", "fi")
+                    literal("City of Turku / Event's Calendar", "en"),
+                    literal("Turun kaupunki / Tapahtumakalenteri", Turku.Language)
             );
 
 

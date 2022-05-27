@@ -27,11 +27,14 @@ import org.w3c.dom.Document;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.metreeca.json.Frame.frame;
 import static com.metreeca.json.Values.*;
 
+import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 public final class RSS implements Function<Document, Xtream<Frame>> {
@@ -43,6 +46,17 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
     public static final IRI Description=term("description");
     public static final IRI Encoded=iri("http://purl.org/rss/1.0/modules/content/", "encoded");
 
+
+    public static Optional<OffsetDateTime> pubDate(final XPath.Processor item) {
+        return item.string("pubDate")
+                .map(RFC_1123_DATE_TIME::parse)
+                .map(OffsetDateTime::from)
+                .map(timestamp -> timestamp.withOffsetSameInstant(UTC))
+                .map(timestamp -> timestamp.truncatedTo(ChronoUnit.SECONDS));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public Xtream<Frame> apply(final Document document) {
 

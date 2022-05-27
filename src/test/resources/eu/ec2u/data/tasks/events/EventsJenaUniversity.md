@@ -1,4 +1,4 @@
-# Source
+# Site
 
 * https://www.uni-jena.de/veranstaltungskalender
   * general university events
@@ -11,15 +11,19 @@
 * https://www.uni-jena.de/promotion-events
   * Graduate Academy
 
+# API
+
+* JSON-LD + schema.org
+  * page-level metadata
+  * no general structured index
+
 # Integration
 
-* data extracted from schema.org-based event description embedded into each page as
-  a `<script type="application/ld+json">` HTML head element
 * no structured event index
   * event URLs are scraped crawling from the entry page and looking for links in `<div class="entry_wrapper">` body
     elements
-
-# Upgrades
+* data extracted from schema.org-based event description embedded into each page as
+  a `<script type="application/ld+json">` HTML head element
 
 ## 2022-05-19
 

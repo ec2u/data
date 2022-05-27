@@ -18,6 +18,7 @@ package eu.ec2u.data.cities;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 import static com.metreeca.open.actions.Wikidata.wd;
@@ -30,7 +31,8 @@ public final class Poitiers {
     public static final IRI City=wd("Q6616");
     public static final IRI Country=wd("Q142");
     public static final String Language="fr";
-    public static final ZoneOffset Zone=ZoneOffset.ofHours(1);
+    public static final ZoneOffset TimeOffset=ZoneOffset.ofHours(1);
+    public static final ZoneId TimeZone=ZoneId.of("Europe/Paris");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,8 @@
 # Site
 
 * https://www.univ-poitiers.fr/c/actualites/
+  * University of Poitiers / News and Events
+  * Université de Poitiers / Actualités et événements
 
 # API
 
@@ -10,6 +12,10 @@
 # Integration
 
 * custom RSS adapter
+
+## 2022-05-20
+
+* migrated to custom RSS adapter to take advantage of extended custom fields
 
 # Content
 
@@ -24,16 +30,6 @@
   * `schema:name`
   * `schema:description`
   * no structured location info
-
-# Pending
-
-* nothing
-
-# Upgrades
-
-## 2022-05-20
-
-* migrated to custom RSS adapter to take advantage of extended custom fields
 
 # Samples
 

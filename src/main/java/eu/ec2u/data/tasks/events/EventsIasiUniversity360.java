@@ -37,17 +37,18 @@ import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.WordPress.RSS;
+import static eu.ec2u.data.work.WordPress.WordPress;
 
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiUniversity360 implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://360.uaic.ro/"))
+    private static final Frame Publisher=frame(iri("https://360.uaic.ro/blog/category/evenimente/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("360 uaic.ro", "en")
+                    literal("University of Iasi / 360 Events", "en"),
+                    literal("Universitatea din Iași / 360 Evenimente", Iasi.Language)
             );
 
 
@@ -88,7 +89,7 @@ public final class EventsIasiUniversity360 implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return RSS(frame, Iasi.Language)
+        return WordPress(frame, Iasi.Language)
 
                 .value(EC2U.university, Iasi.University)
 

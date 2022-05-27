@@ -1,10 +1,13 @@
 # Site
 
-* https://kalenteri.turku.fi/en/events/calendar
+* https://kalenteri.turku.fi/
+  * City of Turku / Event's Calendar
+  * Turun kaupunki / Tapahtumakalenteri
 
 # API
 
-* https://linkedevents-api.turku.fi/v1/
+* LinkedEvents
+  * https://linkedevents-api.turku.fi/v1/
 
 # Integration
 
@@ -12,8 +15,9 @@
   * https://dev.hel.fi/apis/linkedevents
   * https://github.com/City-of-Helsinki/linkedevents
 
-# Pending
+## Pending
 
+- filter out immaterial events (e.g. children, …)
 - location description (usually unpopulated) to be extended on the basis of the `location_extra_info` field
 
 # Samples
@@ -99,9 +103,9 @@ GET https://linkedevents-api.turku.fi/v1/event/?last_modified_since=2022-03-01
             },
             "provider_contact_info": null,
             "description": {
-                "fi": "Reipas vesijumppa Kupittaan maauimalan isossa altaassa. Jumpataan altaan syvässä päässä ja käytetään kelluttavaa vesijuoksuvyötä. Halutessasi voit jumpata myös matalassa vedessä. Vaihtelevat ohjaajat ja ohjelma, välillä jumpataan välineillä välillä ilman. Välineet saat ohjaajalta, omaakin vesijuoksuvyötä voi halutessaan käyttää. Jokainen jumppaa oman kuntonsa mukaan. Aloittelijatkin rohkeasti mukaan jumppaamaan!Jokaiseen jumppaan ilmoittaudutaan etukäteen. Max. määrä 60 hlöä/jumppa.",
-                "sv": "Reipas vesijumppa Kupittaan maauimalan isossa altaassa. Jumpataan altaan syvässä päässä ja käytetään kelluttavaa vesijuoksuvyötä. Halutessasi voit jumpata myös matalassa vedessä. Vaihtelevat ohjaajat ja ohjelma, välillä jumpataan välineillä välillä ilman. Välineet saat ohjaajalta, omaakin vesijuoksuvyötä voi halutessaan käyttää. Jokainen jumppaa oman kuntonsa mukaan. Aloittelijatkin rohkeasti mukaan jumppaamaan!Jokaiseen jumppaan ilmoittaudutaan etukäteen. Max. määrä 60 hlöä/jumppa.",
-                "en": "Reipas vesijumppa Kupittaan maauimalan isossa altaassa. Jumpataan altaan syvässä päässä ja käytetään kelluttavaa vesijuoksuvyötä. Halutessasi voit jumpata myös matalassa vedessä. Vaihtelevat ohjaajat ja ohjelma, välillä jumpataan välineillä välillä ilman. Välineet saat ohjaajalta, omaakin vesijuoksuvyötä voi halutessaan käyttää. Jokainen jumppaa oman kuntonsa mukaan. Aloittelijatkin rohkeasti mukaan jumppaamaan!Jokaiseen jumppaan ilmoittaudutaan etukäteen. Max. määrä 60 hlöä/jumppa."
+                "fi": "Reipas vesijumppa Kupittaan maauimalan isossa altaassa. Jumpataan altaan syvässä päässä ja käytetään kelluttavaa vesijuoksuvyötä. Halutessasi voit jumpata myös matalassa vedessä. Vaihtelevat ohjaajat ja ohjelma, välillä jumpataan välineillä välillä ilman. Välineet saat ohjaajalta, omaakin vesijuoksuvyötä voi halutessaan käyttää. Jokainen jumppaa oman kuntonsa mukaan. Aloittelijatkin rohkeasti mukaan jumppaamaan!Jokaiseen jumppaan ilmoittaudutaan etukäteen. Max. määrä 60 hlöä/jumppa.",
+                "sv": "Reipas vesijumppa Kupittaan maauimalan isossa altaassa. Jumpataan altaan syvässä päässä ja käytetään kelluttavaa vesijuoksuvyötä. Halutessasi voit jumpata myös matalassa vedessä. Vaihtelevat ohjaajat ja ohjelma, välillä jumpataan välineillä välillä ilman. Välineet saat ohjaajalta, omaakin vesijuoksuvyötä voi halutessaan käyttää. Jokainen jumppaa oman kuntonsa mukaan. Aloittelijatkin rohkeasti mukaan jumppaamaan!Jokaiseen jumppaan ilmoittaudutaan etukäteen. Max. määrä 60 hlöä/jumppa.",
+                "en": "Reipas vesijumppa Kupittaan maauimalan isossa altaassa. Jumpataan altaan syvässä päässä ja käytetään kelluttavaa vesijuoksuvyötä. Halutessasi voit jumpata myös matalassa vedessä. Vaihtelevat ohjaajat ja ohjelma, välillä jumpataan välineillä välillä ilman. Välineet saat ohjaajalta, omaakin vesijuoksuvyötä voi halutessaan käyttää. Jokainen jumppaa oman kuntonsa mukaan. Aloittelijatkin rohkeasti mukaan jumppaamaan!Jokaiseen jumppaan ilmoittaudutaan etukäteen. Max. määrä 60 hlöä/jumppa."
             },
             "location_extra_info": {
                 "fi": "Blombergin aukio 12, Turku / Kupittaa, Kupittaan maauimala\n",

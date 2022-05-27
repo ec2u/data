@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.tasks;
 
@@ -27,7 +27,6 @@ import org.eclipse.rdf4j.rio.Rio;
 import java.io.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.metreeca.core.Lambdas.task;
 import static com.metreeca.rdf4j.services.Graph.graph;
@@ -63,7 +62,7 @@ public final class Tasks {
                     .collect(toList());
 
             final List<Statement> statements=batch.stream()
-                    .flatMap(Frame::model)
+                    .flatMap(frame -> frame.model().stream())
                     .collect(toList());
 
             service(graph()).update(task(connection -> {
@@ -83,7 +82,7 @@ public final class Tasks {
 
 
     public static String format(final Frame frame) {
-        return format(frame.model().collect(Collectors.toList()));
+        return format(frame.model());
     }
 
     public static String format(final Iterable<Statement> model) {

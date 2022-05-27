@@ -38,8 +38,40 @@ cron:
     schedule: every day 00:00
 
 
+  - description: "events › coimbra › city - nightly crawling"
+    url: /cron/events/coimbra/city
+    schedule: every day 00:00
+
+  - description: "events › iasi › city › cultura - nightly crawling"
+    url: /cron/events/iasi/city/cultura
+    schedule: every day 00:00
+
+  - description: "events › iasi › city › in-oras - nightly crawling"
+    url: /cron/events/iasi/city/in-oras
+    schedule: every day 00:00
+
+  - description: "events › jena › city - nightly crawling"
+    url: /cron/events/jena/city
+    schedule: every day 00:00
+
   - description: "events › pavia › city - nightly crawling"
     url: /cron/events/pavia/city
+    schedule: every day 00:00
+
+  - description: "events › poitiers > city - nightly crawling"
+    url: /cron/events/poitiers/city
+    schedule: every day 00:00
+
+  - description: "events › poitiers > city › grand - nightly crawling"
+    url: /cron/events/poitiers/city/grand
+    schedule: every day 00:00
+
+  - description: "events › salamanca › city > sacis - nightly crawling"
+    url: /cron/events/salamanca/city/sacis
+    schedule: every day 00:00
+
+  - description: "events › salamanca › city > to - nightly crawling"
+    url: /cron/events/salamanca/city/to
     schedule: every day 00:00
 
   - description: "events › turku › city - nightly crawling"
