@@ -58,6 +58,7 @@ public final class WordPress {
 
                 .frames(DCTERMS.SUBJECT, frame.strings(Category)
                         .map(category -> frame(iri(EC2U.concepts, md5(category)))
+                                .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(category, lang))
                                 .value(SKOS.PREF_LABEL, literal(category, lang))
                         )

@@ -183,6 +183,7 @@ public final class EventsCoimbraCity implements Runnable {
                     .map(text -> literal(text, Coimbra.Language));
 
             return frame(iri(EC2U.concepts, md5(id)))
+                    .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);
 

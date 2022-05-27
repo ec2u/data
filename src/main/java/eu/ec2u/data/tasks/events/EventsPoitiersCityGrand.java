@@ -165,6 +165,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
             final Literal label=literal(category, Poitiers.Language);
 
             return frame(iri(EC2U.concepts, md5(category)))
+                    .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);
 
