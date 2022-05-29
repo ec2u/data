@@ -1,5 +1,3 @@
-# Data Types
-
 All resources properties are described using a limited set of
 standard [XSD](https://www.w3.org/TR/xmlschema-2/#built-in-datatypes)
 / [RDF](https://www.w3.org/TR/rdf-schema/#ch_langstring)
@@ -23,4 +21,4 @@ datatypes, which are internally mapped to implementation datatypes according to 
 |  | `URI` (absolute) | `“scheme:details”` |
 | [rdf:langString](https://www.w3.org/TR/rdf-schema/#ch_langstring) | ``Dictionary extends Map<Locale, String>`` | `{ "locale": "text" }` |
 
-UML diagrams refer to the datatype using the Java mapping, as it is the most specific.
+UML diagrams refer to the datatype using the Java mapping.
