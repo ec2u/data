@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data;
 
@@ -23,6 +23,7 @@ import com.metreeca.rdf4j.services.GraphEngine;
 import com.metreeca.rest.Toolbox;
 import com.metreeca.rest.services.Cache.FileCache;
 import com.metreeca.rest.services.Fetcher.CacheFetcher;
+import com.metreeca.rest.services.Fetcher.URLFetcher;
 
 import eu.ec2u.data.ports.Concepts;
 import eu.ec2u.data.ports.*;
@@ -82,8 +83,8 @@ public final class Data implements Runnable {
                 .set(vault(), GCPVault::new)
                 .set(store(), GCPStore::new)
 
-                .set(storage(), () -> Paths.get("data"))
-                .set(fetcher(), CacheFetcher::new)
+                .set(storage(), () -> Paths.get(Production ? "/tmp" : "data"))
+                .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
 
                 .set(graph(), () -> new Graph(repository()))
