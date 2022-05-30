@@ -6,12 +6,16 @@
 
 # API
 
-* https://www.univ-poitiers.fr/feed/events
+* https://www.univ-poitiers.fr/feed/ec2u
   * WordPress RSS feed with custom fields
 
 # Integration
 
 * custom RSS adapter
+
+## 2022-05-30
+
+* updated RSS feed URL
 
 ## 2022-05-20
 
@@ -39,64 +43,79 @@ GET https://www.univ-poitiers.fr/feed/events
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0"
-     xmlns: content="http://purl.org/rss/1.0/modules/content/"
-     xmlns: wfw="http://wellformedweb.org/CommentAPI/"
-     xmlns:dc="http://purl.org/dc/elements/1.1/"
-     xmlns: atom="http://www.w3.org/2005/Atom"
-     xmlns: sy="http://purl.org/rss/1.0/modules/syndication/"
-     xmlns: slash="http://purl.org/rss/1.0/modules/slash/"
->
+<rss version="2.0">
     <channel>
 
         <title>Université de Poitiers - Feed</title>
-        <atom: link href="https://www.univ-poitiers.fr/feed/events" rel="self" type="application/rss+xml"/>
-        <link>https: //www.univ-poitiers.fr</link>
+        <atom:link href="https://www.univ-poitiers.fr/feed/ec2u" rel="self" type="application/rss+xml"/>
+        <link>https://www.univ-poitiers.fr</link>
         <description></description>
-        <lastBuildDate>Thu, 19 May 2022 12: 32: 33 +0000</lastBuildDate>
+        <lastBuildDate>Wed, 25 May 2022 15:21:06 +0000</lastBuildDate>
         <language></language>
-        <sy: updatePeriod>hourly</sy: updatePeriod>
-        <sy: updateFrequency>1</sy: updateFrequency>
+        <sy:updatePeriod>hourly</sy:updatePeriod>
+        <sy:updateFrequency>1</sy:updateFrequency>
 
         <item>
             <title>Sorties sportives</title>
-            <link>https: //www.univ-poitiers.fr/sorties-sportives/</link>
+            <link>https://www.univ-poitiers.fr/sorties-sportives/</link>
             <date_from>01/05/2022</date_from>
             <date_to>24/06/2022</date_to>
             <hour_from></hour_from>
             <hour_to></hour_to>
 
-            <pubDate>Fri, 29 Apr 2022 13: 25: 23 +0000</pubDate>
-            <dc:creator>jmurguet</dc: creator>
-            <guid isPermaLink="false">https: //www.univ-poitiers.fr/?p=102290</guid>
-            <description><![ CDATA[ En même temps que les beaux jours, les stages du suaps sont de retour !
+            <pubDate>Fri, 29 Apr 2022 13:25:23 +0000</pubDate>
+            <dc:creator>jmurguet</dc:creator>
+            <guid isPermaLink="false">https://www.univ-poitiers.fr/?p=102290</guid>
+            <description>
+                <![CDATA[
+						[01/05/2022 to 24/06/2022						] 												En même temps que les beaux jours, les stages du suaps sont de retour ! 
 
-                Attention les places sont limitées ! ] ]>
+Attention les places sont limitées ! 						<img width="800" height="450" src="https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2020/07/img-suaps.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="SUAPS" loading="lazy" srcset="https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2020/07/img-suaps.jpg 800w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2020/07/img-suaps-300x169.jpg 300w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2020/07/img-suaps-768x432.jpg 768w" sizes="(max-width: 800px) 100vw, 800px" />						]]>
             </description>
-            <content: encoded><![ CDATA[ En même temps que les beaux jours, les stages du suaps sont de retour !
+            <content:encoded><![CDATA[En même temps que les beaux jours, les stages du suaps sont de retour ! 
 
-                Attention les places sont limitées ! ] ]>
-            </content: encoded>
+Attention les places sont limitées ! ]]></content:encoded>
         </item>
         <item>
-            <title>Journée d’études : Végétal Moyen Âge ! Plantes, santé et alimentation</title>
-            <link>https://www.univ-poitiers.fr/journee-detudes-vegetal-moyen-age-plantes-sante-et-alimentation/</link>
-            <date_from>20/05/2022</date_from>
-            <date_to>20/05/2022</date_to>
+            <title>Une École d’été pour accueillir et accompagner les étudiants ou futurs étudiants venant d’Ukraine (du
+                16 mai au 26 juin)
+            </title>
+            <link>
+                https://www.univ-poitiers.fr/une-ecole-dete-pour-accueillir-et-accompagner-les-etudiants-ou-futurs-etudiants-venant-dukraine-du-16-mai-au-24-juin/
+            </link>
+            <date_from>16/05/2022</date_from>
+            <date_to>26/06/2022</date_to>
             <hour_from></hour_from>
             <hour_to></hour_to>
-            <place>
-                <place_name>Jardin botanique universitaire de Poitiers,</place_name>
-                <place_address>Domaine du Deffend, 1108, route des Sachères, 86550 Mignaloux-Beauvoir</place_address>
-            </place>
 
-            <pubDate>Tue, 10 May 2022 21:36:49 +0000</pubDate>
+            <pubDate>Wed, 27 Apr 2022 12:21:04 +0000</pubDate>
             <dc:creator>spivette</dc:creator>
-            <guid isPermaLink="false">https://www.univ-poitiers.fr/?p=102520</guid>
+            <guid isPermaLink="false">https://www.univ-poitiers.fr/?p=102199</guid>
             <description>
-                <![CDATA[Le monde végétal est, au Moyen Âge, objet de représentations et d’usages variés, au sein desquels deux domaines se distinguent : l’alimentation et les remèdes. L’économie, la production alimentaire et les représentations symboliques des sociétés médiévales occidentales reposent fondamentalement sur la céréaliculture et la vigne, tandis que les connaissances en manière de médecine curative s’appuient largement sur les propriétés des végétaux. Cette journée d’études organisée par le CESCM propose d’apporter un regard interdisciplinaire sur ces deux domaines, en associant historiens, littéraires et archéologues à une discussion générale sur les usages et les représentations des plantes dans l’alimentation et les pratiques de santé médiévales.]]></description>
+                <![CDATA[
+						[16/05/2022 to 26/06/2022						] 												A partir du 16 mai et jusqu’au 26 juin, l’université de Poitiers organise une Ecole d’été gratuite « Welcome to Poitiers » pour accueillir et accompagner les étudiants ou futurs étudiants venant d’Ukraine : initiation au français, découverte de l’université, de la ville de Poitiers, ateliers de discussion et d’intégration dans la vie quotidienne française et activités sportives ou culturelles – de nombreux partenaires se mobilisent pour un été festif, solidaire et de partage.						<img width="1500" height="1038" src="https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/04/img-univ-ete.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="Une École d’été pour accueillir et accompagner les étudiants ou futurs étudiants venant d’Ukraine (du 16 mai au 24 juin)" loading="lazy" srcset="https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/04/img-univ-ete.jpg 1500w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/04/img-univ-ete-300x208.jpg 300w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/04/img-univ-ete-1024x709.jpg 1024w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/04/img-univ-ete-768x531.jpg 768w" sizes="(max-width: 1500px) 100vw, 1500px" />						]]>
+            </description>
             <content:encoded>
-                <![CDATA[Le monde végétal est, au Moyen Âge, objet de représentations et d’usages variés, au sein desquels deux domaines se distinguent : l’alimentation et les remèdes. L’économie, la production alimentaire et les représentations symboliques des sociétés médiévales occidentales reposent fondamentalement sur la céréaliculture et la vigne, tandis que les connaissances en manière de médecine curative s’appuient largement sur les propriétés des végétaux. Cette journée d’études organisée par le CESCM propose d’apporter un regard interdisciplinaire sur ces deux domaines, en associant historiens, littéraires et archéologues à une discussion générale sur les usages et les représentations des plantes dans l’alimentation et les pratiques de santé médiévales.]]></content:encoded>
+                <![CDATA[A partir du 16 mai et jusqu’au 26 juin, l’université de Poitiers organise une Ecole d’été gratuite « Welcome to Poitiers » pour accueillir et accompagner les étudiants ou futurs étudiants venant d’Ukraine : initiation au français, découverte de l’université, de la ville de Poitiers, ateliers de discussion et d’intégration dans la vie quotidienne française et activités sportives ou culturelles – de nombreux partenaires se mobilisent pour un été festif, solidaire et de partage.]]></content:encoded>
+        </item>
+        <item>
+            <title>Expérience virtuelle de sensibilisation sur les violences sexistes et sexuelles</title>
+            <link>
+                https://www.univ-poitiers.fr/experience-virtuelle-de-sensibilisation-sur-les-violences-sexistes-et-sexuelles/
+            </link>
+            <date_from>31/05/2022</date_from>
+            <date_to>31/05/2022</date_to>
+            <hour_from></hour_from>
+            <hour_to></hour_to>
+
+            <pubDate>Tue, 24 May 2022 08:24:57 +0000</pubDate>
+            <dc:creator>spivette</dc:creator>
+            <guid isPermaLink="false">https://www.univ-poitiers.fr/?p=102851</guid>
+            <description>
+                <![CDATA[
+						[31/05/2022 to 31/05/2022						 - 14h  à 17h						 - Campus de Poitiers - Maison des étudiants (Bâtiment 6)]												<img width="1249" height="684" src="https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="Expérience virtuelle sur les violences sexistes et sexuelles" loading="lazy" srcset="https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel.jpg 1249w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel-300x164.jpg 300w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel-1024x561.jpg 1024w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel-768x421.jpg 768w" sizes="(max-width: 1249px) 100vw, 1249px" />						]]>
+            </description>
+            <content:encoded><![CDATA[]]></content:encoded>
         </item>
 
     </channel>
