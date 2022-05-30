@@ -48,6 +48,7 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
+import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
@@ -111,7 +112,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .flatMap(this::crawl)
                 .map(this::event)
 
-                .optMap(new Validate(eu.ec2u.data.ports.Events.Event()))
+                .optMap(new Validate(Event()))
 
                 .sink(events -> upload(EC2U.events, events));
     }
@@ -176,6 +177,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                 .value(Schema.url, link)
                 .value(Schema.name, label)
+                .value(Schema.image, item.link("image").map(Values::iri))
                 .value(Schema.disambiguatingDescription, brief)
                 .value(Schema.description, description.map(value -> literal(value, Poitiers.Language)))
 

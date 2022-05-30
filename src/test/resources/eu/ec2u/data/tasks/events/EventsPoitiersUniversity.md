@@ -16,6 +16,7 @@
 ## 2022-05-30
 
 * updated RSS feed URL
+* extract `schema:image`
 
 ## 2022-05-20
 
@@ -24,6 +25,7 @@
 # Content
 
 * `schema:url`
+* `schema:image`
 * `schema:name`
 * `schema:disambiguatingDescription`
 * `schema:startDate`
@@ -45,12 +47,12 @@ GET https://www.univ-poitiers.fr/feed/ec2u
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
     <channel>
-
+        
         <title>Université de Poitiers - Feed</title>
         <atom:link href="https://www.univ-poitiers.fr/feed/ec2u" rel="self" type="application/rss+xml"/>
         <link>https://www.univ-poitiers.fr</link>
         <description></description>
-        <lastBuildDate>Wed, 25 May 2022 15:21:06 +0000</lastBuildDate>
+        <lastBuildDate>Mon, 30 May 2022 07:55:38 +0000</lastBuildDate>
         <language></language>
         <sy:updatePeriod>hourly</sy:updatePeriod>
         <sy:updateFrequency>1</sy:updateFrequency>
@@ -75,6 +77,7 @@ Attention les places sont limitées ! 						<img width="800" height="450" src="h
             <content:encoded><![CDATA[En même temps que les beaux jours, les stages du suaps sont de retour ! 
 
 Attention les places sont limitées ! ]]></content:encoded>
+            <image>https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2020/07/img-suaps.jpg</image>
         </item>
         <item>
             <title>Une École d’été pour accueillir et accompagner les étudiants ou futurs étudiants venant d’Ukraine (du
@@ -97,6 +100,7 @@ Attention les places sont limitées ! ]]></content:encoded>
             </description>
             <content:encoded>
                 <![CDATA[A partir du 16 mai et jusqu’au 26 juin, l’université de Poitiers organise une Ecole d’été gratuite « Welcome to Poitiers » pour accueillir et accompagner les étudiants ou futurs étudiants venant d’Ukraine : initiation au français, découverte de l’université, de la ville de Poitiers, ateliers de discussion et d’intégration dans la vie quotidienne française et activités sportives ou culturelles – de nombreux partenaires se mobilisent pour un été festif, solidaire et de partage.]]></content:encoded>
+            <image>https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/04/img-univ-ete.jpg</image>
         </item>
         <item>
             <title>Expérience virtuelle de sensibilisation sur les violences sexistes et sexuelles</title>
@@ -116,8 +120,9 @@ Attention les places sont limitées ! ]]></content:encoded>
 						[31/05/2022 to 31/05/2022						 - 14h  à 17h						 - Campus de Poitiers - Maison des étudiants (Bâtiment 6)]												<img width="1249" height="684" src="https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="Expérience virtuelle sur les violences sexistes et sexuelles" loading="lazy" srcset="https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel.jpg 1249w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel-300x164.jpg 300w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel-1024x561.jpg 1024w, https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel-768x421.jpg 768w" sizes="(max-width: 1249px) 100vw, 1249px" />						]]>
             </description>
             <content:encoded><![CDATA[]]></content:encoded>
+            <image>https://www.univ-poitiers.fr/wp-content/uploads/sites/10/2022/05/img-virtuel.jpg</image>
         </item>
-
+       
     </channel>
 </rss>
 ```
