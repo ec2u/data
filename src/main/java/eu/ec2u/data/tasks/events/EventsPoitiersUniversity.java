@@ -179,6 +179,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                     .value(Schema.url, link)
                     .value(Schema.name, label)
+                    .value(Schema.image, item.link("image").map(Values::iri))
                     .value(Schema.disambiguatingDescription, brief)
                     .value(Schema.description, description.map(value -> literal(value, Poitiers.Language)))
 
