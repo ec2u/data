@@ -124,7 +124,7 @@ public final class EventsPoitiersUniversity implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://www.univ-poitiers.fr/feed/events")
+                        .model("https://www.univ-poitiers.fr/feed/ec2u")
                 )
 
                 .optMap(new GET<>(xml()))
