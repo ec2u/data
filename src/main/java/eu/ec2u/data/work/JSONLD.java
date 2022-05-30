@@ -16,47 +16,50 @@
 
 package eu.ec2u.data.work;
 
-import com.metreeca.json.Frame;
+import com.metreeca.http.CodecException;
+import com.metreeca.link.Frame;
+import com.metreeca.rdf.schemas.Schema;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.ByteArrayInputStream;
+import java.io.*;
+import java.util.Collection;
 import java.util.stream.Stream;
 
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.inverse;
-import static com.metreeca.rdf.formats.RDFFormat.rdf;
-import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.services.Logger.logger;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.inverse;
+import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.stream.Collectors.toList;
 
 public final class JSONLD {
 
     public static Stream<Frame> jsonld(final String json, final IRI type) {
-        return rdf(new ByteArrayInputStream(json.getBytes(UTF_8)), null, new JSONLDParser())
 
-                .map(model -> model.stream()
-                        .map(com.metreeca.rdf.schemas.Schema::normalize)
-                        .collect(toList())
-                )
 
-                .fold(
+        try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
 
-                        error -> {
+            final Collection<Statement> model=Schema.normalize(rdf(input, null,
+                    new JSONLDParser()));
 
-                            service(logger()).warning(JSONLD.class, error.toString());
+            return frame(type, model).frames(inverse(RDF.TYPE));
 
-                            return Stream.empty();
+        } catch ( final CodecException e ) {
 
-                        },
+            service(logger()).warning(JSONLD.class, e.getMessage());
 
-                        model -> frame(type, model).frames(inverse(RDF.TYPE))
+            return Stream.empty();
 
-                );
+        } catch ( final IOException unexpected ) {
+
+            throw new UncheckedIOException(unexpected);
+
+        }
     }
 
 
