@@ -38,7 +38,7 @@
 # Samples
 
 ```http
-GET https://www.univ-poitiers.fr/feed/events
+GET https://www.univ-poitiers.fr/feed/ec2u
 ```
 
 ```xml
