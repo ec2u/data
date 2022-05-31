@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,24 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.ports;
 
-import com.metreeca.json.Shape;
-import com.metreeca.rest.actions.Validate;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Shape;
 
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.LDP;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.queries.Items.items;
-import static com.metreeca.json.shapes.Guard.*;
-import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.services.Engine.engine;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.jsonld.services.Engine.engine;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.queries.Items.items;
+import static com.metreeca.link.shapes.Guard.*;
 
 import static eu.ec2u.data.ports.Universities.University;
 import static eu.ec2u.data.tasks.Tasks.exec;
@@ -37,29 +37,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 final class UniversitiesTest {
 
-	@Disabled @Test void test() {
+    @Disabled @Test void test() {
 
-		exec(() -> {
+        exec(() -> {
 
-			final Shape shape=University()
-					.redact(Task, Relate)
-					.redact(View, Digest);
+            final Shape shape=University()
+                    .redact(Task, Relate)
+                    .redact(View, Digest);
 
 
-			assertThat(service(engine())
+            assertThat(service(engine())
 
-					.relate(frame(iri(EC2U.Base, "/universities/")), items(shape))
+                    .relate(frame(iri(EC2U.Base, "/universities/")), items(shape))
 
-					.stream()
-					.flatMap(frame -> frame.frames(LDP.CONTAINS))
+                    .stream()
+                    .flatMap(frame -> frame.frames(LDP.CONTAINS))
 
-			).allSatisfy(frame ->
+            ).allSatisfy(frame ->
 
-					assertThat(new Validate(shape).apply(frame)).isNotEmpty()
+                    assertThat(new Validate(shape).apply(frame)).isNotEmpty()
 
-			);
+            );
 
-		});
-	}
+        });
+    }
 
 }

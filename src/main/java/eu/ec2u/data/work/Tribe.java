@@ -17,12 +17,15 @@
 package eu.ec2u.data.work;
 
 import com.metreeca.core.Strings;
-import com.metreeca.json.Frame;
-import com.metreeca.json.Values;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
+import com.metreeca.http.Xtream;
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.json.JSONPath;
+import com.metreeca.json.codecs.JSON;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
+import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.actions.XPath;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
@@ -37,10 +40,9 @@ import java.util.function.Function;
 import static com.metreeca.core.Formats.SQL_TIMESTAMP;
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.TextLength;
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
-import static com.metreeca.rest.formats.JSONFormat.json;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
 
 import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
@@ -147,7 +149,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath.Processor> crawl(final Instant synced) {
+    private Xtream<JSONPath> crawl(final Instant synced) {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
@@ -165,8 +167,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 .scan(page -> Xtream.of(page)
 
-                        .optMap(new GET<>(json()))
-                        .map(JSONPath.Processor::new)
+                        .optMap(new GET<>(new JSON()))
+                        .map(JSONPath::new)
 
                         .map(path -> entry(
                                 path.strings("next_rest_url"),
@@ -176,7 +178,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 );
     }
 
-    private Optional<Frame> event(final JSONPath.Processor event) {
+    private Optional<Frame> event(final JSONPath event) {
 
         final Optional<Literal> title=event.string("title")
                 .map(XPath::decode)
@@ -229,7 +231,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
     }
 
-    private Optional<Frame> category(final JSONPath.Processor category) {
+    private Optional<Frame> category(final JSONPath category) {
         return category.string("urls.self").map(self -> {
 
             final Optional<Literal> name=category.string("name").map(text -> literal(text, language));
@@ -242,7 +244,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
         });
     }
 
-    private Optional<Frame> organizer(final JSONPath.Processor organizer) {
+    private Optional<Frame> organizer(final JSONPath organizer) {
         return organizer.string("url").map(id -> frame(iri(EC2U.organizations, md5(id)))
 
                 .value(Schema.url, organizer.string("website").flatMap(Work::url).map(Values::iri))
@@ -254,7 +256,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
         );
     }
 
-    private Optional<Frame> location(final JSONPath.Processor location) {
+    private Optional<Frame> location(final JSONPath location) {
         return location.string("url").map(id -> {
 
             // !!! lookup by name

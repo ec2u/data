@@ -17,7 +17,7 @@
 package eu.ec2u.data.work;
 
 import com.metreeca.core.Strings;
-import com.metreeca.json.Frame;
+import com.metreeca.link.Frame;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.terms.EC2U;
@@ -32,10 +32,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
-import static com.metreeca.json.shifts.Seq.seq;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
+import static com.metreeca.link.shifts.Seq.seq;
 
 import static java.lang.String.format;
 

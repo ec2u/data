@@ -16,13 +16,15 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.json.Frame;
-import com.metreeca.json.Values;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
-import com.metreeca.rest.formats.JSONFormat;
+import com.metreeca.http.Xtream;
+import com.metreeca.http.actions.*;
+import com.metreeca.json.JSONPath;
+import com.metreeca.json.codecs.JSON;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
+import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.actions.XPath;
 
 import eu.ec2u.data.cities.Turku;
 import eu.ec2u.data.terms.EC2U;
@@ -45,13 +47,12 @@ import static com.metreeca.core.Formats.SQL_TIMESTAMP;
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.TextLength;
 import static com.metreeca.core.Strings.clip;
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
-import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.formats.InputFormat.input;
-import static com.metreeca.rest.services.Logger.logger;
-import static com.metreeca.rest.services.Vault.vault;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
@@ -128,7 +129,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath.Processor> crawl(final Instant synced) {
+    private Xtream<JSONPath> crawl(final Instant synced) {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
@@ -136,7 +137,7 @@ public final class EventsTurkuUniversity implements Runnable {
                 )
 
                 .optMap(new Query(request -> request
-                        .header("Accept", JSONFormat.MIME)
+                        .header("Accept", JSON.MIME)
                         .header("X-Api-Key", service(vault())
                                 .get(APIKey)
                                 .orElseThrow(() -> new IllegalStateException(format(
@@ -148,12 +149,11 @@ public final class EventsTurkuUniversity implements Runnable {
                 // ;( returns JSON array as top-level object: unable to GET using JSONFormat
 
                 .optMap(new Fetch())
-                .optMap(new Parse<>(input()))
 
-                .optMap((supplier -> {
+                .optMap(response -> {
 
                     try (
-                            final InputStream input=supplier.get();
+                            final InputStream input=response.input().get();
                             final JsonReader reader=Json.createReader(input)
 
                     ) {
@@ -169,17 +169,16 @@ public final class EventsTurkuUniversity implements Runnable {
 
                     }
 
-                }))
+                })
 
-                .map(JSONPath.Processor::new)
-
+                .map(JSONPath::new)
                 .flatMap(json -> json.paths("*"));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Optional<Frame> event(final JSONPath.Processor json) {
+    private Optional<Frame> event(final JSONPath json) {
 
         final List<Literal> title=json.entries("title")
                 .optMap(entry -> entry.getValue()
@@ -241,7 +240,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
     }
 
-    private Optional<Frame> location(final JSONPath.Processor json) {
+    private Optional<Frame> location(final JSONPath json) {
         return json.string("url").map(id -> {
 
             final Optional<Value> url=json.string("url").flatMap(Work::url).map(Values::iri);
@@ -277,7 +276,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
     }
 
-    private Optional<Frame> organizer(final JSONPath.Processor json) {
+    private Optional<Frame> organizer(final JSONPath json) {
         return json.string("url").map(id -> frame(iri(EC2U.organizations, md5(id)))
 
                 .value(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.Language)))

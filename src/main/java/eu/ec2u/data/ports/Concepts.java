@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,29 +12,30 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.ports;
 
-import com.metreeca.json.Shape;
-import com.metreeca.rest.Handler;
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.jsonld.handlers.Driver;
+import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.Shape;
 
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import static com.metreeca.json.Values.inverse;
-import static com.metreeca.json.shapes.Clazz.clazz;
-import static com.metreeca.json.shapes.Field.field;
-import static com.metreeca.json.shapes.Guard.*;
-import static com.metreeca.json.shapes.Lang.lang;
-import static com.metreeca.json.shapes.Link.link;
-import static com.metreeca.json.shapes.Localized.localized;
-import static com.metreeca.rest.handlers.Router.router;
-import static com.metreeca.rest.operators.Relator.relator;
-import static com.metreeca.rest.wrappers.Driver.driver;
+import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Values.inverse;
+import static com.metreeca.link.shapes.Clazz.clazz;
+import static com.metreeca.link.shapes.Field.field;
+import static com.metreeca.link.shapes.Guard.*;
+import static com.metreeca.link.shapes.Lang.lang;
+import static com.metreeca.link.shapes.Link.link;
+import static com.metreeca.link.shapes.Localized.localized;
 
-public final class Concepts extends Handler.Base {
+public final class Concepts extends Delegator {
 
     private static Shape label() {
         return field("label", SKOS.PREF_LABEL,
@@ -44,30 +45,34 @@ public final class Concepts extends Handler.Base {
 
 
     public Concepts() {
-        delegate(driver(relate(
+        delegate(handler(
 
-                filter(clazz(EC2U.Theme)),
+                new Driver(relate(
 
-                link(OWL.SAMEAS,
+                        filter(clazz(EC2U.Theme)),
 
-                        label(), detail(
+                        link(OWL.SAMEAS,
 
-                                field("broader", SKOS.BROADER_TRANSITIVE, label(), link(inverse(OWL.SAMEAS))),
+                                label(), detail(
 
-                                field(SKOS.NARROWER, label(), link(inverse(OWL.SAMEAS))),
-                                field(SKOS.RELATED, label(), link(inverse(OWL.SAMEAS)))
+                                        field("broader", SKOS.BROADER_TRANSITIVE, label(), link(inverse(OWL.SAMEAS))),
 
-                        ))
+                                        field(SKOS.NARROWER, label(), link(inverse(OWL.SAMEAS))),
+                                        field(SKOS.RELATED, label(), link(inverse(OWL.SAMEAS)))
 
-        )).wrap(router()
+                                ))
 
-                .path("/", router()
-                        .get(relator())
-                )
+                )),
 
-                .path("/*", router()
-                        .get(relator())
-                )
+                new Router()
+
+                        .path("/", new Router()
+                                .get(new Relator())
+                        )
+
+                        .path("/*", new Router()
+                                .get(new Relator())
+                        )
 
         ));
     }

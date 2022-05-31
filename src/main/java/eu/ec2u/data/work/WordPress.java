@@ -17,7 +17,7 @@
 package eu.ec2u.data.work;
 
 import com.metreeca.core.Strings;
-import com.metreeca.json.Frame;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
@@ -28,9 +28,9 @@ import java.util.Optional;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.TextLength;
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.work.RSS.*;
 import static eu.ec2u.data.work.Work.localize;

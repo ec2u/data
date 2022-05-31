@@ -16,14 +16,17 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.json.Frame;
+import com.metreeca.http.Xtream;
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Frame;
 import com.metreeca.rdf.actions.Localize;
 import com.metreeca.rdf.actions.Normalize;
 import com.metreeca.rdf.actions.Normalize.DateToDateTime;
 import com.metreeca.rdf.actions.Normalize.StringToDate;
 import com.metreeca.rdf4j.actions.Microdata;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
+import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.cities.Pavia;
 import eu.ec2u.data.terms.EC2U;
@@ -33,10 +36,9 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.*;
-import static com.metreeca.json.shifts.Seq.seq;
-import static com.metreeca.xml.formats.HTMLFormat.html;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.*;
+import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
@@ -97,7 +99,7 @@ public final class EventsPaviaCity implements Runnable {
                         )
                 )
 
-                .optMap(new GET<>(html()))
+                .optMap(new GET<>(new HTML()))
                 .flatMap(new Microdata())
                 .batch(0)
 
@@ -107,7 +109,7 @@ public final class EventsPaviaCity implements Runnable {
 
                 .flatMap(url -> Xtream.of(url)
 
-                        .optMap(new GET<>(html()))
+                        .optMap(new GET<>(new HTML()))
                         .flatMap(new Microdata())
 
                         .map(new Normalize(

@@ -16,20 +16,20 @@
 
 package eu.ec2u.data.terms;
 
-import com.metreeca.json.Shape;
+import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
-import static com.metreeca.json.Shape.multiple;
-import static com.metreeca.json.Shape.optional;
-import static com.metreeca.json.Values.IRIType;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.shapes.And.and;
-import static com.metreeca.json.shapes.Datatype.datatype;
-import static com.metreeca.json.shapes.Field.field;
-import static com.metreeca.json.shapes.Or.or;
+import static com.metreeca.link.Shape.multiple;
+import static com.metreeca.link.Shape.optional;
+import static com.metreeca.link.Values.IRIType;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.shapes.And.and;
+import static com.metreeca.link.shapes.Datatype.datatype;
+import static com.metreeca.link.shapes.Field.field;
+import static com.metreeca.link.shapes.Or.or;
 
 import static eu.ec2u.data.terms.EC2U.Reference;
 import static eu.ec2u.data.terms.EC2U.multilingual;
@@ -72,7 +72,6 @@ public final class Schema {
     public static final IRI image=term("image");
     public static final IRI description=term("description");
     public static final IRI disambiguatingDescription=term("disambiguatingDescription");
-
 
 
     /**

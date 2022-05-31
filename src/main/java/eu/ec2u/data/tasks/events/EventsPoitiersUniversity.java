@@ -18,12 +18,15 @@ package eu.ec2u.data.tasks.events;
 
 import com.metreeca.core.Identifiers;
 import com.metreeca.core.Strings;
-import com.metreeca.json.Frame;
-import com.metreeca.json.Values;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
+import com.metreeca.http.Xtream;
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
+import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.actions.XPath;
+import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.cities.Poitiers;
 import eu.ec2u.data.terms.EC2U;
@@ -31,8 +34,6 @@ import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.RSS;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -43,10 +44,9 @@ import java.util.Optional;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.TextLength;
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
-import static com.metreeca.xml.formats.XMLFormat.xml;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
@@ -120,82 +120,78 @@ public final class EventsPoitiersUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Element> crawl(final Instant synced) {
+    private Xtream<XPath> crawl(final Instant synced) {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://www.univ-poitiers.fr/feed/ec2u")
                 )
 
-                .optMap(new GET<>(xml()))
+                .optMap(new GET<>(new XML()))
 
-                .flatMap(new XPath<>(xpath -> xpath.elements("/rss/channel/item")));
+                .map(XPath::new).flatMap(xpath -> xpath.paths("/rss/channel/item"));
     }
 
-    private Frame event(final Node node) {
+    private Frame event(final XPath item) {
 
-        return new XPath<>(item -> {
+        final Optional<IRI> link=item.link("link")
+                .map(Values::iri);
 
-            final Optional<IRI> link=item.link("link")
-                    .map(Values::iri);
+        final Optional<Literal> pubDate=RSS.pubDate(item).map(Values::literal);
 
-            final Optional<Literal> pubDate=RSS.pubDate(item).map(Values::literal);
+        final Optional<Value> label=item.string("title")
+                .map(text -> Strings.clip(text, TextLength))
+                .map(text -> literal(text, Poitiers.Language));
 
-            final Optional<Value> label=item.string("title")
-                    .map(text -> Strings.clip(text, TextLength))
-                    .map(text -> literal(text, Poitiers.Language));
+        final Optional<String> description=item.string("content:encoded")
+                .map(Untag::untag)
+                .or(() -> item.string("description"));
 
-            final Optional<String> description=item.string("content:encoded")
-                    .map(Untag::untag)
-                    .or(() -> item.string("description"));
+        final Optional<Value> brief=description
+                .map(text -> Strings.clip(text, TextLength))
+                .map(text -> literal(text, Poitiers.Language));
 
-            final Optional<Value> brief=description
-                    .map(text -> Strings.clip(text, TextLength))
-                    .map(text -> literal(text, Poitiers.Language));
+        return frame(iri(EC2U.events,
+                link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
+        ))
 
-            return frame(iri(EC2U.events,
-                    link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
-            ))
+                .values(RDF.TYPE, EC2U.Event, Schema.Event)
+                .value(RDFS.LABEL, label)
+                .value(RDFS.COMMENT, brief)
 
-                    .values(RDF.TYPE, EC2U.Event, Schema.Event)
-                    .value(RDFS.LABEL, label)
-                    .value(RDFS.COMMENT, brief)
+                .value(EC2U.university, Poitiers.University)
 
-                    .value(EC2U.university, Poitiers.University)
+                .frame(DCTERMS.PUBLISHER, Publisher)
+                .value(DCTERMS.SOURCE, link)
 
-                    .frame(DCTERMS.PUBLISHER, Publisher)
-                    .value(DCTERMS.SOURCE, link)
+                .value(DCTERMS.ISSUED, pubDate)
+                .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
 
-                    .value(DCTERMS.ISSUED, pubDate)
-                    .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
+                .frames(DCTERMS.SUBJECT, item.strings("category")
+                        .map(c -> frame(iri(EC2U.concepts, md5(c)))
+                                .value(RDF.TYPE, SKOS.CONCEPT)
+                                .value(RDFS.LABEL, literal(c, Poitiers.Language))
+                                .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))
+                        )
+                )
 
-                    .frames(DCTERMS.SUBJECT, item.strings("category")
-                            .map(c -> frame(iri(EC2U.concepts, md5(c)))
-                                    .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .value(RDFS.LABEL, literal(c, Poitiers.Language))
-                                    .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))
-                            )
-                    )
-
-                    .value(Schema.url, link)
-                    .value(Schema.name, label)
+                .value(Schema.url, link)
+                .value(Schema.name, label)
                     .value(Schema.image, item.link("image").map(Values::iri))
-                    .value(Schema.disambiguatingDescription, brief)
-                    .value(Schema.description, description.map(value -> literal(value, Poitiers.Language)))
+                .value(Schema.disambiguatingDescription, brief)
+                .value(Schema.description, description.map(value -> literal(value, Poitiers.Language)))
 
-                    .value(Schema.startDate, startDate(item))
-                    .value(Schema.endDate, endDate(item))
+                .value(Schema.startDate, startDate(item))
+                .value(Schema.endDate, endDate(item))
 
-                    .frame(Schema.location, location(item));
-
-        }).apply(node);
+                .frame(Schema.location, location(item));
 
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Optional<Literal> startDate(final XPath.Processor item) {
+    private Optional<Literal> startDate(final XPath item) {
 
         final Optional<LocalDate> dateFrom=item.string("date_from")
                 .map(EU_DATE::parse)
@@ -214,7 +210,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .map(Values::literal);
     }
 
-    private Optional<Literal> endDate(final XPath.Processor item) {
+    private Optional<Literal> endDate(final XPath item) {
 
         final Optional<LocalDate> dateTo=item.string("date_to")
                 .map(EU_DATE::parse)
@@ -232,7 +228,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .map(Values::literal);
     }
 
-    private Optional<Frame> location(final XPath.Processor item) {
+    private Optional<Frame> location(final XPath item) {
 
         return item.string("place/place_name").filter(not(String::isEmpty))
 
