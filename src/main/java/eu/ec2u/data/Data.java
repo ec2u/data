@@ -27,6 +27,7 @@ import com.metreeca.http.services.Fetcher.URLFetcher;
 import com.metreeca.rdf4j.handlers.Graphs;
 import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
+import com.metreeca.rdf4j.services.GraphEngine;
 
 import eu.ec2u.data.ports.*;
 import eu.ec2u.data.terms.EC2U;
@@ -45,6 +46,7 @@ import static com.metreeca.http.services.Fetcher.fetcher;
 import static com.metreeca.http.services.Logger.Level.debug;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.jsonld.codecs.JSONLD.keywords;
+import static com.metreeca.jsonld.services.Engine.engine;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static java.lang.String.format;
@@ -54,7 +56,7 @@ public final class Data implements Runnable {
 
     private static final boolean Production=GCPServer.production();
 
-    private static final String GraphDBRepository="http://34.79.93.233/repositories/work";
+    private static final String GraphDBRepository="http://34.79.93.233/repositories/data-work";
     private static final String GraphDBUsr="server";
     private static final String GraphDBPwd="graphdb-server-pwd";
 
@@ -76,7 +78,7 @@ public final class Data implements Runnable {
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
 
                 .set(graph(), () -> new Graph(repository()))
-                //.set(engine(), GraphEngine::new)
+                .set(engine(), GraphEngine::new)
 
                 .set(keywords(), () -> EC2U.Keywords);
     }
