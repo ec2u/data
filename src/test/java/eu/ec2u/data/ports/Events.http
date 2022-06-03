@@ -4,8 +4,21 @@ GET https://data.ec2u.eu/events/*?.limit=10
 
 ### Work
 
-GET https://work-dot-ec2u-data.ey.r.appspot.com/events/*?.limit=10
+GET https://work-dot-ec2u-data.ey.r.appspot.com/events/*?.offset=0&.limit=100&>updated=2022-06-03T00:00:00Z
 
 ### Local
 
 GET http://localhost:8080/events/*?.offset=0&.limit=100&>updated=2022-05-10T00:04:13.048Z
+
+
+###
+
+GET https://data.ec2u.eu/events/003a710902cb4530bcd50b06b03b2087
+
+### Work
+
+GET https://work-dot-ec2u-data.ey.r.appspot.com/events/003a710902cb4530bcd50b06b03b2087
+
+### Work
+
+GET http://localhost:8080/events/003a710902cb4530bcd50b06b03b2087
