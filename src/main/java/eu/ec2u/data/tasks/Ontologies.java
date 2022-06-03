@@ -4,13 +4,13 @@
 
 package eu.ec2u.data.tasks;
 
+import com.metreeca.http.Xtream;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
-import com.metreeca.rest.Xtream;
 
 import eu.ec2u.data.terms.EC2U;
 
-import static com.metreeca.rest.Toolbox.resource;
+import static com.metreeca.core.Resources.resource;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 

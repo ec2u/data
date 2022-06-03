@@ -16,10 +16,10 @@
 
 package eu.ec2u.data.tasks.events;
 
+import com.metreeca.http.Xtream;
+import com.metreeca.http.services.Logger;
 import com.metreeca.rdf4j.actions.TupleQuery;
 import com.metreeca.rdf4j.services.Graph;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.services.Logger;
 
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.Literal;
@@ -29,10 +29,10 @@ import java.time.Duration;
 import java.time.Instant;
 
 import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.json.Values.literal;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
-import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.services.Logger.logger;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;

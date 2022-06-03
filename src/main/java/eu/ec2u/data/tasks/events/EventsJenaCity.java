@@ -16,14 +16,17 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.json.Frame;
-import com.metreeca.json.Values;
-import com.metreeca.rest.Request;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
-import com.metreeca.rest.formats.JSONFormat;
+import com.metreeca.http.*;
+import com.metreeca.http.actions.Fetch;
+import com.metreeca.http.actions.GET;
+import com.metreeca.json.JSONPath;
+import com.metreeca.json.codecs.JSON;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
+import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.actions.XPath;
+import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.cities.Jena;
 import eu.ec2u.data.terms.EC2U;
@@ -42,14 +45,13 @@ import javax.json.Json;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.clip;
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
-import static com.metreeca.json.shifts.Seq.seq;
-import static com.metreeca.rest.Request.POST;
-import static com.metreeca.rest.formats.InputFormat.input;
-import static com.metreeca.rest.formats.JSONFormat.json;
-import static com.metreeca.xml.formats.HTMLFormat.html;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.Request.POST;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
+import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.upload;
@@ -105,9 +107,9 @@ public final class EventsJenaCity implements Runnable {
                                 .method(POST)
                                 .base("https://www.jena-veranstaltungen.de/")
                                 .query("ndssolr=search")
-                                .header("Content-Type", JSONFormat.MIME)
-                                .header("Accept", JSONFormat.MIME)
-                                .body(input(), () -> new ByteArrayInputStream(Json.createObjectBuilder() // !!! review
+                                .header("Content-Type", JSON.MIME)
+                                .header("Accept", JSON.MIME)
+                                .input(() -> new ByteArrayInputStream(Json.createObjectBuilder() // !!! review
                                         .add("q", "*")
                                         .add("selectedFilter", Json.createArrayBuilder()
                                                 .add("tx_ndsdestinationdataevent_domain_model_event")
@@ -120,9 +122,22 @@ public final class EventsJenaCity implements Runnable {
                         )
 
                         .optMap(new Fetch())
-                        .optMap(response -> response.body(json()).get())
 
-                        .map(JSONPath.Processor::new).map(path -> Map.entry(
+                        .optMap(response -> {
+                            try {
+
+                                return Optional.of(response.body(new JSON()));
+
+                            } catch ( final CodecException e ) {
+
+                                service(logger()).error(this, "unable to parse message body", e);
+
+                                return Optional.empty();
+
+                            }
+                        })
+
+                        .map(JSONPath::new).map(path -> Map.entry(
 
                                 path.values("docs.*").findAny().isPresent() ? Stream.of(page+1) : Stream.empty(),
                                 path.strings("docs.*.url")
@@ -133,11 +148,11 @@ public final class EventsJenaCity implements Runnable {
 
                 // extract JSON-LD event descriptions
 
-                .optMap(new GET<>(html()))
+                .optMap(new GET<>(new HTML()))
 
-                .optMap(new XPath<>(xpath -> xpath
+                .map(XPath::new).optMap(xpath -> xpath
                         .string("//script[@type='application/ld+json']")
-                ))
+                )
 
                 .flatMap(json -> jsonld(json, Event));
     }

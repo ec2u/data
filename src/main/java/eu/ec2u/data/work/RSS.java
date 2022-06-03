@@ -16,11 +16,11 @@
 
 package eu.ec2u.data.work;
 
-import com.metreeca.json.Frame;
-import com.metreeca.json.Values;
-import com.metreeca.rest.Xtream;
+import com.metreeca.http.Xtream;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
+import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.actions.XPath;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.w3c.dom.Document;
@@ -31,8 +31,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.*;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.*;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
@@ -47,7 +47,7 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
     public static final IRI Encoded=iri("http://purl.org/rss/1.0/modules/content/", "encoded");
 
 
-    public static Optional<OffsetDateTime> pubDate(final XPath.Processor item) {
+    public static Optional<OffsetDateTime> pubDate(final XPath item) {
         return item.string("pubDate")
                 .map(RFC_1123_DATE_TIME::parse)
                 .map(OffsetDateTime::from)
@@ -66,9 +66,10 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
 
         return Xtream.of(document)
 
-                .flatMap(new XPath<>(xpath -> xpath.elements("/rss/channel/item")))
+                .map(XPath::new)
+                .flatMap(xpath -> xpath.paths("/rss/channel/item"))
 
-                .map(new XPath<>(item -> frame(bnode())
+                .map(item -> frame(bnode())
 
                         .string(Title, item.string("title"))
                         .value(Link, item.link("link").map(Values::iri))
@@ -83,8 +84,7 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
 
                         .string(Description, item.string("description"))
                         .string(Encoded, item.string("content:encoded").map(Untag::untag))
-
-                ));
+                );
 
     }
 

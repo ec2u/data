@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,13 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.tasks;
 
-import com.metreeca.json.Values;
+import com.metreeca.http.Xtream;
+import com.metreeca.link.Values;
 import com.metreeca.open.actions.WikidataMirror;
-import com.metreeca.rest.Xtream;
 
 import eu.ec2u.data.cities.*;
 import eu.ec2u.data.terms.EC2U;

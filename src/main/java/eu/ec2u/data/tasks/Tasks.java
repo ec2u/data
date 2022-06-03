@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.tasks;
 
-import com.metreeca.json.Frame;
-import com.metreeca.rest.Toolbox;
-import com.metreeca.rest.Xtream;
+import com.metreeca.http.Locator;
+import com.metreeca.http.Xtream;
+import com.metreeca.link.Frame;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -29,12 +29,12 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.metreeca.core.Lambdas.task;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Logger.time;
 import static com.metreeca.rdf4j.services.Graph.graph;
-import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.services.Logger.logger;
-import static com.metreeca.rest.services.Logger.time;
 
-import static eu.ec2u.data.Data.toolbox;
+import static eu.ec2u.data.Data.services;
 
 import static java.util.stream.Collectors.toList;
 
@@ -44,7 +44,7 @@ public final class Tasks {
 
 
     public static void exec(final Runnable... tasks) {
-        toolbox(new Toolbox()).exec(tasks).clear();
+        services(new Locator()).exec(tasks).clear();
     }
 
 

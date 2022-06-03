@@ -4,16 +4,16 @@
 
 package eu.ec2u.data.tasks;
 
+import com.metreeca.http.Xtream;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
-import com.metreeca.rest.Xtream;
 
 import eu.ec2u.data.terms.EC2U;
 
 import static com.metreeca.core.Lambdas.task;
+import static com.metreeca.http.Locator.service;
 import static com.metreeca.rdf4j.services.Graph.graph;
-import static com.metreeca.rest.Toolbox.service;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 

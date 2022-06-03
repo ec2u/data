@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2021-2022 EC2U Consortium
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,32 +12,33 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 package eu.ec2u.data.ports;
 
-import com.metreeca.json.Shape;
-import com.metreeca.rest.Handler;
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.jsonld.handlers.Driver;
+import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.Shape;
 
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import static com.metreeca.json.Shape.optional;
-import static com.metreeca.json.Shape.required;
-import static com.metreeca.json.Values.IRIType;
-import static com.metreeca.json.shapes.Clazz.clazz;
-import static com.metreeca.json.shapes.Datatype.datatype;
-import static com.metreeca.json.shapes.Field.field;
-import static com.metreeca.json.shapes.Guard.*;
-import static com.metreeca.json.shapes.Link.link;
-import static com.metreeca.rest.handlers.Router.router;
-import static com.metreeca.rest.operators.Relator.relator;
-import static com.metreeca.rest.wrappers.Driver.driver;
+import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Shape.optional;
+import static com.metreeca.link.Shape.required;
+import static com.metreeca.link.Values.IRIType;
+import static com.metreeca.link.shapes.Clazz.clazz;
+import static com.metreeca.link.shapes.Datatype.datatype;
+import static com.metreeca.link.shapes.Field.field;
+import static com.metreeca.link.shapes.Guard.*;
+import static com.metreeca.link.shapes.Link.link;
 
 import static eu.ec2u.data.terms.EC2U.multilingual;
 
 
-public final class Universities extends Handler.Base {
+public final class Universities extends Delegator {
 
 
     public static Shape University() {
@@ -77,17 +78,15 @@ public final class Universities extends Handler.Base {
 
 
     public Universities() {
-        delegate(driver(University()).wrap(router()
+        delegate(handler(new Driver(University()), new Router()
 
-                .path("/", router()
-                        .get(relator())
+                .path("/", new Router()
+                        .get(new Relator())
                 )
 
-                .path("/{id}", router()
-                        .get(relator())
-                )
-
-        ));
+                .path("/{id}", new Router()
+                        .get(new Relator())
+                )));
     }
 
 }

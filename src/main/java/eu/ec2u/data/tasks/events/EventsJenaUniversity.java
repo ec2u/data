@@ -16,32 +16,35 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.json.Frame;
-import com.metreeca.json.Values;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.GET;
-import com.metreeca.rest.actions.Validate;
-import com.metreeca.xml.actions.XPath;
+import com.metreeca.http.CodecException;
+import com.metreeca.http.Xtream;
+import com.metreeca.http.actions.GET;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
+import com.metreeca.xml.XPath;
+import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.cities.Jena;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.Work;
 import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.time.*;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.*;
-import static com.metreeca.rdf.formats.RDFFormat.rdf;
-import static com.metreeca.rest.Toolbox.service;
-import static com.metreeca.rest.services.Logger.logger;
-import static com.metreeca.xml.formats.HTMLFormat.html;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.*;
+import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.schemas.Schema.normalize;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
@@ -133,57 +136,61 @@ public final class EventsJenaUniversity implements Runnable {
                 // paginate through catalog
 
                 .loop(batch -> Xtream.of(batch)
-                        .optMap(new GET<>(html()))
-                        .filter(new XPath<>(xpath -> xpath
+                        .optMap(new GET<>(new HTML()))
+
+                        .filter(document -> new XPath(document)
 
                                 // ;( pagination links are disabled under javascript control: test for page links
 
                                 .link("//div[contains(@class, 'entry_wrapper')]//a[@class='link']/@href")
                                 .isPresent()
 
-                        )::apply)
-                        .flatMap(new XPath<>(xpath -> xpath
+                        )
+
+                        .map(XPath::new)
+                        .flatMap(xpath -> xpath
                                 .links("//div[@class='pagination']//li[last()]/a/@href")
-                        ))
+                        )
                 )
 
                 // extract detail links
 
-                .optMap(new GET<>(html()))
+                .optMap(new GET<>(new HTML()))
 
-                .flatMap(new XPath<>(xpath -> xpath
+                .map(XPath::new).flatMap(xpath -> xpath
                         .links("//div[contains(@class, 'entry_wrapper')]//a[@class='link']/@href")
-                ))
+                )
 
                 // extract JSON-LD
 
-                .optMap(new GET<>(html()))
+                .optMap(new GET<>(new HTML()))
 
-                .optMap(new XPath<>(xpath -> xpath
+                .map(XPath::new).optMap(xpath -> xpath
                         .string("//script[@type='application/ld+json']")
-                ))
+                )
 
-                .flatMap(json -> rdf(new ByteArrayInputStream(json.getBytes(UTF_8)), null, new JSONLDParser())
+                .flatMap(json -> {
 
-                        .map(model -> model.stream()
-                                .map(com.metreeca.rdf.schemas.Schema::normalize)
-                                .collect(toList())
-                        )
+                            try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
 
-                        .fold(
+                                final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
 
-                                error -> {
+                                return frame(Schema.Event, model)
+                                        .frames(inverse(RDF.TYPE));
 
-                                    service(logger()).warning(this, error.toString());
+                            } catch ( final CodecException e ) {
 
-                                    return Stream.empty();
+                                service(logger()).warning(this, e.getMessage());
 
-                                },
+                                return Stream.empty();
 
-                                model -> frame(Schema.Event, model)
-                                        .frames(inverse(RDF.TYPE))
+                            } catch ( final IOException unexpected ) {
 
-                        )
+                                throw new UncheckedIOException(unexpected);
+
+                            }
+
+                        }
 
                 );
 

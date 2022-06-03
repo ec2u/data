@@ -16,21 +16,15 @@
 
 package eu.ec2u.data.work.formats;
 
-import com.metreeca.rest.*;
-import com.metreeca.rest.formats.InputFormat;
-import com.metreeca.rest.formats.OutputFormat;
+import com.metreeca.http.*;
 
 import net.fortuna.ical4j.data.*;
 import net.fortuna.ical4j.model.Calendar;
 
 import java.io.*;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
-
-import static com.metreeca.rest.MessageException.status;
-import static com.metreeca.rest.Response.BadRequest;
-import static com.metreeca.rest.Response.UnsupportedMediaType;
-import static com.metreeca.rest.formats.InputFormat.input;
-import static com.metreeca.rest.formats.OutputFormat.output;
 
 
 /**
@@ -39,7 +33,7 @@ import static com.metreeca.rest.formats.OutputFormat.output;
  * @see <a href="https://www.rfc-editor.org/rfc/rfc5545.html">RFC 5545 - Internet Calendaring and Scheduling Core Object
  * Specification (iCalendar)</a>
  */
-public final class ICSFormat extends Format<Calendar> {
+public final class ICSFormat implements Codec<Calendar> {
 
     /**
      * The default MIME type for iCalendar message bodies ({@value}).
@@ -73,30 +67,34 @@ public final class ICSFormat extends Format<Calendar> {
         return MIME;
     }
 
+    @Override public Class<Calendar> type() {
+        return Calendar.class;
+    }
+
+
     /**
-     * Decodes the iCalendar {@code message} body from the input stream supplied by the {@code message} {@link
-     * InputFormat} body, if one is available and the {@code message} {@code Content-Type} header is either missing or
-     * matched by {@link #MIMEPattern}
+     * @return the iCalendar payload decoded from the raw {@code message} {@linkplain Message#input()} or an empty
+     * optional if the {@code "Content-Type"} {@code message} header is not matched by {@link #MIMEPattern}
      */
-    @Override public Either<MessageException, Calendar> decode(final Message<?> message) {
+    @Override public Optional<Calendar> decode(final Message<?> message) throws CodecException, UncheckedIOException {
         return message
 
                 .header("Content-Type")
 
-                .filter(MIMEPattern.asPredicate().or(String::isEmpty))
+                .filter(MIMEPattern.asPredicate())
 
-                .map(type -> message.body(input()).flatMap(source -> {
+                .map(type -> {
 
                     try (
-                            final InputStream input=source.get();
+                            final InputStream input=message.input().get();
                             final Reader reader=new InputStreamReader(input, message.charset())
                     ) {
 
-                        return Either.Right(new CalendarBuilder().build(input));
+                        return new CalendarBuilder().build(input);
 
                     } catch ( final UnsupportedEncodingException|ParserException e ) {
 
-                        return Either.Left(status(BadRequest, e));
+                        throw new CodecException(Response.BadRequest, e.getMessage());
 
                     } catch ( final IOException e ) {
 
@@ -104,21 +102,21 @@ public final class ICSFormat extends Format<Calendar> {
 
                     }
 
-                }))
-
-                .orElseGet(() -> Either.Left(status(UnsupportedMediaType, "no iCalendar body")));
+                });
     }
 
     /**
-     * Configures {@code message} {@code Content-Type} header to {@value #MIME}, unless already defined, and encodes the
-     * iCalendar {@code value} into the output stream accepted by the {@code message} {@link OutputFormat} body
+     * @return the target {@code message} with its {@code "Content-Type"} header configured to {@value #MIME}, unless
+     * already defined, and its raw {@linkplain Message#output(Consumer) output} configured to return the iCalendar
+     * {@code value}
      */
+
     @Override public <M extends Message<M>> M encode(final M message, final Calendar value) {
         return message
 
-                .header("~Content-Type", MIME)
+                .header("Content-Type", message.header("Content-Type").orElse(MIME))
 
-                .body(output(), output -> {
+                .output(output -> {
                     try ( final Writer writer=new OutputStreamWriter(output, message.charset()) ) {
 
                         new CalendarOutputter().output(value, writer);

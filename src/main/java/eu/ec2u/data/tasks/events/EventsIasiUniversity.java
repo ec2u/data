@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.json.Frame;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.Validate;
+import com.metreeca.http.Xtream;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.cities.Iasi;
 import eu.ec2u.data.terms.EC2U;
@@ -27,9 +27,9 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.ZonedDateTime;
 
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;

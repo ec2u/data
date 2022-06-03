@@ -17,12 +17,15 @@
 package eu.ec2u.data.tasks.events;
 
 import com.metreeca.core.Strings;
-import com.metreeca.json.Frame;
-import com.metreeca.json.Values;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
+import com.metreeca.http.Xtream;
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
+import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.actions.XPath;
+import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.cities.Salamanca;
 import eu.ec2u.data.terms.EC2U;
@@ -36,10 +39,9 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
-import static com.metreeca.xml.formats.XMLFormat.xml;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
@@ -51,7 +53,7 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsSalamancaCitySACIS implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda"
-            + "-salamanca/"))
+            +"-salamanca/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
@@ -84,22 +86,23 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath.Processor> crawl(final Instant synced) {
+    private Xtream<XPath> crawl(final Instant synced) {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://www.salamanca.com/events/feed/")
                 )
 
-                .optMap(new GET<>(xml()))
+                .optMap(new GET<>(new XML()))
 
-                .flatMap(new XPath<>(xml -> xml.paths("/rss/channel/item")));
+                .map(XPath::new)
+                .flatMap(xml -> xml.paths("/rss/channel/item"));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Optional<Frame> event(final XPath.Processor item) {
+    private Optional<Frame> event(final XPath item) {
 
         return item.link("link").map(url -> {
 

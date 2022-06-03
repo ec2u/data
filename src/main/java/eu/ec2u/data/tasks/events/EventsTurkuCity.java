@@ -16,10 +16,14 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.json.Frame;
-import com.metreeca.json.Values;
-import com.metreeca.rest.Xtream;
-import com.metreeca.rest.actions.*;
+import com.metreeca.http.Xtream;
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.json.JSONPath;
+import com.metreeca.json.codecs.JSON;
+import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
 
 import eu.ec2u.data.cities.Turku;
 import eu.ec2u.data.terms.EC2U;
@@ -36,11 +40,10 @@ import java.util.stream.Stream;
 import javax.json.JsonValue;
 
 import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.json.Frame.frame;
-import static com.metreeca.json.Values.iri;
-import static com.metreeca.json.Values.literal;
-import static com.metreeca.json.shifts.Seq.seq;
-import static com.metreeca.rest.formats.JSONFormat.json;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Values.literal;
+import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
@@ -92,9 +95,10 @@ public final class EventsTurkuCity implements Runnable {
                 .map(Value::stringValue)
                 .distinct()
 
-                .optMap(new GET<>(json()))
+                .optMap(new GET<>(new JSON()))
 
-                .map(new JSONPath<>(this::location))
+                .map(JSONPath::new)
+                .map(this::location)
 
                 .optMap(new Validate(Schema.Location()))
 
@@ -120,20 +124,22 @@ public final class EventsTurkuCity implements Runnable {
                 )
 
                 .loop(batch -> Xtream.of(batch)
-                        .optMap(new GET<>(json()))
-                        .optMap(new JSONPath<>(json -> json.string("meta.next")))
+                        .optMap(new GET<>(new JSON()))
+                        .map(JSONPath::new)
+                        .optMap(json -> json.string("meta.next"))
                 )
 
-                .optMap(new GET<>(json()))
+                .optMap(new GET<>(new JSON()))
 
-                .flatMap(new JSONPath<>(json -> json.values("data.*")));
+                .map(JSONPath::new)
+                .flatMap(json -> json.values("data.*"));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<Frame> event(final JsonValue value) {
-        return Xtream.of(value).map(new JSONPath<>(json -> {
+        return Xtream.of(value).map(JSONPath::new).map(json -> {
 
             final String id=json.string("@id").orElseThrow();
 
@@ -201,10 +207,10 @@ public final class EventsTurkuCity implements Runnable {
 
                     .values(Schema.audience, json.strings("audience.*.@id").map(Values::iri)); // !!! mapping
 
-        }));
+        });
     }
 
-    private Frame location(final JSONPath.Processor json) {
+    private Frame location(final JSONPath json) {
 
         final String id=json.string("@id").orElseThrow();
 
@@ -232,7 +238,7 @@ public final class EventsTurkuCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Set<Literal> local(final Stream<Map.Entry<String, JSONPath.Processor>> values) {
+    private Set<Literal> local(final Stream<Map.Entry<String, JSONPath>> values) {
         return values
                 .filter(entry -> EC2U.Languages.contains(entry.getKey()))
                 .map(this::local)
@@ -241,7 +247,7 @@ public final class EventsTurkuCity implements Runnable {
                 .collect(toSet());
     }
 
-    private Optional<Literal> local(final Map.Entry<String, JSONPath.Processor> entry) {
+    private Optional<Literal> local(final Map.Entry<String, JSONPath> entry) {
         return entry.getValue().string("").map(text -> literal(text, entry.getKey()));
     }
 
