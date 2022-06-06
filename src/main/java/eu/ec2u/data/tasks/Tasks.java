@@ -38,6 +38,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.services;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
@@ -64,7 +65,7 @@ public final class Tasks {
                 .count();
 
         if ( invalid != 0 ) {
-            throw new IllegalArgumentException(String.format("<%d> malformed frames in batch", invalid));
+            throw new IllegalArgumentException(format("<%d> malformed frames in batch", invalid));
         }
 
         return statements;
@@ -88,7 +89,7 @@ public final class Tasks {
 
             }));
 
-        }).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
+        }).apply(elapsed -> service(logger()).info(Tasks.class, format(
                 "updated <%d> resources in <%s> in <%d> ms", subjects.size(), context, elapsed
         )));
     }
@@ -123,7 +124,7 @@ public final class Tasks {
 
             }));
 
-        }).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
+        }).apply(elapsed -> service(logger()).info(Tasks.class, format(
                 "updated <%d> resources in <%s> in <%d> ms", batch.size(), context, elapsed
         ))));
     }

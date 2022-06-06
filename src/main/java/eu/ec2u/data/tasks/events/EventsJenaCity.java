@@ -28,7 +28,6 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.cities.Jena;
-import eu.ec2u.data.tasks.Tasks;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.*;
@@ -53,10 +52,8 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
-import static eu.ec2u.data.tasks.Tasks.exec;
-import static eu.ec2u.data.tasks.Tasks.upload;
+import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.terms.Schema.Event;
 import static eu.ec2u.data.work.JSONLD.jsonld;
 
 import static java.util.function.Predicate.not;
@@ -89,7 +86,7 @@ public final class EventsJenaCity implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        Tasks.validate(EC2U.Event, eu.ec2u.data.ports.Events.Event(), events)
+                        validate(EC2U.Event, eu.ec2u.data.ports.Events.Event(), events)
                 ));
     }
 
@@ -154,7 +151,7 @@ public final class EventsJenaCity implements Runnable {
                         .string("//script[@type='application/ld+json']")
                 )
 
-                .flatMap(json -> jsonld(json, Event));
+                .flatMap(json -> jsonld(json, Schema.Event));
     }
 
     private Optional<Frame> event(final Frame frame) {
@@ -172,9 +169,11 @@ public final class EventsJenaCity implements Runnable {
             final Optional<Literal> disambiguatingDescription=description
                     .map(literal -> literal(clip(literal.stringValue()), Jena.Language));
 
-            return frame(iri(EC2U.events, md5(url.stringValue())))
+            // repeating events are described multiple times with different start dates
 
-                    .values(RDF.TYPE, EC2U.Event, Event)
+            return frame(iri(EC2U.events, frame.skolemize(Schema.url, Schema.startDate)))
+
+                    .values(RDF.TYPE, EC2U.Event, Schema.Event)
                     .value(RDFS.LABEL, name)
                     .value(RDFS.COMMENT, disambiguatingDescription)
 
@@ -229,12 +228,12 @@ public final class EventsJenaCity implements Runnable {
         return literal(v.stringValue(), XSD.DATETIME);
     }
 
-    private Optional<Frame> location(final Frame frame, final IRI locations) {
+    private Optional<Frame> location(final Frame frame, final IRI collection) {
         return frame.value(Schema.url).or(() -> frame.value(Schema.name))
 
                 .map(Value::stringValue)
 
-                .map(id -> frame(iri(locations, md5(id.trim())))
+                .map(id -> frame(iri(collection, frame.skolemize(Schema.url, Schema.name)))
 
                         .value(RDF.TYPE, frame.value(RDF.TYPE))
                         .value(RDFS.LABEL, frame.value(Schema.name).map(v -> literal(v.stringValue(), Jena.Language)))
