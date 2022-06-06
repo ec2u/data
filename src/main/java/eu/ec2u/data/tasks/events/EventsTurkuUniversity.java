@@ -175,9 +175,6 @@ public final class EventsTurkuUniversity implements Runnable {
                 .flatMap(json -> json.paths("*"));
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private Optional<Frame> event(final JSONPath json) {
 
         final List<Literal> title=json.entries("title")
@@ -240,6 +237,9 @@ public final class EventsTurkuUniversity implements Runnable {
 
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private Optional<Frame> location(final JSONPath json) {
         return json.string("url").map(id -> {
 
@@ -273,7 +273,6 @@ public final class EventsTurkuUniversity implements Runnable {
                     );
 
         });
-
     }
 
     private Optional<Frame> organizer(final JSONPath json) {
