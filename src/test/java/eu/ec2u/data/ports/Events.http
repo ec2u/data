@@ -1,24 +1,37 @@
-### Main
+### Main Catalog
 
-GET https://data.ec2u.eu/events/*?.limit=10
+GET https://data.ec2u.eu/events/events/
 
-### Work
+### Main Details
 
-GET https://work-dot-ec2u-data.ey.r.appspot.com/events/*?.offset=0&.limit=100&>updated=2022-06-03T00:00:00Z
+GET https://data.ec2u.eu/events/events/55bb5cf18eab7e3dba830b53a022dc26
 
-### Local
+### Main Bulk
 
-GET http://localhost:8080/events/*?.offset=0&.limit=100&>updated=2022-05-10T00:04:13.048Z
+GET https://data.ec2u.eu/events/~?.offset=0&.limit=100&>modified=2022-05-31T00:04:13.048Z
 
 
-###
+### Work Catalog
 
-GET https://data.ec2u.eu/events/003a710902cb4530bcd50b06b03b2087
+GET https://work-dot-ec2u-data.ey.r.appspot.com/events/events/
 
-### Work
+### Work Details
 
-GET https://work-dot-ec2u-data.ey.r.appspot.com/events/003a710902cb4530bcd50b06b03b2087
+GET https://work-dot-ec2u-data.ey.r.appspot.com/events/events/55bb5cf18eab7e3dba830b53a022dc26
 
-### Work
+### Work Bulk
 
-GET http://localhost:8080/events/003a710902cb4530bcd50b06b03b2087
+GET https://work-dot-ec2u-data.ey.r.appspot.com/events/~?.offset=0&.limit=100&>modified=2022-05-31T00:04:13.048Z
+
+
+### Local Catalog
+
+GET http://localhost:8080/events/
+
+### Local Details
+
+GET http://localhost:8080/events/55bb5cf18eab7e3dba830b53a022dc26
+
+### Local Bulk
+
+GET http://localhost:8080/events/~?.offset=0&.limit=100&>updated=2022-05-31T00:04:13.048Z
