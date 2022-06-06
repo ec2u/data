@@ -86,7 +86,11 @@ public final class Events extends Delegator {
                         .get(new Relator())
                 )
 
-                .path("/*", new Router()
+                .path("/~", new Router()
+                        .get(this::bulk)
+                )
+
+                .path("/*", new Router() // !!! remove
                         .get(this::bulk)
                 )
 
@@ -113,7 +117,8 @@ public final class Events extends Delegator {
                 .filter(v -> v > 0) // 0 => no limit
                 .orElse(Long.MAX_VALUE);
 
-        final Instant fence=request.parameter(">updated")
+        final Instant fence=request.parameter(">modified")
+                .or(() -> request.parameter(">updated")) // !!! remove
                 .map(guarded(ISO_ZONED_DATE_TIME::parse))
                 .map(Instant::from)
                 .orElseGet(() -> Instant.ofEpochMilli(0));
