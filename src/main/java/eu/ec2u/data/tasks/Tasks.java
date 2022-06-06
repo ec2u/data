@@ -18,25 +18,28 @@ package eu.ec2u.data.tasks;
 
 import com.metreeca.http.Locator;
 import com.metreeca.http.Xtream;
+import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
+import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.io.*;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static com.metreeca.core.Lambdas.task;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.inverse;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.services;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 public final class Tasks {
 
@@ -48,11 +51,56 @@ public final class Tasks {
     }
 
 
-    public static void upload(final IRI context, final Collection<Frame> frames) {
-        upload(context, Xtream.from(frames));
+    public static Collection<Statement> validate(final IRI type, final Shape shape, final Stream<Frame> frames) {
+
+        final Collection<Statement> statements=frames
+                .flatMap(frame -> frame.model().stream())
+                .collect(toSet());
+
+        final long invalid=frame(type, statements)
+                .frames(inverse(RDF.TYPE))
+                .map(new Validate(shape))
+                .filter(Optional::isEmpty)
+                .count();
+
+        if ( invalid != 0 ) {
+            throw new IllegalArgumentException(String.format("<%d> malformed frames in batch", invalid));
+        }
+
+        return statements;
     }
 
-    public static void upload(final IRI context, final Xtream<Frame> frames) {
+    public static void upload(final IRI context, final Collection<Statement> model) {
+
+        final Set<Resource> subjects=model.stream()
+                .map(Statement::getSubject)
+                .collect(toSet());
+
+        time(() -> {
+
+            service(graph()).update(task(connection -> {
+
+                subjects.forEach(subject ->
+                        connection.remove(subject, null, null, context)
+                );
+
+                connection.add(model, context);
+
+            }));
+
+        }).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
+                "updated <%d> resources in <%s> in <%d> ms", subjects.size(), context, elapsed
+        )));
+    }
+
+
+    //// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void _upload(final IRI context, final Collection<Frame> frames) {
+        _upload(context, Xtream.from(frames));
+    }
+
+    public static void _upload(final IRI context, final Xtream<Frame> frames) {
         frames.batch(1000).forEach(batch -> time(() -> {
 
             final List<Resource> subjects=batch.stream()
@@ -78,25 +126,6 @@ public final class Tasks {
         }).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
                 "updated <%d> resources in <%s> in <%d> ms", batch.size(), context, elapsed
         ))));
-    }
-
-
-    public static String format(final Frame frame) {
-        return format(frame.model());
-    }
-
-    public static String format(final Iterable<Statement> model) {
-        try ( final StringWriter writer=new StringWriter() ) {
-
-            Rio.write(model, writer, RDFFormat.TURTLE);
-
-            return writer.toString();
-
-        } catch ( final IOException e ) {
-
-            throw new UncheckedIOException(e);
-
-        }
     }
 
 

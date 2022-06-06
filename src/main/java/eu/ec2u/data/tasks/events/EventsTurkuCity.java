@@ -26,6 +26,7 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data.cities.Turku;
+import eu.ec2u.data.tasks.Tasks;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.Work;
@@ -47,7 +48,6 @@ import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.exec;
-import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
 import static java.time.ZoneOffset.UTC;
@@ -104,8 +104,8 @@ public final class EventsTurkuCity implements Runnable {
 
                 .collect(toList());
 
-        upload(EC2U.events, events);
-        upload(EC2U.locations, locations);
+        Tasks._upload(EC2U.events, events);
+        Tasks._upload(EC2U.locations, locations);
     }
 
 

@@ -47,8 +47,8 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
 import static eu.ec2u.data.ports.Events.Event;
+import static eu.ec2u.data.tasks.Tasks._upload;
 import static eu.ec2u.data.tasks.Tasks.exec;
-import static eu.ec2u.data.tasks.Tasks.upload;
 import static eu.ec2u.data.tasks.events.Events.synced;
 import static eu.ec2u.data.work.Work.location;
 
@@ -122,7 +122,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .optMap(new Validate(Event()))
 
-                .sink(events -> upload(EC2U.events, events));
+                .sink(events -> _upload(EC2U.events, events));
     }
 
 

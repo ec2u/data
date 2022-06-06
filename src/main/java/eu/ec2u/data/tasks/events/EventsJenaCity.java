@@ -21,7 +21,6 @@ import com.metreeca.http.actions.Fetch;
 import com.metreeca.http.actions.GET;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
-import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.xml.XPath;
@@ -29,6 +28,7 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.cities.Jena;
+import eu.ec2u.data.tasks.Tasks;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.*;
@@ -88,9 +88,9 @@ public final class EventsJenaCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .optMap(new Validate(eu.ec2u.data.ports.Events.Event()))
-
-                .sink(events -> upload(EC2U.events, events));
+                .sink(events -> upload(EC2U.events,
+                        Tasks.validate(EC2U.Event, eu.ec2u.data.ports.Events.Event(), events)
+                ));
     }
 
 
