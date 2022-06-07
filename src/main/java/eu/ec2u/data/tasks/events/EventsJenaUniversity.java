@@ -205,9 +205,7 @@ public final class EventsJenaUniversity implements Runnable {
 
         return frame(iri(EC2U.events, frame.skolemize(Schema.url)))
 
-                .value(RDF.TYPE, EC2U.Event)
-                .value(RDFS.LABEL, label)
-                .value(RDFS.COMMENT, label)
+                .value(RDF.TYPE, Schema.Event)
 
                 .value(EC2U.university, Jena.University)
 
@@ -232,11 +230,8 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .frame(DCTERMS.PUBLISHER, publisher)
 
-                .value(RDF.TYPE, Schema.Event)
-
                 .value(Schema.name, label)
                 .value(Schema.disambiguatingDescription, brief)
-
                 .value(Schema.description, frame.string(Schema.description)
                         .or(() -> frame.string(Schema.disambiguatingDescription))
                         .map(text -> literal(text, "de"))

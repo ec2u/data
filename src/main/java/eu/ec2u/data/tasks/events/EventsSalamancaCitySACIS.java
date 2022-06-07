@@ -122,12 +122,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
             return frame(iri(EC2U.events, md5(url)))
 
-                    .values(RDF.TYPE, EC2U.Event, Schema.Event)
-                    .value(RDFS.LABEL, name)
-                    .value(RDFS.COMMENT, disambiguatingDescription)
-
-                    .value(DCTERMS.TITLE, name)
-                    .value(DCTERMS.DESCRIPTION, disambiguatingDescription)
+                    .values(RDF.TYPE, Schema.Event)
 
                     .value(EC2U.university, Salamanca.University)
 

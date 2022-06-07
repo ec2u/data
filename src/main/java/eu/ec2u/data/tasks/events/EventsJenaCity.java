@@ -173,12 +173,7 @@ public final class EventsJenaCity implements Runnable {
 
             return frame(iri(EC2U.events, frame.skolemize(Schema.url, Schema.startDate)))
 
-                    .values(RDF.TYPE, EC2U.Event, Schema.Event)
-                    .value(RDFS.LABEL, name)
-                    .value(RDFS.COMMENT, disambiguatingDescription)
-
-                    .value(DCTERMS.TITLE, name)
-                    .value(DCTERMS.DESCRIPTION, disambiguatingDescription)
+                    .values(RDF.TYPE, Schema.Event)
 
                     .frames(DCTERMS.SUBJECT, frame.string(Schema.term("keywords")).stream()
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))

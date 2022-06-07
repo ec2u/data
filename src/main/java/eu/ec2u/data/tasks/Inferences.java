@@ -6,6 +6,7 @@ package eu.ec2u.data.tasks;
 
 import com.metreeca.http.Xtream;
 import com.metreeca.rdf4j.actions.Update;
+import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.terms.EC2U;
 
@@ -15,6 +16,8 @@ import static com.metreeca.http.Locator.service;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
+
+import static java.util.function.Predicate.not;
 
 
 public final class Inferences implements Runnable {
@@ -26,12 +29,16 @@ public final class Inferences implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Graph graph=service(graph());
+
+
     @Override public void run() {
-        service(graph()).update(task(connection -> {
+        graph.update(task(connection -> {
 
             connection.clear(EC2U.inferences);
 
             Xtream.of(text(Inferences.class, ".ql"))
+                    .filter(not(String::isEmpty))
                     .forEach(new Update()
                             .base(EC2U.Base)
                             .insert(EC2U.inferences)

@@ -111,7 +111,7 @@ public final class EC2U {
                 ),
 
                 field(DCTERMS.TITLE, multilingual()),
-				// field(DCTERMS.DESCRIPTION, multilingual()), // !!! clashes with schema:description
+                field(DCTERMS.DESCRIPTION, multilingual()),
 
                 field(DCTERMS.PUBLISHER, required(), Publisher()),
                 field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
@@ -142,7 +142,7 @@ public final class EC2U {
     public static final IRI College=term("College");
     public static final IRI Association=term("Association");
     public static final IRI City=term("City");
-    public static final IRI NGO=term("City");
+    public static final IRI Other=term("Other");
 
 
     //// Publishers ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +153,7 @@ public final class EC2U {
     public static Shape Publisher() {
         return and(Reference(),
 
-                field(DCTERMS.COVERAGE, optional(), range(University, College, Association, City, NGO))
+                field(DCTERMS.COVERAGE, optional(), range(University, College, Association, City, Other))
 
         );
     }
@@ -174,11 +174,6 @@ public final class EC2U {
     //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI Event=term("Event");
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Theme=term("Theme");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
