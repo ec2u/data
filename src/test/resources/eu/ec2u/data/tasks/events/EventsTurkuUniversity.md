@@ -19,10 +19,11 @@
 ## Pending
 
 * review availability of image links
-* conflicting labels for online locations
-  * generated when the same url is used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
-  * prevent generation
-  * handle upload
+
+## 2022-06-07
+
+* fix conflicting labels for online locations
+  * generated when the same URL is used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
 
 # Samples
 

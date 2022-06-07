@@ -177,17 +177,13 @@ public final class Schema {
 
 
     public static Shape Location() {
+        return or(
 
-        return Place();
+                Place(),
+                PostalAddress(),
+                VirtualLocation()
 
-
-        //return or(
-        //
-        //		Place(),
-        //		PostalAddress(),
-        //		VirtualLocation()
-        //
-        //);
+        );
     }
 
     public static Shape Place() {

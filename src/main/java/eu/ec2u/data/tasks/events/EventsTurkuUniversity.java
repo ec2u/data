@@ -239,16 +239,19 @@ public final class EventsTurkuUniversity implements Runnable {
     private Optional<Frame> location(final JSONPath json) {
         return json.string("url").map(id -> {
 
+            final Optional<String> name=json.string("free_text");
             final Optional<Value> url=json.string("url").flatMap(Work::url).map(Values::iri);
             final Optional<Value> addressCountry=Optional.ofNullable(Turku.Country);
             final Optional<Value> addressLocality=Optional.ofNullable(Turku.City);
             final Optional<Value> postalCode=json.string("postal_code").map(Values::literal);
             final Optional<Value> streetAddress=json.string("street").map(Values::literal);
 
-            return frame(iri(EC2U.locations, md5(id)))
+            // the same URL may be used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
+
+            return frame(iri(EC2U.locations, md5(format("%s\n%s", id, name.orElse("")))))
 
                     .value(Schema.url, url)
-                    .value(Schema.name, json.string("free_text").map(text -> literal(text, Turku.Language)))
+                    .value(Schema.name, name.map(text -> literal(text, Turku.Language)))
 
                     .frame(Schema.address, frame(iri(EC2U.locations, md5(Xtream
 

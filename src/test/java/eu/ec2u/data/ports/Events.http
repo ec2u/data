@@ -1,10 +1,10 @@
 ### Main Catalog
 
-GET https://data.ec2u.eu/events/events/
+GET https://data.ec2u.eu/events/
 
 ### Main Details
 
-GET https://data.ec2u.eu/events/events/55bb5cf18eab7e3dba830b53a022dc26
+GET https://data.ec2u.eu/events/55bb5cf18eab7e3dba830b53a022dc26
 
 ### Main Bulk
 
@@ -13,11 +13,11 @@ GET https://data.ec2u.eu/events/~?.offset=0&.limit=100&>modified=2022-05-31T00:0
 
 ### Work Catalog
 
-GET https://work-dot-ec2u-data.ey.r.appspot.com/events/events/
+GET https://work-dot-ec2u-data.ey.r.appspot.com/events/
 
 ### Work Details
 
-GET https://work-dot-ec2u-data.ey.r.appspot.com/events/events/55bb5cf18eab7e3dba830b53a022dc26
+GET https://work-dot-ec2u-data.ey.r.appspot.com/events/55bb5cf18eab7e3dba830b53a022dc26
 
 ### Work Bulk
 
