@@ -20,7 +20,6 @@ import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.*;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
-import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.xml.XPath;
@@ -55,8 +54,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.ports.Events.Event;
-import static eu.ec2u.data.tasks.Tasks.exec;
-import static eu.ec2u.data.tasks.Tasks.upload;
+import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
 import static java.lang.String.format;
@@ -102,7 +100,6 @@ public final class EventsTurkuUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     @Override public void run() {
 
         final ZonedDateTime now=ZonedDateTime.now(UTC);
@@ -120,10 +117,9 @@ public final class EventsTurkuUniversity implements Runnable {
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
                 )
 
-                .optMap(new Validate(Event()))
-
-                .sink(events -> upload(EC2U.events, events));
-
+                .sink(events -> upload(EC2U.events,
+                        validate(Event(), EC2U.Event, events)
+                ));
     }
 
 
@@ -174,9 +170,6 @@ public final class EventsTurkuUniversity implements Runnable {
                 .map(JSONPath::new)
                 .flatMap(json -> json.paths("*"));
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Optional<Frame> event(final JSONPath json) {
 
@@ -240,19 +233,25 @@ public final class EventsTurkuUniversity implements Runnable {
 
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private Optional<Frame> location(final JSONPath json) {
         return json.string("url").map(id -> {
 
+            final Optional<String> name=json.string("free_text");
             final Optional<Value> url=json.string("url").flatMap(Work::url).map(Values::iri);
             final Optional<Value> addressCountry=Optional.ofNullable(Turku.Country);
             final Optional<Value> addressLocality=Optional.ofNullable(Turku.City);
             final Optional<Value> postalCode=json.string("postal_code").map(Values::literal);
             final Optional<Value> streetAddress=json.string("street").map(Values::literal);
 
-            return frame(iri(EC2U.locations, md5(id)))
+            // the same URL may be used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
+
+            return frame(iri(EC2U.locations, md5(format("%s\n%s", id, name.orElse("")))))
 
                     .value(Schema.url, url)
-                    .value(Schema.name, json.string("free_text").map(text -> literal(text, Turku.Language)))
+                    .value(Schema.name, name.map(text -> literal(text, Turku.Language)))
 
                     .frame(Schema.address, frame(iri(EC2U.locations, md5(Xtream
 
@@ -273,7 +272,6 @@ public final class EventsTurkuUniversity implements Runnable {
                     );
 
         });
-
     }
 
     private Optional<Frame> organizer(final JSONPath json) {

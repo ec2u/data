@@ -52,6 +52,11 @@
 * initial survey mentions structured APIs under development
   * re-contact for updates
 
+## 2022-06-07
+
+* fixed multiple `startDate`/`endDate` for repeating events
+* fixed multiple labels in`schema:organizer`/`schema:location`
+
 ## 2022-05-26
 
 * initial integration
