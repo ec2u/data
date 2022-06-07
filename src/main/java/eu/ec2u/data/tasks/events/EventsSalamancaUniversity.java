@@ -21,6 +21,7 @@ import com.metreeca.core.Strings;
 import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
+import com.metreeca.ical.codecs.iCal;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.xml.actions.Untag;
@@ -47,7 +48,6 @@ import static com.metreeca.link.Values.literal;
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
-import static eu.ec2u.data.work.formats.ICSFormat.ics;
 import static net.fortuna.ical4j.model.Component.VEVENT;
 
 import static java.time.ZoneOffset.UTC;
@@ -97,7 +97,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                         )
                 )
 
-                .optMap(new GET<>(ics()))
+                .optMap(new GET<>(new iCal()))
 
                 .flatMap(calendar -> calendar.getComponents(VEVENT).stream().map(VEvent.class::cast));
     }
