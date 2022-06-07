@@ -153,16 +153,14 @@ public final class EventsPoitiersUniversity implements Runnable {
                 link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
         ))
 
-                .values(RDF.TYPE, EC2U.Event, Schema.Event)
-                .value(RDFS.LABEL, label)
-                .value(RDFS.COMMENT, brief)
+                .values(RDF.TYPE, Schema.Event)
 
                 .value(EC2U.university, Poitiers.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, link)
 
-                .value(DCTERMS.ISSUED, pubDate)
+                .value(DCTERMS.CREATED, pubDate)
                 .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
 
                 .frames(DCTERMS.SUBJECT, item.strings("category")

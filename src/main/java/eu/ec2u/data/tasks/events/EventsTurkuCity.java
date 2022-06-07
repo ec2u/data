@@ -164,10 +164,7 @@ public final class EventsTurkuCity implements Runnable {
 
             return frame(iri(EC2U.events, md5(id)))
 
-                    .value(RDF.TYPE, EC2U.Event)
-
-                    .values(RDFS.LABEL, name)
-                    .values(RDFS.COMMENT, description)
+                    .value(RDF.TYPE, Schema.Event)
 
                     .value(EC2U.university, Turku.University)
 

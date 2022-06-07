@@ -49,11 +49,9 @@ public final class WordPress {
 
         return frame(iri(EC2U.events, frame.skolemize(Link)))
 
-                .values(RDF.TYPE, EC2U.Event, Schema.Event)
-                .value(RDFS.LABEL, label)
-                .value(RDFS.COMMENT, brief)
+                .values(RDF.TYPE, Schema.Event)
 
-                .value(DCTERMS.ISSUED, frame.value(PubDate))
+                .value(DCTERMS.CREATED, frame.value(PubDate))
                 .value(DCTERMS.SOURCE, frame.value(Link))
 
                 .frames(DCTERMS.SUBJECT, frame.strings(Category)

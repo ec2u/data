@@ -156,9 +156,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                 .orElseGet(Identifiers::md5)
         ))
 
-                .values(RDF.TYPE, EC2U.Event, Schema.Event)
-                .value(RDFS.LABEL, label)
-                .value(RDFS.COMMENT, disambiguatingDescription)
+                .values(RDF.TYPE, Schema.Event)
 
                 .value(EC2U.university, Salamanca.University)
 

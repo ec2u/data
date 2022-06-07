@@ -198,16 +198,11 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
         return event.string("url").map(id -> frame(iri(EC2U.events, md5(id)))
 
-                .value(RDF.TYPE, EC2U.Event)
-
-                .value(RDFS.LABEL, title)
-                .value(RDFS.COMMENT, excerpt)
+                .value(RDF.TYPE, Schema.Event)
 
                 .value(DCTERMS.SOURCE, event.string("url").flatMap(Work::url).map(Values::iri))
-
                 .value(DCTERMS.CREATED, event.string("date_utc").map(Tribe::instant))
                 .value(DCTERMS.MODIFIED, event.string("modified_utc").map(Tribe::instant))
-
                 .frames(DCTERMS.SUBJECT, event.paths("categories.*").optMap(this::category))
 
                 .value(Schema.url, event.string("url").flatMap(Work::url).map(Values::iri))
