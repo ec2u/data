@@ -1,4 +1,3 @@
-@prefix : <https://data.ec2u.eu/terms/> .
 @prefix wd: <http://www.wikidata.org/entity/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
