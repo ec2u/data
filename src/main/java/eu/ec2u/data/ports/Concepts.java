@@ -22,7 +22,6 @@ import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
@@ -49,7 +48,7 @@ public final class Concepts extends Delegator {
 
                 new Driver(relate(
 
-                        filter(clazz(EC2U.Theme)),
+                        filter(clazz(SKOS.CONCEPT)),
 
                         link(OWL.SAMEAS,
 

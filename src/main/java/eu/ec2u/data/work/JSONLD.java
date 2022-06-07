@@ -41,11 +41,9 @@ public final class JSONLD {
 
     public static Stream<Frame> jsonld(final String json, final IRI type) {
 
-
         try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
 
-            final Collection<Statement> model=Schema.normalize(rdf(input, null,
-                    new JSONLDParser()));
+            final Collection<Statement> model=Schema.normalize(rdf(input, null, new JSONLDParser()));
 
             return frame(type, model).frames(inverse(RDF.TYPE));
 

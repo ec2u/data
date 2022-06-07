@@ -84,7 +84,6 @@ public final class Data implements Runnable {
                 .set(keywords(), () -> EC2U.Keywords);
     }
 
-
     private static Repository repository() {
 
         final HTTPRepository repository=new HTTPRepository(GraphDBRepository);
