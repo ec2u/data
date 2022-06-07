@@ -86,7 +86,7 @@ public final class EventsJenaCity implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(EC2U.Event, eu.ec2u.data.ports.Events.Event(), events)
+                        validate(eu.ec2u.data.ports.Events.Event(), EC2U.Event, events)
                 ));
     }
 

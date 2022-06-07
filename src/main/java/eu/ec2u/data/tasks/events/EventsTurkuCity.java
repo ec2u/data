@@ -21,12 +21,10 @@ import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
-import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data.cities.Turku;
-import eu.ec2u.data.tasks.Tasks;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.Work;
@@ -41,13 +39,16 @@ import java.util.stream.Stream;
 import javax.json.JsonValue;
 
 import static com.metreeca.core.Identifiers.md5;
+import static com.metreeca.core.Lambdas.task;
+import static com.metreeca.http.Locator.service;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
+import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.ports.Events.Event;
-import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
 import static java.time.ZoneOffset.UTC;
@@ -84,8 +85,6 @@ public final class EventsTurkuCity implements Runnable {
                 .flatMap(this::crawl)
                 .flatMap(this::event)
 
-                .optMap(new Validate(Event()))
-
                 .collect(toList());
 
         final List<Frame> locations=Xtream.from(events)
@@ -100,12 +99,22 @@ public final class EventsTurkuCity implements Runnable {
                 .map(JSONPath::new)
                 .map(this::location)
 
-                .optMap(new Validate(Schema.Location()))
-
                 .collect(toList());
 
-        Tasks._upload(EC2U.events, events);
-        Tasks._upload(EC2U.locations, locations);
+        service(graph()).update(task(connection -> {
+
+            upload(EC2U.events,
+                    validate(Event(), EC2U.Event, events.stream())
+            );
+
+            upload(EC2U.locations,
+                    validate(Schema.Location(), Set.of(
+                            Schema.VirtualLocation, Schema.Place, Schema.PostalAddress
+                    ), locations.stream())
+            );
+
+        }));
+
     }
 
 

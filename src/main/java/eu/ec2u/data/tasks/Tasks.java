@@ -17,7 +17,6 @@
 package eu.ec2u.data.tasks;
 
 import com.metreeca.http.Locator;
-import com.metreeca.http.Xtream;
 import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
@@ -38,7 +37,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.services;
 
-import static java.util.stream.Collectors.toList;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 
 public final class Tasks {
@@ -51,20 +50,24 @@ public final class Tasks {
     }
 
 
-    public static Collection<Statement> validate(final IRI type, final Shape shape, final Stream<Frame> frames) {
+    public static Collection<Statement> validate(final Shape shape, final IRI type, final Stream<Frame> frames) {
+        return validate(shape, Set.of(type), frames);
+    }
+
+    public static Collection<Statement> validate(final Shape shape, final Set<IRI> types, final Stream<Frame> frames) {
 
         final Collection<Statement> statements=frames
                 .flatMap(frame -> frame.model().stream())
                 .collect(toSet());
 
-        final long invalid=frame(type, statements)
-                .frames(inverse(RDF.TYPE))
+        final long invalid=types.stream()
+                .flatMap(type -> frame(type, statements).frames(inverse(RDF.TYPE)))
                 .map(new Validate(shape))
                 .filter(Optional::isEmpty)
                 .count();
 
         if ( invalid != 0 ) {
-            throw new IllegalArgumentException(String.format("<%d> malformed frames in batch", invalid));
+            throw new IllegalArgumentException(format("<%d> malformed frames in batch", invalid));
         }
 
         return statements;
@@ -88,44 +91,9 @@ public final class Tasks {
 
             }));
 
-        }).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
+        }).apply(elapsed -> service(logger()).info(Tasks.class, format(
                 "updated <%d> resources in <%s> in <%d> ms", subjects.size(), context, elapsed
         )));
-    }
-
-
-    //// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void _upload(final IRI context, final Collection<Frame> frames) {
-        _upload(context, Xtream.from(frames));
-    }
-
-    public static void _upload(final IRI context, final Xtream<Frame> frames) {
-        frames.batch(1000).forEach(batch -> time(() -> {
-
-            final List<Resource> subjects=batch.stream()
-                    .map(Frame::focus)
-                    .filter(Resource.class::isInstance)
-                    .map(Resource.class::cast)
-                    .collect(toList());
-
-            final List<Statement> statements=batch.stream()
-                    .flatMap(frame -> frame.model().stream())
-                    .collect(toList());
-
-            service(graph()).update(task(connection -> {
-
-                subjects.forEach(subject ->
-                        connection.remove(subject, null, null, context)
-                );
-
-                connection.add(statements, context);
-
-            }));
-
-        }).apply(elapsed -> service(logger()).info(Tasks.class, String.format(
-                "updated <%d> resources in <%s> in <%d> ms", batch.size(), context, elapsed
-        ))));
     }
 
 
