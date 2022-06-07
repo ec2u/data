@@ -45,7 +45,9 @@ public final class Events extends Delegator {
                 ),
 
                 EC2U.Resource(),
-                Schema.Event()
+                Schema.Event(),
+
+                field("fullDescription", Schema.description) // prevent clashes with dct:description
 
         );
     }
