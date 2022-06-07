@@ -17,7 +17,6 @@
 package eu.ec2u.data.tasks.events;
 
 import com.metreeca.http.Xtream;
-import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.cities.Iasi;
@@ -32,8 +31,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.ports.Events.Event;
-import static eu.ec2u.data.tasks.Tasks._upload;
-import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
 import static java.time.ZoneOffset.UTC;
@@ -78,9 +76,9 @@ public final class EventsIasiUniversity implements Runnable {
 
                 )
 
-                .optMap(new Validate(Event()))
-
-                .sink(events -> _upload(EC2U.events, events));
+                .sink(events -> upload(EC2U.events,
+                        validate(Event(), EC2U.Event, events)
+                ));
     }
 
 }

@@ -19,7 +19,6 @@ package eu.ec2u.data.tasks.events;
 import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.rdf.actions.Localize;
 import com.metreeca.rdf.actions.Normalize;
@@ -41,8 +40,7 @@ import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.ports.Events.Event;
-import static eu.ec2u.data.tasks.Tasks._upload;
-import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
 import static java.time.ZoneOffset.UTC;
@@ -73,9 +71,10 @@ public final class EventsPaviaCity implements Runnable {
 
                 .flatMap(this::crawl)
                 .map(this::event)
-                .optMap(new Validate(Event()))
 
-                .sink(events -> _upload(EC2U.events, events));
+                .sink(events -> upload(EC2U.events,
+                        validate(Event(), EC2U.Event, events)
+                ));
     }
 
 

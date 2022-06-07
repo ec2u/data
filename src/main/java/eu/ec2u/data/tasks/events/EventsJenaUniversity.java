@@ -19,7 +19,6 @@ package eu.ec2u.data.tasks.events;
 import com.metreeca.http.CodecException;
 import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.GET;
-import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.xml.XPath;
@@ -47,8 +46,7 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
 import static eu.ec2u.data.ports.Events.Event;
-import static eu.ec2u.data.tasks.Tasks._upload;
-import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
 import static eu.ec2u.data.work.Work.location;
 
@@ -120,9 +118,9 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .distinct(Frame::focus) // events may be published multiple times by different publishers
 
-                .optMap(new Validate(Event()))
-
-                .sink(events -> _upload(EC2U.events, events));
+                .sink(events -> upload(EC2U.events,
+                        validate(Event(), EC2U.Event, events)
+                ));
     }
 
 
