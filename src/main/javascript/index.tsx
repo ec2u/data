@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-// import "@metreeca/tool/fonts/quicksand.css";
-// import "@metreeca/tool/index.css";
+import DataNone from "@ec2u/data/pages/none";
+import "@metreeca/skin/index.css";
+import "@metreeca/skin/quicksand.css";
+import { NodeFetcher } from "@metreeca/tool/nests/fetcher";
+import { NodeRouter } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { render } from "react-dom";
 import "./index.css";
@@ -25,24 +28,28 @@ render((
 
     <React.StrictMode>
 
-        ciao!
+        <NodeFetcher>
+
+            <NodeRouter routes={{
+
+                // [Home.id]: DataHome,
+                // [About.id]: DataAbout,
+                //
+                // [Universities.id]: DataUniversities,
+                // [University.id]: DataUniversity,
+                //
+                // [Events.id]: DataEvents,
+                // [Event.id]: DataEvent,
+
+                "*": DataNone
+
+            }}/>
+
+        </NodeFetcher>
 
         {/*<ToolDriver value={RESTGraph()}>
 
-         <ToolRouter routes={{
 
-         [Home.id]: DataHome,
-         [About.id]: DataAbout,
-
-         [Universities.id]: DataUniversities,
-         [University.id]: DataUniversity,
-
-         [Events.id]: DataEvents,
-         [Event.id]: DataEvent,
-
-         "*": ToolNone
-
-         }}/>
 
          </ToolDriver>*/}
 

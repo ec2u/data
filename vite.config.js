@@ -16,7 +16,7 @@
 
 import {defineConfig} from "vite";
 import {resolve} from "path";
-import reactRefresh from "@vitejs/plugin-react-refresh";
+import react from "@vitejs/plugin-react";
 import postcssNesting from "postcss-nesting";
 
 const src=resolve(process.env.src || "src/main/javascript");
@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
     publicDir: resolve(src, "files"),
 
-    plugins: [reactRefresh()],
+    plugins: [react()],
 
     css: {
         postcss: {

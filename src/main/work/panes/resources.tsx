@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
+import { Events } from "@ec2u/data/pages/events/events";
+import { Universities } from "@ec2u/data/pages/universities/universities";
 import { freeze, string } from "@metreeca/tool/bases";
 import { Updater } from "@metreeca/tool/hooks";
 import { useEntry } from "@metreeca/tool/hooks/queries/entry";
@@ -21,8 +23,6 @@ import { Calendar, Library, MapPin } from "@metreeca/tool/tiles/icon";
 import { ToolItem } from "@metreeca/tool/tiles/item";
 import { ToolPane } from "@metreeca/tool/tiles/pane";
 import * as React from "react";
-import { Events } from "../pages/events/events";
-import { Universities } from "../pages/universities/universities";
 
 
 const Resources=freeze({

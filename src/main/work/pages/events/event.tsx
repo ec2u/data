@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 import { freeze, string } from "@metreeca/tool/bases";
 import { useEntry } from "@metreeca/tool/hooks/queries/entry";
@@ -24,60 +24,72 @@ import { DataCard } from "../../tiles/card";
 import { DataPage } from "../../tiles/page";
 
 
-export const Universities=freeze({
+export const Event=freeze({
 
-	id: "/universities/",
+	id: "/events/{code}",
 
-	label: { en: "Universities" },
+	image: "",
+	label: { en: "Event" },
+	comment: { en: "" },
 
-	contains: [{
+	description: { en: "" },
 
-		id: "",
-
-		image: "",
-		label: { en: "" },
-		comment: { en: "" },
-
-		country: {
-			id: "",
-			label: { en: "" }
-		}
-
-	}]
+	startDate: ""
 
 });
 
 
-export function DataUniversities() {
+export function DataEvent() {
 
 	const { name }=useRouter();
 
-	const [{ fetch, frame, error }]=useEntry("", Universities);
+	const [{ fetch, frame, error }]=useEntry("", Event);
 
 
-	useEffect(() => { name(string(Universities.label)); });
+	useEffect(() => { frame(({ label }) => name(string(label))); });
 
 
-	return <DataPage item={string(Universities.label)}
+	return <DataPage
+
+		item={<>
+			<a href={"/events/"}>Events</a>
+			<span>{frame(({ label }) => string(label))}</span>
+		</>}
 
 		menu={fetch(abort => <ToolSpin abort={abort}/>)}
 
 	>
 
-		{frame(({ contains }) => contains.map(({ id, label, image, comment, country }) => (
+		{frame(({
 
-			<DataCard key={id}
+			image,
+			label,
+			comment,
 
-				name={<a href={id}>{string(label)}</a>}
-				icon={image}
-				tags={<span>{string(country)}</span>}
+			description,
+
+			startDate
+
+		}) => (
+
+			<DataCard
+
+				icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
+
+				info={<dl>
+
+					<dt>Start Date</dt>
+					<dd>{startDate}</dd>
+
+				</dl>}
 
 			>
-				{string(comment)}
+
+				<p>{string(description)}</p>
 
 			</DataCard>
 
-		)))}
+		))}
 
 		{error(error => <span>{error.status}</span>)} {/* !!! */}
 

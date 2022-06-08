@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +12,31 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-import { Filter } from "@metreeca/tool/tiles/icon";
-import * as React from "react";
+tool-about {
 
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 
-export function DataFiltersButton({
+	padding: 0;
+	margin: 0;
 
-	onClick
+	font-size: 200%;
+	color: #999;
 
-}: {
+	& > li {
 
-	onClick: () => void
+		list-style: none;
 
-}) {
-
-	return <button title={"Filters"} onClick={onClick}><Filter/></button>;
+	}
 
 }

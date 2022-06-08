@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021-2022 EC2U Consortium
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

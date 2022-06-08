@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,35 +12,33 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-import { useRouter } from "@metreeca/tool/nests/router";
-import { CancelIcon } from "@metreeca/tool/tiles/page";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { createElement } from "react";
-import { DataPage } from "../tiles/page";
-import { Home } from "./home";
 import "./none.css";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function ToolNone() {
+export default function DataNone() {
 
-	const { swap }=useRouter();
+    const [, setRoute]=useRoute();
 
-	return (
+    return (
 
-		<DataPage item="404 | Not Found"
+        <p>ciao!</p>
 
-			menu={<button title="Remove from History" onClick={() => swap(Home.id)}><CancelIcon/></button>}
+        // <DataPage item="404 | Not Found"
+        //
+        //     menu={<button title="Remove from History" onClick={() => setRoute(Home.id, true)}><CancelIcon/></button>}
+        //
+        // >
+        //
+        //     {createElement("data-none", {})}
+        //
+        // </DataPage>
 
-		>
-
-			{createElement("tool-none", {})}
-
-		</DataPage>
-
-	);
+    );
 
 }
