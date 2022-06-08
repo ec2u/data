@@ -40,7 +40,6 @@ import static eu.ec2u.data.terms.EC2U.multilingual;
 
 public final class Universities extends Delegator {
 
-
     public static Shape University() {
         return relate(
 
@@ -55,13 +54,13 @@ public final class Universities extends Delegator {
                 link(OWL.SAMEAS,
 
                         field(EC2U.country, optional(),
-                                field(RDFS.LABEL, optional(), multilingual())
+                                field(RDFS.LABEL, multilingual())
                         ),
 
                         detail(
 
                                 field(EC2U.location, optional(),
-                                        field(RDFS.LABEL, optional(), multilingual())
+                                        field(RDFS.LABEL, multilingual())
                                 ),
 
                                 field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
