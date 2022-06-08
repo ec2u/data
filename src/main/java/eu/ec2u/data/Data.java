@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021-2022 EC2U Consortium
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public final class Data implements Runnable {
     private static final boolean Production=GCPServer.production();
 
     private static final String GraphDBRepository="http://34.79.93.233/repositories/data-work";
-    //private static final String GraphDBRepository="https://base.ec2u.dev/repositories/data-work";
+    // !!! private static final String GraphDBRepository="https://base.ec2u.dev/repositories/data-work";
     private static final String GraphDBUsr="server";
     private static final String GraphDBPwd="graphdb-server-pwd";
 
@@ -110,12 +110,13 @@ public final class Data implements Runnable {
 
                         new CORS(),
 
+                        new Publisher() // static assets published by GAE
+
+                                .fallback("/index.html"),
+
                         new Wrapper()
 
-                                .before(request -> request
-                                        .base(EC2U.Base) // define canonical base
-                                        .header("Accept-Language", "") // disable language negotiation
-                                ),
+                                .before(request -> request.base(EC2U.Base)), // define canonical base
 
                         new Router()
 

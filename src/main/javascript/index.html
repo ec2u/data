@@ -22,9 +22,9 @@
 
 		<base href="/" target="_blank">
 
-		<title>EC2U Connect Centre</title>
+		<title>EC2U Knowledge Hub</title>
 
-		<meta name="copyright" content="&copy; 2021 EC2U Alliance">
+		<meta name="copyright" content="&copy; 2022 EC2U Alliance">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -43,7 +43,7 @@
 
 			}
 
-			html, body, data-root {
+			html, body, tool-root {
 				display: block;
 				width: 100%;
 				height: 100%;
@@ -52,7 +52,7 @@
 				overflow: hidden;
 			}
 
-			body > data-root:empty {
+			body > tool-root:empty {
 				display: block;
 				width: 10vh;
 				height: 10vh;
@@ -62,8 +62,8 @@
 				animation: loader-rotate 2s infinite linear;
 			}
 
-			body > data-root:empty::before,
-			body > data-root:empty::after {
+			body > tool-root:empty::before,
+			body > tool-root:empty::after {
 				content: '';
 				position: absolute;
 				left: 0;
@@ -75,12 +75,12 @@
 				animation: loader-bounce 2s infinite ease-in-out;
 			}
 
-			body > data-root:empty::before {
+			body > tool-root:empty::before {
 				top: 0;
 				background-color: var(--tool--color-accent-dark);
 			}
 
-			body > data-root:empty::after {
+			body > tool-root:empty::after {
 				bottom: 0;
 				background-color: var(--tool--color-accent-lite);
 				animation-delay: -1s;
@@ -107,7 +107,7 @@
 
 	<body>
 
-		<data-root></data-root>
+		<tool-root></tool-root>
 
 	</body>
 
