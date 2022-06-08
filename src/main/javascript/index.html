@@ -41,14 +41,14 @@
 
             }
 
-            html, body, node-root {
-                display: block;
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-            }
+			html, body, node-root, node-root > * {
+				display: block;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
 
             body > node-root:empty {
                 display: block;

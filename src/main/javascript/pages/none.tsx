@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
+import { Home } from "@ec2u/data/pages/home";
+import { DataPage } from "@ec2u/data/tiles/page";
+import { CancelIcon } from "@metreeca/skin/lucide";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
+import { createElement } from "react";
 import "./none.css";
 
 
@@ -27,17 +31,15 @@ export default function DataNone() {
 
     return (
 
-        <p>ciao!</p>
+        <DataPage item="404 | Not Found"
 
-        // <DataPage item="404 | Not Found"
-        //
-        //     menu={<button title="Remove from History" onClick={() => setRoute(Home.id, true)}><CancelIcon/></button>}
-        //
-        // >
-        //
-        //     {createElement("data-none", {})}
-        //
-        // </DataPage>
+            menu={<button title="Remove from History" onClick={() => setRoute(Home.id, true)}><CancelIcon/></button>}
+
+        >
+
+            {createElement("data-none", {})}
+
+        </DataPage>
 
     );
 

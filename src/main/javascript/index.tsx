@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import DataHome, { Home } from "@ec2u/data/pages/home";
 import DataNone from "@ec2u/data/pages/none";
 import "@metreeca/skin/index.css";
 import "@metreeca/skin/quicksand.css";
@@ -32,12 +33,12 @@ render((
 
             <NodeRouter routes={{
 
-                // [Home.id]: DataHome,
+                [Home.id]: DataHome,
                 // [About.id]: DataAbout,
-                //
+
                 // [Universities.id]: DataUniversities,
                 // [University.id]: DataUniversity,
-                //
+
                 // [Events.id]: DataEvents,
                 // [Event.id]: DataEvent,
 
@@ -46,12 +47,6 @@ render((
             }}/>
 
         </NodeFetcher>
-
-        {/*<ToolDriver value={RESTGraph()}>
-
-
-
-         </ToolDriver>*/}
 
     </React.StrictMode>
 

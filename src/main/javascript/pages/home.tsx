@@ -14,22 +14,41 @@
  * limitations under the License.
  */
 
-import { Filter } from "@metreeca/tool/tiles/icon";
+import { DataPage } from "@ec2u/data/tiles/page";
+import { immutable } from "@metreeca/core";
+import { Home as Site } from "@metreeca/skin/lucide";
+import { NodePane } from "@metreeca/tile/pane";
 import * as React from "react";
+
+
+export const Home=immutable({
+
+	id: "/",
+	label: "Knowledge Hub"
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function DataFiltersButton({
+export default function DataHome() {
+	return (
 
-	onClick
+		<DataPage item={"European Campus of City-Universities"}
 
-}: {
+			menu={<a href={"https://ec2u.eu/"} target={"_blank"} title={`About EC2U`}><Site/></a>}
 
-	onClick: () => void
+			pane={<NodePane
 
-}) {
+				header={<input type={"search"} placeholder={Home.label}/>}
 
-	return <button title={"Filters"} onClick={onClick}><Filter/></button>;
+			/>}
 
+		>
+
+			<img src={"/blobs/ec2u.png"} alt={"EC2U Locations"} style={{ width: "100%", maxWidth: "50em" }}/>
+
+		</DataPage>
+
+	);
 }

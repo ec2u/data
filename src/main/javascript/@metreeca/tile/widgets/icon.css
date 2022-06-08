@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2022 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,15 @@
  * limitations under the License.
  */
 
-tool-about {
+node-icon {
 
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
+    display: inline-block;
 
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+    width: 1em;
+    aspect-ratio: 1;
 
-	padding: 0;
-	margin: 0;
-
-	font-size: 200%;
-	color: #999;
-
-	& > li {
-
-		list-style: none;
-
-	}
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
 
 }
