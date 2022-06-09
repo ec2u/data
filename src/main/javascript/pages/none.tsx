@@ -29,11 +29,17 @@ export default function DataNone() {
 
     const [, setRoute]=useRoute();
 
+
+    function doDismiss() {
+        setRoute(Home.id, true);
+    }
+
+
     return (
 
         <DataPage item="404 | Not Found"
 
-            menu={<button title="Remove from History" onClick={() => setRoute(Home.id, true)}><CancelIcon/></button>}
+            menu={<button title="Remove from History" onClick={() => doDismiss()}><CancelIcon/></button>}
 
         >
 

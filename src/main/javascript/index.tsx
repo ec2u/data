@@ -16,6 +16,8 @@
 
 import DataHome, { Home } from "@ec2u/data/pages/home";
 import DataNone from "@ec2u/data/pages/none";
+import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
+import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
 import "@metreeca/skin/index.css";
 import "@metreeca/skin/quicksand.css";
 import { NodeFetcher } from "@metreeca/tool/nests/fetcher";
@@ -34,10 +36,9 @@ render((
             <NodeRouter routes={{
 
                 [Home.id]: DataHome,
-                // [About.id]: DataAbout,
 
-                // [Universities.id]: DataUniversities,
-                // [University.id]: DataUniversity,
+                [Universities.id]: DataUniversities,
+                [University.id]: DataUniversity,
 
                 // [Events.id]: DataEvents,
                 // [Event.id]: DataEvent,

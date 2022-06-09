@@ -332,8 +332,7 @@ export function useRoute(): [Value, Updater] {
         const _state=(state === undefined) ? history.state : (state === null) ? undefined : state;
         const _label=(label === undefined) ? document.title : label && name ? `${label} | ${name}` : label || name;
 
-        const modified=_route !== location.href || _state !== history.state /*|| _label !== document.title*/;
-
+        const modified=_route !== location.href || _state !== history.state || _label !== document.title;
 
         try {
 
@@ -349,7 +348,7 @@ export function useRoute(): [Value, Updater] {
 
         } finally {
 
-            if ( modified ) { update; }
+            if ( modified ) { update(); }
 
         }
 

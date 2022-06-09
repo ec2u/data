@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+import { Heart } from "@metreeca/skin/lucide";
 import { NodeIcon } from "@metreeca/tile/widgets/icon";
+import { copy } from "@metreeca/tool";
 import React, { createElement, ReactNode, useState } from "react";
 import "./page.css";
 
@@ -56,11 +58,17 @@ export function DataPage({
     }, <>
 
         <nav>
+
             <header>
                 <NodeIcon onClick={doToggleSide}/>
             </header>
+
             <section>{side}</section>
-            <footer></footer>
+
+            <footer>
+                <a target={"_blank"} href={"https://github.com/ec2u/data#ec2u-knowledge-hub"}><Heart/></a>
+            </footer>
+
         </nav>
 
         <aside>{pane}</aside>
@@ -75,7 +83,7 @@ export function DataPage({
 
             <section>{children}</section>
 
-            <footer></footer>
+            <footer>{copy}</footer>
 
         </main>
 
