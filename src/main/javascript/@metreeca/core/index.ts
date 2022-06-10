@@ -27,14 +27,16 @@ export type Primitive=undefined | null | boolean | string | number
 
 
 /**
- * Optional type.
+ * Mutable type variant.
  *
- * Denotes a possibly undefined value of the base type `T`
+ * Denotes a full mutable value of the base type `T`
  *
- * @template T the base type
+ * @template T the base immutable type
  */
-export type Optional<T>=undefined | T
-
+export type Mutable<T>=
+    T extends Primitive | Function ? T
+        : T extends Array<infer U> ? Array<Mutable<U>>
+            : { -readonly [K in keyof T]: Mutable<T[K]> }
 
 /**
  * Immutable type variant.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isNumber, isObject, isString } from "@metreeca/core";
+import { isString } from "@metreeca/core";
 import { createContext, createElement, ReactNode, useContext, useState } from "react";
 
 
@@ -29,17 +29,19 @@ import { createContext, createElement, ReactNode, useContext, useState } from "r
  * @module
  */
 
-const Context=createContext<[Value, Updater]>([false, wrap(fetch)]);
+const Context=createContext<[FetcherValue, FetcherUpdater]>([false, wrap(fetch)]);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Fetcher=typeof fetch;
 
 /**
  * The value component of the fetcher context state.
  *
  * Holds `true`, if at least a fetch request is awaiting response; `false`, otherwise
  */
-export type Value=boolean;
+export type FetcherValue=boolean;
 
 /**
  * The updater component of the fetcher context state.
@@ -51,23 +53,7 @@ export type Value=boolean;
  * @see {@link FetchAborted}
  * @see {@link FetchFailed}
  */
-export type Updater=typeof fetch;
-
-
-/**
- * Fetch error report.
- */
-export interface Report<D=any> {
-
-    readonly status: number;
-    readonly reason: string;
-    readonly detail?: D;
-
-}
-
-export function isReport(value: unknown): value is Report {
-    return isObject(value) && isNumber(value.status) && isString(value.reason);
-}
+export type FetcherUpdater=Fetcher;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +110,7 @@ export function NodeFetcher({
 
 }: {
 
-    fetcher?: typeof fetch
+    fetcher?: Fetcher
 
     children: ReactNode
 
@@ -174,7 +160,7 @@ export function NodeFetcher({
  *
  * @return a state tuple including a current {@link Value| value} and an {@link Updater| updater} function.
  */
-export function useFetcher(): [Value, Updater] {
+export function useFetcher(): [FetcherValue, FetcherUpdater] {
     return useContext(Context);
 }
 
@@ -191,7 +177,7 @@ export function useFetcher(): [Value, Updater] {
  *
  * @return a wrapped version of `fetcher` supporting standard services
  */
-function wrap(fetcher: typeof fetch): typeof fetch {
+function wrap(fetcher: Fetcher): Fetcher {
     return (input, init={}) => {
 
         const method=(init.method || "GET").toUpperCase();

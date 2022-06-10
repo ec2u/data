@@ -21,6 +21,7 @@ import { DataUniversity, University } from "@ec2u/data/pages/universities/univer
 import "@metreeca/skin/index.css";
 import "@metreeca/skin/quicksand.css";
 import { NodeFetcher } from "@metreeca/tool/nests/fetcher";
+import { NodeGraph } from "@metreeca/tool/nests/graph";
 import { NodeRouter } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { render } from "react-dom";
@@ -32,21 +33,23 @@ render((
     <React.StrictMode>
 
         <NodeFetcher>
+            <NodeGraph>
 
-            <NodeRouter routes={{
+                <NodeRouter routes={{
 
-                [Home.id]: DataHome,
+                    [Home.id]: DataHome,
 
-                [Universities.id]: DataUniversities,
-                [University.id]: DataUniversity,
+                    [Universities.id]: DataUniversities,
+                    [University.id]: DataUniversity,
 
-                // [Events.id]: DataEvents,
-                // [Event.id]: DataEvent,
+                    // [Events.id]: DataEvents,
+                    // [Event.id]: DataEvent,
 
-                "*": DataNone
+                    "*": DataNone
 
-            }}/>
+                }}/>
 
+            </NodeGraph>
         </NodeFetcher>
 
     </React.StrictMode>

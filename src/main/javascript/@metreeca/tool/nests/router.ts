@@ -36,12 +36,12 @@ const Context=createContext<{ store: Store, update: () => void }>({ store: path(
 /**
  * The value component of the router context state.
  */
-export type Value=string
+export type RouterValue=string
 
 /**
  * The updater component of the router context state.
  */
-export interface Updater {
+export interface RouterUpdater {
 
     (route: string | { route?: string, state?: any, label?: string }, replace?: boolean): void;
 
@@ -96,7 +96,7 @@ export interface Store {
      *
      * @returns the current route as extracted from the current browser location
      */
-    (): Value;
+    (): RouterValue;
 
     /**
      * Converts a route to a browser location.
@@ -105,7 +105,7 @@ export interface Store {
      *
      * @returns a location-relative string representing `route`
      */
-    (route: Value): string;
+    (route: RouterValue): string;
 
 }
 
@@ -318,7 +318,7 @@ export function NodeRouter({
 
 }
 
-export function useRoute(): [Value, Updater] {
+export function useRoute(): [RouterValue, RouterUpdater] {
 
     const { store, update }=useContext(Context);
 

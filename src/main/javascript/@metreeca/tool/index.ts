@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/tool/nests/fetcher";
 
 
@@ -51,7 +50,7 @@ export const copy=(document.querySelector("meta[name=copyright]") as HTMLMetaEle
 /**
  * Creates a conditional `class` attribute.
  */
-export function classes(classes: { [name: string]: Optional<boolean> }): Optional<string> {
+export function classes(classes: { [name: string]: undefined | boolean }): undefined | string {
     return Object.entries(classes)
         .filter(([, state]) => state)
         .map(([label]) => label)

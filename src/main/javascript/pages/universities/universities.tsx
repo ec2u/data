@@ -50,7 +50,7 @@ export function DataUniversities() {
     const [, setRoute]=useRoute();
 
 
-    useEffect(() => { setRoute({ label: Universities.label }); });
+    useEffect(() => { setRoute({ label: Universities.label }); }, []);
 
 
     return <DataPage item={Universities.label}
