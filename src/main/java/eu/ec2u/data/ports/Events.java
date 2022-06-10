@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021-2022 EC2U Consortium
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import static com.metreeca.http.Handler.handler;
@@ -47,6 +48,7 @@ public final class Events extends Delegator {
                 EC2U.Resource(),
                 Schema.Event(),
 
+                field(DCTERMS.MODIFIED, required()), // housekeeping timestamp
                 field("fullDescription", Schema.description) // prevent clashes with dct:description
 
         );
