@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021-2022 EC2U Consortium
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Lambdas.task;
@@ -56,9 +57,28 @@ public final class Tasks {
 
     public static Collection<Statement> validate(final Shape shape, final Set<IRI> types, final Stream<Frame> frames) {
 
+        final AtomicInteger mistyped=new AtomicInteger();
+
         final Collection<Statement> statements=frames
+                .peek(frame -> {
+
+                    if ( frame.values(RDF.TYPE).noneMatch(types::contains) ) {
+
+                        service(logger()).warning(Tasks.class, format(
+                                "mistyped frame <%s> %s", frame.focus(), frame.values(RDF.TYPE).collect(toSet())
+                        ));
+
+                        mistyped.incrementAndGet();
+
+                    }
+
+                })
                 .flatMap(frame -> frame.model().stream())
                 .collect(toSet());
+
+        if ( mistyped.get() > 0 ) {
+            throw new IllegalArgumentException(format("<%d> mistyped frames in batch", mistyped.get()));
+        }
 
         final long invalid=types.stream()
                 .flatMap(type -> frame(type, statements).frames(inverse(RDF.TYPE)))
