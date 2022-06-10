@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021-2022 EC2U Consortium
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ import java.time.format.DateTimeFormatter;
 
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
+import static com.metreeca.link.shifts.Alt.alt;
 import static com.metreeca.link.shifts.Seq.seq;
 
-import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
@@ -73,7 +73,7 @@ public final class EventsPaviaCity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Schema.Event(), Schema.Event, events) // !!! EC2U.Event >> inference?
                 ));
     }
 
@@ -130,12 +130,8 @@ public final class EventsPaviaCity implements Runnable {
                 );
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private Frame event(final Frame frame) {
-
-        return frame(iri(EC2U.events, frame.skolemize(seq(DCTERMS.SOURCE))))
+        return frame(iri(EC2U.events, frame.skolemize(DCTERMS.SOURCE)))
 
                 .values(RDF.TYPE, Schema.Event)
 
@@ -156,7 +152,28 @@ public final class EventsPaviaCity implements Runnable {
 
                 .value(Schema.eventStatus, frame.value(Schema.eventStatus))
 
-                .frame(Schema.location, frame.frame(Schema.location));
+                .frame(Schema.location, frame.frame(Schema.location).map(this::location));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Frame location(final Frame location) {
+        return frame(iri(EC2U.locations, location.skolemize(seq(Schema.name), seq(Schema.address, Schema.name))))
+
+                .value(RDF.TYPE, Schema.Place)
+
+                .value(Schema.name, location.value(alt(seq(Schema.name), seq(Schema.address, Schema.name))))
+                .frame(Schema.address, location.frame(Schema.address).map(this::address));
+    }
+
+    private Frame address(final Frame address) {
+        return frame(iri(EC2U.locations, address.skolemize(Schema.streetAddress, Schema.addressLocality)))
+
+                .value(RDF.TYPE, Schema.PostalAddress)
+
+                .value(Schema.streetAddress, address.value(Schema.streetAddress))
+                .value(Schema.addressLocality, address.value(Schema.addressLocality));
     }
 
 }
