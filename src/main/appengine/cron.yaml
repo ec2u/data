@@ -81,12 +81,12 @@ cron:
 
   - description: "events - nightly housekeeping"
     url: /cron/events/
-    schedule: every day 00:10
+    schedule: every day 00:30
 
   - description: "system - nightly housekeeping"
     url: /cron/chores
-    schedule: every day 00:15
+    schedule: every day 00:35
 
   - description: "system - nightly housekeeping"
     url: /cron/inferences
-    schedule: every day 00:20
+    schedule: every day 00:40

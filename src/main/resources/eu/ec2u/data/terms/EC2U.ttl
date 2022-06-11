@@ -1,17 +1,10 @@
-@prefix : <https://data.ec2u.eu/terms/> .
-@prefix wd: <http://www.wikidata.org/entity/> .
-@prefix dct: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix wdt: <http://www.wikidata.org/prop/direct/> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix ec2u: <https://data.ec2u.eu/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix void: <http://rdfs.org/ns/void#> .
-@prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
-@prefix schema: <https://schema.org/> .
 @base <http://www.w3.org/2002/07/owl#> .
 
 [ rdf:type owl:Ontology ;
@@ -44,50 +37,18 @@ owl:sameAs rdf:type owl:ObjectProperty ,
                     owl:SymmetricProperty .
 
 
-###  http://www.wikidata.org/prop/direct/P131
-wdt:P131 rdf:type owl:ObjectProperty ;
-         rdfs:subPropertyOf ec2u:location .
-
-
-###  http://www.wikidata.org/prop/direct/P17
-wdt:P17 rdf:type owl:ObjectProperty ;
-        rdfs:subPropertyOf ec2u:country .
-
-
-###  http://www.wikidata.org/prop/direct/P18
-wdt:P18 rdf:type owl:ObjectProperty ;
-        rdfs:subPropertyOf ec2u:image .
-
-
-###  https://data.ec2u.eu/terms/country
-ec2u:country rdf:type owl:ObjectProperty .
-
-
-###  https://data.ec2u.eu/terms/image
-ec2u:image rdf:type owl:ObjectProperty .
-
-
-###  https://data.ec2u.eu/terms/location
-ec2u:location rdf:type owl:ObjectProperty .
-
-
 #################################################################
 #    Data properties
 #################################################################
 
 ###  http://purl.org/dc/terms/description
-dct:description rdf:type owl:DatatypeProperty ;
-                rdfs:subPropertyOf rdfs:comment .
+<http://purl.org/dc/terms/description> rdf:type owl:DatatypeProperty ;
+                                       rdfs:subPropertyOf rdfs:comment .
 
 
 ###  http://purl.org/dc/terms/title
-dct:title rdf:type owl:DatatypeProperty ;
-          rdfs:subPropertyOf rdfs:label .
-
-
-###  http://schema.org/disambiguatingDescription
-<http://schema.org/disambiguatingDescription> rdf:type owl:DatatypeProperty ;
-                                              rdfs:subPropertyOf dct:description .
+<http://purl.org/dc/terms/title> rdf:type owl:DatatypeProperty ;
+                                 rdfs:subPropertyOf rdfs:label .
 
 
 ###  http://www.w3.org/2000/01/rdf-schema#comment
@@ -96,53 +57,6 @@ rdfs:comment rdf:type owl:DatatypeProperty .
 
 ###  http://www.w3.org/2000/01/rdf-schema#label
 rdfs:label rdf:type owl:DatatypeProperty .
-
-
-###  http://www.w3.org/2003/01/geo/wgs84_pos#lat
-wgs84:lat rdf:type owl:DatatypeProperty .
-
-
-###  http://www.w3.org/2003/01/geo/wgs84_pos#long
-wgs84:long rdf:type owl:DatatypeProperty ;
-           rdfs:subPropertyOf owl:topDataProperty .
-
-
-###  http://www.w3.org/2004/02/skos/core#prefLabel
-skos:prefLabel rdf:type owl:DatatypeProperty ;
-               rdfs:subPropertyOf rdfs:label .
-
-
-###  http://www.wikidata.org/prop/direct/P2196
-wdt:P2196 rdf:type owl:DatatypeProperty ;
-          rdfs:subPropertyOf ec2u:students .
-
-
-###  http://www.wikidata.org/prop/direct/P571
-wdt:P571 rdf:type owl:DatatypeProperty ;
-         rdfs:subPropertyOf ec2u:inception .
-
-
-###  https://data.ec2u.eu/terms/inception
-ec2u:inception rdf:type owl:DatatypeProperty .
-
-
-###  https://data.ec2u.eu/terms/students
-ec2u:students rdf:type owl:DatatypeProperty .
-
-
-###  https://schema.org/latitude
-schema:latitude rdf:type owl:DatatypeProperty ;
-                rdfs:subPropertyOf wgs84:lat .
-
-
-###  https://schema.org/longitude
-schema:longitude rdf:type owl:DatatypeProperty ;
-                 rdfs:subPropertyOf wgs84:long .
-
-
-###  https://schema.org/name
-schema:name rdf:type owl:DatatypeProperty ;
-            rdfs:subPropertyOf dct:title .
 
 
 #################################################################
@@ -173,49 +87,9 @@ ec2u:University rdf:type owl:Class ;
                 rdfs:subClassOf ec2u:Resource .
 
 
-###  https://schema.org/Event
-schema:Event rdf:type owl:Class ;
-             rdfs:subClassOf ec2u:Event .
-
-
 #################################################################
 #    Individuals
 #################################################################
-
-###  http://www.wikidata.org/entity/Q1523902
-wd:Q1523902 rdf:type owl:NamedIndividual ;
-            owl:sameAs <https://data.ec2u.eu/universities/iasi> .
-
-
-###  http://www.wikidata.org/entity/Q154561
-wd:Q154561 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/jena> .
-
-
-###  http://www.wikidata.org/entity/Q219317
-wd:Q219317 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/pavia> .
-
-
-###  http://www.wikidata.org/entity/Q308963
-wd:Q308963 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/salamanca> .
-
-
-###  http://www.wikidata.org/entity/Q368643
-wd:Q368643 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/coimbra> .
-
-
-###  http://www.wikidata.org/entity/Q501841
-wd:Q501841 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/turku> .
-
-
-###  http://www.wikidata.org/entity/Q661056
-wd:Q661056 rdf:type owl:NamedIndividual ;
-           owl:sameAs <https://data.ec2u.eu/universities/poitiers> .
-
 
 ###  https://data.ec2u.eu/universities/coimbra
 <https://data.ec2u.eu/universities/coimbra> rdf:type owl:NamedIndividual ,

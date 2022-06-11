@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021-2022 EC2U Consortium
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,6 @@ import static eu.ec2u.data.tasks.events.Events.synced;
 
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
-import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -244,7 +243,20 @@ public final class EventsTurkuUniversity implements Runnable {
 
             // the same URL may be used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
 
-            return frame(iri(EC2U.locations, md5(format("%s\n%s", id, name.orElse("")))))
+            return frame(iri(EC2U.locations, md5(md5(Xtream
+
+                    .of(
+                            Optional.of(id).map(Values::literal), name.map(Values::literal),
+                            url, addressCountry, addressLocality, postalCode, streetAddress
+                    )
+
+                    .optMap(value -> value)
+                    .map(Value::stringValue)
+                    .collect(joining("\n"))
+
+            ))))
+
+                    .value(RDF.TYPE, Schema.Place)
 
                     .value(Schema.url, url)
                     .value(Schema.name, name.map(text -> literal(text, Turku.Language)))
@@ -253,11 +265,13 @@ public final class EventsTurkuUniversity implements Runnable {
 
                                     .of(url, addressCountry, addressLocality, postalCode, streetAddress)
 
-                                    .optMap(identity())
+                                    .optMap(value -> value)
                                     .map(Value::stringValue)
                                     .collect(joining("\n"))
 
                             )))
+
+                                    .value(RDF.TYPE, Schema.PostalAddress)
 
                                     .value(Schema.addressCountry, addressCountry)
                                     .value(Schema.addressLocality, addressLocality)
@@ -272,6 +286,8 @@ public final class EventsTurkuUniversity implements Runnable {
 
     private Optional<Frame> organizer(final JSONPath json) {
         return json.string("url").map(id -> frame(iri(EC2U.organizations, md5(id)))
+
+                .value(RDF.TYPE, Schema.Organization)
 
                 .value(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.Language)))
                 .value(Schema.email, json.string("email").map(Values::literal))
