@@ -19,16 +19,18 @@ package eu.ec2u.data.terms;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import static com.metreeca.link.Shape.multiple;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Values.IRIType;
 import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.And.and;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
+import static com.metreeca.link.shapes.Guard.hidden;
 import static com.metreeca.link.shapes.Or.or;
 
 import static eu.ec2u.data.terms.EC2U.Reference;
@@ -47,7 +49,7 @@ public final class Schema {
     /**
      * Creates a term in the schema.org namespace.
      *
-     * @param id the identifer of the term to be created
+     * @param id the identifier of the term to be created
      *
      * @return the schema.org term identified by {@code id}
      *
@@ -84,6 +86,8 @@ public final class Schema {
     public static Shape Thing() {
         return and(Reference(),
 
+                hidden(field(RDF.TYPE, all(Thing))),
+
                 field(url, multiple(), datatype(IRIType)),
                 field(name, multilingual()),
                 field(image, multiple(), datatype(IRIType)),
@@ -110,7 +114,7 @@ public final class Schema {
     public static Shape Organization() {
         return and(Thing(),
 
-                field(RDFS.LABEL, multilingual()),
+                hidden(field(RDF.TYPE, all(Organization))),
 
                 field(Schema.legalName, multilingual()),
                 field(Schema.email, datatype(XSD.STRING)),
@@ -131,13 +135,14 @@ public final class Schema {
     public static final IRI location=term("location");
     public static final IRI eventAttendanceMode=term("eventAttendanceMode");
     public static final IRI inLanguage=term("inLanguage");
-    public static final IRI audience=term("audience");
     public static final IRI startDate=term("startDate");
     public static final IRI endDate=term("endDate");
 
 
     public static Shape Event() {
         return and(Thing(),
+
+                hidden(field(RDF.TYPE, all(Event))),
 
                 field(eventStatus, optional(), datatype(IRIType)),
 
@@ -149,14 +154,13 @@ public final class Schema {
                 field(eventAttendanceMode, multiple(), datatype(IRIType)),
 
                 field(location, multiple(), Location()),
-                field(audience, multiple(), field(RDFS.LABEL, multilingual())),
                 field(organizer, multiple(), Organization())
 
         );
     }
 
 
-    //// Places ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //// Locations /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI Place=term("Place");
     public static final IRI PostalAddress=term("PostalAddress");
@@ -189,6 +193,8 @@ public final class Schema {
     public static Shape Place() {
         return and(Thing(),
 
+                hidden(field(RDF.TYPE, all(Place))),
+
                 field(address, optional(), PostalAddress()),
 
                 field(latitude, optional(), datatype(XSD.DECIMAL)),
@@ -200,6 +206,8 @@ public final class Schema {
     public static Shape PostalAddress() {
         return and(ContactPoint(),
 
+                hidden(field(RDF.TYPE, all(PostalAddress))),
+
                 field(addressCountry, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
                 field(addressRegion, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
                 field(addressLocality, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
@@ -210,7 +218,11 @@ public final class Schema {
     }
 
     public static Shape VirtualLocation() {
-        return and(Thing());
+        return and(Thing(),
+
+                hidden(field(RDF.TYPE, all(VirtualLocation)))
+
+        );
     }
 
 
@@ -226,6 +238,8 @@ public final class Schema {
 
     public static Shape ContactPoint() {
         return and(Thing(),
+
+                hidden(field(RDF.TYPE, all(ContactPoint))),
 
                 field(email, optional(), datatype(XSD.STRING)),
                 field(telephone, optional(), datatype(XSD.STRING))

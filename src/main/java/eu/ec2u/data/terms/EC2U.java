@@ -28,6 +28,7 @@ import java.util.Set;
 
 import static com.metreeca.link.Shape.*;
 import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.And.and;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
@@ -98,8 +99,6 @@ public final class EC2U {
 
                 datatype(Values.IRIType),
 
-                hidden(field(RDF.TYPE)),
-
                 field(RDFS.LABEL, multilingual()),
                 field(RDFS.COMMENT, multilingual())
         );
@@ -107,6 +106,8 @@ public final class EC2U {
 
     public static Shape Resource() {
         return and(Reference(),
+
+                hidden(field(RDF.TYPE, all(Resource))),
 
                 field(university, required(),
                         field(RDFS.LABEL, multilingual())
@@ -129,6 +130,8 @@ public final class EC2U {
 
     public static Shape Concept() {
         return and(Reference(),
+
+                hidden(field(RDF.TYPE, all(SKOS.CONCEPT))),
 
                 field(SKOS.PREF_LABEL, multilingual()),
                 field(SKOS.ALT_LABEL, multilingual()),

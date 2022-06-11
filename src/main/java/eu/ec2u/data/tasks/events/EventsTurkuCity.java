@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021-2022 EC2U Consortium
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -210,9 +210,9 @@ public final class EventsTurkuCity implements Runnable {
                     .value(Schema.endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
 
                     // !!! in_language
+                    // !!! audience
 
-                    .values(Schema.audience, json.strings("audience.*.@id").map(Values::iri)); // !!! mapping
-
+                    ;
         });
     }
 
