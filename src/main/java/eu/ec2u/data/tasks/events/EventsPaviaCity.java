@@ -40,6 +40,7 @@ import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shifts.Alt.alt;
 import static com.metreeca.link.shifts.Seq.seq;
 
+import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
 
@@ -73,7 +74,7 @@ public final class EventsPaviaCity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Schema.Event(), Schema.Event, events) // !!! EC2U.Event >> inference?
+                        validate(Event(), EC2U.Event, events)
                 ));
     }
 

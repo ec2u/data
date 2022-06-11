@@ -24,12 +24,15 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
+import eu.ec2u.data.work.Reasoner;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 
+import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Lambdas.task;
@@ -39,17 +42,21 @@ import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.inverse;
+import static com.metreeca.link.Values.pattern;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.services;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public final class Tasks {
 
     static { System.setProperty("com.sun.security.enableAIAcaIssuers", "true"); } // ;( retrieve missing certificates
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void exec(final Runnable... tasks) {
         services(new Locator()).exec(tasks).clear();
@@ -76,31 +83,65 @@ public final class Tasks {
 
     public static Collection<Statement> validate(final Shape shape, final Set<IRI> types, final Stream<Frame> frames) {
 
-        final AtomicInteger mistyped=new AtomicInteger();
+        final Reasoner reasoner=service(() -> new Reasoner(ontologies()
 
-        final Collection<Statement> statements=frames
-                .peek(frame -> {
+                .flatMap(url -> {
 
-                    if ( frame.values(RDF.TYPE).noneMatch(types::contains) ) {
+                    try ( final InputStream input=url.openStream() ) {
 
-                        service(logger()).warning(Tasks.class, format(
-                                "mistyped frame <%s> %s", frame.focus(), frame.values(RDF.TYPE).collect(toSet())
-                        ));
+                        return Rio.parse(input, RDFFormat.TURTLE).stream();
 
-                        mistyped.incrementAndGet();
+                    } catch ( final IOException e ) {
+
+                        throw new UncheckedIOException(e);
 
                     }
 
                 })
-                .flatMap(frame -> frame.model().stream())
-                .collect(toSet());
 
-        if ( mistyped.get() > 0 ) {
-            throw new IllegalArgumentException(format("<%d> mistyped frames in batch", mistyped.get()));
+                .collect(toSet()))
+        );
+
+
+        final List<Frame> batch=frames.collect(toList());
+
+        final Set<Value> resources=batch.stream().map(Frame::focus).collect(toSet());
+
+        final Collection<Statement> explicit=batch.stream().flatMap(frame -> frame.model().stream()).collect(toSet());
+        final Collection<Statement> extended=reasoner.apply(explicit);
+
+        final long mistyped=resources.stream()
+
+                .filter(resource -> {
+
+                    final boolean invalid=!resource.isResource() || extended.stream()
+                            .filter(pattern(resource, RDF.TYPE, null))
+                            .map(Statement::getObject)
+                            .noneMatch(types::contains);
+
+                    if ( invalid ) {
+
+                        service(logger()).warning(Tasks.class, format(
+                                "mistyped frame <%s> %s", resource, extended.stream()
+                                        .filter(pattern(resource, RDF.TYPE, null))
+                                        .map(Statement::getObject)
+                                        .collect(toSet())
+                        ));
+
+                    }
+
+                    return invalid;
+
+                })
+
+                .count();
+
+        if ( mistyped > 0 ) {
+            throw new IllegalArgumentException(format("<%d> mistyped frames in batch", mistyped));
         }
 
         final long invalid=types.stream()
-                .flatMap(type -> frame(type, statements).frames(inverse(RDF.TYPE)))
+                .flatMap(type -> frame(type, extended).frames(inverse(RDF.TYPE)))
                 .map(new Validate(shape))
                 .filter(Optional::isEmpty)
                 .count();
@@ -109,7 +150,7 @@ public final class Tasks {
             throw new IllegalArgumentException(format("<%d> malformed frames in batch", invalid));
         }
 
-        return statements;
+        return explicit;
     }
 
 

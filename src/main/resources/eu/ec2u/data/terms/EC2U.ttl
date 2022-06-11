@@ -91,41 +91,6 @@ ec2u:University rdf:type owl:Class ;
 #    Individuals
 #################################################################
 
-###  http://www.wikidata.org/entity/Q1523902
-<http://www.wikidata.org/entity/Q1523902> rdf:type owl:NamedIndividual ;
-                                          owl:sameAs <https://data.ec2u.eu/universities/iasi> .
-
-
-###  http://www.wikidata.org/entity/Q154561
-<http://www.wikidata.org/entity/Q154561> rdf:type owl:NamedIndividual ;
-                                         owl:sameAs <https://data.ec2u.eu/universities/jena> .
-
-
-###  http://www.wikidata.org/entity/Q219317
-<http://www.wikidata.org/entity/Q219317> rdf:type owl:NamedIndividual ;
-                                         owl:sameAs <https://data.ec2u.eu/universities/pavia> .
-
-
-###  http://www.wikidata.org/entity/Q308963
-<http://www.wikidata.org/entity/Q308963> rdf:type owl:NamedIndividual ;
-                                         owl:sameAs <https://data.ec2u.eu/universities/salamanca> .
-
-
-###  http://www.wikidata.org/entity/Q368643
-<http://www.wikidata.org/entity/Q368643> rdf:type owl:NamedIndividual ;
-                                         owl:sameAs <https://data.ec2u.eu/universities/coimbra> .
-
-
-###  http://www.wikidata.org/entity/Q501841
-<http://www.wikidata.org/entity/Q501841> rdf:type owl:NamedIndividual ;
-                                         owl:sameAs <https://data.ec2u.eu/universities/turku> .
-
-
-###  http://www.wikidata.org/entity/Q661056
-<http://www.wikidata.org/entity/Q661056> rdf:type owl:NamedIndividual ;
-                                         owl:sameAs <https://data.ec2u.eu/universities/poitiers> .
-
-
 ###  https://data.ec2u.eu/universities/coimbra
 <https://data.ec2u.eu/universities/coimbra> rdf:type owl:NamedIndividual ,
                                                      ec2u:University ;
