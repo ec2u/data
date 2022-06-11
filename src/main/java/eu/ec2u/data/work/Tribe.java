@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021-2022 EC2U Consortium
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -242,6 +242,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
     private Optional<Frame> organizer(final JSONPath organizer) {
         return organizer.string("url").map(id -> frame(iri(EC2U.organizations, md5(id)))
 
+                .value(RDF.TYPE, Schema.Organization)
+
                 .value(Schema.url, organizer.string("website").flatMap(Work::url).map(Values::iri))
                 .value(Schema.name, organizer.string("organizer").map(XPath::decode).map(text -> literal(text,
                         language)))
@@ -262,6 +264,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             return frame(iri(EC2U.locations, md5(id)))
 
+                    .value(RDF.TYPE, Schema.Place)
+
                     .value(Schema.url, location.string("url").map(Values::iri))
                     .value(Schema.name, location.string("venue").map(text -> literal(text, language)))
 
@@ -277,6 +281,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                                     .collect(joining("\n"))
 
                             )))
+
+                                    .value(RDF.TYPE, Schema.PostalAddress)
 
                                     .value(Schema.addressCountry, addressCountry)
                                     .value(Schema.addressLocality, addressLocality)

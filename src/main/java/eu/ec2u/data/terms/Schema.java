@@ -208,9 +208,9 @@ public final class Schema {
 
                 hidden(field(RDF.TYPE, all(PostalAddress))),
 
-                field(addressCountry, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
-                field(addressRegion, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
-                field(addressLocality, optional(), or(and(Reference(), datatype(IRIType)), datatype(XSD.STRING))),
+                field(addressCountry, optional(), or(Reference(), datatype(XSD.STRING))),
+                field(addressRegion, optional(), or(Reference(), datatype(XSD.STRING))),
+                field(addressLocality, optional(), or(Reference(), datatype(XSD.STRING))),
                 field(postalCode, optional(), datatype(XSD.STRING)),
                 field(streetAddress, optional(), datatype(XSD.STRING))
 
