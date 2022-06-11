@@ -4,15 +4,15 @@
 
 package eu.ec2u.data.tasks;
 
-import com.metreeca.http.Xtream;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.terms.EC2U;
 
-import static com.metreeca.core.Resources.resource;
+import java.net.URL;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.Tasks.ontologies;
 
 
 public final class Ontologies implements Runnable {
@@ -25,10 +25,9 @@ public final class Ontologies implements Runnable {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override public void run() {
-		Xtream
+		ontologies()
 
-				.of(resource(EC2U.class, ".ttl").toExternalForm())
-
+				.map(URL::toExternalForm)
 				.bagMap(new Retrieve())
 
 				.batch(0) // avoid multiple truth-maintenance rounds

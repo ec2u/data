@@ -17,18 +17,23 @@
 package eu.ec2u.data.tasks;
 
 import com.metreeca.http.Locator;
+import com.metreeca.http.Xtream;
 import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
+import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Lambdas.task;
+import static com.metreeca.core.Resources.resource;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
@@ -48,6 +53,20 @@ public final class Tasks {
 
     public static void exec(final Runnable... tasks) {
         services(new Locator()).exec(tasks).clear();
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static Xtream<URL> ontologies() {
+        return Xtream
+
+                .of(
+                        resource(EC2U.class, ".ttl"),
+                        resource(EC2U.class, "SKOS.ttl"),
+                        resource(EC2U.class, "Wikidata.ttl"),
+                        resource(Schema.class, ".ttl")
+                );
     }
 
 
@@ -92,6 +111,7 @@ public final class Tasks {
 
         return statements;
     }
+
 
     public static void upload(final IRI context, final Collection<Statement> model) {
 

@@ -4,22 +4,21 @@
 
 package eu.ec2u.data.tasks;
 
-import com.metreeca.http.Xtream;
-
-import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.core.Resources.resource;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
+import static eu.ec2u.data.tasks.Tasks.ontologies;
 
 
 public final class Namespaces implements Runnable {
@@ -36,26 +35,40 @@ public final class Namespaces implements Runnable {
 
             connection.clearNamespaces();
 
-            Xtream.of(resource(EC2U.class, ".ttl")).forEach(path -> {
-                try {
+            ontologies()
 
-                    Rio.createParser(RDFFormat.TURTLE).setRDFHandler(new AbstractRDFHandler() {
+                    .flatMap(path -> {
+                        try {
 
-                        @Override public void handleNamespace(final String prefix, final String uri) {
+                            final Map<String, String> namespaces=new HashMap<>();
 
-                            connection.setNamespace(prefix, uri);
+                            Rio.createParser(RDFFormat.TURTLE).setRDFHandler(new AbstractRDFHandler() {
+
+                                @Override public void handleNamespace(final String prefix, final String uri) {
+
+                                    namespaces.put(prefix, uri);
+
+                                }
+
+                            }).parse(path.openStream());
+
+                            return namespaces.entrySet().stream();
+
+                        } catch ( final IOException e ) {
+
+                            throw new UncheckedIOException(e);
 
                         }
 
-                    }).parse(path.openStream());
+                    })
 
-                } catch ( final IOException e ) {
+                    .distinct()
 
-                    throw new UncheckedIOException(e);
+                    .forEach(namespace ->
 
-                }
+                            connection.setNamespace(namespace.getKey(), namespace.getValue())
 
-            });
+                    );
 
         }));
     }
