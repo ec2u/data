@@ -24,7 +24,8 @@ import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -102,7 +103,6 @@ public final class Work {
         ))))
 
                 .value(RDF.TYPE, Schema.Organization)
-                .value(RDFS.LABEL, name.or(() -> legalName))
 
                 .value(Schema.name, name)
                 .value(Schema.legalName, legalName)
@@ -117,7 +117,6 @@ public final class Work {
         ))))
 
                 .values(RDF.TYPE, frame.values(RDF.TYPE))
-                .values(RDFS.LABEL, frame.values(Schema.name))
 
                 .value(Schema.name, frame.value(Schema.name))
                 .value(Schema.url, frame.value(Schema.url))

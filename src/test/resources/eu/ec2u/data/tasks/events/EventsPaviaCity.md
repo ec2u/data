@@ -15,6 +15,12 @@
 * custom article crawler
 * extractor based on standard HTML Microdata parser
 
+## 2022-06-10
+
+* Fix conversion of event locations
+  * bnodes are converted to skolemized IRIs
+  * name are repositiond from misplaced postal address descriptions
+
 # Content
 
 * `schema:url`
@@ -25,6 +31,10 @@
 * `schema:endDate`
 * `schema:eventStatus`
 * `schema:location`
+  * `schema:name`
+  * `schema:address`
+    * `schema:streetAddress`
+    * `schema:addressLocation`
 
 # Samples
 

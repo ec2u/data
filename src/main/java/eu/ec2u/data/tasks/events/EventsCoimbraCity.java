@@ -190,6 +190,7 @@ public final class EventsCoimbraCity implements Runnable {
 
     private Optional<Frame> location(final JSONPath json) {
         return json.string("place.name").map(name -> frame(iri(EC2U.locations, md5(name)))
+                .value(RDF.TYPE, Schema.Place)
                 .value(Schema.name, literal(name, Coimbra.Language))
                 .value(Schema.longitude, json.decimal("place.longitude").map(Values::literal))
                 .value(Schema.latitude, json.decimal("place.latitude").map(Values::literal))

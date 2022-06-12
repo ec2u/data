@@ -140,7 +140,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                                 // ;( pagination links are disabled under javascript control: test for page links
 
-                                .link("//div[contains(@class, 'entry_wrapper')]//a[@class='link']/@href")
+                                .link("//div[contains(@class, 'entry_wrapper')]/div[@class='title']/a/@href")
                                 .isPresent()
 
                         )
@@ -156,8 +156,9 @@ public final class EventsJenaUniversity implements Runnable {
                 .optMap(new GET<>(new HTML()))
 
                 .map(XPath::new).flatMap(xpath -> xpath
-                        .links("//div[contains(@class, 'entry_wrapper')]//a[@class='link']/@href")
+                        .links("//div[contains(@class, 'entry_wrapper')]/div[@class='title']/a/@href")
                 )
+
 
                 // extract JSON-LD
 

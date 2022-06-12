@@ -210,9 +210,9 @@ public final class EventsTurkuCity implements Runnable {
                     .value(Schema.endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
 
                     // !!! in_language
+                    // !!! audience
 
-                    .values(Schema.audience, json.strings("audience.*.@id").map(Values::iri)); // !!! mapping
-
+                    ;
         });
     }
 

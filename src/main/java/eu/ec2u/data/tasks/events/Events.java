@@ -39,89 +39,97 @@ import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
 public final class Events implements Runnable {
 
-	public static Instant synced(final Value publisher) {
-		return Xtream
+    public static Instant synced(final Value publisher) {
+        return Xtream
 
-				.of("prefix ec2u: </terms/>\n"
-						+"prefix dct: <http://purl.org/dc/terms/>\n\n"
-						+"select (max(?modified) as ?synced) where {\n"
-						+"\n"
-						+"\t?event a ec2u:Event;\n"
-						+"\t\tdct:publisher ?publisher;\n"
-						+"\t\tdct:modified ?modified.\n"
-						+"\n"
-						+"}"
-				)
+                .of("prefix ec2u: </terms/>\n"
+                        +"prefix dct: <http://purl.org/dc/terms/>\n\n"
+                        +"select (max(?modified) as ?synced) where {\n"
+                        +"\n"
+                        +"\t?event a ec2u:Event;\n"
+                        +"\t\tdct:publisher ?publisher;\n"
+                        +"\t\tdct:modified ?modified.\n"
+                        +"\n"
+                        +"}"
+                )
 
-				.flatMap(new TupleQuery()
-						.base(EC2U.Base)
-						.binding("publisher", publisher)
-						.dflt(EC2U.events)
-				)
+                .flatMap(new TupleQuery()
+                        .base(EC2U.Base)
+                        .binding("publisher", publisher)
+                        .dflt(EC2U.events)
+                )
 
-				.optMap(bindings -> literal(bindings.getValue("synced")))
+                .optMap(bindings -> literal(bindings.getValue("synced")))
 
-				.map(Literal::temporalAccessorValue)
-				.map(Instant::from)
+                .map(Literal::temporalAccessorValue)
+                .map(Instant::from)
 
-				.findFirst()
+                .findFirst()
 
-				.orElseGet(() -> Instant.now().minus(Duration.ofDays(30)));
-	}
-
-
-	public static void main(final String... args) {
-		exec(() -> new Events().run());
-	}
+                .orElseGet(() -> Instant.now().minus(Duration.ofDays(30)));
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private final Graph graph=service(graph());
-	private final Logger logger=service(logger());
-
-
-	@Override public void run() {
-		purge();
-	}
+    public static void main(final String... args) {
+        exec(() -> new Events().run());
+    }
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private void purge() {
+    private final Graph graph=service(graph());
+    private final Logger logger=service(logger());
 
-		logger.info(this, "removing stale events");
 
-		exec(() -> graph.update(task(connection -> connection
+    @Override public void run() {
+        purge();
+    }
 
-				.prepareUpdate(SPARQL, ""
-						+"prefix : </terms/>\n"
-						+"prefix schema: <https://schema.org/>\n"
-						+"\n"
-						+"delete {\n"
-						+"\n"
-						+"\t?e ?p ?o.\n"
-						+"\t?s ?q ?e.\n"
-						+"\n"
-						+"} where {\n"
-						+"\n"
-						+"\t?e a :Event.\n"
-						+"\n"
-						+"\toptional { ?e schema:startDate ?start }\n"
-						+"\toptional { ?e schema:endDate ?end }\n"
-						+"\n"
-						+"\tbind (coalesce(?end, ?start) as ?date)\n"
-						+"\n"
-						+"\tfilter (bound(?date) && ?date < now() )\n"
-						+"\n"
-						+"optional { ?e ?p ?o }\n"
-						+"\toptional { ?s ?q ?e }\n"
-						+"\n"
-						+"}", EC2U.Base)
 
-				.execute()
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		)));
-	}
+    private void purge() {
+
+        logger.info(this, "removing stale events");
+
+        exec(() -> graph.update(task(connection -> connection
+
+                .prepareUpdate(SPARQL, ""
+                        +"prefix : </terms/>\n"
+                        +"prefix dct: <http://purl.org/dc/terms/>\n"
+                        +"prefix schema: <https://schema.org/>\n"
+                        +"\n"
+                        +"delete {\n"
+                        +"\n"
+                        +"?e ?p ?o.\n"
+                        +"\t?s ?q ?e.\n"
+                        +"\n"
+                        +"} where {\n"
+                        +"\n"
+                        +"?e a :Event.\n"
+                        +"\n"
+                        +"optional { ?e schema:startDate ?start }\n"
+                        +"optional { ?e schema:endDate ?end }\n"
+                        +"\n"
+                        +"optional { ?e dct:created ?created }\n"
+                        +"optional { ?e dct:modified ?modified }\n"
+                        +"\n"
+                        +"bind (coalesce(?end, ?start) as ?date)\n"
+                        +"bind (coalesce(?modified, ?created) as ?mutated)\n"
+                        +"\n"
+                        +"bind (?date < now() as ?stale)\n"
+                        +"bind ((year(now())*12+month(now()))-(year(?mutated)*12+month(?mutated)) as ?delta)\n"
+                        +"\n"
+                        +"\tfilter ( ?stale || !bound(?date) && ?delta >= 1)\n"
+                        +"\n"
+                        +"optional { ?e ?p ?o }\n"
+                        +"\toptional { ?s ?q ?e }\n"
+                        +"\n"
+                        +"}", EC2U.Base)
+
+                .execute()
+
+        )));
+    }
 
 }

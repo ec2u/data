@@ -206,11 +206,11 @@ public final class EventsJenaCity implements Runnable {
                     .value(Schema.endDate, frame.value(Schema.endDate).map(this::datetime))
 
                     .frame(Schema.organizer, frame.frame(Schema.organizer)
-                            .flatMap(location -> location(location, EC2U.organizations))
+                            .flatMap(location -> thing(location, EC2U.organizations))
                     )
 
                     .frame(Schema.location, frame.frame(Schema.location)
-                            .flatMap(location -> location(location, EC2U.locations))
+                            .flatMap(location -> thing(location, EC2U.locations))
                     );
 
         });
@@ -223,7 +223,7 @@ public final class EventsJenaCity implements Runnable {
         return literal(v.stringValue(), XSD.DATETIME);
     }
 
-    private Optional<Frame> location(final Frame frame, final IRI collection) {
+    private Optional<Frame> thing(final Frame frame, final IRI collection) {
         return frame.value(Schema.url).or(() -> frame.value(Schema.name))
 
                 .map(Value::stringValue)
@@ -231,7 +231,6 @@ public final class EventsJenaCity implements Runnable {
                 .map(id -> frame(iri(collection, frame.skolemize(Schema.url, Schema.name)))
 
                         .value(RDF.TYPE, frame.value(RDF.TYPE))
-                        .value(RDFS.LABEL, frame.value(Schema.name).map(v -> literal(v.stringValue(), Jena.Language)))
 
                         .value(Schema.url, frame.value(Schema.url).map(v -> iri(v.stringValue())))
                         .value(Schema.name, frame.value(Schema.name).map(v -> literal(v.stringValue(), Jena.Language)))

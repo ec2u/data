@@ -24,6 +24,7 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import static com.metreeca.http.Handler.handler;
@@ -31,22 +32,15 @@ import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.link.shapes.Range.range;
 
 public final class Events extends Delegator {
 
     public static Shape Event() {
-        return relate(
+        return relate(EC2U.Resource(), Schema.Event(),
 
-                filter(clazz(EC2U.Event)),
+                hidden(field(RDF.TYPE, all(EC2U.Event))),
 
-                hidden(
-                        field(RDF.TYPE, all(EC2U.Event), range(EC2U.Event, Schema.Event))
-                ),
-
-                EC2U.Resource(),
-                Schema.Event(),
-
+                field(DCTERMS.MODIFIED, required()), // housekeeping timestamp
                 field("fullDescription", Schema.description) // prevent clashes with dct:description
 
         );
@@ -54,15 +48,24 @@ public final class Events extends Delegator {
 
 
     public Events() {
-        delegate(handler(new Driver(Event()), new Router()
+        delegate(handler(
 
-                .path("/", new Router()
-                        .get(new Relator())
-                )
+                new Driver(Event(),
 
-                .path("/{id}", new Router()
-                        .get(new Relator())
-                )
+                        filter(clazz(EC2U.Event))
+
+                ),
+
+                new Router()
+
+                        .path("/", new Router()
+                                .get(new Relator())
+                        )
+
+                        .path("/{id}", new Router()
+                                .get(new Relator())
+                        )
+
         ));
     }
 
