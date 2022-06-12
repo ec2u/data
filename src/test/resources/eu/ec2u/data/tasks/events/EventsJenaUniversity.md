@@ -25,6 +25,10 @@
 * data extracted from schema.org-based event description embedded into each page as
   a `<script type="application/ld+json">` HTML head element
 
+## 2022-06-12
+
+* fix XPath expressions for page link scraping
+
 ## 2022-05-19
 
 * prevent generation of duplicate events when dates are modified (#6)
@@ -34,33 +38,33 @@
 # Samples
 
 ```xml
-
-<div class="entry_wrapper chege">
+<div class="entry_wrapper unijena">
     <div class="date">
-        <time datetime="2022-05-19T16:15:00+02:00">19. Mai 2022</time>
+        <time datetime="2022-06-13T16:00:00+02:00">13. Jun 2022</time>
     </div>
-    <div class="time_categories">
-        16:15 Uhr ·
-        <span>Vortrag/Vorlesung</span>
+    <div class="time_categories_wrapper">
+        <div class="time_categories">
+            16:00 Uhr ·
+            <span>Informationsveranstaltung</span>
+        </div>
+        <div class="edge_wrapper">
+            <div class="edge"></div>
+        </div>
     </div>
     <div class="title">
-        Polymict crystalline impact breccias from the Nördlinger Ries impact structure, Germany - shock effects and
-        mixing of target rocks
+        <a href="https://www.uni-jena.de/kommende-veranstaltungen/praktikum-im-ausland-eu-praktikum-thueringen" hreflang="de">
+            Praktikum im Ausland - internationale Berufserfahrung sammeln
+        </a>
+        <div class="edge_wrapper">
+            <div class="edge"></div>
+        </div>
     </div>
     <div class="short">
-        Prof. Dr. Claudia Trepmann (LMU München, Department für Geo– und Umweltwissenschaften)
+        Wie finde ich einen Praktikumsplatz und welche Unterstützung bekomme ich?
     </div>
-    <div class="additional_wrapper">
-        <div class="additional">
-            <a class="link"
-               href="https://www.uni-jena.de/kommende-veranstaltungen/polymict-crystalline-impact-breccias-from-the-noerdlinger-ries-impact-structure-germany-shock-effects-and-mixing-of-target-rocks"
-               hreflang="de"
-               aria-label='Mehr erfahren über "Polymict crystalline impact breccias from the Nördlinger Ries impact structure, Germany - shock effects and mixing of target rocks"'>
-                Mehr erfahren
-            </a>
-            <div class="icons">
-            </div>
-            <div class="placeholder"></div>
+    <div class="additional">
+        <div class="icons">
+            <img loading="lazy" decoding="async" title="Der Zugang zu dieser Veranstaltung ist barrierefrei." alt="Der Zugang zu dieser Veranstaltung ist barrierefrei." src="/skin/_global/_images/blocks/event_overview_accessible.png" srcset="/skin/_global/_images/blocks/event_overview_accessible.svg">
         </div>
     </div>
 </div>
