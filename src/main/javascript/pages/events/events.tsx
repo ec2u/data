@@ -17,8 +17,10 @@
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
-import { Query } from "@metreeca/link";
+import { Query, string } from "@metreeca/link";
 import { NodePane } from "@metreeca/tile/pane";
+import { NodePath } from "@metreeca/tile/widgets/path";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Updater } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/parameters";
 import { useEntry } from "@metreeca/tool/nests/graph";
@@ -30,18 +32,18 @@ import { useEffect } from "react";
 export const Events=immutable({
 
     id: "/events/",
-    label: "Events",
+    label: { "en": "Events" },
 
     contains: [{
 
         id: "",
         image: "",
-        label: "",
-        comment: "",
+        label: {},
+        comment: {},
 
         university: {
             id: "",
-            label: ""
+            label: {}
         },
 
         startDate: "",
@@ -66,15 +68,15 @@ export function DataEvents() {
     const [entry]=useEntry(route, Events, [query, setQuery]);
 
 
-    useEffect(() => { setRoute({ label: Events.label }); }, []);
+    useEffect(() => { setRoute({ label: string(Events) }); }, []);
 
 
-    return <DataPage item={Events.label}
+    return <DataPage item={<NodePath>{Events}</NodePath>}
 
-        // menu={fetch(abort => <ToolSpin abort={abort}/>)}
-        //
+        menu={entry({ fetch: <NodeSpin/> })}
+
         // side={<DataFiltersButton onClick={update}/>}
-        //
+
         // pane={facets([query, setQuery])}
 
     >{entry({
@@ -83,21 +85,21 @@ export function DataEvents() {
 
             <DataCard key={id}
 
-                name={<a href={id}>{label}</a>}
+                name={<a href={id}>{string(label)}</a>}
 
                 icon={image?.[0]}
 
                 tags={<>
-                    <span>{university.label}</span>
+                    <span>{string(university)}</span>
                     {startDate && <>
                         <span> / </span>
-                        <span>{startDate.substr(0, 10)}</span>
+                        <span>{startDate.substring(0, 10)}</span>
                     </>}
                 </>}
 
             >
 
-                {comment}
+                {string(comment)}
 
             </DataCard>
 

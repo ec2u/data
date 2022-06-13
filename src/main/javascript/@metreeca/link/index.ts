@@ -210,11 +210,12 @@ export function string(value: undefined | Value | Entry, locales: readonly strin
                         : "";
 }
 
-export function label(entry: Entry, locales: readonly string[]=navigator.languages): string {
+
+function label(entry: Entry, locales: readonly string[]) {
     return string(entry.label, locales) || guess(entry.id) || "";
 }
 
-export function local(dictionary: Dictionary, locales: readonly string[]=navigator.languages): string {
+function local(dictionary: Dictionary, locales: readonly string[]=navigator.languages): string {
     return locales.map(l => dictionary[l]).filter(s => s)[0] || dictionary.en || Object.values(dictionary)[0] || "";
 }
 
@@ -225,7 +226,7 @@ export function local(dictionary: Dictionary, locales: readonly string[]=navigat
  *
  * @returns a label guessed from `id` or an empty string, if unable to guess
  */
-export function guess(id: string): string {
+function guess(id: string): string {
     return id
         .replace(/^.*?(?:[/#:]([^/#:]+))?(?:\/|#|#_|#id|#this)?$/, "$1") // extract label
         .replace(/([a-z-0-9])([A-Z])/g, "$1 $2") // split camel-case words

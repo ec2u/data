@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
+import { Events } from "@ec2u/data/pages/events/events";
+import { DataCard } from "@ec2u/data/tiles/card";
+import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
+import { string } from "@metreeca/link";
+import { NodePath } from "@metreeca/tile/widgets/path";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { useEntry } from "@metreeca/tool/nests/graph";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
+import { useEffect } from "react";
 
 
 export const Event=immutable({
@@ -23,10 +32,10 @@ export const Event=immutable({
     id: "/events/{code}",
 
     image: "",
-    label: "Event",
-    comment: "",
+    label: { "en": "Event" },
+    comment: {},
 
-    description: "",
+    fullDescription: {},
 
     startDate: ""
 
@@ -35,58 +44,53 @@ export const Event=immutable({
 
 export function DataEvent() {
 
-    // const { name }=useRouter();
-    //
-    // const [{ fetch, frame, error }]=useEntry("", Event);
-    //
-    //
-    // useEffect(() => { frame(({ label }) => name(string(label))); });
+    const [route, setRoute]=useRoute();
+
+    const [entry]=useEntry(route, Event);
 
 
-    return <></>  /*<DataPage
+    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
 
-     item={<>
-     <a href={"/events/"}>Events</a>
-     <span>{frame(({ label }) => string(label))}</span>
-     </>}
+    return <DataPage item={<NodePath>{[Events, entry({ value: value => value })]}</NodePath>}
 
-     menu={fetch(abort => <ToolSpin abort={abort}/>)}
+        menu={entry({ fetch: <NodeSpin/> })}
 
-     >
+    >{entry({
 
-     {frame(({
+        value: ({
 
-     image,
-     label,
-     comment,
+            image,
+            label,
+            comment,
 
-     description,
+            fullDescription,
 
-     startDate
+            startDate
 
-     }) => (
+        }) => (
 
-     <DataCard
+            <DataCard
 
-     icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
+                icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
 
-     info={<dl>
+                info={<dl>
 
-     <dt>Start Date</dt>
-     <dd>{startDate}</dd>
+                    <dt>Start Date</dt>
+                    <dd>{startDate}</dd>
 
-     </dl>}
+                </dl>}
 
-     >
+            >
 
-     <p>{string(description)}</p>
+                <p>{string(fullDescription)}</p>
 
-     </DataCard>
+            </DataCard>
 
-     ))}
+        ),
 
-     {error(error => <span>{error.status}</span>)} {/!* !!! *!/}
+        error: error => <span>{error.status}</span> // !!! report
 
-     </DataPage>*/;
+
+    })}</DataPage>;
 
 }

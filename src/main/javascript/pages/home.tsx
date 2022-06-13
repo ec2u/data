@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+import { Events } from "@ec2u/data/pages/events/events";
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
-import { label } from "@metreeca/link";
+import { string } from "@metreeca/link";
 import { Home as Site } from "@metreeca/skin/lucide";
 import { NodePane } from "@metreeca/tile/pane";
 import { name } from "@metreeca/tool";
@@ -26,8 +27,8 @@ import * as React from "react";
 
 export const Home=immutable({
 
-	id: "/",
-	label: "Knowledge Hub"
+    id: "/",
+    label: "Knowledge Hub"
 
 });
 
@@ -35,29 +36,30 @@ export const Home=immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function DataHome() {
-	return (
+    return (
 
-		<DataPage item={name}
+        <DataPage item={name}
 
-			menu={<a href={"https://ec2u.eu/"} target={"_blank"} title={`About EC2U`}><Site/></a>}
+            menu={<a href={"https://ec2u.eu/"} target={"_blank"} title={`About EC2U`}><Site/></a>}
 
-			pane={<NodePane
+            pane={<NodePane
 
-				header={<input type={"search"} placeholder={Home.label}/>}
+                header={<input type={"search"} placeholder={Home.label}/>}
 
-			>
+            >
 
-				<ul>
-					<li><a href={Universities.id}>{label(Universities)}</a></li>
-				</ul>
+                <ul>
+                    <li><a href={Universities.id}>{string(Universities)}</a></li>
+                    <li><a href={Events.id}>{string(Events)}</a></li>
+                </ul>
 
-			</NodePane>}
+            </NodePane>}
 
-		>
+        >
 
-			<img src={"/blobs/ec2u.png"} alt={"EC2U Locations"} style={{ width: "100%", maxWidth: "50em" }}/>
+            <img src={"/blobs/ec2u.png"} alt={"EC2U Locations"} style={{ width: "100%", maxWidth: "50em" }}/>
 
-		</DataPage>
+        </DataPage>
 
-	);
+    );
 }

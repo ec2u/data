@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { DataEvent, Event } from "@ec2u/data/pages/events/event";
+import { DataEvents, Events } from "@ec2u/data/pages/events/events";
 import DataHome, { Home } from "@ec2u/data/pages/home";
 import DataNone from "@ec2u/data/pages/none";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
@@ -42,8 +44,8 @@ render((
                     [Universities.id]: DataUniversities,
                     [University.id]: DataUniversity,
 
-                    // [Events.id]: DataEvents,
-                    // [Event.id]: DataEvent,
+                    [Events.id]: DataEvents,
+                    [Event.id]: DataEvent,
 
                     "*": DataNone
 

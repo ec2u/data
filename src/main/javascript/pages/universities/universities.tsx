@@ -16,7 +16,7 @@
 
 import { DataCard } from "@ec2u/data/tiles/card";
 import { immutable } from "@metreeca/core";
-import { label, Query, string } from "@metreeca/link";
+import { Query, string } from "@metreeca/link";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useParameters } from "@metreeca/tool/hooks/parameters";
@@ -65,7 +65,7 @@ export function DataUniversities() {
 
     const [entry]=useEntry(route, Universities, [query, setQuery]);
 
-    useEffect(() => { setRoute({ label: label(Universities) }); }, []);
+    useEffect(() => { setRoute({ label: string(Universities) }); }, []);
 
 
     return <DataPage item={<NodePath>{Universities}</NodePath>}
