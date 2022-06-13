@@ -271,7 +271,7 @@ export function State<V extends Frame, E extends Frame>({ value }: {
  */
 export function State<V extends Frame, E extends Frame>({ error }: {
 
-    error: E,
+    error: Error<E>,
 
 }): State<V, E>;
 

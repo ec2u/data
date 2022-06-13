@@ -94,7 +94,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
                         });
 
-                        cache.set(key, entry=State<V, E>({ error: error }));
+                        cache.set(key, entry=State<V, E>({ error }));
 
                     }
 
