@@ -17,11 +17,13 @@
 import { DataCard } from "@ec2u/data/tiles/card";
 import { immutable } from "@metreeca/core";
 import { label, Query, string } from "@metreeca/link";
+import { NodePath } from "@metreeca/tile/widgets/path";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useParameters } from "@metreeca/tool/hooks/parameters";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { DataPage } from "../../tiles/page";
 
 
@@ -56,7 +58,7 @@ export function DataUniversities() {
     const [route, setRoute]=useRoute();
     const [query, setQuery]=useParameters<Query>({
 
-        ".order": "label",
+        ".order": "",
         ".limit": 20
 
     });
@@ -66,11 +68,11 @@ export function DataUniversities() {
     useEffect(() => { setRoute({ label: label(Universities) }); }, []);
 
 
-    return <DataPage item={label(Universities)}
+    return <DataPage item={<NodePath>{Universities}</NodePath>}
 
-        // menu={<ToolSpin/>}
+        menu={entry({ fetch: <NodeSpin/> })}
 
-    >{entry({
+    >{entry<ReactNode>({
 
         value: ({ contains }) => contains.map(({ id, label, image, comment, country }) => {
 
@@ -78,7 +80,7 @@ export function DataUniversities() {
 
                 name={<a href={id}>{string(label)}</a>}
                 icon={image}
-                // tags={<span>{country}</span>}
+                tags={<span>{string(country.label)}</span>}
 
             >
                 {string(comment)}
@@ -87,7 +89,7 @@ export function DataUniversities() {
 
         }),
 
-        error: error => [<span>{error.status}</span>]
+        error: error => <span>{error.status}</span> /* !!! report */
 
     })}</DataPage>;
 

@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
+import { Universities } from "@ec2u/data/pages/universities/universities";
+import { DataCard } from "@ec2u/data/tiles/card";
 import { immutable } from "@metreeca/core";
+import { string } from "@metreeca/link";
+import { NodePath } from "@metreeca/tile/widgets/path";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { useEntry } from "@metreeca/tool/nests/graph";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
+import { useEffect } from "react";
 import { DataPage } from "../../tiles/page";
 
 
@@ -28,7 +36,7 @@ export const University=immutable({
     id: "/universities/{code}",
 
     image: "",
-    label: "University",
+    label: { "en": "University" },
     comment: "",
 
     schac: "",
@@ -40,12 +48,12 @@ export const University=immutable({
 
     country: optional({
         id: "",
-        label: ""
+        label: {}
     }),
 
     location: optional({
         id: "",
-        label: ""
+        label: {}
     })
 
 });
@@ -53,65 +61,61 @@ export const University=immutable({
 
 export function DataUniversity() {
 
-    // const { name }=useRouter();
+    const [route, setRoute]=useRoute();
 
-    // const [{ fetch, frame, error }]=useEntry("", University);
+    const [entry]=useEntry(route, University);
 
 
-    // useEffect(() => { frame(({ label }) => name(string(label))); });
+    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
 
 
     return <DataPage
 
-        // item={<>
-        // 	<a href={Universities.id}>{string(Universities.label)}</a>
-        // 	{frame(({ label }) => <span>{string(label)}</span>)}
-        // </>}
+        item={<NodePath>{[Universities, entry({ value: value => value })]}</NodePath>}
 
-        // menu={fetch(abort => <ToolSpin abort={abort}/>)}
+        menu={entry({ fetch: <NodeSpin/> })}
 
-    >
+    >{entry({
 
-        {/*{frame(({*/}
+        value: ({
 
-        {/*		image, label, comment,*/}
-        {/*		inception, students,*/}
-        {/*		country, location*/}
+            image, label, comment,
+            inception, students,
+            country, location
 
-        {/*	}) => (*/}
+        }) => (
 
-        {/*		<DataCard*/}
+            <DataCard
 
-        {/*			icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}*/}
+                icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
 
-        {/*			info={<dl>*/}
+                info={<dl>
 
-        {/*				<dt>Inception</dt>*/}
-        {/*				<dd>{inception && inception.substr(0, 4) || "-"}</dd>*/}
+                    <dt>Inception</dt>
+                    <dd>{inception && inception.substring(0, 4) || "-"}</dd>
 
-        {/*				<dt>Country</dt>*/}
-        {/*				<dd>{country && <a href={country.id}>{string(country.label)}</a>}</dd>*/}
+                    <dt>Country</dt>
+                    <dd>{country && <a href={country.id}>{string(country.label)}</a>}</dd>
 
-        {/*				<dt>City</dt>*/}
-        {/*				<dd>{location && <a href={location.id}>{string(location.label)}</a>}</dd>*/}
+                    <dt>City</dt>
+                    <dd>{location && <a href={location.id}>{string(location.label)}</a>}</dd>
 
-        {/*				{students && <>*/}
-        {/*					<dt>Students</dt>*/}
-        {/*					<dd>{string(students)}</dd>*/}
-        {/*				</>}*/}
+                    {students && <>
+                        <dt>Students</dt>
+                        <dd>{string(students)}</dd>
+                    </>}
 
-        {/*			</dl>}*/}
+                </dl>}
 
-        {/*		>*/}
+            >
 
-        {/*			<p>{string(comment)}</p>*/}
+                <p>{string(comment)}</p>
 
-        {/*		</DataCard>*/}
+            </DataCard>
 
-        {/*	)*/}
-        {/*)}*/}
+        ),
 
-        {/*{error(error => <span>{error.status}</span>)} /!* !!! *!/*/}
+        error: error => <span>{error.status}</span> /* !!! report */
 
-    </DataPage>;
+    })}</DataPage>;
 }

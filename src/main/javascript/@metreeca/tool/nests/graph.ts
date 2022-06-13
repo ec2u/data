@@ -60,7 +60,7 @@ export function useGraph(): Graph {
 }
 
 export function useEntry<V extends Frame, E extends Frame=Frame>(
-    id: string, model: V, [query, setQuery]: [Query, Setter<Query>]
+    id: string, model: V, [query, setQuery]: [Query, Setter<Query>]=[{}, () => {}]
 ): [State<V, E>, Setter<Query>] {
 
     const graph=useGraph();

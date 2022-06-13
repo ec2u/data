@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2022 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,61 +14,47 @@
  * limitations under the License.
  */
 
+import { Loader2 } from "@metreeca/skin/lucide";
 import * as React from "react";
 import { createElement, ReactNode } from "react";
-import "./card.css";
+
+import "./spin.css";
 
 
-export interface Tags {
+export function NodeSpin({
 
-	[label: string]: string;
+	icon=<Loader2/>,
+	title,
 
-}
+	color,
+	period,
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function DataCard({
-
-	name,
-
-	tags,
-	icon,
-	info,
-
-	children
+	onClick
 
 }: {
 
-	name?: ReactNode | string
+	icon?: ReactNode
+	title?: string
 
-	tags?: ReactNode | string
-	icon?: ReactNode | string
-	info?: ReactNode | string
+	size?: string
+	thickness?: string
+	color?: string
+	period?: string,
 
-	children?: ReactNode
+	onClick?: () => void
 
 }) {
 
-	return createElement("data-card", {}, <>
+	return createElement("node-spin", {
 
-		<div>
+			style: {
 
-			<h1>{name}</h1>
+				"--node-spin-color": color,
+				"--node-spin-period": period
 
-			{children}
+			}
 
-		</div>
-
-		<nav>
-
-			<header>{tags}</header>
-
-			<figure>{typeof icon === "string" ? <img src={icon}/> : icon}</figure>
-
-			{info}
-
-		</nav>
-
-	</>);
+		},
+		<button type={"button"} title={title || onClick ? "Cancel" : undefined} onClick={onClick || (() => {})}>{icon}</button>);
 
 }

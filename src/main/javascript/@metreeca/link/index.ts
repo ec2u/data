@@ -67,19 +67,6 @@ export interface Query {
 
 }
 
-export interface Focus {
-
-    readonly id: string;
-
-}
-
-export interface Entry extends Focus, Frame {
-
-    readonly id: string;
-    readonly label?: string | Dictionary;
-
-}
-
 export interface Error<D extends Frame=Frame> {
 
     readonly status: number;
@@ -89,14 +76,6 @@ export interface Error<D extends Frame=Frame> {
 
 }
 
-
-export function isFocus(value: any): value is Focus {
-    return isObject(value) && isString(value.id);
-}
-
-export function isEntry(value: any): value is Entry {
-    return isFocus(value) && isFrame(value);
-}
 
 export function isError(value: any): value is Error {
     return isNumber(value.status) && isString(value.reason) && (
@@ -127,17 +106,10 @@ export interface Stats extends Frame {
 
 }
 
-export interface Range {
-
-    readonly min?: Literal,
-    readonly max?: Literal
-
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Value=Literal | Dictionary | Frame
+export type Value=Literal | Dictionary | Frame | Focus | Entry
 
 export type Literal=boolean | number | string
 
@@ -153,9 +125,33 @@ export interface Frame {
 
 }
 
+export interface Range {
+
+    readonly min?: Literal,
+    readonly max?: Literal
+
+}
+
+export interface Focus {
+
+    readonly id: string;
+
+}
+
+export interface Entry extends Focus, Frame {
+
+    readonly id: string;
+    readonly label?: string | Dictionary;
+
+}
+
 
 export function isValue(value: any): value is Value {
-    return isLiteral(value) || isFrame(value) || isDictionary(value); // as a last resort to avoid expensive checks
+    return isLiteral(value)
+        || isFrame(value)
+        || isFocus(value)
+        || isEntry(value)
+        || isDictionary(value); // as a last resort to avoid expensive checks
 }
 
 export function isLiteral(value: any): value is Literal {
@@ -171,8 +167,16 @@ export function isDictionary(value: any): value is Dictionary {
 
 export function isFrame(value: any): value is Frame {
     return isObject(value) && Object.entries(value).every(([key, value]) =>
-        isString(key) && isArray(value) && value.every(isValue)
+        isString(key) && (isValue(value) || isArray(value) && value.every(isValue))
     );
+}
+
+export function isFocus(value: any): value is Focus {
+    return isObject(value) && isString(value.id);
+}
+
+export function isEntry(value: any): value is Entry {
+    return isFocus(value) && isFrame(value);
 }
 
 
@@ -197,7 +201,7 @@ export function multiple<T=any>(value: T): (typeof value)[] {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function string(value: undefined | Value, locales: readonly string[]=navigator.languages): string {
+export function string(value: undefined | Value | Entry, locales: readonly string[]=navigator.languages): string {
     return isBoolean(value) ? value.toString()
         : isNumber(value) ? value.toLocaleString(locales as string[])
             : isString(value) ? value
@@ -232,7 +236,46 @@ export function guess(id: string): string {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function createState<V extends Frame, E extends Frame>({ fetch, value, error }: {
+/**
+ * Creates a `fetch` {@link State} object.
+ *
+ * @param fetch the callback for aborting the fetch operation
+ *
+ * @constructor
+ */
+export function State<V extends Frame, E extends Frame>({ fetch }: {
+
+    fetch: () => void
+
+}): State<V, E>;
+
+/**
+ * Creates a `value` {@link State} object.
+ *
+ * @param value the value returned by the operation
+ *
+ * @constructor
+ */
+export function State<V extends Frame, E extends Frame>({ value }: {
+
+    value: V
+
+}): State<V, E>;
+
+/**
+ * Creates an `error` {@link State} object.
+ *
+ * @param error the error reported by the operation
+ *
+ * @constructor
+ */
+export function State<V extends Frame, E extends Frame>({ error }: {
+
+    error: E,
+
+}): State<V, E>;
+
+export function State<V extends Frame, E extends Frame>({ fetch, value, error }: {
 
     fetch?: () => void,
     value?: V,
@@ -269,6 +312,9 @@ export function createState<V extends Frame, E extends Frame>({ fetch, value, er
     };
 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function process<P, R>(processor: (response: Response, payload: string | P) => R): (response: Response) => Promise<R> {
     return response => {

@@ -16,7 +16,7 @@
 
 
 import { immutable } from "@metreeca/core";
-import { createState, Error, Focus, Frame, Graph, Probe, process, Query, State } from "@metreeca/link/index";
+import { Error, Focus, Frame, Graph, Probe, process, Query, State } from "@metreeca/link/index";
 
 
 export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
@@ -70,7 +70,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
                 controller.signal;
 
-                cache.set(key, entry=createState<V, E>({ fetch: controller.abort }));
+                cache.set(key, entry=State<V, E>({ fetch: controller.abort }));
 
                 fetcher(key, {
 
@@ -82,7 +82,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
                     if ( response.ok ) {
 
-                        cache.set(key, entry=createState<V, E>({ value: payload as V }));
+                        cache.set(key, entry=State<V, E>({ value: payload as V }));
 
                     } else {
 
@@ -94,7 +94,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
                         });
 
-                        cache.set(key, entry=createState<V, E>({ error: error }));
+                        cache.set(key, entry=State<V, E>({ error: error }));
 
                     }
 
@@ -115,7 +115,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
             const stash=cache.get(id);
 
-            cache.set(id, createState({ fetch: controller.abort }));
+            cache.set(id, State({ fetch: controller.abort }));
 
             notify(id);
 
@@ -174,7 +174,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
             const stash=cache.get(id);
 
-            cache.set(id, createState({ fetch: controller.abort }));
+            cache.set(id, State({ fetch: controller.abort }));
 
             notify(id);
 
@@ -232,7 +232,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
             const stash=cache.get(id);
 
-            cache.set(id, createState({ fetch: controller.abort }));
+            cache.set(id, State({ fetch: controller.abort }));
 
             notify(id);
 

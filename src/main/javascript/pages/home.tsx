@@ -17,6 +17,7 @@
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
+import { label } from "@metreeca/link";
 import { Home as Site } from "@metreeca/skin/lucide";
 import { NodePane } from "@metreeca/tile/pane";
 import { name } from "@metreeca/tool";
@@ -47,7 +48,7 @@ export default function DataHome() {
 			>
 
 				<ul>
-					<li><a href={Universities.id}>{Universities.label}</a></li>
+					<li><a href={Universities.id}>{label(Universities)}</a></li>
 				</ul>
 
 			</NodePane>}
