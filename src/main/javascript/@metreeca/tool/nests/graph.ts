@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-import { Frame, Graph, Query } from "@metreeca/link";
+import { Frame, Graph, Query, Range, State, Stats } from "@metreeca/link";
 import { RESTGraph } from "@metreeca/link/rest";
+import { Setter } from "@metreeca/tool/hooks";
+import { useUpdate } from "@metreeca/tool/hooks/update";
 import { Fetcher, useFetcher } from "@metreeca/tool/nests/fetcher";
-import { createContext, createElement, ReactNode, useContext } from "react";
+import { createContext, createElement, ReactNode, useContext, useEffect } from "react";
 
 
 const Context=createContext<Graph>(RESTGraph());
@@ -27,37 +29,79 @@ const Context=createContext<Graph>(RESTGraph());
 
 export function NodeGraph({
 
-	factory=fetcher => RESTGraph(fetcher),
+    factory=fetcher => RESTGraph(fetcher),
 
-	children
+    children
 
 }: {
 
-	factory?: (fetcher: Fetcher) => Graph
+    factory?: (fetcher: Fetcher) => Graph
 
-	children: ReactNode
+    children: ReactNode
 
 }) {
 
-	const [, fetcher]=useFetcher();
+    const [, fetcher]=useFetcher();
 
-	return createElement(Context.Provider, {
+    return createElement(Context.Provider, {
 
-		value: factory(fetcher),
+        value: factory(fetcher),
 
-		children
+        children
 
-	});
+    });
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function useGraph(): Graph {
-	return useContext(Context);
+    return useContext(Context);
+}
+
+export function useEntry<V extends Frame, E extends Frame=Frame>(
+    id: string, model: V, [query, setQuery]: [Query, Setter<Query>]
+): [State<V, E>, Setter<Query>] {
+
+    const graph=useGraph();
+    const update=useUpdate();
+
+    useEffect(() => graph.observe(id, update), [id, JSON.stringify(query)]);
+
+    return [graph.get<V, E>(id, model, query), delta => setQuery({ ...query, ...delta })];
+
 }
 
 
-export function useEntry<V extends Frame, E extends Frame>(id: string, query: Query, model: V): [] {}
+export function useStats<V extends Frame, E extends Frame>(
+    id: string, path: string, [query, setQuery]: [Query, Setter<Query>]
+): [State<Stats>, Setter<Range>] {
 
-export function useStats<V extends Frame, E extends Frame>(id: string, path: string, [query, setQuery]: [Query, () => void]): [] {}
+    const [entry, setEntry]=useEntry<Stats>(id, {
+
+        id: "",
+        count: 0,
+
+        min: undefined,
+        max: undefined,
+
+        stats: [{
+
+            id: "",
+            count: 0,
+
+            min: undefined,
+            max: undefined
+
+        }]
+
+    }, [{ ...query, ".stats": path }, setQuery]);
+
+    return [entry, ({ min, max }) => setEntry({
+
+        [`>=${path}`]: min,
+        [`<=${path}`]: max
+
+    })];
+
+}

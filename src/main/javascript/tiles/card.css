@@ -1,0 +1,115 @@
+/*
+ * Copyright © 2020-2022 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+data-card {
+
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+
+    max-width: 50em;
+
+    grid-column-gap: 1.5em;
+
+    &:not(:first-child) {
+        margin-top: 1.5em;
+    }
+
+    & > * {
+
+        & > :first-child {
+
+            margin-bottom: 1.5ex;
+            font-weight: 500;
+
+            &:empty {
+                display: none;
+            }
+
+        }
+
+        & > :first-child + * {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+    }
+
+    & > div {
+
+        flex-grow: 1;
+
+        & > h1 {
+
+            & > * + *::before {
+                content: "›";
+                margin: 0 0.25em;
+            }
+
+        }
+
+    }
+
+    & > nav {
+
+        flex-shrink: 0;
+
+        width: 12.5em;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        font-size: 90%;
+
+        & > header {
+            margin-left: auto;
+            color: #999;
+        }
+
+        & > figure {
+
+            & > img:first-child {
+                width: 100%;
+            }
+
+        }
+
+        & > figure + dl {
+
+            display: grid;
+            grid-template-columns: min-content 1fr;
+            grid-template-rows: min-content;
+            grid-column-gap: 0.5em;
+            grid-row-gap: 0.25em;
+
+            margin-top: 2ex;
+
+            & > * {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            & > dd {
+                text-align: right;
+            }
+
+        }
+
+    }
+
+}

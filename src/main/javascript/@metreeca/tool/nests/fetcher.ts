@@ -29,7 +29,7 @@ import { createContext, createElement, ReactNode, useContext, useState } from "r
  * @module
  */
 
-const Context=createContext<[FetcherValue, FetcherUpdater]>([false, wrap(fetch)]);
+const Context=createContext<[FetcherValue, FetcherUpdater]>([false, standardize(fetch)]);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +145,7 @@ export function NodeFetcher({
 
             promises.size > 0,
 
-            (input, init) => monitor(wrap(fetcher)(input, init))
+            (input, init) => /*monitor*/(standardize(fetcher)(input, init))
 
         ],
 
@@ -177,7 +177,7 @@ export function useFetcher(): [FetcherValue, FetcherUpdater] {
  *
  * @return a wrapped version of `fetcher` supporting standard services
  */
-function wrap(fetcher: Fetcher): Fetcher {
+function standardize(fetcher: Fetcher): Fetcher {
     return (input, init={}) => {
 
         const method=(init.method || "GET").toUpperCase();

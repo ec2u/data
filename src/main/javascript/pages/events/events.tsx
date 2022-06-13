@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-
+import { DataCard } from "@ec2u/data/tiles/card";
+import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
 import { Query } from "@metreeca/link";
 import { NodePane } from "@metreeca/tile/pane";
 import { Updater } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/parameters";
+import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
@@ -28,13 +30,11 @@ import { useEffect } from "react";
 export const Events=immutable({
 
     id: "/events/",
-
     label: "Events",
 
     contains: [{
 
         id: "",
-
         image: "",
         label: "",
         comment: "",
@@ -58,56 +58,54 @@ export function DataEvents() {
 
     const [query, setQuery]=useParameters<Query>({
 
-        "~label": "",
-
         ".order": "startDate",
         ".limit": 20
 
     });
 
-    // const [{ fetch, frame, error }]=useEntry("", Events, [query, setQuery]);
+    const [entry]=useEntry(route, Events, [query, setQuery]);
 
 
     useEffect(() => { setRoute({ label: Events.label }); }, []);
 
 
-    return <></> /*<DataPage item={string(Events.label)}
+    return <DataPage item={Events.label}
 
-     menu={fetch(abort => <ToolSpin abort={abort}/>)}
+        // menu={fetch(abort => <ToolSpin abort={abort}/>)}
+        //
+        // side={<DataFiltersButton onClick={update}/>}
+        //
+        // pane={facets([query, setQuery])}
 
-     side={<DataFiltersButton onClick={update}/>}
+    >{entry({
 
-     pane={facets([query, setQuery])}
+        value: ({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
 
-     >
+            <DataCard key={id}
 
-     {frame(({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
+                name={<a href={id}>{label}</a>}
 
-     <DataCard key={id}
+                icon={image?.[0]}
 
-     name={<a href={id}>{string(label)}</a>}
+                tags={<>
+                    <span>{university.label}</span>
+                    {startDate && <>
+                        <span> / </span>
+                        <span>{startDate.substr(0, 10)}</span>
+                    </>}
+                </>}
 
-     icon={image?.[0]}
+            >
 
-     tags={<>
-     <span>{string(university.label).replace("University of ", "")}</span>
-     {startDate && <>
-     <span> / </span>
-     <span>{startDate.substr(0, 10)}</span>
-     </>}
-     </>}
+                {comment}
 
-     >
+            </DataCard>
 
-     {string(comment, ["en", "pt", "ro", "it", "fr", "es", "fi"])}
+        )),
 
-     </DataCard>
+        error: error => [<span>{error.status}</span>]
 
-     )))}
-
-     {error(error => <span>{error.status}</span>)} {/!* !!! *!/}
-
-     </DataPage>*/;
+    })}</DataPage>;
 
 }
 

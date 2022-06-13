@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+import { DataCard } from "@ec2u/data/tiles/card";
 import { immutable } from "@metreeca/core";
+import { label, Query, string } from "@metreeca/link";
+import { useParameters } from "@metreeca/tool/hooks/parameters";
+import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
@@ -25,19 +29,21 @@ export const Universities=immutable({
 
     id: "/universities/",
 
-    label: "Universities",
+    label: {
+        "en": "Universities"
+    },
 
     contains: [{
 
         id: "",
-
         image: "",
-        label: "",
-        comment: "",
+
+        label: {},
+        comment: {},
 
         country: {
             id: "",
-            label: ""
+            label: {}
         }
 
     }]
@@ -47,35 +53,42 @@ export const Universities=immutable({
 
 export function DataUniversities() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
+    const [query, setQuery]=useParameters<Query>({
+
+        ".order": "label",
+        ".limit": 20
+
+    });
+
+    const [entry]=useEntry(route, Universities, [query, setQuery]);
+
+    useEffect(() => { setRoute({ label: label(Universities) }); }, []);
 
 
-    useEffect(() => { setRoute({ label: Universities.label }); }, []);
-
-
-    return <DataPage item={Universities.label}
+    return <DataPage item={label(Universities)}
 
         // menu={<ToolSpin/>}
 
-    >
+    >{entry({
 
-        {/*{frame(({ contains }) => contains.map(({ id, label, image, comment, country }) => (*/}
+        value: ({ contains }) => contains.map(({ id, label, image, comment, country }) => {
 
-        {/*    <DataCard key={id}*/}
+            return <DataCard key={id}
 
-        {/*        name={<a href={id}>{string(label)}</a>}*/}
-        {/*        icon={image}*/}
-        {/*        tags={<span>{string(country)}</span>}*/}
+                name={<a href={id}>{string(label)}</a>}
+                icon={image}
+                // tags={<span>{country}</span>}
 
-        {/*    >*/}
-        {/*        {string(comment)}*/}
+            >
+                {string(comment)}
 
-        {/*    </DataCard>*/}
+            </DataCard>;
 
-        {/*)))}*/}
+        }),
 
-        {/*{error(error => <span>{error.status}</span>)}  !!! */}
+        error: error => [<span>{error.status}</span>]
 
-    </DataPage>;
+    })}</DataPage>;
 
 }

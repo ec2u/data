@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-import { Immutable, isNumber, isObject, isString } from "@metreeca/core";
+import { immutable, Immutable, isArray, isBoolean, isNumber, isObject, isString } from "@metreeca/core";
 
 
 export interface Graph {
 
-    get<V extends Frame, E extends Frame, R>(id: string, model: V, query: Query, probe: Probe<typeof model, E, R>): undefined | R;
+    get<V extends Frame, E extends Frame>(id: string, model: V, query?: Query): State<V, E>;
 
-    post<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<Frame, E>): void;
+    post<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<Focus, E>): void;
 
-    put<V extends Frame, E extends Frame>(id: string, state: V, probe: Probe<Resource, E>): void;
+    put<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<Focus, E>): void;
 
-    del<E extends Frame>(id: string, probe: Probe<Resource, E>): void;
+    del<E extends Frame>(id: string, probe: Probe<Focus, E>): void;
 
 
     observe(id: string, observer: () => void): () => void;
 
 }
 
-export interface Entry<V extends Frame, E extends Frame> {
+export interface State<V extends Frame, E extends Frame=Frame> {
 
     <R>(probe: Probe<V, E, R>): undefined | R;
 
 }
 
-export interface Probe<V, E extends Frame, R=void> {
+export interface Probe<V, E extends Frame=Frame, R=void> {
 
     fetch?: R | ((abort: () => void) => R);
 
@@ -67,6 +67,19 @@ export interface Query {
 
 }
 
+export interface Focus {
+
+    readonly id: string;
+
+}
+
+export interface Entry extends Focus, Frame {
+
+    readonly id: string;
+    readonly label?: string | Dictionary;
+
+}
+
 export interface Error<D extends Frame=Frame> {
 
     readonly status: number;
@@ -76,10 +89,61 @@ export interface Error<D extends Frame=Frame> {
 
 }
 
-export interface Resource extends Frame {
+
+export function isFocus(value: any): value is Focus {
+    return isObject(value) && isString(value.id);
+}
+
+export function isEntry(value: any): value is Entry {
+    return isFocus(value) && isFrame(value);
+}
+
+export function isError(value: any): value is Error {
+    return isNumber(value.status) && isString(value.reason) && (
+        value.detail === undefined || isFrame(value.detail)
+    );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface Stats extends Frame {
 
     readonly id: string;
-    readonly label?: string | Dictionary;
+    readonly count: number;
+
+    readonly min?: Value;
+    readonly max?: Value;
+
+    readonly stats: Immutable<Array<{
+
+        readonly id: string;
+        readonly count: number;
+
+        readonly min?: Value
+        readonly max?: Value
+
+    }>>;
+
+}
+
+export interface Range {
+
+    readonly min?: Literal,
+    readonly max?: Literal
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Value=Literal | Dictionary | Frame
+
+export type Literal=boolean | number | string
+
+export interface Dictionary {
+
+    readonly [lang: string]: string;
 
 }
 
@@ -89,71 +153,26 @@ export interface Frame {
 
 }
 
-export interface Dictionary {
-
-    readonly [lang: string]: string;
-
-}
-
-export type Literal=boolean | string | number
-export type Value=Literal | Dictionary | Frame
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function isError(value: unknown): value is Error {
-    return isObject(value) && isNumber(value.status) && isString(value.reason);
-}
-
-
-export function isSimples(value: any): value is Simples {
-    return isSimple(value) || isArray(value) && value.every(isSimple);
-}
-
-export function isSimple(value: any): value is Simple {
-    return value === undefined || isPlain(value) || isFocus(value);
-}
-
-
-export function isValues(value: any): value is Values {
-    return isValue(value) || isArray(value) && value.every(isValue);
-}
 
 export function isValue(value: any): value is Value {
-    return isPlain(value) || isFrame(value) || isLangs(value); // langs as a last resort to postpone expensive checks
+    return isLiteral(value) || isFrame(value) || isDictionary(value); // as a last resort to avoid expensive checks
 }
 
+export function isLiteral(value: any): value is Literal {
+    return isBoolean(value) || isNumber(value) || isString(value);
+}
 
-export function isPlain(value: any): value is Plain {
-    return typeof value === "boolean" || typeof value === "number" || typeof value === "string";
+// https://www.rfc-editor.org/rfc/rfc5646.html#section-2.2.9
+export function isDictionary(value: any): value is Dictionary {
+    return isObject(value) && !("id" in value) && Object.entries(value).every(([key, value]) =>
+        isString(key) && /[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*/.test(key) && isString(value)
+    );
 }
 
 export function isFrame(value: any): value is Frame {
-    return isFocus(value) && isState(value);
-}
-
-export function isFocus(value: any): value is Focus {
-    return isObject(value) && "id" in value; // !!! isId(id), types, label
-}
-
-export function isState(value: any): value is Entry {
-    return isObject(value) && Object.entries(value).every(([key, value]) => isString(key) && isValues(value));
-}
-
-export function isLangs(value: any): value is Langs {
-    if ( isObject(value) && !("id" in value) ) {
-
-        for (const p in value) {
-            if ( typeof (<any>value)[p] !== "string" ) { return false; }
-        }
-
-        return true;
-
-    } else {
-
-        return false;
-
-    }
+    return isObject(value) && Object.entries(value).every(([key, value]) =>
+        isString(key) && isArray(value) && value.every(isValue)
+    );
 }
 
 
@@ -173,4 +192,124 @@ export function repeatable<T=any>(value: T): (typeof value)[] {
 
 export function multiple<T=any>(value: T): (typeof value)[] {
     return [value];
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function string(value: undefined | Value, locales: readonly string[]=navigator.languages): string {
+    return isBoolean(value) ? value.toString()
+        : isNumber(value) ? value.toLocaleString(locales as string[])
+            : isString(value) ? value
+                : isEntry(value) ? label(value, locales)
+                    : isDictionary(value) ? local(value, locales)
+                        : "";
+}
+
+export function label(entry: Entry, locales: readonly string[]=navigator.languages): string {
+    return string(entry.label, locales) || guess(entry.id) || "";
+}
+
+export function local(dictionary: Dictionary, locales: readonly string[]=navigator.languages): string {
+    return locales.map(l => dictionary[l]).filter(s => s)[0] || dictionary.en || Object.values(dictionary)[0] || "";
+}
+
+/**
+ * Guesses a resource label from its id.
+ *
+ * @param id the resource id
+ *
+ * @returns a label guessed from `id` or an empty string, if unable to guess
+ */
+export function guess(id: string): string {
+    return id
+        .replace(/^.*?(?:[/#:]([^/#:]+))?(?:\/|#|#_|#id|#this)?$/, "$1") // extract label
+        .replace(/([a-z-0-9])([A-Z])/g, "$1 $2") // split camel-case words
+        .replace(/[-_]+/g, " ") // split kebab-case words
+        .replace(/\b[a-z]/g, $0 => $0.toUpperCase()); // capitalize words
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function createState<V extends Frame, E extends Frame>({ fetch, value, error }: {
+
+    fetch?: () => void,
+    value?: V,
+    error?: Error<E>,
+
+}): State<V, E> {
+
+    return <R>(probe: Probe<V, E, R>) => {
+
+        const other=fetch ?? value ?? error;
+
+        if ( fetch !== undefined && probe.fetch !== undefined ) {
+
+            return probe.fetch instanceof Function ? probe.fetch(fetch) : probe.fetch;
+
+        } else if ( value !== undefined && probe.value !== undefined ) {
+
+            return probe.value instanceof Function ? probe.value(value) : probe.value;
+
+        } else if ( error !== undefined && probe.error !== undefined ) {
+
+            return probe.error instanceof Function ? probe.error(error) : probe.error;
+
+        } else if ( other !== undefined && probe.other !== undefined ) {
+
+            return probe.other instanceof Function ? probe.other(other) : probe.other;
+
+        } else {
+
+            return undefined;
+
+        }
+
+    };
+
+}
+
+export function process<P, R>(processor: (response: Response, payload: string | P) => R): (response: Response) => Promise<R> {
+    return response => {
+
+        const mime=response.headers.get("Content-Type");
+
+        if ( mime?.match(/^text\/plain\b/i) ) {
+
+            return response.text()
+
+                .catch(reason => {
+
+                    console.error(`unreadable text payload <${reason}>`);
+
+                    return "";
+
+                })
+
+                .then(text => processor(response, text));
+
+        } else if ( mime?.match(/^application\/(ld\+)?json\b/i) ) {
+
+            return response.json()
+
+                .catch(reason => {
+
+                    console.error(`unreadable JSON payload <${reason}>`);
+
+                    return {};
+
+                })
+
+                .then(json => processor(response, immutable(json)));
+
+        } else {
+
+            return Promise
+
+                .resolve(processor(response, <P>immutable({})));
+
+        }
+
+    };
 }

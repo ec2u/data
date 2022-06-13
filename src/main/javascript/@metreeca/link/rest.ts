@@ -15,416 +15,274 @@
  */
 
 
-import { immutable, isEmpty } from "@metreeca/core";
-import { Entry, Graph } from "@metreeca/link/index";
-import { Fetcher } from "@metreeca/tool/nests/fetcher";
+import { immutable } from "@metreeca/core";
+import { createState, Error, Focus, Frame, Graph, Probe, process, Query, State } from "@metreeca/link/index";
 
 
-export function RESTGraph(fetcher: Fetcher=fallback()): Graph {
+export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
-	// !!! force error to synthetic response conversion
-	// !!! TTL / size limits / …
+    // !!! force error to synthetic response conversion
+    // !!! TTL / size limits / …
 
-	const cache=new Map<string, Entry<unknown, unknown>>(); // !!! factor
+    const cache=new Map<string, State<Frame>>(); // !!! factor
+    const observers=new Map<string, Set<() => void>>();
 
 
-	const observers=new Map<string, Set<() => void>>(); // !!! factor
+    function observe(id: string, observer: () => void): () => void {
 
+        if ( !observers.get(id)?.add(observer) ) {
+            observers.set(id, new Set([observer]));
+        }
 
-	function observe(id: string, observer: () => void): () => void {
+        return () => observers.get(id)?.delete(observer);
 
-		if ( !observers.get(id)?.add(observer) ) {
-			observers.set(id, new Set([observer]));
-		}
+    }
 
-		return () => observers.get(id)?.delete(observer);
+    function notify(id?: string) {
+        if ( id === undefined ) {
 
-	}
+            observers.forEach(observers => observers.forEach(observer => observer()));
 
-	function notify(id?: string) {
-		if ( id === undefined ) {
+        } else {
 
-			observers.forEach(observers => observers.forEach(observer => observer()));
+            observers.get(id)?.forEach(observer => observer());
 
-		} else {
+        }
+    }
 
-			observers.get(id)?.forEach(observer => observer());
 
-		}
-	}
+    return immutable({
 
+        get<V extends Frame, E extends Frame>(id: string, model: V, query?: Query): State<typeof model, E> {
 
-	const graph=immutable({
+            const key=query ? `${id}?${encodeURI(JSON.stringify(query))}` : id;
 
-		get<V, E>(id: string, model: V, query: string, probe?: EntryProbe<typeof model, E>): Entry<typeof model, E> {
 
-			const key=query ? `${id}?${query}` : id;  // !!! parametrize converter
+            let entry=cache.get(key) as undefined | State<V, E>;
 
+            if ( entry ) {
 
-			let entry=cache.get(key) as Maybe<Entry<V, E>>;
+                return entry;
 
-			if ( entry ) {
+            } else {
 
-				if ( probe ) { entry(probe); }
+                const controller=new AbortController();
 
-			} else {
+                controller.signal;
 
-				const controller=new AbortController();
+                cache.set(key, entry=createState<V, E>({ fetch: controller.abort }));
 
-				controller.signal;
+                fetcher(key, {
 
-				cache.set(key, entry=createEntry<V, E>({ fetch: controller.abort }));
+                    headers: { "Accept": "application/json" },
 
-				if ( probe ) { entry(probe); }
+                    signal: controller.signal
 
+                }).then(process((response, payload) => {
 
-				fetcher(key, {
+                    if ( response.ok ) {
 
-					headers: { "Accept": "application/json" },
+                        cache.set(key, entry=createState<V, E>({ value: payload as V }));
 
-					signal: controller.signal
+                    } else {
 
-				}).then(process((response, payload) => {
+                        const error=<Error<E>>immutable({
 
-					if ( response.ok ) {
+                            status: response.status,
+                            reason: response.statusText,
+                            detail: payload
 
-						cache.set(key, entry=createEntry<V, E>({ value: payload as V }));
+                        });
 
-						if ( probe ) { entry(probe); }
+                        cache.set(key, entry=createState<V, E>({ error: error }));
 
-					} else {
+                    }
 
-						const report=<Report<E>>frozen({
+                    notify(id);
 
-							status: response.status,
-							reason: response.statusText,
-							detail: payload
+                }));
 
-						});
+                return entry;
 
-						cache.set(key, entry=createEntry<V, E>({ error: report }));
+            }
 
-						if ( probe ) { entry(probe); }
+        },
 
-					}
+        post<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<{ id: string }, E>): void {
 
-					notify(id);
+            const controller=new AbortController();
 
-				}));
 
-			}
+            const stash=cache.get(id);
 
-			return entry;
+            cache.set(id, createState({ fetch: controller.abort }));
 
-		},
+            notify(id);
 
-		post<V, E>(id: string, state: V, probe: EntryProbe<Focus, E>): void {
+            if ( probe.fetch instanceof Function ) {
+                probe.fetch(controller.abort);
+            }
 
-			const controller=new AbortController();
 
+            fetcher(id, {
 
-			const stash=cache.get(id);
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(frame),
 
-			cache.set(id, createEntry({ fetch: controller.abort }));
+                signal: controller.signal
 
-			notify(id);
+            }).then(process((response, payload) => {
 
-			if ( probe.fetch instanceof Function ) {
-				probe.fetch(controller.abort);
-			}
+                if ( response.ok ) {
 
+                    cache.clear(); // !!! selective purge
 
-			fetcher(id, {
+                    notify();
 
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(state),
+                    if ( probe.value instanceof Function ) {
+                        probe.value(response.status === 201 // Created
+                            ? { id: response.headers.get("Location") || id }
+                            : payload as any
+                        );
+                    }
 
-				signal: controller.signal
+                } else {
 
-			}).then(process((response, payload) => {
+                    if ( stash ) { cache.set(id, stash); }
 
-				if ( response.ok ) {
+                    notify(id);
 
-					cache.clear(); // !!! selective purge
+                    if ( probe.error instanceof Function ) {
+                        probe.error(<Error<E>>immutable({
 
-					notify();
+                            status: response.status,
+                            reason: response.statusText,
+                            detail: payload
 
-					if ( probe.value instanceof Function ) {
-						probe.value(response.status === 201 // Created
-							? { id: response.headers.get("Location") || id }
-							: payload as any
-						);
-					}
+                        }));
+                    }
 
-				} else {
+                }
 
-					if ( stash ) { cache.set(id, stash); }
+            }));
+        },
 
-					notify(id);
+        put<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<Focus, E>): void {
 
-					if ( probe.error instanceof Function ) {
-						probe.error(<Report<E>>frozen({
+            const controller=new AbortController();
 
-							status: response.status,
-							reason: response.statusText,
-							detail: payload
+            const stash=cache.get(id);
 
-						}));
-					}
+            cache.set(id, createState({ fetch: controller.abort }));
 
-				}
+            notify(id);
 
-			}));
-		},
+            if ( probe.fetch instanceof Function ) {
+                probe.fetch(controller.abort);
+            }
 
-		put<V, E>(id: string, state: V, probe: EntryProbe<Focus, E>): void {
 
-			const controller=new AbortController();
+            fetcher(id, {
 
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(frame),
 
-			const stash=cache.get(id);
+                signal: controller.signal
 
-			cache.set(id, createEntry({ fetch: controller.abort }));
+            }).then(process((response, payload) => {
 
-			notify(id);
+                if ( response.ok ) {
 
-			if ( probe.fetch instanceof Function ) {
-				probe.fetch(controller.abort);
-			}
+                    cache.clear(); // !!! selective purge
 
+                    notify();
 
-			fetcher(id, {
+                    if ( probe.value instanceof Function ) {
+                        probe.value({ id: id });
+                    }
 
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(state),
+                } else {
 
-				signal: controller.signal
+                    if ( stash ) { cache.set(id, stash); }
 
-			}).then(process((response, payload) => {
+                    notify(id);
 
-				if ( response.ok ) {
+                    if ( probe.error instanceof Function ) {
+                        probe.error(<Error<E>>immutable({
 
-					cache.clear(); // !!! selective purge
+                            status: response.status,
+                            reason: response.statusText,
+                            detail: payload
 
-					notify();
+                        }));
+                    }
 
-					if ( probe.value instanceof Function ) {
-						probe.value({ id: id });
-					}
+                }
 
-				} else {
+            }));
 
-					if ( stash ) { cache.set(id, stash); }
+        },
 
-					notify(id);
+        del<E extends Frame>(id: string, probe: Probe<Focus, E>): void {
 
-					if ( probe.error instanceof Function ) {
-						probe.error(<Report<E>>frozen({
+            const controller=new AbortController();
 
-							status: response.status,
-							reason: response.statusText,
-							detail: payload
 
-						}));
-					}
+            const stash=cache.get(id);
 
-				}
+            cache.set(id, createState({ fetch: controller.abort }));
 
-			}));
+            notify(id);
 
-		},
+            if ( probe.fetch instanceof Function ) { probe.fetch(controller.abort); }
 
-		del<E>(id: string, probe: EntryProbe<Focus, E>): void {
 
-			const controller=new AbortController();
+            fetcher(id, {
 
+                method: "DELETE",
 
-			const stash=cache.get(id);
+                signal: controller.signal
 
-			cache.set(id, createEntry({ fetch: controller.abort }));
+            }).then(process((response, payload) => {
 
-			notify(id);
+                if ( response.ok ) {
 
-			if ( probe.fetch instanceof Function ) { probe.fetch(controller.abort); }
+                    cache.clear(); // !!! selective purge
 
+                    notify();
 
-			fetcher(id, {
+                    if ( probe.value instanceof Function ) {
+                        probe.value({ id: id.substring(0, id.lastIndexOf("/")+1) });
+                    }
 
-				method: "DELETE",
+                } else {
 
-				signal: controller.signal
+                    if ( stash ) { cache.set(id, stash); }
 
-			}).then(process((response, payload) => {
+                    notify(id);
 
-				if ( response.ok ) {
+                    if ( probe.error instanceof Function ) {
+                        probe.error(<Error<E>>immutable({
 
-					cache.clear(); // !!! selective purge
+                            status: response.status,
+                            reason: response.statusText,
+                            detail: payload
 
-					notify();
+                        }));
+                    }
 
-					if ( probe.value instanceof Function ) {
-						probe.value({ id: id.substring(0, id.lastIndexOf("/")+1) });
-					}
+                }
 
-				} else {
+            }));
 
-					if ( stash ) { cache.set(id, stash); }
+        },
 
-					notify(id);
+        observe
 
-					if ( probe.error instanceof Function ) {
-						probe.error(<Report<E>>frozen({
-
-							status: response.status,
-							reason: response.statusText,
-							detail: payload
-
-						}));
-					}
-
-				}
-
-			}));
-
-		},
-
-
-		bulk<V, E>({ del, put, post, get }: Bulk<V>, probe?: EntryProbe<V, Report<E>[]>): Entry<V, Report<E>[]> {
-
-			const aborts: Map<string, () => void>=new Map();
-			const errors: Report<E>[]=[];
-
-
-			function getEntry() {
-				return createEntry({
-
-					fetch: aborts.size === 0 ? undefined : () => {
-
-						try { aborts.forEach(abort => abort()); } finally { aborts.clear(); }
-
-					},
-
-					value: aborts.size > 0 || errors.length > 0 ? undefined : {
-
-						...(get as any)?.model, id: "" // !!! review model usage
-
-					},
-
-					error: aborts.size > 0 || errors.length === 0 ? undefined : {
-
-						status: 207,
-						reason: "Multi-Status",
-
-						detail: errors
-
-					}
-
-				});
-			}
-
-
-			if ( del ) {
-
-				if ( isArray(del) ) {
-
-					del.map(value => {
-
-						if ( isFocus(value) ) {
-
-							return value.id;
-
-						} else if ( isString(value) ) {
-
-							return value;
-
-						} else {
-
-							throw new RangeError(`malformed bulk del targets <${del}>`);
-
-						}
-
-					}).forEach(id => graph.del<E>(id, {
-
-						fetch: abort => {
-
-							aborts.set(id, abort);
-
-						},
-
-						value: () => {
-
-							aborts.delete(id);
-
-							if ( probe ) {
-								getEntry()(probe);
-							}
-
-						},
-
-						error: error => {
-
-							aborts.delete(id);
-							errors.push(error);
-
-							if ( probe ) {
-								getEntry()(probe);
-							}
-
-						}
-
-					}));
-
-				} else {
-
-					throw new RangeError(`malformed bulk del targets <${del}>`);
-
-				}
-
-			}
-
-			if ( put ) {
-				throw new Error("unsupported bulk <put> operations");
-			}
-
-			if ( post ) {
-				throw new Error("unsupported bulk <post> operations");
-			}
-
-			if ( get ) {
-				throw new Error("unsupported bulk <get> operations");
-			}
-
-			if ( del && !isEmpty(del) || put && !isEmpty(put) || post && !isEmpty(post) ) {
-
-				cache.clear(); // !!! selective purge
-
-				notify();
-
-			}
-
-			const bulk=getEntry();
-
-			if ( probe ) { bulk(probe); }
-
-			return bulk;
-
-		},
-
-
-		purge(id: string): void {
-
-			cache.clear(); // !!! selective purge
-
-			notify();
-
-		},
-
-		observe
-
-	});
-
-	return graph;
+    });
 
 }
+
+
