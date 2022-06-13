@@ -15,7 +15,7 @@
  */
 
 import { isString } from "@metreeca/core";
-import { createContext, createElement, ReactNode, useContext, useState } from "react";
+import { createContext, createElement, ReactNode, useContext, useMemo, useState } from "react";
 
 
 /**
@@ -96,6 +96,8 @@ export function resolve(path: string, base: string=location.href): string {
 /**
  * Creates a fetcher context.
  *
+ * **Warning** / The `fetcher` argument must have a stable identity.
+ *
  * @param fetcher the fetch function to be exposed by the new context; defaults to the global {@link fetch} function
  * @param children the children components to be nested inside the new context component
  *
@@ -118,36 +120,46 @@ export function NodeFetcher({
 
     const [promises, setPromises]=useState(new Set<Promise<Response>>());
 
+    const updater: Fetcher=useMemo(() => {
 
-    function monitor(promise: Promise<Response>) {
+        const standardized=standardize(fetcher);
 
-        const update=new Set(promises);
+        return (input, init) => {
 
-        update.add(promise);
+            const promise=standardized(input, init);
 
-        setPromises(update);
+            setTimeout(() => {
 
-        return promise.finally(() => {
+                const update=new Set(promises);
 
-            const update=new Set(promises);
+                update.add(promise);
 
-            update.delete(promise);
+                setPromises(update);
 
-            setPromises(update);
+            });
 
-        });
-    }
+            return promise.finally(() => {
+
+                setTimeout(() => {
+
+                    const update=new Set(promises);
+
+                    update.delete(promise);
+
+                    setPromises(update);
+
+                });
+
+            });
+
+        };
+
+    }, [fetcher]);
 
 
     return createElement(Context.Provider, {
 
-        value: [
-
-            promises.size > 0,
-
-            (input, init) => /*monitor*/(standardize(fetcher)(input, init))
-
-        ],
+        value: [promises.size > 0, updater],
 
         children
 

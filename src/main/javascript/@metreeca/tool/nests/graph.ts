@@ -19,7 +19,7 @@ import { RESTGraph } from "@metreeca/link/rest";
 import { Setter } from "@metreeca/tool/hooks";
 import { useUpdate } from "@metreeca/tool/hooks/update";
 import { Fetcher, useFetcher } from "@metreeca/tool/nests/fetcher";
-import { createContext, createElement, ReactNode, useContext, useEffect } from "react";
+import { createContext, createElement, ReactNode, useContext, useEffect, useMemo } from "react";
 
 
 const Context=createContext<Graph>(RESTGraph());
@@ -27,9 +27,17 @@ const Context=createContext<Graph>(RESTGraph());
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ **Warning** / The `factory` argument must have a stable identity
+ *
+ * @param factory
+ * @param children
+ *
+ * @constructor
+ */
 export function NodeGraph({
 
-    factory=fetcher => RESTGraph(fetcher),
+    factory=RESTGraph,
 
     children
 
@@ -43,9 +51,11 @@ export function NodeGraph({
 
     const [, fetcher]=useFetcher();
 
+    const graph=useMemo(() => factory(fetcher), [factory, fetcher]);
+
     return createElement(Context.Provider, {
 
-        value: factory(fetcher),
+        value: graph,
 
         children
 
