@@ -15,7 +15,7 @@
  */
 
 
-import { immutable } from "@metreeca/core";
+import { immutable, isEmpty } from "@metreeca/core";
 import { Error, Focus, Frame, Graph, Probe, process, Query, State } from "@metreeca/link/index";
 
 
@@ -55,7 +55,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
         get<V extends Frame, E extends Frame>(id: string, model: V, query?: Query): State<typeof model, E> {
 
-            const key=query ? `${id}?${encodeURI(JSON.stringify(query))}` : id;
+            const key=!query || isEmpty(query) ? id : `${id}?${encodeURI(JSON.stringify(query))}`;
 
 
             let entry=cache.get(key) as undefined | State<V, E>;

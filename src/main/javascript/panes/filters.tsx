@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 Metreeca srl
+ * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-import "./lucide.css";
+import { Filter } from "@metreeca/skin/lucide";
+import * as React from "react";
+import { ReactNode } from "react";
 
 
-export * from "lucide-react";
+export function DataFiltersTab(pane: () => ReactNode) {
+    return {
 
-export { X as CancelIcon } from "lucide-react";
-export { Search as SearchIcon } from "lucide-react";
-export { XCircle as ClearIcon } from "lucide-react";
+        name: "Filter",
+        icon: <Filter/>,
+        pane
+
+    };
+}

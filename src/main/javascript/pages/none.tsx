@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { Home } from "@ec2u/data/pages/home";
+import { Sets } from "@ec2u/data/pages/sets";
+import { DataSetsTab } from "@ec2u/data/panes/sets";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { CancelIcon } from "@metreeca/skin/lucide";
 import { useRoute } from "@metreeca/tool/nests/router";
@@ -31,7 +32,7 @@ export default function DataNone() {
 
 
     function doDismiss() {
-        setRoute(Home.id, true);
+        setRoute(Sets.id, true);
     }
 
 
@@ -40,6 +41,8 @@ export default function DataNone() {
         <DataPage item="404 | Not Found"
 
             menu={<button title="Remove from History" onClick={() => doDismiss()}><CancelIcon/></button>}
+
+            tabs={[DataSetsTab()]}
 
         >
 

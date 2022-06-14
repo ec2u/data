@@ -14,5 +14,7 @@
  * limitations under the License.
  */
 
+export type Initial<V>=V | (() => V)
+
 export type Setter<V>=React.Dispatch<V>
 export type Updater<V>=React.Dispatch<React.SetStateAction<V>>

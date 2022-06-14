@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { DataSetsTab } from "@ec2u/data/panes/sets";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
@@ -65,12 +66,15 @@ export function DataUniversities() {
 
     const [entry]=useEntry(route, Universities, [query, setQuery]);
 
+
     useEffect(() => { setRoute({ label: string(Universities) }); }, []);
 
 
     return <DataPage item={<NodePath>{Universities}</NodePath>}
 
         menu={entry({ fetch: <NodeSpin/> })}
+
+        tabs={[DataSetsTab()]}
 
     >{entry<ReactNode>({
 

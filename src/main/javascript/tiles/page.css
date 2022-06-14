@@ -18,8 +18,11 @@ data-page {
 
     display: grid;
 
-    grid-template-columns: min-content minmax(min-content, 15rem) minmax(1rem, 1fr);
+    grid-template-columns: min-content minmax(min-content, 17.5rem) minmax(1rem, 1fr);
     grid-template-rows: 1fr;
+
+    --data-page-header-shadow-size: 0.5em;
+    --data-page-aside-background-color: #F8F8F8;
 
     & > * {
 
@@ -28,6 +31,8 @@ data-page {
         align-items: stretch;
 
         grid-row: 1;
+
+        overflow: hidden;
 
         border-color: #DDD;
 
@@ -58,7 +63,9 @@ data-page {
 
             font-size: 1.25em;
 
-            box-shadow: 0 0 0.5em 0.5em #FFF;
+            white-space: nowrap;
+
+            box-shadow: 0 0 var(--data-page-header-shadow-size) var(--data-page-header-shadow-size) var(--node--background-color);
 
             & > node-icon::after {
                 content: '​'; /* prevent vertical collapsing*/
@@ -67,7 +74,6 @@ data-page {
             & > span {
                 flex-grow: 1;
                 flex-shrink: 1;
-                white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -92,19 +98,40 @@ data-page {
         z-index: 1;
         grid-column: 1 / span 1;
 
+        border-right-style: solid;
+
         & > * {
             text-align: center;
+        }
+
+        & > section {
+
+            font-size: 2rem;
+            color: #777;
+
+            & > :not(:first-child) {
+                margin-top: 0.25em;
+            }
         }
 
     }
 
     & > aside {
 
-        z-index: 2;
+        z-index: 1;
         grid-column: 2 / span 1;
 
-
         border-right-style: solid;
+
+        & > * {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+
+        & > header {
+
+
+        }
 
     }
 
@@ -127,7 +154,7 @@ data-page {
 
     @media only screen and (max-width: 960px) {
 
-        &.collapsed {
+        &.primary {
 
             & > nav {
                 display: none;
@@ -139,7 +166,7 @@ data-page {
 
         }
 
-        &.expanded {
+        &.alternate {
 
             & > main {
                 pointer-events: none;
@@ -152,6 +179,34 @@ data-page {
 
     @media only screen and (min-width: 960px), print {
 
+        &.primary {
+
+            & > nav {
+                visibility: visible;
+            }
+
+            & > aside {
+                visibility: visible;
+            }
+
+            & > main {
+                grid-column: 3 / span 1;
+            }
+
+        }
+
+        &.alternate {
+
+            & > aside {
+                visibility: hidden;
+            }
+
+            & > main {
+                grid-column: 2 / span 2;
+            }
+
+        }
+
         & > * {
 
             & > header {
@@ -161,18 +216,27 @@ data-page {
         }
 
         & > nav {
-            visibility: visible;
-            border-right-style: solid;
+
+            & > * {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
         }
 
         & > aside {
+
             visibility: visible;
-            background-color: #F8F8F8;
+
+            background-color: var(--data-page-aside-background-color);
+
+            & > header {
+                box-shadow: 0 0 var(--data-page-header-shadow-size) var(--data-page-header-shadow-size) var(--data-page-aside-background-color);
+            }
+
         }
 
         & > main {
-
-            grid-column: 3 / span 1;
 
             & > * {
 

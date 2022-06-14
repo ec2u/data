@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-import "./lucide.css";
+import { Entry, string } from "@metreeca/link";
+import React from "react";
 
 
-export * from "lucide-react";
+export function NodeLink({
 
-export { X as CancelIcon } from "lucide-react";
-export { Search as SearchIcon } from "lucide-react";
-export { XCircle as ClearIcon } from "lucide-react";
+    children
+
+}: {
+
+    children: Entry
+
+}) {
+
+    return <a href={children.id}>{string(children)}</a>;
+
+}

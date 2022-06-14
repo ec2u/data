@@ -14,12 +14,31 @@
  * limitations under the License.
  */
 
+import { Immutable, isObject, isString } from "@metreeca/core";
+import { Value } from "@metreeca/link";
 import { Heart } from "@metreeca/skin/lucide";
 import { NodeIcon } from "@metreeca/tile/widgets/icon";
+import { NodePath } from "@metreeca/tile/widgets/path";
 import { copy } from "@metreeca/tool";
+import { useStorage } from "@metreeca/tool/hooks/storage";
 import React, { createElement, ReactNode, useState } from "react";
 import "./page.css";
 
+
+export interface Tab {
+
+    name: string;
+    icon: ReactNode;
+    pane: () => ReactNode;
+
+}
+
+export function isTab(value: unknown): value is Tab {
+    return isObject(value) && isString(value.name) && "icon" in value && "pane" in value;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function DataPage({
 
@@ -29,55 +48,82 @@ export function DataPage({
     side,
     pane,
 
+    tabs,
+
     children
 
 }: {
 
-    item?: ReactNode
+    item?: Value | ReactNode | Immutable<Array<Value | ReactNode>>
     menu?: ReactNode
 
     side?: ReactNode
     pane?: ReactNode
 
+    tabs?: Immutable<Tab[]>
+
     children: ReactNode
 
 }) {
 
-    const [expanded, setExpanded]=useState(false);
+    const init=pane ?? tabs?.[0]?.pane();
 
 
-    function doToggleSide() {
-        setExpanded(!expanded);
+    const [alternate, setAlternate]=useStorage(localStorage, "data-page-alternate", false);
+
+    const [tray, setTray]=useState(init);
+
+
+    // !!! useEffect(() => setTray(init), [init]);
+
+
+    function doToggleTray() {
+        setAlternate(!alternate);
+    }
+
+    function doSetTray(pane: ReactNode) {
+        setAlternate(false);
+        setTray(pane);
     }
 
 
     return createElement("data-page", {
 
-        class: expanded ? "expanded" : "collapsed"
+        class: alternate ? "alternate" : "primary"
 
     }, <>
 
         <nav>
 
             <header>
-                <NodeIcon onClick={doToggleSide}/>
+                <NodeIcon onClick={doToggleTray}/>
             </header>
 
-            <section>{side}</section>
+            <section>{tabs?.map(item =>
+                <button key={item.name} title={item.name} onClick={() => doSetTray(item.pane())}>{item.icon}</button>
+            )}</section>
 
             <footer>
-                <a target={"_blank"} href={"https://github.com/ec2u/data#ec2u-knowledge-hub"}><Heart/></a>
+                <a target={"_blank"} href={"https://github.com/ec2u/data"}><Heart/></a>
             </footer>
 
         </nav>
 
-        <aside>{pane}</aside>
+        <aside onClick={e => {
+
+            if ( e.target instanceof Element && e.target.tagName === "A" ) {
+                console.log("!!!");
+            }
+
+        }}>
+            {tray}
+        </aside>
 
         <main>
 
             <header>
-                <NodeIcon onClick={doToggleSide}/>
-                <span>{item}</span>
+                <NodeIcon onClick={doToggleTray}/>
+                <span><NodePath>{item}</NodePath></span>
                 <nav>{menu}</nav>
             </header>
 

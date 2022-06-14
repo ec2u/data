@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { isString } from "@metreeca/core";
 import { Frame, Graph, Query, Range, State, Stats } from "@metreeca/link";
 import { RESTGraph } from "@metreeca/link/rest";
 import { Setter } from "@metreeca/tool/hooks";
@@ -72,7 +73,9 @@ export function useGraph(): Graph {
 
 export function useEntry<V extends Frame, E extends Frame=Frame>(
     id: string, model: V, [query, setQuery]: [Query, Setter<Query>]=[{}, () => {}]
-): [State<V, E>, Setter<Query>] {
+): [
+    State<V, E>, Setter<Query>
+] {
 
     const graph=useGraph();
     const update=useUpdate();
@@ -84,9 +87,25 @@ export function useEntry<V extends Frame, E extends Frame=Frame>(
 }
 
 
+export function useKeywords(
+    id: string, path: string, [query, setQuery]: [Query, Setter<Query>]
+): [
+    string, Setter<string>
+] {
+
+    const keywords=query[`~${path}`];
+
+    return [isString(keywords) ? keywords.trim() : "", keywords => {
+        setQuery({ [`~${path}`]: keywords.trim() ? keywords.trim() : undefined });
+    }];
+
+}
+
 export function useStats<V extends Frame, E extends Frame>(
     id: string, path: string, [query, setQuery]: [Query, Setter<Query>]
-): [State<Stats>, Setter<Range>] {
+): [
+    State<Stats>, Setter<Range>
+] {
 
     const [entry, setEntry]=useEntry<Stats>(id, {
 

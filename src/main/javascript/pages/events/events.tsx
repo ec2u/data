@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
+import { DataFiltersTab } from "@ec2u/data/panes/filters";
+import { DataSetsTab } from "@ec2u/data/panes/sets";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
+import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodePane } from "@metreeca/tile/pane";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { Updater } from "@metreeca/tool/hooks";
+import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/parameters";
-import { useEntry } from "@metreeca/tool/nests/graph";
+import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
@@ -75,9 +78,12 @@ export function DataEvents() {
 
         menu={entry({ fetch: <NodeSpin/> })}
 
-        // side={<DataFiltersButton onClick={update}/>}
+        tabs={[
+            DataSetsTab(),
+            DataFiltersTab(() => <DataEventsFilters id={route} state={[query, setQuery]}/>)
+        ]}
 
-        // pane={facets([query, setQuery])}
+        pane={<DataEventsFilters id={route} state={[query, setQuery]}/>}
 
     >{entry({
 
@@ -114,25 +120,40 @@ export function DataEvents() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
+function DataEventsFilters({
 
-    // const [search, setSearch]=useSearch("label", [query, setQuery]);
-    //
+    id,
+    state: [query, setQuery]
+
+}: {
+
+    id: string
+    state: [Query, Setter<Query>]
+
+}) {
+
+    const [search, setSearch]=useKeywords(id, "label", [query, setQuery]);
+
     // const [universities, setUniversities]=useTerms("", "university", [query, setQuery]);
     // const [publishers, setPublishers]=useTerms("", "publisher", [query, setQuery]);
     // const [date, setDate]=useStats("", "startDate", [query, setQuery]);
-    //
-    // const [{ count }]=useStats("", "", [query, setQuery]);
+
+    const [stats]=useStats("", "", [query, setQuery]);
 
     return <NodePane
 
-        // header={<ToolSearch icon rule placeholder={"Search"}
-        //     auto value={search} onChange={setSearch}
-        // />}
+        header={<NodeSearch icon placeholder={"Search"}
+            auto state={[search, setSearch]}
+        />}
 
-        // footer={count === 0 ? "no matches" : count === 1 ? "1 match" : `${count} matches`}
+        footer={stats({
+            value: ({ count }) =>
+                count === 0 ? "no matches" : count === 1 ? "1 match" : `${string(count)} matches`
+        })}
 
     >
+
+        <p>facets…</p>
 
         {/* <ToolFacet expanded name={string(University.label)}
          menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}

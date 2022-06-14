@@ -19,7 +19,6 @@ import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
-import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
@@ -51,7 +50,7 @@ export function DataEvent() {
 
     useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
 
-    return <DataPage item={<NodePath>{[Events, entry({ value: value => value })]}</NodePath>}
+    return <DataPage item={[Events, entry({ value: value => value })]}
 
         menu={entry({ fetch: <NodeSpin/> })}
 
