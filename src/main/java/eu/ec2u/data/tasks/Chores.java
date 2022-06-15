@@ -51,6 +51,9 @@ public final class Chores implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Collect unreferenced resources.
+     */
     private void collect() {
 
         logger.info(this, "collecting garbage");

@@ -134,7 +134,7 @@ public final class Data implements Runnable {
 
                                 .path("/*", new Router()
 
-                                        .path("/", new Resources())
+                                        .path("/", new Datasets())
                                         .path("/concepts/*", new Concepts())
                                         .path("/universities/*", new Universities())
                                         .path("/events/*", new Events())

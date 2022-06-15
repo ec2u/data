@@ -1,3 +1,4 @@
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
@@ -15,6 +16,18 @@
 #################################################################
 #    Annotation properties
 #################################################################
+
+###  http://purl.org/dc/terms/description
+dct:description rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/title
+dct:title rdf:type owl:AnnotationProperty .
+
+
+###  http://rdfs.org/ns/void#class
+void:class rdf:type owl:AnnotationProperty .
+
 
 ###  http://rdfs.org/ns/void#rootResource
 void:rootResource rdf:type owl:AnnotationProperty .
@@ -42,13 +55,13 @@ owl:sameAs rdf:type owl:ObjectProperty ,
 #################################################################
 
 ###  http://purl.org/dc/terms/description
-<http://purl.org/dc/terms/description> rdf:type owl:DatatypeProperty ;
-                                       rdfs:subPropertyOf rdfs:comment .
+dct:description rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf rdfs:comment .
 
 
 ###  http://purl.org/dc/terms/title
-<http://purl.org/dc/terms/title> rdf:type owl:DatatypeProperty ;
-                                 rdfs:subPropertyOf rdfs:label .
+dct:title rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf rdfs:label .
 
 
 ###  http://www.w3.org/2000/01/rdf-schema#comment
@@ -63,9 +76,19 @@ rdfs:label rdf:type owl:DatatypeProperty .
 #    Classes
 #################################################################
 
+###  http://rdfs.org/ns/void#Dataset
+void:Dataset rdf:type owl:Class .
+
+
 ###  https://data.ec2u.eu/terms/Course
 ec2u:Course rdf:type owl:Class ;
             rdfs:subClassOf ec2u:Resource .
+
+
+###  https://data.ec2u.eu/terms/Dataset
+ec2u:Dataset rdf:type owl:Class ;
+             rdfs:subClassOf void:Dataset ,
+                             ec2u:Resource .
 
 
 ###  https://data.ec2u.eu/terms/Event
@@ -90,6 +113,22 @@ ec2u:University rdf:type owl:Class ;
 #################################################################
 #    Individuals
 #################################################################
+
+###  https://data.ec2u.eu/events/
+<https://data.ec2u.eu/events/> rdf:type owl:NamedIndividual ,
+                                        ec2u:Dataset ;
+                               dct:description "Local academic and public events."@en ;
+                               dct:title "Events"@en ;
+                               void:class ec2u:Event .
+
+
+###  https://data.ec2u.eu/universities/
+<https://data.ec2u.eu/universities/> rdf:type owl:NamedIndividual ,
+                                              ec2u:Dataset ;
+                                     dct:description "EC2U Alliance partner universities."@en ;
+                                     dct:title "Universities"@en ;
+                                     void:class ec2u:University .
+
 
 ###  https://data.ec2u.eu/universities/coimbra
 <https://data.ec2u.eu/universities/coimbra> rdf:type owl:NamedIndividual ,
