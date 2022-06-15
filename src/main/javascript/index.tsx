@@ -16,8 +16,8 @@
 
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
+import DataHome, { Home } from "@ec2u/data/pages/home";
 import DataNone from "@ec2u/data/pages/none";
-import DataSets, { Sets } from "@ec2u/data/pages/sets";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
 import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
 import "@metreeca/skin/index.css";
@@ -39,7 +39,7 @@ render((
 
                 <NodeRouter routes={{
 
-                    [Sets.id]: DataSets,
+                    [Home.id]: DataHome,
 
                     [Universities.id]: DataUniversities,
                     [University.id]: DataUniversity,

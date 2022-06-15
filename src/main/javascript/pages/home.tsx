@@ -15,15 +15,11 @@
  */
 
 import { Events } from "@ec2u/data/pages/events/events";
-import { DataFiltersTab } from "@ec2u/data/panes/filters";
-import { DataSetsTab } from "@ec2u/data/panes/sets";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
-import { Home as Site } from "@metreeca/skin/lucide";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodePane } from "@metreeca/tile/pane";
-import { NodePath } from "@metreeca/tile/widgets/path";
 import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/parameters";
 import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
@@ -32,10 +28,10 @@ import * as React from "react";
 import { useEffect } from "react";
 
 
-export const Sets=immutable({
+export const Home=immutable({
 
     id: "/",
-    label: "Datasets",
+    label: "Knowledge Hub",
 
     universities: 0,
     events: 0
@@ -45,7 +41,7 @@ export const Sets=immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function DataSets() {
+export default function DataHome() {
 
     const [route, setRoute]=useRoute();
 
@@ -56,7 +52,7 @@ export default function DataSets() {
 
     });
 
-    const [entry]=useEntry(route, Sets, [query, setQuery]);
+    const [entry]=useEntry(route, Home, [query, setQuery]);
 
 
     useEffect(() => { setRoute({ label: string(Events) }); }, []);
@@ -64,17 +60,9 @@ export default function DataSets() {
 
     return (
 
-        <DataPage item={<NodePath>{Sets}</NodePath>}
+        <DataPage item={Home}
 
-            menu={<a href={"https://ec2u.eu/"} target={"_blank"} title={`About EC2U`}><Site/></a>}
-
-
-            tabs={[
-                DataSetsTab(),
-                DataFiltersTab(() => <DataSetsFilters id={route} state={[query, setQuery]}/>)
-            ]}
-
-            pane={<DataSetsFilters id={route} state={[query, setQuery]}/>}
+            pane={<DataHomeFilters id={route} state={[query, setQuery]}/>}
 
         >
 
@@ -88,7 +76,7 @@ export default function DataSets() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function DataSetsFilters({
+function DataHomeFilters({
 
     id,
     state: [query, setQuery]
@@ -106,7 +94,7 @@ function DataSetsFilters({
 
     return <NodePane
 
-        header={<NodeSearch icon placeholder={"Search"}
+        header={<NodeSearch icon placeholder={"Datasets"}
             auto state={[search, setSearch]}
         />}
 
@@ -119,6 +107,6 @@ function DataSetsFilters({
 
         <p>facets…</p>
 
-
     </NodePane>;
+
 }

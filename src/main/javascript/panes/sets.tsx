@@ -15,7 +15,7 @@
  */
 
 import { Events } from "@ec2u/data/pages/events/events";
-import { Sets } from "@ec2u/data/pages/sets";
+import { Home } from "@ec2u/data/pages/home";
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { string } from "@metreeca/link";
 import { Calendar, Landmark, Library, Package } from "@metreeca/skin/lucide";
@@ -40,7 +40,7 @@ export function DataSetsTab() {
 
 export function DataSetsPane() {
 
-    const [entry]=useEntry("/", Sets);
+    const [entry]=useEntry("/", Home);
 
     return <NodePane
 
@@ -49,7 +49,7 @@ export function DataSetsPane() {
     >
 
         <NodeItem icon={<Package/>}
-            name={<NodeLink>{Sets}</NodeLink>}
+            name={<NodeLink>{Home}</NodeLink>}
             menu={"#"}
         />
 

@@ -14,41 +14,22 @@
  * limitations under the License.
  */
 
-import { Immutable, isObject, isString } from "@metreeca/core";
+import { Immutable } from "@metreeca/core";
 import { Value } from "@metreeca/link";
-import { Heart } from "@metreeca/skin/lucide";
+import { Heart, Menu } from "@metreeca/skin/lucide";
 import { NodeIcon } from "@metreeca/tile/widgets/icon";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { copy } from "@metreeca/tool";
-import { useStorage } from "@metreeca/tool/hooks/storage";
 import React, { createElement, ReactNode, useState } from "react";
 import "./page.css";
 
-
-export interface Tab {
-
-    name: string;
-    icon: ReactNode;
-    pane: () => ReactNode;
-
-}
-
-export function isTab(value: unknown): value is Tab {
-    return isObject(value) && isString(value.name) && "icon" in value && "pane" in value;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function DataPage({
 
     item,
     menu,
 
-    side,
     pane,
-
-    tabs,
 
     children
 
@@ -57,51 +38,39 @@ export function DataPage({
     item?: Value | ReactNode | Immutable<Array<Value | ReactNode>>
     menu?: ReactNode
 
-    side?: ReactNode
     pane?: ReactNode
-
-    tabs?: Immutable<Tab[]>
 
     children: ReactNode
 
 }) {
 
-    const init=pane ?? tabs?.[0]?.pane();
-
-
-    const [alternate, setAlternate]=useStorage(localStorage, "data-page-alternate", false);
-
-    const [tray, setTray]=useState(init);
-
-
-    // !!! useEffect(() => setTray(init), [init]);
+    const [tray, setTray]=useState(false);
 
 
     function doToggleTray() {
-        setAlternate(!alternate);
-    }
-
-    function doSetTray(pane: ReactNode) {
-        setAlternate(false);
-        setTray(pane);
+        setTray(!tray);
     }
 
 
     return createElement("data-page", {
 
-        class: alternate ? "alternate" : "primary"
+        class: tray ? "tray" : "main",
+
+        onClick: e => {
+
+            if ( e.target instanceof Element && e.target.tagName === "DATA-PAGE" ) { setTray(false); }
+
+        }
 
     }, <>
 
         <nav>
 
             <header>
-                <NodeIcon onClick={doToggleTray}/>
+                <a href={"/"}><NodeIcon/></a>
             </header>
 
-            <section>{tabs?.map(item =>
-                <button key={item.name} title={item.name} onClick={() => doSetTray(item.pane())}>{item.icon}</button>
-            )}</section>
+            <section/>
 
             <footer>
                 <a target={"_blank"} href={"https://github.com/ec2u/data"}><Heart/></a>
@@ -112,19 +81,22 @@ export function DataPage({
         <aside onClick={e => {
 
             if ( e.target instanceof Element && e.target.tagName === "A" ) {
-                console.log("!!!");
+                setTray(false);
             }
 
-        }}>
-            {tray}
-        </aside>
+        }}>{
+
+            pane
+
+        }</aside>
 
         <main>
 
             <header>
-                <NodeIcon onClick={doToggleTray}/>
+                <a href={"/"}><NodeIcon/></a>
                 <span><NodePath>{item}</NodePath></span>
                 <nav>{menu}</nav>
+                <button title={"Open menu"} onClick={doToggleTray}><Menu/></button>
             </header>
 
             <section>{children}</section>

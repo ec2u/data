@@ -25,6 +25,8 @@ node-search {
 
     grid-template-columns: min-content 1fr min-content;
 
+    margin-top: -0.25ex;
+
     white-space: nowrap;
 
     font-weight: 300 !important;
@@ -55,15 +57,15 @@ node-search {
     &:not(.rule) {
 
         & > nav:first-child {
-            margin-left: 0.15em;
+            margin-left: 0.1em;
         }
 
         & > nav:last-child {
-            margin-right: 0.15em;
+            margin-right: 0.1em;
         }
 
         & > input {
-            margin: 0 -0.25em;
+            margin: 0 -0.1em;
             border-style: solid;
             border-radius: 2ex;
         }
@@ -78,7 +80,7 @@ node-search {
 
         grid-column: 1 / cols 3;
 
-        padding: 0.25ex 1.75em;
+        padding: 0.2ex 1.5em 0.3ex;
 
         font-size: 90%;
 
@@ -86,18 +88,16 @@ node-search {
 
     & > nav {
 
-        width: 1em;
-        height: 1em;
-
         z-index: 1;
         color: #333;
 
         background-color: transparent;
-        transform: scale(0.9) translate(0, 5%);
+        transform: scale(0.75);
 
         &:first-child {
             grid-column: 1;
             pointer-events: none;
+            color: #999;
         }
 
         &:last-child {

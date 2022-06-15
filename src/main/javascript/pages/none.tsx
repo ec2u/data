@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Sets } from "@ec2u/data/pages/sets";
+import { Home } from "@ec2u/data/pages/home";
 import { DataSetsTab } from "@ec2u/data/panes/sets";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { CancelIcon } from "@metreeca/skin/lucide";
@@ -32,7 +32,7 @@ export default function DataNone() {
 
 
     function doDismiss() {
-        setRoute(Sets.id, true);
+        setRoute(Home.id, true);
     }
 
 

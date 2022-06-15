@@ -16,13 +16,13 @@
 
 data-page {
 
+    --data-page-header-shadow-size: 0.5em;
+    --data-page-aside-background-color: #F8F8F8;
+
     display: grid;
 
     grid-template-columns: min-content minmax(min-content, 17.5rem) minmax(1rem, 1fr);
     grid-template-rows: 1fr;
-
-    --data-page-header-shadow-size: 0.5em;
-    --data-page-aside-background-color: #F8F8F8;
 
     & > * {
 
@@ -56,8 +56,8 @@ data-page {
 
             grid-gap: 0.5em;
 
-            padding-top: 0.5em;
-            padding-bottom: 0.5em;
+            padding-top: 0.66em;
+            padding-bottom: 0.66em;
 
             margin-bottom: 0.5em;
 
@@ -141,6 +141,8 @@ data-page {
 
         overflow-y: auto;
 
+        text-align: center;
+
         & > * {
             max-width: 50em;
         }
@@ -152,9 +154,10 @@ data-page {
 
     }
 
+
     @media only screen and (max-width: 960px) {
 
-        &.primary {
+        &.main {
 
             & > nav {
                 display: none;
@@ -166,7 +169,7 @@ data-page {
 
         }
 
-        &.alternate {
+        &.tray {
 
             & > main {
                 pointer-events: none;
@@ -179,34 +182,6 @@ data-page {
 
     @media only screen and (min-width: 960px), print {
 
-        &.primary {
-
-            & > nav {
-                visibility: visible;
-            }
-
-            & > aside {
-                visibility: visible;
-            }
-
-            & > main {
-                grid-column: 3 / span 1;
-            }
-
-        }
-
-        &.alternate {
-
-            & > aside {
-                visibility: hidden;
-            }
-
-            & > main {
-                grid-column: 2 / span 2;
-            }
-
-        }
-
         & > * {
 
             & > header {
@@ -216,6 +191,8 @@ data-page {
         }
 
         & > nav {
+
+            visibility: visible;
 
             & > * {
                 padding-left: 1rem;
@@ -238,6 +215,10 @@ data-page {
 
         & > main {
 
+            grid-column: 3 / span 1;
+
+            text-align: start;
+
             & > * {
 
                 margin-left: 1rem;
@@ -246,7 +227,7 @@ data-page {
 
             & > header {
 
-                & > node-icon {
+                & > a, & > button {
                     display: none;
                 }
 
