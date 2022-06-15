@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 import {defineConfig} from "vite";
 import {resolve} from "path";
@@ -20,7 +20,7 @@ import reactRefresh from "@vitejs/plugin-react-refresh";
 import postcssNesting from "postcss-nesting";
 
 const src=resolve(process.env.src || "src/main/javascript");
-const out=resolve(process.env.out || "target/static");
+const out=resolve(process.env.out || "target/classes/static");
 
 export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 

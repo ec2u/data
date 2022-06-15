@@ -110,6 +110,10 @@ public final class Data implements Runnable {
 
                         new CORS(),
 
+                        new Publisher() // static assets published by GAE
+
+                                .fallback("/index.html"),
+
                         new Wrapper()
 
                                 .before(request -> request
