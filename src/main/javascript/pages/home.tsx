@@ -15,11 +15,13 @@
  */
 
 import { Events } from "@ec2u/data/pages/events/events";
+import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
-import { NodePane } from "@metreeca/tile/pane";
+import { NodeLink } from "@metreeca/tile/widgets/link";
 import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/parameters";
 import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
@@ -33,8 +35,16 @@ export const Home=immutable({
     id: "/",
     label: "Knowledge Hub",
 
-    universities: 0,
-    events: 0
+
+    contains: [{
+
+        id: "",
+        label: "",
+        comment: "",
+
+        entities: ""
+
+    }]
 
 });
 
@@ -47,7 +57,7 @@ export default function DataHome() {
 
     const [query, setQuery]=useParameters<Query>({
 
-        ".order": "label",
+        ".order": "entities",
         ".limit": 100
 
     });
@@ -64,11 +74,17 @@ export default function DataHome() {
 
             pane={<DataHomeFilters id={route} state={[query, setQuery]}/>}
 
-        >
+        >{entry({
 
-            <img src={"/blobs/ec2u.png"} alt={"EC2U Locations"} style={{ width: "100%", maxWidth: "50em" }}/>
+            value: ({ contains }) => contains.map(dataset => <DataCard
 
-        </DataPage>
+                key={dataset.id} name={<NodeLink>{dataset}</NodeLink>}
+
+                tags={`${string(dataset.entities)} entities`}
+
+            >{string(dataset.comment)}</DataCard>)
+
+        })}</DataPage>
 
     );
 }
@@ -92,7 +108,7 @@ function DataHomeFilters({
 
     const [stats]=useStats("", "", [query, setQuery]);
 
-    return <NodePane
+    return <DataPane
 
         header={<NodeSearch icon placeholder={"Datasets"}
             auto state={[search, setSearch]}
@@ -100,13 +116,11 @@ function DataHomeFilters({
 
         footer={stats({
             value: ({ count }) =>
-                count === 0 ? "no matches" : count === 1 ? "1 match" : `${string(count)} matches`
+                count === 0 ? "no matches"
+                    : count === 1 ? "1 match"
+                        : `${string(count)} matches`
         })}
 
-    >
-
-        <p>facets…</p>
-
-    </NodePane>;
+    />;
 
 }

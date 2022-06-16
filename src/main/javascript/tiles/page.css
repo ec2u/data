@@ -16,12 +16,13 @@
 
 data-page {
 
-    --data-page-header-shadow-size: 0.5em;
+    --data-page-header-shadow-size: 0.5rem;
+    --data-page-aside-width: 20rem;
     --data-page-aside-background-color: #F8F8F8;
 
     display: grid;
 
-    grid-template-columns: min-content minmax(min-content, 17.5rem) minmax(1rem, 1fr);
+    grid-template-columns: min-content minmax(min-content, var(--data-page-aside-width)) minmax(1rem, 1fr);
     grid-template-rows: 1fr;
 
     & > * {
@@ -66,6 +67,11 @@ data-page {
             white-space: nowrap;
 
             box-shadow: 0 0 var(--data-page-header-shadow-size) var(--data-page-header-shadow-size) var(--node--background-color);
+
+            &:empty::after {
+                content: '​';
+            }
+
 
             & > node-icon::after {
                 content: '​'; /* prevent vertical collapsing*/
@@ -124,12 +130,36 @@ data-page {
         border-right-style: solid;
 
         & > * {
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
 
-        & > header {
+        & > section {
 
+            & > dl {
+
+                display: grid;
+                grid-template-columns: min-content 1fr;
+                grid-template-rows: min-content;
+                grid-column-gap: 0.5em;
+                grid-row-gap: 0.25em;
+
+
+                & > * {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                & > dt {
+                    font-weight: 600;
+                }
+
+                & > dd {
+                    text-align: right;
+                }
+
+            }
 
         }
 

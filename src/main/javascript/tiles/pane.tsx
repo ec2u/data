@@ -14,17 +14,32 @@
  * limitations under the License.
  */
 
-import { Filter } from "@metreeca/skin/lucide";
 import * as React from "react";
 import { ReactNode } from "react";
 
 
-export function DataFiltersTab(pane: () => ReactNode) {
-    return {
+export function DataPane({
 
-        name: "Filter",
-        icon: <Filter/>,
-        pane
+    header,
+    footer,
 
-    };
+    children
+
+}: {
+
+    header?: ReactNode
+    footer?: ReactNode
+
+    children?: ReactNode
+
+}) {
+    return <>
+
+        <header>{header}</header>
+
+        <section>{children}</section>
+
+        <footer>{footer}</footer>
+
+    </>;
 }

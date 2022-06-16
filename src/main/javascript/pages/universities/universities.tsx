@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import { DataSetsTab } from "@ec2u/data/panes/sets";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
+import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/parameters";
-import { useEntry } from "@metreeca/tool/nests/graph";
+import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { ReactNode, useEffect } from "react";
-import { DataPage } from "../../tiles/page";
 
 
 export const Universities=immutable({
@@ -74,7 +76,7 @@ export function DataUniversities() {
 
         menu={entry({ fetch: <NodeSpin/> })}
 
-        tabs={[DataSetsTab()]}
+        pane={<DataUniversitiesFilters id={route} state={[query, setQuery]}/>}
 
     >{entry<ReactNode>({
 
@@ -97,4 +99,37 @@ export function DataUniversities() {
 
     })}</DataPage>;
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function DataUniversitiesFilters({
+
+    id,
+    state: [query, setQuery]
+
+}: {
+
+    id: string
+    state: [Query, Setter<Query>]
+
+}) {
+
+    const [search, setSearch]=useKeywords(id, "label", [query, setQuery]);
+
+    const [stats]=useStats("", "", [query, setQuery]);
+
+    return <DataPane
+
+        header={<NodeSearch icon placeholder={"Search"}
+            auto state={[search, setSearch]}
+        />}
+
+        footer={stats({
+            value: ({ count }) =>
+                count === 0 ? "no matches" : count === 1 ? "1 match" : `${string(count)} matches`
+        })}
+
+    />;
 }

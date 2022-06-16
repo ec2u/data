@@ -14,39 +14,48 @@
  * limitations under the License.
  */
 
-import { immutable, Immutable, isArray, isBoolean, isNumber, isObject, isString } from "@metreeca/core";
+import { immutable, Immutable, isArray, isBoolean, isDate, isDateTime, isNumber, isObject, isString, isTime } from "@metreeca/core";
+import { Frame } from "lucide-react";
 
 
 export interface Graph {
 
-    get<V extends Frame, E extends Frame>(id: string, model: V, query?: Query): State<V, E>;
+    get<V extends Entry, E>(id: string, model: V, query?: Query): State<V, E>;
 
-    post<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<Focus, E>): void;
+    post<V, E>(id: string, frame: V, probe: Probe<Focus, E>): void;
 
-    put<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<Focus, E>): void;
+    put<V extends Entry, E>(id: string, frame: V, probe: Probe<Focus, E>): void;
 
-    del<E extends Frame>(id: string, probe: Probe<Focus, E>): void;
+    del<E>(id: string, probe: Probe<Focus, E>): void;
 
 
     observe(id: string, observer: () => void): () => void;
 
 }
 
-export interface State<V extends Frame, E extends Frame=Frame> {
+export interface State<V, E=unknown> {
 
-    <R>(probe: Probe<V, E, R>): undefined | R;
+    <R>(probe: Probe<V, E, R>): R;
+
+    <R>(probe: Partial<Probe<V, E, R>> & Fallback<V, E, R>): R;
+
+    <R>(probe: Partial<Probe<V, E, R>> & Partial<Fallback<V, E, R>>): undefined | R;
 
 }
 
-export interface Probe<V, E extends Frame=Frame, R=void> {
+export interface Probe<V, E, R=void> {
 
-    fetch?: R | ((abort: () => void) => R);
+    fetch: R | ((abort: () => void) => R);
 
-    value?: R | ((frame: V) => R);
+    value: R | ((frame: V) => R);
 
-    error?: R | ((error: Error<E>) => R);
+    error: R | ((error: Error<E>) => R);
 
-    other?: R | ((state: (() => void) | V | Error<E>) => R);
+}
+
+export interface Fallback<V, E, R=void> {
+
+    other: R | ((state: (() => void) | V | Error<E>) => R);
 
 }
 
@@ -63,11 +72,11 @@ export interface Query {
     readonly ".offset"?: number;
     readonly ".limit"?: number;
 
-    readonly [path: string]: undefined | Literal | Immutable<Literal[]>;
+    readonly [path: string]: undefined | Literal | Immutable<Array<Literal>>;
 
 }
 
-export interface Error<D extends Frame=Frame> {
+export interface Error<D> {
 
     readonly status: number;
     readonly reason: string;
@@ -77,33 +86,8 @@ export interface Error<D extends Frame=Frame> {
 }
 
 
-export function isError(value: any): value is Error {
-    return isNumber(value.status) && isString(value.reason) && (
-        value.detail === undefined || isFrame(value.detail)
-    );
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export interface Stats extends Frame {
-
-    readonly id: string;
-    readonly count: number;
-
-    readonly min?: Value;
-    readonly max?: Value;
-
-    readonly stats: Immutable<Array<{
-
-        readonly id: string;
-        readonly count: number;
-
-        readonly min?: Value
-        readonly max?: Value
-
-    }>>;
-
+export function isError(value: any): value is Error<unknown> {
+    return isNumber(value.status) && isString(value.reason);
 }
 
 
@@ -125,12 +109,6 @@ export interface Frame {
 
 }
 
-export interface Range {
-
-    readonly min?: Literal,
-    readonly max?: Literal
-
-}
 
 export interface Focus {
 
@@ -180,7 +158,7 @@ export function isEntry(value: any): value is Entry {
 }
 
 
-//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function required<T=any>(value: T): typeof value {
     return value;
@@ -204,10 +182,13 @@ export function multiple<T=any>(value: T): (typeof value)[] {
 export function string(value: undefined | Value | Entry, locales: readonly string[]=navigator.languages): string {
     return isBoolean(value) ? value.toString()
         : isNumber(value) ? value.toLocaleString(locales as string[])
-            : isString(value) ? value
-                : isEntry(value) ? label(value, locales)
-                    : isDictionary(value) ? local(value, locales)
-                        : "";
+            : isDateTime(value) ? new Date(value).toLocaleString(locales as string[])
+                : isDate(value) ? new Date(`${value}T00:00:00`).toLocaleDateString(locales as string[])
+                    : isTime(value) ? new Date(`1970-01-01T${value}`).toLocaleTimeString(locales as string[])
+                        : isString(value) ? value
+                            : isEntry(value) ? label(value, locales)
+                                : isDictionary(value) ? local(value, locales)
+                                    : "";
 }
 
 
@@ -244,7 +225,7 @@ function guess(id: string): string {
  *
  * @constructor
  */
-export function State<V extends Frame, E extends Frame>({ fetch }: {
+export function State<V, E=unknown>({ fetch }: {
 
     fetch: () => void
 
@@ -257,7 +238,7 @@ export function State<V extends Frame, E extends Frame>({ fetch }: {
  *
  * @constructor
  */
-export function State<V extends Frame, E extends Frame>({ value }: {
+export function State<V, E=unknown>({ value }: {
 
     value: V
 
@@ -270,13 +251,13 @@ export function State<V extends Frame, E extends Frame>({ value }: {
  *
  * @constructor
  */
-export function State<V extends Frame, E extends Frame>({ error }: {
+export function State<V, E=unknown>({ error }: {
 
     error: Error<E>,
 
 }): State<V, E>;
 
-export function State<V extends Frame, E extends Frame>({ fetch, value, error }: {
+export function State<V, E=unknown>({ fetch, value, error }: {
 
     fetch?: () => void,
     value?: V,
@@ -284,7 +265,7 @@ export function State<V extends Frame, E extends Frame>({ fetch, value, error }:
 
 }): State<V, E> {
 
-    return <R>(probe: Probe<V, E, R>) => {
+    return function <R>(probe: any) {
 
         const other=fetch ?? value ?? error;
 
@@ -309,7 +290,6 @@ export function State<V extends Frame, E extends Frame>({ fetch, value, error }:
             return undefined;
 
         }
-
     };
 
 }

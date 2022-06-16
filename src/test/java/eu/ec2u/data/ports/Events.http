@@ -1,6 +1,7 @@
 ### Main Catalog
 
 GET https://data.ec2u.eu/events/?.stats
+
 ### Main Details
 
 GET https://data.ec2u.eu/events/0a389bf60aa1ea21bc06875442caa221

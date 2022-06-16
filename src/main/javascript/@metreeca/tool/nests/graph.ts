@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { isString } from "@metreeca/core";
-import { Frame, Graph, Query, Range, State, Stats } from "@metreeca/link";
+import { Immutable, isString } from "@metreeca/core";
+import { Entry, Focus, Frame, Graph, isFocus, isLiteral, Literal, Query, State, string, Value } from "@metreeca/link";
 import { RESTGraph } from "@metreeca/link/rest";
 import { Setter } from "@metreeca/tool/hooks";
 import { useUpdate } from "@metreeca/tool/hooks/update";
@@ -71,10 +71,10 @@ export function useGraph(): Graph {
     return useContext(Context);
 }
 
-export function useEntry<V extends Frame, E extends Frame=Frame>(
+export function useEntry<V extends Entry, E>(
     id: string, model: V, [query, setQuery]: [Query, Setter<Query>]=[{}, () => {}]
 ): [
-    State<V, E>, Setter<Query>
+    State<typeof model, E>, Setter<Query>
 ] {
 
     const graph=useGraph();
@@ -96,18 +96,47 @@ export function useKeywords(
     const keywords=query[`~${path}`];
 
     return [isString(keywords) ? keywords.trim() : "", keywords => {
-        setQuery({ [`~${path}`]: keywords.trim() ? keywords.trim() : undefined });
+        setQuery({ [`~${path}`]: keywords.trim() || undefined });
     }];
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface Stats {
+
+    readonly count: number;
+
+    readonly min?: Value;
+    readonly max?: Value;
+
+    readonly stats: Immutable<Array<{
+
+        readonly id: string;
+        readonly count: number;
+
+        readonly min?: Value
+        readonly max?: Value
+
+    }>>;
+
+}
+
+export interface StatsQuery {
+
+    readonly min?: Literal,
+    readonly max?: Literal
 
 }
 
 export function useStats<V extends Frame, E extends Frame>(
     id: string, path: string, [query, setQuery]: [Query, Setter<Query>]
 ): [
-    State<Stats>, Setter<Range>
+    State<Stats>, Setter<StatsQuery>
 ] {
 
-    const [entry, setEntry]=useEntry<Stats>(id, {
+    const [entry, setEntry]=useEntry(id, {
 
         id: "",
         count: 0,
@@ -129,9 +158,162 @@ export function useStats<V extends Frame, E extends Frame>(
 
     return [entry, ({ min, max }) => setEntry({
 
+        ...query,
+
         [`>=${path}`]: min,
         [`<=${path}`]: max
 
     })];
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface Terms extends Immutable<Array<{
+
+    readonly value: Value;
+    readonly count: number;
+
+    readonly selected?: boolean;
+
+}>> {}
+
+export interface TermsQuery extends Immutable<Array<{
+
+    readonly value: Literal;
+
+    readonly selected: boolean;
+
+}>> {}
+
+export function useTerms(
+    id: string,
+    {
+
+        path,
+
+        keywords,
+        offset,
+        limit
+
+    }: {
+
+        path: string,
+
+        keywords?: string,
+        offset?: number,
+        limit?: number
+
+    },
+    [query, setQuery]: [Query, Setter<Query>]
+): [
+
+    State<Terms>, Setter<TermsQuery>
+
+] {
+
+    const model=({
+
+        id: "",
+
+        terms: [{
+
+            value: "",
+            count: 0
+
+        }]
+
+    });
+
+    const constraint=query[path] || query[`?${path}`] || [];
+    const selection=isLiteral(constraint) ? [constraint] : constraint;
+
+    const [baseline]=useEntry(id, model, [{ // ignoring all facets // !!! review offset/limit
+
+        ".terms": path,
+
+        ".offset": offset,
+        ".limit": limit
+
+
+    }, setQuery]);
+
+    const [matching]=useEntry(id, model, [{ // ignoring this facet
+
+        ".terms": path,
+
+        ".offset": offset,
+        ".limit": limit,
+
+        ...Object.entries(query)
+            .filter(([key]) => !key.startsWith(".") && key !== path && key !== `?${path}`)
+            .reduce((current, [key, value]) => ({ ...current, [key]: value }), {})
+
+    }, setQuery]);
+
+
+    const value=baseline({
+
+        fetch: abort => State<Terms>({ fetch: abort }),
+
+        error: error => State<Terms>({ error }),
+
+        value: ({ terms: baseline }) => matching({
+
+            fetch: abort => State<Terms>({ fetch: abort }),
+
+            error: error => State<Terms>({ error }),
+
+            value: ({ terms: matching }) => State<Terms>({
+
+                value: [...matching, ...baseline
+
+                    .filter(term => !matching.some(match => equals(term.value, match.value)))
+                    .map(term => ({ ...term, count: 0 }))
+
+                ]
+
+                    .map(term => ({
+
+                        ...term, selected: selection.some(value =>
+                            isFocus(term.value) ? term.value.id === value : term.value === value
+                        )
+
+                    }))
+
+                    .sort((x, y): number =>
+                        x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
+                            : x.count > y.count ? -1 : x.count < y.count ? +1
+                                : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
+                    )
+            })
+
+        })
+
+    });
+
+    const updater=(terms: TermsQuery) => {
+
+        const stable=selection.filter(selected => terms.every(({ value }) => !equals(selected, value)));
+        const added=terms.filter(({ selected }) => selected).map(({ value }) => value);
+
+        const update=[
+
+            ...stable,
+            ...added
+
+        ];
+
+        return setQuery({ ...query, [path]: update.length > 0 ? update : undefined });
+    };
+
+    return [value, updater];
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function equals(x: Literal | Focus, y: Literal | Focus): boolean {
+    return isFocus(x) && isFocus(y) ? equals(x.id, y.id) : x === y;
 }

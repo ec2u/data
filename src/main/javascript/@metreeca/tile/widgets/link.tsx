@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Entry, string } from "@metreeca/link";
+import { Focus, string } from "@metreeca/link";
 import React from "react";
 
 
@@ -24,7 +24,7 @@ export function NodeLink({
 
 }: {
 
-    children: Entry
+    children: Focus
 
 }) {
 

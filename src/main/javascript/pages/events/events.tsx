@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { DataFiltersTab } from "@ec2u/data/panes/filters";
-import { DataSetsTab } from "@ec2u/data/panes/sets";
+import { University } from "@ec2u/data/pages/universities/university";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
-import { NodePane } from "@metreeca/tile/pane";
+import { NodeTerms } from "@metreeca/tile/lenses/terms";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
@@ -78,11 +78,6 @@ export function DataEvents() {
 
         menu={entry({ fetch: <NodeSpin/> })}
 
-        tabs={[
-            DataSetsTab(),
-            DataFiltersTab(() => <DataEventsFilters id={route} state={[query, setQuery]}/>)
-        ]}
-
         pane={<DataEventsFilters id={route} state={[query, setQuery]}/>}
 
     >{entry({
@@ -123,49 +118,38 @@ export function DataEvents() {
 function DataEventsFilters({
 
     id,
+
     state: [query, setQuery]
 
 }: {
 
     id: string
+
     state: [Query, Setter<Query>]
 
 }) {
 
     const [search, setSearch]=useKeywords(id, "label", [query, setQuery]);
-
-    // const [universities, setUniversities]=useTerms("", "university", [query, setQuery]);
-    // const [publishers, setPublishers]=useTerms("", "publisher", [query, setQuery]);
-    // const [date, setDate]=useStats("", "startDate", [query, setQuery]);
+    // const [university, setUniversity]=useTerms(id, { path: "university"}, [query, setQuery]);
 
     const [stats]=useStats("", "", [query, setQuery]);
 
-    return <NodePane
+    return <DataPane
 
         header={<NodeSearch icon placeholder={"Search"}
             auto state={[search, setSearch]}
         />}
 
         footer={stats({
-            value: ({ count }) =>
-                count === 0 ? "no matches" : count === 1 ? "1 match" : `${string(count)} matches`
+
+            value: ({ count }) => count === 0 ? "no matches" : count === 1 ? "1 match" : `${string(count)} matches`
+
         })}
 
     >
 
-        <p>facets…</p>
-
-        {/* <ToolFacet expanded name={string(University.label)}
-         menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
-         >
-         <ToolTerms value={[universities, setUniversities]}/>
-         </ToolFacet>*/}
-
-        {/* <ToolFacet expanded name={"Publisher"}
-         menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
-         >
-         <ToolTerms value={[publishers, setPublishers]}/>
-         </ToolFacet>*/}
+        <NodeTerms id={id} path={"university"} compact placeholder={"University"} state={[query, setQuery]}/>
+        <NodeTerms id={id} path={"publisher"} compact placeholder={"Publisher"} state={[query, setQuery]}/>
 
         {/* <ToolFacet expanded name={"Date"}
          menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
@@ -173,5 +157,5 @@ function DataEventsFilters({
          <ToolRange pattern={"\\d{4}-\\d{2}-\\d{2}"} value={[date, setDate]}/>
          </ToolFacet>*/}
 
-    </NodePane>;
+    </DataPane>;
 }

@@ -88,28 +88,6 @@ data-card {
 
         }
 
-        & > figure + dl {
-
-            display: grid;
-            grid-template-columns: min-content 1fr;
-            grid-template-rows: min-content;
-            grid-column-gap: 0.5em;
-            grid-row-gap: 0.25em;
-
-            margin-top: 2ex;
-
-            & > * {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            & > dd {
-                text-align: right;
-            }
-
-        }
-
     }
 
 }

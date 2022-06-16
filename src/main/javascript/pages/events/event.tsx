@@ -19,6 +19,7 @@ import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
+import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
@@ -34,9 +35,15 @@ export const Event=immutable({
     label: { "en": "Event" },
     comment: {},
 
+    university: {
+        id: "",
+        label: {}
+    },
+
     fullDescription: {},
 
-    startDate: ""
+    startDate: "",
+    endDate: ""
 
 });
 
@@ -62,9 +69,12 @@ export function DataEvent() {
             label,
             comment,
 
+            university,
+
             fullDescription,
 
-            startDate
+            startDate,
+            endDate
 
         }) => (
 
@@ -74,8 +84,14 @@ export function DataEvent() {
 
                 info={<dl>
 
+                    <dt>University</dt>
+                    <dd><NodeLink>{university}</NodeLink></dd>
+
                     <dt>Start Date</dt>
                     <dd>{startDate}</dd>
+
+                    <dt>End Date</dt>
+                    <dd>{endDate}</dd>
 
                 </dl>}
 

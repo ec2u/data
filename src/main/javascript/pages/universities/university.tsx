@@ -16,6 +16,8 @@
 
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
 import { NodePath } from "@metreeca/tile/widgets/path";
@@ -24,7 +26,6 @@ import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
-import { DataPage } from "../../tiles/page";
 
 
 function optional<T>(value: T): undefined | typeof value {
@@ -75,37 +76,45 @@ export function DataUniversity() {
 
         menu={entry({ fetch: <NodeSpin/> })}
 
+        pane={<DataPane>{entry({
+
+            value: ({
+
+                inception, students,
+                country, location
+
+            }) => <dl>
+
+                <dt>Inception</dt>
+                <dd>{inception && inception.substring(0, 4) || "-"}</dd>
+
+                <dt>Country</dt>
+                <dd>{country && <a href={country.id}>{string(country.label)}</a>}</dd>
+
+                <dt>City</dt>
+                <dd>{location && <a href={location.id}>{string(location.label)}</a>}</dd>
+
+                {students && <>
+                    <dt>Students</dt>
+                    <dd>{string(students)}</dd>
+                </>}
+
+            </dl>
+
+
+        })}</DataPane>}
+
     >{entry({
 
         value: ({
 
-            image, label, comment,
-            inception, students,
-            country, location
+            image, label, comment
 
         }) => (
 
             <DataCard
 
                 icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
-
-                info={<dl>
-
-                    <dt>Inception</dt>
-                    <dd>{inception && inception.substring(0, 4) || "-"}</dd>
-
-                    <dt>Country</dt>
-                    <dd>{country && <a href={country.id}>{string(country.label)}</a>}</dd>
-
-                    <dt>City</dt>
-                    <dd>{location && <a href={location.id}>{string(location.label)}</a>}</dd>
-
-                    {students && <>
-                        <dt>Students</dt>
-                        <dd>{string(students)}</dd>
-                    </>}
-
-                </dl>}
 
             >
 

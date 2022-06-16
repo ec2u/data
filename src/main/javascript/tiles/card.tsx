@@ -33,7 +33,6 @@ export function DataCard({
 
 	tags,
 	icon,
-	info,
 
 	children
 
@@ -64,8 +63,6 @@ export function DataCard({
 			<header>{tags}</header>
 
 			<figure>{typeof icon === "string" ? <img src={icon}/> : icon}</figure>
-
-			{info}
 
 		</nav>
 
