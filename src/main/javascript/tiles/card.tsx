@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { isString } from "@metreeca/core";
 import * as React from "react";
 import { createElement, ReactNode } from "react";
 import "./card.css";
@@ -50,21 +51,21 @@ export function DataCard({
 
 	return createElement("data-card", {}, <>
 
-		<div>
+		<header>
 
 			<h1>{name}</h1>
 
+			<nav>{tags}</nav>
+
+		</header>
+
+		<section>
+
+			<figure>{isString(icon) ? <img src={icon}/> : icon}</figure>
+
 			{children}
 
-		</div>
-
-		<nav>
-
-			<header>{tags}</header>
-
-			<figure>{typeof icon === "string" ? <img src={icon}/> : icon}</figure>
-
-		</nav>
+		</section>
 
 	</>);
 

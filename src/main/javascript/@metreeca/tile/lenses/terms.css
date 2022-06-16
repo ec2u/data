@@ -27,8 +27,6 @@ node-terms {
 
     overflow: hidden;
 
-    font-size: 90%;
-
     background-color: var(--node--background-color-edit);
 
     &.focused {

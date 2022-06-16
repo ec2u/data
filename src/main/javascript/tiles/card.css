@@ -17,70 +17,55 @@
 data-card {
 
     display: flex;
-    flex-direction: row;
-    align-items: start;
-
-    max-width: 50em;
-
-    grid-column-gap: 1.5em;
+    flex-direction: column;
+    align-items: stretch;
 
     &:not(:first-child) {
         margin-top: 1.5em;
     }
 
+
     & > * {
 
-        & > :first-child {
-
-            margin-bottom: 1.5ex;
-            font-weight: 500;
-
-            &:empty {
-                display: none;
-            }
-
-        }
-
-        & > :first-child + * {
-            margin-top: 0;
-            padding-top: 0;
+        &:empty {
+            display: none;
         }
 
     }
 
-    & > div {
-
-        flex-grow: 1;
-
-        & > h1 {
-
-            & > * + *::before {
-                content: "›";
-                margin: 0 0.25em;
-            }
-
-        }
-
-    }
-
-    & > nav {
-
-        flex-shrink: 0;
-
-        width: 12.5em;
+    & > header {
 
         display: flex;
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: baseline;
 
-        font-size: 90%;
+        grid-gap: 0.25em;
 
-        & > header {
-            margin-left: auto;
-            color: #999;
+        & > h1 {
+            flex-grow: 1;
         }
 
+        & > nav {
+
+            white-space: nowrap;
+            font-size: 90%;
+            color: var(--node--color-label);
+
+        }
+
+    }
+
+    & > section {
+
+        margin-top: 0.75em;
+
         & > figure {
+
+            float: right;
+            width: 33%;
+
+            margin-left: 1em;
+            margin-bottom: 1em;
 
             & > img:first-child {
                 width: 100%;

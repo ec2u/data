@@ -26,9 +26,9 @@ node-path {
         font-weight: inherit;
     }
 
-    & > *:not(:last-child) {
+    & > *:not(:first-child) {
 
-        &::after {
+        &::before {
             content: "›";
             padding: 0 0.33em;
         }

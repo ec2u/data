@@ -136,6 +136,8 @@ data-page {
 
         & > section {
 
+            font-size: 90%;
+
             & > dl {
 
                 display: grid;
