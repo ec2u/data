@@ -29,6 +29,8 @@ node-terms {
 
     font-size: 90%;
 
+    background-color: var(--node--background-color-edit);
+
     &.focused {
         box-shadow: var(--node--box-shadow-focus);
     }

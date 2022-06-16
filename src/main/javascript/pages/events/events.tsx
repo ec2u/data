@@ -21,6 +21,7 @@ import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
+import { NodeStats } from "@metreeca/tile/lenses/stats";
 import { NodeTerms } from "@metreeca/tile/lenses/terms";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -129,15 +130,14 @@ function DataEventsFilters({
 
 }) {
 
-    const [search, setSearch]=useKeywords(id, "label", [query, setQuery]);
-    // const [university, setUniversity]=useTerms(id, { path: "university"}, [query, setQuery]);
+    const [keywords, setKeywords]=useKeywords(id, "label", [query, setQuery]);
 
     const [stats]=useStats("", "", [query, setQuery]);
 
     return <DataPane
 
         header={<NodeSearch icon placeholder={"Search"}
-            auto state={[search, setSearch]}
+            auto state={[keywords, setKeywords]}
         />}
 
         footer={stats({
@@ -151,11 +151,7 @@ function DataEventsFilters({
         <NodeTerms id={id} path={"university"} compact placeholder={"University"} state={[query, setQuery]}/>
         <NodeTerms id={id} path={"publisher"} compact placeholder={"Publisher"} state={[query, setQuery]}/>
 
-        {/* <ToolFacet expanded name={"Date"}
-         menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
-         >
-         <ToolRange pattern={"\\d{4}-\\d{2}-\\d{2}"} value={[date, setDate]}/>
-         </ToolFacet>*/}
+        <NodeStats id={id} path={"startDate"} pattern={/\d{4}-\d{2}-\d{2}/} state={[query, setQuery]}/>
 
     </DataPane>;
 }
