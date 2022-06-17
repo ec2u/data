@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Loader2 } from "@metreeca/skin/lucide";
+import { Loader2 } from "@metreeca/tile/widgets/icon";
 import * as React from "react";
 import { createElement, ReactNode } from "react";
 

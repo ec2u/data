@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import "./lucide.css";
+import "./icon.css";
 
 
 export * from "lucide-react";

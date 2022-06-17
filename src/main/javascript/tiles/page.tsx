@@ -16,8 +16,8 @@
 
 import { Immutable } from "@metreeca/core";
 import { Value } from "@metreeca/link";
-import { Heart, Menu } from "@metreeca/skin/lucide";
-import { NodeIcon } from "@metreeca/tile/widgets/icon";
+import { Heart, Menu } from "@metreeca/tile/widgets/icon";
+import { NodeIcon } from "@metreeca/tile/widgets/logo";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { copy } from "@metreeca/tool";
 import React, { createElement, ReactNode, useState } from "react";

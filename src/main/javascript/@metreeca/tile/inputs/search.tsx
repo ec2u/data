@@ -15,7 +15,7 @@
  */
 
 import { isNumber } from "@metreeca/core";
-import { ClearIcon, Search } from "@metreeca/skin/lucide";
+import { ClearIcon, Search } from "@metreeca/tile/widgets/icon";
 import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
 import { useTrailing } from "@metreeca/tool/hooks/trailing";

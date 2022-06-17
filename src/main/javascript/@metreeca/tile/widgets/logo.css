@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-@import url("index.css");
-@import url('https://fonts.googleapis.com/css2?family=Inconsolata&family=Quicksand:wght@400;600&display=swap');
+node-logo {
 
-body {
-    font-family: Quicksand, Arial, sans-serif;
-    font-weight: 400;
-}
+    display: inline-block;
 
-a {
-    font-weight: 600;
-}
+    width: 1em;
+    aspect-ratio: 1;
 
-strong {
-    font-weight: 600;
-}
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
 
-code {
-    font-family: Inconsolata, Courier, monospace;
-    font-weight: 400;
 }

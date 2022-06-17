@@ -14,17 +14,34 @@
  * limitations under the License.
  */
 
+import { icon } from "@metreeca/tool";
+import * as React from "react";
+import { createElement } from "react";
+import "./logo.css";
 
-*.lucide {
 
-    display: inline-block;
+/**
+ * Creates a component displaying the app {@link icon}.
+ *
+ * @constructor
+ */
+export function NodeIcon({
 
-    width: 1em;
-    height: 1em;
+    onClick
 
-    text-align: center;
-    vertical-align: middle;
+}: {
 
-    transform: translateY(-10%);
+    onClick?: () => void;
+
+}) {
+
+    return createElement("node-logo", {
+
+        onClick,
+
+        style: { backgroundImage: `url(${icon})` }
+
+    }, <></>);
 
 }
+

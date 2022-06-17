@@ -16,7 +16,7 @@
 
 import { Home } from "@ec2u/data/pages/home";
 import { DataPage } from "@ec2u/data/tiles/page";
-import { CancelIcon } from "@metreeca/skin/lucide";
+import { CancelIcon } from "@metreeca/tile/widgets/icon";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { createElement } from "react";

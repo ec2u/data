@@ -4,7 +4,7 @@
 
 import { isBoolean } from "@metreeca/core";
 import { isFocus, isLiteral, Literal, Query, string } from "@metreeca/link";
-import { Check, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon, Search, X } from "@metreeca/skin/lucide";
+import { Check, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon, Search, X } from "@metreeca/tile/widgets/icon";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
