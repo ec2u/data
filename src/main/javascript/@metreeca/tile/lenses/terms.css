@@ -14,87 +14,9 @@
  * limitations under the License.
  */
 
+@import "./facet.css";
+
 node-terms {
-
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    margin: 0 -0.25em;
-
-    border-style: solid;
-    border-radius: 0.5em;
-
-    overflow: hidden;
-
-    background-color: var(--node--background-color-edit);
-
-    &.focused {
-        box-shadow: var(--node--box-shadow-focus);
-    }
-
-    &:not(:first-child) {
-        margin-top: 0.5em;
-    }
-
-    & > * {
-
-        margin: 0;
-
-        padding-left: 0.5em;
-        padding-right: 0.5em;
-
-        &:empty {
-            display: none;
-        }
-
-    }
-
-    & > header {
-
-        display: grid;
-        align-items: center;
-
-        grid-template-columns: 1em 1fr 1em;
-        grid-column-gap: 0.25em;
-
-        padding-top: 0.33em;
-        padding-bottom: 0.25em;
-
-        & svg {
-
-            color: var(--node--color-light);
-
-            background-color: transparent;
-            transform: scale(0.9);
-
-        }
-
-        & > i {
-            margin-left: -0.1em;
-            pointer-events: none;
-        }
-
-        & > input {
-
-            border: none;
-
-            &:focus {
-                box-shadow: none;
-            }
-
-        }
-
-    }
-
-    & > header ~ * {
-
-        padding-top: 0.33em;
-        padding-bottom: 0.33em;
-
-        border-top-style: solid;
-
-    }
 
     & > section {
 
@@ -104,6 +26,9 @@ node-terms {
         justify-items: stretch;
 
         grid-column-gap: 0.5em;
+
+        padding-top: 0.33em;
+        padding-bottom: 0.33em;
 
         & > small {
 
@@ -160,6 +85,10 @@ node-terms {
     }
 
     & > footer {
+
+        padding-top: 0.33em;
+        padding-bottom: 0.33em;
+
         text-align: right;
     }
 

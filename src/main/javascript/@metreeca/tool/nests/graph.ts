@@ -136,7 +136,7 @@ export function useStats<V extends Frame, E extends Frame>(
     State<Stats>, Setter<StatsQuery>
 ] {
 
-    const [entry, setEntry]=useEntry(id, {
+    const [entry]=useEntry(id, {
 
         id: "",
         count: 0,
@@ -156,7 +156,7 @@ export function useStats<V extends Frame, E extends Frame>(
 
     }, [{ ...query, ".stats": path }, setQuery]);
 
-    return [entry, ({ min, max }) => setEntry({
+    return [entry, ({ min, max }) => setQuery({
 
         ...query,
 

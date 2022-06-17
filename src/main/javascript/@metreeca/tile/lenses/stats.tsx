@@ -14,20 +14,40 @@
  * limitations under the License.
  */
 
-import { isNumber, isString } from "@metreeca/core";
 import { isLiteral, Literal, Query, string, Value } from "@metreeca/link";
-import { toLocaleDateString } from "@metreeca/tile/inputs/date";
-import { toLocaleDateTimeString } from "@metreeca/tile/inputs/datetime";
-import { toLocaleNumberString } from "@metreeca/tile/inputs/number";
-import { toLocaleTimeString } from "@metreeca/tile/inputs/time";
+import { Calendar } from "@metreeca/tile/widgets/icon";
+import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
 import { Stats, useStats } from "@metreeca/tool/nests/graph";
 import * as React from "react";
-import { createElement, useEffect, useState } from "react";
+import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import "./stats.css";
 
 
 const AutoDelay=500;
+
+
+export function trailing<H extends (...args: any[]) => void>(delay: number, handler: H): typeof handler {
+    if ( delay <= 0 ) {
+
+        return handler;
+
+    } else {
+
+        let timeout: number;
+
+        function wrapper(this: unknown, ...args: unknown[]) {
+
+            clearTimeout(timeout);
+
+            timeout=setTimeout(() => handler.apply(this, args), delay);
+
+        }
+
+        return wrapper as typeof handler;
+
+    }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +56,10 @@ export function NodeStats({
 
     id,
     path,
+    type,
 
+    compact,
+    placeholder,
     pattern=/\d+(\.\d+)?/, // !!! adapt to facet type
     format,
 
@@ -46,8 +69,11 @@ export function NodeStats({
 
     id: string,
     path: string,
+    type?: "number" | "date" | "date()" | "time" | "datetime"
 
-    pattern?: RegExp
+    compact?: boolean
+    placeholder?: string
+    pattern?: string | RegExp
     format?: (value: Value) => string
 
     state: [Query, Setter<Query>]
@@ -64,6 +90,28 @@ export function NodeStats({
         max: toLiteral(query[`<=${path}`])
     };
 
+
+    const root=useRef<Element>(null);
+    const [focused, setFocused]=useState(false);
+
+    const expanded=!compact || focused;
+
+
+    useEffect(() => {
+
+        const focus=(e: FocusEvent) => doActivate(
+            e.target instanceof Node && root.current?.contains(e.target) || false
+        );
+
+        window.addEventListener("focus", focus, true);
+
+        return () => {
+            window.removeEventListener("focus", focus, true);
+        };
+
+    });
+
+
     const [min, setMin]=useState(range.min);
     const [max, setMax]=useState(range.max);
 
@@ -76,58 +124,53 @@ export function NodeStats({
     );
 
 
-    // const doSetRange=useTrailing(AutoDelay, (min: undefined | Literal, max: undefined | Literal) => {
-    //
-    //     setStats({ min, max });
-    //
-    // }, [setStats]);
+    const doSetRange=useCallback(trailing(AutoDelay, (min: undefined | Literal, max: undefined | Literal) => {
+
+        setStats({ min, max });
+
+    }), [setStats]);
 
 
-    const type=stats({ value: value => value.stats?.[0]?.id });
+    const control={
 
-    const isInteger=type === "http://www.w3.org/2001/XMLSchema#integer";
-    const isDecimal=type === "http://www.w3.org/2001/XMLSchema#decimal";
-    const isNumeric=isInteger || isDecimal;
+        "": "search",
 
-    const isDate=type === "http://www.w3.org/2001/XMLSchema#date";
-    const isTime=type === "http://www.w3.org/2001/XMLSchema#time";
-    const isDateTime=type === "http://www.w3.org/2001/XMLSchema#dateTime";
-    const isTemporal=isDate || isTime || isDateTime;
+        "number": "number",
+        "date": "date",
+        "date()": "date",
+        "time": "time",
+        "datetime": "datetime-local"
 
-    const control=
-        isDate ? "date"
-            : isTime ? "time"
-                : isDateTime ? "datetime-local"
-                    : "search";
+    }[type || ""];
 
 
     function effective(value: undefined | Literal) {
-        return isTemporal && !value ? "text" : control;
+        return (type === "date" || type === "time" || type === "datetime") && !value ? "text" : control;
     }
 
     function toString(value: undefined | Value, placeholder=false) {
         return value === undefined ? ""
             : format !== undefined ? format(value)
 
-                : placeholder && isNumeric && isNumber(value) ? toLocaleNumberString(value)
-                    : placeholder && isInteger && isString(value) ? toLocaleNumberString(parseInt(value))
-                        : placeholder && isDecimal && isString(value) ? toLocaleNumberString(parseFloat(value))
+                // : placeholder && isNumber(value) ? toLocaleNumberString(value)
+                //     : placeholder && isInteger && isString(value) ? toLocaleNumberString(parseInt(value))
+                //         : placeholder && isDecimal && isString(value) ? toLocaleNumberString(parseFloat(value))
+                //
+                //             : placeholder && isDate && isString(value) ? toLocaleDateString(new Date(value))
+                //                 : placeholder && isTime && isString(value) ? toLocaleTimeString(new Date(`1970-01-01T${value}`))
+                //                     : placeholder && isDateTime && isString(value) ? toLocaleDateTimeString(new Date(value))
 
-                            : placeholder && isDate && isString(value) ? toLocaleDateString(new Date(value))
-                                : placeholder && isTime && isString(value) ? toLocaleTimeString(new Date(`1970-01-01T${value}`))
-                                    : placeholder && isDateTime && isString(value) ? toLocaleDateTimeString(new Date(value))
-
-                                        : string(value);
+                : string(value);
     }
 
 
-    return createElement("node-stats", {
+    function doActivate(activate: boolean) {
+        setFocused(activate);
+    }
 
-        class: isDateTime ? "col" : "row"
 
-    }, <>
-
-        <input type={effective(min)} className={"node-input"}
+    function lower() {
+        return <input type={effective(min)} className={"node-input"}
 
             pattern={pattern.toString()}
             placeholder={toString(cache?.min, true)}
@@ -155,13 +198,15 @@ export function NodeStats({
                 minInput.reportValidity();
 
                 setMin(minValue);
-                // doSetRange(minInput.checkValidity() ? minValue : undefined, maxValue);
+                doSetRange(minInput.checkValidity() ? minValue : undefined, maxValue);
 
             }}
 
-        />
+        />;
+    }
 
-        <input type={effective(max)} className={"node-input"}
+    function upper() {
+        return <input type={effective(max)} className={"node-input"}
 
             pattern={pattern.toString()}
             placeholder={toString(cache?.max, true)}
@@ -189,11 +234,48 @@ export function NodeStats({
                 maxInput.reportValidity();
 
                 setMax(maxValue);
-                // doSetRange(minValue, maxInput.checkValidity() ? maxValue : undefined);
+                doSetRange(minValue, maxInput.checkValidity() ? maxValue : undefined);
 
             }}
 
-        />
+        />;
+    }
+
+    return createElement("node-stats", {
+
+        ref: root,
+
+        class: classes({ "node-input": true, focused }),
+
+        onKeyDown: e => {
+            if ( e.key === "Escape" || e.key === "Enter" ) {
+
+                e.preventDefault();
+
+                if ( document.activeElement instanceof HTMLElement ) {
+                    document.activeElement.blur();
+                }
+
+                doActivate(false);
+
+            }
+        }
+
+    }, <>
+
+
+        <header>
+
+            <i><Calendar/></i> {/* !!! configure on type */}
+
+            <input readOnly placeholder={placeholder}/>
+
+        </header>
+
+        {expanded && <section>
+            {lower()}
+            {upper()}
+        </section>}
 
     </>);
 

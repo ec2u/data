@@ -19,7 +19,7 @@ import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { Query, string } from "@metreeca/link";
+import { multiple, optional, Query, required, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodeStats } from "@metreeca/tile/lenses/stats";
 import { NodeTerms } from "@metreeca/tile/lenses/terms";
@@ -42,10 +42,10 @@ export const Events=immutable({
     id: "/events/",
     label: { "en": "Events" },
 
-    contains: [{
+    contains: multiple({
 
-        id: "",
-        image: "",
+        id: required(""),
+        image: optional(""),
         label: {},
         comment: {},
 
@@ -54,11 +54,10 @@ export const Events=immutable({
             label: {}
         },
 
-        startDate: "",
-        endDate: ""
+        startDate: optional(""),
+        endDate: optional("")
 
-    }]
-
+    })
 });
 
 
@@ -89,7 +88,7 @@ export function DataEvents() {
 
         fetch: <NodeHint>{EventsIcon}</NodeHint>,
 
-        value: ({ contains }) => contains.length === 0
+        value: ({ contains }) => !contains || contains.length === 0
 
             ? <NodeHint>{EventsIcon}</NodeHint>
 
@@ -159,7 +158,7 @@ function DataEventsFilters({
         <NodeTerms id={id} path={"university"} compact placeholder={"University"} state={[query, setQuery]}/>
         <NodeTerms id={id} path={"publisher"} compact placeholder={"Publisher"} state={[query, setQuery]}/>
 
-        <NodeStats id={id} path={"startDate"} pattern={/\d{4}-\d{2}-\d{2}/} state={[query, setQuery]}/>
+        <NodeStats id={id} path={"startDate"} type={"date()"} compact placeholder={"Start Date"} state={[query, setQuery]}/>
 
     </DataPane>;
 }
