@@ -4,10 +4,11 @@
 
 import { isBoolean } from "@metreeca/core";
 import { isFocus, isLiteral, Literal, Query, string } from "@metreeca/link";
-import { Check, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon, Search, X } from "@metreeca/tile/widgets/icon";
+import { Check, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon, Filter, X } from "@metreeca/tile/widgets/icon";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
+import { useDelay } from "@metreeca/tool/hooks/delay";
 import { Terms, useTerms } from "@metreeca/tool/nests/graph";
 import * as React from "react";
 import { createElement, useEffect, useRef, useState } from "react";
@@ -42,8 +43,6 @@ export function NodeTerms({
 
 }) {
 
-    const root=useRef<Element>(null);
-
     const [focused, setFocused]=useState(false);
 
     const [keywords, setKeywords]=useState("");
@@ -55,10 +54,13 @@ export function NodeTerms({
         [query, setQuery]
     );
 
-    const count=0; // !!!
+    const root=useRef<Element>(null);
+    const search=useDelay(true, [keywords, doSearch]);
+
+    const count=terms({ value: value => value.length, other: 0 });
 
     const expanded=!compact || focused;
-    const paging=keywords || offset > 0 || count > PageSize;
+    const paging=count > PageSize || offset > 0;
 
 
     useEffect(() => {
@@ -90,9 +92,9 @@ export function NodeTerms({
         }
     }
 
-    function doSearch(search: string) {
+    function doSearch(keywords: string) {
         // !!! clear cache
-        setKeywords(search);
+        setKeywords(keywords);
         setOffset(0);
     }
 
@@ -106,42 +108,6 @@ export function NodeTerms({
         setOffset(0);
     }
 
-
-    function header() {
-        return <header>{<>
-
-            <i><Search/></i>
-
-            <input type={"text"} value={keywords} placeholder={placeholder}
-                onChange={e => doSearch(e.currentTarget.value)}
-            />
-
-            <nav>{keywords ?
-
-                <button type={"button"} title={"Clear"} onClick={() => setKeywords("")}><ClearIcon/></button>
-
-                : expanded && paging ? <>
-
-                        <button type={"button"} title={"First Page"}
-                            disabled={offset === 0} onClick={() => doPage(0)}
-                        ><ChevronsLeft/></button>
-
-                        <button type={"button"} title={"Previous Page"}
-                            disabled={offset === 0} onClick={() => doPage(-1)}
-                        ><ChevronLeft/></button>
-
-                        <button type={"button"} title={"Next Page"}
-                            disabled={count <= PageSize} onClick={() => doPage(+1)}
-                        ><ChevronRight/></button>
-
-                    </>
-
-                    : null
-
-            }</nav>
-
-        </>}</header>;
-    }
 
     function option({ selected, value, count }: Terms[number]) {
         return <div key={string(value)} className={count > 0 ? "available" : "unavailable"}>
@@ -168,17 +134,17 @@ export function NodeTerms({
 
     return createElement("node-terms", {
 
-        ref: root,
-        class: classes({ "node-input": true, focused }),
+            ref: root,
+            class: classes({ "node-input": true, focused }),
 
-        onKeyDown: e => {
-            if ( e.key === "Escape" || e.key === "Enter" ) {
+            onKeyDown: e => {
+                if ( e.key === "Escape" || e.key === "Enter" ) {
 
-                e.preventDefault();
+                    e.preventDefault();
 
-                if ( document.activeElement instanceof HTMLElement ) {
-                    document.activeElement.blur();
-                }
+                    if ( document.activeElement instanceof HTMLElement ) {
+                        document.activeElement.blur();
+                    }
 
                     doActivate(false);
                 }
@@ -186,7 +152,21 @@ export function NodeTerms({
 
         }, <>
 
-            {header()}
+            <header>
+
+                <i><Filter/></i>
+
+                <input ref={search} type={"text"} placeholder={placeholder}/>
+
+                <nav>{search.current?.value
+
+                    ? <button title={"Clear"} onClick={() => doSearch("")}><ClearIcon/></button>
+
+                    : null
+
+                }</nav>
+
+            </header>
 
             <section>{terms({
 
@@ -203,6 +183,22 @@ export function NodeTerms({
                     : terms.filter(({ selected }) => !selected).map(option)
 
             })}</section>
+
+            {expanded && paging && <footer>
+
+                <button type={"button"} title={"First Page"}
+                    disabled={offset === 0} onClick={() => doPage(0)}
+                ><ChevronsLeft/></button>
+
+                <button type={"button"} title={"Previous Page"}
+                    disabled={offset === 0} onClick={() => doPage(-1)}
+                ><ChevronLeft/></button>
+
+                <button type={"button"} title={"Next Page"}
+                    disabled={count <= PageSize} onClick={() => doPage(+1)}
+                ><ChevronRight/></button>
+
+            </footer>}
 
         </>
     );

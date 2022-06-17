@@ -65,7 +65,7 @@ data-card {
             width: 33%;
 
             margin-left: 1em;
-            margin-bottom: 1em;
+            margin-bottom: 0.25em;
 
             & > img:first-child {
                 width: 100%;

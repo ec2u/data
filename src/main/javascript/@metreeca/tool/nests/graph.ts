@@ -233,10 +233,6 @@ export function useTerms(
 
         ".terms": path,
 
-        ".offset": offset,
-        ".limit": limit
-
-
     }, setQuery]);
 
     const [matching]=useEntry(id, model, [{ // ignoring this facet
@@ -270,6 +266,8 @@ export function useTerms(
                 value: [...matching, ...baseline
 
                     .filter(term => !matching.some(match => equals(term.value, match.value)))
+                    .filter((term, index) => limit === undefined || limit === 0 || index < limit-matching.length)
+
                     .map(term => ({ ...term, count: 0 }))
 
                 ]

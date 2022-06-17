@@ -71,6 +71,7 @@ node-terms {
         }
 
         & > i {
+            margin-left: -0.1em;
             pointer-events: none;
         }
 
@@ -86,6 +87,15 @@ node-terms {
 
     }
 
+    & > header ~ * {
+
+        padding-top: 0.33em;
+        padding-bottom: 0.33em;
+
+        border-top-style: solid;
+
+    }
+
     & > section {
 
         display: grid;
@@ -94,12 +104,6 @@ node-terms {
         justify-items: stretch;
 
         grid-column-gap: 0.5em;
-
-        padding-top: 0.33em;
-        padding-bottom: 0.33em;
-
-        border-top-style: solid;
-
 
         & > small {
 
@@ -153,6 +157,10 @@ node-terms {
 
         }
 
+    }
+
+    & > footer {
+        text-align: right;
     }
 
 }
