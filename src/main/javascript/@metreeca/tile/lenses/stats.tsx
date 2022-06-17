@@ -21,7 +21,6 @@ import { toLocaleDateTimeString } from "@metreeca/tile/inputs/datetime";
 import { toLocaleNumberString } from "@metreeca/tile/inputs/number";
 import { toLocaleTimeString } from "@metreeca/tile/inputs/time";
 import { Setter } from "@metreeca/tool/hooks";
-import { useTrailing } from "@metreeca/tool/hooks/trailing";
 import { Stats, useStats } from "@metreeca/tool/nests/graph";
 import * as React from "react";
 import { createElement, useEffect, useState } from "react";
@@ -77,14 +76,14 @@ export function NodeStats({
     );
 
 
-    const doSetRange=useTrailing(AutoDelay, (min: undefined | Literal, max: undefined | Literal) => {
+    // const doSetRange=useTrailing(AutoDelay, (min: undefined | Literal, max: undefined | Literal) => {
+    //
+    //     setStats({ min, max });
+    //
+    // }, [setStats]);
 
-        setStats({ min, max });
 
-    }, [setStats]);
-
-
-    const type=stats({ value: value => value.stats[0]?.id });
+    const type=stats({ value: value => value.stats?.[0]?.id });
 
     const isInteger=type === "http://www.w3.org/2001/XMLSchema#integer";
     const isDecimal=type === "http://www.w3.org/2001/XMLSchema#decimal";
@@ -156,7 +155,7 @@ export function NodeStats({
                 minInput.reportValidity();
 
                 setMin(minValue);
-                doSetRange(minInput.checkValidity() ? minValue : undefined, maxValue);
+                // doSetRange(minInput.checkValidity() ? minValue : undefined, maxValue);
 
             }}
 
@@ -190,7 +189,7 @@ export function NodeStats({
                 maxInput.reportValidity();
 
                 setMax(maxValue);
-                doSetRange(minValue, maxInput.checkValidity() ? maxValue : undefined);
+                // doSetRange(minValue, maxInput.checkValidity() ? maxValue : undefined);
 
             }}
 

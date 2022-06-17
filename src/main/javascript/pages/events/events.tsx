@@ -136,9 +136,7 @@ function DataEventsFilters({
 
     return <DataPane
 
-        header={<NodeSearch icon placeholder={"Search"}
-            auto state={[keywords, setKeywords]}
-        />}
+        header={<NodeSearch icon placeholder={"Search"} auto state={[keywords, setKeywords]}/>}
 
         footer={stats({
 

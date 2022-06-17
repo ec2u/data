@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import { isNumber } from "@metreeca/core";
 import { ClearIcon, Search } from "@metreeca/tile/widgets/icon";
 import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
-import { useTrailing } from "@metreeca/tool/hooks/trailing";
+import { useDelay } from "@metreeca/tool/hooks/delay";
 import * as React from "react";
-import { createElement, ReactNode, useEffect, useRef, useState } from "react";
+import { createElement, ReactNode } from "react";
 import "./search.css";
 
 
@@ -33,9 +32,7 @@ export function NodeSearch({
 
     disabled,
 
-    icon=false,
-    rule=false,
-
+    icon,
     menu,
 
     placeholder,
@@ -49,8 +46,6 @@ export function NodeSearch({
     disabled?: boolean
 
     icon?: boolean | ReactNode
-    rule?: boolean
-
     menu?: ReactNode
 
     placeholder?: string
@@ -64,27 +59,11 @@ export function NodeSearch({
 
 }) {
 
-    const input=useRef<HTMLInputElement>(null);
-
-    const [state, setState]=useState(value);
-
-
-    useEffect(() => setState(value), [value]);
-
-
-    const doSearch=useTrailing(isNumber(auto) ? auto : auto ? AutoDelay : 0, (value: string) => {
-
-        if ( auto ) { setValue(value); }
-
-    }, [state]);
+    const input=useDelay(auto, [value, setValue]);
 
 
     function doClear() {
-
         setValue("");
-
-        input.current?.focus();
-
     }
 
 
@@ -92,7 +71,7 @@ export function NodeSearch({
 
         disabled: disabled ? "disabled" : undefined,
 
-        class: classes({ "node-input": true, rule })
+        class: classes({ "node-input": true })
 
     }, <>
 
@@ -103,20 +82,15 @@ export function NodeSearch({
             type="text" disabled={disabled}
 
             placeholder={placeholder}
-            value={state}
 
             onFocus={e => e.currentTarget.select()}
 
-            onInput={e => {
-                setState(e.currentTarget?.value || "");
-                doSearch(e.currentTarget?.value || "");
-            }}
-
         />
 
-        {state && <nav>
-            <button type={"button"} title="Clear" onClick={doClear}><ClearIcon/></button>
-        </nav> || menu && <nav>{menu}</nav>}
+        <nav>{input.current?.value
+            ? <button type={"button"} title="Clear" onClick={doClear}><ClearIcon/></button>
+            : menu
+        }</nav>
 
     </>);
 }
