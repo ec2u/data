@@ -129,6 +129,10 @@ data-page {
 
         border-right-style: solid;
 
+        & .node-input {
+            background-color: var(--node--background-color);
+        }
+
         & > * {
             padding-left: 1rem;
             padding-right: 1rem;

@@ -92,7 +92,7 @@ export function NodeSearch({
 
         disabled: disabled ? "disabled" : undefined,
 
-        class: classes({ rule })
+        class: classes({ "node-input": true, rule })
 
     }, <>
 

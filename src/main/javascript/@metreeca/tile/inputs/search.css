@@ -31,6 +31,8 @@ node-search {
 
     font-weight: 300 !important;
 
+    background-color: var(--node--background-color-edit);
+
     &.rule {
 
         overflow: hidden;

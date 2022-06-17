@@ -128,7 +128,7 @@ export function NodeStats({
 
     }, <>
 
-        <input type={effective(min)}
+        <input type={effective(min)} className={"node-input"}
 
             pattern={pattern.toString()}
             placeholder={toString(cache?.min, true)}
@@ -162,7 +162,7 @@ export function NodeStats({
 
         />
 
-        <input type={effective(max)}
+        <input type={effective(max)} className={"node-input"}
 
             pattern={pattern.toString()}
             placeholder={toString(cache?.max, true)}

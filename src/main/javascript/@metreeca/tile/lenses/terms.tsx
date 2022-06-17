@@ -112,7 +112,7 @@ export function NodeTerms({
 
             <i><Search/></i>
 
-            <input value={keywords} placeholder={placeholder}
+            <input type={"text"} value={keywords} placeholder={placeholder}
                 onChange={e => doSearch(e.currentTarget.value)}
             />
 
@@ -168,17 +168,17 @@ export function NodeTerms({
 
     return createElement("node-terms", {
 
-            ref: root,
-            class: classes({ focused }),
+        ref: root,
+        class: classes({ "node-input": true, focused }),
 
-            onKeyDown: e => {
-                if ( e.key === "Escape" || e.key === "Enter" ) {
+        onKeyDown: e => {
+            if ( e.key === "Escape" || e.key === "Enter" ) {
 
-                    e.preventDefault();
+                e.preventDefault();
 
-                    if ( document.activeElement instanceof HTMLElement ) {
-                        document.activeElement.blur();
-                    }
+                if ( document.activeElement instanceof HTMLElement ) {
+                    document.activeElement.blur();
+                }
 
                     doActivate(false);
                 }
