@@ -23,6 +23,8 @@ import { Query, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodeStats } from "@metreeca/tile/lenses/stats";
 import { NodeTerms } from "@metreeca/tile/lenses/terms";
+import { NodeHint } from "@metreeca/tile/widgets/hint";
+import { Calendar } from "@metreeca/tile/widgets/icon";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
@@ -30,8 +32,10 @@ import { useParameters } from "@metreeca/tool/hooks/parameters";
 import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 
+
+export const EventsIcon=<Calendar/>;
 
 export const Events=immutable({
 
@@ -81,33 +85,39 @@ export function DataEvents() {
 
         pane={<DataEventsFilters id={route} state={[query, setQuery]}/>}
 
-    >{entry({
+    >{entry<ReactNode>({
 
-        value: ({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
+        fetch: <NodeHint>{EventsIcon}</NodeHint>,
 
-            <DataCard key={id}
+        value: ({ contains }) => contains.length === 0
 
-                name={<a href={id}>{string(label)}</a>}
+            ? <NodeHint>{EventsIcon}</NodeHint>
 
-                icon={image?.[0]}
+            : contains.map(({ id, label, image, comment, university, startDate }) => (
 
-                tags={<>
-                    <span>{string(university)}</span>
-                    {startDate && <>
-                        <span> / </span>
-                        <span>{startDate.substring(0, 10)}</span>
+                <DataCard key={id}
+
+                    name={<a href={id}>{string(label)}</a>}
+
+                    icon={image?.[0]}
+
+                    tags={<>
+                        <span>{string(university)}</span>
+                        {startDate && <>
+                            <span> / </span>
+                            <span>{startDate.substring(0, 10)}</span>
+                        </>}
                     </>}
-                </>}
 
-            >
+                >
 
-                {string(comment)}
+                    {string(comment)}
 
-            </DataCard>
+                </DataCard>
 
-        )),
+            )),
 
-        error: error => [<span>{error.status}</span>]
+        error: error => <span>{error.status}</span> // !!! report
 
     })}</DataPage>;
 

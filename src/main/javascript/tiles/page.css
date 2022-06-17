@@ -95,6 +95,9 @@ data-page {
             padding-top: 1.5rem;
             padding-bottom: 0.75rem;
 
+            font-size: 90%;
+            color: var(--node--color-light);
+
         }
 
     }
@@ -181,11 +184,6 @@ data-page {
 
         & > * {
             max-width: 50em;
-        }
-
-        & > footer {
-            font-size: 75%;
-            color: var(--node--color-light);
         }
 
     }

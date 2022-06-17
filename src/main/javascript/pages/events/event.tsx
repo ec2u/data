@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { Events } from "@ec2u/data/pages/events/events";
+import { Events, EventsIcon } from "@ec2u/data/pages/events/events";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
+import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
@@ -62,6 +63,8 @@ export function DataEvent() {
         menu={entry({ fetch: <NodeSpin/> })}
 
     >{entry({
+
+        fetch: <NodeHint>{EventsIcon}</NodeHint>,
 
         value: ({
 

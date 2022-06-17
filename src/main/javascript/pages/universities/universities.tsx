@@ -20,6 +20,8 @@ import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
+import { NodeHint } from "@metreeca/tile/widgets/hint";
+import { Landmark } from "@metreeca/tile/widgets/icon";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
@@ -29,6 +31,8 @@ import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { ReactNode, useEffect } from "react";
 
+
+export const UniversitiesIcon=<Landmark/>;
 
 export const Universities=immutable({
 
@@ -80,22 +84,28 @@ export function DataUniversities() {
 
     >{entry<ReactNode>({
 
-        value: ({ contains }) => contains.map(({ id, label, image, comment, country }) => {
+        fetch: <NodeHint>{UniversitiesIcon}</NodeHint>,
 
-            return <DataCard key={id}
+        value: ({ contains }) => contains.length === 0
 
-                name={<a href={id}>{string(label)}</a>}
-                icon={image}
-                tags={<span>{string(country.label)}</span>}
+            ? <NodeHint>{UniversitiesIcon}</NodeHint>
 
-            >
-                {string(comment)}
+            : contains.map(({ id, label, image, comment, country }) => {
 
-            </DataCard>;
+                return <DataCard key={id}
 
-        }),
+                    name={<a href={id}>{string(label)}</a>}
+                    icon={image}
+                    tags={<span>{string(country.label)}</span>}
 
-        error: error => <span>{error.status}</span> /* !!! report */
+                >
+                    {string(comment)}
+
+                </DataCard>;
+
+            }),
+
+        error: error => <span>{error.status}</span> // !!! report
 
     })}</DataPage>;
 

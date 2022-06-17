@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { Universities } from "@ec2u/data/pages/universities/universities";
+import { Universities, UniversitiesIcon } from "@ec2u/data/pages/universities/universities";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
+import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
@@ -105,6 +106,8 @@ export function DataUniversity() {
         })}</DataPane>}
 
     >{entry({
+
+        fetch: <NodeHint>{UniversitiesIcon}</NodeHint>,
 
         value: ({
 
