@@ -96,7 +96,7 @@ export function useKeywords(
     const keywords=query[`~${path}`];
 
     return [isString(keywords) ? keywords.trim() : "", keywords => {
-        setQuery({ [`~${path}`]: keywords.trim() || undefined });
+        setQuery({ ...query, [`~${path}`]: keywords.trim() || undefined });
     }];
 
 }
