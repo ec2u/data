@@ -155,10 +155,10 @@ function DataEventsFilters({
 
     >
 
-        <NodeTerms id={id} path={"university"} compact placeholder={"University"} state={[query, setQuery]}/>
-        <NodeTerms id={id} path={"publisher"} compact placeholder={"Publisher"} state={[query, setQuery]}/>
+        <NodeTerms id={id} path={"university"} placeholder={"University"} state={[query, setQuery]}/>
+        <NodeTerms id={id} path={"publisher"} placeholder={"Publisher"} state={[query, setQuery]}/>
 
-        <NodeStats id={id} path={"startDate"} type={"date()"} compact placeholder={"Start Date"} state={[query, setQuery]}/>
+        <NodeStats id={id} path={"startDate"} type={"dateTimeStart"} placeholder={"Start Date"} state={[query, setQuery]}/>
 
     </DataPane>;
 }

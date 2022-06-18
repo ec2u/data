@@ -49,8 +49,11 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    outline: none var(--node--border-width) var(--node--border-color);
-    border: none var(--node--border-width) var(--node--border-color);
+    outline-style: none;
+    border-style: none;
+    border-radius: 0;
+    border-width: var(--node--border-width);
+    border-color: var(--node--border-color);
     overflow: visible;
     font-family: inherit;
     font-style: inherit;

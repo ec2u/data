@@ -93,9 +93,25 @@ export function isError(value: any): value is Error<unknown> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const DataTypes=immutable({
+
+    boolean: "http://www.w3.org/2001/XMLSchema#boolen",
+    integer: "http://www.w3.org/2001/XMLSchema#integer",
+    decimal: "http://www.w3.org/2001/XMLSchema#decimal",
+    string: "http://www.w3.org/2001/XMLSchema#string",
+
+    date: "http://www.w3.org/2001/XMLSchema#date",
+    time: "http://www.w3.org/2001/XMLSchema#time",
+    dateTime: "http://www.w3.org/2001/XMLSchema#dateTime",
+    dateTimeStart: "http://www.w3.org/2001/XMLSchema#dateTime"
+
+});
+
+
 export type Value=Literal | Dictionary | Frame | Focus | Entry
 
 export type Literal=boolean | number | string
+
 
 export interface Dictionary {
 

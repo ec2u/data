@@ -168,19 +168,13 @@ export function NodeTerms({
 
         </header>
 
-        <section>{terms({
-
-            value: terms => terms.filter(({ selected }) => selected).map(option)
-
-        })}</section>
-
         <section>{expanded && terms({
 
             fetch: <NodeSpin/>,
 
             value: terms => keywords && terms.length === 0
                 ? <small>No Matches</small>
-                : terms.filter(({ selected }) => !selected).map(option)
+                : terms.map(option)
 
         })}</section>
 
