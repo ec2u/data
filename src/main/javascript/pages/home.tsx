@@ -23,8 +23,9 @@ import { Query, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { Setter } from "@metreeca/tool/hooks";
-import { useParameters } from "@metreeca/tool/hooks/parameters";
-import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
+import { useKeywords } from "@metreeca/tool/hooks/content";
+import { useParameters } from "@metreeca/tool/hooks/params";
+import { useEntry, useStats } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
@@ -62,7 +63,7 @@ export default function DataHome() {
 
     });
 
-    const [entry]=useEntry(route, Home, [query, setQuery]);
+    const entry=useEntry(route, Home, query);
 
 
     useEffect(() => { setRoute({ label: string(Events) }); }, []);
@@ -106,7 +107,7 @@ function DataHomeFilters({
 
     const [search, setSearch]=useKeywords(id, "label", [query, setQuery]);
 
-    const [stats]=useStats("", "", [query, setQuery]);
+    const stats=useStats("", "", query);
 
     return <DataPane
 

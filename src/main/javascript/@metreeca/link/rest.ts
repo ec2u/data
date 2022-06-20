@@ -141,9 +141,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify();
 
                     if ( probe.value instanceof Function ) {
-                        probe.value(response.status === 201 // Created
-                            ? { id: response.headers.get("Location") || id }
-                            : payload as any
+                        probe.value(
                         );
                     }
 
@@ -200,7 +198,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify();
 
                     if ( probe.value instanceof Function ) {
-                        probe.value({ id: id });
+                        probe.value();
                     }
 
                 } else {
@@ -254,7 +252,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify();
 
                     if ( probe.value instanceof Function ) {
-                        probe.value({ id: id.substring(0, id.lastIndexOf("/")+1) });
+                        probe.value();
                     }
 
                 } else {

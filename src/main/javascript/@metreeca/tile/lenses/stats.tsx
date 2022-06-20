@@ -21,7 +21,7 @@ import { toLocaleDateString } from "@metreeca/tile/inputs/date";
 import { Calendar, CheckSquare, Clock, Hash, Type } from "@metreeca/tile/widgets/icon";
 import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
-import { useRange } from "@metreeca/tool/nests/graph";
+import { useRange } from "@metreeca/tool/hooks/content";
 import * as React from "react";
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import "./stats.css";
@@ -83,8 +83,6 @@ export function NodeStats({
     const doUpdate=useCallback(trailing(AutoDelay, setRange), [setRange]);
 
 
-    const expanded=!compact || focused || range?.gte !== undefined || range?.lte !== undefined;
-
 
     return createElement("node-stats", {
 
@@ -113,17 +111,26 @@ export function NodeStats({
             <input readOnly placeholder={placeholder}/>
         </header>
 
-        {expanded && <section className={classes({ wide: WideTypes.has(type) })}>
+        {range({
 
-            <Input type={type} max={range?.lte} placeholder={range?.min}
-                value={range?.gte} onChange={gte => doUpdate({ gte })}
-            />
+            value: range => {
 
-            <Input type={type} min={range?.gte} placeholder={range?.max}
-                value={range?.lte} onChange={lte => doUpdate({ lte })}
-            />
+                const expanded=!compact || focused || range?.gte !== undefined || range?.lte !== undefined;
 
-        </section>}
+                return expanded && <section className={classes({ wide: WideTypes.has(type) })}>
+
+                    <Input type={type} max={range?.lte} placeholder={range?.min}
+                        value={range?.gte} onChange={gte => doUpdate({ gte })}
+                    />
+
+                    <Input type={type} min={range?.gte} placeholder={range?.max}
+                        value={range?.lte} onChange={lte => doUpdate({ lte })}
+                    />
+
+                </section>;
+            }
+
+        })}
 
     </>);
 
@@ -269,7 +276,7 @@ function DateTimeStartInput({
 
 
     function decode(value: undefined | Literal): undefined | string {
-        return isDateTime(value) ? value.substring(0, 10) : undefined;
+        return isDateTime(value) ? new Date(value).toISOString().substring(0, 10) : undefined;
     }
 
     function encode(value: undefined | string): undefined | Literal {
@@ -277,14 +284,14 @@ function DateTimeStartInput({
     }
 
 
-    const _limit=decode(placeholder);
+    const _placeholder=decode(placeholder);
 
     return <input type={focused || value ? "date" : "text"}
 
         min={decode(min)}
         max={decode(max)}
 
-        placeholder={_limit && toLocaleDateString(new Date(_limit))}
+        placeholder={_placeholder && toLocaleDateString(new Date(_placeholder))}
         defaultValue={decode(value)}
 
         onFocus={() => setFocused(true)}

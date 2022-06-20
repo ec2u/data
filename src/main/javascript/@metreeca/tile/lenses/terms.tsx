@@ -8,8 +8,8 @@ import { Check, CheckSquare, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon,
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
+import { Options, useOptions } from "@metreeca/tool/hooks/content";
 import { useDelay } from "@metreeca/tool/hooks/delay";
-import { Options, useOptions } from "@metreeca/tool/nests/graph";
 import * as React from "react";
 import { createElement, useEffect, useRef, useState } from "react";
 import { classes } from "../../tool";

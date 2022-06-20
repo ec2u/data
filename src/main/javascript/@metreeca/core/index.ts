@@ -102,7 +102,7 @@ export function isTemporal(value: unknown): value is string {
  * `false` otherwise
  */
 export function isDateTime(value: unknown): value is string {
-    return isString(value) && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?Z?$/) !== null;
+    return isString(value) && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(\+\d{2}:\d{2}|Z)?$/) !== null;
 }
 
 /**

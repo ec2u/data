@@ -19,7 +19,9 @@ import { Value } from "@metreeca/link";
 import { Heart, Menu } from "@metreeca/tile/widgets/icon";
 import { NodeIcon } from "@metreeca/tile/widgets/logo";
 import { NodePath } from "@metreeca/tile/widgets/path";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { copy } from "@metreeca/tool";
+import { useFetcher } from "@metreeca/tool/nests/fetcher";
 import React, { createElement, ReactNode, useState } from "react";
 import "./page.css";
 
@@ -44,6 +46,7 @@ export function DataPage({
 
 }) {
 
+    const [active]=useFetcher();
     const [tray, setTray]=useState(false);
 
 
@@ -95,7 +98,7 @@ export function DataPage({
             <header>
                 <a href={"/"}><NodeIcon/></a>
                 <span><NodePath>{item}</NodePath></span>
-                <nav>{menu}</nav>
+                <nav>{active ? <NodeSpin/> : menu}</nav>
                 <button title={"Open menu"} onClick={doToggleTray}><Menu/></button>
             </header>
 
