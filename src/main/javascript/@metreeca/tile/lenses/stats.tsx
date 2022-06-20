@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { isString } from "@metreeca/core";
+import { isDateTime } from "@metreeca/core";
+import { trailing } from "@metreeca/core/callbacks";
 import { DataTypes, Literal, Query } from "@metreeca/link";
 import { toLocaleDateString } from "@metreeca/tile/inputs/date";
 import { Calendar, CheckSquare, Clock, Hash, Type } from "@metreeca/tile/widgets/icon";
@@ -27,6 +28,8 @@ import "./stats.css";
 
 
 const AutoDelay=500;
+
+const WideTypes=new Set(["date", "dateTime", "dateTimeStart"]);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,14 +58,14 @@ export function NodeStats({
 
 }) {
 
-    const root=useRef<Element>(null);
+    const element=useRef<Element>(null);
     const [focused, setFocused]=useState(false);
 
 
     useEffect(() => {
 
         function focus(e: FocusEvent) {
-            setFocused(e.target instanceof Node && root.current?.contains(e.target) || false);
+            setFocused(e.target instanceof Node && element.current?.contains(e.target) || false);
         }
 
         window.addEventListener("focus", focus, true);
@@ -77,47 +80,7 @@ export function NodeStats({
     const [range, setRange]=useRange(id, path, type, [query, setQuery]);
 
 
-    const doSetRange=useCallback(trailing(AutoDelay, setRange), [setRange]);
-
-
-    function consistent(gte: undefined | string, lte: undefined | string) {
-        return gte === undefined || lte === undefined || new Date(gte).getTime() < new Date(lte).getTime();
-    }
-
-
-    // function GTEInput() {
-    //     return <input type={_control}
-    //
-    //         pattern={pattern.toString()}
-    //         placeholder={decode(range?.min)}
-    //         value={decode(range?.gte)}
-    //
-    //         onFocus={e => e.currentTarget.type=_control}
-    //         onBlur={e => e.currentTarget.type=_default}
-    //
-    //         onChange={e => {
-    //
-    //             const gteInput=e.currentTarget;
-    //             const lteInput=gteInput.nextElementSibling as HTMLInputElement;
-    //
-    //             if ( consistent(gteInput.value, lteInput.value) ) {
-    //                 gteInput.setCustomValidity("");
-    //                 lteInput.setCustomValidity("");
-    //             } else {
-    //                 gteInput.setCustomValidity("minimum value greater than maximum");
-    //                 lteInput.setCustomValidity("maximum value lower than minimum");
-    //             }
-    //
-    //             gteInput.reportValidity();
-    //
-    //             if ( gteInput.checkValidity() ) {
-    //                 doSetRange({ gte: encode(gteInput.value), lte: encode(lteInput.value) });
-    //             }
-    //
-    //         }}
-    //
-    //     />;
-    // }
+    const doUpdate=useCallback(trailing(AutoDelay, setRange), [setRange]);
 
 
     const expanded=!compact || focused || range?.gte !== undefined || range?.lte !== undefined;
@@ -125,7 +88,7 @@ export function NodeStats({
 
     return createElement("node-stats", {
 
-        ref: root,
+        ref: element,
 
         class: classes({ "node-input": true, focused }),
 
@@ -150,45 +113,20 @@ export function NodeStats({
             <input readOnly placeholder={placeholder}/>
         </header>
 
-        {expanded && <section className={classes({ wide: type === "dateTime" })}>
+        {expanded && <section className={classes({ wide: WideTypes.has(type) })}>
 
-            <Input type={type} value={range?.gte} placeholder={range?.min}
-                onChange={gte => doSetRange({ gte, lte: range?.lte })}
+            <Input type={type} max={range?.lte} placeholder={range?.min}
+                value={range?.gte} onChange={gte => doUpdate({ gte })}
             />
 
-            <Input type={type} value={range?.lte} placeholder={range?.max}
-                onChange={lte => doSetRange({ gte: range?.gte, lte })}
+            <Input type={type} min={range?.gte} placeholder={range?.max}
+                value={range?.lte} onChange={lte => doUpdate({ lte })}
             />
 
         </section>}
 
     </>);
 
-}
-
-
-//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function trailing<H extends (...args: any[]) => void>(delay: number, handler: H): typeof handler {
-    if ( delay <= 0 ) {
-
-        return handler;
-
-    } else {
-
-        let timeout: number;
-
-        function wrapper(this: unknown, ...args: unknown[]) {
-
-            clearTimeout(timeout);
-
-            timeout=setTimeout(() => handler.apply(this, args), delay);
-
-        }
-
-        return wrapper as typeof handler;
-
-    }
 }
 
 
@@ -246,18 +184,22 @@ function Input({
 
     type,
 
-    value,
+    min,
+    max,
     placeholder,
 
+    value,
     onChange
 
 }: {
 
     type: keyof typeof DataTypes
 
-    value: undefined | Literal
+    min?: Literal
+    max?: Literal
     placeholder: undefined | Literal
 
+    value: undefined | Literal
     onChange: (value: undefined | Literal) => void
 
 }) {
@@ -293,7 +235,8 @@ function Input({
             throw "to be implemented";
 
         case "dateTimeStart":
-            return <DateTimeStartInput value={value} placeholder={placeholder} onChange={onChange}/>;
+
+            return <DateTimeStartInput min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
 
     }
 
@@ -304,16 +247,20 @@ function Input({
 
 function DateTimeStartInput({
 
-    value,
+    min,
+    max,
     placeholder,
 
+    value,
     onChange
 
 }: {
 
-    value?: Literal,
-    placeholder?: Literal,
+    min?: Literal,
+    max?: Literal,
+    placeholder: undefined | Literal,
 
+    value: undefined | Literal,
     onChange: (value: undefined | Literal) => void
 
 }) {
@@ -321,27 +268,35 @@ function DateTimeStartInput({
     const [focused, setFocused]=useState(false);
 
 
-    function decode(value: undefined | Literal): undefined | Date {
-        return isString(value) ? new Date(value) : undefined;
+    function decode(value: undefined | Literal): undefined | string {
+        return isDateTime(value) ? value.substring(0, 10) : undefined;
     }
 
     function encode(value: undefined | string): undefined | Literal {
-        return value && `${value}T00:00:00Z`;
+        return value ? `${value}T00:00:00Z` : undefined;
     }
 
 
-    const _value=decode(value);
-    const _placeholder=decode(placeholder);
+    const _limit=decode(placeholder);
 
     return <input type={focused || value ? "date" : "text"}
 
-        defaultValue={_value?.toISOString()?.substring(0, 10)}
-        placeholder={_placeholder && toLocaleDateString(_placeholder)}
+        min={decode(min)}
+        max={decode(max)}
+
+        placeholder={_limit && toLocaleDateString(new Date(_limit))}
+        defaultValue={decode(value)}
 
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
 
-        onChange={e => onChange(encode(e.target.value.trim()))}
+        onChange={e => {
+
+            if ( e.target.checkValidity() ) {
+                onChange(encode(e.target.value.trim()));
+            }
+
+        }}
 
     />;
 

@@ -16,7 +16,7 @@
 
 
 import { immutable, isEmpty } from "@metreeca/core";
-import { Error, Focus, Frame, Graph, Probe, process, Query, State } from "@metreeca/link/index";
+import { Entry, Error, Focus, Frame, Graph, Probe, process, Query, State } from "@metreeca/link/index";
 
 
 export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
@@ -53,7 +53,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
     return immutable({
 
-        get<V extends Frame, E extends Frame>(id: string, model: V, query?: Query): State<typeof model, E> {
+        get<V extends Entry, E>(id: string, model: V, query?: Query): State<typeof model, E> {
 
             const key=!query || isEmpty(query) ? id : `${id}?${encodeURI(JSON.stringify(query))}`;
 
@@ -108,7 +108,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
         },
 
-        post<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<{ id: string }, E>): void {
+        post<V extends Frame, E>(id: string, frame: V, probe: Probe<{ id: string }, E>): void {
 
             const controller=new AbortController();
 
@@ -168,7 +168,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
             }));
         },
 
-        put<V extends Frame, E extends Frame>(id: string, frame: V, probe: Probe<Focus, E>): void {
+        put<V extends Frame, E>(id: string, frame: V, probe: Probe<Focus, E>): void {
 
             const controller=new AbortController();
 
@@ -225,7 +225,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
         },
 
-        del<E extends Frame>(id: string, probe: Probe<Focus, E>): void {
+        del<E>(id: string, probe: Probe<Focus, E>): void {
 
             const controller=new AbortController();
 

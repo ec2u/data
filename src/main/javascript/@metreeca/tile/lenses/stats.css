@@ -25,7 +25,7 @@ node-stats {
 
         & > input {
 
-            width: 0; /* auto-sizing */
+            min-height: 4ex; /* prevent vertical flickering */
 
             flex-grow: 1;
             flex-basis: 100%;
@@ -37,7 +37,13 @@ node-stats {
                 box-shadow: none;
             }
 
+            &:invalid {
+                color: var(--node--color-invalid);
+                border-color: inherit;
+            }
+
             &::-webkit-calendar-picker-indicator {
+                height: 1em;
                 margin: 0 0.1em;
                 font-size: 75%;
             }
@@ -50,7 +56,7 @@ node-stats {
 
             & > input {
 
-                height: 4ex; /* prevent vertical flickering */
+                width: 0; /* auto-sizing */
 
                 &:first-child {
                     padding-right: 0.1em;
@@ -69,12 +75,11 @@ node-stats {
 
             flex-direction: column;
 
+            padding: 0;
+
             & > input {
 
-                height: 3ex; /* prevent vertical flickering */
-
-                &:first-child {
-                }
+                padding: 0.3em 0.5em 0.2em;
 
                 &:last-child {
                     border-top-style: solid;

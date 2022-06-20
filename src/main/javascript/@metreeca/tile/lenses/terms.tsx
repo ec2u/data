@@ -172,9 +172,9 @@ export function NodeTerms({
 
             fetch: <NodeSpin/>,
 
-            value: terms => keywords && terms.length === 0
-                ? <small>No Matches</small>
-                : terms.map(option)
+            value: terms => terms
+                ? terms.map(option)
+                : <small>No Matches</small>
 
         })}</section>
 

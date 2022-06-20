@@ -218,6 +218,7 @@ export function useTerms(
         ".terms": path
 
     }, setQuery]);
+
     const [matching]=useEntry(id, model, [{ // ignoring this facet
 
         ".terms": path,
@@ -238,39 +239,49 @@ export function useTerms(
 
         error: error => State<Terms>({ error }),
 
-        value: ({ terms: baseline }) => matching({
+        value: ({ terms }) => {
 
-            fetch: abort => State<Terms>({ fetch: abort }),
+            const baseline=terms ?? [];
 
-            error: error => State<Terms>({ error }),
+            return matching({
 
-            value: ({ terms: matching }) => State<Terms>({
+                fetch: abort => State<Terms>({ fetch: abort }),
 
-                value: [...matching, ...baseline
+                error: error => State<Terms>({ error }),
 
-                    .filter(term => !matching.some(match => equals(term.value, match.value)))
-                    .filter((term, index) => limit === undefined || limit === 0 || index < limit-matching.length)
+                value: ({ terms }) => {
 
-                    .map(term => ({ ...term, count: 0 }))
+                    const matching=terms ?? [];
 
-                ]
+                    return State<Terms>({
 
-                    .map(term => ({
+                        value: [...matching, ...baseline
 
-                        ...term, selected: selection.some(value =>
-                            isFocus(term.value) ? term.value.id === value : term.value === value
-                        )
+                            .filter(term => !matching.some(match => equals(term.value, match.value)))
+                            .filter((term, index) => limit === undefined || limit === 0 || index < limit-matching.length)
 
-                    }))
+                            .map(term => ({ ...term, count: 0 }))
 
-                    .sort((x, y): number =>
-                        x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
-                            : x.count > y.count ? -1 : x.count < y.count ? +1
-                                : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
-                    )
-            })
+                        ]
 
-        })
+                            .map(term => ({
+
+                                ...term, selected: selection.some(value =>
+                                    isFocus(term.value) ? term.value.id === value : term.value === value
+                                )
+
+                            }))
+
+                            .sort((x, y): number =>
+                                x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
+                                    : x.count > y.count ? -1 : x.count < y.count ? +1
+                                        : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
+                            )
+                    });
+                }
+
+            });
+        }
 
     });
 
@@ -356,18 +367,21 @@ export function useRange(
     [query, setQuery]: [Query, Setter<Query>]
 ): [undefined | Range, Setter<RangeQuery>] {
 
+    const lower=`>=${path}`;
+    const upper=`<=${path}`;
+
     const [stats]=useStats(id, path, [query, setQuery]);
 
     const [range, setRange]=useState<Range>();
 
-    const gte=asLiteral(query[`>=${path}`]);
-    const lte=asLiteral(query[`<=${path}`]);
+    const gte=asLiteral(query[lower]);
+    const lte=asLiteral(query[upper]);
 
     const value=stats({
 
         value: ({ stats }) => {
 
-            const entry=stats.filter(({ id }) => id === DataTypes[type])[0];
+            const entry=stats?.filter(({ id }) => id === DataTypes[type])[0];
 
             const min=asLiteral(entry?.min);
             const max=asLiteral(entry?.max);
@@ -381,14 +395,16 @@ export function useRange(
 
     useEffect(() => setRange(value), [JSON.stringify(value)]);
 
-    return [range, ({ gte, lte }) => setQuery({
+    return [range, ({ gte, lte }) => {
+        return setQuery({
 
-        ...query,
+            ...query,
 
-        [`>=${path}`]: gte,
-        [`<=${path}`]: lte
+            [lower]: gte ?? query[lower],
+            [upper]: lte ?? query[upper]
 
-    })];
+        });
+    }];
 
 }
 

@@ -22,7 +22,7 @@ export interface Graph {
 
     get<V extends Entry, E>(id: string, model: V, query?: Query): State<V, E>;
 
-    post<V, E>(id: string, frame: V, probe: Probe<Focus, E>): void;
+    post<V extends Frame, E>(id: string, frame: V, probe: Probe<Focus, E>): void;
 
     put<V extends Entry, E>(id: string, frame: V, probe: Probe<Focus, E>): void;
 

@@ -72,6 +72,7 @@ export function DataEvents() {
 
     });
 
+
     const [entry]=useEntry(route, Events, [query, setQuery]);
 
 
