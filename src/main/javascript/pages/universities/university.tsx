@@ -16,11 +16,13 @@
 
 import { Universities, UniversitiesIcon } from "@ec2u/data/pages/universities/universities";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
+import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
@@ -81,26 +83,20 @@ export function DataUniversity() {
 
             value: ({
 
-                inception, students,
-                country, location
+                inception,
+                students,
+                country,
+                location
 
-            }) => <dl>
+            }) => <DataInfo>{{
 
-                <dt>Inception</dt>
-                <dd>{inception && inception.substring(0, 4) || "-"}</dd>
+                "Inception": inception && inception.substring(0, 4) || "-",
+                "Students": students && string(students),
 
-                <dt>Country</dt>
-                <dd>{country && <a href={country.id}>{string(country.label)}</a>}</dd>
+                "Country": country && <NodeLink>{country}</NodeLink>,
+                "City": location && <NodeLink>{location}</NodeLink>
 
-                <dt>City</dt>
-                <dd>{location && <a href={location.id}>{string(location.label)}</a>}</dd>
-
-                {students && <>
-                    <dt>Students</dt>
-                    <dd>{string(students)}</dd>
-                </>}
-
-            </dl>
+            }}</DataInfo>
 
 
         })}</DataPane>}
@@ -121,7 +117,7 @@ export function DataUniversity() {
 
             >
 
-                <p>{string(comment)}</p>
+                {string(comment)}
 
             </DataCard>
 

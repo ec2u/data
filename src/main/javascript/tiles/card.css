@@ -41,6 +41,8 @@ data-card {
 
         grid-gap: 0.25em;
 
+        margin-bottom: 0.75em;
+
         & > h1 {
             flex-grow: 1;
         }
@@ -56,8 +58,6 @@ data-card {
     }
 
     & > section {
-
-        margin-top: 0.75em;
 
         & > figure {
 

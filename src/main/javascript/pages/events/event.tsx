@@ -16,9 +16,12 @@
 
 import { Events, EventsIcon } from "@ec2u/data/pages/events/events";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/link";
+import { optional, string } from "@metreeca/link";
+import { toLocaleDateString } from "@metreeca/tile/inputs/date";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -41,10 +44,17 @@ export const Event=immutable({
         label: {}
     },
 
-    fullDescription: {},
+    publisher: {
+        id: "",
+        label: {}
+    },
 
-    startDate: "",
-    endDate: ""
+    url: optional(""),
+
+    fullDescription: optional(""),
+
+    startDate: optional(""),
+    endDate: optional("")
 
 });
 
@@ -62,6 +72,29 @@ export function DataEvent() {
 
         menu={entry({ fetch: <NodeSpin/> })}
 
+        pane={<DataPane>{entry({
+
+            value: ({
+
+                university,
+
+                publisher,
+                url,
+
+                startDate,
+                endDate
+
+            }) => <DataInfo>{{
+
+                "University": <NodeLink>{university}</NodeLink>,
+                "Source": url && <a href={url}>{string(publisher)}</a>,
+                "Start Date": startDate && toLocaleDateString(new Date(startDate)),
+                "End Date": endDate && toLocaleDateString(new Date(endDate))
+
+            }}</DataInfo>
+
+        })}</DataPane>}
+
     >{entry({
 
         fetch: <NodeHint>{EventsIcon}</NodeHint>,
@@ -72,35 +105,13 @@ export function DataEvent() {
             label,
             comment,
 
-            university,
-
-            fullDescription,
-
-            startDate,
-            endDate
+            fullDescription
 
         }) => (
 
-            <DataCard
+            <DataCard icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}>
 
-                icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
-
-                info={<dl>
-
-                    <dt>University</dt>
-                    <dd><NodeLink>{university}</NodeLink></dd>
-
-                    <dt>Start Date</dt>
-                    <dd>{startDate}</dd>
-
-                    <dt>End Date</dt>
-                    <dd>{endDate}</dd>
-
-                </dl>}
-
-            >
-
-                <p>{string(fullDescription)}</p>
+                {string(fullDescription)}
 
             </DataCard>
 

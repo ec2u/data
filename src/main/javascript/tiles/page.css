@@ -142,34 +142,7 @@ data-page {
         }
 
         & > section {
-
             font-size: 90%;
-
-            & > dl {
-
-                display: grid;
-                grid-template-columns: min-content 1fr;
-                grid-template-rows: min-content;
-                grid-column-gap: 0.5em;
-                grid-row-gap: 0.25em;
-
-
-                & > * {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
-
-                & > dt {
-                    font-weight: 600;
-                }
-
-                & > dd {
-                    text-align: right;
-                }
-
-            }
-
         }
 
     }

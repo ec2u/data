@@ -51,13 +51,13 @@ export function DataCard({
 
 	return createElement("data-card", {}, <>
 
-		<header>
+		{(name || tags) && <header>
 
 			<h1>{name}</h1>
 
 			<nav>{tags}</nav>
 
-		</header>
+		</header>}
 
 		<section>
 

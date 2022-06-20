@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { immutable, isString } from "@metreeca/core";
+import { isString } from "@metreeca/core";
 import { DataTypes, Literal, Query } from "@metreeca/link";
 import { toLocaleDateString } from "@metreeca/tile/inputs/date";
 import { Calendar, CheckSquare, Clock, Hash, Type } from "@metreeca/tile/widgets/icon";
@@ -22,25 +22,11 @@ import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
 import { useRange } from "@metreeca/tool/nests/graph";
 import * as React from "react";
-import { createElement, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import "./stats.css";
 
 
 const AutoDelay=500;
-
-const Icons: Record<keyof typeof DataTypes, ReactNode>=immutable({
-
-    boolean: <CheckSquare/>,
-    integer: <Hash/>,
-    decimal: <Hash/>,
-    string: <Type/>,
-
-    date: <Calendar/>,
-    time: <Clock/>,
-    dateTime: <Calendar/>,
-    dateTimeStart: <Calendar/>
-
-});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +75,7 @@ export function NodeStats({
 
 
     const [range, setRange]=useRange(id, path, type, [query, setQuery]);
+
 
     const doSetRange=useCallback(trailing(AutoDelay, setRange), [setRange]);
 
@@ -159,17 +146,17 @@ export function NodeStats({
     }, <>
 
         <header>
-            <i>{Icons[type]}</i>
+            <i><Icon type={type}/></i>
             <input readOnly placeholder={placeholder}/>
         </header>
 
         {expanded && <section className={classes({ wide: type === "dateTime" })}>
 
-            <DateTimeStartInput value={range?.gte} placeholder={range?.min}
+            <Input type={type} value={range?.gte} placeholder={range?.min}
                 onChange={gte => doSetRange({ gte, lte: range?.lte })}
             />
 
-            <DateTimeStartInput value={range?.lte} placeholder={range?.max}
+            <Input type={type} value={range?.lte} placeholder={range?.max}
                 onChange={lte => doSetRange({ gte: range?.gte, lte })}
             />
 
@@ -202,6 +189,114 @@ export function trailing<H extends (...args: any[]) => void>(delay: number, hand
         return wrapper as typeof handler;
 
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function Icon({
+
+    type
+
+}: {
+
+    type: keyof typeof DataTypes
+
+}) {
+
+    switch ( type ) {
+
+        case "boolean":
+
+            return <CheckSquare/>;
+
+        case "integer":
+
+            return <Hash/>;
+
+        case "decimal":
+
+            return <Hash/>;
+
+        case "string":
+
+            return <Type/>;
+
+        case "date":
+
+            return <Calendar/>;
+
+        case "time":
+
+            return <Clock/>;
+
+        case "dateTime":
+
+            return <Calendar/>;
+
+        case "dateTimeStart":
+
+            return <Calendar/>;
+
+    }
+
+}
+
+function Input({
+
+    type,
+
+    value,
+    placeholder,
+
+    onChange
+
+}: {
+
+    type: keyof typeof DataTypes
+
+    value: undefined | Literal
+    placeholder: undefined | Literal
+
+    onChange: (value: undefined | Literal) => void
+
+}) {
+
+    switch ( type ) {
+
+        case "boolean":
+
+            throw "to be implemented";
+
+        case "integer":
+
+            throw "to be implemented";
+
+        case "decimal":
+
+            throw "to be implemented";
+
+        case "string":
+
+            throw "to be implemented";
+
+        case "date":
+
+            throw "to be implemented";
+
+        case "time":
+
+            throw "to be implemented";
+
+        case "dateTime":
+
+            throw "to be implemented";
+
+        case "dateTimeStart":
+            return <DateTimeStartInput value={value} placeholder={placeholder} onChange={onChange}/>;
+
+    }
+
 }
 
 
