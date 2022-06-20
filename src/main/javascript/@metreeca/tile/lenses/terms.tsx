@@ -9,7 +9,7 @@ import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
 import { useDelay } from "@metreeca/tool/hooks/delay";
-import { Terms, useTerms } from "@metreeca/tool/nests/graph";
+import { Options, useOptions } from "@metreeca/tool/nests/graph";
 import * as React from "react";
 import { createElement, useEffect, useRef, useState } from "react";
 import { classes } from "../../tool";
@@ -54,7 +54,7 @@ export function NodeTerms({
 
     const search=useDelay(true, [keywords, doSearch]);
 
-    const [terms, setTerms]=useTerms(id,
+    const [terms, setTerms]=useOptions(id,
         { path, keywords, offset, limit },
         [query, setQuery]
     );
@@ -109,7 +109,7 @@ export function NodeTerms({
     }
 
 
-    function option({ selected, value, count }: Terms[number]) {
+    function option({ selected, value, count }: Options[number]) {
         return <div key={string(value)} className={count > 0 ? "available" : "unavailable"}>
 
             <input type="checkbox" checked={selected} disabled={!selected && count === 0}

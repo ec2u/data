@@ -73,7 +73,7 @@ export function DataEvents() {
     });
 
 
-    const [entry]=useEntry(route, Events, [query, setQuery]);
+    const entry=useEntry(route, Events, query);
 
 
     useEffect(() => { setRoute({ label: string(Events) }); }, []);
@@ -142,7 +142,7 @@ function DataEventsFilters({
 
     const [keywords, setKeywords]=useKeywords(id, "label", [query, setQuery]);
 
-    const [stats]=useStats("", "", [query, setQuery]);
+    const stats=useStats("", "", query);
 
     return <DataPane
 

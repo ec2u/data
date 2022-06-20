@@ -86,6 +86,37 @@ export interface Error<D> {
 }
 
 
+export interface Terms {
+
+    readonly terms?: Immutable<Array<{
+
+        readonly value: Value;
+        readonly count: number;
+
+    }>>;
+
+}
+
+export interface Stats {
+
+    readonly count: number;
+
+    readonly min?: Value;
+    readonly max?: Value;
+
+    readonly stats?: Immutable<Array<{
+
+        readonly id: string;
+        readonly count: number;
+
+        readonly min: Value
+        readonly max: Value
+
+    }>>;
+
+}
+
+
 export function isError(value: any): value is Error<unknown> {
     return isNumber(value.status) && isString(value.reason);
 }

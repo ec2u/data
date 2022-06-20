@@ -15,7 +15,7 @@
  */
 
 import { Immutable, isString } from "@metreeca/core";
-import { DataTypes, Entry, Focus, Graph, isFocus, isLiteral, Literal, Query, State, string, Value } from "@metreeca/link";
+import { DataTypes, Entry, Graph, isFocus, isLiteral, Literal, Query, State, Stats, string, Terms, Value } from "@metreeca/link";
 import { RESTGraph } from "@metreeca/link/rest";
 import { Setter } from "@metreeca/tool/hooks";
 import { useUpdate } from "@metreeca/tool/hooks/update";
@@ -71,56 +71,38 @@ export function useGraph(): Graph {
     return useContext(Context);
 }
 
-export function useEntry<V extends Entry, E>(
-    id: string, model: V,
-    [query, setQuery]: [Query, Setter<Query>]=[{}, () => {}]
-): [State<typeof model, E>, Setter<Query>] {
+
+export function useEntry<V extends Entry, E>(id: string, model: V, query: Query={}): State<typeof model, E> {
 
     const graph=useGraph();
     const update=useUpdate();
 
     useEffect(() => graph.observe(id, update), [id, JSON.stringify(query)]);
 
-    return [graph.get<V, E>(id, model, query), delta => setQuery({ ...query, ...delta })];
+    return graph.get<V, E>(id, model, query);
 
 }
 
+export function useTerms<E>(id: string, path: string, query: Query={}): State<Terms, E> {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    return useEntry(id, ({
 
-export interface Stats {
+        id: "",
 
-    readonly count: number;
+        terms: [{
 
-    readonly min?: Value;
-    readonly max?: Value;
+            value: "",
+            count: 0
 
-    readonly stats: Immutable<Array<{
+        }]
 
-        readonly id: string;
-        readonly count: number;
-
-        readonly min: Value
-        readonly max: Value
-
-    }>>;
+    }), { ...query, ".terms": path });
 
 }
 
-export interface StatsQuery {
+export function useStats<E>(id: string, path: string, query: Query={}): State<Stats, E> {
 
-    readonly min?: Literal,
-    readonly max?: Literal
-
-}
-
-
-export function useStats(
-    id: string, path: string,
-    [query, setQuery]: [Query, Setter<Query>]
-): [State<Stats>, Setter<StatsQuery>] {
-
-    const [entry]=useEntry(id, {
+    return useEntry(id, {
 
         id: "",
         count: 0,
@@ -138,23 +120,30 @@ export function useStats(
 
         }]
 
-    }, [{ ...query, ".stats": path }, setQuery]);
-
-    return [entry, ({ min, max }) => setQuery({
-
-        ...query,
-
-        [`>=${path}`]: min,
-        [`<=${path}`]: max
-
-    })];
+    }, { ...query, ".stats": path });
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export interface Terms extends Immutable<Array<{
+export function useKeywords(
+    id: string, path: string,
+    [query, setQuery]: [Query, Setter<Query>]
+): [string, Setter<string>] {
+
+    const keywords=query[`~${path}`];
+
+    return [isString(keywords) ? keywords.trim() : "", keywords => {
+        setQuery({ ...query, [`~${path}`]: keywords.trim() || undefined });
+    }];
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface Options extends Immutable<Array<{
 
     readonly value: Value;
     readonly count: number;
@@ -163,7 +152,7 @@ export interface Terms extends Immutable<Array<{
 
 }>> {}
 
-export interface TermsQuery extends Immutable<Array<{
+export interface OptionsDelta extends Immutable<Array<{
 
     readonly value: Literal;
 
@@ -171,7 +160,8 @@ export interface TermsQuery extends Immutable<Array<{
 
 }>> {}
 
-export function useTerms(
+
+export function useOptions(
     id: string,
     {
 
@@ -193,51 +183,36 @@ export function useTerms(
     [query, setQuery]: [Query, Setter<Query>]
 ): [
 
-    State<Terms>, Setter<TermsQuery>
+    State<Options>, Setter<OptionsDelta>
 
 ] {
 
-    const model=({
+    const key=`?${path}`;
 
-        id: "",
+    const constraint=query[path] || query[key] || [];
+    const selection=isLiteral(constraint) ? [constraint] : constraint;
 
-        terms: [{
-
-            value: "",
-            count: 0
-
-        }]
+    const baseline=useTerms(id, path, { // ignoring all facets // !!! review offset/limit
 
     });
 
-    const constraint=query[path] || query[`?${path}`] || [];
-    const selection=isLiteral(constraint) ? [constraint] : constraint;
-
-    const [baseline]=useEntry(id, model, [{ // ignoring all facets // !!! review offset/limit
-
-        ".terms": path
-
-    }, setQuery]);
-
-    const [matching]=useEntry(id, model, [{ // ignoring this facet
-
-        ".terms": path,
+    const matching=useTerms(id, path, { // ignoring this facet
 
         ".offset": offset,
         ".limit": limit,
 
         ...Object.entries(query)
-            .filter(([key]) => !key.startsWith(".") && key !== path && key !== `?${path}`)
+            .filter(([key]) => !key.startsWith(".") && key !== path && key !== key)
             .reduce((current, [key, value]) => ({ ...current, [key]: value }), {})
 
-    }, setQuery]);
+    });
 
 
     const value=baseline({
 
-        fetch: abort => State<Terms>({ fetch: abort }),
+        fetch: abort => State<Options>({ fetch: abort }),
 
-        error: error => State<Terms>({ error }),
+        error: error => State<Options>({ error }),
 
         value: ({ terms }) => {
 
@@ -245,15 +220,15 @@ export function useTerms(
 
             return matching({
 
-                fetch: abort => State<Terms>({ fetch: abort }),
+                fetch: abort => State<Options>({ fetch: abort }),
 
-                error: error => State<Terms>({ error }),
+                error: error => State<Options>({ error }),
 
                 value: ({ terms }) => {
 
                     const matching=terms ?? [];
 
-                    return State<Terms>({
+                    return State<Options>({
 
                         value: [...matching, ...baseline
 
@@ -285,7 +260,7 @@ export function useTerms(
 
     });
 
-    const updater=(terms: TermsQuery) => {
+    const updater=(terms: OptionsDelta) => {
 
         const stable=selection.filter(selected => terms.every(({ value }) => !equals(selected, value)));
         const added=terms.filter(({ selected }) => selected).map(({ value }) => value);
@@ -306,44 +281,6 @@ export function useTerms(
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function useCount(
-    id: string, path: string,
-    [query, setQuery]: [Query, Setter<Query>]
-): [undefined | number] {
-
-    const [stats]=useStats(id, path, [query, setQuery]);
-
-    const [count, setCount]=useState<number>();
-
-    useEffect(() => setCount(stats({
-
-        value: ({ count }) => count,
-
-        other: count
-
-    })));
-
-
-    return [count];
-
-}
-
-export function useKeywords(
-    id: string, path: string,
-    [query, setQuery]: [Query, Setter<Query>]
-): [string, Setter<string>] {
-
-    const keywords=query[`~${path}`];
-
-    return [isString(keywords) ? keywords.trim() : "", keywords => {
-        setQuery({ ...query, [`~${path}`]: keywords.trim() || undefined });
-    }];
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export interface Range {
 
     readonly min?: Literal;
@@ -354,7 +291,7 @@ export interface Range {
 
 }
 
-export interface RangeQuery {
+export interface RangeDelta {
 
     readonly gte?: Literal;
     readonly lte?: Literal;
@@ -365,12 +302,12 @@ export interface RangeQuery {
 export function useRange(
     id: string, path: string, type: keyof typeof DataTypes,
     [query, setQuery]: [Query, Setter<Query>]
-): [undefined | Range, Setter<RangeQuery>] {
+): [undefined | Range, Setter<RangeDelta>] {
 
     const lower=`>=${path}`;
     const upper=`<=${path}`;
 
-    const [stats]=useStats(id, path, [query, setQuery]);
+    const stats=useStats(id, path, query);
 
     const [range, setRange]=useState<Range>();
 
@@ -409,13 +346,37 @@ export function useRange(
 }
 
 
-function asLiteral(value: unknown): undefined | Literal {
-    return isLiteral(value) ? value : undefined;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function useCount(id: string, path: string, query: Query): undefined | number {
+
+    const stats=useStats(id, path, query);
+
+    const [count, setCount]=useState<number>();
+
+    useEffect(() => setCount(stats({
+
+        value: ({ count }) => count,
+
+        other: count
+
+    })));
+
+
+    return count;
+
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function equals(x: Literal | Focus, y: Literal | Focus): boolean {
+function equals(x: Value, y: Value): boolean {
     return isFocus(x) && isFocus(y) ? equals(x.id, y.id) : x === y;
+}
+
+
+//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function asLiteral(value: unknown): undefined | Literal {
+    return isLiteral(value) ? value : undefined;
 }

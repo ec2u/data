@@ -70,7 +70,7 @@ export function DataUniversities() {
 
     });
 
-    const [entry]=useEntry(route, Universities, [query, setQuery]);
+    const entry=useEntry(route, Universities, query);
 
 
     useEffect(() => { setRoute({ label: string(Universities) }); }, []);
@@ -128,7 +128,7 @@ function DataUniversitiesFilters({
 
     const [search, setSearch]=useKeywords(id, "label", [query, setQuery]);
 
-    const [stats]=useStats("", "", [query, setQuery]);
+    const stats=useStats("", "", query);
 
     return <DataPane
 
