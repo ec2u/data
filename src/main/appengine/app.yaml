@@ -3,8 +3,8 @@ runtime: java11
 handlers:
 
   - url: /(.*\.(html|css|js|svg|png))$
-    static_files: target/classes/static/\1
-    upload: target/classes/static/.*$
+    static_files: static/\1
+    upload: static/.*$
     secure: always
 
   - url: /.*
