@@ -15,6 +15,8 @@
  */
 
 import { equals, Immutable, Primitive } from "@metreeca/core";
+import { useStorage } from "@metreeca/tool/hooks/storage";
+import { useRoute } from "@metreeca/tool/nests/router";
 import { useEffect, useState } from "react";
 
 
@@ -28,9 +30,18 @@ export interface Parameters {
 }
 
 
-export function useParams<T extends Parameters=Parameters>(initial: T): [T, (parameters: T) => void] {
+export function useParameters<T extends Parameters=Parameters>(initial: T): [T, (parameters: T) => void];
+export function useParameters<T extends Parameters=Parameters>(initial: T, storage: Storage): [T, (parameters: T) => void];
 
-    const [state, setState]=useState({ ...(initial || {}), ...parameters() });
+export function useParameters<T extends Parameters=Parameters>(initial: T, storage?: Storage): [T, (parameters: T) => void] {
+
+    const value={ ...(initial || {}), ...parameters() };
+
+    const [route]=useRoute();
+
+    const [state, setState]=(storage === undefined)
+        ? useState(value)
+        : useStorage(storage, route, value);
 
     useEffect(() => { parameters(state, initial); });
 
