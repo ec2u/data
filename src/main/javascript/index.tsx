@@ -34,7 +34,25 @@ render((
 
     <React.StrictMode>
 
-        <NodeFetcher>
+        <NodeFetcher fetcher={(input, init) => {
+
+            const headers=new Headers(init?.headers || {});
+
+            const tags=navigator.languages;
+            const size=tags.length+1;
+
+            headers.set("Accept-Language", [
+
+                ...tags.map((tag, index) => `${tag};q=${((size-index)/size).toFixed(1)}`),
+
+                `*;q=${(1/size).toFixed(1)}`
+
+            ].join(", "));
+
+            return fetch(input, { ...init, headers });
+
+        }}>
+
             <NodeGraph>
 
                 <NodeRouter routes={{
@@ -52,6 +70,7 @@ render((
                 }}/>
 
             </NodeGraph>
+
         </NodeFetcher>
 
     </React.StrictMode>
