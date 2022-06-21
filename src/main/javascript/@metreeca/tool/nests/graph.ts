@@ -207,12 +207,12 @@ export function useRange<E>(
 
         }),
 
-        ({ gte, lte }) => setQuery({
+        (delta) => setQuery({
 
             ...query,
 
-            [lower]: gte ?? query[lower],
-            [upper]: lte ?? query[upper]
+            [lower]: "gte" in delta ? delta.gte : query[lower],
+            [upper]: "lte" in delta ? delta.lte : query[upper]
 
         })
 

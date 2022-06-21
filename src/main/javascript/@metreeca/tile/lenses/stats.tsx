@@ -307,8 +307,25 @@ function DateTimeStartInput({
         placeholder={_placeholder && toLocaleDateString(new Date(_placeholder))}
         defaultValue={decode(value)}
 
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        onFocus={() =>
+
+            setFocused(true)
+
+        }
+
+        onBlur={e => {
+
+            setFocused(false);
+
+            // ;(chrome) no change event on clear
+
+            const current=encode(e.target.value.trim());
+
+            if ( e.target.checkValidity() && current !== value ) {
+                onChange(current);
+            }
+
+        }}
 
         onChange={e => {
 
