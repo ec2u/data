@@ -20,17 +20,16 @@ import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { multiple, optional, Query, required, string } from "@metreeca/link";
-import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodeCount } from "@metreeca/tile/lenses/count";
-import { NodeStats } from "@metreeca/tile/lenses/stats";
-import { NodeTerms } from "@metreeca/tile/lenses/terms";
+import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
+import { NodeOptions } from "@metreeca/tile/lenses/options";
+import { NodeRange } from "@metreeca/tile/lenses/range";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { Calendar } from "@metreeca/tile/widgets/icon";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/params";
-import { useEntry, useKeywords } from "@metreeca/tool/nests/graph";
+import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { ReactNode, useEffect } from "react";
@@ -65,6 +64,7 @@ export const Events=immutable({
 export function DataEvents() {
 
     const [route, setRoute]=useRoute();
+
     const [query, setQuery]=useParameters<Query>({
 
         ".order": ["startDate", "label"],
@@ -83,7 +83,19 @@ export function DataEvents() {
 
         menu={entry({ fetch: <NodeSpin/> })}
 
-        pane={<DataEventsFilters id={route} state={[query, setQuery]}/>}
+        pane={<DataPane
+
+            header={<NodeKeywords state={[query, setQuery]}/>}
+            footer={<NodeCount state={[query, setQuery]}/>}
+
+        >
+
+            <NodeOptions path={"university"} type={"reference"} placeholder={"University"} state={[query, setQuery]}/>
+            <NodeOptions path={"publisher"} type={"reference"} placeholder={"Publisher"} state={[query, setQuery]}/>
+
+            <NodeRange path={"startDate"} type={"dateTimeStart"} placeholder={"Start Date"} state={[query, setQuery]}/>
+
+        </DataPane>}
 
     >{entry<ReactNode>({
 
@@ -121,38 +133,4 @@ export function DataEvents() {
 
     })}</DataPage>;
 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function DataEventsFilters({
-
-    id,
-
-    state: [query, setQuery]
-
-}: {
-
-    id: string
-
-    state: [Query, Setter<Query>]
-
-}) {
-
-    const [keywords, setKeywords]=useKeywords(id, "label", [query, setQuery]);
-
-    return <DataPane
-
-        header={<NodeSearch icon placeholder={"Search"} auto state={[keywords, setKeywords]}/>}
-        footer={<NodeCount id={id} state={[query, setQuery]}/>}
-
-    >
-
-        <NodeTerms id={id} path={"university"} type={"reference"} placeholder={"University"} state={[query, setQuery]}/>
-        <NodeTerms id={id} path={"publisher"} type={"reference"} placeholder={"Publisher"} state={[query, setQuery]}/>
-
-        <NodeStats id={id} path={"startDate"} type={"dateTimeStart"} placeholder={"Start Date"} state={[query, setQuery]}/>
-
-    </DataPane>;
 }

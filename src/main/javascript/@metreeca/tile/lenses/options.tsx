@@ -11,10 +11,11 @@ import { Setter } from "@metreeca/tool/hooks";
 import { useCache } from "@metreeca/tool/hooks/cache";
 import { useDelay } from "@metreeca/tool/hooks/delay";
 import { Options, useOptions } from "@metreeca/tool/nests/graph";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { createElement, useEffect, useRef, useState } from "react";
 import { classes } from "../../tool";
-import "./terms.css";
+import "./options.css";
 
 
 const PageSize=10;
@@ -22,7 +23,7 @@ const PageSize=10;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function NodeTerms({
+export function NodeOptions({
 
     id,
     path,
@@ -35,7 +36,7 @@ export function NodeTerms({
 
 }: {
 
-    id: string
+    id?: string
     path: string,
     type: keyof typeof DataTypes
 
@@ -69,13 +70,15 @@ export function NodeTerms({
     });
 
 
+    const [route]=useRoute();
+
     const [keywords, setKeywords]=useState("");
     const [offset, setOffset]=useState(0);
     const limit=PageSize+1;
 
     const search=useDelay(true, [keywords, doSearch]);
 
-    const [options, setOptions]=useOptions(id, path, type, { keywords, offset, limit }, [query, setQuery]);
+    const [options, setOptions]=useOptions(id || route, path, type, { keywords, offset, limit }, [query, setQuery]);
     const cache=useCache(options({ value: options => options }));
 
 

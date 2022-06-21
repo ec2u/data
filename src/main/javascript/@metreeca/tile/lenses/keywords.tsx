@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-import { Query, string } from "@metreeca/link";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { Query } from "@metreeca/link";
+import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { Setter } from "@metreeca/tool/hooks";
-import { useCache } from "@metreeca/tool/hooks/cache";
-import { useStats } from "@metreeca/tool/nests/graph";
+import { useKeywords } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { createElement } from "react";
-import "./count.css";
+import "./keywords.css";
 
 
-export function NodeCount({
+export function NodeKeywords({
 
     id,
-    path="",
+    path="label",
+
+    placeholder="Search",
 
     state: [query, setQuery]
 
@@ -37,22 +38,18 @@ export function NodeCount({
     id?: string,
     path?: string,
 
+    placeholder?: string
+
     state: [Query, Setter<Query>]
 
 }) {
 
-
     const [route]=useRoute();
 
-    const stats=useStats(id || route, path);
-    const count=useCache(stats({ value: ({ count }) => count }));
+    const [keywords, setKeywords]=useKeywords(id || route, path, [query, setQuery]);
 
-    return createElement("node-count", {},
-
-        count === undefined ? <NodeSpin/>
-            : count === 0 ? "no matches"
-                : count === 1 ? "1 match"
-                    : `${string(count)} matches`
+    return createElement("node-keywords", {},
+        <NodeSearch icon placeholder={placeholder} auto state={[keywords, setKeywords]}/>
     );
 
 }

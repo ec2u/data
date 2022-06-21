@@ -19,15 +19,14 @@ import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
-import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodeCount } from "@metreeca/tile/lenses/count";
+import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { Landmark } from "@metreeca/tile/widgets/icon";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/params";
-import { useEntry, useKeywords } from "@metreeca/tool/nests/graph";
+import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { ReactNode, useEffect } from "react";
@@ -64,6 +63,7 @@ export const Universities=immutable({
 export function DataUniversities() {
 
     const [route, setRoute]=useRoute();
+
     const [query, setQuery]=useParameters<Query>({
 
         ".order": "",
@@ -81,7 +81,12 @@ export function DataUniversities() {
 
         menu={entry({ fetch: <NodeSpin/> })}
 
-        pane={<DataUniversitiesFilters id={route} state={[query, setQuery]}/>}
+        pane={<DataPane
+
+            header={<NodeKeywords state={[query, setQuery]}/>}
+            footer={<NodeCount state={[query, setQuery]}/>}
+
+        />}
 
     >{entry<ReactNode>({
 
@@ -110,29 +115,4 @@ export function DataUniversities() {
 
     })}</DataPage>;
 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function DataUniversitiesFilters({
-
-    id,
-    state: [query, setQuery]
-
-}: {
-
-    id: string
-    state: [Query, Setter<Query>]
-
-}) {
-
-    const [search, setSearch]=useKeywords(id, "label", [query, setQuery]);
-
-    return <DataPane
-
-        header={<NodeSearch icon placeholder={"Search"} auto state={[search, setSearch]}/>}
-        footer={<NodeCount id={id} state={[query, setQuery]}/>}
-
-    />;
 }

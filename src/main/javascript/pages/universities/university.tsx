@@ -98,7 +98,6 @@ export function DataUniversity() {
 
             }}</DataInfo>
 
-
         })}</DataPane>}
 
     >{entry({

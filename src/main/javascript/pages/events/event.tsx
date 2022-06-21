@@ -119,7 +119,6 @@ export function DataEvent() {
 
         error: error => <span>{error.status}</span> // !!! report
 
-
     })}</DataPage>;
 
 }

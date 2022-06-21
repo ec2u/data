@@ -24,9 +24,10 @@ import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
 import { useCache } from "@metreeca/tool/hooks/cache";
 import { useRange } from "@metreeca/tool/nests/graph";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
-import "./stats.css";
+import "./range.css";
 
 
 const AutoDelay=500;
@@ -36,7 +37,7 @@ const WideTypes=new Set(["date", "dateTime", "dateTimeStart"]);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function NodeStats({
+export function NodeRange({
 
     id,
     path,
@@ -49,7 +50,7 @@ export function NodeStats({
 
 }: {
 
-    id: string,
+    id?: string,
     path: string,
     type: keyof typeof DataTypes
 
@@ -83,7 +84,9 @@ export function NodeStats({
     });
 
 
-    const [range, setRange]=useRange(id, path, type, [query, setQuery]);
+    const [route]=useRoute();
+
+    const [range, setRange]=useRange(id || route, path, type, [query, setQuery]);
     const cache=useCache(range({ value: range => range }));
 
 
