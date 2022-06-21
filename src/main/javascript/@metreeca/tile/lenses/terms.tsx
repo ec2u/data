@@ -46,15 +46,19 @@ export function NodeTerms({
 
 }) {
 
-    const root=useRef<Element>(null);
+    const element=useRef<Element>(null);
     const [focused, setFocused]=useState(false);
 
 
     useEffect(() => {
 
-        const focus=(e: FocusEvent) => doActivate(
-            e.target instanceof Node && root.current?.contains(e.target) || false
-        );
+        const focus=(e: FocusEvent) => {
+            return setFocused(
+                e.target instanceof Node && (element.current?.contains(e.target) || false) && (
+                    focused || e.target instanceof HTMLInputElement && e.target.parentElement?.tagName === "HEADER"
+                )
+            );
+        };
 
         window.addEventListener("focus", focus, true);
 
@@ -141,7 +145,7 @@ export function NodeTerms({
 
     return createElement("node-terms", {
 
-        ref: root,
+        ref: element,
         class: classes({ "node-input": true, focused }),
 
         onKeyDown: e => {

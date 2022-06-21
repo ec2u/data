@@ -67,7 +67,11 @@ export function NodeStats({
     useEffect(() => {
 
         function focus(e: FocusEvent) {
-            setFocused(e.target instanceof Node && element.current?.contains(e.target) || false);
+            return setFocused(
+                e.target instanceof Node && (element.current?.contains(e.target) || false) && (
+                    focused || e.target instanceof HTMLInputElement && e.target.parentElement?.tagName === "HEADER"
+                )
+            );
         }
 
         window.addEventListener("focus", focus, true);
