@@ -20,6 +20,15 @@ data-card {
     flex-direction: column;
     align-items: stretch;
 
+
+    &.compact {
+        & > section {
+            & > figure {
+                width: 25vmin;
+            }
+        }
+    }
+
     &:not(:first-child) {
         margin-top: 1.5em;
     }
@@ -62,7 +71,7 @@ data-card {
         & > figure {
 
             float: right;
-            width: 33%;
+            width: 40vmin;
 
             margin-left: 1em;
             margin-bottom: 0.25em;

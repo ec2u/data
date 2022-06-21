@@ -15,6 +15,7 @@
  */
 
 import { isString } from "@metreeca/core";
+import { classes } from "@metreeca/tool";
 import * as React from "react";
 import { createElement, ReactNode } from "react";
 import "./card.css";
@@ -30,6 +31,8 @@ export interface Tags {
 
 export function DataCard({
 
+	compact,
+
 	name,
 
 	tags,
@@ -38,6 +41,8 @@ export function DataCard({
 	children
 
 }: {
+
+	compact?: boolean
 
 	name?: ReactNode | string
 
@@ -49,7 +54,11 @@ export function DataCard({
 
 }) {
 
-	return createElement("data-card", {}, <>
+	return createElement("data-card", {
+
+		class: classes({ compact })
+
+	}, <>
 
 		{(name || tags) && <header>
 

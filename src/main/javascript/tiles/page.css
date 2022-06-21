@@ -172,7 +172,7 @@ data-page {
         text-align: center;
 
         & > * {
-            max-width: 50em;
+            max-width: 66rem;
         }
 
     }

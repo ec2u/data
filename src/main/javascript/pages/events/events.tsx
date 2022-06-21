@@ -106,7 +106,7 @@ export function DataEvents() {
 
             : contains.map(({ id, label, image, comment, university, startDate }) => (
 
-                <DataCard key={id}
+                <DataCard key={id} compact
 
                     name={<a href={id}>{string(label)}</a>}
 

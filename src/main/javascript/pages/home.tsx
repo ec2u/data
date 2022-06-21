@@ -84,9 +84,9 @@ export default function DataHome() {
 
         >{entry<ReactNode>({
 
-            value: ({ contains }) => contains.map(dataset => <DataCard
+            value: ({ contains }) => contains.map(dataset => <DataCard key={dataset.id} compact
 
-                key={dataset.id} name={<NodeLink>{dataset}</NodeLink>}
+                name={<NodeLink>{dataset}</NodeLink>}
 
                 tags={`${string(dataset.entities)} entities`}
 

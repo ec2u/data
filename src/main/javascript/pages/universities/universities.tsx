@@ -97,7 +97,7 @@ export function DataUniversities() {
 
             : contains.map(({ id, label, image, comment, country }) => {
 
-                return <DataCard key={id}
+                return <DataCard key={id} compact
 
                     name={<a href={id}>{string(label)}</a>}
                     icon={image}
