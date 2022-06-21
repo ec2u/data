@@ -18,7 +18,7 @@ import { isDateTime } from "@metreeca/core";
 import { trailing } from "@metreeca/core/callbacks";
 import { DataTypes, Literal, Query } from "@metreeca/link";
 import { toLocaleDateString } from "@metreeca/tile/inputs/date";
-import { AlertIcon, Calendar, CheckSquare, Clock, Hash, Type } from "@metreeca/tile/widgets/icon";
+import { AlertIcon, Calendar, CheckSquare, Clock, Hash, Type, X } from "@metreeca/tile/widgets/icon";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
@@ -42,7 +42,7 @@ export function NodeStats({
     path,
     type,
 
-    compact,
+    compact=true,
     placeholder,
 
     state: [query, setQuery]
@@ -85,8 +85,13 @@ export function NodeStats({
 
     const doUpdate=useCallback(trailing(AutoDelay, setRange), [setRange]);
 
+    function doReset() {
+        setRange(null);
+    }
 
-    const expanded=!compact || focused || cache?.gte !== undefined || cache?.lte !== undefined;
+
+    const selected=cache?.gte !== undefined || cache?.lte !== undefined;
+    const expanded=!compact || focused || selected;
 
     return createElement("node-stats", {
 
@@ -119,7 +124,8 @@ export function NodeStats({
             <nav>{range({
 
                 fetch: <NodeSpin/>,
-                error: <AlertIcon/> // !!! tooltip
+                error: <AlertIcon/>, // !!! tooltip
+                value: selected && <button title={"Reset"} onClick={doReset}><X/></button>
 
             })}</nav>
 

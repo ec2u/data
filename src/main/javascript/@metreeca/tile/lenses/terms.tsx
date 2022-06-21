@@ -28,7 +28,7 @@ export function NodeTerms({
     path,
     type,
 
-    compact,
+    compact=true,
     placeholder,
 
     state: [query, setQuery]
@@ -105,6 +105,12 @@ export function NodeTerms({
         setOffset(0);
     }
 
+    function doReset() {
+        setOptions(null);
+        setKeywords("");
+        setOffset(0);
+    }
+
 
     function option({ selected, value, count }: Options[number]) {
         return <div key={string(value)} className={count > 0 ? "available" : "unavailable"}>
@@ -164,16 +170,19 @@ export function NodeTerms({
                 fetch: <NodeSpin/>,
                 error: <AlertIcon/>, // !!! tooltip
 
-                value: search.current?.value
-                    ? <button title={"Clear"} onClick={() => doSearch("")}><ClearIcon/></button>
-                    : null
+                value:
+                    search.current?.value ? <button title={"Clear"} onClick={() => doSearch("")}><ClearIcon/></button>
+                        : cache?.some(({ selected }) => selected) ?
+                            <button title={"Reset"} onClick={doReset}><X/></button>
+                            : null
 
             })}</nav>
 
         </header>
 
-        <section>{expanded && cache && (
-            cache.length ? cache.map(option) : <small>No Matches</small>
+        <section>{cache && (cache.length
+                ? cache.filter(({ selected }) => expanded || selected).map(option)
+                : expanded && <small>No Matches</small>
         )}</section>
 
         {expanded && paging && <footer>

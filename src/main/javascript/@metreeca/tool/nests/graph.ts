@@ -184,7 +184,7 @@ export function useRange<E>(
     path: string,
     type: keyof typeof DataTypes,
     [query, setQuery]: [Query, Setter<Query>]
-): [State<Range>, Setter<RangeDelta>] {
+): [State<Range>, Setter<null | RangeDelta>] {
 
     const lower=`>=${path}`;
     const upper=`<=${path}`;
@@ -207,12 +207,12 @@ export function useRange<E>(
 
         }),
 
-        (delta) => setQuery({
+        delta => setQuery({
 
             ...query,
 
-            [lower]: "gte" in delta ? delta.gte : query[lower],
-            [upper]: "lte" in delta ? delta.lte : query[upper]
+            [lower]: delta === null ? undefined : "gte" in delta ? delta.gte : query[lower],
+            [upper]: delta === null ? undefined : "lte" in delta ? delta.lte : query[upper]
 
         })
 
@@ -241,7 +241,7 @@ export function useOptions(
     [query, setQuery]: [Query, Setter<Query>]
 ): [
 
-    State<Options>, Setter<OptionsDelta>
+    State<Options>, Setter<null | OptionsDelta>
 
 ] {
 
@@ -285,67 +285,76 @@ export function useOptions(
 
     const value=flatMapState(baseline, ({ terms }) => {
 
-        const baseline=terms ?? [];
+            const baseline=terms ?? [];
 
-        return flatMapState(selected, ({ terms }) => {
+            return flatMapState(selected, ({ terms }) => {
 
-            const selected=terms ?? [];
+                const selected=terms ?? [];
 
-            return mapState(matching, ({ terms }) => {
+                return mapState(matching, ({ terms }) => {
 
-                    const matching=terms ?? [];
+                        const matching=terms ?? [];
 
-                    return [
+                        return [
 
-                        ...selected,
+                            ...selected,
 
-                        ...matching
-                            .filter(term => !selected.some(match => equals(term.value, match.value))),
+                            ...matching
+                                .filter(term => !selected.some(match => equals(term.value, match.value))),
 
-                        ...baseline
-                            .filter(term => !selected.some(match => equals(term.value, match.value)))
-                            .filter(term => !matching.some(match => equals(term.value, match.value)))
-                            .map(term => ({ ...term, count: 0 }))
+                            ...baseline
+                                .filter(term => !selected.some(match => equals(term.value, match.value)))
+                                .filter(term => !matching.some(match => equals(term.value, match.value)))
+                                .map(term => ({ ...term, count: 0 }))
 
-                    ]
+                        ]
 
-                        .map(term => ({
+                            .map(term => ({
 
-                            ...term, selected: selection.some(value =>
-                                isFocus(term.value) ? term.value.id === value : term.value === value
+                                ...term, selected: selection.some(value =>
+                                    isFocus(term.value) ? term.value.id === value : term.value === value
+                                )
+
+                            }))
+
+                            .sort((x, y): number =>
+                                x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
+                                    : x.count > y.count ? -1 : x.count < y.count ? +1
+                                        : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
                             )
 
-                        }))
+                            .slice(offset, offset+limit);
 
-                        .sort((x, y): number =>
-                            x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
-                                : x.count > y.count ? -1 : x.count < y.count ? +1
-                                    : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
-                        )
-
-                        .slice(offset, offset+limit);
-
-                }
-            );
+                    }
+                );
 
 
-        });
+            });
         }
     );
 
-    const updater=(terms: OptionsDelta) => {
+    const updater=(terms: null | OptionsDelta) => {
 
-        const stable=selection.filter(selected => terms.every(({ value }) => !equals(selected, value)));
-        const added=terms.filter(({ selected }) => selected).map(({ value }) => value);
+        if ( terms === null ) {
 
-        const update=[
+            setQuery({ ...query, [path]: undefined });
 
-            ...stable,
-            ...added
+        } else {
 
-        ];
+            const stable=selection.filter(selected => terms.every(({ value }) => !equals(selected, value)));
+            const added=terms.filter(({ selected }) => selected).map(({ value }) => value);
 
-        return setQuery({ ...query, [path]: update.length > 0 ? update : undefined });
+            const update=[
+
+                ...stable,
+                ...added
+
+            ];
+
+            setQuery({ ...query, [path]: update.length > 0 ? update : undefined });
+
+        }
+
     };
 
     return [value, updater];
