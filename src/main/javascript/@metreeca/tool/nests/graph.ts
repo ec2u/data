@@ -20,7 +20,7 @@ import { RESTGraph } from "@metreeca/link/rest";
 import { Setter } from "@metreeca/tool/hooks";
 import { useUpdate } from "@metreeca/tool/hooks/update";
 import { Fetcher, useFetcher } from "@metreeca/tool/nests/fetcher";
-import { createContext, createElement, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, createElement, ReactNode, useContext, useEffect, useMemo } from "react";
 
 
 const Context=createContext<Graph>(RESTGraph());
@@ -239,10 +239,7 @@ export function useOptions(
 
     },
     [query, setQuery]: [Query, Setter<Query>]
-): [
-
-    State<Options>, Setter<null | OptionsDelta>
-
+): [State<Options>, Setter<null | OptionsDelta>
 ] {
 
     const filter=`?${path}`;
@@ -257,6 +254,7 @@ export function useOptions(
         [type === "reference" ? `~${path}.label` : `~${path}`]: keywords
 
     };
+
 
     const baseline=useTerms(id, path, { // ignoring all facets
 
@@ -285,53 +283,53 @@ export function useOptions(
 
     const value=flatMapState(baseline, ({ terms }) => {
 
-            const baseline=terms ?? [];
+        const baseline=terms ?? [];
 
-            return flatMapState(selected, ({ terms }) => {
+        return flatMapState(selected, ({ terms }) => {
 
-                const selected=terms ?? [];
+            const selected=terms ?? [];
 
-                return mapState(matching, ({ terms }) => {
+            return mapState(matching, ({ terms }) => {
 
-                        const matching=terms ?? [];
+                    const matching=terms ?? [];
 
-                        return [
+                    return [
 
-                            ...selected,
+                        ...selected,
 
-                            ...matching
-                                .filter(term => !selected.some(match => equals(term.value, match.value))),
+                        ...matching
+                            .filter(term => !selected.some(match => equals(term.value, match.value))),
 
-                            ...baseline
-                                .filter(term => !selected.some(match => equals(term.value, match.value)))
-                                .filter(term => !matching.some(match => equals(term.value, match.value)))
-                                .map(term => ({ ...term, count: 0 }))
+                        ...baseline
+                            .filter(term => !selected.some(match => equals(term.value, match.value)))
+                            .filter(term => !matching.some(match => equals(term.value, match.value)))
+                            .map(term => ({ ...term, count: 0 }))
 
-                        ]
+                    ]
 
-                            .map(term => ({
+                        .map(term => ({
 
-                                ...term, selected: selection.some(value =>
-                                    isFocus(term.value) ? term.value.id === value : term.value === value
-                                )
-
-                            }))
-
-                            .sort((x, y): number =>
-                                x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
-                                    : x.count > y.count ? -1 : x.count < y.count ? +1
-                                        : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
+                            ...term, selected: selection.some(value =>
+                                isFocus(term.value) ? term.value.id === value : term.value === value
                             )
 
-                            .slice(offset, offset+limit);
+                        }))
 
-                    }
-                );
+                        .sort((x, y): number =>
+                            x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
+                                : x.count > y.count ? -1 : x.count < y.count ? +1
+                                    : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
+                        )
+
+                        .slice(offset, offset+limit);
+
+                }
+            );
 
 
-            });
-        }
-    );
+        });
+
+    });
 
     const updater=(terms: null | OptionsDelta) => {
 
@@ -358,25 +356,6 @@ export function useOptions(
     };
 
     return [value, updater];
-}
-
-export function useCount(id: string, path: string, query: Query): undefined | number {
-
-    const stats=useStats(id, path, query);
-
-    const [count, setCount]=useState<number>();
-
-    useEffect(() => setCount(stats({
-
-        value: ({ count }) => count,
-
-        other: count
-
-    })));
-
-
-    return count;
-
 }
 
 

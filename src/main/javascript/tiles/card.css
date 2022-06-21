@@ -39,7 +39,7 @@ data-card {
         flex-direction: row;
         align-items: baseline;
 
-        grid-gap: 0.25em;
+        grid-gap: 1em;
 
         margin-bottom: 0.75em;
 
@@ -66,6 +66,10 @@ data-card {
 
             margin-left: 1em;
             margin-bottom: 0.25em;
+
+            &:empty {
+                display: none;
+            }
 
             & > img:first-child {
                 width: 100%;

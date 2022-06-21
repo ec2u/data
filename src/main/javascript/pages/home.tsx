@@ -21,11 +21,12 @@ import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
+import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/params";
-import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
+import { useEntry, useKeywords } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { ReactNode, useEffect } from "react";
@@ -111,20 +112,10 @@ function DataHomeFilters({
 
     const [search, setSearch]=useKeywords(id, "label", [query, setQuery]);
 
-    const stats=useStats("", "", query);
-
     return <DataPane
 
-        header={<NodeSearch icon placeholder={"Datasets"}
-            auto state={[search, setSearch]}
-        />}
-
-        footer={stats({
-            value: ({ count }) =>
-                count === 0 ? "no matches"
-                    : count === 1 ? "1 match"
-                        : `${string(count)} matches`
-        })}
+        header={<NodeSearch icon placeholder={"Search"} auto state={[search, setSearch]}/>}
+        footer={<NodeCount id={id} state={[query, setQuery]}/>}
 
     />;
 
