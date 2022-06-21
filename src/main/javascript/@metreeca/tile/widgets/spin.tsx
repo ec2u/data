@@ -23,38 +23,45 @@ import "./spin.css";
 
 export function NodeSpin({
 
-	icon=<Loader2/>,
-	title,
+    icon=<Loader2/>,
+    title,
 
-	color,
-	period,
+    color,
+    period,
 
-	onClick
+    onClick
 
 }: {
 
-	icon?: ReactNode
-	title?: string
+    icon?: ReactNode
+    title?: string
 
-	size?: string
-	thickness?: string
-	color?: string
-	period?: string,
+    size?: string
+    thickness?: string
+    color?: string
+    period?: string,
 
-	onClick?: () => void
+    onClick?: () => void
 
 }) {
 
-	return createElement("node-spin", {
+    return createElement("node-spin", {
 
-			style: {
+        style: {
 
-				"--node-spin-color": color,
-				"--node-spin-period": period
+            "--node-spin-color": color,
+            "--node-spin-period": period
 
-			}
+        }
 
-		},
-		<button type={"button"} title={title || onClick ? "Cancel" : undefined} onClick={onClick || (() => {})}>{icon}</button>);
+    }, <button type={"button"} title={title || onClick ? "Cancel" : undefined}
+
+        onClick={onClick || (() => {})}
+
+    >{
+
+        icon
+
+    }</button>);
 
 }

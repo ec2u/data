@@ -4,7 +4,7 @@
 
 import { isBoolean } from "@metreeca/core";
 import { DataTypes, isFocus, isLiteral, Literal, Query, string } from "@metreeca/link";
-import { Check, CheckSquare, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon, X } from "@metreeca/tile/widgets/icon";
+import { AlertIcon, Check, CheckSquare, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon, X } from "@metreeca/tile/widgets/icon";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
@@ -159,13 +159,16 @@ export function NodeTerms({
 
             <input ref={search} type={"text"} placeholder={placeholder}/>
 
-            <nav>{search.current?.value
+            <nav>{options({
 
-                ? <button title={"Clear"} onClick={() => doSearch("")}><ClearIcon/></button>
+                fetch: <NodeSpin/>,
+                error: <AlertIcon/>, // !!! tooltip
 
-                : null
+                value: search.current?.value
+                    ? <button title={"Clear"} onClick={() => doSearch("")}><ClearIcon/></button>
+                    : null
 
-            }</nav>
+            })}</nav>
 
         </header>
 

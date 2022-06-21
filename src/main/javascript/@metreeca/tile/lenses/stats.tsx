@@ -18,7 +18,8 @@ import { isDateTime } from "@metreeca/core";
 import { trailing } from "@metreeca/core/callbacks";
 import { DataTypes, Literal, Query } from "@metreeca/link";
 import { toLocaleDateString } from "@metreeca/tile/inputs/date";
-import { Calendar, CheckSquare, Clock, Hash, Type } from "@metreeca/tile/widgets/icon";
+import { AlertIcon, Calendar, CheckSquare, Clock, Hash, Type } from "@metreeca/tile/widgets/icon";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
 import { useCache } from "@metreeca/tool/hooks/cache";
@@ -110,8 +111,18 @@ export function NodeStats({
     }, <>
 
         <header>
+
             <i><Icon type={type}/></i>
+
             <input readOnly placeholder={placeholder}/>
+
+            <nav>{range({
+
+                fetch: <NodeSpin/>,
+                error: <AlertIcon/> // !!! tooltip
+
+            })}</nav>
+
         </header>
 
         {expanded && <section className={classes({ wide: WideTypes.has(type) })}>
