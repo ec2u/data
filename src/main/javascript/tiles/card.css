@@ -67,6 +67,10 @@ data-card {
             margin-left: 1em;
             margin-bottom: 0.25em;
 
+            border-style: solid;
+            border-color: #DDD;
+            border-radius: 0.25em;
+
             &:empty {
                 display: none;
             }
