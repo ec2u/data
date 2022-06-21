@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-import { Immutable } from "@metreeca/core";
-import { Value } from "@metreeca/link";
 import { Heart, Menu } from "@metreeca/tile/widgets/icon";
 import { NodeIcon } from "@metreeca/tile/widgets/logo";
-import { NodePath } from "@metreeca/tile/widgets/path";
 import { copy } from "@metreeca/tool";
 import React, { createElement, ReactNode, useState } from "react";
 import "./page.css";
@@ -35,7 +32,7 @@ export function DataPage({
 
 }: {
 
-    item?: Value | ReactNode | Immutable<Array<Value | ReactNode>>
+    item?: ReactNode
     menu?: ReactNode
 
     pane?: ReactNode
@@ -94,7 +91,7 @@ export function DataPage({
 
             <header>
                 <a href={"/"}><NodeIcon/></a>
-                <span><NodePath>{item}</NodePath></span>
+                <span>{item}</span>
                 <nav>{menu}</nav>
                 <button title={"Open menu"} onClick={doToggleTray}><Menu/></button>
             </header>

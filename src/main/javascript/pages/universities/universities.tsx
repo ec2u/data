@@ -23,7 +23,6 @@ import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { Landmark } from "@metreeca/tile/widgets/icon";
-import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useParameters } from "@metreeca/tool/hooks/params";
 import { useEntry } from "@metreeca/tool/nests/graph";
@@ -77,7 +76,7 @@ export function DataUniversities() {
     useEffect(() => { setRoute({ label: string(Universities) }); }, []);
 
 
-    return <DataPage item={<NodePath>{Universities}</NodePath>}
+    return <DataPage item={string(Universities)}
 
         menu={entry({ fetch: <NodeSpin/> })}
 

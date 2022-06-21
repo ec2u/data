@@ -72,9 +72,15 @@ data-page {
                 content: '​';
             }
 
+            & > a {
 
-            & > node-icon::after {
-                content: '​'; /* prevent vertical collapsing*/
+                display: flex;
+                align-items: center;
+
+                &::after {
+                    content: '​'; /* prevent vertical collapsing*/
+                }
+
             }
 
             & > span {
@@ -139,6 +145,16 @@ data-page {
         & > * {
             padding-left: 1rem;
             padding-right: 1rem;
+        }
+
+        & > header {
+
+            justify-content: stretch;
+
+            & > * {
+                flex-grow: 1;
+            }
+
         }
 
         & > section {

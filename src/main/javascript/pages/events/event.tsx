@@ -15,6 +15,7 @@
  */
 
 import { Events, EventsIcon } from "@ec2u/data/pages/events/events";
+import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
@@ -68,11 +69,15 @@ export function DataEvent() {
 
     useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
 
-    return <DataPage item={[Events, entry({ value: value => value })]}
+    return <DataPage item={entry({ value: string })}
 
         menu={entry({ fetch: <NodeSpin/> })}
 
-        pane={<DataPane>{entry({
+        pane={<DataPane
+
+            header={<DataBack>{Events}</DataBack>}
+
+        >{entry({
 
             value: ({
 

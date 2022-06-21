@@ -15,6 +15,7 @@
  */
 
 import { Universities, UniversitiesIcon } from "@ec2u/data/pages/universities/universities";
+import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
@@ -23,7 +24,6 @@ import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
-import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
@@ -73,13 +73,15 @@ export function DataUniversity() {
     useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
 
 
-    return <DataPage
-
-        item={<NodePath>{[Universities, entry({ value: value => value })]}</NodePath>}
+    return <DataPage item={entry({ value: string })}
 
         menu={entry({ fetch: <NodeSpin/> })}
 
-        pane={<DataPane>{entry({
+        pane={<DataPane
+
+            header={<DataBack>{Universities}</DataBack>}
+
+        >{entry({
 
             value: ({
 

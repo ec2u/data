@@ -55,6 +55,7 @@ export const Home=immutable({
 export default function DataHome() {
 
     const [route, setRoute]=useRoute();
+
     const [query, setQuery]=useParameters<Query>({
 
         ".order": ["entities", "label"],
@@ -70,7 +71,7 @@ export default function DataHome() {
 
     return (
 
-        <DataPage item={Home}
+        <DataPage item={string(Home)}
 
             menu={entry({ fetch: <NodeSpin/> })}
 
