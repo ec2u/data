@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2020-2022 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,31 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-tool-about {
+/**
+ * Env variables and modes.
+ *
+ * @see for instance, {@link https://vitejs.dev/guide/env-and-mode.html}
+ * @module
+ */
 
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
+interface ImportMeta {
+    readonly env: ImportMetaEnv;
+}
 
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+interface ImportMetaEnv extends Readonly<Record<string, boolean | string>> {
 
-	padding: 0;
-	margin: 0;
-
-	font-size: 200%;
-	color: #999;
-
-	& > li {
-
-		list-style: none;
-
-	}
+    readonly MODE: string;
+    readonly BASE_URL: string;
+    readonly PROD: boolean;
+    readonly DEV: boolean;
 
 }

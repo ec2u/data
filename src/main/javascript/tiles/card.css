@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,104 +12,84 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 data-card {
 
-	display: flex;
-	flex-direction: row;
-	align-items: start;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 
-	max-width: 50em;
 
-	grid-column-gap: 1.5em;
+    &.compact {
+        & > section {
+            & > figure {
+                width: 25vmin;
+            }
+        }
+    }
 
-	&:not(:first-child) {
-		margin-top: 1.5em;
-	}
+    &:not(:first-child) {
+        margin-top: 1.5em;
+    }
 
-	& > * {
 
-		& > :first-child {
+    & > * {
 
-			margin-bottom: 1.5ex;
-			font-weight: 500;
+        &:empty {
+            display: none;
+        }
 
-			&:empty {
-				display: none;
-			}
+    }
 
-		}
+    & > header {
 
-		& > :first-child + * {
-			margin-top: 0;
-			padding-top: 0;
-		}
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
 
-	}
+        grid-gap: 1em;
 
-	& > div {
+        margin-bottom: 0.75em;
 
-		flex-grow: 1;
+        & > h1 {
+            flex-grow: 1;
+        }
 
-		& > h1 {
+        & > nav {
 
-			& > * + *::before {
-				content: "›";
-				margin: 0 0.25em;
-			}
+            white-space: nowrap;
+            font-size: 90%;
+            color: var(--node--color-label);
 
-		}
+        }
 
-	}
+    }
 
-	& > nav {
+    & > section {
 
-		flex-shrink: 0;
+        & > figure {
 
-		width: 12.5em;
+            float: right;
+            width: 40vmin;
 
-		display: flex;
-		flex-direction: column;
-		align-items: stretch;
+            margin-left: 1em;
+            margin-bottom: 0.25em;
 
-		font-size: 90%;
+            border-style: solid;
+            border-color: #DDD;
+            border-radius: 0.25em;
 
-		& > header {
-			margin-left: auto;
-			color: #999;
-		}
+            &:empty {
+                display: none;
+            }
 
-		& > figure {
+            & > img:first-child {
+                width: 100%;
+            }
 
-			& > img:first-child {
-				width: 100%;
-			}
+        }
 
-		}
-
-		& > figure + dl {
-
-			display: grid;
-			grid-template-columns: min-content 1fr;
-			grid-template-rows: min-content;
-			grid-column-gap: 0.5em;
-			grid-row-gap: 0.25em;
-
-			margin-top: 2ex;
-
-			& > * {
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-
-			& > dd {
-				text-align: right;
-			}
-
-		}
-
-	}
+    }
 
 }

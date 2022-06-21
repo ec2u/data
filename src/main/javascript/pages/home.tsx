@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,34 +12,40 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-import { freeze } from "@metreeca/tool/bases";
-import { Home as Site } from "@metreeca/tool/tiles/icon";
+import { Events } from "@ec2u/data/pages/events/events";
+import { DataCard } from "@ec2u/data/tiles/card";
+import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
+import { immutable } from "@metreeca/core";
+import { Query, string } from "@metreeca/link";
+import { NodeCount } from "@metreeca/tile/lenses/count";
+import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
+import { NodeLink } from "@metreeca/tile/widgets/link";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { useParameters } from "@metreeca/tool/hooks/params";
+import { useEntry } from "@metreeca/tool/nests/graph";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { DataPage } from "../tiles/page";
+import { ReactNode, useEffect } from "react";
 
 
-export const Home=freeze({
+export const Home=immutable({
 
-	id: "/",
+    id: "/",
+    label: "Knowledge Hub",
 
-	label: { en: "Connect Centre" },
 
-	contains: [{
+    contains: [{
 
-		id: "",
+        id: "",
+        label: "",
+        comment: "",
 
-		label: "",
-		image: "",
-		comment: "",
+        entities: ""
 
-		university: {
-			id: "",
-			label: ""
-		}
-
-	}]
+    }]
 
 });
 
@@ -47,15 +53,48 @@ export const Home=freeze({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function DataHome() {
-	return (
 
-		<DataPage item={"European Campus of City-Universities"}
+    const [route, setRoute]=useRoute();
 
-			menu={<a href={"https://ec2u.eu/"} target={"_blank"} title={`About EC2U`}><Site/></a>}>
+    const [query, setQuery]=useParameters<Query>({
 
-			{<img src={"/blobs/ec2u.png"} alt={"EC2U Locations"} style={{ width: "100%", maxWidth: "50em" }}/>}
+        ".order": ["entities", "label"],
+        ".limit": 100
 
-		</DataPage>
+    }, sessionStorage);
 
-	);
+    const entry=useEntry(route, Home, query);
+
+
+    useEffect(() => { setRoute({ label: string(Events) }); }, []);
+
+
+    return (
+
+        <DataPage item={string(Home)}
+
+            menu={entry({ fetch: <NodeSpin/> })}
+
+            pane={<DataPane
+
+                header={<NodeKeywords state={[query, setQuery]}/>}
+                footer={<NodeCount state={[query, setQuery]}/>}
+
+            />}
+
+        >{entry<ReactNode>({
+
+            value: ({ contains }) => contains.map(dataset => <DataCard key={dataset.id} compact
+
+                name={<NodeLink>{dataset}</NodeLink>}
+
+                tags={`${string(dataset.entities)} entities`}
+
+            >{string(dataset.comment)}</DataCard>),
+
+            error: error => <span>{error.status}</span> // !!! report
+
+        })}</DataPage>
+
+    );
 }

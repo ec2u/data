@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
+import { isString } from "@metreeca/core";
+import { classes } from "@metreeca/tool";
 import * as React from "react";
 import { createElement, ReactNode } from "react";
 import "./card.css";
@@ -29,15 +31,18 @@ export interface Tags {
 
 export function DataCard({
 
+	compact,
+
 	name,
 
 	tags,
 	icon,
-	info,
 
 	children
 
 }: {
+
+	compact?: boolean
 
 	name?: ReactNode | string
 
@@ -49,25 +54,27 @@ export function DataCard({
 
 }) {
 
-	return createElement("data-card", {}, <>
+	return createElement("data-card", {
 
-		<div>
+		class: classes({ compact })
+
+	}, <>
+
+		{(name || tags) && <header>
 
 			<h1>{name}</h1>
 
+			<nav>{tags}</nav>
+
+		</header>}
+
+		<section>
+
+			<figure>{isString(icon) ? <img src={icon}/> : icon}</figure>
+
 			{children}
 
-		</div>
-
-		<nav>
-
-			<header>{tags}</header>
-
-			<figure>{typeof icon === "string" ? <img src={icon}/> : icon}</figure>
-
-			{info}
-
-		</nav>
+		</section>
 
 	</>);
 

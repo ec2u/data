@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,27 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-import { useProp } from "@metreeca/tool/hooks/prop";
-import { ToolPage } from "@metreeca/tool/tiles/page";
-import * as React from "react";
-import { ReactNode } from "react";
-import { Home } from "../pages/home";
-import { DataResourcesButton, DataResourcesPane } from "../panes/resources";
+import { Heart, Menu } from "@metreeca/tile/widgets/icon";
+import { NodeIcon } from "@metreeca/tile/widgets/logo";
+import { copy } from "@metreeca/tool";
+import React, { createElement, ReactNode, useState } from "react";
+import "./page.css";
 
-
-const ResourcesPane: ReactNode=<DataResourcesPane/>;
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function DataPage({
 
     item,
     menu,
 
-    side,
     pane,
 
     children
@@ -42,35 +35,73 @@ export function DataPage({
     item?: ReactNode
     menu?: ReactNode
 
-    side?: ReactNode
     pane?: ReactNode
 
     children: ReactNode
 
 }) {
 
-    const [active, setActive]=useProp(pane || ResourcesPane); // ;( use constant to avoid infinite useEffect loops
+    const [tray, setTray]=useState(false);
 
 
-    return <ToolPage
+    function doToggleTray() {
+        setTray(!tray);
+    }
 
-        item={<><a href={Home.id}>EC2U</a> {typeof item === "string" ? <span>{item}</span> : item}</>}
 
-        menu={menu}
+    return createElement("data-page", {
 
-        side={<>
-            <DataResourcesButton onClick={() => setActive(<DataResourcesPane/>)}/>
-            {side}
-        </>}
+        class: tray ? "tray" : "main",
 
-        pane={active}
+        onClick: e => {
 
-    >
+            if ( e.target instanceof Element && e.target.tagName === "DATA-PAGE" ) { setTray(false); }
 
-        {children}
+        }
 
-    </ToolPage>;
+    }, <>
+
+        <nav>
+
+            <header>
+                <a href={"/"}><NodeIcon/></a>
+            </header>
+
+            <section/>
+
+            <footer>
+                <a target={"_blank"} href={"https://github.com/ec2u/data"}><Heart/></a>
+            </footer>
+
+        </nav>
+
+        <aside onClick={e => {
+
+            if ( e.target instanceof Element && e.target.tagName === "A" ) {
+                setTray(false);
+            }
+
+        }}>{
+
+            pane
+
+        }</aside>
+
+        <main>
+
+            <header>
+                <a href={"/"}><NodeIcon/></a>
+                <span>{item}</span>
+                <nav>{menu}</nav>
+                <button title={"Open menu"} onClick={doToggleTray}><Menu/></button>
+            </header>
+
+            <section>{children}</section>
+
+            <footer>{copy}</footer>
+
+        </main>
+
+    </>);
 
 }
-
-

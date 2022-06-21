@@ -110,11 +110,13 @@ public final class Data implements Runnable {
 
                         new CORS(),
 
+                        new Publisher() // static assets published by GAE
+
+                                .fallback("/index.html"),
+
                         new Wrapper()
 
-                                .before(request -> request
-                                        .base(EC2U.Base) // define canonical base
-                                ),
+                                .before(request -> request.base(EC2U.Base)), // define canonical base
 
                         new Router()
 
@@ -134,7 +136,7 @@ public final class Data implements Runnable {
 
                                 .path("/*", new Router()
 
-                                        .path("/", new Resources())
+                                        .path("/", new Datasets())
                                         .path("/concepts/*", new Concepts())
                                         .path("/universities/*", new Universities())
                                         .path("/events/*", new Events())

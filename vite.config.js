@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,51 +12,57 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
 import {defineConfig} from "vite";
 import {resolve} from "path";
-import reactRefresh from "@vitejs/plugin-react-refresh";
+import react from "@vitejs/plugin-react";
 import postcssNesting from "postcss-nesting";
 
 const src=resolve(process.env.src || "src/main/javascript");
-const out=resolve(process.env.out || "target/static");
+const out=resolve(process.env.out || "target/appengine-staging/static");
 
 export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
-	root: resolve(src),
+    root: resolve(src),
 
-	publicDir: resolve(src, "files"),
+    publicDir: resolve(src, "files"),
 
-	plugins: [reactRefresh()],
+    plugins: [react()],
 
-	css: {
-		postcss: {
-			plugins: [postcssNesting()]
-		}
-	},
+    css: {
+        postcss: {
+            plugins: [postcssNesting()]
+        }
+    },
 
-	resolve: {
-		alias: {
-			"@ec2u/data": resolve(src)
-		}
-	},
+    resolve: {
+        alias: {
+            "@metreeca": resolve(src, "@metreeca"),
+            "@ec2u/data": resolve(src)
+        }
+    },
 
-	build: {
+    build: {
 
-		outDir: out,
-		assetsDir: ".",
-		emptyOutDir: true,
-		minify: mode !== "development",
+        outDir: out,
+        assetsDir: ".",
+        emptyOutDir: true,
+        minify: mode !== "development",
 
-		rollupOptions: {
-			output: { manualChunks: undefined } // no vendor chunks
-		}
+        rollupOptions: {
+            output: { manualChunks: undefined } // no vendor chunks
+        }
 
-	},
+    },
 
-	server: {
-		proxy: { "^(/[-a-zA-Z0-9]+)*/?(\\?.*)?$": { target: "http://localhost:8080/" } } // routes with optional query
-	}
+    server: {
+        proxy: {
+            "^(/[-a-zA-Z0-9]+)*/?(\\?.*)?$": { // routes with optional query
+                target: "http://localhost:8080/",
+                xfwd: true
+            }
+        }
+    }
 
 }));

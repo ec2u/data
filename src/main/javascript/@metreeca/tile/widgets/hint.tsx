@@ -1,5 +1,5 @@
-/***********************************************************************************************************************
- * Copyright © 2020-2022 EC2U Alliance
+/*
+ * Copyright © 2020-2022 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,24 +12,30 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-import { Filter } from "@metreeca/tool/tiles/icon";
 import * as React from "react";
+import { createElement, ReactNode } from "react";
+import "./hint.css";
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Content hint.
+ */
+export function NodeHint({
 
-export function DataFiltersButton({
-
-	onClick
+    children
 
 }: {
 
-	onClick: () => void
+    children?: ReactNode
 
 }) {
 
-	return <button title={"Filters"} onClick={onClick}><Filter/></button>;
+    return createElement("node-hint", {}, <>
+
+        <div>{children}</div>
+
+    </>);
 
 }

@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,112 +12,119 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-import { freeze, string } from "@metreeca/tool/bases";
-import { useEntry } from "@metreeca/tool/hooks/queries/entry";
-import { useRouter } from "@metreeca/tool/nests/router";
-import { ToolSpin } from "@metreeca/tool/tiles/spin";
+import { Universities, UniversitiesIcon } from "@ec2u/data/pages/universities/universities";
+import { DataBack } from "@ec2u/data/tiles/back";
+import { DataCard } from "@ec2u/data/tiles/card";
+import { DataInfo } from "@ec2u/data/tiles/info";
+import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
+import { immutable } from "@metreeca/core";
+import { string } from "@metreeca/link";
+import { NodeHint } from "@metreeca/tile/widgets/hint";
+import { NodeLink } from "@metreeca/tile/widgets/link";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { useEntry } from "@metreeca/tool/nests/graph";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
-import { DataCard } from "../../tiles/card";
-import { DataPage } from "../../tiles/page";
-import { Universities } from "./universities";
 
 
 function optional<T>(value: T): undefined | typeof value {
-	return value;
+    return value;
 }
 
-export const University=freeze({
+export const University=immutable({
 
-	id: "/universities/{code}",
+    id: "/universities/{code}",
 
-	image: "",
-	label: { en: "University" },
-	comment: { en: "" },
+    image: "",
+    label: { "en": "University" },
+    comment: "",
 
-	schac: "",
-	lat: 0,
-	long: 0,
+    schac: "",
+    lat: 0,
+    long: 0,
 
-	inception: optional(""),
-	students: optional(0),
+    inception: optional(""),
+    students: optional(0),
 
-	country: optional({
-		id: "",
-		label: { en: "" }
-	}),
+    country: optional({
+        id: "",
+        label: {}
+    }),
 
-	location: optional({
-		id: "",
-		label: { en: "" }
-	})
+    location: optional({
+        id: "",
+        label: {}
+    })
 
 });
 
 
 export function DataUniversity() {
 
-	const { name }=useRouter();
+    const [route, setRoute]=useRoute();
 
-	const [{ fetch, frame, error }]=useEntry("", University);
-
-
-	useEffect(() => { frame(({ label }) => name(string(label))); });
+    const entry=useEntry(route, University);
 
 
-	return <DataPage
+    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
 
-		item={<>
-			<a href={Universities.id}>{string(Universities.label)}</a>
-			{frame(({ label }) => <span>{string(label)}</span>)}
-		</>}
 
-		menu={fetch(abort => <ToolSpin abort={abort}/>)}
+    return <DataPage item={entry({ value: string })}
 
-	>
+        menu={entry({ fetch: <NodeSpin/> })}
 
-		{frame(({
+        pane={<DataPane
 
-				image, label, comment,
-				inception, students,
-				country, location
+            header={<DataBack>{Universities}</DataBack>}
 
-			}) => (
+        >{entry({
 
-				<DataCard
+            value: ({
 
-					icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
+                inception,
+                students,
+                country,
+                location
 
-					info={<dl>
+            }) => <DataInfo>{{
 
-						<dt>Inception</dt>
-						<dd>{inception && inception.substr(0, 4) || "-"}</dd>
+                "Inception": inception && inception.substring(0, 4) || "-",
+                "Students": students && string(students),
 
-						<dt>Country</dt>
-						<dd>{country && <a href={country.id}>{string(country.label)}</a>}</dd>
+                "Country": country && <NodeLink>{country}</NodeLink>,
+                "City": location && <NodeLink>{location}</NodeLink>
 
-						<dt>City</dt>
-						<dd>{location && <a href={location.id}>{string(location.label)}</a>}</dd>
+            }}</DataInfo>
 
-						{students && <>
-							<dt>Students</dt>
-							<dd>{string(students)}</dd>
-						</>}
+        })}</DataPane>}
 
-					</dl>}
+    >{entry({
 
-				>
+        fetch: <NodeHint>{UniversitiesIcon}</NodeHint>,
 
-					<p>{string(comment)}</p>
+        value: ({
 
-				</DataCard>
+            image, label, comment
 
-			)
-		)}
+        }) => (
 
-		{error(error => <span>{error.status}</span>)} {/* !!! */}
+            <DataCard
 
-	</DataPage>;
+                icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
+
+            >
+
+                {string(comment)}
+
+            </DataCard>
+
+        ),
+
+        error: error => <span>{error.status}</span> // !!! report
+
+    })}</DataPage>;
 }

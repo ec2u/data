@@ -7,7 +7,7 @@ handlers:
     upload: static/.*$
     secure: always
 
-  - url: .*
+  - url: /.*
     script: auto
     secure: always
 

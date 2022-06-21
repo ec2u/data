@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-// import "@metreeca/tool/fonts/quicksand.css";
-// import "@metreeca/tool/index.css";
+import { DataEvent, Event } from "@ec2u/data/pages/events/event";
+import { DataEvents, Events } from "@ec2u/data/pages/events/events";
+import DataHome, { Home } from "@ec2u/data/pages/home";
+import DataNone from "@ec2u/data/pages/none";
+import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
+import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
+import "@metreeca/tile/index.css";
+import "@metreeca/tile/styles/quicksand.css";
+import { NodeFetcher } from "@metreeca/tool/nests/fetcher";
+import { NodeGraph } from "@metreeca/tool/nests/graph";
+import { NodeRouter } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { render } from "react-dom";
 import "./index.css";
@@ -25,24 +34,44 @@ render((
 
     <React.StrictMode>
 
-        {/*<ToolDriver value={RESTGraph()}>
+        <NodeFetcher fetcher={(input, init) => {
 
-         <ToolRouter routes={{
+            const headers=new Headers(init?.headers || {});
 
-         [Home.id]: DataHome,
-         [About.id]: DataAbout,
+            const tags=navigator.languages;
+            const size=tags.length+1;
 
-         [Universities.id]: DataUniversities,
-         [University.id]: DataUniversity,
+            headers.set("Accept-Language", [
 
-         [Events.id]: DataEvents,
-         [Event.id]: DataEvent,
+                ...tags.map((tag, index) => `${tag};q=${((size-index)/size).toFixed(1)}`),
 
-         "*": ToolNone
+                `*;q=${(1/size).toFixed(1)}`
 
-         }}/>
+            ].join(", "));
 
-         </ToolDriver>*/}
+            return fetch(input, { ...init, headers });
+
+        }}>
+
+            <NodeGraph>
+
+                <NodeRouter routes={{
+
+                    [Home.id]: DataHome,
+
+                    [Universities.id]: DataUniversities,
+                    [University.id]: DataUniversity,
+
+                    [Events.id]: DataEvents,
+                    [Event.id]: DataEvent,
+
+                    "*": DataNone
+
+                }}/>
+
+            </NodeGraph>
+
+        </NodeFetcher>
 
     </React.StrictMode>
 

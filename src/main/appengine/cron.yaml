@@ -5,6 +5,11 @@ cron:
     schedule: every day 00:00
 
 
+  - description: "events - nightly purging"
+    url: /cron/events/
+    schedule: every day 00:00
+
+
   - description: "events › coimbra › university - nightly crawling"
     url: /cron/events/coimbra/university
     schedule: every day 00:00
@@ -79,14 +84,10 @@ cron:
     schedule: every day 00:00
 
 
-  - description: "events - nightly housekeeping"
-    url: /cron/events/
+  - description: "system - nightly housekeeping"
+    url: /cron/chores
     schedule: every day 00:30
 
   - description: "system - nightly housekeeping"
-    url: /cron/chores
-    schedule: every day 00:35
-
-  - description: "system - nightly housekeeping"
     url: /cron/inferences
-    schedule: every day 00:40
+    schedule: every day 00:45

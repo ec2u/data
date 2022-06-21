@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,159 +12,124 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-import { freeze, Query, string } from "@metreeca/tool/bases";
-import { Updater } from "@metreeca/tool/hooks";
-import { useEntry } from "@metreeca/tool/hooks/queries/entry";
-import { useRange } from "@metreeca/tool/hooks/queries/range";
-import { useSearch } from "@metreeca/tool/hooks/queries/search";
-import { useTerms } from "@metreeca/tool/hooks/queries/terms";
-import { useQuery } from "@metreeca/tool/hooks/query";
-import { useRouter } from "@metreeca/tool/nests/router";
-import { ToolTerms } from "@metreeca/tool/tiles/facets/terms";
-import { ToolFacet } from "@metreeca/tool/tiles/inputs/facet";
-import { ToolSearch } from "@metreeca/tool/tiles/inputs/search";
-import { ClearIcon } from "@metreeca/tool/tiles/page";
-import { ToolPane } from "@metreeca/tool/tiles/pane";
-import { ToolSpin } from "@metreeca/tool/tiles/spin";
+import { University } from "@ec2u/data/pages/universities/university";
+import { DataCard } from "@ec2u/data/tiles/card";
+import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
+import { immutable } from "@metreeca/core";
+import { multiple, optional, Query, required, string } from "@metreeca/link";
+import { NodeCount } from "@metreeca/tile/lenses/count";
+import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
+import { NodeOptions } from "@metreeca/tile/lenses/options";
+import { NodeRange } from "@metreeca/tile/lenses/range";
+import { NodeHint } from "@metreeca/tile/widgets/hint";
+import { Calendar } from "@metreeca/tile/widgets/icon";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { useParameters } from "@metreeca/tool/hooks/params";
+import { useEntry } from "@metreeca/tool/nests/graph";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { useEffect, useReducer } from "react";
-import { DataFiltersButton } from "../../panes/filters";
-import { DataCard } from "../../tiles/card";
-import { DataPage } from "../../tiles/page";
-import { University } from "../universities/university";
+import { ReactNode, useEffect } from "react";
 
 
-export const Events=freeze({
+export const EventsIcon=<Calendar/>;
+
+export const Events=immutable({
 
     id: "/events/",
+    label: { "en": "Events" },
 
-    label: { en: "Events" },
+    contains: multiple({
 
-    contains: [{
-
-        id: "",
-
-        image: "",
-        label: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" },
-        comment: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" },
+        id: required(""),
+        image: optional(""),
+        label: {},
+        comment: {},
 
         university: {
             id: "",
-            label: { en: "", pt: "", ro: "", it: "", fr: "", es: "", fi: "" }
+            label: {}
         },
 
-        startDate: "",
-        endDate: ""
+        startDate: optional(""),
+        endDate: optional("")
 
-    }]
-
+    })
 });
 
 
 export function DataEvents() {
 
-    const { name }=useRouter();
+    const [route, setRoute]=useRoute();
 
-    const [query, setQuery]=useQuery<Query>({
+    const [query, setQuery]=useParameters<Query>({
 
-        "~label": "",
-
-        ".order": "startDate",
+        ".order": ["startDate", "label"],
         ".limit": 20
 
-    });
+    }, sessionStorage);
 
 
-    const [, update]=useReducer(v => v+1, 0);
-
-    const [{ fetch, frame, error }]=useEntry("", Events, [query, setQuery]);
+    const entry=useEntry(route, Events, query);
 
 
-    useEffect(() => { name(string(Events.label)); });
+    useEffect(() => { setRoute({ label: string(Events) }); }, []);
 
 
-    return <DataPage item={string(Events.label)}
+    return <DataPage item={string(Events)}
 
-        menu={fetch(abort => <ToolSpin abort={abort}/>)}
+        menu={entry({ fetch: <NodeSpin/> })}
 
-        side={<DataFiltersButton onClick={update}/>}
+        pane={<DataPane
 
-        pane={facets([query, setQuery])}
+            header={<NodeKeywords state={[query, setQuery]}/>}
+            footer={<NodeCount state={[query, setQuery]}/>}
 
-    >
-
-        {frame(({ contains }) => contains.map(({ id, label, image, comment, university, startDate }) => (
-
-            <DataCard key={id}
-
-                name={<a href={id}>{string(label)}</a>}
-
-                icon={image?.[0]}
-
-                tags={<>
-                    <span>{string(university.label).replace("University of ", "")}</span>
-                    {startDate && <>
-                        <span> / </span>
-                        <span>{startDate.substr(0, 10)}</span>
-                    </>}
-                </>}
-
-            >
-
-                {string(comment, ["en", "pt", "ro", "it", "fr", "es", "fi"])}
-
-            </DataCard>
-
-        )))}
-
-        {error(error => <span>{error.status}</span>)} {/* !!! */}
-
-    </DataPage>;
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function facets([query, setQuery]: [query: Query, setQuery: Updater<Query>]) {
-
-    const [search, setSearch]=useSearch("label", [query, setQuery]);
-
-    const [universities, setUniversities]=useTerms("", "university", [query, setQuery]);
-    const [publishers, setPublishers]=useTerms("", "publisher", [query, setQuery]);
-    const [date, setDate]=useRange("", "startDate", [query, setQuery]);
-
-    const [{ count }]=useRange("", "updated", [query, setQuery]);
-
-    return <ToolPane
-
-        header={<ToolSearch icon rule placeholder={"Search"}
-            auto value={search} onChange={setSearch}
-        />}
-
-        footer={count === 0 ? "no matches" : count === 1 ? "1 match" : `${count} matches`}
-
-    >
-
-        <ToolFacet expanded name={string(University.label)}
-            menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
         >
-            <ToolTerms value={[universities, setUniversities]}/>
-        </ToolFacet>
 
-        {/* <ToolFacet expanded name={"Publisher"}
-         menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
-         >
-         <ToolTerms value={[publishers, setPublishers]}/>
-         </ToolFacet>*/}
+            <NodeOptions path={"university"} type={"reference"} placeholder={"University"} state={[query, setQuery]}/>
+            <NodeOptions path={"publisher"} type={"reference"} placeholder={"Publisher"} state={[query, setQuery]}/>
 
-        {/* <ToolFacet expanded name={"Date"}
-         menu={<button title={"Clear filter"} onClick={() => {}}><ClearIcon/></button>}
-         >
-         <ToolRange pattern={"\\d{4}-\\d{2}-\\d{2}"} value={[date, setDate]}/>
-         </ToolFacet>*/}
+            <NodeRange path={"startDate"} type={"dateTimeStart"} placeholder={"Start Date"} state={[query, setQuery]}/>
 
-    </ToolPane>;
+        </DataPane>}
+
+    >{entry<ReactNode>({
+
+        fetch: <NodeHint>{EventsIcon}</NodeHint>,
+
+        value: ({ contains }) => !contains || contains.length === 0
+
+            ? <NodeHint>{EventsIcon}</NodeHint>
+
+            : contains.map(({ id, label, image, comment, university, startDate }) => (
+
+                <DataCard key={id} compact
+
+                    name={<a href={id}>{string(label)}</a>}
+
+                    icon={image?.[0]}
+
+                    tags={<>
+                        <span>{string(university)}</span>
+                        {startDate && <>
+                            <span> / </span>
+                            <span>{startDate.substring(0, 10)}</span>
+                        </>}
+                    </>}
+
+                >
+
+                    {string(comment)}
+
+                </DataCard>
+
+            )),
+
+        error: error => <span>{error.status}</span> // !!! report
+
+    })}</DataPage>;
+
 }

@@ -1,10 +1,10 @@
 ### Main Catalog
 
-GET https://data.ec2u.eu/events/?.offset=0&.limit=100&>modified=2022-06-01T00:00:00Z
+GET https://data.ec2u.eu/events/?.stats
 
 ### Main Details
 
-GET https://data.ec2u.eu/events/55bb5cf18eab7e3dba830b53a022dc26
+GET https://data.ec2u.eu/events/0a389bf60aa1ea21bc06875442caa221
 
 
 ### Work Catalog

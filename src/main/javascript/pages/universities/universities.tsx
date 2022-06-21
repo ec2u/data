@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/*
  * Copyright © 2020-2022 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,75 +12,106 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **********************************************************************************************************************/
+ */
 
-import { freeze, string } from "@metreeca/tool/bases";
-import { useEntry } from "@metreeca/tool/hooks/queries/entry";
-import { useRouter } from "@metreeca/tool/nests/router";
-import { ToolSpin } from "@metreeca/tool/tiles/spin";
+import { DataCard } from "@ec2u/data/tiles/card";
+import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPane } from "@ec2u/data/tiles/pane";
+import { immutable } from "@metreeca/core";
+import { Query, string } from "@metreeca/link";
+import { NodeCount } from "@metreeca/tile/lenses/count";
+import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
+import { NodeHint } from "@metreeca/tile/widgets/hint";
+import { Landmark } from "@metreeca/tile/widgets/icon";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { useParameters } from "@metreeca/tool/hooks/params";
+import { useEntry } from "@metreeca/tool/nests/graph";
+import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { useEffect } from "react";
-import { DataCard } from "../../tiles/card";
-import { DataPage } from "../../tiles/page";
+import { ReactNode, useEffect } from "react";
 
 
-export const Universities=freeze({
+export const UniversitiesIcon=<Landmark/>;
 
-	id: "/universities/",
+export const Universities=immutable({
 
-	label: { en: "Universities" },
+    id: "/universities/",
 
-	contains: [{
+    label: {
+        "en": "Universities"
+    },
 
-		id: "",
+    contains: [{
 
-		image: "",
-		label: { en: "" },
-		comment: { en: "" },
+        id: "",
+        image: "",
 
-		country: {
-			id: "",
-			label: { en: "" }
-		}
+        label: {},
+        comment: {},
 
-	}]
+        country: {
+            id: "",
+            label: {}
+        }
+
+    }]
 
 });
 
 
 export function DataUniversities() {
 
-	const { name }=useRouter();
+    const [route, setRoute]=useRoute();
 
-	const [{ fetch, frame, error }]=useEntry("", Universities);
+    const [query, setQuery]=useParameters<Query>({
+
+        ".order": "",
+        ".limit": 20
+
+    }, sessionStorage);
+
+    const entry=useEntry(route, Universities, query);
 
 
-	useEffect(() => { name(string(Universities.label)); });
+    useEffect(() => { setRoute({ label: string(Universities) }); }, []);
 
 
-	return <DataPage item={string(Universities.label)}
+    return <DataPage item={string(Universities)}
 
-		menu={fetch(abort => <ToolSpin abort={abort}/>)}
+        menu={entry({ fetch: <NodeSpin/> })}
 
-	>
+        pane={<DataPane
 
-		{frame(({ contains }) => contains.map(({ id, label, image, comment, country }) => (
+            header={<NodeKeywords state={[query, setQuery]}/>}
+            footer={<NodeCount state={[query, setQuery]}/>}
 
-			<DataCard key={id}
+        />}
 
-				name={<a href={id}>{string(label)}</a>}
-				icon={image}
-				tags={<span>{string(country)}</span>}
+    >{entry<ReactNode>({
 
-			>
-				{string(comment)}
+        fetch: <NodeHint>{UniversitiesIcon}</NodeHint>,
 
-			</DataCard>
+        value: ({ contains }) => contains.length === 0
 
-		)))}
+            ? <NodeHint>{UniversitiesIcon}</NodeHint>
 
-		{error(error => <span>{error.status}</span>)} {/* !!! */}
+            : contains.map(({ id, label, image, comment, country }) => {
 
-	</DataPage>;
+                return <DataCard key={id} compact
+
+                    name={<a href={id}>{string(label)}</a>}
+                    icon={image}
+                    tags={<span>{string(country.label)}</span>}
+
+                >
+                    {string(comment)}
+
+                </DataCard>;
+
+            }),
+
+        error: error => <span>{error.status}</span> // !!! report
+
+    })}</DataPage>;
 
 }
