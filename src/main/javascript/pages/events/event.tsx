@@ -63,7 +63,7 @@ export function DataEvent() {
 
     const [route, setRoute]=useRoute();
 
-    const [entry]=useEntry(route, Event);
+    const entry=useEntry(route, Event);
 
 
     useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));

@@ -22,12 +22,13 @@ import { immutable } from "@metreeca/core";
 import { Query, string } from "@metreeca/link";
 import { NodeSearch } from "@metreeca/tile/inputs/search";
 import { NodeLink } from "@metreeca/tile/widgets/link";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/params";
 import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 
 
 export const Home=immutable({
@@ -72,9 +73,11 @@ export default function DataHome() {
 
         <DataPage item={Home}
 
+            menu={entry({ fetch: <NodeSpin/> })}
+
             pane={<DataHomeFilters id={route} state={[query, setQuery]}/>}
 
-        >{entry({
+        >{entry<ReactNode>({
 
             value: ({ contains }) => contains.map(dataset => <DataCard
 
@@ -82,7 +85,10 @@ export default function DataHome() {
 
                 tags={`${string(dataset.entities)} entities`}
 
-            >{string(dataset.comment)}</DataCard>)
+            >{string(dataset.comment)}</DataCard>),
+
+
+            error: error => <span>{error.status}</span> // !!! report
 
         })}</DataPage>
 

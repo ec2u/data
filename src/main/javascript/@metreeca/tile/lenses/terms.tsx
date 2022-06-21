@@ -172,11 +172,8 @@ export function NodeTerms({
 
         </header>
 
-        <section>{expanded && (
-            !cache ? <NodeSpin/>
-                : !cache.length ? <small>No Matches</small>
-                    : cache.map(option)
-
+        <section>{expanded && cache && (
+            cache.length ? cache.map(option) : <small>No Matches</small>
         )}</section>
 
         {expanded && paging && <footer>

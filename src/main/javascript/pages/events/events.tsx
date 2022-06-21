@@ -26,6 +26,7 @@ import { NodeTerms } from "@metreeca/tile/lenses/terms";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { Calendar } from "@metreeca/tile/widgets/icon";
 import { NodePath } from "@metreeca/tile/widgets/path";
+import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
 import { useParameters } from "@metreeca/tool/hooks/params";
 import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
@@ -79,6 +80,8 @@ export function DataEvents() {
 
 
     return <DataPage item={<NodePath>{Events}</NodePath>}
+
+        menu={entry({ fetch: <NodeSpin/> })}
 
         pane={<DataEventsFilters id={route} state={[query, setQuery]}/>}
 

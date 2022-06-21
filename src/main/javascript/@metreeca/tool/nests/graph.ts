@@ -28,8 +28,46 @@ const Context=createContext<Graph>(RESTGraph());
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export interface Range {
+
+    readonly min?: Literal;
+    readonly max?: Literal;
+
+    readonly gte?: Literal;
+    readonly lte?: Literal;
+
+}
+
+export interface RangeDelta {
+
+    readonly gte?: Literal;
+    readonly lte?: Literal;
+
+}
+
+
+export interface Options extends Immutable<Array<{
+
+    readonly value: Value;
+    readonly count: number;
+
+    readonly selected?: boolean;
+
+}>> {}
+
+export interface OptionsDelta extends Immutable<Array<{
+
+    readonly value: Literal;
+
+    readonly selected: boolean;
+
+}>> {}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
- **Warning** / The `factory` argument must have a stable identity
+ * **Warning** / The `factory` argument must have a stable identity
  *
  * @param factory
  * @param children
@@ -127,43 +165,6 @@ export function useStats<E>(id: string, path: string, query: Query={}): State<St
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-export interface Range {
-
-    readonly min?: Literal;
-    readonly max?: Literal;
-
-    readonly gte?: Literal;
-    readonly lte?: Literal;
-
-}
-
-export interface RangeDelta {
-
-    readonly gte?: Literal;
-    readonly lte?: Literal;
-
-}
-
-
-export interface Options extends Immutable<Array<{
-
-    readonly value: Value;
-    readonly count: number;
-
-    readonly selected?: boolean;
-
-}>> {}
-
-export interface OptionsDelta extends Immutable<Array<{
-
-    readonly value: Literal;
-
-    readonly selected: boolean;
-
-}>> {}
-
-
 export function useKeywords(
     id: string, path: string,
     [query, setQuery]: [Query, Setter<Query>]
@@ -231,8 +232,8 @@ export function useOptions(
         path: string,
 
         keywords?: string,
-        offset?: number,
-        limit?: number
+        offset: number,
+        limit: number
 
     },
     [query, setQuery]: [Query, Setter<Query>]
@@ -247,14 +248,15 @@ export function useOptions(
     const constraint=query[path] || query[label] || [];
     const selection=isLiteral(constraint) ? [constraint] : constraint;
 
-    const baseline=useTerms(id, path, { // ignoring all facets // !!! review offset/limit
+    const baseline=useTerms(id, path, { // ignoring all facets
+
+        ".limit": offset+limit
 
     });
 
     const matching=useTerms(id, path, { // ignoring this facet
 
-        ".offset": offset,
-        ".limit": limit,
+        ".limit": offset+limit,
 
         ...Object.entries(query)
             .filter(([key]) => !key.startsWith(".") && key !== path && key !== label)
@@ -263,57 +265,39 @@ export function useOptions(
     });
 
 
-    const value=baseline({
-
-        fetch: abort => State<Options>({ fetch: abort }),
-
-        error: error => State<Options>({ error }),
-
-        value: ({ terms }) => {
+    const value=flatMapState(baseline, ({ terms }) => {
 
             const baseline=terms ?? [];
 
-            return matching({
-
-                fetch: abort => State<Options>({ fetch: abort }),
-
-                error: error => State<Options>({ error }),
-
-                value: ({ terms }) => {
+            return mapState(matching, ({ terms }) => {
 
                     const matching=terms ?? [];
 
-                    return State<Options>({
+                    return [...matching, ...baseline
+                        .filter(term => !matching.some(match => equals(term.value, match.value)))
+                        .map(term => ({ ...term, count: 0 }))
+                    ]
 
-                        value: [...matching, ...baseline
+                        .map(term => ({
 
-                            .filter(term => !matching.some(match => equals(term.value, match.value)))
-                            .filter((term, index) => limit === undefined || limit === 0 || index < limit-matching.length)
-
-                            .map(term => ({ ...term, count: 0 }))
-
-                        ]
-
-                            .map(term => ({
-
-                                ...term, selected: selection.some(value =>
-                                    isFocus(term.value) ? term.value.id === value : term.value === value
-                                )
-
-                            }))
-
-                            .sort((x, y): number =>
-                                x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
-                                    : x.count > y.count ? -1 : x.count < y.count ? +1
-                                        : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
+                            ...term, selected: selection.some(value =>
+                                isFocus(term.value) ? term.value.id === value : term.value === value
                             )
-                    });
+
+                        }))
+
+                        .sort((x, y): number =>
+                            x.selected && !y.selected ? -1 : !x.selected && y.selected ? +1
+                                : x.count > y.count ? -1 : x.count < y.count ? +1
+                                    : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
+                        )
+
+                        .slice(offset);
+
                 }
-
-            });
+            );
         }
-
-    });
+    );
 
     const updater=(terms: OptionsDelta) => {
 
@@ -369,11 +353,17 @@ function asLiteral(value: unknown): undefined | Literal {
 
 function mapState<V, R, E>(state: State<V, E>, mapper: (value: V) => R): State<R, E> {
 
+    return flatMapState(state, (value: V) => State<R, E>({ value: mapper(value) }));
+
+}
+
+function flatMapState<V, R, E>(state: State<V, E>, mapper: (value: V) => State<R, E>): State<R, E> {
+
     return state({
 
         fetch: (abort: () => void) => State<R, E>({ fetch: abort }),
 
-        value: (value: V) => State<R, E>({ value: mapper(value) }),
+        value: mapper,
 
         error: (error: Error<E>) => State<R, E>({ error })
 

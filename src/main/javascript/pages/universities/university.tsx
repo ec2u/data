@@ -67,7 +67,7 @@ export function DataUniversity() {
 
     const [route, setRoute]=useRoute();
 
-    const [entry]=useEntry(route, University);
+    const entry=useEntry(route, University);
 
 
     useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
@@ -123,7 +123,7 @@ export function DataUniversity() {
 
         ),
 
-        error: error => <span>{error.status}</span> /* !!! report */
+        error: error => <span>{error.status}</span> // !!! report
 
     })}</DataPage>;
 }
