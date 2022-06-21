@@ -153,8 +153,8 @@ function DataEventsFilters({
 
     >
 
-        <NodeTerms id={id} path={"university"} placeholder={"University"} state={[query, setQuery]}/>
-        <NodeTerms id={id} path={"publisher"} placeholder={"Publisher"} state={[query, setQuery]}/>
+        <NodeTerms id={id} path={"university"} type={"reference"} placeholder={"University"} state={[query, setQuery]}/>
+        <NodeTerms id={id} path={"publisher"} type={"reference"} placeholder={"Publisher"} state={[query, setQuery]}/>
 
         <NodeStats id={id} path={"startDate"} type={"dateTimeStart"} placeholder={"Start Date"} state={[query, setQuery]}/>
 

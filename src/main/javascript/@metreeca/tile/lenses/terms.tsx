@@ -3,7 +3,7 @@
  */
 
 import { isBoolean } from "@metreeca/core";
-import { isFocus, isLiteral, Literal, Query, string } from "@metreeca/link";
+import { DataTypes, isFocus, isLiteral, Literal, Query, string } from "@metreeca/link";
 import { Check, CheckSquare, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon, X } from "@metreeca/tile/widgets/icon";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -25,6 +25,7 @@ export function NodeTerms({
 
     id,
     path,
+    type,
 
     compact,
     placeholder,
@@ -35,6 +36,7 @@ export function NodeTerms({
 
     id: string
     path: string,
+    type: keyof typeof DataTypes
 
     compact?: boolean
     placeholder?: string
@@ -45,22 +47,6 @@ export function NodeTerms({
 
     const root=useRef<Element>(null);
     const [focused, setFocused]=useState(false);
-
-    const expanded=!compact || focused;
-
-    const [keywords, setKeywords]=useState("");
-    const [offset, setOffset]=useState(0);
-    const limit=PageSize+1;
-
-    const search=useDelay(true, [keywords, doSearch]);
-
-    const [terms, setTerms]=useOptions(id,
-        { path, keywords, offset, limit },
-        [query, setQuery]
-    );
-
-    const count=terms({ value: value => value.length, other: 0 });
-    const paging=count > PageSize || offset > 0;
 
 
     useEffect(() => {
@@ -76,6 +62,15 @@ export function NodeTerms({
         };
 
     });
+
+
+    const [keywords, setKeywords]=useState("");
+    const [offset, setOffset]=useState(0);
+    const limit=PageSize+1;
+
+    const search=useDelay(true, [keywords, doSearch]);
+
+    const [options, setOptions]=useOptions(id, { path, keywords, offset, limit }, [query, setQuery]);
 
 
     function doActivate(activate: boolean) {
@@ -103,7 +98,7 @@ export function NodeTerms({
     }
 
     function doSelect(value: Literal, selected: boolean) {
-        setTerms([{ value, selected }]);
+        setOptions([{ value, selected }]);
         setKeywords("");
         setOffset(0);
     }
@@ -131,6 +126,10 @@ export function NodeTerms({
         </div>;
     }
 
+
+    const expanded=!compact || focused;
+    const count=options({ value: options => options.length, other: 0 });
+    const paging=count > PageSize || offset > 0;
 
     return createElement("node-terms", {
 
@@ -168,7 +167,7 @@ export function NodeTerms({
 
         </header>
 
-        <section>{expanded && terms({
+        <section>{expanded && options({
 
             fetch: <NodeSpin/>,
 

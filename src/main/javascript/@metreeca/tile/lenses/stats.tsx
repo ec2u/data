@@ -177,6 +177,10 @@ function Icon({
 
             return <Calendar/>;
 
+        case "reference":
+
+            throw "to be implemented";
+
     }
 
 }
@@ -238,6 +242,10 @@ function Input({
         case "dateTimeStart":
 
             return <DateTimeStartInput min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
+
+        case "reference":
+
+            throw "to be implemented";
 
     }
 

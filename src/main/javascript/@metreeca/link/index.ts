@@ -134,7 +134,9 @@ export const DataTypes=immutable({
     date: "http://www.w3.org/2001/XMLSchema#date",
     time: "http://www.w3.org/2001/XMLSchema#time",
     dateTime: "http://www.w3.org/2001/XMLSchema#dateTime",
-    dateTimeStart: "http://www.w3.org/2001/XMLSchema#dateTime"
+    dateTimeStart: "http://www.w3.org/2001/XMLSchema#dateTime",
+
+    reference: "http://www.w3.org/2001/XMLSchema#anyURI"
 
 });
 
