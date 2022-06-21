@@ -71,7 +71,7 @@ export function NodeTerms({
 
     const search=useDelay(true, [keywords, doSearch]);
 
-    const [options, setOptions]=useOptions(id, { path, keywords, offset, limit }, [query, setQuery]);
+    const [options, setOptions]=useOptions(id, path, type, { keywords, offset, limit }, [query, setQuery]);
     const cache=useCache(options({ value: options => options }));
 
 

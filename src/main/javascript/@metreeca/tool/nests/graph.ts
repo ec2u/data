@@ -166,7 +166,8 @@ export function useStats<E>(id: string, path: string, query: Query={}): State<St
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function useKeywords(
-    id: string, path: string,
+    id: string,
+    path: string,
     [query, setQuery]: [Query, Setter<Query>]
 ): [string, Setter<string>] {
 
@@ -179,7 +180,9 @@ export function useKeywords(
 }
 
 export function useRange<E>(
-    id: string, path: string, type: keyof typeof DataTypes,
+    id: string,
+    path: string,
+    type: keyof typeof DataTypes,
     [query, setQuery]: [Query, Setter<Query>]
 ): [State<Range>, Setter<RangeDelta>] {
 
@@ -219,9 +222,9 @@ export function useRange<E>(
 
 export function useOptions(
     id: string,
+    path: string,
+    type: keyof typeof DataTypes,
     {
-
-        path,
 
         keywords,
         offset,
@@ -229,7 +232,6 @@ export function useOptions(
 
     }: {
 
-        path: string,
 
         keywords?: string,
         offset: number,
@@ -243,23 +245,39 @@ export function useOptions(
 
 ] {
 
-    const label=`?${path}`;
+    const filter=`?${path}`;
 
-    const constraint=query[path] || query[label] || [];
+    const constraint=query[path] || query[filter] || [];
     const selection=isLiteral(constraint) ? [constraint] : constraint;
+
+    const head={
+
+        ".limit": offset+limit,
+
+        [type === "reference" ? `~${path}.label` : `~${path}`]: keywords
+
+    };
 
     const baseline=useTerms(id, path, { // ignoring all facets
 
-        ".limit": offset+limit
+        ...head
+
+    });
+
+    const selected=useTerms(id, path, { // including this facet
+
+        ...head, ...Object.entries(query)
+
+            .filter(([key]) => !key.startsWith("."))
+            .reduce((current, [key, value]) => ({ ...current, [key]: value }), {})
 
     });
 
     const matching=useTerms(id, path, { // ignoring this facet
 
-        ".limit": offset+limit,
+        ...head, ...Object.entries(query)
 
-        ...Object.entries(query)
-            .filter(([key]) => !key.startsWith(".") && key !== path && key !== label)
+            .filter(([key]) => !key.startsWith(".") && key !== path && key !== filter)
             .reduce((current, [key, value]) => ({ ...current, [key]: value }), {})
 
     });
@@ -267,15 +285,28 @@ export function useOptions(
 
     const value=flatMapState(baseline, ({ terms }) => {
 
-            const baseline=terms ?? [];
+        const baseline=terms ?? [];
+
+        return flatMapState(selected, ({ terms }) => {
+
+            const selected=terms ?? [];
 
             return mapState(matching, ({ terms }) => {
 
                     const matching=terms ?? [];
 
-                    return [...matching, ...baseline
-                        .filter(term => !matching.some(match => equals(term.value, match.value)))
-                        .map(term => ({ ...term, count: 0 }))
+                    return [
+
+                        ...selected,
+
+                        ...matching
+                            .filter(term => !selected.some(match => equals(term.value, match.value))),
+
+                        ...baseline
+                            .filter(term => !selected.some(match => equals(term.value, match.value)))
+                            .filter(term => !matching.some(match => equals(term.value, match.value)))
+                            .map(term => ({ ...term, count: 0 }))
+
                     ]
 
                         .map(term => ({
@@ -292,10 +323,13 @@ export function useOptions(
                                     : string(x.value).toUpperCase().localeCompare(string(y.value).toUpperCase())
                         )
 
-                        .slice(offset);
+                        .slice(offset, offset+limit);
 
                 }
             );
+
+
+        });
         }
     );
 
