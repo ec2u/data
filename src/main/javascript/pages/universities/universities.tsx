@@ -25,7 +25,7 @@ import { Landmark } from "@metreeca/tile/widgets/icon";
 import { NodePath } from "@metreeca/tile/widgets/path";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
-import { useParameters } from "@metreeca/tool/hooks/params";
+import { useParams } from "@metreeca/tool/hooks/params";
 import { useEntry, useKeywords, useStats } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
@@ -63,7 +63,7 @@ export const Universities=immutable({
 export function DataUniversities() {
 
     const [route, setRoute]=useRoute();
-    const [query, setQuery]=useParameters<Query>({
+    const [query, setQuery]=useParams<Query>({
 
         ".order": "",
         ".limit": 20

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Immutable, Primitive } from "@metreeca/core";
+import { equals, Immutable, Primitive } from "@metreeca/core";
 import { useEffect, useState } from "react";
 
 
@@ -23,57 +23,59 @@ import { useEffect, useState } from "react";
  */
 export interface Parameters {
 
-	readonly [key: string]: undefined | Primitive | Immutable<Primitive[]>;
+    readonly [key: string]: undefined | Primitive | Immutable<Primitive[]>;
 
 }
 
 
-export function useParameters<T extends Parameters=Parameters>(initial: T): [T, (parameters: T) => void] {
+export function useParams<T extends Parameters=Parameters>(initial: T): [T, (parameters: T) => void] {
 
-	const [state, setState]=useState({ ...(initial || {}), ...parameters() });
+    const [state, setState]=useState({ ...(initial || {}), ...parameters() });
 
-	useEffect(() => { parameters(state, initial); });
+    useEffect(() => { parameters(state, initial); });
 
-	return [state, setState];
+    return [state, setState];
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function parameters<T>(query?: Parameters, defaults?: Parameters): Parameters {
-	if ( query === undefined ) { // getter
+    if ( query === undefined ) { // getter
 
-		const query={};
+        const query={};
 
-		new URLSearchParams(location.search.substring(1)).forEach((value, key) => {
+        new URLSearchParams(location.search.substring(1)).forEach((value, key) => {
 
-			const current=(query as any)[key];
+            const current=(query as any)[key];
 
-			(query as any)[key]=current === undefined ? value
-				: Array.isArray(current) ? [...current, value]
-					: [current, value];
+            (query as any)[key]=current === undefined ? value
+                : Array.isArray(current) ? [...current, value]
+                    : [current, value];
 
-		});
+        });
 
-		return query;
+        return query;
 
-	} else { // setter
+    } else { // setter
 
-		const params=new URLSearchParams();
+        const params=new URLSearchParams();
 
-		Object.entries(query).forEach(([key, values]) => (Array.isArray(values) ? values : [values])
-			.filter(value => !(defaults && value === defaults[key]))
-			.filter(value => !(key.startsWith(".") && !value))
-			.forEach(value => params.append(key, String(value)))
-		);
+        Object.entries(query)
 
-		const search=params.toString();
+            .filter(([key, values]) => !defaults || !equals(values, defaults[key]))
 
-		history.replaceState(history.state, document.title,
-			search ? `${location.pathname}?${search}${location.hash}` : `${location.pathname}${location.hash}`
-		);
+            .forEach(([key, values]) => (Array.isArray(values) ? values : [values]).forEach(value =>
+                params.append(key, String(value))
+            ));
 
-		return {};
+        const search=params.toString();
 
-	}
+        history.replaceState(history.state, document.title,
+            search ? `${location.pathname}?${search}${location.hash}` : `${location.pathname}${location.hash}`
+        );
+
+        return {};
+
+    }
 }
