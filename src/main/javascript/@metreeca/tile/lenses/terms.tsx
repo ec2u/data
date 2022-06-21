@@ -8,6 +8,7 @@ import { Check, CheckSquare, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon,
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
+import { useCache } from "@metreeca/tool/hooks/cache";
 import { useDelay } from "@metreeca/tool/hooks/delay";
 import { Options, useOptions } from "@metreeca/tool/nests/graph";
 import * as React from "react";
@@ -71,6 +72,7 @@ export function NodeTerms({
     const search=useDelay(true, [keywords, doSearch]);
 
     const [options, setOptions]=useOptions(id, { path, keywords, offset, limit }, [query, setQuery]);
+    const cache=useCache(options({ value: options => options }));
 
 
     function doActivate(activate: boolean) {
@@ -128,7 +130,7 @@ export function NodeTerms({
 
 
     const expanded=!compact || focused;
-    const count=options({ value: options => options.length, other: 0 });
+    const count=cache?.length ?? 0;
     const paging=count > PageSize || offset > 0;
 
     return createElement("node-terms", {
@@ -167,15 +169,12 @@ export function NodeTerms({
 
         </header>
 
-        <section>{expanded && options({
+        <section>{expanded && (
+            !cache ? <NodeSpin/>
+                : !cache.length ? <small>No Matches</small>
+                    : cache.map(option)
 
-            fetch: <NodeSpin/>,
-
-            value: terms => terms
-                ? terms.map(option)
-                : <small>No Matches</small>
-
-        })}</section>
+        )}</section>
 
         {expanded && paging && <footer>
 

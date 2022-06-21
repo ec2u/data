@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import { Setter } from "@metreeca/tool/hooks/index";
 import { useEffect, useState } from "react";
 
 
-export function useCache<V, D>([value, setValue]: [V, Setter<D>]): [typeof value, typeof setValue] {
+export function useCache<V>(value: V): typeof value {
 
     const [cache, setCache]=useState<V>(value);
 
     useEffect(() => { setCache(value ?? cache); }, [JSON.stringify(value ?? cache)]);
 
-    return [cache, setValue];
+    return cache;
 
 }

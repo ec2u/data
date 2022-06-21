@@ -79,10 +79,10 @@ export function NodeStats({
 
 
     const [range, setRange]=useRange(id, path, type, [query, setQuery]);
-    const [cache, setCache]=useCache([range({ value: range => range }), setRange]);
+    const cache=useCache(range({ value: range => range }));
 
 
-    const doUpdate=useCallback(trailing(AutoDelay, setRange), [setCache]);
+    const doUpdate=useCallback(trailing(AutoDelay, setRange), [setRange]);
 
 
     const expanded=!compact || focused || cache?.gte !== undefined || cache?.lte !== undefined;
