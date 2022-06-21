@@ -141,8 +141,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify();
 
                     if ( probe.value instanceof Function ) {
-                        probe.value(
-                        );
+                        probe.value({ id });
                     }
 
                 } else {
@@ -198,7 +197,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify();
 
                     if ( probe.value instanceof Function ) {
-                        probe.value();
+                        probe.value({ id });
                     }
 
                 } else {
@@ -252,7 +251,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify();
 
                     if ( probe.value instanceof Function ) {
-                        probe.value();
+                        probe.value({ id });
                     }
 
                 } else {

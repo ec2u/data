@@ -21,7 +21,8 @@ import { toLocaleDateString } from "@metreeca/tile/inputs/date";
 import { Calendar, CheckSquare, Clock, Hash, Type } from "@metreeca/tile/widgets/icon";
 import { classes } from "@metreeca/tool";
 import { Setter } from "@metreeca/tool/hooks";
-import { useRange } from "@metreeca/tool/hooks/content";
+import { useCache } from "@metreeca/tool/hooks/cache";
+import { useRange } from "@metreeca/tool/nests/graph";
 import * as React from "react";
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import "./stats.css";
@@ -78,11 +79,13 @@ export function NodeStats({
 
 
     const [range, setRange]=useRange(id, path, type, [query, setQuery]);
+    const [cache, setCache]=useCache([range({ value: range => range }), setRange]);
 
 
-    const doUpdate=useCallback(trailing(AutoDelay, setRange), [setRange]);
+    const doUpdate=useCallback(trailing(AutoDelay, setRange), [setCache]);
 
 
+    const expanded=!compact || focused || cache?.gte !== undefined || cache?.lte !== undefined;
 
     return createElement("node-stats", {
 
@@ -111,26 +114,17 @@ export function NodeStats({
             <input readOnly placeholder={placeholder}/>
         </header>
 
-        {range({
+        {expanded && <section className={classes({ wide: WideTypes.has(type) })}>
 
-            value: range => {
+            <Input type={type} max={cache?.lte} placeholder={cache?.min}
+                value={cache?.gte} onChange={gte => doUpdate({ gte })}
+            />
 
-                const expanded=!compact || focused || range?.gte !== undefined || range?.lte !== undefined;
+            <Input type={type} min={cache?.gte} placeholder={cache?.max}
+                value={cache?.lte} onChange={lte => doUpdate({ lte })}
+            />
 
-                return expanded && <section className={classes({ wide: WideTypes.has(type) })}>
-
-                    <Input type={type} max={range?.lte} placeholder={range?.min}
-                        value={range?.gte} onChange={gte => doUpdate({ gte })}
-                    />
-
-                    <Input type={type} min={range?.gte} placeholder={range?.max}
-                        value={range?.lte} onChange={lte => doUpdate({ lte })}
-                    />
-
-                </section>;
-            }
-
-        })}
+        </section>}
 
     </>);
 
