@@ -17,12 +17,12 @@
 data-page {
 
     --data-page-header-shadow-size: 0.5rem;
-    --data-page-aside-width: 20rem;
+    --data-page-aside-width: 22.5rem;
     --data-page-aside-background-color: #F8F8F8;
 
     display: grid;
 
-    grid-template-columns: min-content minmax(min-content, var(--data-page-aside-width)) minmax(1rem, 1fr);
+    grid-template-columns: min-content minmax(min-content, var(--data-page-aside-width)) minmax(2rem, 1fr);
     grid-template-rows: 1fr;
 
     & > * {

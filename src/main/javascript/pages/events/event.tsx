@@ -21,8 +21,9 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { optional, string } from "@metreeca/link";
+import { multiple, optional, string } from "@metreeca/link";
 import { toLocaleDateString } from "@metreeca/tile/inputs/date";
+import { toLocaleTimeString } from "@metreeca/tile/inputs/time";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -31,6 +32,7 @@ import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 
 export const Event=immutable({
@@ -51,12 +53,31 @@ export const Event=immutable({
         label: {}
     },
 
+    subject: multiple({
+        id: "",
+        label: {}
+    }),
+
     url: optional(""),
 
     fullDescription: optional(""),
 
     startDate: optional(""),
-    endDate: optional("")
+    endDate: optional(""),
+
+    isAccessibleForFree: optional(false),
+
+    location: multiple({
+        id: "",
+        label: {},
+        url: optional("")
+    }),
+
+    organizer: multiple({
+        id: "",
+        label: {},
+        url: optional("")
+    })
 
 });
 
@@ -85,19 +106,76 @@ export function DataEvent() {
                 university,
 
                 publisher,
+                subject,
+
                 url,
 
                 startDate,
-                endDate
+                endDate,
 
-            }) => <DataInfo>{{
+                isAccessibleForFree,
+                location,
+                organizer
 
-                "University": <NodeLink>{university}</NodeLink>,
-                "Source": url && <a href={url}>{string(publisher)}</a>,
-                "Start Date": startDate && toLocaleDateString(new Date(startDate)),
-                "End Date": endDate && toLocaleDateString(new Date(endDate))
+            }) => <>
 
-            }}</DataInfo>
+                <DataInfo>{{
+
+                    "University": <NodeLink>{university}</NodeLink>,
+                    "Source": url && <a href={url} title={string(publisher)}>{string(publisher)}</a>
+
+                }}</DataInfo>
+
+                <DataInfo>{{
+
+                    "Topic": subject && <ul>{[...subject]
+                        .sort((x, y) => string(x).localeCompare(string(y)))
+                        .map(({ id, label }) => <li key={id}>{string(label)}</li>)
+                    }</ul>
+
+                }}</DataInfo>
+
+                <DataInfo>{{
+
+                    ...(startDate && {
+                        "Start Date": toLocaleDateString(new Date(startDate)),
+                        "Start Time": toLocaleTimeString(new Date(startDate))
+
+                    }),
+
+                    ...(endDate && endDate !== startDate && {
+
+                        "End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toLocaleDateString(new Date(endDate)),
+                        "End Time": toLocaleTimeString(new Date(endDate))
+
+                    })
+
+                }}</DataInfo>
+
+
+                <DataInfo>{{
+
+                    "Entry": isAccessibleForFree === true ? "Free"
+                        : isAccessibleForFree === false ? "Paid"
+                            : undefined,
+
+                    "Location": location && [...location]
+                        .sort((x, y) => string(x).localeCompare(string(y)))
+                        .map(({ id, label, url }) => url
+                            ? <a key={id} href={url}>{string(label)}</a>
+                            : <span key={id}>{string(label)}</span>
+                        ),
+
+                    "Organizer": organizer && [...organizer]
+                        .sort((x, y) => string(x).localeCompare(string(y)))
+                        .map(({ id, label, url }) => url
+                            ? <a href={url}>{string(label)}</a>
+                            : <span>{string(label)}</span>
+                        )
+
+                }}</DataInfo>
+
+            </>
 
         })}</DataPane>}
 
@@ -109,7 +187,6 @@ export function DataEvent() {
 
             image,
             label,
-            comment,
 
             fullDescription
 
@@ -117,7 +194,15 @@ export function DataEvent() {
 
             <DataCard icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}>
 
-                <ReactMarkdown>{string(fullDescription)}</ReactMarkdown>
+                <ReactMarkdown
+
+                    remarkPlugins={[remarkGfm]}
+
+                >{
+
+                    string(fullDescription)
+
+                }</ReactMarkdown>
 
             </DataCard>
 
