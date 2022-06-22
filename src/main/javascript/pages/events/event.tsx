@@ -155,7 +155,7 @@ export function DataEvent() {
 
                 <DataInfo>{{
 
-                    "Entrance": isAccessibleForFree === true ? "Free"
+                    "Entry": isAccessibleForFree === true ? "Free"
                         : isAccessibleForFree === false ? "Paid"
                             : undefined,
 
