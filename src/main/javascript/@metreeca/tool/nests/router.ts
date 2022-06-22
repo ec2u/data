@@ -237,6 +237,8 @@ export function NodeRouter({
                 && (target === null || target === "_self") // only local anchors
             ) {
 
+                e.preventDefault();
+
                 const href=anchor.href;
                 const file="file:///";
 
@@ -245,9 +247,7 @@ export function NodeRouter({
                         : href.startsWith(file) ? href.substring(file.length-1)
                             : "";
 
-                if ( route ) { // only internal routes
-
-                    e.preventDefault();
+                if ( route ) { // internal routes
 
                     try {
 
@@ -259,7 +259,12 @@ export function NodeRouter({
 
                     }
 
+                } else { // external links
+
+                    window.open(href, "_blank");
+
                 }
+
             }
         }
 
