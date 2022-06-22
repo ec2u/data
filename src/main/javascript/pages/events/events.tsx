@@ -92,7 +92,12 @@ export function DataEvents() {
             <NodeOptions path={"university"} type={"reference"} placeholder={"University"} state={[query, setQuery]}/>
             <NodeOptions path={"publisher"} type={"reference"} placeholder={"Publisher"} state={[query, setQuery]}/>
 
+            <NodeOptions path={"subject"} type={"reference"} placeholder={"Topic"} state={[query, setQuery]}/>
             <NodeRange path={"startDate"} type={"dateTimeStart"} placeholder={"Start Date"} state={[query, setQuery]}/>
+
+            <NodeOptions path={"isAccessibleForFree"} type={"boolean"} placeholder={"Free Entrance"} state={[query, setQuery]}/>
+            <NodeOptions path={"location"} type={"reference"} placeholder={"Location"} state={[query, setQuery]}/>
+            <NodeOptions path={"organizer"} type={"reference"} placeholder={"Organizer"} state={[query, setQuery]}/>
 
         </DataPane>}
 

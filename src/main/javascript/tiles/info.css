@@ -22,6 +22,12 @@ data-info {
     grid-column-gap: 0.5em;
     grid-row-gap: 0.25em;
 
+    &:not(:first-child) {
+        padding-top: 1em;
+        margin-top: 1em;
+        border-top-style: solid;
+    }
+
     & > div {
 
         display: contents;
@@ -38,6 +44,14 @@ data-info {
 
         & > dd {
             text-align: right;
+
+            & > ul {
+                margin: 0;
+
+                & > li {
+                    list-style: none;
+                }
+            }
         }
 
     }

@@ -21,8 +21,9 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { optional, string } from "@metreeca/link";
+import { multiple, optional, string } from "@metreeca/link";
 import { toLocaleDateString } from "@metreeca/tile/inputs/date";
+import { toLocaleTimeString } from "@metreeca/tile/inputs/time";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -51,12 +52,31 @@ export const Event=immutable({
         label: {}
     },
 
+    subject: multiple({
+        id: "",
+        label: {}
+    }),
+
     url: optional(""),
 
     fullDescription: optional(""),
 
     startDate: optional(""),
-    endDate: optional("")
+    endDate: optional(""),
+
+    isAccessibleForFree: optional(false),
+
+    location: multiple({
+        id: "",
+        label: {},
+        url: optional("")
+    }),
+
+    organizer: multiple({
+        id: "",
+        label: {},
+        url: optional("")
+    })
 
 });
 
@@ -85,19 +105,62 @@ export function DataEvent() {
                 university,
 
                 publisher,
+                subject,
+
                 url,
 
                 startDate,
-                endDate
+                endDate,
 
-            }) => <DataInfo>{{
+                isAccessibleForFree,
+                location,
+                organizer
 
-                "University": <NodeLink>{university}</NodeLink>,
-                "Source": url && <a href={url}>{string(publisher)}</a>,
-                "Start Date": startDate && toLocaleDateString(new Date(startDate)),
-                "End Date": endDate && toLocaleDateString(new Date(endDate))
+            }) => <>
 
-            }}</DataInfo>
+                <DataInfo>{{
+
+                    "University": <NodeLink>{university}</NodeLink>,
+                    "Source": url && <a href={url}>{string(publisher)}</a>
+
+                }}</DataInfo>
+
+                <DataInfo>{{
+
+                    "Topic": subject && <ul>{subject.map(subject => <li>{string(subject)}</li>)}</ul>
+
+                }}</DataInfo>
+
+                <DataInfo>{{
+
+                    ...(startDate && {
+                        "Start Date": toLocaleDateString(new Date(startDate)),
+                        "Start Time": toLocaleTimeString(new Date(startDate))
+
+                    }),
+
+                    ...(endDate && endDate !== startDate && {
+
+                        "End Date": endDate.substring(10) !== startDate?.substring(10) && toLocaleDateString(new Date(endDate)),
+                        "End Time": toLocaleTimeString(new Date(endDate))
+
+                    })
+
+                }}</DataInfo>
+
+
+                <DataInfo>{{
+
+                    "Entrance": isAccessibleForFree === true ? "Free" : isAccessibleForFree === false ? "Paid" : undefined,
+                    "Location": location && location.map(location => location.url ?
+                        <a href={location.url}>{string(location)}</a> : <span>{string(location)}</span>),
+                    "Organizer": organizer && organizer.map(organizer => organizer.url ?
+                        <a href={organizer.url}>{string(organizer)}</a> : <span>{string(organizer)}</span>)
+
+                }}</DataInfo>
+
+
+            </>
 
         })}</DataPane>}
 
@@ -109,7 +172,6 @@ export function DataEvent() {
 
             image,
             label,
-            comment,
 
             fullDescription
 
