@@ -171,11 +171,14 @@ export function useKeywords(
     [query, setQuery]: [Query, Setter<Query>]
 ): [string, Setter<string>] {
 
-    const keywords=query[`~${path}`];
+    const filter=`~${path}`;
+    const keywords=query[filter];
 
-    return [isString(keywords) ? keywords.trim() : "", keywords => {
-        setQuery({ ...query, [`~${path}`]: keywords.trim() || undefined });
-    }];
+    return [isString(keywords) ? keywords.trim() : "", keywords => setQuery({
+
+        ...query, [filter]: keywords.trim() || undefined
+
+    })];
 
 }
 
