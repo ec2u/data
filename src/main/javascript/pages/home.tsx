@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Events } from "@ec2u/data/pages/events/events";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
@@ -66,7 +65,7 @@ export default function DataHome() {
     const entry=useEntry(route, Home, query);
 
 
-    useEffect(() => { setRoute({ label: string(Events) }); }, []);
+    useEffect(() => { setRoute({ label: string(Home) }); }, []);
 
 
     return (
