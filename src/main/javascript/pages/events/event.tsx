@@ -30,6 +30,7 @@ import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 
 
 export const Event=immutable({
@@ -116,7 +117,7 @@ export function DataEvent() {
 
             <DataCard icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}>
 
-                {string(fullDescription)}
+                <ReactMarkdown>{string(fullDescription)}</ReactMarkdown>
 
             </DataCard>
 

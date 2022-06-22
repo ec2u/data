@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { normalize } from "@metreeca/core/strings";
 import { createContext, createElement, PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useReducer } from "react";
 import { base, name, root } from "../index";
 
@@ -236,6 +237,8 @@ export function NodeRouter({
                 && (target === null || target === "_self") // only local anchors
             ) {
 
+                e.preventDefault();
+
                 const href=anchor.href;
                 const file="file:///";
 
@@ -244,9 +247,7 @@ export function NodeRouter({
                         : href.startsWith(file) ? href.substring(file.length-1)
                             : "";
 
-                if ( route ) { // only internal routes
-
-                    e.preventDefault();
+                if ( route ) { // internal routes
 
                     try {
 
@@ -258,7 +259,12 @@ export function NodeRouter({
 
                     }
 
+                } else { // external links
+
+                    window.open(href, "_blank");
+
                 }
+
             }
         }
 
@@ -324,15 +330,15 @@ export function useRoute(): [RouterValue, RouterUpdater] {
 
     return [store(), (entry, replace) => {
 
-        const { route, state, label }=(typeof entry === "string")
-            ? { route: entry, state: undefined, label: undefined }
+        const { route, label, state }=(typeof entry === "string")
+            ? { route: entry, label: undefined, state: undefined }
             : entry;
 
-        const _route=route === undefined ? location.href : route === null ? location.origin : store(route);
+        const _route=normalize(route === undefined ? location.href : route === null ? location.origin : store(route));
+        const _label=normalize((label === undefined) ? document.title : label && name ? `${label} | ${name}` : label || name);
         const _state=(state === undefined) ? history.state : (state === null) ? undefined : state;
-        const _label=(label === undefined) ? document.title : label && name ? `${label} | ${name}` : label || name;
 
-        const modified=_route !== location.href || _state !== history.state || _label !== document.title;
+        const modified=_route !== location.href || _label !== document.title || _state !== history.state;
 
         try {
 

@@ -19,7 +19,7 @@ import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, optional, Query, required, string } from "@metreeca/link";
+import { multiple, optional, Query, string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
@@ -43,7 +43,7 @@ export const Events=immutable({
 
     contains: multiple({
 
-        id: required(""),
+        id: "",
         image: optional(""),
         label: {},
         comment: {},
@@ -100,11 +100,11 @@ export function DataEvents() {
 
         fetch: <NodeHint>{EventsIcon}</NodeHint>,
 
-        value: ({ contains }) => !contains || contains.length === 0
+        value: ({ contains }) => !contains?.length
 
             ? <NodeHint>{EventsIcon}</NodeHint>
 
-            : contains.map(({ id, label, image, comment, university, startDate }) => (
+            : contains.map(({ id, label, image, comment, university, startDate }) =>
 
                 <DataCard key={id} compact
 
@@ -125,8 +125,7 @@ export function DataEvents() {
                     {string(comment)}
 
                 </DataCard>
-
-            )),
+            ),
 
         error: error => <span>{error.status}</span> // !!! report
 

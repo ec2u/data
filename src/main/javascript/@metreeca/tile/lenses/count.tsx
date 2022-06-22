@@ -41,14 +41,12 @@ export function NodeCount({
 
 }) {
 
-
     const [route]=useRoute();
 
-    const stats=useStats(id || route, path);
+    const stats=useStats(id || route, path, query);
     const count=useCache(stats({ value: ({ count }) => count }));
 
     return createElement("node-count", {},
-
         count === undefined ? <NodeSpin/>
             : count === 0 ? "no matches"
                 : count === 1 ? "1 match"

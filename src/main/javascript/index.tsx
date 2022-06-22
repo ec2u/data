@@ -41,6 +41,7 @@ render((
             const tags=navigator.languages;
             const size=tags.length+1;
 
+            headers.set("Accept", "application/json");
             headers.set("Accept-Language", [
 
                 ...tags.map((tag, index) => `${tag};q=${((size-index)/size).toFixed(1)}`),

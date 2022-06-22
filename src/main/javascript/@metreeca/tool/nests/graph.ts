@@ -121,7 +121,7 @@ export function useEntry<V extends Entry, E>(id: string, model: V, query: Query=
 
 }
 
-export function useTerms<E>(id: string, path: string, query: Query={}): State<Terms, E> {
+export function useTerms<E>(id: string, path: string, query: Query): State<Terms, E> {
 
     return useEntry(id, ({
 
@@ -138,7 +138,7 @@ export function useTerms<E>(id: string, path: string, query: Query={}): State<Te
 
 }
 
-export function useStats<E>(id: string, path: string, query: Query={}): State<Stats, E> {
+export function useStats<E>(id: string, path: string, query: Query): State<Stats, E> {
 
     return useEntry(id, {
 
@@ -171,11 +171,14 @@ export function useKeywords(
     [query, setQuery]: [Query, Setter<Query>]
 ): [string, Setter<string>] {
 
-    const keywords=query[`~${path}`];
+    const filter=`~${path}`;
+    const keywords=query[filter];
 
-    return [isString(keywords) ? keywords.trim() : "", keywords => {
-        setQuery({ ...query, [`~${path}`]: keywords.trim() || undefined });
-    }];
+    return [isString(keywords) ? keywords.trim() : "", keywords => setQuery({
+
+        ...query, [filter]: keywords.trim() || undefined
+
+    })];
 
 }
 

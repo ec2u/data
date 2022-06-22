@@ -74,7 +74,7 @@ export function useDelay(
             input.current?.removeEventListener("change", onChange);
         };
 
-    }, [auto, input.current]);
+    }, [auto, setValue, input.current]);
 
     useEffect(() => {
 
