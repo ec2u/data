@@ -22,7 +22,7 @@ data-page {
 
     display: grid;
 
-    grid-template-columns: min-content minmax(min-content, var(--data-page-aside-width)) minmax(1rem, 1fr);
+    grid-template-columns: min-content minmax(min-content, var(--data-page-aside-width)) minmax(2rem, 1fr);
     grid-template-rows: 1fr;
 
     & > * {

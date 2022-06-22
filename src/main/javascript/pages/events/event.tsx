@@ -32,6 +32,7 @@ import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 
 export const Event=immutable({
@@ -121,13 +122,16 @@ export function DataEvent() {
                 <DataInfo>{{
 
                     "University": <NodeLink>{university}</NodeLink>,
-                    "Source": url && <a href={url}>{string(publisher)}</a>
+                    "Source": url && <a href={url} title={string(publisher)}>{string(publisher)}</a>
 
                 }}</DataInfo>
 
                 <DataInfo>{{
 
-                    "Topic": subject && <ul>{subject.map(subject => <li>{string(subject)}</li>)}</ul>
+                    "Topic": subject && <ul>{[...subject]
+                        .sort((x, y) => string(x).localeCompare(string(y)))
+                        .map(({ id, label }) => <li key={id}>{string(label)}</li>)
+                    }</ul>
 
                 }}</DataInfo>
 
@@ -141,7 +145,7 @@ export function DataEvent() {
 
                     ...(endDate && endDate !== startDate && {
 
-                        "End Date": endDate.substring(10) !== startDate?.substring(10) && toLocaleDateString(new Date(endDate)),
+                        "End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toLocaleDateString(new Date(endDate)),
                         "End Time": toLocaleTimeString(new Date(endDate))
 
                     })
@@ -151,14 +155,25 @@ export function DataEvent() {
 
                 <DataInfo>{{
 
-                    "Entrance": isAccessibleForFree === true ? "Free" : isAccessibleForFree === false ? "Paid" : undefined,
-                    "Location": location && location.map(location => location.url ?
-                        <a href={location.url}>{string(location)}</a> : <span>{string(location)}</span>),
-                    "Organizer": organizer && organizer.map(organizer => organizer.url ?
-                        <a href={organizer.url}>{string(organizer)}</a> : <span>{string(organizer)}</span>)
+                    "Entrance": isAccessibleForFree === true ? "Free"
+                        : isAccessibleForFree === false ? "Paid"
+                            : undefined,
+
+                    "Location": location && [...location]
+                        .sort((x, y) => string(x).localeCompare(string(y)))
+                        .map(({ id, label, url }) => url
+                            ? <a key={id} href={url}>{string(label)}</a>
+                            : <span key={id}>{string(label)}</span>
+                        ),
+
+                    "Organizer": organizer && [...organizer]
+                        .sort((x, y) => string(x).localeCompare(string(y)))
+                        .map(({ id, label, url }) => url
+                            ? <a href={url}>{string(label)}</a>
+                            : <span>{string(label)}</span>
+                        )
 
                 }}</DataInfo>
-
 
             </>
 
@@ -179,7 +194,15 @@ export function DataEvent() {
 
             <DataCard icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}>
 
-                <ReactMarkdown>{string(fullDescription)}</ReactMarkdown>
+                <ReactMarkdown
+
+                    remarkPlugins={[remarkGfm]}
+
+                >{
+
+                    string(fullDescription)
+
+                }</ReactMarkdown>
 
             </DataCard>
 

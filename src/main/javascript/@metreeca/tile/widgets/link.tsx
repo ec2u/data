@@ -28,6 +28,8 @@ export function NodeLink({
 
 }) {
 
-    return <a href={children.id}>{string(children)}</a>;
+    const label=string(children);
+
+    return <a href={children.id} title={label}>{label}</a>;
 
 }
