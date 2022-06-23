@@ -18,12 +18,12 @@ import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { Query, string } from "@metreeca/link";
+import { string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { useParameters } from "@metreeca/tool/hooks/params";
+import { useQuery } from "@metreeca/tool/hooks/query";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
@@ -55,7 +55,7 @@ export default function DataHome() {
 
     const [route, setRoute]=useRoute();
 
-    const [query, setQuery]=useParameters<Query>({
+    const [query, setQuery]=useQuery({
 
         ".order": ["entities", "label"],
         ".limit": 100

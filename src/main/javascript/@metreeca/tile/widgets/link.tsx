@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { Focus, isFocus, Literal, string, url } from "@metreeca/link";
+import { isEmpty } from "@metreeca/core";
+import { Focus, isFocus, Literal, string } from "@metreeca/link";
 import React from "react";
 
 
@@ -26,9 +27,7 @@ export function NodeLink({
 
 }: {
 
-    search?: [Focus, {
-        readonly [path: string]: undefined | Literal | Focus;
-    }]
+    search?: [Focus, { readonly [path: string]: undefined | Literal | Focus; }]
 
     children: Focus
 
@@ -36,14 +35,20 @@ export function NodeLink({
 
     const label=string(children);
 
-    const href=search
+    if ( search ) {
 
-        ? url(search[0].id, Object.entries(search[1]).reduce(
-            (accumulator, [key, value]) => Object.assign(accumulator, { [key]: isFocus(value) ? value.id : value }),
-            {}
-        ))
+        const query=Object.entries(search[1])
+            .filter(([, value]) => value !== undefined && value !== "")
+            .reduce((query, [key, value]) => Object.assign(query, { [key]: isFocus(value) ? value.id : value }), {});
 
-        : children.id;
+        const href=isEmpty(query) ? search[0].id : `${search[0].id}?${encodeURI(JSON.stringify(query))}`;
 
-    return <a href={href} title={label}>{label}</a>;
+        return <a href={href} title={label}>{label}</a>;
+
+    } else {
+
+        return <a href={children.id} title={label}>{label}</a>;
+
+    }
+
 }
