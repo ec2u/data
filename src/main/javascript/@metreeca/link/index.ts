@@ -217,11 +217,11 @@ export function optional<T=any>(value: T): undefined | typeof value {
     return value;
 }
 
-export function repeatable<T=any>(value: T): (typeof value)[] {
+export function repeatable<T=any>(value: T): typeof value[] {
     return [value];
 }
 
-export function multiple<T=any>(value: T): undefined | (typeof value)[] {
+export function multiple<T=any>(value: T): undefined | typeof value[] {
     return [value];
 }
 
@@ -264,6 +264,47 @@ function guess(id: string): string {
         .replace(/\b[a-z]/g, $0 => $0.toUpperCase()); // capitalize words
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Merges an id and an optional query into an URL.
+ *
+ * @param id
+ * @param query
+ *
+ * @return
+ */
+export function url(id: string, query?: Query) {
+    if ( query ) {
+
+        const params=new URLSearchParams();
+
+        Object.entries(query)
+
+            .flatMap(([key, value]) => <[string, undefined | Literal][]>(
+                isArray<Literal>(value) ? value.map(value => [key, value as undefined | Literal])
+                    : isLiteral(value) ? [[key, value as undefined | Literal]]
+                        : [[key, undefined as undefined | Literal]]
+            ))
+
+            .filter(([key, value]) =>
+                key.startsWith(".") ? Boolean(value) : value !== undefined
+            )
+
+            .forEach(([key, value]) =>
+                params.append(key, String(value))
+            );
+
+        const search=params.toString();
+
+        return search ? `${id}?${search}` : id;
+
+    } else {
+
+        return id;
+
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

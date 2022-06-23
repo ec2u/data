@@ -91,6 +91,7 @@ export function DataEvent() {
 
     useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
 
+
     return <DataPage item={entry({ value: string })}
 
         menu={entry({ fetch: <NodeSpin/> })}
@@ -101,81 +102,7 @@ export function DataEvent() {
 
         >{entry({
 
-            value: ({
-
-                university,
-
-                publisher,
-                subject,
-
-                url,
-
-                startDate,
-                endDate,
-
-                isAccessibleForFree,
-                location,
-                organizer
-
-            }) => <>
-
-                <DataInfo>{{
-
-                    "University": <NodeLink>{university}</NodeLink>,
-                    "Source": url && <a href={url} title={string(publisher)}>{string(publisher)}</a>
-
-                }}</DataInfo>
-
-                <DataInfo>{{
-
-                    "Topic": subject && <ul>{[...subject]
-                        .sort((x, y) => string(x).localeCompare(string(y)))
-                        .map(({ id, label }) => <li key={id}>{string(label)}</li>)
-                    }</ul>
-
-                }}</DataInfo>
-
-                <DataInfo>{{
-
-                    ...(startDate && {
-                        "Start Date": toLocaleDateString(new Date(startDate)),
-                        "Start Time": toLocaleTimeString(new Date(startDate))
-
-                    }),
-
-                    ...(endDate && endDate !== startDate && {
-
-                        "End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toLocaleDateString(new Date(endDate)),
-                        "End Time": toLocaleTimeString(new Date(endDate))
-
-                    })
-
-                }}</DataInfo>
-
-
-                <DataInfo>{{
-
-                    "Entry": isAccessibleForFree === true ? "Free"
-                        : isAccessibleForFree === false ? "Paid"
-                            : undefined,
-
-                    "Location": location && [...location]
-                        .sort((x, y) => string(x).localeCompare(string(y)))
-                        .map(({ id, label, url }) => url
-                            ? <a key={id} href={url}>{string(label)}</a>
-                            : <span key={id}>{string(label)}</span>
-                        ),
-
-                    "Organizer": organizer && [...organizer]
-                        .sort((x, y) => string(x).localeCompare(string(y)))
-                        .map(({ id, label, url }) => url
-                            ? <a href={url}>{string(label)}</a>
-                            : <span>{string(label)}</span>
-                        )
-
-                }}</DataInfo>
-
-            </>
+            value: event => <DataEventInfo>{event}</DataEventInfo>
 
         })}</DataPane>}
 
@@ -183,33 +110,135 @@ export function DataEvent() {
 
         fetch: <NodeHint>{EventsIcon}</NodeHint>,
 
-        value: ({
-
-            image,
-            label,
-
-            fullDescription
-
-        }) => (
-
-            <DataCard icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}>
-
-                <ReactMarkdown
-
-                    remarkPlugins={[remarkGfm]}
-
-                >{
-
-                    string(fullDescription)
-
-                }</ReactMarkdown>
-
-            </DataCard>
-
-        ),
+        value: event => <DataEventBody>{event}</DataEventBody>,
 
         error: error => <span>{error.status}</span> // !!! report
 
     })}</DataPage>;
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function DataEventInfo({
+
+    children: {
+
+        university,
+
+        publisher,
+        subject,
+
+        url,
+
+        startDate,
+        endDate,
+
+        isAccessibleForFree,
+        location,
+        organizer
+
+    }
+
+}: {
+
+    children: typeof Event
+
+}) {
+
+    return <>
+
+        <DataInfo>{{
+
+            "University": <NodeLink>{university}</NodeLink>,
+            "Source": url && <a href={url} title={string(publisher)}>{string(publisher)}</a>
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
+            "Topic": subject && <ul>{[...subject]
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(subject => <li key={subject.id}>
+                    <NodeLink search={[Events, { university, subject }]}>{subject}</NodeLink>
+                </li>)
+            }</ul>
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
+            ...(startDate && {
+                "Start Date": toLocaleDateString(new Date(startDate)),
+                "Start Time": toLocaleTimeString(new Date(startDate))
+
+            }),
+
+            ...(endDate && endDate !== startDate && {
+
+                "End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toLocaleDateString(new Date(endDate)),
+                "End Time": toLocaleTimeString(new Date(endDate))
+
+            })
+
+        }}</DataInfo>
+
+
+        <DataInfo>{{
+
+            "Entry": isAccessibleForFree === true ? "Free"
+                : isAccessibleForFree === false ? "Paid"
+                    : undefined,
+
+            "Location": location && [...location]
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(({ id, label, url }) => url
+                    ? <a key={id} href={url}>{string(label)}</a>
+                    : <span key={id}>{string(label)}</span>
+                ),
+
+            "Organizer": organizer && [...organizer]
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(({ id, label, url }) => url
+                    ? <a href={url}>{string(label)}</a>
+                    : <span>{string(label)}</span>
+                )
+
+        }}</DataInfo>
+
+    </>;
+}
+
+function DataEventBody({
+
+    children: {
+
+        image,
+        label,
+
+        fullDescription
+
+    }
+
+}: {
+
+    children: typeof Event
+
+}) {
+
+    return <DataCard icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}>
+
+        <ReactMarkdown
+
+            remarkPlugins={[remarkGfm]}
+
+        >{
+
+            string(fullDescription)
+
+        }</ReactMarkdown>
+
+    </DataCard>;
 
 }
