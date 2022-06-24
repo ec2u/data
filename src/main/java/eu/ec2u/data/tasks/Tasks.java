@@ -23,7 +23,6 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.terms.EC2U;
-import eu.ec2u.data.terms.Schema;
 import eu.ec2u.data.work.Reasoner;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -71,8 +70,9 @@ public final class Tasks {
                 .of(
                         resource(EC2U.class, ".ttl"),
                         resource(EC2U.class, "SKOS.ttl"),
-                        resource(EC2U.class, "Wikidata.ttl"),
-                        resource(Schema.class, ".ttl")
+                        resource(EC2U.class, "Org.ttl"),
+                        resource(EC2U.class, "Schema.ttl"),
+                        resource(EC2U.class, "Wikidata.ttl")
                 );
     }
 
