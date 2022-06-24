@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2022 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-58 -12 295 241"
+     width="295" height="241">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
+            stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
+      <g>
+        <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="universities" fill-opacity="1" stroke="none" fill="none" stroke-opacity="1" stroke-dasharray="none">
+    <title>universities</title>
+    <rect fill="white" x="-58" y="-12" width="295" height="241"/>
+    <g id="universities_Layer_1">
+      <title>Layer 1</title>
+      <g id="Group_2">
+        <g id="Graphic_5">
+          <rect x="-34.84825" y="192.5839" width="77.844" height="18" fill="white"/>
+          <rect x="-34.84825" y="192.5839" width="77.844" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_4">
+          <rect x="-34.84825" y="174.5839" width="77.844" height="18" fill="white"/>
+          <rect x="-34.84825" y="174.5839" width="77.844" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_3">
+          <rect x="-34.84825" y="157.32284" width="77.844" height="17.261063" fill="white"/>
+          <rect x="-34.84825" y="157.32284" width="77.844" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(-28.848247 160.32284)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="48316906e-20" y="9">
+              ec2u:University
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_111">
+        <g id="Graphic_31">
+          <text transform="translate(-43.93701 3.8346457)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_32">
+        <g id="Graphic_35">
+          <rect x="109.13386" y="196.8079" width="113.466" height="18" fill="white"/>
+          <rect x="109.13386" y="196.8079" width="113.466" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_34">
+          <rect x="109.13386" y="170.3599" width="113.466" height="26.447998" fill="white"/>
+          <rect x="109.13386" y="170.3599" width="113.466" height="26.447998" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(115.13386 173.3599)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="8" fill="black" x="0" y="8">skos:prefLabel: Dictionary</tspan>
+            <tspan font-family="Helvetica Neue" font-size="8" fill="black" x="0" y="18.224">skos:altLabel: Dictionary
+            </tspan>
+          </text>
+        </g>
+        <g id="Graphic_33">
+          <a xl:href="https://www.w3.org/TR/vocab-org/#class-formalorganization">
+            <rect x="109.13386" y="153.09884" width="113.466" height="17.261063" fill="white"/>
+            <rect x="109.13386" y="153.09884" width="113.466" height="17.261063" stroke="black" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(115.13386 156.09884)" fill="black">
+              <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="17763568e-20" y="9">
+                org:FormalOrganization
+              </tspan>
+            </text>
+          </a>
+        </g>
+      </g>
+      <g id="Group_56">
+        <g id="Graphic_59">
+          <rect x="-34.01575" y="94.78862" width="76.179" height="18" fill="white"/>
+          <rect x="-34.01575" y="94.78862" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_58">
+          <rect x="-34.01575" y="76.78862" width="76.179" height="18" fill="white"/>
+          <rect x="-34.01575" y="76.78862" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_57">
+          <a xl:href="resources.svg">
+            <rect x="-34.01575" y="59.52756" width="76.179" height="17.261063" fill="white"/>
+            <rect x="-34.01575" y="59.52756" width="76.179" height="17.261063" stroke="black" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(-28.015748 62.52756)" fill="black">
+              <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="4973799e-20" y="9">
+                ec2u:Resource
+              </tspan>
+            </text>
+          </a>
+        </g>
+      </g>
+      <g id="Line_113">
+        <line x1="42.99575" y1="183.95337" x2="99.38386" y2="183.95334" marker-end="url(#UMLInheritance_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Line_114">
+        <line x1="4.0737517" y1="157.32284" x2="4.0737517" y2="122.53862" marker-end="url(#UMLInheritance_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_115">
+        <a xl:href="https://www.w3.org/TR/vocab-org/">
+          <text transform="translate(-43.93701 17.095708)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix org: &lt;http://www.w3.org/ns/org#&gt;</tspan>
+          </text>
+        </a>
+      </g>
+      <g id="Graphic_116">
+        <text transform="translate(-43.93701 30.35677)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
