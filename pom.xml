@@ -101,6 +101,11 @@
 
         <dependency>
             <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-json</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
             <artifactId>metreeca-jsonld</artifactId>
         </dependency>
 

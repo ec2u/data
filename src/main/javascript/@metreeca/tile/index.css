@@ -85,7 +85,12 @@ ul, ol {
     margin-bottom: 1em;
 
     & > li {
+
         list-style-type: disc;
+
+        & > p:only-child {
+            margin: 0;
+        }
     }
 
 }

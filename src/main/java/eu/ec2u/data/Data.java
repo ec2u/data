@@ -139,6 +139,7 @@ public final class Data implements Runnable {
                                         .path("/", new Datasets())
                                         .path("/concepts/*", new Concepts())
                                         .path("/universities/*", new Universities())
+                                        .path("/units/*", new Units())
                                         .path("/events/*", new Events())
 
                                 )

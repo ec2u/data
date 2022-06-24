@@ -1,0 +1,8 @@
+### Local Catalog
+
+GET http://localhost:8080/units/
+
+### Local Details
+
+GET http://localhost:8080/events/55bb5cf18eab7e3dba830b53a022dc26
+

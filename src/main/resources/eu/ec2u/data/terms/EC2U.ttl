@@ -13,6 +13,7 @@
 [ rdf:type owl:Ontology ;
    void:rootResource ec2u:Dataset ,
                      ec2u:Event ,
+                     ec2u:Unit ,
                      ec2u:University
  ] .
 
@@ -75,6 +76,10 @@ void:Dataset rdf:type owl:Class .
 org:FormalOrganization rdf:type owl:Class .
 
 
+###  http://www.w3.org/ns/org#OrganizationalUnit
+org:OrganizationalUnit rdf:type owl:Class .
+
+
 ###  https://data.ec2u.eu/terms/Course
 ec2u:Course rdf:type owl:Class ;
             rdfs:subClassOf ec2u:Resource .
@@ -98,7 +103,8 @@ ec2u:Resource rdf:type owl:Class .
 
 ###  https://data.ec2u.eu/terms/Unit
 ec2u:Unit rdf:type owl:Class ;
-          rdfs:subClassOf ec2u:Resource .
+          rdfs:subClassOf org:OrganizationalUnit ,
+                          ec2u:Resource .
 
 
 ###  https://data.ec2u.eu/terms/University
@@ -120,6 +126,14 @@ schema:Event rdf:type owl:Class .
                                dct:description "Local academic and public events."@en ;
                                dct:title "Events"@en ;
                                void:class ec2u:Event .
+
+
+###  https://data.ec2u.eu/units/
+<https://data.ec2u.eu/units/> rdf:type owl:NamedIndividual ,
+                                       ec2u:Dataset ;
+                              dct:description "Research units and facilities."@en ;
+                              dct:title "Research Units"@en ;
+                              void:class ec2u:Unit .
 
 
 ###  https://data.ec2u.eu/universities/
