@@ -124,7 +124,7 @@ public final class EventsCoimbraCity implements Runnable {
 
                     return frame(iri(EC2U.events, md5(url)))
 
-                            .values(RDF.TYPE, Schema.Event)
+                            .values(RDF.TYPE, EC2U.Event)
 
                             .frames(DCTERMS.SUBJECT, subjects(json))
 

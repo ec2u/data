@@ -121,7 +121,7 @@ public final class EventsPoitiersCity implements Runnable {
 
             return frame(iri(EC2U.events, md5(url)))
 
-                    .values(RDF.TYPE, Schema.Event)
+                    .values(RDF.TYPE, EC2U.Event)
 
                     .value(EC2U.university, Poitiers.University)
 

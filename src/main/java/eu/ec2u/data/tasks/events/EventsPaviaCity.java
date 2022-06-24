@@ -134,7 +134,7 @@ public final class EventsPaviaCity implements Runnable {
     private Frame event(final Frame frame) {
         return frame(iri(EC2U.events, frame.skolemize(DCTERMS.SOURCE)))
 
-                .values(RDF.TYPE, Schema.Event)
+                .values(RDF.TYPE, EC2U.Event)
 
                 .value(EC2U.university, Pavia.University)
 

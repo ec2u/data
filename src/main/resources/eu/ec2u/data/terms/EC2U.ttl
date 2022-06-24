@@ -7,10 +7,12 @@
 @prefix ec2u: <https://data.ec2u.eu/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix void: <http://rdfs.org/ns/void#> .
+@prefix schema: <https://schema.org/> .
 @base <http://www.w3.org/2002/07/owl#> .
 
 [ rdf:type owl:Ontology ;
-   void:rootResource ec2u:Event ,
+   void:rootResource ec2u:Dataset ,
+                     ec2u:Event ,
                      ec2u:University
  ] .
 
@@ -36,6 +38,14 @@ void:class rdf:type owl:AnnotationProperty .
 void:rootResource rdf:type owl:AnnotationProperty .
 
 
+###  http://www.w3.org/2000/01/rdf-schema#comment
+rdfs:comment rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2000/01/rdf-schema#label
+rdfs:label rdf:type owl:AnnotationProperty .
+
+
 ###  https://data.ec2u.eu/terms/image
 ec2u:image rdf:type owl:AnnotationProperty .
 
@@ -51,28 +61,6 @@ ec2u:schac rdf:type owl:AnnotationProperty .
 ###  http://www.w3.org/2002/07/owl#sameAs
 owl:sameAs rdf:type owl:ObjectProperty ,
                     owl:SymmetricProperty .
-
-
-#################################################################
-#    Data properties
-#################################################################
-
-###  http://purl.org/dc/terms/description
-dct:description rdf:type owl:AnnotationProperty ;
-                rdfs:subPropertyOf rdfs:comment .
-
-
-###  http://purl.org/dc/terms/title
-dct:title rdf:type owl:AnnotationProperty ;
-          rdfs:subPropertyOf rdfs:label .
-
-
-###  http://www.w3.org/2000/01/rdf-schema#comment
-rdfs:comment rdf:type owl:AnnotationProperty .
-
-
-###  http://www.w3.org/2000/01/rdf-schema#label
-rdfs:label rdf:type owl:AnnotationProperty .
 
 
 #################################################################
@@ -100,7 +88,8 @@ ec2u:Dataset rdf:type owl:Class ;
 
 ###  https://data.ec2u.eu/terms/Event
 ec2u:Event rdf:type owl:Class ;
-           rdfs:subClassOf ec2u:Resource .
+           rdfs:subClassOf ec2u:Resource ,
+                           schema:Event .
 
 
 ###  https://data.ec2u.eu/terms/Resource
@@ -115,6 +104,10 @@ ec2u:Unit rdf:type owl:Class ;
 ###  https://data.ec2u.eu/terms/University
 ec2u:University rdf:type owl:Class ;
                 rdfs:subClassOf org:FormalOrganization .
+
+
+###  https://schema.org/Event
+schema:Event rdf:type owl:Class .
 
 
 #################################################################
