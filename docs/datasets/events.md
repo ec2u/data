@@ -2,7 +2,9 @@
 title: Events
 ---
 
-![event data model](docs/datasets/events.svgets/events.svg)
+![event data model](models/events.svg)
+
+# Vocabularies
 
 EC2U events are described using a controlled subset of the [schema:Event](https://schema.org/Event) data model, with the
 following major deviations:
@@ -12,7 +14,7 @@ following major deviations:
 * only events of interest to the academic population are included, so properties like `schema:typicalAgeRange` or
   `schema:audience` are not included.
 
-# Minimal Model
+## Minimal Model
 
 The following properties are strongly suggested as a minimal description for events published from local sources:
 
