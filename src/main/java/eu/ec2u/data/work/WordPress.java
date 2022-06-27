@@ -49,7 +49,7 @@ public final class WordPress {
 
         return frame(iri(EC2U.events, frame.skolemize(Link)))
 
-                .values(RDF.TYPE, Schema.Event)
+                .values(RDF.TYPE, EC2U.Event)
 
                 .value(DCTERMS.CREATED, frame.value(PubDate))
                 .value(DCTERMS.SOURCE, frame.value(Link))

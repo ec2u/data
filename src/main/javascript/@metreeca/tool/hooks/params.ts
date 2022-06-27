@@ -35,17 +35,27 @@ export function useParameters<T extends Parameters=Parameters>(initial: T, stora
 
 export function useParameters<T extends Parameters=Parameters>(initial: T, storage?: Storage): [T, (parameters: T) => void] {
 
-    const value={ ...(initial || {}), ...parameters() };
-
     const [route]=useRoute();
 
     const [state, setState]=(storage === undefined)
-        ? useState(value)
-        : useStorage(storage, route, value);
+        ? useState(initial)
+        : useStorage(storage, route, initial);
 
-    useEffect(() => { parameters(state, initial); });
+    const value={ ...state, ...parameters() };
 
-    return [state, setState];
+    useEffect(() => {
+
+        setState(value);
+        parameters(value, initial);
+
+    }, [JSON.stringify([initial, value])]);
+
+    return [state, state => {
+
+        setState(state);
+        parameters(state, initial);
+
+    }];
 }
 
 

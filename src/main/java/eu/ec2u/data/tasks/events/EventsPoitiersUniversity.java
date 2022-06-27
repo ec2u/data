@@ -153,7 +153,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
         ))
 
-                .values(RDF.TYPE, Schema.Event)
+                .values(RDF.TYPE, EC2U.Event)
 
                 .value(EC2U.university, Poitiers.University)
 

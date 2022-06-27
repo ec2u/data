@@ -2,7 +2,7 @@
 title: Events
 ---
 
-![event data model](index.svg)
+![event data model](docs/datasets/events.svgets/events.svg)
 
 EC2U events are described using a controlled subset of the [schema:Event](https://schema.org/Event) data model, with the
 following major deviations:

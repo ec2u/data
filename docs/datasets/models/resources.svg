@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="151 24 629 459"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="151 24 629 459"
      width="629" height="459">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
@@ -33,10 +33,10 @@
             </g>
         </marker>
     </defs>
-    <g id="Resources" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
-        <title>Resources</title>
+    <g id="resources" fill-opacity="1" stroke="none" fill="none" stroke-opacity="1" stroke-dasharray="none">
+        <title>resources</title>
         <rect fill="white" x="151" y="24" width="629" height="459"/>
-        <g id="Resources_Layer_1">
+        <g id="resources_Layer_1">
             <title>Layer 1</title>
             <g id="Group_2">
                 <g id="Graphic_5">
@@ -50,14 +50,16 @@
                           stroke-linejoin="round" stroke-width=".25"/>
                 </g>
                 <g id="Graphic_3">
-                    <rect x="253.20033" y="401.10237" width="77.844" height="17.261063" fill="white"/>
-                    <rect x="253.20033" y="401.10237" width="77.844" height="17.261063" stroke="black"
-                          stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(259.20033 404.10237)" fill="black">
-                        <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black"
-                               x="48316906e-20" y="9">ec2u:University
-                        </tspan>
-                    </text>
+                    <a xl:href="universities.svg">
+                        <rect x="253.20033" y="401.10237" width="77.844" height="17.261063" fill="white"/>
+                        <rect x="253.20033" y="401.10237" width="77.844" height="17.261063" stroke="black"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(259.20033 404.10237)" fill="black">
+                            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black"
+                                   x="48316906e-20" y="9">ec2u:University
+                            </tspan>
+                        </text>
+                    </a>
                 </g>
             </g>
             <g id="Graphic_6">
@@ -136,14 +138,16 @@
                           stroke-linejoin="round" stroke-width=".25"/>
                 </g>
                 <g id="Graphic_17">
-                    <rect x="361.1649" y="401.10237" width="52.671" height="17.261063" fill="white"/>
-                    <rect x="361.1649" y="401.10237" width="52.671" height="17.261063" stroke="black"
-                          stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(367.1649 404.10237)" fill="black">
-                        <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">
-                            ec2u:Unit
-                        </tspan>
-                    </text>
+                    <a xl:href="units.svg">
+                        <rect x="361.1649" y="401.10237" width="52.671" height="17.261063" fill="white"/>
+                        <rect x="361.1649" y="401.10237" width="52.671" height="17.261063" stroke="black"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(367.1649 404.10237)" fill="black">
+                            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0"
+                                   y="9">ec2u:Unit
+                            </tspan>
+                        </text>
+                    </a>
                 </g>
             </g>
             <g id="Group_20">
@@ -180,21 +184,21 @@
             </g>
             <g id="Group_26">
                 <g id="Graphic_29">
-                    <rect x="541.796" y="436.36343" width="59.358" height="18" fill="white"/>
-                    <rect x="541.796" y="436.36343" width="59.358" height="18" stroke="black" stroke-linecap="round"
+                    <rect x="542.83465" y="436.36343" width="59.358" height="18" fill="white"/>
+                    <rect x="542.83465" y="436.36343" width="59.358" height="18" stroke="black" stroke-linecap="round"
                           stroke-linejoin="round" stroke-width=".25"/>
                 </g>
                 <g id="Graphic_28">
-                    <rect x="541.796" y="418.36343" width="59.358" height="18" fill="white"/>
-                    <rect x="541.796" y="418.36343" width="59.358" height="18" stroke="black" stroke-linecap="round"
+                    <rect x="542.83465" y="418.36343" width="59.358" height="18" fill="white"/>
+                    <rect x="542.83465" y="418.36343" width="59.358" height="18" stroke="black" stroke-linecap="round"
                           stroke-linejoin="round" stroke-width=".25"/>
                 </g>
                 <g id="Graphic_27">
-                    <a xl:href="file:/Users/Alessandro/Metreeca/Projects/EC2U/Data/docs/collections/events/index.graffle">
-                        <rect x="541.796" y="401.10237" width="59.358" height="17.261063" fill="white"/>
-                        <rect x="541.796" y="401.10237" width="59.358" height="17.261063" stroke="black"
+                    <a xl:href="events.svg">
+                        <rect x="542.83465" y="401.10237" width="59.358" height="17.261063" fill="white"/>
+                        <rect x="542.83465" y="401.10237" width="59.358" height="17.261063" stroke="black"
                               stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(547.796 404.10237)" fill="black">
+                        <text transform="translate(548.83465 404.10237)" fill="black">
                             <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black"
                                    x="8881784e-20" y="9">ec2u:Event
                             </tspan>
@@ -203,7 +207,7 @@
                 </g>
             </g>
             <g id="Line_30">
-                <path d="M 571.475 401.10237 L 571.475 360.10237 L 292.12233 360.10237 L 292.12233 329.5647"
+                <path d="M 572.51365 401.10237 L 572.51365 360.10237 L 292.12233 360.10237 L 292.12233 329.5647"
                       marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                       stroke-linejoin="round" stroke-width=".25"/>
             </g>
@@ -331,6 +335,35 @@
                 <text transform="translate(184.74633 354.66474)" fill="black">
                     <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">ec2u:university 1</tspan>
                 </text>
+            </g>
+            <g id="Group_60">
+                <g id="Graphic_63">
+                    <rect x="654.80316" y="436.36343" width="68.511" height="18" fill="white"/>
+                    <rect x="654.80316" y="436.36343" width="68.511" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_62">
+                    <rect x="654.80316" y="418.36343" width="68.511" height="18" fill="white"/>
+                    <rect x="654.80316" y="418.36343" width="68.511" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_61">
+                    <a xl:href="datasets.svg">
+                        <rect x="654.80316" y="401.10237" width="68.511" height="17.261063" fill="white"/>
+                        <rect x="654.80316" y="401.10237" width="68.511" height="17.261063" stroke="black"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(660.80316 404.10237)" fill="black">
+                            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0"
+                                   y="9">ec2u:Dataset
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_64">
+                <path d="M 689.05866 401.10237 L 689.05866 360.10237 L 292.12233 360.10237 L 292.12233 329.5647"
+                      marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-width=".25"/>
             </g>
         </g>
     </g>

@@ -10,21 +10,6 @@
 [ rdf:type owl:Ontology
  ] .
 
-#################################################################
-#    Annotation properties
-#################################################################
-
-###  http://rdfs.org/ns/void#rootResource
-<http://rdfs.org/ns/void#rootResource> rdf:type owl:AnnotationProperty .
-
-
-###  https://data.ec2u.eu/terms/image
-ec2u:image rdf:type owl:AnnotationProperty .
-
-
-###  https://data.ec2u.eu/terms/schac
-ec2u:schac rdf:type owl:AnnotationProperty .
-
 
 #################################################################
 #    Data properties

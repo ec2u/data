@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
+import { University } from "@ec2u/data/pages/universities/university";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/link";
+import { multiple, string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
+import { NodeOptions } from "@metreeca/tile/lenses/options";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
-import { Landmark } from "@metreeca/tile/widgets/icon";
+import { FlaskConical } from "@metreeca/tile/widgets/icon";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useEntry } from "@metreeca/tool/nests/graph";
@@ -31,52 +33,49 @@ import * as React from "react";
 import { ReactNode, useEffect } from "react";
 
 
-export const UniversitiesIcon=<Landmark/>;
+export const UnitsIcon=<FlaskConical/>;
 
-export const Universities=immutable({
+export const Units=immutable({
 
-    id: "/universities/",
+    id: "/units/",
+    label: { "en": "Units" },
 
-    label: {
-        "en": "Universities"
-    },
-
-    contains: [{
+    contains: multiple({
 
         id: "",
-        image: "",
+        label: { "en": "" },
+        comment: { "en": "" },
 
-        label: {},
-        comment: {},
+        altLabel: { "en": "" },
 
-        country: {
+        university: {
             id: "",
-            label: {}
+            label: { "en": "" }
         }
 
-    }]
-
+    })
 });
 
 
-export function DataUniversities() {
+export function DataUnits() {
 
     const [route, setRoute]=useRoute();
 
     const [query, setQuery]=useQuery({
 
-        ".order": "",
+        ".order": "label",
         ".limit": 20
 
     }, sessionStorage);
 
-    const entry=useEntry(route, Universities, query);
+
+    const entry=useEntry(route, Units, query);
 
 
-    useEffect(() => { setRoute({ label: string(Universities) }); }, []);
+    useEffect(() => { setRoute({ label: string(Units) }); }, []);
 
 
-    return <DataPage item={string(Universities)}
+    return <DataPage item={string(Units)}
 
         menu={entry({ fetch: <NodeSpin/> })}
 
@@ -85,30 +84,40 @@ export function DataUniversities() {
             header={<NodeKeywords state={[query, setQuery]}/>}
             footer={<NodeCount state={[query, setQuery]}/>}
 
-        />}
+        >
+
+            <NodeOptions path={"university"} type={"reference"} placeholder={"University"} state={[query, setQuery]}/>
+
+        </DataPane>}
 
     >{entry<ReactNode>({
 
-        fetch: <NodeHint>{UniversitiesIcon}</NodeHint>,
+        fetch: <NodeHint>{UnitsIcon}</NodeHint>,
 
-        value: ({ contains }) => contains.length === 0
+        value: ({ contains }) => !contains?.length
 
-            ? <NodeHint>{UniversitiesIcon}</NodeHint>
+            ? <NodeHint>{UnitsIcon}</NodeHint>
 
-            : contains.map(({ id, label, image, comment, country }) => {
+            : contains.map(({ id, label, comment, university, altLabel }) =>
 
-                return <DataCard key={id} compact
+                <DataCard key={id} compact
 
                     name={<a href={id}>{string(label)}</a>}
-                    icon={image}
-                    tags={<span>{string(country.label)}</span>}
+
+                    tags={<>
+                        <span>{string(university)}</span>
+                        {altLabel && <>
+                            <span> / </span>
+                            <span>{string(altLabel)}</span>
+                        </>}
+                    </>}
 
                 >
+
                     {string(comment)}
 
-                </DataCard>;
-
-            }),
+                </DataCard>
+            ),
 
         error: error => <span>{error.status}</span> // !!! report
 

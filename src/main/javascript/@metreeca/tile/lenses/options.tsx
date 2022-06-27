@@ -97,7 +97,6 @@ export function NodeOptions({
     }
 
     function doSearch(keywords: string) {
-        // !!! clear cache
         setKeywords(keywords);
         setOffset(0);
     }

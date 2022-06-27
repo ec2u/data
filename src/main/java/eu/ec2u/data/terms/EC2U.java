@@ -82,6 +82,9 @@ public final class EC2U {
     public static final IRI wikidata=item("/wikidata");
     public static final IRI inferences=item("/inferences");
 
+    public static final IRI units=item("/units/");
+    public static final IRI persons=item("/persons/");
+
     public static final IRI events=item("/events/");
     public static final IRI locations=item("/locations/");
     public static final IRI organizations=item("/organizations/");
@@ -101,6 +104,7 @@ public final class EC2U {
 
                 field(RDFS.LABEL, multilingual()),
                 field(RDFS.COMMENT, multilingual())
+
         );
     }
 
@@ -116,7 +120,7 @@ public final class EC2U {
                 field(DCTERMS.TITLE, multilingual()),
                 field(DCTERMS.DESCRIPTION, multilingual()),
 
-                field(DCTERMS.PUBLISHER, required(), Publisher()),
+                field(DCTERMS.PUBLISHER, optional(), Publisher()),
                 field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
 
                 field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
@@ -179,6 +183,16 @@ public final class EC2U {
     public static final IRI image=term("image");
     public static final IRI inception=term("inception");
     public static final IRI students=term("students");
+
+
+    //// Units ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI Unit=term("Unit");
+
+
+    //// Persons ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI Person=term("Person");
 
 
     //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////

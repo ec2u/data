@@ -19,7 +19,7 @@ import { DataPage } from "@ec2u/data/tiles/page";
 import { CancelIcon } from "@metreeca/tile/widgets/icon";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { createElement } from "react";
+import { createElement, useEffect } from "react";
 import "./none.css";
 
 
@@ -28,6 +28,9 @@ import "./none.css";
 export default function DataNone() {
 
     const [, setRoute]=useRoute();
+
+
+    useEffect(() => { setRoute({ label: "Not Found" }); }, []);
 
 
     function doDismiss() {

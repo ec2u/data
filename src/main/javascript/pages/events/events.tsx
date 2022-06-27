@@ -19,7 +19,7 @@ import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, optional, Query, string } from "@metreeca/link";
+import { multiple, optional, string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
@@ -27,7 +27,7 @@ import { NodeRange } from "@metreeca/tile/lenses/range";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { Calendar } from "@metreeca/tile/widgets/icon";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { useParameters } from "@metreeca/tool/hooks/params";
+import { useQuery } from "@metreeca/tool/hooks/query";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
@@ -64,7 +64,7 @@ export function DataEvents() {
 
     const [route, setRoute]=useRoute();
 
-    const [query, setQuery]=useParameters<Query>({
+    const [query, setQuery]=useQuery({
 
         ".order": ["startDate", "label"],
         ".limit": 20

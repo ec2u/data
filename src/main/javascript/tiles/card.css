@@ -20,15 +20,6 @@ data-card {
     flex-direction: column;
     align-items: stretch;
 
-
-    &.compact {
-        & > section {
-            & > figure {
-                width: 25vmin;
-            }
-        }
-    }
-
     &:not(:first-child) {
         margin-top: 1.5em;
     }
@@ -45,12 +36,11 @@ data-card {
     & > header {
 
         display: flex;
-        flex-direction: row;
-        align-items: baseline;
+        flex-direction: column;
+        align-items: center;
 
-        grid-gap: 1em;
-
-        margin-bottom: 0.75em;
+        grid-gap: 0.25em;
+        margin-bottom: 0.5em;
 
         & > h1 {
             flex-grow: 1;
@@ -70,11 +60,8 @@ data-card {
 
         & > figure {
 
-            float: right;
-            width: 40vmin;
-
-            margin-left: 1em;
-            margin-bottom: 0.5em;
+            width: 100%;
+            margin-bottom: 1em;
 
             &:empty {
                 display: none;
@@ -88,6 +75,45 @@ data-card {
                 border-color: #DDD;
                 border-radius: 0.25em;
 
+            }
+
+        }
+
+    }
+
+
+    @media only screen and (min-width: 960px), print {
+
+
+        &.compact {
+            & > section {
+                & > figure {
+                    width: 25vmin;
+                }
+            }
+        }
+
+        & > header {
+
+            flex-direction: row;
+            align-items: baseline;
+
+            grid-gap: 1em;
+
+            margin-bottom: 0.75em;
+
+
+        }
+
+        & > section {
+
+            & > figure {
+
+                float: right;
+                width: 40vmin;
+
+                margin-left: 1em;
+                margin-bottom: 0.5em;
             }
 
         }

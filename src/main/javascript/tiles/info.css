@@ -55,7 +55,7 @@ data-info {
                 margin: 0;
 
                 & > li {
-                    list-style: none;
+                    list-style: inside "› ";
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }

@@ -217,11 +217,11 @@ export function optional<T=any>(value: T): undefined | typeof value {
     return value;
 }
 
-export function repeatable<T=any>(value: T): (typeof value)[] {
+export function repeatable<T=any>(value: T): typeof value[] {
     return [value];
 }
 
-export function multiple<T=any>(value: T): undefined | (typeof value)[] {
+export function multiple<T=any>(value: T): undefined | typeof value[] {
     return [value];
 }
 
