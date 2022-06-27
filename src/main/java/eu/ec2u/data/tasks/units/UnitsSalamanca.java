@@ -91,7 +91,9 @@ public final class UnitsSalamanca implements Runnable {
             return frame(iri(EC2U.units, md5(Salamanca.University+"@"+id)))
 
                     .value(RDF.TYPE, EC2U.Unit)
+
                     .value(EC2U.university, Salamanca.University)
+                    .value(ORG.UNIT_OF, Salamanca.University)
 
                     .value(RDFS.LABEL, label)
                     .value(RDFS.COMMENT, json.string("topics")
