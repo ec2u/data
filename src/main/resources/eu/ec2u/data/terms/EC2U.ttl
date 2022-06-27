@@ -5,6 +5,7 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix ec2u: <https://data.ec2u.eu/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix schema: <https://schema.org/> .
@@ -80,6 +81,10 @@ org:FormalOrganization rdf:type owl:Class .
 org:OrganizationalUnit rdf:type owl:Class .
 
 
+###  http://xmlns.com/foaf/0.1/Person
+foaf:Person rdf:type owl:Class .
+
+
 ###  https://data.ec2u.eu/terms/Course
 ec2u:Course rdf:type owl:Class ;
             rdfs:subClassOf ec2u:Resource .
@@ -95,6 +100,11 @@ ec2u:Dataset rdf:type owl:Class ;
 ec2u:Event rdf:type owl:Class ;
            rdfs:subClassOf ec2u:Resource ,
                            schema:Event .
+
+
+###  https://data.ec2u.eu/terms/Person
+ec2u:Person rdf:type owl:Class ;
+            rdfs:subClassOf foaf:Person .
 
 
 ###  https://data.ec2u.eu/terms/Resource

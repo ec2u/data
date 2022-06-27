@@ -46,8 +46,12 @@ export const Unit=immutable({
         label: { "en": "" }
     },
 
-    altLabel: optional({ "en": "" })
+    altLabel: optional({ "en": "" }),
 
+    head: optional({
+        id: "",
+        label: { "en": "" }
+    })
 
 });
 
@@ -98,7 +102,9 @@ function DataEventInfo({
         university,
 
         label,
-        altLabel
+        altLabel,
+
+        head
 
     }
 
@@ -119,7 +125,8 @@ function DataEventInfo({
         <DataInfo>{{
 
             "Acronym": altLabel && <span>{string(altLabel)}</span>,
-            "Name": <span>{string(label)}</span>
+            "Name": <span>{string(label)}</span>,
+            "Head": head && <span>{string(head)}</span>
 
         }}</DataInfo>
 
@@ -130,7 +137,6 @@ function DataEventBody({
 
     children: {
 
-        label,
         comment
 
     }

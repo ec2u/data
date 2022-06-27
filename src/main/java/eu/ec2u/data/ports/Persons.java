@@ -26,37 +26,37 @@ import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
+import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
 import static eu.ec2u.data.terms.EC2U.Reference;
-import static eu.ec2u.data.terms.EC2U.multilingual;
 
-public final class Units extends Delegator {
+public final class Persons extends Delegator {
 
-    public static Shape Unit() {
+    public static Shape Person() {
         return relate(EC2U.Resource(),
 
-                hidden(field(RDF.TYPE, all(EC2U.Unit))),
+                hidden(field(RDF.TYPE, all(EC2U.Person))),
 
-                field(SKOS.PREF_LABEL, multilingual()),
-                field(SKOS.ALT_LABEL, multilingual()),
+                field(FOAF.GIVEN_NAME, required(), datatype(XSD.STRING)),
+                field(FOAF.FAMILY_NAME, required(), datatype(XSD.STRING)),
 
-                field("head", inverse(ORG.HEAD_OF), optional(), Reference())
+                field(ORG.HEAD_OF, multiple(), Reference()),
+                field(ORG.MEMBER_OF, multiple(), Reference())
 
         );
     }
 
 
-    public Units() {
+    public Persons() {
         delegate(handler(
 
-                new Driver(Unit(),
+                new Driver(Person(),
 
-                        filter(clazz(EC2U.Unit))
+                        filter(clazz(EC2U.Person))
 
                 ),
 

@@ -1,9 +1,0 @@
-### Local Catalog
-
-GET http://localhost:8080/universities/
-
-
-### Local Details
-
-GET http://localhost:8080/universities/pavia
-

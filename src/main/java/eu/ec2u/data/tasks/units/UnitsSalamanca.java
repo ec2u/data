@@ -20,7 +20,6 @@ import com.metreeca.http.Xtream;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
 
 import eu.ec2u.data.cities.Salamanca;
 import eu.ec2u.data.terms.EC2U;
@@ -30,6 +29,8 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Resources.resource;
@@ -42,6 +43,8 @@ import static eu.ec2u.data.tasks.Tasks.*;
 import static java.util.function.Predicate.not;
 
 public final class UnitsSalamanca implements Runnable {
+
+    private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");
 
 
     public static void main(final String... args) {
@@ -70,8 +73,6 @@ public final class UnitsSalamanca implements Runnable {
                 .flatMap(json -> json.paths("*"))
                 .optMap(this::unit)
 
-                .peek(unit -> System.out.println(format(unit)))
-
                 .sink(events -> upload(EC2U.units,
                         validate(Unit(), EC2U.Unit, events)
                 ));
@@ -79,7 +80,6 @@ public final class UnitsSalamanca implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     private Optional<Frame> unit(final JSONPath json) {
         return json.string("id").map(id -> {
@@ -102,10 +102,35 @@ public final class UnitsSalamanca implements Runnable {
                     .value(SKOS.PREF_LABEL, label)
                     .value(SKOS.ALT_LABEL, json.string("acronym")
                             .filter(not(String::isEmpty))
-                            .map(Values::literal))
+                            .map(value -> literal(value, Salamanca.Language)))
 
-                    ;
+                    .frame(inverse(ORG.HEAD_OF), head(json));
         });
+    }
+
+    private Optional<Frame> head(final JSONPath json) {
+        return json.string("head")
+
+                .map(HeadPattern::matcher)
+                .filter(Matcher::matches)
+                .map(matcher -> {
+
+                    final String familyName=matcher.group(1);
+                    final String givenName=matcher.group(2);
+                    final String fullName=String.format("%s %s", givenName, familyName);
+
+                    return frame(iri(EC2U.persons, md5(Salamanca.University+"@"+fullName)))
+
+                            .value(RDF.TYPE, EC2U.Person)
+
+                            .value(RDFS.LABEL, literal(fullName, Salamanca.Language))
+
+                            .value(EC2U.university, Salamanca.University)
+
+                            .value(FOAF.GIVEN_NAME, literal(givenName))
+                            .value(FOAF.FAMILY_NAME, literal(familyName));
+
+                });
     }
 
 }

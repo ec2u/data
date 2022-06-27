@@ -83,6 +83,7 @@ public final class EC2U {
     public static final IRI inferences=item("/inferences");
 
     public static final IRI units=item("/units/");
+    public static final IRI persons=item("/persons/");
 
     public static final IRI events=item("/events/");
     public static final IRI locations=item("/locations/");
@@ -103,6 +104,7 @@ public final class EC2U {
 
                 field(RDFS.LABEL, multilingual()),
                 field(RDFS.COMMENT, multilingual())
+
         );
     }
 
@@ -186,6 +188,11 @@ public final class EC2U {
     //// Units ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI Unit=term("Unit");
+
+
+    //// Persons ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI Person=term("Person");
 
 
     //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
