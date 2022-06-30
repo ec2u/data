@@ -119,7 +119,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .distinct(Frame::focus) // events may be published multiple times by different publishers
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 

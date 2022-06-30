@@ -77,11 +77,15 @@ public final class Tasks {
     }
 
 
-    public static Collection<Statement> validate(final Shape shape, final IRI type, final Stream<Frame> frames) {
-        return validate(shape, Set.of(type), frames);
+    public static Collection<Statement> validate(
+            final Shape shape, final Set<IRI> types, final Stream<Frame> frames
+    ) {
+        return validate(shape, types, frames, Stream.empty());
     }
 
-    public static Collection<Statement> validate(final Shape shape, final Set<IRI> types, final Stream<Frame> frames) {
+    public static Collection<Statement> validate(
+            final Shape shape, final Set<IRI> types, final Stream<Frame> frames, final Stream<Frame> context
+    ) {
 
         final Reasoner reasoner=service(() -> new Reasoner(ontologies()
 
@@ -107,8 +111,9 @@ public final class Tasks {
 
         final Set<Value> resources=batch.stream().map(Frame::focus).collect(toSet());
 
-        final Collection<Statement> explicit=batch.stream().flatMap(frame -> frame.model().stream()).collect(toSet());
-        final Collection<Statement> extended=reasoner.apply(explicit);
+        final Collection<Statement> explicit=batch.stream().flatMap(Frame::stream).collect(toSet());
+        final Collection<Statement> extended=reasoner.apply(Stream.concat(explicit.stream(),
+                context.flatMap(Frame::stream)).collect(toSet()));
 
         final long mistyped=resources.stream()
 

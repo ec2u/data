@@ -29,6 +29,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.Set;
 
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
@@ -69,7 +70,7 @@ public final class EventsIasiUniversity360 implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 

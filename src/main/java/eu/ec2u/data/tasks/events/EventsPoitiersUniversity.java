@@ -38,8 +38,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Strings.TextLength;
@@ -111,7 +110,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 

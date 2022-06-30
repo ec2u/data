@@ -16,7 +16,7 @@
 
 ## Pending
 
-* `STATUS` to `schema:evemtStatus` mapping
+* `STATUS` to `schema:eventStatus` mapping
   * requires a dictionary of possible input values
 
 ## 2022-05-20

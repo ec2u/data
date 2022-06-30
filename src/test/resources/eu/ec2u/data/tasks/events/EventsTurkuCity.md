@@ -20,6 +20,10 @@
 - filter out immaterial events (e.g. children, …)
 - location description (usually unpopulated) to be extended on the basis of the `location_extra_info` field
 
+## 2022-06-30
+
+* Fix mapping of location addresses: now skolemized resources are generated only for non empty descriptions
+
 # Samples
 
 ```http

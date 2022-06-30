@@ -39,6 +39,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.metreeca.core.Identifiers.AbsoluteIRIPattern;
 import static com.metreeca.core.Strings.TextLength;
@@ -82,7 +83,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 

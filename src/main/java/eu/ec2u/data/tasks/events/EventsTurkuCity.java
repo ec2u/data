@@ -54,6 +54,7 @@ import static eu.ec2u.data.tasks.events.Events.synced;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
@@ -103,15 +104,18 @@ public final class EventsTurkuCity implements Runnable {
 
         service(graph()).update(task(connection -> {
 
-            upload(EC2U.events,
-                    validate(Event(), EC2U.Event, events.stream())
-            );
+            upload(EC2U.events, validate(
+                    Event(),
+                    Set.of(EC2U.Event),
+                    events.stream(),
+                    locations.stream()
+            ));
 
-            upload(EC2U.locations,
-                    validate(Schema.Location(), Set.of(
-                            Schema.VirtualLocation, Schema.Place, Schema.PostalAddress
-                    ), locations.stream())
-            );
+            upload(EC2U.locations, validate(
+                    Schema.Location(),
+                    Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
+                    locations.stream()
+            ));
 
         }));
 
@@ -220,6 +224,18 @@ public final class EventsTurkuCity implements Runnable {
 
         final String id=json.string("@id").orElseThrow();
 
+        final Frame address=frame(iri())
+
+                .values(Schema.addressCountry, local(json.entries("address_country")))
+                .values(Schema.addressRegion, local(json.entries("address_region")))
+                .values(Schema.addressLocality, local(json.entries("address_locality")))
+                .values(Schema.postalCode, local(json.entries("postal_code")))
+                .values(Schema.streetAddress, local(json.entries("street_address")))
+
+                .values(Schema.url, local(json.entries("info_url")))
+                .values(Schema.email, local(json.entries("email")))
+                .values(Schema.telephone, local(json.entries("telephone")));
+
         return frame(iri(EC2U.locations, md5(id)))
 
                 .value(RDF.TYPE, json.string("@type").map(Schema::term).orElse(Schema.Place))
@@ -229,12 +245,22 @@ public final class EventsTurkuCity implements Runnable {
                 .values(Schema.name, local(json.entries("name")))
                 .values(Schema.description, local(json.entries("description")))
 
-                .frame(Schema.address, frame(iri())
-                        .values(Schema.addressCountry, local(json.entries("address_country")))
-                        .values(Schema.addressRegion, local(json.entries("address_region")))
-                        .values(Schema.addressLocality, local(json.entries("address_locality")))
-                        .values(Schema.postalCode, local(json.entries("postal_code")))
-                        .values(Schema.streetAddress, local(json.entries("street_address")))
+                .frame(Schema.address, Optional.of(address)
+                        .filter(not(Frame::isEmpty))
+                        .map(frame -> frame
+
+                                .value(RDF.TYPE, Schema.PostalAddress)
+
+                                .refocus(iri(EC2U.locations, frame.skolemize( // !!! wildcard
+                                        Schema.addressCountry,
+                                        Schema.addressRegion,
+                                        Schema.addressLocality,
+                                        Schema.postalCode,
+                                        Schema.streetAddress,
+                                        Schema.url,
+                                        Schema.email,
+                                        Schema.telephone
+                                ))))
                 )
 
                 .value(Schema.longitude, json.decimal("position.coordinates.0").map(Values::literal))
