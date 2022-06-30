@@ -34,11 +34,13 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shifts.Alt.alt;
 import static com.metreeca.link.shifts.Seq.seq;
+import static com.metreeca.link.shifts.Step.step;
 
 import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.*;
@@ -74,7 +76,7 @@ public final class EventsPaviaCity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 
@@ -160,7 +162,10 @@ public final class EventsPaviaCity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Frame location(final Frame location) {
-        return frame(iri(EC2U.locations, location.skolemize(seq(Schema.name), seq(Schema.address, Schema.name))))
+        return frame(iri(EC2U.locations, location.skolemize(
+                seq(Schema.name),
+                seq(step(Schema.address), alt(Schema.name, Schema.streetAddress, Schema.addressLocality))
+        )))
 
                 .value(RDF.TYPE, Schema.Place)
 

@@ -39,7 +39,9 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
 import java.util.Optional;
+import java.util.Set;
 
+import static com.metreeca.core.Identifiers.AbsoluteIRIPattern;
 import static com.metreeca.core.Strings.TextLength;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
@@ -81,7 +83,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 
@@ -112,6 +114,8 @@ public final class EventsSalamancaUniversity implements Runnable {
         final Optional<IRI> url=Optional.ofNullable(event.getLocation())
                 .map(Location::getValue)
                 .filter(not(String::isEmpty))
+                .map(s -> s.startsWith("sac.usal.es/") ? String.format("https://%s", s) : s)
+                .filter(AbsoluteIRIPattern.asMatchPredicate())
                 .map(Values::iri);
 
         final Optional<Value> label=Optional.ofNullable(event.getSummary())

@@ -29,6 +29,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,7 +75,7 @@ public final class UnitsSalamanca implements Runnable {
                 .optMap(this::unit)
 
                 .sink(events -> upload(EC2U.units,
-                        validate(Unit(), EC2U.Unit, events)
+                        validate(Unit(), Set.of(EC2U.Unit), events)
                 ));
     }
 

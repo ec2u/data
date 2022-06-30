@@ -36,8 +36,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.io.InputStream;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.json.Json;
 import javax.json.JsonReader;
@@ -117,7 +116,7 @@ public final class EventsTurkuUniversity implements Runnable {
                 )
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 

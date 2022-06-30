@@ -36,6 +36,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
@@ -77,7 +78,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 

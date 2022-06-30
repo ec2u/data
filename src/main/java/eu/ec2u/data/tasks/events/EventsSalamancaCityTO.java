@@ -39,8 +39,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
@@ -100,7 +99,7 @@ public final class EventsSalamancaCityTO implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(Event(), EC2U.Event, events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 
