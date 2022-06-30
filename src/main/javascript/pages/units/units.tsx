@@ -38,7 +38,7 @@ export const UnitsIcon=<FlaskConical/>;
 export const Units=immutable({
 
     id: "/units/",
-    label: { "en": "Units" },
+    label: { "en": "Research Units" },
 
     contains: multiple({
 

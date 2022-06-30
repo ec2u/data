@@ -38,7 +38,7 @@ export const Unit=immutable({
 
     id: "/units/{code}",
 
-    label: { "en": "Unit" },
+    label: { "en": "Research Unit" },
     comment: { "en": "" },
 
     university: {
