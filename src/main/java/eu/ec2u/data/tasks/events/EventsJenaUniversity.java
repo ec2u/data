@@ -206,7 +206,7 @@ public final class EventsJenaUniversity implements Runnable {
 
         return frame(iri(EC2U.events, frame.skolemize(Schema.url)))
 
-                .value(RDF.TYPE, Schema.Event)
+                .value(RDF.TYPE, EC2U.Event)
 
                 .value(EC2U.university, Jena.University)
 

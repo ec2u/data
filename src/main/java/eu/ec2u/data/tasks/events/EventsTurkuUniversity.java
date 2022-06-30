@@ -202,7 +202,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
         return json.integer("id").map(id -> frame(iri(EC2U.events, md5(Publisher.focus().stringValue()+id)))
 
-                .value(RDF.TYPE, Schema.Event)
+                .value(RDF.TYPE, EC2U.Event)
 
                 .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Work::url).map(Values::iri))
                 .value(DCTERMS.CREATED, json.string("published").map(EventsTurkuUniversity::instant))

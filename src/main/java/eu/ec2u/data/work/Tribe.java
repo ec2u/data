@@ -198,7 +198,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
         return event.string("url").map(id -> frame(iri(EC2U.events, md5(id)))
 
-                .value(RDF.TYPE, Schema.Event)
+                .value(RDF.TYPE, EC2U.Event)
 
                 .value(DCTERMS.SOURCE, event.string("url").flatMap(Work::url).map(Values::iri))
                 .value(DCTERMS.CREATED, event.string("date_utc").map(Tribe::instant))
