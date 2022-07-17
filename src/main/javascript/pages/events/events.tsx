@@ -89,6 +89,8 @@ export function DataEvents() {
 
         </DataPane>}
 
+        deps={[JSON.stringify(query)]}
+
     >
 
         <NodeItems model={Events} placeholder={EventsIcon} state={[query, setQuery]}>{({

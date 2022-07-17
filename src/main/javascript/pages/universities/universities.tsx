@@ -84,6 +84,8 @@ export function DataUniversities() {
 
         />}
 
+        deps={[JSON.stringify(query)]}
+
     >
 
         <NodeItems model={Universities} placeholder={UniversitiesIcon} state={[query, setQuery]}>{({

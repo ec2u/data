@@ -87,6 +87,8 @@ export function DataUnits() {
 
         </DataPane>}
 
+        deps={[JSON.stringify(query)]}
+
     >
 
         <NodeItems model={Units} placeholder={UnitsIcon} state={[query, setQuery]}>{({
