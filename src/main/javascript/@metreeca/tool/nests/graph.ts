@@ -15,12 +15,12 @@
  */
 
 import { Immutable, isString } from "@metreeca/core";
-import { DataTypes, Entry, Error, Graph, isFocus, isLiteral, Literal, Query, State, Stats, string, Terms, Value } from "@metreeca/link";
+import { Collection, DataTypes, Entry, Error, Graph, isFocus, isLiteral, Literal, Query, State, Stats, string, Terms, Value } from "@metreeca/link";
 import { RESTGraph } from "@metreeca/link/rest";
 import { Setter } from "@metreeca/tool/hooks";
 import { useUpdate } from "@metreeca/tool/hooks/update";
 import { Fetcher, useFetcher } from "@metreeca/tool/nests/fetcher";
-import { createContext, createElement, ReactNode, useContext, useEffect, useMemo } from "react";
+import { createContext, createElement, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 
 const Context=createContext<Graph>(RESTGraph());
@@ -361,6 +361,44 @@ export function useOptions(
     return [value, updater];
 }
 
+export function useItems<I extends Entry, E>(
+    id: string,
+    { model, limit=10 }: { model: Collection<I>, limit?: number },
+    [query, setQuery]: [Query, Setter<Query>]
+): [State<Exclude<typeof model.contains, undefined>, E>, () => void] {
+
+    const [page, setPage]=useState(0);
+    const [items, setItems]=useState<Exclude<typeof model.contains, undefined>>([]);
+
+    const entry=useEntry<typeof model, E>(id, model, { ...query, ".offset": page*limit, ".limit": limit+1 });
+
+    const value=entry({ value: ({ contains }) => contains });
+
+    useEffect(() => {
+
+        setPage(0);
+        setItems([]);
+
+    }, [id, JSON.stringify(query)]);
+
+    useEffect(() => {
+
+        if ( value ) { setItems(() => [...items, ...value.slice(0, limit)]); }
+
+    }, [value]);
+
+    return [mapState(entry, () => items), () => entry({
+
+        value: ({ contains }) => {
+
+            if ( contains && contains.length > limit ) { setPage(page+1); }
+
+        }
+
+    })];
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -395,4 +433,3 @@ function flatMapState<V, R, E>(state: State<V, E>, mapper: (value: V) => State<R
     });
 
 }
-

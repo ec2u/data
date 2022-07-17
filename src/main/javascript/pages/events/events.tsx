@@ -21,17 +21,15 @@ import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { multiple, optional, string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
+import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
 import { NodeRange } from "@metreeca/tile/lenses/range";
-import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { Calendar } from "@metreeca/tile/widgets/icon";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useQuery } from "@metreeca/tool/hooks/query";
-import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 
 export const EventsIcon=<Calendar/>;
@@ -57,30 +55,20 @@ export const Events=immutable({
         endDate: optional("")
 
     })
+
 });
 
 
 export function DataEvents() {
 
-    const [route, setRoute]=useRoute();
-
-    const [query, setQuery]=useQuery({
-
-        ".order": ["startDate", "label"],
-        ".limit": 20
-
-    }, sessionStorage);
-
-
-    const entry=useEntry(route, Events, query);
+    const [, setRoute]=useRoute();
+    const [query, setQuery]=useQuery({ ".order": ["startDate", "label"] }, sessionStorage);
 
 
     useEffect(() => { setRoute({ label: string(Events) }); }, []);
 
 
     return <DataPage item={string(Events)}
-
-        menu={entry({ fetch: <NodeSpin/> })}
 
         pane={<DataPane
 
@@ -101,39 +89,41 @@ export function DataEvents() {
 
         </DataPane>}
 
-    >{entry<ReactNode>({
+    >
 
-        fetch: <NodeHint>{EventsIcon}</NodeHint>,
+        <NodeItems model={Events} placeholder={EventsIcon} state={[query, setQuery]}>{({
 
-        value: ({ contains }) => !contains?.length
+            id,
 
-            ? <NodeHint>{EventsIcon}</NodeHint>
+            image,
+            label,
+            comment,
 
-            : contains.map(({ id, label, image, comment, university, startDate }) =>
+            university,
+            startDate
 
-                <DataCard key={id} compact
+        }) =>
 
-                    name={<a href={id}>{string(label)}</a>}
+            <DataCard key={id} compact
 
-                    icon={image?.[0]}
+                name={<a href={id}>{string(label)}</a>}
 
-                    tags={<>
-                        <span>{string(university)}</span>
-                        {startDate && <>
-                            <span> / </span>
-                            <span>{startDate.substring(0, 10)}</span>
-                        </>}
-                    </>}
+                icon={image?.[0]}
 
-                >
+                tags={<>
+                    <span>{string(university)}</span>
+                    {startDate && <><span> / </span><span>{startDate.substring(0, 10)}</span></>}
+                </>}
 
-                    {string(comment)}
+            >
 
-                </DataCard>
-            ),
+                {string(comment)}
 
-        error: error => <span>{error.status}</span> // !!! report
+            </DataCard>
 
-    })}</DataPage>;
+        }</NodeItems>
+
+    </DataPage>;
 
 }
+

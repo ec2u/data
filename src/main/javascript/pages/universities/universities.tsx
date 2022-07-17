@@ -20,15 +20,14 @@ import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
+import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
-import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { Landmark } from "@metreeca/tile/widgets/icon";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 
 export const UniversitiesIcon=<Landmark/>;
@@ -78,8 +77,6 @@ export function DataUniversities() {
 
     return <DataPage item={string(Universities)}
 
-        menu={entry({ fetch: <NodeSpin/> })}
-
         pane={<DataPane
 
             header={<NodeKeywords state={[query, setQuery]}/>}
@@ -87,31 +84,33 @@ export function DataUniversities() {
 
         />}
 
-    >{entry<ReactNode>({
+    >
 
-        fetch: <NodeHint>{UniversitiesIcon}</NodeHint>,
+        <NodeItems model={Universities} placeholder={UniversitiesIcon} state={[query, setQuery]}>{({
 
-        value: ({ contains }) => contains.length === 0
+            id,
+            label,
+            comment,
+            image,
 
-            ? <NodeHint>{UniversitiesIcon}</NodeHint>
+            country
 
-            : contains.map(({ id, label, image, comment, country }) => {
+        }) => {
 
-                return <DataCard key={id} compact
+            return <DataCard key={id} compact
 
-                    name={<a href={id}>{string(label)}</a>}
-                    icon={image}
-                    tags={<span>{string(country.label)}</span>}
+                name={<a href={id}>{string(label)}</a>}
+                icon={image}
+                tags={<span>{string(country.label)}</span>}
 
-                >
-                    {string(comment)}
+            >
+                {string(comment)}
 
-                </DataCard>;
+            </DataCard>;
 
-            }),
+        }
+        }</NodeItems>
 
-        error: error => <span>{error.status}</span> // !!! report
-
-    })}</DataPage>;
+    </DataPage>;
 
 }

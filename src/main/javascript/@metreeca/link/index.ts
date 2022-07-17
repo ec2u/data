@@ -152,16 +152,15 @@ export interface Dictionary {
 
 }
 
-export interface Frame {
-
-    readonly [field: string]: undefined | Value | Immutable<Value[]>;
-
-}
-
-
 export interface Focus {
 
     readonly id: string;
+
+}
+
+export interface Frame {
+
+    readonly [field: string]: undefined | Value | Immutable<Value[]>;
 
 }
 
@@ -169,6 +168,12 @@ export interface Entry extends Focus, Frame {
 
     readonly id: string;
     readonly label?: string | Dictionary;
+
+}
+
+export interface Collection<R extends Entry> extends Entry {
+
+    readonly contains?: Immutable<R[]>;
 
 }
 
@@ -192,18 +197,24 @@ export function isDictionary(value: any): value is Dictionary {
     );
 }
 
+export function isFocus(value: any): value is Focus {
+    return isObject(value) && isString(value.id);
+}
+
 export function isFrame(value: any): value is Frame {
     return isObject(value) && Object.entries(value).every(([key, value]) =>
         isString(key) && (isValue(value) || isArray(value) && value.every(isValue))
     );
 }
 
-export function isFocus(value: any): value is Focus {
-    return isObject(value) && isString(value.id);
-}
-
 export function isEntry(value: any): value is Entry {
     return isFocus(value) && isFrame(value);
+}
+
+export function isCollection(value: any): value is Entry {
+    return isEntry(value) && (
+        value.contains === undefined || isArray(value.contains) && value.contains.every(isEntry)
+    );
 }
 
 
