@@ -18,6 +18,11 @@
 
 * initial integration
 
+## 2022-07-18
+
+* Extended to handle both `encoded` and `decription` elements
+* Fix decoding of HTML entities
+
 # Content
 
 * `schema:url`

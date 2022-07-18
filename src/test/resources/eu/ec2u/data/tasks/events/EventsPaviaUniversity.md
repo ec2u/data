@@ -14,6 +14,11 @@
 
 * standard WordPress/RSS adapter
 
+## 2022-07-18
+
+* Extended to handle both `encoded` and `decription` elements
+* Fix decoding of HTML entities
+
 # Samples
 
 ```http
