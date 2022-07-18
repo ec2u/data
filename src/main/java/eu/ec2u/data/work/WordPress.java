@@ -18,6 +18,7 @@ package eu.ec2u.data.work;
 
 import com.metreeca.core.Strings;
 import com.metreeca.link.Frame;
+import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
@@ -33,7 +34,6 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.work.RSS.*;
-import static eu.ec2u.data.work.Work.localize;
 
 public final class WordPress {
 
@@ -43,8 +43,13 @@ public final class WordPress {
                 .map(text -> Strings.clip(text, TextLength))
                 .map(text -> literal(text, lang));
 
-        final Optional<Value> brief=frame.string(Encoded)
+        final Optional<Value> brief=frame.string(Encoded).or(() -> frame.string(Description))
+                .map(Untag::untag)
                 .map(text -> Strings.clip(text, TextLength))
+                .map(text -> literal(text, lang));
+
+        final Optional<Value> notes=frame.string(Encoded).or(() -> frame.string(Description))
+                .map(Untag::untag)
                 .map(text -> literal(text, lang));
 
         return frame(iri(EC2U.events, frame.skolemize(Link)))
@@ -64,7 +69,7 @@ public final class WordPress {
 
                 .value(Schema.name, label)
                 .value(Schema.disambiguatingDescription, brief)
-                .value(Schema.description, frame.value(Encoded).map(value -> localize(value, lang)))
+                .value(Schema.description, notes)
                 .value(Schema.url, frame.value(Link));
     }
 
