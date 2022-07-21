@@ -17,7 +17,7 @@
 import { Heart, Menu } from "@metreeca/tile/widgets/icon";
 import { NodeIcon } from "@metreeca/tile/widgets/logo";
 import { copy } from "@metreeca/tool";
-import React, { createElement, ReactNode, useState } from "react";
+import React, { createElement, DependencyList, ReactNode, useEffect, useRef, useState } from "react";
 import "./page.css";
 
 
@@ -28,7 +28,8 @@ export function DataPage({
 
     pane,
 
-    children
+    children,
+    deps=[]
 
 }: {
 
@@ -37,11 +38,22 @@ export function DataPage({
 
     pane?: ReactNode
 
+
     children: ReactNode
+    deps?: DependencyList
 
 }) {
 
     const [tray, setTray]=useState(false);
+
+
+    const main=useRef<HTMLElement>(null);
+
+    useEffect(() => {
+
+        main.current?.scroll(0, 0);
+
+    }, deps);
 
 
     function doToggleTray() {
@@ -87,7 +99,7 @@ export function DataPage({
 
         }</aside>
 
-        <main>
+        <main ref={main}>
 
             <header>
                 <a href={"/"}><NodeIcon/></a>

@@ -15,12 +15,12 @@
  */
 
 import { Immutable, isString } from "@metreeca/core";
-import { DataTypes, Entry, Error, Graph, isFocus, isLiteral, Literal, Query, State, Stats, string, Terms, Value } from "@metreeca/link";
+import { Collection, DataTypes, Entry, Error, Graph, isFocus, isLiteral, Literal, Query, State, Stats, string, Terms, Value } from "@metreeca/link";
 import { RESTGraph } from "@metreeca/link/rest";
 import { Setter } from "@metreeca/tool/hooks";
 import { useUpdate } from "@metreeca/tool/hooks/update";
 import { Fetcher, useFetcher } from "@metreeca/tool/nests/fetcher";
-import { createContext, createElement, ReactNode, useContext, useEffect, useMemo } from "react";
+import { createContext, createElement, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 
 const Context=createContext<Graph>(RESTGraph());
@@ -361,6 +361,106 @@ export function useOptions(
     return [value, updater];
 }
 
+export function useItems<I extends Entry, D>(
+    id: string,
+    { model, limit=10 }: { model: Collection<I>, limit?: number },
+    [query, setQuery]: [Query, Setter<Query>]
+): [State<Exclude<typeof model.contains, undefined>, D>, () => void] {
+
+    const graph=useGraph();
+
+    const [pages, setPages]=useState<State<typeof model, D>[]>([]);
+
+
+    function get(page: number) {
+        return graph.get<typeof model, D>(id, model, { ...query, ".offset": page*limit, ".limit": limit });
+    }
+
+
+    // reset on query updates
+
+    useEffect(() => {
+
+        setPages([get(0)]);
+
+    }, [id, JSON.stringify(query)]);
+
+
+    // update pending pages
+
+    useEffect(() => {
+
+        return graph.observe(id, () => setPages(pages.map((state, index) => state({
+
+            fetch: () => get(index),
+
+            other: () => state
+
+        }))));
+
+    }, [id, JSON.stringify(pages.map(page => page({ value: true, other: false })))]);
+
+
+    // merge states
+
+    const fetch=pages.reduce<undefined | (() => void)>((aborts, page) => page({
+
+        fetch: abort => aborts
+
+            ? () => {
+                abort();
+                aborts();
+            }
+
+            : abort,
+
+        other: aborts
+
+    }), undefined);
+
+    const error=pages.reduce<undefined | Error<D>>((errors, page) => page({
+
+        error: error => errors ?? error,
+
+        other: errors
+
+    }), undefined);
+
+    const value=pages.reduce<Exclude<typeof model.contains, undefined>>((values, page) => page({
+
+        value: ({ contains }) => contains ? [...values, ...contains] : values,
+
+        other: values
+
+    }), []);
+
+
+    return [
+
+        fetch ? State<Exclude<typeof model.contains, undefined>, D>({ fetch })
+            : error ? State<Exclude<typeof model.contains, undefined>, D>({ error })
+                : State<Exclude<typeof model.contains, undefined>, D>({ value }),
+
+        () => {
+
+            if ( pages.every(page => page({
+
+                value: ({ contains }) => contains && contains.length > 0,
+
+                other: false
+
+            })) ) {
+
+                setPages([...pages, get(pages.length)]);
+
+            }
+
+        }
+
+    ];
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -395,4 +495,3 @@ function flatMapState<V, R, E>(state: State<V, E>, mapper: (value: V) => State<R
     });
 
 }
-

@@ -21,16 +21,15 @@ import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { multiple, string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
+import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
-import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { FlaskConical } from "@metreeca/tile/widgets/icon";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 
 export const UnitsIcon=<FlaskConical/>;
@@ -77,8 +76,6 @@ export function DataUnits() {
 
     return <DataPage item={string(Units)}
 
-        menu={entry({ fetch: <NodeSpin/> })}
-
         pane={<DataPane
 
             header={<NodeKeywords state={[query, setQuery]}/>}
@@ -90,37 +87,41 @@ export function DataUnits() {
 
         </DataPane>}
 
-    >{entry<ReactNode>({
+        deps={[JSON.stringify(query)]}
 
-        fetch: <NodeHint>{UnitsIcon}</NodeHint>,
+    >
 
-        value: ({ contains }) => !contains?.length
+        <NodeItems model={Units} placeholder={UnitsIcon} state={[query, setQuery]}>{({
 
-            ? <NodeHint>{UnitsIcon}</NodeHint>
+            id,
+            label,
+            comment,
 
-            : contains.map(({ id, label, comment, university, altLabel }) =>
+            university,
+            altLabel
 
-                <DataCard key={id} compact
+        }) =>
 
-                    name={<a href={id}>{string(label)}</a>}
+            <DataCard key={id} compact
 
-                    tags={<>
-                        <span>{string(university)}</span>
-                        {altLabel && <>
-                            <span> / </span>
-                            <span>{string(altLabel)}</span>
-                        </>}
+                name={<a href={id}>{string(label)}</a>}
+
+                tags={<>
+                    <span>{string(university)}</span>
+                    {altLabel && <>
+                        <span> / </span>
+                        <span>{string(altLabel)}</span>
                     </>}
+                </>}
 
-                >
+            >
 
-                    {string(comment)}
+                {string(comment)}
 
-                </DataCard>
-            ),
+            </DataCard>
 
-        error: error => <span>{error.status}</span> // !!! report
+        }</NodeItems>
 
-    })}</DataPage>;
+    </DataPage>;
 
 }

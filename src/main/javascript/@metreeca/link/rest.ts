@@ -53,12 +53,12 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
     return immutable({
 
-        get<V extends Entry, E>(id: string, model: V, query?: Query): State<typeof model, E> {
+        get<V extends Entry, D>(id: string, model: V, query?: Query): State<typeof model, D> {
 
             const key=!query || isEmpty(query) ? id : `${id}?${encodeURI(JSON.stringify(query))}`;
 
 
-            let entry=cache.get(key) as undefined | State<V, E>;
+            let entry=cache.get(key) as undefined | State<V, D>;
 
             if ( entry ) {
 
@@ -68,9 +68,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
                 const controller=new AbortController();
 
-                controller.signal;
-
-                cache.set(key, entry=State<V, E>({ fetch: controller.abort }));
+                cache.set(key, entry=State<V, D>({ fetch: controller.abort }));
 
                 fetcher(key, {
 
@@ -82,19 +80,25 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
                     if ( response.ok ) {
 
-                        cache.set(key, entry=State<V, E>({ value: payload as V }));
+                        cache.set(key, entry=State<V, D>({
+
+                            value: payload as V
+
+                        }));
 
                     } else {
 
-                        const error=<Error<E>>immutable({
+                        cache.set(key, entry=State<V, D>({
 
-                            status: response.status,
-                            reason: response.statusText,
-                            detail: payload
+                            error: <Error<D>>immutable({
 
-                        });
+                                status: response.status,
+                                reason: response.statusText,
+                                detail: payload
 
-                        cache.set(key, entry=State<V, E>({ error }));
+                            })
+
+                        }));
 
                     }
 
@@ -108,7 +112,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
         },
 
-        post<V extends Frame, E>(id: string, frame: V, probe: Probe<{ id: string }, E>): void {
+        post<V extends Frame, D>(id: string, frame: V, probe: Probe<{ id: string }, D>): void {
 
             const controller=new AbortController();
 
@@ -151,7 +155,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify(id);
 
                     if ( probe.error instanceof Function ) {
-                        probe.error(<Error<E>>immutable({
+                        probe.error(<Error<D>>immutable({
 
                             status: response.status,
                             reason: response.statusText,
@@ -165,7 +169,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
             }));
         },
 
-        put<V extends Frame, E>(id: string, frame: V, probe: Probe<Focus, E>): void {
+        put<V extends Frame, D>(id: string, frame: V, probe: Probe<Focus, D>): void {
 
             const controller=new AbortController();
 
@@ -207,7 +211,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify(id);
 
                     if ( probe.error instanceof Function ) {
-                        probe.error(<Error<E>>immutable({
+                        probe.error(<Error<D>>immutable({
 
                             status: response.status,
                             reason: response.statusText,
@@ -222,7 +226,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
         },
 
-        del<E>(id: string, probe: Probe<Focus, E>): void {
+        del<D>(id: string, probe: Probe<Focus, D>): void {
 
             const controller=new AbortController();
 
@@ -233,7 +237,9 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
             notify(id);
 
-            if ( probe.fetch instanceof Function ) { probe.fetch(controller.abort); }
+            if ( probe.fetch instanceof Function ) {
+                probe.fetch(controller.abort);
+            }
 
 
             fetcher(id, {
@@ -261,7 +267,7 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
                     notify(id);
 
                     if ( probe.error instanceof Function ) {
-                        probe.error(<Error<E>>immutable({
+                        probe.error(<Error<D>>immutable({
 
                             status: response.status,
                             reason: response.statusText,

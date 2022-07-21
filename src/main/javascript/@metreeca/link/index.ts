@@ -33,29 +33,29 @@ export interface Graph {
 
 }
 
-export interface State<V, E=unknown> {
+export interface State<V, D=unknown> {
 
-    <R>(probe: Probe<V, E, R>): R;
+    <R>(probe: Probe<V, D, R>): R;
 
-    <R>(probe: Partial<Probe<V, E, R>> & Fallback<V, E, R>): R;
+    <R>(probe: Partial<Probe<V, D, R>> & Fallback<V, D, R>): R;
 
-    <R>(probe: Partial<Probe<V, E, R>> & Partial<Fallback<V, E, R>>): undefined | R;
+    <R>(probe: Partial<Probe<V, D, R>> & Partial<Fallback<V, D, R>>): undefined | R;
 
 }
 
-export interface Probe<V, E, R=void> {
+export interface Probe<V, D, R=void> {
 
     fetch: R | ((abort: () => void) => R);
 
     value: R | ((frame: V) => R);
 
-    error: R | ((error: Error<E>) => R);
+    error: R | ((error: Error<D>) => R);
 
 }
 
-export interface Fallback<V, E, R=void> {
+export interface Fallback<V, D, R=void> {
 
-    other: R | ((state: (() => void) | V | Error<E>) => R);
+    other: R | ((state: (() => void) | V | Error<D>) => R);
 
 }
 
@@ -152,16 +152,15 @@ export interface Dictionary {
 
 }
 
-export interface Frame {
-
-    readonly [field: string]: undefined | Value | Immutable<Value[]>;
-
-}
-
-
 export interface Focus {
 
     readonly id: string;
+
+}
+
+export interface Frame {
+
+    readonly [field: string]: undefined | Value | Immutable<Value[]>;
 
 }
 
@@ -169,6 +168,12 @@ export interface Entry extends Focus, Frame {
 
     readonly id: string;
     readonly label?: string | Dictionary;
+
+}
+
+export interface Collection<R extends Entry> extends Entry {
+
+    readonly contains?: Immutable<R[]>;
 
 }
 
@@ -192,18 +197,24 @@ export function isDictionary(value: any): value is Dictionary {
     );
 }
 
+export function isFocus(value: any): value is Focus {
+    return isObject(value) && isString(value.id);
+}
+
 export function isFrame(value: any): value is Frame {
     return isObject(value) && Object.entries(value).every(([key, value]) =>
         isString(key) && (isValue(value) || isArray(value) && value.every(isValue))
     );
 }
 
-export function isFocus(value: any): value is Focus {
-    return isObject(value) && isString(value.id);
-}
-
 export function isEntry(value: any): value is Entry {
     return isFocus(value) && isFrame(value);
+}
+
+export function isCollection(value: any): value is Entry {
+    return isEntry(value) && (
+        value.contains === undefined || isArray(value.contains) && value.contains.every(isEntry)
+    );
 }
 
 
@@ -274,11 +285,11 @@ function guess(id: string): string {
  *
  * @constructor
  */
-export function State<V, E=unknown>({ fetch }: {
+export function State<V, D=unknown>({ fetch }: {
 
     fetch: () => void
 
-}): State<V, E>;
+}): State<V, D>;
 
 /**
  * Creates a `value` {@link State} object.
@@ -287,11 +298,11 @@ export function State<V, E=unknown>({ fetch }: {
  *
  * @constructor
  */
-export function State<V, E=unknown>({ value }: {
+export function State<V, D=unknown>({ value }: {
 
     value: V
 
-}): State<V, E>;
+}): State<V, D>;
 
 /**
  * Creates an `error` {@link State} object.
@@ -300,11 +311,11 @@ export function State<V, E=unknown>({ value }: {
  *
  * @constructor
  */
-export function State<V, E=unknown>({ error }: {
+export function State<V, D=unknown>({ error }: {
 
-    error: Error<E>,
+    error: Error<D>,
 
-}): State<V, E>;
+}): State<V, D>;
 
 export function State<V, E=unknown>({ fetch, value, error }: {
 
