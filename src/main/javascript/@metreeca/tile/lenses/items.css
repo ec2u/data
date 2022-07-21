@@ -16,4 +16,21 @@
 
 node-items {
 
+    display: flex;
+    flex-direction: column;
+
+    flex-grow: 1;
+
+    & > node-spin {
+
+        &:only-child {
+            margin: auto;
+        }
+
+        &:not(:only-child) {
+            margin-top: 0.25em;
+        }
+
+    }
+
 }

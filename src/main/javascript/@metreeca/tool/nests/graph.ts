@@ -441,7 +441,6 @@ export function useItems<I extends Entry, D>(
             : error ? State<Exclude<typeof model.contains, undefined>, D>({ error })
                 : State<Exclude<typeof model.contains, undefined>, D>({ value }),
 
-
         () => {
 
             if ( pages.every(page => page({

@@ -16,16 +16,20 @@
 
 :root {
 
-    --node-spin-color: #999;
+    --node-spin-size: 1em;
+    --node-spin-thickness: max(0.1rem, calc(var(--node-spin-size) / 50));
+    --node-spin-color: #CCC;
     --node-spin-period: 1s;
 
 }
 
 node-spin {
 
-    display: inline-block;
+    display: block;
 
     margin: auto;
+
+    font-size: var(--node-spin-size);
 
     & > button {
 
@@ -37,6 +41,7 @@ node-spin {
         & > svg.lucide {
 
             color: var(--node-spin-color);
+            stroke-width: var(--node-spin-thickness);
 
             animation: node-spin var(--node-spin-period) infinite linear;
 

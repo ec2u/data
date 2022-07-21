@@ -26,6 +26,8 @@ export function NodeSpin({
     icon=<Loader2/>,
     title,
 
+    size,
+    thickness,
     color,
     period,
 
@@ -49,6 +51,8 @@ export function NodeSpin({
 
         style: {
 
+            "--node-spin-size": size,
+            "--node-spin-thickness": thickness,
             "--node-spin-color": color,
             "--node-spin-period": period
 

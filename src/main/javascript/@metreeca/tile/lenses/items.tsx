@@ -54,7 +54,7 @@ export function NodeItems<I extends Entry>({
 
     const [route]=useRoute();
 
-    const [items, setItems]=useItems(id || route, { model }, [query, setQuery]);
+    const [items, loadItems]=useItems(id || route, { model }, [query, setQuery]);
     const cache=useCache(items({ value: value => value }));
 
     const stats=useStats(id || route, "", query);
@@ -69,7 +69,7 @@ export function NodeItems<I extends Entry>({
 
             const observer=new IntersectionObserver(entries => entries.forEach(entry => {
 
-                if ( entry.isIntersecting ) { setItems(); }
+                if ( entry.isIntersecting ) { loadItems(); }
 
             }), {
 
@@ -100,11 +100,11 @@ export function NodeItems<I extends Entry>({
 
         {items<ReactNode>({
 
-            fetch: <NodeSpin/>,
+            fetch: <NodeSpin size={"5rem"}/>,
 
             value:
                 none ? <NodeHint>{placeholder || <Folder/>}</NodeHint>
-                    : more ? <span ref={loader}><NodeSpin/></span>
+                    : more ? <span ref={loader}/>
                         : null,
 
             error: error => <span>{error.status}</span> // !!! report
