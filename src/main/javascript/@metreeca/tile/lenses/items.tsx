@@ -88,7 +88,7 @@ export function NodeItems<I extends Entry>({
 
         }
 
-    }, [cache?.length]);
+    }, [cache]);
 
 
     const none=cache && cache.length === 0;
@@ -104,7 +104,7 @@ export function NodeItems<I extends Entry>({
 
             value:
                 none ? <NodeHint>{placeholder || <Folder/>}</NodeHint>
-                    : more ? <span ref={loader}/>
+                    : more ? <footer ref={loader}/>
                         : null,
 
             error: error => <span>{error.status}</span> // !!! report
