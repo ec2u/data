@@ -33,4 +33,8 @@ node-items {
 
     }
 
+    & > footer:last-child {
+        height: 1em;
+    }
+
 }
