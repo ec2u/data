@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.tasks.events;
 
+import com.metreeca.core.Strings;
 import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
@@ -23,17 +24,20 @@ import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
+import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.cities.Turku;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
-import eu.ec2u.data.work.Work;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import javax.json.JsonValue;
@@ -56,9 +60,10 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 public final class EventsTurkuCity implements Runnable {
+
+    private static final Pattern EOLPattern=Pattern.compile("\n+");
 
     private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
             .value(RDF.TYPE, EC2U.Publisher)
@@ -88,7 +93,9 @@ public final class EventsTurkuCity implements Runnable {
 
                 .collect(toList());
 
-        final List<Frame> locations=Xtream.from(events)
+        final List<Frame> places=Xtream.from(events)
+
+                .filter(frame -> frame.focus().stringValue().startsWith("https://linkedevents-api.turku.fi/"))
 
                 .optMap(event -> event.value(seq(Schema.location, Schema.url)))
                 .optMap(Values::iri)
@@ -98,7 +105,7 @@ public final class EventsTurkuCity implements Runnable {
                 .optMap(new GET<>(new JSON()))
 
                 .map(JSONPath::new)
-                .map(this::location)
+                .map(this::place)
 
                 .collect(toList());
 
@@ -108,13 +115,13 @@ public final class EventsTurkuCity implements Runnable {
                     Event(),
                     Set.of(EC2U.Event),
                     events.stream(),
-                    locations.stream()
+                    places.stream()
             ));
 
             upload(EC2U.locations, validate(
                     Schema.Location(),
                     Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
-                    locations.stream()
+                    places.stream()
             ));
 
         }));
@@ -156,15 +163,17 @@ public final class EventsTurkuCity implements Runnable {
 
             final String id=json.string("@id").orElseThrow();
 
-            final Collection<Literal> name=local(json.entries("name"));
-
-            final Collection<Literal> description=json.entries("short_description")
+            final Stream<Literal> shortDescription=json.entries("short_description")
                     .filter(entry -> EC2U.Languages.contains(entry.getKey()))
                     .map(this::local)
                     .flatMap(Optional::stream)
-                    .map(Work::untag)
-                    .map(Work::normalize)
-                    .collect(toSet());
+                    .map(this::normalize);
+
+            final Stream<Literal> fullDescription=json.entries("description")
+                    .filter(entry -> EC2U.Languages.contains(entry.getKey()))
+                    .map(this::local)
+                    .flatMap(Optional::stream)
+                    .map(l -> normalize(l, s -> EOLPattern.matcher(s).replaceAll("\n\n")));
 
             return frame(iri(EC2U.events, md5(id)))
 
@@ -184,12 +193,16 @@ public final class EventsTurkuCity implements Runnable {
 
                     // !!! keywords
 
-                    .value(Schema.url, json.string("info_url").map(Values::iri))
+                    .values(Schema.url, json.entries("info_url")
+                            .flatMap(entry -> entry.getValue().strings(""))
+                            .map(Strings::normalize)
+                            .map(Values::iri)
+                    )
 
-                    .values(Schema.name, name)
+                    .values(Schema.name, label(json.entries("name")))
                     .values(Schema.image, json.strings("images.*.url").map(Values::iri))
-                    .values(Schema.disambiguatingDescription, description)
-                    .values(Schema.description, local(json.entries("description")))
+                    .values(Schema.disambiguatingDescription, shortDescription)
+                    .values(Schema.description, fullDescription)
 
                     .value(Schema.isAccessibleForFree, json.bools("offers.*.is_free")
                             .filter(v -> v)
@@ -202,13 +215,7 @@ public final class EventsTurkuCity implements Runnable {
                             .map(status -> iri(Schema.Namespace, status))
                     )
 
-                    // !!! is_virtualevent
-
-                    .frame(Schema.location, json.string("location.@id").map(Values::iri).map(iri ->
-                            frame(iri(EC2U.locations, md5(iri.stringValue()))).value(Schema.url, iri)
-                    ))
-
-                    // !!! location_extra_info
+                    .frames(Schema.location, location(json))
 
                     .value(Schema.startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME)))
                     .value(Schema.endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
@@ -220,21 +227,47 @@ public final class EventsTurkuCity implements Runnable {
         });
     }
 
-    private Frame location(final JSONPath json) {
+    private Stream<Frame> location(final JSONPath json) {
+
+        // !!! is_virtualevent // not populated as of 2022-07-25
+
+        return json.string("location.@id")
+                .map(Values::iri)
+                .map(iri -> frame(iri(EC2U.locations, md5(iri.stringValue())))
+                        .value(RDF.TYPE, Schema.Place)
+                        .value(Schema.url, iri)
+                )
+                .map(Stream::of)
+
+                .or(() -> json.path("location_extra_info").map(location -> location.entries("")
+                        .filter(entry -> EC2U.Languages.contains(entry.getKey()))
+                        .optMap(entry -> entry.getValue().string("")
+                                .map(Strings::normalize)
+                                .map(info -> frame(iri(EC2U.locations, md5(info)))
+                                        .value(RDF.TYPE, Schema.Place)
+                                        .value(Schema.name, literal(info, entry.getKey()))
+                                )
+                        )
+                ))
+
+                .orElseGet(Stream::empty);
+    }
+
+    private Frame place(final JSONPath json) {
 
         final String id=json.string("@id").orElseThrow();
 
         final Frame address=frame(iri())
 
-                .values(Schema.addressCountry, local(json.entries("address_country")))
-                .values(Schema.addressRegion, local(json.entries("address_region")))
-                .values(Schema.addressLocality, local(json.entries("address_locality")))
-                .values(Schema.postalCode, local(json.entries("postal_code")))
-                .values(Schema.streetAddress, local(json.entries("street_address")))
+                .values(Schema.addressCountry, label(json.entries("address_country")))
+                .values(Schema.addressRegion, label(json.entries("address_region")))
+                .values(Schema.addressLocality, label(json.entries("address_locality")))
+                .values(Schema.postalCode, label(json.entries("postal_code")))
+                .values(Schema.streetAddress, label(json.entries("street_address")))
 
-                .values(Schema.url, local(json.entries("info_url")))
-                .values(Schema.email, local(json.entries("email")))
-                .values(Schema.telephone, local(json.entries("telephone")));
+                .values(Schema.url, label(json.entries("info_url")))
+                .values(Schema.email, label(json.entries("email")))
+                .values(Schema.telephone, label(json.entries("telephone")));
 
         return frame(iri(EC2U.locations, md5(id)))
 
@@ -242,8 +275,8 @@ public final class EventsTurkuCity implements Runnable {
 
                 .value(Schema.url, iri(id))
 
-                .values(Schema.name, local(json.entries("name")))
-                .values(Schema.description, local(json.entries("description")))
+                .values(Schema.name, label(json.entries("name")))
+                .values(Schema.description, label(json.entries("description")))
 
                 .frame(Schema.address, Optional.of(address)
                         .filter(not(Frame::isEmpty))
@@ -270,17 +303,37 @@ public final class EventsTurkuCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Set<Literal> local(final Stream<Map.Entry<String, JSONPath>> values) {
+    private Stream<Literal> label(final Stream<Entry<String, JSONPath>> values) {
+        return local(values).map(this::normalize);
+    }
+
+
+    private Stream<Literal> local(final Stream<Entry<String, JSONPath>> values) {
         return values
                 .filter(entry -> EC2U.Languages.contains(entry.getKey()))
                 .map(this::local)
-                .flatMap(Optional::stream)
-                .map(Work::normalize)
-                .collect(toSet());
+                .flatMap(Optional::stream);
     }
 
-    private Optional<Literal> local(final Map.Entry<String, JSONPath> entry) {
+    private Optional<Literal> local(final Entry<String, JSONPath> entry) {
         return entry.getValue().string("").map(text -> literal(text, entry.getKey()));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Literal normalize(final Literal literal) {
+        return normalize(literal, Strings::normalize);
+    }
+
+    private Literal untag(final Literal literal) {
+        return normalize(literal, Untag::untag);
+    }
+
+    private Literal normalize(final Literal literal, final UnaryOperator<String> normalizer) {
+        return literal.getLanguage()
+                .map(lang -> literal(normalizer.apply(literal.stringValue()), lang))
+                .orElseGet(() -> literal(normalizer.apply(literal.stringValue()), literal.getDatatype()));
     }
 
 }

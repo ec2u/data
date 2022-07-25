@@ -16,19 +16,15 @@
 
 package eu.ec2u.data.work;
 
-import com.metreeca.core.Strings;
 import com.metreeca.link.Frame;
-import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
-import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.util.Optional;
-import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,21 +68,6 @@ public final class Work {
                 .map(url -> url.replace("[", "%5B")) // !!! generalize
                 .map(url -> url.replace("]", "%5D"))
                 .map(url -> url.startsWith("http") ? url : format("https://%s", url));
-    }
-
-
-    public static Literal normalize(final Literal literal) {
-        return normalize(literal, Strings::normalize);
-    }
-
-    public static Literal untag(final Literal literal) {
-        return normalize(literal, Untag::untag);
-    }
-
-    public static Literal normalize(final Literal literal, final UnaryOperator<String> normalizer) {
-        return literal.getLanguage()
-                .map(lang -> literal(normalizer.apply(literal.stringValue()), lang))
-                .orElseGet(() -> literal(normalizer.apply(literal.stringValue()), literal.getDatatype()));
     }
 
 

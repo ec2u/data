@@ -20,6 +20,12 @@
 - filter out immaterial events (e.g. children, …)
 - location description (usually unpopulated) to be extended on the basis of the `location_extra_info` field
 
+## 2022-07-25
+
+* FIx https://github.com/ec2u/data/issues/29 / Newlines are preserved in description (assuming no HTML markup)
+* Fix https://github.com/ec2u/data/issues/24 / `info_url` is correctly mapped to `schema.url`
+* Close https://github.com/ec2u/data/issues/13 / Integrate `location_extra_info` has fallback location info
+
 ## 2022-06-30
 
 * Fix mapping of location addresses: now skolemized resources are generated only for non empty descriptions

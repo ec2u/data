@@ -53,17 +53,18 @@ export const Event=immutable({
         label: {}
     },
 
-    subject: multiple({
-        id: "",
-        label: {}
-    }),
-
+    name: { "en": "" },
     url: optional(""),
 
     fullDescription: optional(""),
 
     startDate: optional(""),
     endDate: optional(""),
+
+    subject: multiple({
+        id: "",
+        label: {}
+    }),
 
     isAccessibleForFree: optional(false),
 
@@ -125,15 +126,17 @@ function DataEventInfo({
 
     children: {
 
+
         university,
-
         publisher,
-        subject,
 
+        name,
         url,
 
         startDate,
         endDate,
+
+        subject,
 
         isAccessibleForFree,
         location,
@@ -157,6 +160,8 @@ function DataEventInfo({
         }}</DataInfo>
 
         <DataInfo>{{
+
+            "Title": string(name),
 
             "Topic": subject && <ul>{[...subject]
                 .sort((x, y) => string(x).localeCompare(string(y)))
