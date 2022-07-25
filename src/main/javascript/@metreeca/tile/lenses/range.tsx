@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isDateTime } from "@metreeca/core";
+import { isDateTime, isNumber } from "@metreeca/core";
 import { trailing } from "@metreeca/core/callbacks";
 import { DataTypes, Literal, Query } from "@metreeca/link";
 import { toLocaleDateString } from "@metreeca/tile/inputs/date";
@@ -181,6 +181,10 @@ function Icon({
 
             return <Hash/>;
 
+        case "decimalTruncated":
+
+            return <Hash/>;
+
         case "string":
 
             return <Type/>;
@@ -241,11 +245,15 @@ function Input({
 
         case "integer":
 
-            throw "to be implemented";
+            return <IntegerInput min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
 
         case "decimal":
 
             throw "to be implemented";
+
+        case "decimalTruncated":
+
+            return <DecimalTruncatedInput min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
 
         case "string":
 
@@ -278,6 +286,114 @@ function Input({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function IntegerInput({
+
+    min,
+    max,
+    placeholder,
+
+    value,
+    onChange
+
+}: {
+
+    min?: Literal,
+    max?: Literal,
+    placeholder: undefined | Literal,
+
+    value: undefined | Literal,
+    onChange: (value: undefined | Literal) => void
+
+}) {
+
+    function decode(value: undefined | Literal): undefined | number {
+        return isNumber(value) && Number.isInteger(value) ? value : undefined;
+    }
+
+
+    function parse(value: undefined | string): undefined | number {
+        return value ? parseInt(value) : undefined;
+    }
+
+    function format(value: undefined | number): undefined | string {
+        return value ? value.toLocaleString() : undefined;
+    }
+
+
+    return <input type={"number"}
+
+        min={decode(min)}
+        max={decode(max)}
+
+        placeholder={format(decode(placeholder))}
+        defaultValue={decode(value)}
+
+        onChange={e => {
+
+            if ( e.target.checkValidity() ) {
+                onChange(parse(e.target.value.trim()));
+            }
+
+        }}
+
+    />;
+
+}
+
+function DecimalTruncatedInput({
+
+    min,
+    max,
+    placeholder,
+
+    value,
+    onChange
+
+}: {
+
+    min?: Literal,
+    max?: Literal,
+    placeholder: undefined | Literal,
+
+    value: undefined | Literal,
+    onChange: (value: undefined | Literal) => void
+
+}) {
+
+    function decode(value: undefined | Literal): undefined | number {
+        return isNumber(value) ? Math.trunc(value) : undefined;
+    }
+
+
+    function parse(value: undefined | string): undefined | number {
+        return value ? parseInt(value) : undefined;
+    }
+
+    function format(value: undefined | number): undefined | string {
+        return value ? value.toLocaleString() : undefined;
+    }
+
+
+    return <input type={"number"}
+
+        min={decode(min)}
+        max={decode(max)}
+
+        placeholder={format(decode(placeholder))}
+        defaultValue={decode(value)}
+
+        onChange={e => {
+
+            if ( e.target.checkValidity() ) {
+                onChange(parse(e.target.value.trim()));
+            }
+
+        }}
+
+    />;
+
+}
+
 function DateTimeStartInput({
 
     min,
@@ -305,19 +421,22 @@ function DateTimeStartInput({
         return isDateTime(value) ? new Date(value).toISOString().substring(0, 10) : undefined;
     }
 
-    function encode(value: undefined | string): undefined | Literal {
+
+    function parse(value: undefined | string): undefined | string {
         return value ? `${value}T00:00:00Z` : undefined;
     }
 
+    function format(value: undefined | string): undefined | string {
+        return value ? toLocaleDateString(new Date(value)) : undefined;
+    }
 
-    const _placeholder=decode(placeholder);
 
     return <input type={focused || value ? "date" : "text"}
 
         min={decode(min)}
         max={decode(max)}
 
-        placeholder={_placeholder && toLocaleDateString(new Date(_placeholder))}
+        placeholder={format(decode(placeholder))}
         defaultValue={decode(value)}
 
         onFocus={() =>
@@ -332,7 +451,7 @@ function DateTimeStartInput({
 
             // ;(chrome) no change event on clear
 
-            const current=encode(e.target.value.trim());
+            const current=parse(e.target.value.trim());
 
             if ( e.target.checkValidity() && current !== value ) {
                 onChange(current);
@@ -343,7 +462,7 @@ function DateTimeStartInput({
         onChange={e => {
 
             if ( e.target.checkValidity() ) {
-                onChange(encode(e.target.value.trim()));
+                onChange(parse(e.target.value.trim()));
             }
 
         }}

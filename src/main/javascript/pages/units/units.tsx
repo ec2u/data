@@ -26,7 +26,6 @@ import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
 import { FlaskConical } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
-import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
@@ -58,17 +57,8 @@ export const Units=immutable({
 
 export function DataUnits() {
 
-    const [route, setRoute]=useRoute();
-
-    const [query, setQuery]=useQuery({
-
-        ".order": "label",
-        ".limit": 20
-
-    }, sessionStorage);
-
-
-    const entry=useEntry(route, Units, query);
+    const [, setRoute]=useRoute();
+    const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
 
 
     useEffect(() => { setRoute({ label: string(Units) }); }, []);

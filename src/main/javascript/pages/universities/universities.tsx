@@ -22,9 +22,9 @@ import { string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
+import { NodeRange } from "@metreeca/tile/lenses/range";
 import { Landmark } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
-import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
@@ -60,16 +60,8 @@ export const Universities=immutable({
 
 export function DataUniversities() {
 
-    const [route, setRoute]=useRoute();
-
-    const [query, setQuery]=useQuery({
-
-        ".order": "",
-        ".limit": 20
-
-    }, sessionStorage);
-
-    const entry=useEntry(route, Universities, query);
+    const [, setRoute]=useRoute();
+    const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
 
 
     useEffect(() => { setRoute({ label: string(Universities) }); }, []);
@@ -82,7 +74,12 @@ export function DataUniversities() {
             header={<NodeKeywords state={[query, setQuery]}/>}
             footer={<NodeCount state={[query, setQuery]}/>}
 
-        />}
+        >
+
+            <NodeRange path={"inception"} type={"dateTimeStart"} placeholder={"Inception"} state={[query, setQuery]}/>
+            <NodeRange path={"students"} type={"decimalTruncated"} placeholder={"Students"} state={[query, setQuery]}/>
+
+        </DataPane>}
 
         deps={[JSON.stringify(query)]}
 
@@ -97,9 +94,9 @@ export function DataUniversities() {
 
             country
 
-        }) => {
+        }) =>
 
-            return <DataCard key={id} compact
+            <DataCard key={id} compact
 
                 name={<a href={id}>{string(label)}</a>}
                 icon={image}
@@ -108,9 +105,8 @@ export function DataUniversities() {
             >
                 {string(comment)}
 
-            </DataCard>;
+            </DataCard>
 
-        }
         }</NodeItems>
 
     </DataPage>;

@@ -129,6 +129,7 @@ export const DataTypes=immutable({
     boolean: "http://www.w3.org/2001/XMLSchema#boolen",
     integer: "http://www.w3.org/2001/XMLSchema#integer",
     decimal: "http://www.w3.org/2001/XMLSchema#decimal",
+    decimalTruncated: "http://www.w3.org/2001/XMLSchema#decimal",
     string: "http://www.w3.org/2001/XMLSchema#string",
 
     date: "http://www.w3.org/2001/XMLSchema#date",
