@@ -93,7 +93,9 @@ public final class EventsTurkuCity implements Runnable {
 
                 .collect(toList());
 
-        final List<Frame> locations=Xtream.from(events)
+        final List<Frame> places=Xtream.from(events)
+
+                .filter(frame -> frame.focus().stringValue().startsWith("https://linkedevents-api.turku.fi/"))
 
                 .optMap(event -> event.value(seq(Schema.location, Schema.url)))
                 .optMap(Values::iri)
@@ -103,7 +105,7 @@ public final class EventsTurkuCity implements Runnable {
                 .optMap(new GET<>(new JSON()))
 
                 .map(JSONPath::new)
-                .map(this::location)
+                .map(this::place)
 
                 .collect(toList());
 
@@ -113,13 +115,13 @@ public final class EventsTurkuCity implements Runnable {
                     Event(),
                     Set.of(EC2U.Event),
                     events.stream(),
-                    locations.stream()
+                    places.stream()
             ));
 
             upload(EC2U.locations, validate(
                     Schema.Location(),
                     Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
-                    locations.stream()
+                    places.stream()
             ));
 
         }));
@@ -213,13 +215,7 @@ public final class EventsTurkuCity implements Runnable {
                             .map(status -> iri(Schema.Namespace, status))
                     )
 
-                    // !!! is_virtualevent
-
-                    .frame(Schema.location, json.string("location.@id").map(Values::iri).map(iri ->
-                            frame(iri(EC2U.locations, md5(iri.stringValue()))).value(Schema.url, iri)
-                    ))
-
-                    // !!! location_extra_info
+                    .frames(Schema.location, location(json))
 
                     .value(Schema.startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME)))
                     .value(Schema.endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
@@ -231,7 +227,33 @@ public final class EventsTurkuCity implements Runnable {
         });
     }
 
-    private Frame location(final JSONPath json) {
+    private Stream<Frame> location(final JSONPath json) {
+
+        // !!! is_virtualevent // not populated as of 2022-07-25
+
+        return json.string("location.@id")
+                .map(Values::iri)
+                .map(iri -> frame(iri(EC2U.locations, md5(iri.stringValue())))
+                        .value(RDF.TYPE, Schema.Place)
+                        .value(Schema.url, iri)
+                )
+                .map(Stream::of)
+
+                .or(() -> json.path("location_extra_info").map(location -> location.entries("")
+                        .filter(entry -> EC2U.Languages.contains(entry.getKey()))
+                        .optMap(entry -> entry.getValue().string("")
+                                .map(Strings::normalize)
+                                .map(info -> frame(iri(EC2U.locations, md5(info)))
+                                        .value(RDF.TYPE, Schema.Place)
+                                        .value(Schema.name, literal(info, entry.getKey()))
+                                )
+                        )
+                ))
+
+                .orElseGet(Stream::empty);
+    }
+
+    private Frame place(final JSONPath json) {
 
         final String id=json.string("@id").orElseThrow();
 

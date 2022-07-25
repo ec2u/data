@@ -24,6 +24,7 @@
 
 * FIx https://github.com/ec2u/data/issues/29 / Newlines are preserved in description (assuming no HTML markup)
 * Fix https://github.com/ec2u/data/issues/24 / `info_url` is correctly mapped to `schema.url`
+* Close https://github.com/ec2u/data/issues/13 / Integrate `location_extra_info` has fallback location info
 
 ## 2022-06-30
 
