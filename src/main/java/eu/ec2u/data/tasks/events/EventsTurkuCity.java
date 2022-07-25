@@ -35,6 +35,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -190,7 +191,11 @@ public final class EventsTurkuCity implements Runnable {
 
                     // !!! keywords
 
-                    .value(Schema.url, json.string("info_url").map(Values::iri))
+                    .values(Schema.url, json.entries("info_url")
+                            .flatMap(entry -> entry.getValue().strings(""))
+                            .map(Strings::normalize)
+                            .map(Values::iri)
+                    )
 
                     .values(Schema.name, label(json.entries("name")))
                     .values(Schema.image, json.strings("images.*.url").map(Values::iri))
@@ -276,19 +281,19 @@ public final class EventsTurkuCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<Literal> label(final Stream<Map.Entry<String, JSONPath>> values) {
+    private Stream<Literal> label(final Stream<Entry<String, JSONPath>> values) {
         return local(values).map(this::normalize);
     }
 
 
-    private Stream<Literal> local(final Stream<Map.Entry<String, JSONPath>> values) {
+    private Stream<Literal> local(final Stream<Entry<String, JSONPath>> values) {
         return values
                 .filter(entry -> EC2U.Languages.contains(entry.getKey()))
                 .map(this::local)
                 .flatMap(Optional::stream);
     }
 
-    private Optional<Literal> local(final Map.Entry<String, JSONPath> entry) {
+    private Optional<Literal> local(final Entry<String, JSONPath> entry) {
         return entry.getValue().string("").map(text -> literal(text, entry.getKey()));
     }
 

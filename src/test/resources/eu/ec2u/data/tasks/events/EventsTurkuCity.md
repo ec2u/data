@@ -22,7 +22,8 @@
 
 ## 2022-07-25
 
-* FIx https://github.com/ec2u/data/issues/29 / newlines are preserved in description (assuming no HTML markup)
+* FIx https://github.com/ec2u/data/issues/29 / Newlines are preserved in description (assuming no HTML markup)
+* Fix https://github.com/ec2u/data/issues/24 / `info_url` is correctly mapped to `schema.url`
 
 ## 2022-06-30
 
