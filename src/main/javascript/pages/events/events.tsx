@@ -77,15 +77,15 @@ export function DataEvents() {
 
         >
 
-            <NodeOptions path={"university"} type={"reference"} placeholder={"University"} state={[query, setQuery]}/>
-            <NodeOptions path={"publisher"} type={"reference"} placeholder={"Publisher"} state={[query, setQuery]}/>
+            <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
+            <NodeOptions path={"publisher"} type={"anyURI"} placeholder={"Publisher"} state={[query, setQuery]}/>
 
-            <NodeOptions path={"subject"} type={"reference"} placeholder={"Topic"} state={[query, setQuery]}/>
-            <NodeRange path={"startDate"} type={"dateTimeStart"} placeholder={"Start Date"} state={[query, setQuery]}/>
+            <NodeOptions path={"subject"} type={"anyURI"} placeholder={"Topic"} state={[query, setQuery]}/>
+            <NodeRange path={"startDate"} type={"dateTime"} as={"date"} placeholder={"Start Date"} state={[query, setQuery]}/>
 
             <NodeOptions path={"isAccessibleForFree"} type={"boolean"} placeholder={"Free Entry"} state={[query, setQuery]}/>
-            <NodeOptions path={"location"} type={"reference"} placeholder={"Location"} state={[query, setQuery]}/>
-            <NodeOptions path={"organizer"} type={"reference"} placeholder={"Organizer"} state={[query, setQuery]}/>
+            <NodeOptions path={"location"} type={"anyURI"} placeholder={"Location"} state={[query, setQuery]}/>
+            <NodeOptions path={"organizer"} type={"anyURI"} placeholder={"Organizer"} state={[query, setQuery]}/>
 
         </DataPane>}
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isDateTime, isNumber } from "@metreeca/core";
+import { isDate, isDateTime, isNumber, isString } from "@metreeca/core";
 import { trailing } from "@metreeca/core/callbacks";
 import { DataTypes, Literal, Query } from "@metreeca/link";
 import { toLocaleDateString } from "@metreeca/tile/inputs/date";
@@ -32,7 +32,7 @@ import "./range.css";
 
 const AutoDelay=500;
 
-const WideTypes=new Set(["date", "dateTime", "dateTimeStart"]);
+const WideTypes=new Set(["date", "dateTime"]);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,6 +43,7 @@ export function NodeRange({
     path,
     type,
 
+    as,
     compact=true,
     placeholder,
 
@@ -52,8 +53,9 @@ export function NodeRange({
 
     id?: string,
     path: string,
-    type: keyof typeof DataTypes
+    type: keyof typeof DataTypes,
 
+    as?: keyof typeof DataTypes,
     compact?: boolean
     placeholder?: string
 
@@ -77,9 +79,7 @@ export function NodeRange({
 
         window.addEventListener("focus", focus, true);
 
-        return () => {
-            window.removeEventListener("focus", focus, true);
-        };
+        return () => window.removeEventListener("focus", focus, true);
 
     });
 
@@ -124,7 +124,7 @@ export function NodeRange({
 
         <header>
 
-            <i><Icon type={type}/></i>
+            <i><Icon as={as ?? type}/></i>
 
             <input readOnly placeholder={placeholder}/>
 
@@ -138,13 +138,13 @@ export function NodeRange({
 
         </header>
 
-        {expanded && <section className={classes({ wide: WideTypes.has(type) })}>
+        {expanded && <section className={classes({ wide: WideTypes.has(as ?? type) })}>
 
-            <Input type={type} max={cache?.lte} placeholder={cache?.min}
+            <Input as={as ?? type} type={type} max={cache?.lte} placeholder={cache?.min}
                 value={cache?.gte} onChange={gte => doUpdate({ gte })}
             />
 
-            <Input type={type} min={cache?.gte} placeholder={cache?.max}
+            <Input as={as ?? type} type={type} min={cache?.gte} placeholder={cache?.max}
                 value={cache?.lte} onChange={lte => doUpdate({ lte })}
             />
 
@@ -159,15 +159,15 @@ export function NodeRange({
 
 function Icon({
 
-    type
+    as
 
 }: {
 
-    type: keyof typeof DataTypes
+    as: keyof typeof DataTypes
 
 }) {
 
-    switch ( type ) {
+    switch ( as ) {
 
         case "boolean":
 
@@ -181,13 +181,13 @@ function Icon({
 
             return <Hash/>;
 
-        case "decimalTruncated":
-
-            return <Hash/>;
-
         case "string":
 
             return <Type/>;
+
+        case "dateTime":
+
+            return <Calendar/>;
 
         case "date":
 
@@ -197,15 +197,11 @@ function Icon({
 
             return <Clock/>;
 
-        case "dateTime":
+        case "gYear":
 
             return <Calendar/>;
 
-        case "dateTimeStart":
-
-            return <Calendar/>;
-
-        case "reference":
+        case "anyURI":
 
             throw "to be implemented";
 
@@ -214,6 +210,145 @@ function Icon({
 }
 
 function Input({
+
+    as,
+    type,
+
+    min,
+    max,
+    placeholder,
+
+    value,
+    onChange
+
+}: {
+
+    as: keyof typeof DataTypes
+    type: keyof typeof DataTypes
+
+    min?: Literal
+    max?: Literal
+    placeholder: undefined | Literal
+
+    value: undefined | Literal
+    onChange: (value: undefined | Literal) => void
+
+}) {
+
+    switch ( as ) {
+
+        case "boolean":
+
+            throw "to be implemented";
+
+        case "integer":
+
+            return <IntegerInput type={type} min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
+
+        case "decimal":
+
+            throw "to be implemented";
+
+        case "string":
+
+            throw "to be implemented";
+
+        case "dateTime":
+
+            throw "to be implemented";
+
+        case "date":
+
+            return <DateInput type={type} min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
+
+        case "time":
+
+            throw "to be implemented";
+
+        case "gYear":
+
+            return <GYearInput type={type} min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
+
+        case "anyURI":
+
+            throw "to be implemented";
+
+    }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function IntegerInput({
+
+    type,
+
+    min,
+    max,
+    placeholder,
+
+    value,
+    onChange
+
+}: {
+
+    type: keyof typeof DataTypes
+
+    min?: Literal
+    max?: Literal
+    placeholder?: Literal
+
+    value: undefined | Literal
+    onChange: (value: undefined | Literal) => void
+
+}) {
+
+    function integer(literal: undefined | Literal): undefined | number {
+        return literal === undefined ? undefined
+            : isNumber(literal) ? Number.isFinite(literal) ? Math.trunc(literal) : undefined
+                : isString(literal) ? integer(parseFloat(literal))
+                    : undefined;
+    }
+
+    function literal(integer: undefined | number): undefined | Literal {
+        return integer === undefined ? undefined
+            : type === "integer" || type === "decimal" ? integer
+                : type === "string" ? integer.toString()
+                    : undefined;
+    }
+
+
+    function decode(string: undefined | string): undefined | number {
+        return string ? parseInt(string) : undefined;
+    }
+
+    function encode(integer: undefined | number): undefined | string {
+        return integer !== undefined ? integer.toLocaleString() : undefined;
+    }
+
+
+    return <input type={"number"} key={String(value)}
+
+        min={integer(min)}
+        max={integer(max)}
+
+        placeholder={encode(integer(placeholder))}
+        defaultValue={integer(value)}
+
+        onChange={e => {
+
+            if ( e.target.checkValidity() ) {
+                onChange(literal(decode(e.target.value.trim())));
+            }
+
+        }}
+
+    />;
+
+}
+
+function DateInput({
 
     type,
 
@@ -237,207 +372,42 @@ function Input({
 
 }) {
 
-    switch ( type ) {
 
-        case "boolean":
-
-            throw "to be implemented";
-
-        case "integer":
-
-            return <IntegerInput min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
-
-        case "decimal":
-
-            throw "to be implemented";
-
-        case "decimalTruncated":
-
-            return <DecimalTruncatedInput min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
-
-        case "string":
-
-            throw "to be implemented";
-
-        case "date":
-
-            throw "to be implemented";
-
-        case "time":
-
-            throw "to be implemented";
-
-        case "dateTime":
-
-            throw "to be implemented";
-
-        case "dateTimeStart":
-
-            return <DateTimeStartInput min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
-
-        case "reference":
-
-            throw "to be implemented";
-
+    function date(literal: undefined | Literal): undefined | string {
+        return literal === undefined ? undefined
+            : isDateTime(literal) ? literal.substring(0, 10)
+                : isDate(literal) ? literal
+                    : undefined;
     }
 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function IntegerInput({
-
-    min,
-    max,
-    placeholder,
-
-    value,
-    onChange
-
-}: {
-
-    min?: Literal,
-    max?: Literal,
-    placeholder: undefined | Literal,
-
-    value: undefined | Literal,
-    onChange: (value: undefined | Literal) => void
-
-}) {
-
-    function decode(value: undefined | Literal): undefined | number {
-        return isNumber(value) && Number.isInteger(value) ? value : undefined;
+    function literal(date: undefined | string): undefined | Literal {
+        return date === undefined ? undefined
+            : type === "dateTime" ? `${date}T00:00:00Z`
+                : type === "date" ? date
+                    : type === "string" ? date
+                        : undefined;
     }
 
 
-    function parse(value: undefined | string): undefined | number {
-        return value ? parseInt(value) : undefined;
+    function decode(string: undefined | string): undefined | string {
+        return string ? string : undefined;
     }
 
-    function format(value: undefined | number): undefined | string {
-        return value ? value.toLocaleString() : undefined;
+    function encode(date: undefined | string): undefined | string {
+        return date ? toLocaleDateString(new Date(`${date}T00:00:00Z`)) : undefined;
     }
 
-
-    return <input type={"number"}
-
-        min={decode(min)}
-        max={decode(max)}
-
-        placeholder={format(decode(placeholder))}
-        defaultValue={decode(value)}
-
-        onChange={e => {
-
-            if ( e.target.checkValidity() ) {
-                onChange(parse(e.target.value.trim()));
-            }
-
-        }}
-
-    />;
-
-}
-
-function DecimalTruncatedInput({
-
-    min,
-    max,
-    placeholder,
-
-    value,
-    onChange
-
-}: {
-
-    min?: Literal,
-    max?: Literal,
-    placeholder: undefined | Literal,
-
-    value: undefined | Literal,
-    onChange: (value: undefined | Literal) => void
-
-}) {
-
-    function decode(value: undefined | Literal): undefined | number {
-        return isNumber(value) ? Math.trunc(value) : undefined;
-    }
-
-
-    function parse(value: undefined | string): undefined | number {
-        return value ? parseInt(value) : undefined;
-    }
-
-    function format(value: undefined | number): undefined | string {
-        return value ? value.toLocaleString() : undefined;
-    }
-
-
-    return <input type={"number"}
-
-        min={decode(min)}
-        max={decode(max)}
-
-        placeholder={format(decode(placeholder))}
-        defaultValue={decode(value)}
-
-        onChange={e => {
-
-            if ( e.target.checkValidity() ) {
-                onChange(parse(e.target.value.trim()));
-            }
-
-        }}
-
-    />;
-
-}
-
-function DateTimeStartInput({
-
-    min,
-    max,
-    placeholder,
-
-    value,
-    onChange
-
-}: {
-
-    min?: Literal,
-    max?: Literal,
-    placeholder: undefined | Literal,
-
-    value: undefined | Literal,
-    onChange: (value: undefined | Literal) => void
-
-}) {
 
     const [focused, setFocused]=useState(false);
 
 
-    function decode(value: undefined | Literal): undefined | string {
-        return isDateTime(value) ? new Date(value).toISOString().substring(0, 10) : undefined;
-    }
+    return <input type={focused || value ? "date" : "text"} key={String(value)}
 
+        min={date(min)}
+        max={date(max)}
 
-    function parse(value: undefined | string): undefined | string {
-        return value ? `${value}T00:00:00Z` : undefined;
-    }
-
-    function format(value: undefined | string): undefined | string {
-        return value ? toLocaleDateString(new Date(value)) : undefined;
-    }
-
-
-    return <input type={focused || value ? "date" : "text"}
-
-        min={decode(min)}
-        max={decode(max)}
-
-        placeholder={format(decode(placeholder))}
-        defaultValue={decode(value)}
+        placeholder={encode(date(placeholder))}
+        defaultValue={date(value)}
 
         onFocus={() =>
 
@@ -451,7 +421,7 @@ function DateTimeStartInput({
 
             // ;(chrome) no change event on clear
 
-            const current=parse(e.target.value.trim());
+            const current=decode(e.target.value.trim());
 
             if ( e.target.checkValidity() && current !== value ) {
                 onChange(current);
@@ -462,7 +432,79 @@ function DateTimeStartInput({
         onChange={e => {
 
             if ( e.target.checkValidity() ) {
-                onChange(parse(e.target.value.trim()));
+                onChange(literal(decode(e.target.value.trim())));
+            }
+
+        }}
+
+    />;
+
+}
+
+function GYearInput({
+
+    type,
+
+    min,
+    max,
+    placeholder,
+
+    value,
+    onChange
+
+}: {
+
+    type: keyof typeof DataTypes
+
+    min?: Literal
+    max?: Literal
+    placeholder?: Literal
+
+    value: undefined | Literal
+    onChange: (value: undefined | Literal) => void
+
+}) {
+
+    function gYear(literal: undefined | Literal): undefined | number {
+        return literal === undefined ? undefined
+            : isNumber(literal) ? Number.isFinite(literal) ? Math.trunc(literal) : undefined
+                : isDate(literal) ? new Date(`${literal}T00:00:00Z`).getFullYear()
+                    : isDateTime(literal) ? new Date(literal).getFullYear()
+                        : isString(literal) ? gYear(parseFloat(literal))
+                            : undefined;
+    }
+
+    function literal(gYear: undefined | number): undefined | Literal {
+        return gYear === undefined ? undefined
+            : type === "integer" || type === "decimal" ? gYear
+                : type === "date" ? `${gYear}-01-01`
+                    : type === "dateTime" ? `${gYear}-01-01T00:00:00Z`
+                        : type === "string" ? gYear?.toString()
+                            : undefined;
+    }
+
+
+    function decode(string: undefined | string): undefined | number {
+        return string ? parseInt(string) : undefined;
+    }
+
+    function encode(integer: undefined | number): undefined | string {
+        return integer ? integer.toString() : undefined;
+    }
+
+
+    return <input type={"number"} key={String(value)}
+
+        min={gYear(min)}
+        max={gYear(max)}
+
+        placeholder={encode(gYear(placeholder))}
+        defaultValue={gYear(value)}
+
+        onChange={e => {
+
+            if ( e.target.checkValidity() ) {
+                onChange(literal(decode(e.target.value.trim())));
             }
 
         }}

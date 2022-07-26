@@ -117,11 +117,6 @@ export interface Stats {
 }
 
 
-export function isError(value: any): value is Error<unknown> {
-    return isNumber(value.status) && isString(value.reason);
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const DataTypes=immutable({
@@ -129,15 +124,15 @@ export const DataTypes=immutable({
     boolean: "http://www.w3.org/2001/XMLSchema#boolen",
     integer: "http://www.w3.org/2001/XMLSchema#integer",
     decimal: "http://www.w3.org/2001/XMLSchema#decimal",
-    decimalTruncated: "http://www.w3.org/2001/XMLSchema#decimal",
     string: "http://www.w3.org/2001/XMLSchema#string",
 
+    dateTime: "http://www.w3.org/2001/XMLSchema#dateTime",
     date: "http://www.w3.org/2001/XMLSchema#date",
     time: "http://www.w3.org/2001/XMLSchema#time",
-    dateTime: "http://www.w3.org/2001/XMLSchema#dateTime",
-    dateTimeStart: "http://www.w3.org/2001/XMLSchema#dateTime",
 
-    reference: "http://www.w3.org/2001/XMLSchema#anyURI"
+    gYear: "http://www.w3.org/2001/XMLSchema#gYear",
+
+    anyURI: "http://www.w3.org/2001/XMLSchema#anyURI"
 
 });
 

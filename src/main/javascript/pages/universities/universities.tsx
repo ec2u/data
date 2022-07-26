@@ -76,8 +76,8 @@ export function DataUniversities() {
 
         >
 
-            <NodeRange path={"inception"} type={"dateTimeStart"} placeholder={"Inception"} state={[query, setQuery]}/>
-            <NodeRange path={"students"} type={"decimalTruncated"} placeholder={"Students"} state={[query, setQuery]}/>
+            <NodeRange path={"inception"} type={"dateTime"} as={"gYear"} placeholder={"Inception"} state={[query, setQuery]}/>
+            <NodeRange path={"students"} type={"decimal"} as={"integer"} placeholder={"Students"} state={[query, setQuery]}/>
 
         </DataPane>}
 

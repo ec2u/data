@@ -73,7 +73,7 @@ export function DataUnits() {
 
         >
 
-            <NodeOptions path={"university"} type={"reference"} placeholder={"University"} state={[query, setQuery]}/>
+            <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
 
         </DataPane>}
 
