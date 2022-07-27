@@ -254,7 +254,7 @@ export function useOptions(
 
         ".limit": offset+limit,
 
-        [type === "reference" ? `~${path}.label` : `~${path}`]: keywords
+        [type === "anyURI" ? `~${path}.label` : `~${path}`]: keywords
 
     };
 

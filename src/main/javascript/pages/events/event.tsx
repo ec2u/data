@@ -53,6 +53,9 @@ export const Event=immutable({
         label: {}
     },
 
+    source: optional(""),
+
+
     name: { "en": "" },
     url: optional(""),
 
@@ -129,6 +132,7 @@ function DataEventInfo({
 
         university,
         publisher,
+        source,
 
         name,
         url,
@@ -155,13 +159,15 @@ function DataEventInfo({
         <DataInfo>{{
 
             "University": <NodeLink>{university}</NodeLink>,
-            "Source": url && <a href={url} title={string(publisher)}>{string(publisher)}</a>
+            "Source": source
+                ? <a href={source} title={string(publisher)}>{string(publisher)}</a>
+                : <span title={string(publisher)}>{string(publisher)}</span>
 
         }}</DataInfo>
 
         <DataInfo>{{
 
-            "Title": string(name),
+            "Title": <span title={string(name)}>{string(name)}</span>,
 
             "Topic": subject && <ul>{[...subject]
                 .sort((x, y) => string(x).localeCompare(string(y)))
@@ -208,7 +214,9 @@ function DataEventInfo({
                 .map(({ id, label, url }) => url
                     ? <a href={url}>{string(label)}</a>
                     : <span>{string(label)}</span>
-                )
+                ),
+
+            "Info": url && <a href={url}>{new URL(url).host}</a>
 
         }}</DataInfo>
 

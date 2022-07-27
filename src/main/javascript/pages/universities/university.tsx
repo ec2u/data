@@ -90,15 +90,23 @@ export function DataUniversity() {
                 country,
                 location
 
-            }) => <DataInfo>{{
+            }) => <>
 
-                "Inception": inception && inception.substring(0, 4) || "-",
-                "Students": students && string(students),
+                <DataInfo>{{
 
-                "Country": country && <NodeLink>{country}</NodeLink>,
-                "City": location && <NodeLink>{location}</NodeLink>
+                    "Country": country && <NodeLink>{country}</NodeLink>,
+                    "City": location && <NodeLink>{location}</NodeLink>
 
-            }}</DataInfo>
+                }}</DataInfo>
+
+                <DataInfo>{{
+
+                    "Inception": inception && inception.substring(0, 4) || "-",
+                    "Students": students && string(students)
+
+                }}</DataInfo>
+
+            </>
 
         })}</DataPane>}
 

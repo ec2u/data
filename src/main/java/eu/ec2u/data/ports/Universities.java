@@ -57,6 +57,9 @@ public final class Universities extends Delegator {
                                 field(RDFS.LABEL, multilingual())
                         ),
 
+                        field(EC2U.inception, optional(), datatype(XSD.DATETIME)),
+                        field(EC2U.students, optional(), datatype(XSD.DECIMAL)),
+
                         detail(
 
                                 field(EC2U.location, optional(),
@@ -64,10 +67,7 @@ public final class Universities extends Delegator {
                                 ),
 
                                 field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
-                                field(WGS84.LONG, optional(), datatype(XSD.DECIMAL)),
-
-                                field(EC2U.inception, optional(), datatype(XSD.DATETIME)),
-                                field(EC2U.students, optional(), datatype(XSD.DECIMAL))
+                                field(WGS84.LONG, optional(), datatype(XSD.DECIMAL))
                         )
 
                 )

@@ -26,8 +26,8 @@ https://theeventscalendar.com/knowledgebase/k/introduction-to-the-events-calenda
 
 ## HTML Microdata
 
-pattern `itemid/itemtype/itemprop`
+* search for `itemid/itemtype/itemprop`
 
 ## JSON-LD Metadata
 
-pattern `ld+json` 
+* search for `ld+json` 

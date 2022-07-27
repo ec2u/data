@@ -18,7 +18,6 @@
 ## Pending
 
 - filter out immaterial events (e.g. children, …)
-- location description (usually unpopulated) to be extended on the basis of the `location_extra_info` field
 
 ## 2022-07-25
 

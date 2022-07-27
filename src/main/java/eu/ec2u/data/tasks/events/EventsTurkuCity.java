@@ -194,6 +194,7 @@ public final class EventsTurkuCity implements Runnable {
                     // !!! keywords
 
                     .values(Schema.url, json.entries("info_url")
+                            .filter(entry -> EC2U.Languages.contains(entry.getKey()))
                             .flatMap(entry -> entry.getValue().strings(""))
                             .map(Strings::normalize)
                             .map(Values::iri)
