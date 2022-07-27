@@ -56,7 +56,6 @@ GET https://www.poitiers.fr/les-evenements?date=personnalise&du=2022-07-01&au=
 ```
 
 ```xml
-
 <a href="/evenements/spectacle-flamenco" class="pushEvt__link">Spectacle Flamenco</a>
 ```
 
@@ -65,8 +64,3 @@ GET https://www.poitiers.fr/les-evenements?date=personnalise&du=2022-07-01&au=
 ```http
 GET https://www.poitiers.fr/evenements/spectacle-flamenco
 ```
-
-```xml
-
-```
-
