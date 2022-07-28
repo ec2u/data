@@ -37,26 +37,25 @@ public final class Cron extends Delegator {
                 .path("/wikidata", execute(new Wikidata()))
 
                 .path("/events/", execute(new Events()))
-
                 .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
+                .path("/events/coimbra/city", execute(new EventsCoimbraCity()))
                 .path("/events/iasi/university", execute(new EventsIasiUniversity()))
                 .path("/events/iasi/university/360", execute(new EventsIasiUniversity360()))
-                .path("/events/jena/university", execute(new EventsJenaUniversity()))
-                .path("/events/pavia/university", execute(new EventsPaviaUniversity()))
-                .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
-                .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
-                .path("/events/turku/university", execute(new EventsTurkuUniversity()))
-
-                .path("/events/coimbra/city", execute(new EventsCoimbraCity()))
                 .path("/events/iasi/city/cultura", execute(new EventsIasiCityCultura()))
                 .path("/events/iasi/city/in-oras", execute(new EventsIasiCityInOras()))
+                .path("/events/jena/university", execute(new EventsJenaUniversity()))
                 .path("/events/jena/city", execute(new EventsJenaCity()))
+                .path("/events/pavia/university", execute(new EventsPaviaUniversity()))
                 .path("/events/pavia/city", execute(new EventsPaviaCity()))
-                .path("/events/poitiers/city", execute(new EventsPoitiersCity()))
+                .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
+                //.path("/events/poitiers/city", execute(new EventsPoitiersCity()))
                 .path("/events/poitiers/city/grand", execute(new EventsPoitiersCityGrand()))
+                .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
                 .path("/events/salamanca/city/sacis", execute(new EventsSalamancaCitySACIS()))
                 .path("/events/salamanca/city/to", execute(new EventsSalamancaCityTO()))
+                .path("/events/turku/university", execute(new EventsTurkuUniversity()))
                 .path("/events/turku/city", execute(new EventsTurkuCity()))
+                .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
 
         )));
     }
