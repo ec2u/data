@@ -8,26 +8,31 @@
 
 ## RSS
 
-pattern `rss`
-
-## WordPress
-
-Inspect available APIs at:
-
-- https://developer.wordpress.org/rest-api/
-
-### WordPress Event Calendar API
-
-Events Calendar plugin
-
-https://theeventscalendar.com/knowledgebase/k/introduction-to-the-events-calendar-rest-api/
-
-- `https://www.uaic.ro/wp-json/tribe/events/v1/events/?start_date=2022-01-01`
+* search for: `application/rss+xml` /`rss`
 
 ## HTML Microdata
 
-* search for `itemid/itemtype/itemprop`
+* search for `itemid`/`itemtype`/`itemprop`
 
 ## JSON-LD Metadata
 
-* search for `ld+json` 
+* search for `ld+json`
+
+## iCal
+
+* search for `text/calendar`/`ical`
+
+## WordPress
+
+* inspect available API at
+  * https://example.org/wp-json/
+* see https://developer.wordpress.org/rest-api/
+
+### WordPress Event Calendar API
+
+* search for `/tribe/events/`
+
+*
+see [Events Calendar plugin](https://theeventscalendar.com/knowledgebase/k/introduction-to-the-events-calendar-rest-api/)
+  - `https://example.org/wp-json/tribe/events/v1/events/?start_date=2022-01-01`
+

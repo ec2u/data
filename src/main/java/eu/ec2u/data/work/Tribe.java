@@ -55,6 +55,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
     private static final Period Delta=Period.ofDays(90);
 
+
     private static Literal instant(final String timestamp) {
         return literal(ZonedDateTime
                 .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), UTC)
@@ -144,6 +145,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
         }
 
         return crawl(instant).optMap(this::event);
+
     }
 
 
