@@ -46,6 +46,10 @@ cron:
     url: /cron/events/pavia/university
     schedule: every day 00:00
 
+  - description: "events › pavia › borromeo - nightly crawling"
+    url: /cron/events/pavia/borromeo
+    schedule: every day 00:00
+
   - description: "events › pavia › city - nightly crawling"
     url: /cron/events/pavia/city
     schedule: every day 00:00
