@@ -10,7 +10,7 @@ EC2U research units and facilities are described using a controlled subset of
 the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with:
 
 * [SKOS](https://www.w3.org/TR/skos-primer/#seclabel) labels, as per *Organization Ontology* recommendations
-* the following [VIVO](https://wiki.lyrasis.org/display/VIVODOC113x/Ontology+Reference) `foaf:Organization`
+* the following [VIVO](https://wiki.lyrasis.org/display/VIVODOC113x/Ontology+Reference) foaf:Organization`
   subclasses for classification purposes:
   * `vivo:Association`
   * `vivo:Center`
