@@ -20,17 +20,21 @@ import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
+import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
+import { Package } from "@metreeca/tile/widgets/icon";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 
-export const Home=immutable({
+export const SetsIcon=<Package/>;
+
+export const Sets=immutable({
 
     id: "/",
     label: "Knowledge Hub",
@@ -51,7 +55,7 @@ export const Home=immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function DataHome() {
+export function DataSets() {
 
     const [route, setRoute]=useRoute();
 
@@ -62,15 +66,15 @@ export default function DataHome() {
 
     }, sessionStorage);
 
-    const entry=useEntry(route, Home, query);
+    const entry=useEntry(route, Sets, query);
 
 
-    useEffect(() => { setRoute({ label: string(Home) }); }, []);
+    useEffect(() => { setRoute({ label: string(Sets) }); }, []);
 
 
     return (
 
-        <DataPage item={string(Home)}
+        <DataPage item={string(Sets)}
 
             menu={entry({ fetch: <NodeSpin/> })}
 
@@ -81,19 +85,34 @@ export default function DataHome() {
 
             />}
 
-        >{entry<ReactNode>({
+            deps={[JSON.stringify(query)]}
 
-            value: ({ contains }) => contains.map(dataset => <DataCard key={dataset.id} compact
+        >
 
-                name={<NodeLink>{dataset}</NodeLink>}
+            <NodeItems model={Sets} placeholder={SetsIcon} state={[query, setQuery]}>{({
 
-                tags={`${string(dataset.entities)} entities`}
+                id,
+                label,
+                comment,
+                entities
 
-            >{string(dataset.comment)}</DataCard>),
+            }) =>
 
-            error: error => <span>{error.status}</span> // !!! report
+                <DataCard key={id} compact
 
-        })}</DataPage>
+                    name={<NodeLink>{{ id, label }}</NodeLink>}
+
+                    tags={`${string(entities)} entities`}
+
+                >{
+
+                    string(comment)
+
+                }</DataCard>
+
+            }</NodeItems>
+
+        </DataPage>
 
     );
 }
