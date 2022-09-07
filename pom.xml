@@ -64,8 +64,8 @@
         <java.version>11</java.version>
         <maven.version>3.6</maven.version>
 
-        <node.version>14.15.4</node.version>
-        <npm.version>7.7.6</npm.version>
+        <node.version>16.13.0</node.version>
+        <npm.version>8.6.0</npm.version>
 
         <gae.project>${project.artifactId}</gae.project>
         <gae.version>${revision}</gae.version>

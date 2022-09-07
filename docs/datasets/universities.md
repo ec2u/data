@@ -6,8 +6,8 @@ title: Universities
 
 # Vocabularies
 
-EC2U partner universities are described using a controlled subset of the [Organization Ontology](https://www.w3.
-org/TR/vocab-org/) data model, extended with:
+EC2U partner universities are described using a controlled subset of
+the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with:
 
 * [SKOS](https://www.w3.org/TR/skos-primer/#seclabel) labels, as per *Organization Ontology* recommendations
 * the following internal specialized properties

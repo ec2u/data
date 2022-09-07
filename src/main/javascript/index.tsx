@@ -16,8 +16,8 @@
 
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
-import DataHome, { Home } from "@ec2u/data/pages/home";
 import DataNone from "@ec2u/data/pages/none";
+import { DataSets, Sets } from "@ec2u/data/pages/sets";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
@@ -60,7 +60,7 @@ render((
 
                 <NodeRouter routes={{
 
-                    [Home.id]: DataHome,
+                    [Sets.id]: DataSets,
 
                     [Universities.id]: DataUniversities,
                     [University.id]: DataUniversity,

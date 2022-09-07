@@ -82,9 +82,9 @@ cron:
     url: /cron/events/turku/university
     schedule: every day 00:00
 
-  - description: "events › turku › city - nightly crawling"
-    url: /cron/events/turku/city
-    schedule: every day 00:00
+  #  - description: "events › turku › city - nightly crawling"
+  #    url: /cron/events/turku/city
+  #    schedule: every day 00:00
 
   - description: "events › turku › tyy - nightly crawling"
     url: /cron/events/turku/tyy
