@@ -19,6 +19,10 @@
 
 - filter out immaterial events (e.g. children, …)
 
+## 2022-09-07
+
+* Provisionally disabled feed as per https://github.com/ec2u/data/issues/36
+
 ## 2022-07-25
 
 * FIx https://github.com/ec2u/data/issues/29 / Newlines are preserved in description (assuming no HTML markup)
