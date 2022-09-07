@@ -17,33 +17,45 @@
 package eu.ec2u.data.tasks.units;
 
 import com.metreeca.http.Xtream;
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.http.services.Vault;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
+import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.cities.Salamanca;
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Resources.resource;
+import static com.metreeca.core.Lambdas.task;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
+import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.ports.Units.Unit;
 import static eu.ec2u.data.tasks.Tasks.*;
 
+import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.function.Predicate.not;
 
 public final class UnitsSalamanca implements Runnable {
+
+    private static final String APIUrl="units-salamanca-url"; // vault label
+    private static final String APIKey="units-salamanca-key"; // vault label
+
 
     private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");
 
@@ -55,32 +67,71 @@ public final class UnitsSalamanca implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Vault vault=service(vault());
+
+
     @Override public void run() {
-        Xtream.of(resource(this, "UnitsSalamanca-20220517.json"))
+        Xtream.of(Instant.EPOCH)
 
-                .map(url -> {
-                    try {
-
-                        return JSON.json(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-
-                    } catch ( final IOException e ) {
-
-                        throw new UncheckedIOException(e);
-
-                    }
-                })
-
-                .map(JSONPath::new)
-                .flatMap(json -> json.paths("*"))
+                .flatMap(this::units)
                 .optMap(this::unit)
 
-                .sink(events -> upload(EC2U.units,
-                        validate(Unit(), Set.of(EC2U.Unit), events)
+                .sink(units -> upload(EC2U.units,
+                        validate(Unit(), Set.of(EC2U.Unit), units),
+                        () -> service(graph()).update(task(connection -> Stream
+
+                                .of(""
+                                        +"prefix ec2u: </terms/>\n"
+                                        +"\n"
+                                        +"delete { ?s ?p ?o } where {\n"
+                                        +"\n"
+                                        +"\t?s ?p ?o; a ec2u:Unit; ec2u:university $university\n"
+                                        +"\n"
+                                        +"}"
+                                )
+
+                                .forEach(new Update()
+                                        .base(EC2U.Base)
+                                        .binding("university", Salamanca.University)
+                                )
+
+                        ))
                 ));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Xtream<JSONPath> units(final Instant synced) {
+
+        final String url=vault
+                .get(APIUrl)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined API URL <%s>", APIUrl
+                )));
+
+        final String key=service(vault())
+                .get(APIKey)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined API key <%s>", APIKey
+                )));
+
+        return Xtream.of(synced)
+
+                .flatMap(new Fill<>()
+                        .model(url)
+                )
+
+                .optMap(new GET<>(new JSON(), request -> request
+                        .header("Authorization", format("Basic %s",
+                                Base64.getEncoder().encodeToString(key.getBytes(UTF_8))
+                        ))
+                        .header("Accept", JSON.MIME)
+                ))
+
+                .map(JSONPath::new)
+                .flatMap(json -> json.paths("*"));
+    }
 
     private Optional<Frame> unit(final JSONPath json) {
         return json.string("id").map(id -> {
@@ -120,7 +171,7 @@ public final class UnitsSalamanca implements Runnable {
 
                     final String familyName=matcher.group(1);
                     final String givenName=matcher.group(2);
-                    final String fullName=String.format("%s %s", givenName, familyName);
+                    final String fullName=format("%s %s", givenName, familyName);
 
                     return frame(iri(EC2U.persons, md5(Salamanca.University+"@"+fullName)))
 

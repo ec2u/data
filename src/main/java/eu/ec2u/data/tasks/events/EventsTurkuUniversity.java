@@ -72,7 +72,7 @@ public final class EventsTurkuUniversity implements Runnable {
                     literal("Turun yliopisto / Ajankohtaista", Turku.Language)
             );
 
-    private static final String APIKey="key-events-turku-university"; // GCP Vault key label
+    private static final String APIKey="key-events-turku-university"; // vault label
 
 
     private static Literal instant(final String timestamp) {
