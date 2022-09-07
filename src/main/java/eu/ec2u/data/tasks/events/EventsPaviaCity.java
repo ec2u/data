@@ -20,11 +20,9 @@ import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
 import com.metreeca.link.Frame;
-import com.metreeca.rdf.actions.Localize;
-import com.metreeca.rdf.actions.Normalize;
+import com.metreeca.rdf.actions.*;
 import com.metreeca.rdf.actions.Normalize.DateToDateTime;
 import com.metreeca.rdf.actions.Normalize.StringToDate;
-import com.metreeca.rdf4j.actions.Microdata;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.cities.Pavia;
