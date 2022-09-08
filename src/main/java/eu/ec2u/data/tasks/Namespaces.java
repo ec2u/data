@@ -46,7 +46,9 @@ public final class Namespaces implements Runnable {
 
                                 @Override public void handleNamespace(final String prefix, final String uri) {
 
-                                    namespaces.put(prefix, uri);
+                                    if ( !prefix.isEmpty() ) {
+                                        namespaces.put(prefix, uri);
+                                    }
 
                                 }
 
