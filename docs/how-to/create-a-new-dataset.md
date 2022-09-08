@@ -1,0 +1,2 @@
+- declare top-level dataset types as `void:rootResources` in `eu/ec2u/data/terms/EC2U.ttl`
+  - required to prevent garbage collection from `eu.ec2u.data.tasks.Chores#collect()`
