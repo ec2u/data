@@ -2,7 +2,7 @@
 title: Universities
 ---
 
-![universities data model](models/universities.svg)
+![universities data model](docs/datasets/index/universities.svg)
 
 # Vocabularies
 

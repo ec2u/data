@@ -2,7 +2,7 @@
 title: Persons
 ---
 
-![persons data model](models/persons.svg)
+![persons data model](docs/datasets/index/persons.svg)
 
 # Vocabularies
 

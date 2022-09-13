@@ -2,7 +2,7 @@
 title: Research Units
 ---
 
-![research units data model](models/units.svg)
+![research units data model](docs/datasets/index/units.svg)
 
 # Vocabularies
 

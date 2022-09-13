@@ -6,7 +6,7 @@
 
 # Integration
 
-N/A
+* currently not integrated due to the lack of content in the structured dat sources
 
 # Content
 
