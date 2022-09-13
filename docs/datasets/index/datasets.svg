@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2022 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="70 48 564 254"
+     width="564" height="254">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
+            stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
+      <g>
+        <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="datasets" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1" stroke="none">
+    <title>datasets</title>
+    <rect fill="white" x="70" y="48" width="564" height="254"/>
+    <g id="datasets_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_112">
+        <a xl:href="https://www.w3.org/TR/void/">
+          <text transform="translate(237.60136 90.8189)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix void: &lt;http://rdfs.org/ns/void#&gt;</tspan>
+          </text>
+        </a>
+      </g>
+      <g id="Graphic_31">
+        <text transform="translate(237.60136 63.362205)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
+        </text>
+      </g>
+      <g id="Group_32">
+        <g id="Graphic_35">
+          <rect x="233.01868" y="269.7202" width="123.87" height="18" fill="white"/>
+          <rect x="233.01868" y="269.7202" width="123.87" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_34">
+          <rect x="233.01868" y="241.19807" width="123.87" height="28.522125" fill="white"/>
+          <rect x="233.01868" y="241.19807" width="123.87" height="28.522125" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(239.01868 244.19807)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">void:uriSpace :String [0..1]
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">void:entities :BigInteger
+              [0..1]
+            </tspan>
+          </text>
+        </g>
+        <g id="Graphic_33">
+          <a xl:href="https://www.w3.org/TR/void/#dataset">
+            <rect x="233.01868" y="223.937" width="123.87" height="17.261063" fill="white"/>
+            <rect x="233.01868" y="223.937" width="123.87" height="17.261063" stroke="black" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(268.0347 226.937)" fill="black">
+              <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                void:Dataset
+              </tspan>
+            </text>
+          </a>
+        </g>
+      </g>
+      <g id="Group_56">
+        <g id="Graphic_59">
+          <rect x="85.03937" y="97.62327" width="76.179" height="18" fill="white"/>
+          <rect x="85.03937" y="97.62327" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_58">
+          <rect x="85.03937" y="79.62327" width="76.179" height="18" fill="white"/>
+          <rect x="85.03937" y="79.62327" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_57">
+          <a xl:href="resources.svg">
+            <rect x="85.03937" y="62.362205" width="76.179" height="17.261063" fill="white"/>
+            <rect x="85.03937" y="62.362205" width="76.179" height="17.261063" stroke="black" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(91.03937 65.362205)" fill="black">
+              <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="4272461e-13" y="9">
+                ec2u:Resource
+              </tspan>
+            </text>
+          </a>
+        </g>
+      </g>
+      <g id="Line_115">
+        <path d="M 157.38437 172.61478 L 195.38437 172.61478 L 195.38437 255.82857 L 223.26868 255.82857"
+              marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width=".25"/>
+      </g>
+      <g id="Group_116">
+        <g id="Graphic_119">
+          <rect x="88.87337" y="181.24532" width="68.511" height="18" fill="white"/>
+          <rect x="88.87337" y="181.24532" width="68.511" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_118">
+          <rect x="88.87337" y="163.24532" width="68.511" height="18" fill="white"/>
+          <rect x="88.87337" y="163.24532" width="68.511" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_117">
+          <rect x="88.87337" y="145.98425" width="68.511" height="17.261063" fill="white"/>
+          <rect x="88.87337" y="145.98425" width="68.511" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(94.87337 148.98425)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="793457e-12" y="9">
+              ec2u:Dataset
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_120">
+        <line x1="123.12887" y1="145.98425" x2="123.12887" y2="125.37327" marker-end="url(#UMLInheritance_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_121">
+        <a xl:href="http://www.w3.org/ns/dcat#.">
+          <text transform="translate(237.60136 76.86737)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix dcat: &lt;http://www.w3.org/ns/dcat#.&gt;</tspan>
+          </text>
+        </a>
+      </g>
+      <g id="Group_122">
+        <g id="Graphic_125">
+          <rect x="233.01868" y="192.1369" width="144.039" height="18" fill="white"/>
+          <rect x="233.01868" y="192.1369" width="144.039" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_124">
+          <rect x="233.01868" y="152.35372" width="144.039" height="39.78319" fill="white"/>
+          <rect x="233.01868" y="152.35372" width="144.039" height="39.78319" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(239.01868 155.35372)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">dct:license :URI</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">dct:rights :Dictionary
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">dct:accessRights
+              :Dictionary [0..1]
+            </tspan>
+          </text>
+        </g>
+        <g id="Graphic_123">
+          <a xl:href="https://www.w3.org/TR/void/#dataset">
+            <rect x="233.01868" y="135.09266" width="144.039" height="17.261063" fill="white"/>
+            <rect x="233.01868" y="135.09266" width="144.039" height="17.261063" stroke="black" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(277.6197 138.09266)" fill="black">
+              <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                dcat:Dataset
+              </tspan>
+            </text>
+          </a>
+        </g>
+      </g>
+      <g id="Line_126">
+        <line x1="157.38437" y1="172.61478" x2="223.26868" y2="172.61475" marker-end="url(#UMLInheritance_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+    </g>
+  </g>
+</svg>

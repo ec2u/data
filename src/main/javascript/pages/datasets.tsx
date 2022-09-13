@@ -22,6 +22,7 @@ import { string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
+import { NodeOptions } from "@metreeca/tile/lenses/options";
 import { Package } from "@metreeca/tile/widgets/icon";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -34,7 +35,7 @@ import { useEffect } from "react";
 
 export const SetsIcon=<Package/>;
 
-export const Sets=immutable({
+export const Datasets=immutable({
 
     id: "/",
     label: "Knowledge Hub",
@@ -66,15 +67,15 @@ export function DataSets() {
 
     }, sessionStorage);
 
-    const entry=useEntry(route, Sets, query);
+    const entry=useEntry(route, Datasets, query);
 
 
-    useEffect(() => { setRoute({ label: string(Sets) }); }, []);
+    useEffect(() => { setRoute({ label: string(Datasets) }); }, []);
 
 
     return (
 
-        <DataPage item={string(Sets)}
+        <DataPage item={string(Datasets)}
 
             menu={entry({ fetch: <NodeSpin/> })}
 
@@ -83,13 +84,17 @@ export function DataSets() {
                 header={<NodeKeywords state={[query, setQuery]}/>}
                 footer={<NodeCount state={[query, setQuery]}/>}
 
-            />}
+            >
+
+                <NodeOptions path={"license"} type={"anyURI"} placeholder={"License"} state={[query, setQuery]}/>
+
+            </DataPane>}
 
             deps={[JSON.stringify(query)]}
 
         >
 
-            <NodeItems model={Sets} placeholder={SetsIcon} state={[query, setQuery]}>{({
+            <NodeItems model={Datasets} placeholder={SetsIcon} state={[query, setQuery]}>{({
 
                 id,
                 label,

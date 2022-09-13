@@ -25,6 +25,7 @@ import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Shape.required;
 import static com.metreeca.link.Values.IRIType;
 import static com.metreeca.link.shapes.Clazz.clazz;
@@ -40,15 +41,22 @@ public final class Datasets extends Delegator {
     public Datasets() {
         delegate(handler(
 
-                new Driver(relate(
+                new Driver(relate(EC2U.Resource(),
 
                         filter(clazz(EC2U.Dataset)),
 
                         field(RDFS.LABEL, multilingual()),
                         field(RDFS.COMMENT, multilingual()),
 
-                        field(VOID.CLASS, required(), datatype(IRIType)),
-                        field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
+                        field(DCTERMS.LICENSE, required(), datatype(IRIType),
+                                field(RDFS.LABEL, multilingual())
+                        ),
+
+                        field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
+                        field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
+
+                        field(VOID.URI_SPACE, optional(), datatype(XSD.STRING)),
+                        field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER))
 
                 )),
 
