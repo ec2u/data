@@ -1,5 +1,5 @@
 ---
-title: Datasets › Events
+title: Datasets › Events
 ---
 
 The [EC2U Events Dataset](http://data.ec2u.eu/events/) dynamically collects information about local events at partner
@@ -11,7 +11,7 @@ tools as any other EC2U dataset.
 
 # Model
 
-![event data model](docs/datasets/index/events.svg)
+![event data model](index/events.svg)
 
 EC2U events are described using a controlled subset of the [schema:Event](https://schema.org/Event) data model, with the
 following major deviations:
