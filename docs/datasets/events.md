@@ -40,15 +40,6 @@ The following properties are strongly suggested as a minimal description for eve
 
 > ❗️source-level license / copyright holder
 
-# Updating
-
-* Data sources are crawled nightly using custom data integration scripts that extract structured data from decicated
-  APIs, RSS feed, embedded HTML microannotations or embedded JSON/LD metadata; custom scraping from HTML content is
-  currently not supported in order to improve the overall robustness of the process
-* Stale events are removed nightly just before source crawling; events are considered stale if either:
-  * the latest between `schema:starDate` and `schema:endDate` timestamp is in the past
-  * no date info is provided and the event was crawled more than a month in the past
-
 # Sources
 
 Events are crawled from different local academic, public and commercial sources and mapped as far as possible to the
@@ -80,6 +71,15 @@ shared data model: source analysis and integration status are detailed in the li
 | ✗      | Turku     | City        | [Turun kaupunki / Tapahtumakalenteri](../../src/main/java/eu/ec2u/data/tasks/events/EventsTurkuCity.md) |
 | ✓      | Turku     | Association | [The Student Union of the University of Turku (TYY) / Calendar of Events](../../src/main/java/eu/ec2u/data/tasks/events/EventsTurkuTYY.md) |
 | ✓      | Turku     | University  | [University of Turku / News](../../src/main/java/eu/ec2u/data/tasks/events/EventsTurkuUniversity.md) |
+
+# Updating
+
+* Data sources are crawled nightly using custom data integration scripts that extract structured data from dedicated
+  APIs, RSS feed, embedded HTML micro-annotations or embedded JSON/LD metadata; custom scraping from HTML content is
+  currently not supported in order to improve the overall robustness of the process
+* Stale events are removed nightly just before source crawling; events are considered stale if either:
+  * the latest between `schema:starDate` and `schema:endDate` timestamp is in the past
+  * no date info is provided and the event was crawled more than a month in the past
 
 ---
 

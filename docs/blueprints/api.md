@@ -2,7 +2,8 @@
 title: REST/JSON-LD API
 ---
 
-> * RDF
+> * RDF data model
+> * dataset RDF context
 > * RDF › JSON-LD
 
 # Datatypes
@@ -12,8 +13,8 @@ standard [XSD](https://www.w3.org/TR/xmlschema-2/#built-in-datatypes)
 / [RDF](https://www.w3.org/TR/rdf-schema/#ch_langstring)
 datatypes, which are internally mapped to implementation datatypes according to the following table.
 
-| **Datatype**                                                 | **Java**                                   | **
-TypeScript/JSON**           |
+| **Datatype**                                                 | **
+Java**                                   | ** TypeScript/JSON**           |
 | :----------------------------------------------------------- | ------------------------------------------ | :---------------------------- |
 | [xsd:boolean](https://www.w3.org/TR/xmlschema-2/#boolean)    | `Boolean`                                  | `boolean`                     |
 | [xsd:string](https://www.w3.org/TR/xmlschema-2/#string)      | `String`                                   | `string`                      |

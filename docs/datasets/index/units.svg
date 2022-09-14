@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="26 42 672 405"
+<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="26 42 672 405"
      width="672" height="405">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
@@ -45,7 +45,7 @@
       </g>
     </marker>
   </defs>
-  <g id="units" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1" stroke="none">
+  <g id="units" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none" stroke="none">
     <title>units</title>
     <rect fill="white" x="26" y="42" width="672" height="405"/>
     <g id="units_Layer_1">
@@ -244,9 +244,9 @@
               stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_134">
-        <rect x="419.21573" y="243.75668" width="55.846" height="21.261063" fill="white"/>
-        <text transform="translate(424.21573 248.75668)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="6856737e-19" y="9">org:unitOf 1</tspan>
+        <rect x="414.21173" y="243.75668" width="65.854" height="21.261063" fill="white"/>
+        <text transform="translate(419.21173 248.75668)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">org:unitOf 0..1</tspan>
         </text>
       </g>
       <g id="Graphic_135">
@@ -382,6 +382,36 @@
         <text transform="translate(494.1895 230.7734)" fill="black">
           <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">a</tspan>
         </text>
+      </g>
+      <g id="Graphic_161">
+        <path d="M 550.7055 155.0254 C 550.7055 153.39113 549.1918 153.18893 538.13476 151.57156 L 538.01795 151.55482 C 526.9025 149.92054 526.78687 149.92054 515.3794 149.92054 C 500.19006 149.92054 431.5175 149.92054 431.5175 149.92054 L 431.5175 167.17254 L 550.7055 167.17254 L 550.7055 155.0254 Z"
+              fill="#fffd78"/>
+        <path d="M 550.7055 155.0254 C 550.7055 153.39113 549.1918 153.18893 538.13476 151.57156 L 538.01795 151.55482 C 526.9025 149.92054 526.78687 149.92054 515.3794 149.92054 C 500.19006 149.92054 431.5175 149.92054 431.5175 149.92054 L 431.5175 167.17254 L 550.7055 167.17254 L 550.7055 155.0254 Z M 550.7055 154.94122 C 550.7055 153.39113 550.5887 153.39113 526.78687 153.39113 L 526.78687 153.39113 C 526.78687 149.93745 526.78687 149.92054 516.0778 149.92054"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <text transform="translate(436.5175 152.92054)" fill="black">
+          <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">Add link to
+            Virtual Institutes
+          </tspan>
+        </text>
+      </g>
+      <g id="Line_162">
+        <line x1="403.7695" y1="218.42068" x2="478.42515" y2="167.24322" stroke="black" stroke-linecap="round"
+              stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_163">
+        <path d="M 561.5325 176.28525 C 561.5325 174.65097 559.8813 174.44878 547.8198 172.8314 L 547.6924 172.81467 C 535.5672 171.18038 535.4411 171.18038 522.99737 171.18038 C 506.42826 171.18038 431.5175 171.18038 431.5175 171.18038 L 431.5175 188.43238 L 561.5325 188.43238 L 561.5325 176.28525 Z"
+              fill="#fffd78"/>
+        <path d="M 561.5325 176.28525 C 561.5325 174.65097 559.8813 174.44878 547.8198 172.8314 L 547.6924 172.81467 C 535.5672 171.18038 535.4411 171.18038 522.99737 171.18038 C 506.42826 171.18038 431.5175 171.18038 431.5175 171.18038 L 431.5175 188.43238 L 561.5325 188.43238 L 561.5325 176.28525 Z M 561.5325 176.20106 C 561.5325 174.65097 561.4051 174.65097 535.4411 174.65097 L 535.4411 174.65097 C 535.4411 171.1973 535.4411 171.18038 523.75926 171.18038"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <text transform="translate(436.5175 174.18038)" fill="black">
+          <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">Add unit type as
+            skos scheme
+          </tspan>
+        </text>
+      </g>
+      <g id="Line_164">
+        <line x1="403.7695" y1="218.42068" x2="475.6891" y2="188.48042" stroke="black" stroke-linecap="round"
+              stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
       </g>
     </g>
   </g>

@@ -2,14 +2,10 @@
 title: Resources
 ---
 
-> - RDF data model
-    >
-- dataset RDF context
-> - JSON-LD
-    >
-- RDF › JSON-LD
+*Resources* describe generic items of interest made available on the *EC2U Knowledge Hub*.
 
----
+The resource data model is *abstract*, that is is not intended to be used in isolation but only to provide a base
+definiton factoring generic properties shared by the specialized models defined by each [dataset](index.md).
 
 # Model
 
@@ -23,17 +19,21 @@ languages.
 
 ## ec2u:Resource
 
-| property        | description |
-| --------------- | ----------- |
-| dct:title       |             |
-| dct:description |             |
-| dct:publisher   |             |
-| dct:source      |             |
-| dct:issued      |             |
-| dct:created     |             |
-| dct:modified    |             |
-| dct:subject     |             |
-| ec2u:university |             |
+| property                                                     | description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [rdf:type](https://www.w3.org/TR/rdf-schema/#ch_type)        | a reference to the data model of the resource                |
+| [dct:title](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/title/) | the human-readable, localized name of the resource           |
+| [dct:description](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/description/) | a human-readable, localized description of the resource      |
+| [dct:publisher](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/publisher/) | a link to the entity responsible for making the resource available |
+| [dct:source](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/source/) | a link to a related resource from which the described resource is derived |
+| [dct:issued](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/issued/) | the date of formal issuance of the resource                  |
+| [dct:created](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/created/) | the date of creation of the resource                         |
+| [dct:modified](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/modified/) | the latest date on which the resource was changed            |
+| [dct:subject](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/subject/) | a link to a topic of the resource; must reference one the SKOS [concepts](concepts.md) managed by the *
+Knowledge Hub* |
+| ec2u:university                                              | a link to an EC2U partner [university](universities.md) associated with the resource |
 
-> ❓Replace `ec2u:university` with `dct:coverage` ?
+> ❓Replace `ec2u:university` with `dct:coverage` ?
+>
+> ❓Convert `ec2u:COverage` to concept scheme?
 
