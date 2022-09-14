@@ -2,11 +2,13 @@
 title: Deliverables
 ---
 
-> describe funding/implementation
+> ❗️Work in progress
+>
+> ❗️describe funding/implementation
 
 # EC2U
 
-> TBC
+> ❗️TBC
 
 # RI4C2
 
@@ -41,8 +43,8 @@ agenda, Univ Salamanca), and in particular of the Virtual Institutes. It will al
 transformation – on the legal status of the Alliances – Univ Poitiers).*
 
 * [EC2U Research Units Dataset](../datasets/units.md)
-* *activities / projects*
-* *facilities*
+* ❗️*activities / projects*
+* ❗️*facilities*
 
 ## M12 D4.5 Knowledge ecosystems database
 

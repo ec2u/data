@@ -6,16 +6,6 @@ The [EC2U Dataset Catalog](https://data.ec2u.eu/) provides a searchable director
 Knowledge Hub*. Catalog entries include human and machine-readable dataset descriptions and basic information about
 license and access rights for partners and other stakeholders.
 
-The following dataset are currently managed on EC2U Knowledge Hub.
-
-| dataset                         | context                            |
-| ------------------------------- | ---------------------------------- |
-| [catalog](index.md)             | https://data.ec2u.eu/              |
-| [universities](universities.md) | https://data.ec2u.eu/universities/ |
-| [units](units.md)               | https://data.ec2u.eu/units/        |
-| [persons](persons.md)           | https://data.ec2u.eu/persons/      |
-| [events](events.md)             | https://data.ec2u.eu/events/       |
-
 External supporting datasets may also be listed in the catalog for reference and ease of access.
 
 # Model
