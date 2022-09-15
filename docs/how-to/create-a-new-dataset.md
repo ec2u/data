@@ -1,3 +1,7 @@
+---
+title: Create a New Dataset
+---
+
 - declare top-level dataset types as `void:rootResources` in `eu/ec2u/data/terms/EC2U.ttl`
   - required to prevent garbage collection from `eu.ec2u.data.tasks.Chores#collect()`
 - define dedicated or update shared ontology (`eu/ec2u/data/terms/EC2U.ttl`)
