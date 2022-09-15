@@ -1,4 +1,4 @@
-# Site
+# Sites
 
 * https://usal.es/institutos-investigacion
 * https://investigacion.usal.es/es/empresas/gir
@@ -6,6 +6,12 @@
 # Integration
 
 ## Pending
+
+* waiting for API extensions
+  * research institutes / centres
+  * unit relationships
+  * description
+  * extended contact data
 
 ## 2022-09-07
 
@@ -22,7 +28,7 @@ GET {{units-salamanca-url}}
 Authenticate: Basic {{units-salamanca-key}}
 ```
 
-> ⚠️ Credentials stored as `{usr}:{pwd}` but not encoded.
+> ⚠️ Credentials stored in vault as `{usr}:{pwd}` but not encoded.
 
 ```json
 [
