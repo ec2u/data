@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Sets } from "@ec2u/data/pages/sets";
+import { Datasets } from "@ec2u/data/pages/datasets";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { CancelIcon } from "@metreeca/tile/widgets/icon";
 import { useRoute } from "@metreeca/tool/nests/router";
@@ -34,7 +34,7 @@ export default function DataNone() {
 
 
     function doDismiss() {
-        setRoute(Sets.id, true);
+        setRoute(Datasets.id, true);
     }
 
 

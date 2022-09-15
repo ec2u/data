@@ -68,11 +68,16 @@ public final class Tasks {
         return Xtream
 
                 .of(
+
                         resource(EC2U.class, ".ttl"),
+
                         resource(EC2U.class, "SKOS.ttl"),
                         resource(EC2U.class, "Org.ttl"),
+                        resource(EC2U.class, "DCAT2.ttl"),
+
                         resource(EC2U.class, "Schema.ttl"),
                         resource(EC2U.class, "Wikidata.ttl")
+
                 );
     }
 
