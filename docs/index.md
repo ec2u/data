@@ -9,8 +9,8 @@ of structured data about skills, courses, research, local events and many other 
 
 # Datasets
 
-EC2U Knowledge Hub Resources are organized as a collection of cross-linked [datasets](datasets/index.md) published both
-through an interactive [semantic search tool](blueprints/app.md) or a machine
+EC2U Knowledge Hub resources are organized as a collection of cross-linked [datasets](datasets/index.md) published both
+through an interactive [semantic search tool](blueprints/app.md) and a machine
 readable [REST/JSON-LD API](blueprints/api.md). Both services support extensive faceted search and linked data navigation
 facilities.
 
@@ -28,8 +28,8 @@ The following dataset are currently avaliable:
 * Source code for the EC2U Knowledge Hub platform is licensed under
   the [Apache 2.0 License](https://choosealicense.com/licenses/apache-2.0/) and published
   on [GitHub](https://github.com/ec2u/data)
-* Managed datasets are [licensed](blueprints/licensing.md) on a case-by-case basis by the copyright holder as specified
-  in their factsheets
+* Managed datasets are [licensed](policies/licensing.md) on a case-by-case basis by the copyright holder as specified in
+  their factsheets
 
 # Support
 
@@ -40,6 +40,5 @@ The following dataset are currently avaliable:
 
 Development of the *EC2U Knowledge Hub* is funded by the European Commission under
 the [EC2U](https://education.ec.europa.eu/sites/default/files/document-library-docs/european-universities-factsheet-ec2u.pdf)
-and [RI4C2](https://cordis.europa.eu/project/id/101035803) projects. See the list of relevant
-project [deliverables](blueprints/deliverables.md) for further details.
+and [RI4C2](https://cordis.europa.eu/project/id/101035803) projects.
 
