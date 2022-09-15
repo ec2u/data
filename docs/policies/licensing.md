@@ -19,4 +19,4 @@ requirements:
   license
 * other well-established licenses enabling [open access](https://opensource.org/osd-annotated) MAY be considered on a
   case-by-case basis and only after evaluating Creative Commons options; open source software licenses SHOULD be avoided
-  in favor of specialized licenses covering creative content and datasets
+  in favour of specialized licenses covering creative content and datasets
