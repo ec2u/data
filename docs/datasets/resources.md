@@ -29,8 +29,7 @@ languages.
 | [dct:issued](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/issued/) | the date of formal issuance of the resource                  |
 | [dct:created](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/created/) | the date of creation of the resource                         |
 | [dct:modified](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/modified/) | the latest date on which the resource was changed            |
-| [dct:subject](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/subject/) | a link to a topic of the resource; must reference one the SKOS [concepts](concepts.md) managed by the *
-Knowledge Hub* |
+| [dct:subject](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/subject/) | a link to a topic of the resource; must reference one the SKOS concepts managed by the *Knowledge Hub*                                               |                                                              |
 | ec2u:university                                              | a link to an EC2U partner [university](universities.md) associated with the resource |
 
 > ❓Replace `ec2u:university` with `dct:coverage` ?

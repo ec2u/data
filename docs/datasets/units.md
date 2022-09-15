@@ -22,10 +22,9 @@ the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extend
 | [org:identifier](https://www.w3.org/TR/vocab-org/#org:identifier) | unique machine-readable unit registration identifier         |
 | [skos:prefLabel](https://www.w3.org/TR/skos-reference/#labels) | the human-readable, localized offical name of the unit       |
 | [skos:altLabel](https://www.w3.org/TR/skos-reference/#labels) | human-readable, localized alternate/shortened names for the unit; may be used also for informal acronyms |
-| [org:unitOf](https://www.w3.org/TR/vocab-org/#org:unitOf)    | a link to the owning partner [university](universities.md) or parent unit; parent links must reference a resource listed in the *
-EC2U Research Units Dataset* |
-| [org:hasUnit](https://www.w3.org/TR/vocab-org/#org:hasUnit)  | a link to a child unit; must reference a resource listed in the *
-EC2U Research Units Dataset* |
+| [org:unitOf](https://www.w3.org/TR/vocab-org/#org:unitOf)    | a link to the owning partner [university](universities.md) or parent unit; parent links must reference a resource listed in the * |
+| EC2U Research Units Dataset*                                 |                                                              |
+| [org:hasUnit](https://www.w3.org/TR/vocab-org/#org:hasUnit)  | a link to a child unit; must reference a resource listed in the *EC2U Research Units Dataset* |
 | [org:hasMember](https://www.w3.org/TR/vocab-org/#property-hasmember) | a link to an affilated member [staff](persons.md)            |
 
 ## ec2u:University

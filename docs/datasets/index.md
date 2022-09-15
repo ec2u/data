@@ -2,7 +2,7 @@
 title: Datasets › Catalog
 ---
 
-The [EC2U Dataset Catalog](https://data.ec2u.eu/) provides a searchable directory of datasets made available on the *EC2U
+The [EC2U Dataset Catalog](https://data.ec2u.eu/) provides a searchable catalog of datasets made available on the *EC2U
 Knowledge Hub*. Catalog entries include human and machine-readable dataset descriptions and basic information about
 license and access rights for partners and other stakeholders.
 
@@ -21,7 +21,7 @@ and  [VoID](https://www.w3.org/TR/void/) data models.
 | property                                                     | description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | all [ec2u:Resource](resources.md) properties                 | inherited properties                                         |
-| [dct:license](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_license) | the URL of the public text of the [licensing](../blueprints/licensing.md) terms for the catalog as a whole; entries in the dataset define their own licensing terms |
+| [dct:license](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_license) | the URL of the public text of the [licensing](../policies/licensing.md) terms for the catalog as a whole; entries in the dataset define their own licensing terms |
 | [dct:rights](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_rights) | the copyright statement (e.g. `Copyright © 2022 EC2U Alliance`) |
 | [dct:accessRights](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_access_rights) | a human-readable, localized description of access rights and policies for partners and other stakeholders |
 | [void:uriSpace](https://www.w3.org/TR/void/#pattern)         | the common prefix of the IRIs of the principal entities in the dataset; if not specified, defaults to the IRI of the dataset (e.g. `https://data.ec2u.eu/events/`) |
