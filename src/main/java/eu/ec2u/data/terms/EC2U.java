@@ -26,7 +26,8 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.util.Map;
 import java.util.Set;
 
-import static com.metreeca.link.Shape.*;
+import static com.metreeca.link.Shape.multiple;
+import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.And.and;
@@ -113,7 +114,7 @@ public final class EC2U {
 
                 hidden(field(RDF.TYPE, all(Resource))),
 
-                field(university, required(),
+                field(university, optional(),
                         field(RDFS.LABEL, multilingual())
                 ),
 

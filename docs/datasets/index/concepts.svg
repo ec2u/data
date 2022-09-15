@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2022 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="188 122 424 239"
+     width="424" height="239">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
+            stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
+      <g>
+        <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="concepts" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none" stroke="none">
+    <title>concepts</title>
+    <rect fill="white" x="188" y="122" width="424" height="239"/>
+    <g id="concepts_Layer_1">
+      <title>Layer 1</title>
+      <g id="Group_2">
+        <g id="Graphic_5">
+          <rect x="339.3248" y="314.1042" width="111.855" height="18" fill="white"/>
+          <rect x="339.3248" y="314.1042" width="111.855" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_4">
+          <rect x="339.3248" y="296.84313" width="111.855" height="17.261063" fill="white"/>
+          <rect x="339.3248" y="296.84313" width="111.855" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(345.3248 299.84313)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">skos:prefLabel :Dictionary</tspan>
+          </text>
+        </g>
+        <g id="Graphic_3">
+          <rect x="339.3248" y="279.58207" width="111.855" height="17.261063" fill="white"/>
+          <rect x="339.3248" y="279.58207" width="111.855" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(365.5838 282.58207)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">skos:Concept
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Graphic_7">
+        <a xl:href="http://www.w3.org/2004/02/skos/core#">
+          <text transform="translate(326.31496 164.49728)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</tspan>
+          </text>
+        </a>
+      </g>
+      <g id="Group_13">
+        <g id="Graphic_16">
+          <rect x="216.8504" y="185.49728" width="76.179" height="18" fill="white"/>
+          <rect x="216.8504" y="185.49728" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_15">
+          <rect x="216.8504" y="167.49728" width="76.179" height="18" fill="white"/>
+          <rect x="216.8504" y="167.49728" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_14">
+          <a xl:href="resources.svg">
+            <rect x="216.8504" y="150.23622" width="76.179" height="17.261063" fill="white"/>
+            <rect x="216.8504" y="150.23622" width="76.179" height="17.261063" stroke="black" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(222.8504 153.23622)" fill="black">
+              <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="4272461e-13" y="9">
+                ec2u:Resource
+              </tspan>
+            </text>
+          </a>
+        </g>
+      </g>
+      <g id="Group_9">
+        <g id="Graphic_12">
+          <rect x="219.1004" y="314.1042" width="71.679" height="18" fill="white"/>
+          <rect x="219.1004" y="314.1042" width="71.679" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_11">
+          <rect x="219.1004" y="296.1042" width="71.679" height="18" fill="white"/>
+          <rect x="219.1004" y="296.1042" width="71.679" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_10">
+          <rect x="219.1004" y="278.84313" width="71.679" height="17.261063" fill="white"/>
+          <rect x="219.1004" y="278.84313" width="71.679" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(225.1004 281.84313)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="4272461e-13" y="9">
+              ec2u:Concept
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_8">
+        <line x1="254.9399" y1="278.84313" x2="254.9399" y2="213.24728" marker-end="url(#UMLInheritance_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Line_17">
+        <path d="M 290.7794 305.47366 L 301.7794 305.47366 L 328.3248 305.8431 L 329.5748 305.8431"
+              marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width=".25"/>
+      </g>
+      <g id="Graphic_18">
+        <text transform="translate(326.31496 151.23622)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
+        </text>
+      </g>
+      <g id="Group_19">
+        <g id="Graphic_22">
+          <rect x="476.833" y="314.1042" width="106.167" height="18" fill="white"/>
+          <rect x="476.833" y="314.1042" width="106.167" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_21">
+          <rect x="476.833" y="296.1042" width="106.167" height="18" fill="white"/>
+          <rect x="476.833" y="296.1042" width="106.167" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_20">
+          <rect x="476.833" y="278.84313" width="106.167" height="17.261063" fill="white"/>
+          <rect x="476.833" y="278.84313" width="106.167" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(482.833 281.84313)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="6465939e-19" y="9">
+              skos:ConceptScheme
+            </tspan>
+          </text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

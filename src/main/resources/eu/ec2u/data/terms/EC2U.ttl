@@ -4,6 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix ec2u: <https://data.ec2u.eu/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -27,13 +28,17 @@ dct:description rdf:type owl:AnnotationProperty ;
                 rdfs:subPropertyOf rdfs:comment .
 
 
+###  http://purl.org/dc/terms/license
+dct:license rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/rights
+dct:rights rdf:type owl:AnnotationProperty .
+
+
 ###  http://purl.org/dc/terms/title
 dct:title rdf:type owl:AnnotationProperty ;
           rdfs:subPropertyOf rdfs:label .
-
-
-###  http://rdfs.org/ns/void#class
-void:class rdf:type owl:AnnotationProperty .
 
 
 ###  http://rdfs.org/ns/void#rootResource
@@ -73,6 +78,10 @@ owl:sameAs rdf:type owl:ObjectProperty ,
 void:Dataset rdf:type owl:Class .
 
 
+###  http://www.w3.org/ns/dcat#Dataset
+dcat:Dataset rdf:type owl:Class .
+
+
 ###  http://www.w3.org/ns/org#FormalOrganization
 org:FormalOrganization rdf:type owl:Class .
 
@@ -93,6 +102,7 @@ ec2u:Course rdf:type owl:Class ;
 ###  https://data.ec2u.eu/terms/Dataset
 ec2u:Dataset rdf:type owl:Class ;
              rdfs:subClassOf void:Dataset ,
+                             dcat:Dataset ,
                              ec2u:Resource .
 
 
@@ -130,28 +140,46 @@ schema:Event rdf:type owl:Class .
 #    Individuals
 #################################################################
 
+###  http://creativecommons.org/licenses/by-nc-nd/4.0/
+<http://creativecommons.org/licenses/by-nc-nd/4.0/> rdf:type owl:NamedIndividual ;
+                                                    dct:description "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"@en ;
+                                                    dct:title "CC BY-NC-ND 4.0"@en .
+
+
+###  https://data.ec2u.eu/
+<https://data.ec2u.eu/> rdf:type owl:NamedIndividual ,
+                                 ec2u:Dataset ;
+                        dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+                        dct:rights "Copyright © 2022 EC2U Alliance" ;
+                        dct:title "Datasets"@en ;
+                        rdfs:isDefinedBy "EC2U Knowledge Hub dataset catalog"@en .
+
+
 ###  https://data.ec2u.eu/events/
 <https://data.ec2u.eu/events/> rdf:type owl:NamedIndividual ,
                                         ec2u:Dataset ;
                                dct:description "Local academic and public events."@en ;
-                               dct:title "Events"@en ;
-                               void:class ec2u:Event .
+                               dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+                               dct:rights "Copyright © 2022 EC2U Alliance" ;
+                               dct:title "Events"@en .
 
 
 ###  https://data.ec2u.eu/units/
 <https://data.ec2u.eu/units/> rdf:type owl:NamedIndividual ,
                                        ec2u:Dataset ;
                               dct:description "Research units and facilities."@en ;
-                              dct:title "Research Units"@en ;
-                              void:class ec2u:Unit .
+                              dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+                              dct:rights "Copyright © 2022 EC2U Alliance" ;
+                              dct:title "Research Units"@en .
 
 
 ###  https://data.ec2u.eu/universities/
 <https://data.ec2u.eu/universities/> rdf:type owl:NamedIndividual ,
                                               ec2u:Dataset ;
                                      dct:description "EC2U Alliance partner universities."@en ;
-                                     dct:title "Universities"@en ;
-                                     void:class ec2u:University .
+                                     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+                                     dct:rights "Copyright © 2022 EC2U Alliance" ;
+                                     dct:title "Universities"@en .
 
 
 ###  https://data.ec2u.eu/universities/coimbra
