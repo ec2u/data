@@ -1,7 +1,7 @@
 # Site
 
 * https://usal.es/institutos-investigacion
-  * no annotations (available to add if required and under guidance)
+* https://investigacion.usal.es/es/empresas/gir
 
 # Integration
 
@@ -14,6 +14,8 @@
 # Feeds
 
 ## REST/JSON API
+
+* based on the same database feeding https://investigacion.usal.es/GIR
 
 ```http
 GET {{units-salamanca-url}}
@@ -53,3 +55,7 @@ Authenticate: Basic {{units-salamanca-key}}
 
 - https://usal.es/rss/institutos-investigacion
 - https://usal.es/rss/centros-propios
+
+## ~~Microdata~~
+
+* no annotations, but USAL available to add if required and under guidance
