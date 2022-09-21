@@ -14,7 +14,7 @@ through an interactive [semantic search tool](blueprints/app.md) and a machine
 readable [REST/JSON-LD API](blueprints/api.md). Both services support extensive faceted search and linked data navigation
 facilities.
 
-The following dataset are currently avaliable:
+The following dataset are currently available:
 
 | dataset                                  | context                            | description                        |
 | ---------------------------------------- | ---------------------------------- | ---------------------------------- |
