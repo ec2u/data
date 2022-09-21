@@ -56,8 +56,8 @@ public final class Data implements Runnable {
 
     private static final boolean Production=GCPServer.production();
 
-    private static final String GraphDBRepository="http://104.199.42.9//repositories/data-work";
-    // !!! private static final String GraphDBRepository="https://base.ec2u.dev/repositories/data-work";
+    private static final String GraphDBRepository="http://base.ec2u.net/repositories/data-work";
+    // !!! private static final String GraphDBRepository="https://base.ec2u.eu/repositories/data-work";
     private static final String GraphDBUsr="server";
     private static final String GraphDBPwd="graphdb-server-pwd";
 
