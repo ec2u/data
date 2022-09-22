@@ -36,6 +36,8 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
@@ -51,13 +53,15 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsTurkuTYY implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://www.tyy.fi/en/activities/calendar-events"))
+    private static final Frame Publisher=frame(iri("https://www.tyy.fi/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.Association)
             .values(RDFS.LABEL,
                     literal("The Student Union of the University of Turku (TYY) / Calendar of Events", "en"),
                     literal("Turun yliopiston ylioppilaskunta (TYY) / Tapahtumakalenteri", Turku.Language)
             );
+
+    private static final Pattern LangPattern=Pattern.compile("/([a-z]{2})/");
 
 
     public static void main(final String... args) {
@@ -98,7 +102,8 @@ public final class EventsTurkuTYY implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://www.tyy.fi/en/events.json")
+                        .model("https://www.tyy.fi/{lang}/events.json")
+                        .values("lang", "fi", "en")
                 )
 
                 .optMap(new GET<>(new JSON(), request -> request
@@ -110,6 +115,16 @@ public final class EventsTurkuTYY implements Runnable {
     }
 
     private Optional<Frame> event(final JSONPath json) {
+
+        final Optional<String> url=json.string("url") // canonical URL; will redirect to Finnish version ;-(
+                .map(LangPattern::matcher)
+                .map(v -> v.replaceFirst("/"));
+
+        final String lang=json.string("url")
+                .map(LangPattern::matcher)
+                .filter(Matcher::find)
+                .map(v -> v.group(1))
+                .orElse(Turku.Language);
 
         final Optional<String> title=json.string("title");
         final Optional<String> description=json.string("content").map(Untag::untag);
@@ -123,14 +138,15 @@ public final class EventsTurkuTYY implements Runnable {
 
                                 .value(RDF.TYPE, EC2U.Event)
 
-                                .value(DCTERMS.SOURCE, json.string("url").map(Values::iri))
+                                .value(DCTERMS.SOURCE, url.map(Values::iri))
 
-                                .value(Schema.url, json.string("url").map(Values::iri))
-                                .value(Schema.name, title.map(s -> literal(s, "en")))
+                                .value(Schema.url, url.map(Values::iri))
+                                .value(Schema.name, title.map(s -> literal(s, lang)))
                                 .value(Schema.image, json.string("image").map(Values::iri))
-                                .value(Schema.description, description.map(s -> literal(s, "en")))
-                                .value(Schema.disambiguatingDescription, disambiguatingDescription.map(s -> literal(s,
-                                        "en")))
+                                .value(Schema.description, description.map(s -> literal(s, lang)))
+                                .value(Schema.disambiguatingDescription,
+                                        disambiguatingDescription.map(s -> literal(s, lang))
+                                )
 
                                 .value(Schema.startDate, json.string("start_date").flatMap(this::datetime))
                                 .value(Schema.endDate, json.string("end_date").flatMap(this::datetime))

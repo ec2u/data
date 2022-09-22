@@ -1,6 +1,6 @@
 # Site
 
-* https://www.tyy.fi/en/activities/calendar-events
+* https://www.tyy.fi/en/node/183
   * Turun yliopiston ylioppilaskunta (TYY) / Tapahtumakalenteri
   * The Student Union of the University of Turku (TYY) / Calendar of Events
 
@@ -8,14 +8,11 @@
 
 * Custom JSON API adapter
 
-## Pending
-
-* retrieve and merge Finnish content
-
 ## 2022-09-22
 
 * update to use modified APIs
-  * `image/organizer/location` no longer included
+  * `image/organizer/location` no longer included
+* merge localized content from Finnish and English versions
 
 ## 2022-07-28
 
