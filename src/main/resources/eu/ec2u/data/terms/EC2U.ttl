@@ -45,6 +45,10 @@ dct:title rdf:type owl:AnnotationProperty ;
 void:rootResource rdf:type owl:AnnotationProperty .
 
 
+###  http://rdfs.org/ns/void#uriSpace
+void:uriSpace rdf:type owl:AnnotationProperty .
+
+
 ###  http://www.w3.org/2000/01/rdf-schema#comment
 rdfs:comment rdf:type owl:AnnotationProperty .
 
@@ -96,7 +100,8 @@ foaf:Person rdf:type owl:Class .
 
 ###  https://data.ec2u.eu/terms/Course
 ec2u:Course rdf:type owl:Class ;
-            rdfs:subClassOf ec2u:Resource .
+            rdfs:subClassOf ec2u:Resource ;
+            void:uriSpace "https://data.ec2u.eu/courses/" .
 
 
 ###  https://data.ec2u.eu/terms/Dataset
@@ -109,7 +114,8 @@ ec2u:Dataset rdf:type owl:Class ;
 ###  https://data.ec2u.eu/terms/Event
 ec2u:Event rdf:type owl:Class ;
            rdfs:subClassOf ec2u:Resource ,
-                           schema:Event .
+                           schema:Event ;
+           void:uriSpace "https://data.ec2u.eu/events/" .
 
 
 ###  https://data.ec2u.eu/terms/Person
@@ -124,12 +130,15 @@ ec2u:Resource rdf:type owl:Class .
 ###  https://data.ec2u.eu/terms/Unit
 ec2u:Unit rdf:type owl:Class ;
           rdfs:subClassOf org:OrganizationalUnit ,
-                          ec2u:Resource .
+                          ec2u:Resource ;
+          void:uriSpace "https://data.ec2u.eu/units/" .
 
 
 ###  https://data.ec2u.eu/terms/University
 ec2u:University rdf:type owl:Class ;
-                rdfs:subClassOf org:FormalOrganization .
+                rdfs:subClassOf org:FormalOrganization ,
+                                ec2u:Resource ;
+                void:uriSpace "https://data.ec2u.eu/universities/" .
 
 
 ###  https://schema.org/Event
