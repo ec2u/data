@@ -116,11 +116,13 @@ public final class EventsTurkuTYY implements Runnable {
 
     private Optional<Frame> event(final JSONPath json) {
 
-        final Optional<String> url=json.string("url") // canonical URL; will redirect to Finnish version ;-(
+        final Optional<String> url=json.string("url");
+
+        final Optional<String> source=url // canonical URL; will redirect to Finnish version ;-(
                 .map(LangPattern::matcher)
                 .map(v -> v.replaceFirst("/"));
 
-        final String lang=json.string("url")
+        final String lang=url
                 .map(LangPattern::matcher)
                 .filter(Matcher::find)
                 .map(v -> v.group(1))
@@ -138,7 +140,7 @@ public final class EventsTurkuTYY implements Runnable {
 
                                 .value(RDF.TYPE, EC2U.Event)
 
-                                .value(DCTERMS.SOURCE, url.map(Values::iri))
+                                .value(DCTERMS.SOURCE, source.map(Values::iri))
 
                                 .value(Schema.url, url.map(Values::iri))
                                 .value(Schema.name, title.map(s -> literal(s, lang)))

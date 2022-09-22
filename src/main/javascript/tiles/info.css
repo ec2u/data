@@ -50,6 +50,10 @@ data-info {
 
             text-align: right;
 
+            & > * {
+                display: block;
+            }
+
             & > ul {
 
                 margin: 0;
