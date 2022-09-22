@@ -98,7 +98,7 @@ public final class EventsTurkuTYY implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://www.tyy.fi/events.json/en")
+                        .model("https://www.tyy.fi/en/events.json")
                 )
 
                 .optMap(new GET<>(new JSON(), request -> request
@@ -106,7 +106,7 @@ public final class EventsTurkuTYY implements Runnable {
                 ))
 
                 .map(JSONPath::new)
-                .flatMap(json -> json.paths("events.*.event"));
+                .flatMap(json -> json.paths("*"));
     }
 
     private Optional<Frame> event(final JSONPath json) {
@@ -121,21 +121,24 @@ public final class EventsTurkuTYY implements Runnable {
 
                 .map(id -> frame(iri(EC2U.events, id))
 
-                        .value(RDF.TYPE, EC2U.Event)
+                                .value(RDF.TYPE, EC2U.Event)
 
-                        .value(DCTERMS.SOURCE, json.string("url").map(Values::iri))
+                                .value(DCTERMS.SOURCE, json.string("url").map(Values::iri))
 
-                        .value(Schema.url, json.string("url").map(Values::iri))
-                        .value(Schema.name, title.map(s -> literal(s, "en")))
-                        .value(Schema.image, json.string("image").map(Values::iri))
-                        .value(Schema.description, description.map(s -> literal(s, "en")))
-                        .value(Schema.disambiguatingDescription, disambiguatingDescription.map(s -> literal(s, "en")))
+                                .value(Schema.url, json.string("url").map(Values::iri))
+                                .value(Schema.name, title.map(s -> literal(s, "en")))
+                                .value(Schema.image, json.string("image").map(Values::iri))
+                                .value(Schema.description, description.map(s -> literal(s, "en")))
+                                .value(Schema.disambiguatingDescription, disambiguatingDescription.map(s -> literal(s,
+                                        "en")))
 
-                        .value(Schema.startDate, json.string("start_date").map(this::datetime))
-                        .value(Schema.endDate, json.string("end_date").map(this::datetime))
+                                .value(Schema.startDate, json.string("start_date").flatMap(this::datetime))
+                                .value(Schema.endDate, json.string("end_date").flatMap(this::datetime))
 
-                        .frame(Schema.organizer, organizer(json))
-                        .frame(Schema.location, location(json))
+                        // ;-( apparently no longer included after 2022-09-22
+
+                        //.frame(Schema.organizer, organizer(json))
+                        //.frame(Schema.location, location(json))
 
                 );
 
@@ -184,11 +187,12 @@ public final class EventsTurkuTYY implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Literal datetime(final String datetime) {
-        return literal(OffsetDateTime
-                .parse(datetime)
-                .truncatedTo(ChronoUnit.SECONDS)
-        );
+    private Optional<Literal> datetime(final String datetime) {
+        return Optional.of(datetime)
+                .map(LocalDateTime::parse)
+                .map(v -> v.truncatedTo(ChronoUnit.SECONDS))
+                .map(v -> v.atOffset(Turku.TimeZone.getRules().getOffset(v)))
+                .map(Values::literal);
     }
 
 }
