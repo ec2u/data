@@ -70,6 +70,7 @@ public final class Tasks {
                 .of(
 
                         resource(EC2U.class, ".ttl"),
+                        resource(EC2U.class, "Units.ttl"),
 
                         resource(EC2U.class, "SKOS.ttl"),
                         resource(EC2U.class, "Org.ttl"),

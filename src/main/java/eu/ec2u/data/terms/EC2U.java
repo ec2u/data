@@ -56,8 +56,7 @@ public final class EC2U {
     );
 
     public static final Map<String, String> Keywords=Map.ofEntries(
-            entry("@id", "id"),
-            entry("@type", "type")
+            entry("@id", "id")
     );
 
 
@@ -128,6 +127,7 @@ public final class EC2U {
                 field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
                 field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
 
+                field(DCTERMS.TYPE, multiple(), Concept()),
                 field(DCTERMS.SUBJECT, multiple(), Concept())
 
         );
@@ -142,8 +142,8 @@ public final class EC2U {
                 field(SKOS.ALT_LABEL, multilingual()),
                 field(SKOS.DEFINITION, multilingual()),
 
-                field(SKOS.BROADER, datatype(Values.IRIType)),
-                field(SKOS.NARROWER, datatype(Values.IRIType))
+                field(SKOS.BROADER, Reference()),
+                field(SKOS.NARROWER, Reference())
 
         );
     }

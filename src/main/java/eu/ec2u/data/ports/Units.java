@@ -29,11 +29,12 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
+import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
-import static eu.ec2u.data.terms.EC2U.Reference;
-import static eu.ec2u.data.terms.EC2U.multilingual;
+import static eu.ec2u.data.terms.EC2U.*;
+
 
 public final class Units extends Delegator {
 
@@ -44,6 +45,12 @@ public final class Units extends Delegator {
 
                 field(SKOS.PREF_LABEL, multilingual()),
                 field(SKOS.ALT_LABEL, multilingual()),
+
+                field(ORG.IDENTIFIER, optional(), datatype(XSD.STRING)),
+                field(ORG.CLASSIFICATION, optional(), Concept()),
+
+                field(ORG.UNIT_OF, optional(), Reference()),
+                field(ORG.HAS_UNIT, multiple(), Reference()),
 
                 field("head", inverse(ORG.HEAD_OF), optional(), Reference())
 

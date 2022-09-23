@@ -48,6 +48,7 @@ data-card {
 
         & > nav {
 
+            text-align: end;
             white-space: nowrap;
             font-size: 90%;
             color: var(--node--color-label);

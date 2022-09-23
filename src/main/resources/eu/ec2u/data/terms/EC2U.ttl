@@ -8,6 +8,7 @@
 @prefix ec2u: <https://data.ec2u.eu/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vivo: <http://vivoweb.org/ontology/core#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix schema: <https://schema.org/> .
 @base <http://www.w3.org/2002/07/owl#> .
@@ -69,9 +70,18 @@ ec2u:schac rdf:type owl:AnnotationProperty .
 #    Object Properties
 #################################################################
 
+###  http://purl.org/dc/terms/type
+dct:type rdf:type owl:ObjectProperty .
+
+
 ###  http://www.w3.org/2002/07/owl#sameAs
 owl:sameAs rdf:type owl:ObjectProperty ,
                     owl:SymmetricProperty .
+
+
+###  http://www.w3.org/ns/org#classification
+org:classification rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf dct:type .
 
 
 #################################################################

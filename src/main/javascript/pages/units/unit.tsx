@@ -48,6 +48,11 @@ export const Unit=immutable({
 
     altLabel: optional({ "en": "" }),
 
+    classification: optional({
+        id: "",
+        label: { "en": "" }
+    }),
+
     head: optional({
         id: "",
         label: { "en": "" }
@@ -104,6 +109,7 @@ function DataEventInfo({
         label,
         altLabel,
 
+        classification,
         head
 
     }
@@ -118,7 +124,8 @@ function DataEventInfo({
 
         <DataInfo>{{
 
-            "University": <NodeLink>{university}</NodeLink>
+            "University": <NodeLink>{university}</NodeLink>,
+            "Type": classification && <span>{string(classification)}</span>
 
         }}</DataInfo>
 

@@ -13,6 +13,10 @@
   * description
   * extended contact data
 
+## 2022-09-23
+
+* add `org:classification` data
+
 ## 2022-09-07
 
 * initial integration from REST/JSON API

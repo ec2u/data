@@ -27,6 +27,7 @@ import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.cities.Salamanca;
 import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.terms.Units;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -152,13 +153,10 @@ public final class UnitsSalamanca implements Runnable {
 
             return frame(iri(EC2U.units, md5(Salamanca.University+"@"+id)))
 
-                    .value(RDF.TYPE, EC2U.Unit)
+                    .values(RDF.TYPE, EC2U.Unit)
 
-                    .value(EC2U.university, Salamanca.University)
-                    .value(ORG.UNIT_OF, Salamanca.University)
-
-                    .value(RDFS.LABEL, label)
-                    .value(RDFS.COMMENT, json.string("topics")
+                    .value(DCTERMS.TITLE, label)
+                    .value(DCTERMS.DESCRIPTION, json.string("topics")
                             .filter(not(String::isEmpty))
                             .map(topics -> literal(topics, Salamanca.Language))
                     )
@@ -167,6 +165,11 @@ public final class UnitsSalamanca implements Runnable {
                     .value(SKOS.ALT_LABEL, json.string("acronym")
                             .filter(not(String::isEmpty))
                             .map(value -> literal(value, Salamanca.Language)))
+
+                    .value(EC2U.university, Salamanca.University)
+                    .value(ORG.UNIT_OF, Salamanca.University)
+
+                    .value(ORG.CLASSIFICATION, Units.GroupRecognized)
 
                     .frame(inverse(ORG.HEAD_OF), head(json));
         });

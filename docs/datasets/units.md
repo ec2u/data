@@ -19,9 +19,10 @@ the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extend
 | property                                                     | description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | all [ec2u:Resource](resources.md) properties                 | inherited properties                                         |
-| [org:identifier](https://www.w3.org/TR/vocab-org/#org:identifier) | unique machine-readable unit registration identifier         |
-| [skos:prefLabel](https://www.w3.org/TR/skos-reference/#labels) | the human-readable, localized offical name of the unit       |
+| [skos:prefLabel](https://www.w3.org/TR/skos-reference/#labels) | the human-readable, localized official name of the unit      |
 | [skos:altLabel](https://www.w3.org/TR/skos-reference/#labels) | human-readable, localized alternate/shortened names for the unit; may be used also for informal acronyms |
+| [org:identifier](https://www.w3.org/TR/vocab-org/#org:identifier) | unique machine-readable unit registration identifier         |
+| [org:classification](https://www.w3.org/TR/vocab-org/#org:classification) | a link to an organization type in the `/concepts/units/` SKOS concept scheme |
 | [org:unitOf](https://www.w3.org/TR/vocab-org/#org:unitOf)    | a link to the owning partner [university](universities.md) or parent unit; parent links must reference a resource listed in the *EC2U Research Units Dataset* |
 | [org:hasUnit](https://www.w3.org/TR/vocab-org/#org:hasUnit)  | a link to a child unit; must reference a resource listed in the *EC2U Research Units Dataset* |
 | [org:hasMember](https://www.w3.org/TR/vocab-org/#property-hasmember) | a link to an affilated member [staff](persons.md)            |
