@@ -57,7 +57,7 @@ export const Event=immutable({
 
 
     name: { "en": "" },
-    url: optional(""),
+    url: multiple(""),
 
     fullDescription: optional(""),
 
@@ -216,7 +216,16 @@ function DataEventInfo({
                     : <span>{string(label)}</span>
                 ),
 
-            "Info": url && <a href={url}>{new URL(url).host}</a>
+            "Info": url && url.map(item => {
+
+                const url=new URL(item);
+
+                const host=url.host;
+                const lang=url.pathname.match(/\b[a-z]{2}\b/);
+
+                return <a key={item} href={item}>{lang ? `${host} (${lang})` : host}</a>;
+
+            })
 
         }}</DataInfo>
 
