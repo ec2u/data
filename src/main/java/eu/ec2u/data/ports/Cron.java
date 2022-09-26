@@ -12,6 +12,7 @@ import com.metreeca.http.services.Logger;
 import eu.ec2u.data.tasks.*;
 import eu.ec2u.data.tasks.events.Events;
 import eu.ec2u.data.tasks.events.*;
+import eu.ec2u.data.tasks.units.UnitsPavia;
 import eu.ec2u.data.tasks.units.UnitsSalamanca;
 
 import static com.metreeca.gcp.GCPServer.cron;
@@ -37,6 +38,7 @@ public final class Cron extends Delegator {
 
                 .path("/wikidata", execute(new Wikidata()))
 
+                .path("/units/pavia", execute(new UnitsPavia()))
                 .path("/units/salamanca", execute(new UnitsSalamanca()))
 
                 .path("/events/", execute(new Events()))

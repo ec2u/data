@@ -1,8 +1,16 @@
 # Sites
 
-*  https://www.uc.pt/iii/investigacao/unidades-i-d-e-laboratorios-associados/
+*  https://unipv.unifind.cineca.it/organizations
 
 # Integration
 
-Direct RDF extraction from a VIVO-based internal knowledge hub under development.
+Direct RDF extraction from a VIVO-based internal knowledge hub (currently under development).
 
+## Pending
+
+* contact info / address
+* subject area
+
+## 2022-09-26
+
+* Initial integration
