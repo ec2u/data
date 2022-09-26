@@ -31,7 +31,7 @@ public final class Poitiers {
     public static final IRI City=wd("Q6616");
     public static final IRI Country=wd("Q142");
     public static final String Language="fr";
-    public static final ZoneOffset TimeOffset=ZoneOffset.ofHours(1);
+    public static final ZoneOffset TimeOffset=ZoneOffset.ofHours(1); // !!! remove
     public static final ZoneId TimeZone=ZoneId.of("Europe/Paris");
 
 

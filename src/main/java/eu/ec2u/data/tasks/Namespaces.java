@@ -4,6 +4,8 @@
 
 package eu.ec2u.data.tasks;
 
+import com.metreeca.http.services.Logger;
+
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
@@ -15,10 +17,14 @@ import java.util.Map;
 
 import static com.metreeca.core.Lambdas.task;
 import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.ontologies;
+
+import static java.lang.String.format;
+import static java.util.Map.Entry.comparingByKey;
 
 
 public final class Namespaces implements Runnable {
@@ -29,6 +35,9 @@ public final class Namespaces implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Logger logger=service(logger());
+
 
     @Override public void run() {
         service(graph()).update(task(connection -> {
@@ -62,7 +71,14 @@ public final class Namespaces implements Runnable {
 
                     })
 
+                    .filter(entry -> !entry.getKey().isEmpty()) // ignore default namespaces
+
                     .distinct()
+                    .sorted(comparingByKey())
+
+                    .peek(entry -> logger.info(this, format(
+                            "%-8s %s", entry.getKey(), entry.getValue()
+                    )))
 
                     .forEach(namespace ->
 

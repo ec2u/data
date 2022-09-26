@@ -22,7 +22,7 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { optional, string } from "@metreeca/link";
+import { multiple, optional, required, string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -46,9 +46,26 @@ export const Unit=immutable({
         label: { "en": "" }
     },
 
+    homepage: optional(""),
+
     altLabel: optional({ "en": "" }),
 
+    classification: optional({
+        id: "",
+        label: { "en": "" }
+    }),
+
     head: optional({
+        id: "",
+        label: { "en": "" }
+    }),
+
+    unitOf: required({
+        id: "",
+        label: { "en": "" }
+    }),
+
+    hasUnit: multiple({
         id: "",
         label: { "en": "" }
     })
@@ -104,7 +121,12 @@ function DataEventInfo({
         label,
         altLabel,
 
-        head
+        homepage,
+
+        classification,
+        head,
+
+        unitOf
 
     }
 
@@ -118,7 +140,9 @@ function DataEventInfo({
 
         <DataInfo>{{
 
-            "University": <NodeLink>{university}</NodeLink>
+            "University": <NodeLink>{university}</NodeLink>,
+            "Parent": unitOf && unitOf.id !== university.id && <NodeLink>{unitOf}</NodeLink>,
+            "Type": classification && <span>{string(classification)}</span>
 
         }}</DataInfo>
 
@@ -130,6 +154,12 @@ function DataEventInfo({
 
         }}</DataInfo>
 
+        <DataInfo>{{
+
+            "Info": homepage && <a href={homepage}>{new URL(homepage).host}</a>
+
+        }}</DataInfo>
+
     </>;
 }
 
@@ -137,7 +167,9 @@ function DataEventBody({
 
     children: {
 
-        comment
+        comment,
+
+        hasUnit
 
     }
 
@@ -158,6 +190,25 @@ function DataEventBody({
             string(comment)
 
         }</ReactMarkdown>
+
+
+        {hasUnit && <>
+
+            {comment && <hr/>}
+
+            <dl>
+
+                <dt>Organizational Units</dt>
+
+                <dt>
+                    <ul>{hasUnit.map(unit =>
+                        <li><NodeLink key={unit.id}>{unit}</NodeLink></li>
+                    )}</ul>
+                </dt>
+
+            </dl>
+
+        </>}
 
     </DataCard>;
 

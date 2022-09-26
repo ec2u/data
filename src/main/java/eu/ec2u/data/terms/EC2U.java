@@ -26,7 +26,8 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.util.Map;
 import java.util.Set;
 
-import static com.metreeca.link.Shape.*;
+import static com.metreeca.link.Shape.multiple;
+import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.And.and;
@@ -55,8 +56,7 @@ public final class EC2U {
     );
 
     public static final Map<String, String> Keywords=Map.ofEntries(
-            entry("@id", "id"),
-            entry("@type", "type")
+            entry("@id", "id")
     );
 
 
@@ -113,7 +113,7 @@ public final class EC2U {
 
                 hidden(field(RDF.TYPE, all(Resource))),
 
-                field(university, required(),
+                field(university, optional(),
                         field(RDFS.LABEL, multilingual())
                 ),
 
@@ -127,7 +127,8 @@ public final class EC2U {
                 field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
                 field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
 
-                field(DCTERMS.SUBJECT, multiple(), Concept())
+                field(DCTERMS.TYPE, multiple(), Reference()),
+                field(DCTERMS.SUBJECT, multiple(), Reference())
 
         );
     }
@@ -141,8 +142,8 @@ public final class EC2U {
                 field(SKOS.ALT_LABEL, multilingual()),
                 field(SKOS.DEFINITION, multilingual()),
 
-                field(SKOS.BROADER, datatype(Values.IRIType)),
-                field(SKOS.NARROWER, datatype(Values.IRIType))
+                field(SKOS.BROADER, Reference()),
+                field(SKOS.NARROWER, Reference())
 
         );
     }

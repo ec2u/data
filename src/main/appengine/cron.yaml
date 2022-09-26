@@ -5,6 +5,15 @@ cron:
     schedule: every day 00:00
 
 
+  - description: "units › pavia - nightly crawling"
+    url: /cron/units/pavia
+    schedule: every day 00:00
+
+  - description: "units › salamanca - nightly crawling"
+    url: /cron/units/salamanca
+    schedule: every day 00:00
+
+
   - description: "events - nightly purging"
     url: /cron/events/
     schedule: every day 00:00
@@ -82,9 +91,9 @@ cron:
     url: /cron/events/turku/university
     schedule: every day 00:00
 
-  - description: "events › turku › city - nightly crawling"
-    url: /cron/events/turku/city
-    schedule: every day 00:00
+  #  - description: "events › turku › city - nightly crawling"
+  #    url: /cron/events/turku/city
+  #    schedule: every day 00:00
 
   - description: "events › turku › tyy - nightly crawling"
     url: /cron/events/turku/tyy

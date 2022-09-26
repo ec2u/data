@@ -1,48 +1,50 @@
 ---
-title: Datasets
+title: Datasets › Catalog
 ---
 
-| collection                      | context                       |
-| ------------------------------- | ----------------------------- |
-| [datasets](datasets.md)         | -                             |
-| [universities](universities.md) | -                             |
-| [units](units.md)               | https://data.ec2u.eu/units/   |
-| [persons](persons.md)           | https://data.ec2u.eu/persons/ |
-| [events](events.md)             | https://data.ec2u.eu/events/  |
+The [EC2U Dataset Catalog](https://data.ec2u.eu/) provides a searchable catalog of datasets made available on the *EC2U
+Knowledge Hub*. Catalog entries include human and machine-readable dataset descriptions and basic information about
+license and access rights for partners and other stakeholders.
 
-![resource data model](models/resources.svg)
+External supporting datasets may also be listed in the catalog for reference and ease of access.
 
-# Vocabularies
+# Model
 
-EC2U resources are described using a controlled subset of
-the [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) data model.
+![dataset data model](index/datasets.svg)
 
-All generic human-readable labels and descriptions are localized either in English or in one of the local EC2U partner
-languages.
+EC2U datasets are described using a controlled subset
+of [Data Catalog Vocabulary (DCAT) - Version 2](https://www.w3.org/TR/vocab-dcat-2/)
+and  [VoID](https://www.w3.org/TR/void/) data models.
 
-# Datatypes
+## ec2u:Dataset
 
-All resources properties are described using a limited set of
-standard [XSD](https://www.w3.org/TR/xmlschema-2/#built-in-datatypes)
-/ [RDF](https://www.w3.org/TR/rdf-schema/#ch_langstring)
-datatypes, which are internally mapped to implementation datatypes according to the following table.
+| property                                                     | description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| all [ec2u:Resource](resources.md) properties                 | inherited properties                                         |
+| [dct:license](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_license) | the URL of the public text of the [licensing](../policies/licensing.md) terms for the catalog as a whole; entries in the dataset define their own licensing terms |
+| [dct:rights](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_rights) | the copyright statement (e.g. `Copyright © 2022 EC2U Alliance`) |
+| [dct:accessRights](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_access_rights) | a human-readable, localized description of access rights and policies for partners and other stakeholders |
+| [void:uriSpace](https://www.w3.org/TR/void/#pattern)         | the common prefix of the IRIs of the principal entities in the dataset; if not specified, defaults to the IRI of the dataset (e.g. `https://data.ec2u.eu/events/`) |
+| [void:entities](https://www.w3.org/TR/void/#statistics)      | the count of the principal entities in the dataset, that is of the datatset entities whos IRI starts with the prefix defined by the `void:uriSpace` property |
 
-| **Datatype** | **Java**| **TypeScript/JSON**  |
-| :------------------------------------------------------ | ------------------------------------------------------- | :------------------------------- |
-| [xsd:boolean](https://www.w3.org/TR/xmlschema-2/#boolean) | `Boolean` | `boolean`                         |
-| [xsd:string](https://www.w3.org/TR/xmlschema-2/#string) | `String` | `string`                          |
-| [xsd:integer](https://www.w3.org/TR/xmlschema-2/#integer) | `BigInteger` | `integral number`                 |
-| [xsd:decimal](https://www.w3.org/TR/xmlschema-2/#decimal)   | `BigDecimal` | `decimal number`                  |
-| [xsd:gYear](https://www.w3.org/TR/xmlschema-2/#gYear)       | `Year` | `“yyyy”`                          |
-| [xsd:date](https://www.w3.org/TR/xmlschema-2/#date)         | `LocalDate` | `"yyyy-MM-dd"`                    |
-| [xsd:time](https://www.w3.org/TR/xmlschema-2/#time)         | `LocalTime`         | `"hh:mm:ss"`           |
-|  | `OffsetTime` | `"hh:mm:ss+hh:mm"` |
-| [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime) | `LocalDateTime` | `"yyyy-MM-ddThh:mm:ss"` |
-|  | `OffsetDateTime` | `"yyyy-MM-ddThh:mm:ss+hh:mm"` |
-| | `Instant` | `"yyyy-MM-ddThh:mm:ssZ"` |
-| [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration) | `Duration`                       | |
-| [xsd:anyURI](https://www.w3.org/TR/xmlschema-2/#anyURI)     | `URI` (relative) | `"/path"`              |
-|  | `URI` (absolute) | `“scheme:details”` |
-| [rdf:langString](https://www.w3.org/TR/rdf-schema/#ch_langstring) | ``Dictionary extends Map<Locale, String>`` | `{ "locale": "text" }` |
+# Licensing
 
-UML diagrams refer to the datatype using the Java mapping.
+> ❗️ To be confirmed.
+
+[EC2U Catalog Dataset ](https://data.ec2u.eu/)© 2022 by [EC2U Alliance](https://www.ec2u.eu/) is licensed
+under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
+
+Individual datasets included in the catalog are licensed by their respective owners under the licensing terms specified
+by the [`dct:rights`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_rights)
+, [`dct:license`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_license)
+and  [`dct:accessRights`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_access_rights) properties as described
+above.
+
+# Sources
+
+* static content from application source code
+* manually curated database content
+
+# Updating
+
+* static content is updated on demand by manually editing application source code

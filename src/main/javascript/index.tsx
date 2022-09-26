@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { DataSets, Datasets } from "@ec2u/data/pages/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
-import DataHome, { Home } from "@ec2u/data/pages/home";
 import DataNone from "@ec2u/data/pages/none";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
@@ -60,7 +60,7 @@ render((
 
                 <NodeRouter routes={{
 
-                    [Home.id]: DataHome,
+                    [Datasets.id]: DataSets,
 
                     [Universities.id]: DataUniversities,
                     [University.id]: DataUniversity,

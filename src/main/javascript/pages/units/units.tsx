@@ -44,6 +44,11 @@ export const Units=immutable({
         label: { "en": "" },
         comment: { "en": "" },
 
+        classification: {
+            id: "",
+            label: { "en": "" }
+        },
+
         altLabel: { "en": "" },
 
         university: {
@@ -74,6 +79,7 @@ export function DataUnits() {
         >
 
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
+            <NodeOptions path={"type"} type={"string"} placeholder={"Type"} state={[query, setQuery]}/>
 
         </DataPane>}
 
@@ -87,6 +93,8 @@ export function DataUnits() {
             label,
             comment,
 
+            classification,
+
             university,
             altLabel
 
@@ -94,14 +102,15 @@ export function DataUnits() {
 
             <DataCard key={id} compact
 
-                name={<a href={id}>{string(label)}</a>}
+                name={<a href={id}>{altLabel && <>
+                    <span>{string(altLabel)}</span>
+                    <span> / </span>
+                </>}{string(label)}</a>
+                }
 
                 tags={<>
                     <span>{string(university)}</span>
-                    {altLabel && <>
-                        <span> / </span>
-                        <span>{string(altLabel)}</span>
-                    </>}
+                    {classification && <><br/><span>{string(classification)}</span></>}
                 </>}
 
             >

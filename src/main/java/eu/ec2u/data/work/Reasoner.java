@@ -17,8 +17,7 @@
 package eu.ec2u.data.work;
 
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.*;
 import java.util.function.Function;
@@ -45,7 +44,8 @@ public final class Reasoner implements UnaryOperator<Collection<Statement>> {
 
                 .of(
                         subClassOf(ontology),
-                        subPropertyOf(ontology)
+                        subPropertyOf(ontology),
+                        inverseOf(ontology)
                 )
 
                 .flatMap(stream -> stream)
@@ -70,15 +70,25 @@ public final class Reasoner implements UnaryOperator<Collection<Statement>> {
     private Stream<SubClassOf> subClassOf(final Collection<Statement> ontology) {
         return ontology.stream()
                 .filter(pattern(null, RDFS.SUBCLASSOF, null))
-                .map(statement -> new SubClassOf(statement.getSubject(), statement.getObject()));
+                .filter(statement -> statement.getSubject().isIRI())
+                .filter(statement -> statement.getObject().isIRI())
+                .map(statement -> new SubClassOf((IRI)statement.getSubject(), (IRI)statement.getObject()));
     }
 
     private Stream<SubPropertyOf> subPropertyOf(final Collection<Statement> ontology) {
         return ontology.stream()
                 .filter(pattern(null, RDFS.SUBPROPERTYOF, null))
                 .filter(statement -> statement.getSubject().isIRI())
-                .filter(statement -> statement.getPredicate().isIRI())
+                .filter(statement -> statement.getObject().isIRI())
                 .map(statement -> new SubPropertyOf((IRI)statement.getSubject(), (IRI)statement.getObject()));
+    }
+
+    private Stream<InverseOf> inverseOf(final Collection<Statement> ontology) {
+        return ontology.stream()
+                .filter(pattern(null, OWL.INVERSEOF, null))
+                .filter(statement -> statement.getSubject().isIRI())
+                .filter(statement -> statement.getObject().isIRI())
+                .map(statement -> new InverseOf((IRI)statement.getSubject(), (IRI)statement.getObject()));
     }
 
 
@@ -89,7 +99,7 @@ public final class Reasoner implements UnaryOperator<Collection<Statement>> {
         private final Value child;
         private final Value parent;
 
-        private SubClassOf(final Value child, final Value parent) {
+        private SubClassOf(final IRI child, final IRI parent) {
             this.child=child;
             this.parent=parent;
         }
@@ -116,6 +126,26 @@ public final class Reasoner implements UnaryOperator<Collection<Statement>> {
             return statements.stream()
                     .filter(pattern(null, child, null))
                     .map(statement -> statement(statement.getSubject(), parent, statement.getObject()));
+        }
+
+    }
+
+    private static final class InverseOf implements Function<Collection<Statement>, Stream<Statement>> {
+
+        private final IRI direct;
+        private final IRI inverse;
+
+
+        private InverseOf(final IRI direct, final IRI inverse) {
+            this.direct=direct;
+            this.inverse=inverse;
+        }
+
+        @Override public Stream<Statement> apply(final Collection<Statement> statements) {
+            return statements.stream()
+                    .filter(pattern(null, direct, null))
+                    .filter(statement -> statement.getObject().isIRI())
+                    .map(statement -> statement((Resource)statement.getObject(), inverse, statement.getSubject()));
         }
 
     }

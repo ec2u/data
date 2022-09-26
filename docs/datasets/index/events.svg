@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 806 538"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 806 538"
      width="806" height="538">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter"
@@ -32,7 +32,7 @@
       </g>
     </marker>
   </defs>
-  <g id="events" stroke="none" fill="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
+  <g id="events" stroke-dasharray="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke="none">
     <title>events</title>
     <rect fill="white" x="0" y="0" width="806" height="538"/>
     <g id="events_Layer_1">
@@ -202,7 +202,7 @@
                 stroke-linejoin="round" stroke-width=".25"/>
           <text transform="translate(139.26275 72.70201)" fill="black">
             <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">rdf:type :URI</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">schema:url :URI [0..1]
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">schema:url :URI [0..*]
             </tspan>
             <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">schema:name :Dictionary
             </tspan>
@@ -439,6 +439,24 @@
       <g id="Line_108">
         <line x1="73.52257" y1="247.54575" x2="73.52257" y2="115.45201" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_109">
+        <path d="M 763.3206 380.8488 C 763.3206 378.1486 761.7984 377.81453 750.6794 375.1423 L 750.5619 375.11463 C 739.3841 372.41445 739.2679 372.41445 727.79645 372.41445 C 712.522 372.41445 643.4646 372.41445 643.4646 372.41445 L 643.4646 400.91845 L 763.3206 400.91845 L 763.3206 380.8488 Z"
+              fill="white"/>
+        <path d="M 763.3206 380.8488 C 763.3206 378.1486 761.7984 377.81453 750.6794 375.1423 L 750.5619 375.11463 C 739.3841 372.41445 739.2679 372.41445 727.79645 372.41445 C 712.522 372.41445 643.4646 372.41445 643.4646 372.41445 L 643.4646 400.91845 L 763.3206 400.91845 L 763.3206 380.8488 Z M 763.3206 380.7097 C 763.3206 378.1486 763.2031 378.1486 739.2679 378.1486 L 739.2679 378.1486 C 739.2679 372.4424 739.2679 372.41445 728.4988 372.41445"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <text transform="translate(648.4646 375.41445)" fill="black">
+          <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">use schema:name
+            to hold
+          </tspan>
+          <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="20.252">
+            unstructured addresses
+          </tspan>
+        </text>
+      </g>
+      <g id="Line_110">
+        <line x1="684.4948" y1="400.99396" x2="632.2323" y2="440.6173" stroke="black" stroke-linecap="round"
+              stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
       </g>
     </g>
   </g>
