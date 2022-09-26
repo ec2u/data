@@ -14,6 +14,11 @@ cron:
     schedule: every day 00:00
 
 
+  - description: "units › pavia - nightly crawling"
+    url: /cron/courses/pavia
+    schedule: every day 00:00
+
+
   - description: "events - nightly purging"
     url: /cron/events/
     schedule: every day 00:00

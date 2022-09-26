@@ -93,10 +93,6 @@ org:classification rdf:type owl:ObjectProperty ;
 void:Dataset rdf:type owl:Class .
 
 
-###  http://schema.org/Course
-<http://schema.org/Course> rdf:type owl:Class .
-
-
 ###  http://www.w3.org/ns/dcat#Dataset
 dcat:Dataset rdf:type owl:Class .
 
@@ -115,8 +111,8 @@ foaf:Person rdf:type owl:Class .
 
 ###  https://data.ec2u.eu/terms/Course
 ec2u:Course rdf:type owl:Class ;
-            rdfs:subClassOf <http://schema.org/Course> ,
-                            ec2u:Resource ;
+            rdfs:subClassOf ec2u:Resource ,
+                            schema:Course ;
             void:uriSpace "https://data.ec2u.eu/courses/" .
 
 
@@ -157,8 +153,18 @@ ec2u:University rdf:type owl:Class ;
                 void:uriSpace "https://data.ec2u.eu/universities/" .
 
 
+###  https://schema.org/Course
+schema:Course rdf:type owl:Class ;
+              rdfs:subClassOf schema:Thing .
+
+
 ###  https://schema.org/Event
-schema:Event rdf:type owl:Class .
+schema:Event rdf:type owl:Class ;
+             rdfs:subClassOf schema:Thing .
+
+
+###  https://schema.org/Thing
+schema:Thing rdf:type owl:Class .
 
 
 #################################################################
