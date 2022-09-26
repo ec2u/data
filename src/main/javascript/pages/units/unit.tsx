@@ -46,6 +46,8 @@ export const Unit=immutable({
         label: { "en": "" }
     },
 
+    homepage: optional(""),
+
     altLabel: optional({ "en": "" }),
 
     classification: optional({
@@ -119,6 +121,8 @@ function DataEventInfo({
         label,
         altLabel,
 
+        homepage,
+
         classification,
         head,
 
@@ -147,6 +151,12 @@ function DataEventInfo({
             "Acronym": altLabel && <span>{string(altLabel)}</span>,
             "Name": <span>{string(label)}</span>,
             "Head": head && <span>{string(head)}</span>
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
+            "Info": homepage && <a href={homepage}>{new URL(homepage).host}</a>
 
         }}</DataInfo>
 
