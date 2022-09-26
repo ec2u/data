@@ -25,10 +25,12 @@ import com.metreeca.link.Shape;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
+import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
@@ -40,7 +42,9 @@ public final class Courses extends Delegator {
 
                 hidden(field(RDF.TYPE, all(EC2U.Course))),
 
-                field("fullDescription", Schema.description) // prevent clashes with dct:description
+                field("fullDescription", Schema.description), // prevent clashes with dct:description
+
+                field(Schema.courseCode, optional(), datatype(XSD.STRING))
 
         );
     }

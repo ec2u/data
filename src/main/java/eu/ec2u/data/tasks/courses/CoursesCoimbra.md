@@ -1,26 +1,31 @@
 # Sites
 
-*  …
+*  https://apps.uc.pt/courses/
 
 # Integration
 
-## Pending
+## 2022-09-26
 
-* …
+* initial integration
 
 # Feeds
 
 ## REST/JSON API
 
-* …
-
 ```http
-GET {{units-salamanca-url}}
-Authorization: Basic {{units-salamanca-key}}
+POST {{courses-coimbra-url}}
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+applicationId={{courses-coimbra-id}}
+&applicationToken={{courses-coimbra-token}}
+&anoLectivo=2022/2023
 ```
 
 ```json
 {
+    "status": "SUCCESS",
+    "additionalInformation": "Total Resultados: 716",
     "listaResultados": [
         {
             "cursoId": 4604,
@@ -158,8 +163,6 @@ Authorization: Basic {{units-salamanca-key}}
             "unoId": 141
         },
         …
-    ],
-    "status": "SUCCESS",
-    "additionalInformation": "Total Resultados: 690"
+    ]
 }
 ```

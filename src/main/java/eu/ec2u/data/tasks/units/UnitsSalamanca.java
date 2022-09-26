@@ -138,7 +138,6 @@ public final class UnitsSalamanca implements Runnable {
                         .header("Authorization", format("Basic %s",
                                 Base64.getEncoder().encodeToString(key.getBytes(UTF_8))
                         ))
-                        .header("Accept", JSON.MIME)
                 ))
 
                 .map(JSONPath::new)

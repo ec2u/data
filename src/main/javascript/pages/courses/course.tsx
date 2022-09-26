@@ -21,7 +21,7 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/link";
+import { multiple, optional, string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -44,7 +44,11 @@ export const Course=immutable({
     university: {
         id: "",
         label: { "en": "" }
-    }
+    },
+
+    url: multiple(""),
+
+    courseCode: optional("")
 
 });
 
@@ -92,8 +96,9 @@ function DataCourseInfo({
 
     children: {
 
-
-        university
+        university,
+        url,
+        courseCode
     }
 
 }: {
@@ -107,6 +112,23 @@ function DataCourseInfo({
         <DataInfo>{{
 
             "University": <NodeLink>{university}</NodeLink>
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
+            "Code": courseCode && <span>{courseCode}</span>,
+
+            "Info": url && url.map(item => {
+
+                const url=new URL(item);
+
+                const host=url.host;
+                const lang=url.pathname.match(/\b[a-z]{2}\b/i);
+
+                return <a key={item} href={item}>{lang ? `${host} (${lang[0].toLowerCase()})` : host}</a>;
+
+            })
 
         }}</DataInfo>
 

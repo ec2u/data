@@ -14,3 +14,9 @@ Direct RDF extraction from a VIVO-based internal knowledge hub (currently under 
 ## 2022-09-26
 
 * Initial integration
+
+# Feeds
+
+## RDF Dump
+
+* extracted from underlying VIVO instance

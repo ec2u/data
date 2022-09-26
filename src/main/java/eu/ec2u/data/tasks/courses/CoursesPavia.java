@@ -37,6 +37,8 @@ import java.util.stream.Stream;
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Lambdas.task;
 import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Logger.time;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf4j.services.Graph.graph;
@@ -63,13 +65,12 @@ public final class CoursesPavia implements Runnable {
                 .flatMap(this::courses)
                 .map(this::course)
 
-                .sink(units -> upload(EC2U.courses,
-                        validate(Course(), Set.of(EC2U.Course), units),
+                .sink(courses -> upload(EC2U.courses,
+                        validate(Course(), Set.of(EC2U.Course), courses),
                         () -> service(graph()).update(task(connection -> Stream
 
                                 .of(""
                                         +"prefix ec2u: </terms/>\n"
-                                        +"prefix org: <http://www.w3.org/ns/org#>\n"
                                         +"\n"
                                         +"delete where {\n"
                                         +"\n"
@@ -112,12 +113,13 @@ public final class CoursesPavia implements Runnable {
                         .graph(new Graph(repository("vivo-unipv")))
                 )
 
-                .limit(100)
-
                 .batch(0)
 
-                .flatMap(model -> frame(VIVO.Course, model)
-                        .frames(inverse(RDF.TYPE))
+                .flatMap(model -> time(() -> frame(VIVO.Course, model)
+                                .frames(inverse(RDF.TYPE))
+                        ).apply((elapsed, stream) ->
+                                service(logger()).info(this, String.format("split in <%,d> ms", elapsed))
+                        )
                 );
     }
 

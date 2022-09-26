@@ -123,6 +123,13 @@ public final class Schema {
     }
 
 
+    //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI Course=term("Course");
+
+    public static final IRI courseCode=term("courseCode");
+
+
     //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public enum EventStatus {EventScheduled, EventMovedOnline, EventPostponed, EventRescheduled, EventCancelled}
