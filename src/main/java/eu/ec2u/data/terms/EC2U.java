@@ -127,8 +127,8 @@ public final class EC2U {
                 field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
                 field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
 
-                field(DCTERMS.TYPE, multiple(), Concept()),
-                field(DCTERMS.SUBJECT, multiple(), Concept())
+                field(DCTERMS.TYPE, multiple(), Reference()),
+                field(DCTERMS.SUBJECT, multiple(), Reference())
 
         );
     }

@@ -52,6 +52,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
+import static eu.ec2u.data.ports.Events.Event;
 import static eu.ec2u.data.tasks.Tasks.*;
 import static eu.ec2u.data.tasks.events.Events.synced;
 import static eu.ec2u.data.work.JSONLD.jsonld;
@@ -86,7 +87,7 @@ public final class EventsJenaCity implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(EC2U.events,
-                        validate(eu.ec2u.data.ports.Events.Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
 

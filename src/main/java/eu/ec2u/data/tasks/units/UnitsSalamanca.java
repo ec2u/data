@@ -23,6 +23,7 @@ import com.metreeca.http.services.Vault;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.cities.Salamanca;
@@ -154,6 +155,7 @@ public final class UnitsSalamanca implements Runnable {
             return frame(iri(EC2U.units, md5(Salamanca.University+"@"+id)))
 
                     .values(RDF.TYPE, EC2U.Unit)
+                    .value(EC2U.university, Salamanca.University)
 
                     .value(DCTERMS.TITLE, label)
                     .value(DCTERMS.DESCRIPTION, json.string("topics")
@@ -166,12 +168,32 @@ public final class UnitsSalamanca implements Runnable {
                             .filter(not(String::isEmpty))
                             .map(value -> literal(value, Salamanca.Language)))
 
-                    .value(EC2U.university, Salamanca.University)
-                    .value(ORG.UNIT_OF, Salamanca.University)
-
                     .value(ORG.CLASSIFICATION, Units.GroupRecognized)
 
-                    .frame(inverse(ORG.HEAD_OF), head(json));
+                    .frame(inverse(ORG.HEAD_OF), head(json))
+
+                    .frame(ORG.UNIT_OF, department(json).orElseGet(
+                            () -> frame(Salamanca.University)
+                    ));
+        });
+    }
+
+    private Optional<Frame> department(final JSONPath json) {
+        return json.string("department").map(name -> {
+
+            final Literal title=literal(name, Salamanca.Language);
+
+            return frame(iri(EC2U.units, md5(Salamanca.University+"@"+name)))
+
+                    .values(RDF.TYPE, EC2U.Unit)
+                    .value(EC2U.university, Salamanca.University)
+
+                    .value(DCTERMS.TITLE, title)
+                    .value(SKOS.PREF_LABEL, title)
+                    .value(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Values::iri))
+
+                    .value(ORG.CLASSIFICATION, Units.Department)
+                    .frame(ORG.UNIT_OF, frame(Salamanca.University));
         });
     }
 
