@@ -79,7 +79,7 @@ export function DataUnits() {
         >
 
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
-            <NodeOptions path={"type"} type={"anyURI"} placeholder={"Type"} state={[query, setQuery]}/>
+            <NodeOptions path={"type"} type={"string"} placeholder={"Type"} state={[query, setQuery]}/>
 
         </DataPane>}
 
