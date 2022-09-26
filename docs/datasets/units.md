@@ -57,11 +57,11 @@ under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativ
 Research units are crawled from different local academic sources and mapped as far as possible to the shared data model:
 source analysis and integration status are detailed in the linked source sheets.
 
-| status      | university | feed |
-| ----------- | ---------- | ---- |
-| in progress | Pavia      |      |
-| in progress | Salamanca  |      |
-| in progress | Coimbra    |      |
+| status      | university                                                   |
+| ----------- | ------------------------------------------------------------ |
+| ✓           | [Pavia](../../src/main/java/eu/ec2u/data/tasks/units/UnitsPavia.md) |
+| ✓           | [Salamanca](../../src/main/java/eu/ec2u/data/tasks/units/UnitsSalamanca.md) |
+| in progress | [Coimbra](../../src/main/java/eu/ec2u/data/tasks/units/UnitsCoimbra.md) |
 
 # Updating
 

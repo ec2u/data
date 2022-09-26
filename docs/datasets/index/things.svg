@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2022 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="116 20 515 157"
+     width="515" height="157">
+  <defs/>
+  <g id="things" stroke-dasharray="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke="none">
+    <title>things</title>
+    <rect fill="white" x="116" y="20" width="515" height="157"/>
+    <g id="things_Layer_1">
+      <title>Layer 1</title>
+      <g id="Group_69">
+        <g id="Graphic_72">
+          <rect x="144.56693" y="130.59" width="212.871" height="18" fill="white"/>
+          <rect x="144.56693" y="130.59" width="212.871" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_71">
+          <rect x="144.56693" y="68.284685" width="212.871" height="62.30531" fill="white"/>
+          <rect x="144.56693" y="68.284685" width="212.871" height="62.30531" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(150.56693 71.284685)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">schema:url :URI [0..1]</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">schema:name :Dictionary
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">schema:image :URI [0..1]
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="42.78319">schema:description
+              :Dictionary
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="54.04425">
+              schema:disambiguatingDescription :Dictionary [0..1]
+            </tspan>
+          </text>
+        </g>
+        <g id="Graphic_70">
+          <a xl:href="https://schema.org/Thing">
+            <rect x="144.56693" y="51.02362" width="212.871" height="17.261063" fill="white"/>
+            <rect x="144.56693" y="51.02362" width="212.871" height="17.261063" stroke="black" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(220.75343 54.02362)" fill="black">
+              <tspan font-family="Helvetica Neue" font-style="italic" font-weight="bold" font-size="9" fill="black" x="0"
+                     y="9">schema:Thing
+              </tspan>
+            </text>
+          </a>
+        </g>
+      </g>
+      <g id="Graphic_74">
+        <path d="M 529.4784 122.74266 C 529.4784 121.10838 527.8441 120.90619 515.9062 119.28881 L 515.7801 119.27208 C 503.7791 117.6378 503.6543 117.6378 491.33803 117.6378 C 474.93867 117.6378 400.7954 117.6378 400.7954 117.6378 L 400.7954 134.8898 L 529.4784 134.8898 L 529.4784 122.74266 Z"
+              fill="white"/>
+        <path d="M 529.4784 122.74266 C 529.4784 121.10838 527.8441 120.90619 515.9062 119.28881 L 515.7801 119.27208 C 503.7791 117.6378 503.6543 117.6378 491.33803 117.6378 C 474.93867 117.6378 400.7954 117.6378 400.7954 117.6378 L 400.7954 134.8898 L 529.4784 134.8898 L 529.4784 122.74266 Z M 529.4784 122.65847 C 529.4784 121.10838 529.3523 121.10838 503.6543 121.10838 L 503.6543 121.10838 C 503.6543 117.6547 503.6543 117.6378 492.0921 117.6378"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <text transform="translate(405.7954 120.6378)" fill="black">
+          <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">extended by all
+            schema types
+          </tspan>
+        </text>
+      </g>
+      <g id="Line_73">
+        <line x1="400.6704" y1="125.0275" x2="357.43793" y2="124.1984" stroke="black" stroke-linecap="round"
+              stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
+      </g>
+      <g id="Group_77">
+        <g id="Graphic_78">
+          <text transform="translate(400.7954 49.188977)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Graphic_76">
+        <a xl:href="https://schema.org/">
+          <text transform="translate(400.7954 62.45004)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;https://schema.org/&gt;</tspan>
+          </text>
+        </a>
+      </g>
+    </g>
+  </g>
+</svg>

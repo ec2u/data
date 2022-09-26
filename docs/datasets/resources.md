@@ -5,7 +5,7 @@ title: Resources
 *Resources* describe generic items of interest made available on the *EC2U Knowledge Hub*.
 
 The resource data model is *abstract*, that is is not intended to be used in isolation but only to provide a base
-definiton factoring generic properties shared by the specialized models defined by each [dataset](index.md).
+definition factoring generic properties shared by the specialized models defined by each [dataset](index.md).
 
 # Model
 
