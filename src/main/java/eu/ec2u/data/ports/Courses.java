@@ -28,11 +28,17 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
+import static com.metreeca.link.shapes.MinInclusive.minInclusive;
+import static com.metreeca.link.shapes.Pattern.pattern;
+
+import static eu.ec2u.data.terms.EC2U.Reference;
+import static eu.ec2u.data.terms.EC2U.multilingual;
 
 
 public final class Courses extends Delegator {
@@ -44,7 +50,23 @@ public final class Courses extends Delegator {
 
                 field("fullDescription", Schema.description), // prevent clashes with dct:description
 
-                field(Schema.courseCode, optional(), datatype(XSD.STRING))
+                field(Schema.provider, optional(), Reference()),
+                field(Schema.courseCode, optional(), datatype(XSD.STRING)),
+                field(Schema.educationalLevel, optional(), Reference()),
+                field(Schema.inLanguage, optional(), datatype(XSD.STRING), pattern("[a-z]{2}")),
+                field(Schema.numberOfCredits, optional(), datatype(XSD.INTEGER), minInclusive(literal(0))),
+                field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
+
+                field(Schema.about, optional(), Reference()),
+
+                field(Schema.teaches, multilingual()),
+                field(Schema.assesses, multilingual()),
+                field(Schema.coursePrerequisites, multilingual()),
+                field(Schema.learningResourceType, multilingual()),
+                field(Schema.competencyRequired, multilingual()),
+
+                field(Schema.educationalCredentialAwarded, multilingual()),
+                field(Schema.occupationalCredentialAwarded, multilingual())
 
         );
     }
