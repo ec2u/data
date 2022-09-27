@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="91 24 689 459"
-     width="689" height="459">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="146 24 634 459"
+     width="634" height="459">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
             stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
@@ -32,9 +32,9 @@
       </g>
     </marker>
   </defs>
-  <g id="resources" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none" stroke="none">
+  <g id="resources" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
     <title>resources</title>
-    <rect fill="white" x="91" y="24" width="689" height="459"/>
+    <rect fill="white" x="146" y="24" width="634" height="459"/>
     <g id="resources_Layer_1">
       <title>Layer 1</title>
       <g id="Group_2">
@@ -312,9 +312,12 @@
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_53">
-        <rect x="264.62133" y="117.66362" width="55.002" height="17.261063" fill="white"/>
-        <text transform="translate(270.62133 120.66362)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="2060574e-19" y="9">dct:subject</tspan>
+        <rect x="254.61333" y="123.1117" width="75.018" height="28.522125" fill="white"/>
+        <text transform="translate(260.61333 126.1117)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="5.6655" y="9">dct:type [0..*]</tspan>
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="17763568e-21" y="20.261063">dct:subject
+            [0..*]
+          </tspan>
         </text>
       </g>
       <g id="Graphic_59">

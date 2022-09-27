@@ -56,8 +56,7 @@ public final class EC2U {
     );
 
     public static final Map<String, String> Keywords=Map.ofEntries(
-            entry("@id", "id"),
-            entry("@type", "type")
+            entry("@id", "id")
     );
 
 
@@ -84,6 +83,7 @@ public final class EC2U {
     public static final IRI inferences=item("/inferences");
 
     public static final IRI units=item("/units/");
+    public static final IRI courses=item("/courses/");
     public static final IRI persons=item("/persons/");
 
     public static final IRI events=item("/events/");
@@ -128,7 +128,8 @@ public final class EC2U {
                 field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
                 field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
 
-                field(DCTERMS.SUBJECT, multiple(), Concept())
+                field(DCTERMS.TYPE, multiple(), Reference()),
+                field(DCTERMS.SUBJECT, multiple(), Reference())
 
         );
     }
@@ -142,8 +143,8 @@ public final class EC2U {
                 field(SKOS.ALT_LABEL, multilingual()),
                 field(SKOS.DEFINITION, multilingual()),
 
-                field(SKOS.BROADER, datatype(Values.IRIType)),
-                field(SKOS.NARROWER, datatype(Values.IRIType))
+                field(SKOS.BROADER, Reference()),
+                field(SKOS.NARROWER, Reference())
 
         );
     }
@@ -189,6 +190,11 @@ public final class EC2U {
     //// Units ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI Unit=term("Unit");
+
+
+    //// Courses ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI Course=term("Course");
 
 
     //// Persons ////////////////////////////////////////////////////////////////////////////////////////////////////////

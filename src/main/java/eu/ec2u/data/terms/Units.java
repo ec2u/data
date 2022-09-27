@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.cities;
+package eu.ec2u.data.terms;
 
 import org.eclipse.rdf4j.model.IRI;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import static com.metreeca.link.Values.iri;
 
-import static com.metreeca.open.actions.Wikidata.wd;
+/**
+ * EC2U Research Unit SKOS Concept Schema.
+ */
+public final class Units {
 
-import static eu.ec2u.data.terms.EC2U.item;
+    public static final IRI Base=EC2U.item("/concepts/units/");
 
-public final class Poitiers {
 
-    public static final IRI University=item("/universities/poitiers");
-    public static final IRI City=wd("Q6616");
-    public static final IRI Country=wd("Q142");
-    public static final String Language="fr";
-    public static final ZoneOffset TimeOffset=ZoneOffset.ofHours(1); // !!! remove
-    public static final ZoneId TimeZone=ZoneId.of("Europe/Paris");
+    public static final IRI Institute=iri(Base, "institute");
+    public static final IRI Center=iri(Base, "center");
+    public static final IRI Department=iri(Base, "department");
+    public static final IRI Laboratory=iri(Base, "laboratory");
+    public static final IRI Group=iri(Base, "group");
+    public static final IRI GroupRecognized=iri(Base, "group-recognized");
+    public static final IRI GroupInformal=iri(Base, "group-informal");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Poitiers() { }
+    private Units() { }
 
 }

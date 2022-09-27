@@ -130,8 +130,8 @@ export function NodeOptions({
 
             />
 
-            {isBoolean(value) ? value ? <Check/> : <X/>
-                : isFocus(value) ? <NodeLink>{value}</NodeLink>
+            {type === "boolean" && isBoolean(value) ? value ? <Check/> : <X/>
+                : type === "anyURI" && isFocus(value) ? <NodeLink>{value}</NodeLink>
                     : <span data-placeholder={"blank"}>{string(value)}</span>
             }
 

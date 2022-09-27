@@ -56,8 +56,8 @@ public final class Data implements Runnable {
 
     private static final boolean Production=GCPServer.production();
 
-    private static final String GraphDBRepository="http://base.ec2u.net/repositories/data-main";
-    // !!! private static final String GraphDBRepository="https://base.ec2u.eu/repositories/data-main";
+    private static final String GraphDBServer="http://base.ec2u.net"; // !!! "https://base.ec2u.eu";
+    private static final String GraphDBRepository="data-main";
     private static final String GraphDBUsr="server";
     private static final String GraphDBPwd="graphdb-server-pwd";
 
@@ -78,15 +78,15 @@ public final class Data implements Runnable {
                 .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
 
-                .set(graph(), () -> new Graph(repository()))
+                .set(graph(), () -> new Graph(repository(GraphDBRepository)))
                 .set(engine(), GraphEngine::new)
 
                 .set(keywords(), () -> EC2U.Keywords);
     }
 
-    private static Repository repository() {
+    public static Repository repository(final String name) {
 
-        final HTTPRepository repository=new HTTPRepository(GraphDBRepository);
+        final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GraphDBServer, name));
 
         repository.setUsernameAndPassword(GraphDBUsr, service(vault()).get(GraphDBPwd).orElseThrow(() ->
                 new IllegalStateException(format("undefined <%s> secret", GraphDBPwd))
@@ -140,6 +140,7 @@ public final class Data implements Runnable {
                                         .path("/concepts/*", new Concepts())
                                         .path("/universities/*", new Universities())
                                         .path("/units/*", new Units())
+                                        .path("/courses/*", new Courses())
                                         .path("/persons/*", new Persons())
                                         .path("/events/*", new Events())
 

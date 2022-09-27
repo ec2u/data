@@ -8,12 +8,14 @@
 @prefix ec2u: <https://data.ec2u.eu/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vivo: <http://vivoweb.org/ontology/core#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix schema: <https://schema.org/> .
 @base <http://www.w3.org/2002/07/owl#> .
 
 [ rdf:type owl:Ontology ;
-   void:rootResource ec2u:Dataset ,
+   void:rootResource ec2u:Course ,
+                     ec2u:Dataset ,
                      ec2u:Event ,
                      ec2u:Unit ,
                      ec2u:University
@@ -69,9 +71,27 @@ ec2u:schac rdf:type owl:AnnotationProperty .
 #    Object Properties
 #################################################################
 
+###  http://purl.org/dc/terms/subject
+dct:subject rdf:type owl:ObjectProperty .
+
+
+###  http://purl.org/dc/terms/type
+dct:type rdf:type owl:ObjectProperty .
+
+
 ###  http://www.w3.org/2002/07/owl#sameAs
 owl:sameAs rdf:type owl:ObjectProperty ,
                     owl:SymmetricProperty .
+
+
+###  http://www.w3.org/ns/org#classification
+org:classification rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf dct:type .
+
+
+###  https://schema.org/about
+schema:about rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf dct:subject .
 
 
 #################################################################
@@ -80,6 +100,14 @@ owl:sameAs rdf:type owl:ObjectProperty ,
 
 ###  http://rdfs.org/ns/void#Dataset
 void:Dataset rdf:type owl:Class .
+
+
+###  http://www.w3.org/2004/02/skos/core#Concept
+<http://www.w3.org/2004/02/skos/core#Concept> rdf:type owl:Class .
+
+
+###  http://www.w3.org/2004/02/skos/core#ConceptScheme
+<http://www.w3.org/2004/02/skos/core#ConceptScheme> rdf:type owl:Class .
 
 
 ###  http://www.w3.org/ns/dcat#Dataset
@@ -98,9 +126,22 @@ org:OrganizationalUnit rdf:type owl:Class .
 foaf:Person rdf:type owl:Class .
 
 
+###  https://data.ec2u.eu/terms/Concept
+ec2u:Concept rdf:type owl:Class ;
+             rdfs:subClassOf <http://www.w3.org/2004/02/skos/core#Concept> ,
+                             ec2u:Resource .
+
+
+###  https://data.ec2u.eu/terms/ConceptScheme
+ec2u:ConceptScheme rdf:type owl:Class ;
+                   rdfs:subClassOf <http://www.w3.org/2004/02/skos/core#ConceptScheme> ,
+                                   ec2u:Resource .
+
+
 ###  https://data.ec2u.eu/terms/Course
 ec2u:Course rdf:type owl:Class ;
-            rdfs:subClassOf ec2u:Resource ;
+            rdfs:subClassOf ec2u:Resource ,
+                            schema:Course ;
             void:uriSpace "https://data.ec2u.eu/courses/" .
 
 
@@ -141,8 +182,18 @@ ec2u:University rdf:type owl:Class ;
                 void:uriSpace "https://data.ec2u.eu/universities/" .
 
 
+###  https://schema.org/Course
+schema:Course rdf:type owl:Class ;
+              rdfs:subClassOf schema:Thing .
+
+
 ###  https://schema.org/Event
-schema:Event rdf:type owl:Class .
+schema:Event rdf:type owl:Class ;
+             rdfs:subClassOf schema:Thing .
+
+
+###  https://schema.org/Thing
+schema:Thing rdf:type owl:Class .
 
 
 #################################################################
@@ -162,6 +213,15 @@ schema:Event rdf:type owl:Class .
                         dct:rights "Copyright © 2022 EC2U Alliance" ;
                         dct:title "Datasets"@en ;
                         rdfs:isDefinedBy "EC2U Knowledge Hub dataset catalog"@en .
+
+
+###  https://data.ec2u.eu/courses/
+<https://data.ec2u.eu/courses/> rdf:type owl:NamedIndividual ,
+                                         ec2u:Dataset ;
+                                dct:description "Academic courses"@en ;
+                                dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+                                dct:rights "Copyright © 2022 EC2U Alliance" ;
+                                dct:title "Courses"@en .
 
 
 ###  https://data.ec2u.eu/events/

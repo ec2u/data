@@ -16,17 +16,20 @@
 
 package eu.ec2u.data.work;
 
+import com.metreeca.http.Xtream;
 import com.metreeca.link.Frame;
 
+import eu.ec2u.data.cities.Pavia;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Schema;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
@@ -35,19 +38,30 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
 import static java.lang.String.format;
+import static java.util.function.Predicate.not;
 
 public final class Work {
 
-    public static Value localize(final Value value, final String lang) {
-        return literal(value)
+    public static Stream<Literal> localized(final Stream<Value> values) {
+        return Xtream.from(values).optMap(Work::localized);
+    }
 
-                .filter(object -> object.getDatatype().equals(XSD.STRING))
+    public static Optional<Literal> localized(final Optional<Value> value) {
+        return value.flatMap(Work::localized);
+    }
 
+    public static Optional<Literal> localized(final Value value) {
+
+        final String text=literal(value)
                 .map(Value::stringValue)
-                .map(text -> literal(text, lang))
-                .map(Value.class::cast)
+                .filter(not(String::isEmpty))
+                .orElse("");
 
-                .orElse(value);
+        final String lang=literal(value)
+                .flatMap(Literal::getLanguage)
+                .orElse(Pavia.Language);
+
+        return text.isEmpty() ? Optional.empty() : Optional.of(literal(text, lang));
     }
 
 

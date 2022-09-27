@@ -24,52 +24,47 @@ import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
-import { FlaskConical } from "@metreeca/tile/widgets/icon";
+import { NodeRange } from "@metreeca/tile/lenses/range";
+import { GraduationCap } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
 
 
-export const UnitsIcon=<FlaskConical/>;
+export const CoursesIcon=<GraduationCap/>;
 
-export const Units=immutable({
+export const Courses=immutable({
 
-    id: "/units/",
-    label: { "en": "Research Units" },
+    id: "/courses/",
+    label: { "en": "Courses" },
 
     contains: multiple({
 
         id: "",
-        label: { "en": "" },
-        comment: { "en": "" },
-
-        classification: {
-            id: "",
-            label: { "en": "" }
-        },
-
-        altLabel: { "en": "" },
+        label: {},
+        comment: {},
 
         university: {
             id: "",
-            label: { "en": "" }
+            label: {}
         }
 
     })
+
 });
 
 
-export function DataUnits() {
+export function DataCourses() {
 
     const [, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
+    const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Units) }); }, []);
+    useEffect(() => { setRoute({ label: string(Courses) }); }, []);
 
 
-    return <DataPage item={string(Units)}
+    return <DataPage item={string(Courses)}
 
         pane={<DataPane
 
@@ -79,7 +74,9 @@ export function DataUnits() {
         >
 
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
-            <NodeOptions path={"type"} type={"string"} placeholder={"Type"} state={[query, setQuery]}/>
+            <NodeOptions path={"educationalLevel"} type={"string"} placeholder={"Level"} state={[query, setQuery]}/>
+            <NodeOptions path={"inLanguage"} type={"string"} placeholder={"Language"} state={[query, setQuery]}/> {/* !!! labels */}
+            <NodeRange path={"numberOfCredits"} type={"integer"} placeholder={"Credits"} state={[query, setQuery]}/>
 
         </DataPane>}
 
@@ -87,31 +84,22 @@ export function DataUnits() {
 
     >
 
-        <NodeItems model={Units} placeholder={UnitsIcon} state={[query, setQuery]}>{({
+        <NodeItems model={Courses} placeholder={CoursesIcon} state={[query, setQuery]}>{({
 
             id,
+
             label,
             comment,
 
-            classification,
-
-            university,
-            altLabel
+            university
 
         }) =>
 
             <DataCard key={id} compact
 
-                name={<a href={id}>{altLabel && <>
-                    <span>{string(altLabel)}</span>
-                    <span> / </span>
-                </>}{string(label)}</a>
-                }
+                name={<a href={id}>{string(label)}</a>}
 
-                tags={<>
-                    <span>{string(university)}</span>
-                    {classification && <><br/><span>{string(classification)}</span></>}
-                </>}
+                tags={string(university)}
 
             >
 
@@ -124,3 +112,4 @@ export function DataUnits() {
     </DataPage>;
 
 }
+

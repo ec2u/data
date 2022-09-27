@@ -44,10 +44,13 @@ data-card {
 
         & > h1 {
             flex-grow: 1;
+            margin: 0;
+            font-size: inherit;
         }
 
         & > nav {
 
+            text-align: end;
             white-space: nowrap;
             font-size: 90%;
             color: var(--node--color-label);

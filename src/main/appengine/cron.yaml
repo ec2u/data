@@ -5,6 +5,20 @@ cron:
     schedule: every day 00:00
 
 
+  - description: "units › pavia - nightly crawling"
+    url: /cron/units/pavia
+    schedule: every day 00:00
+
+  - description: "units › salamanca - nightly crawling"
+    url: /cron/units/salamanca
+    schedule: every day 00:00
+
+
+  - description: "units › pavia - nightly crawling"
+    url: /cron/courses/pavia
+    schedule: every day 00:00
+
+
   - description: "events - nightly purging"
     url: /cron/events/
     schedule: every day 00:00

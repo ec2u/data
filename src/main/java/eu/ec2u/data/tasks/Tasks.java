@@ -70,6 +70,8 @@ public final class Tasks {
                 .of(
 
                         resource(EC2U.class, ".ttl"),
+                        resource(EC2U.class, "Units.ttl"),
+                        resource(EC2U.class, "ISCED-2011.ttl"),
 
                         resource(EC2U.class, "SKOS.ttl"),
                         resource(EC2U.class, "Org.ttl"),
@@ -165,25 +167,33 @@ public final class Tasks {
 
 
     public static void upload(final IRI context, final Collection<Statement> model) {
-
-        final Set<Resource> subjects=model.stream()
+        upload(context, model, () -> service(graph()).update(task(connection -> model.stream()
                 .map(Statement::getSubject)
-                .collect(toSet());
+                .distinct()
+                .forEach(subject ->
+                        connection.remove(subject, null, null, context)
+                )
+        )));
+    }
+
+    public static void upload(final IRI context, final Collection<Statement> model, final Runnable setup) {
+
+        final long subjects=model.stream()
+                .map(Statement::getSubject)
+                .distinct()
+                .count();
 
         time(() -> {
 
             service(graph()).update(task(connection -> {
 
-                subjects.forEach(subject ->
-                        connection.remove(subject, null, null, context)
-                );
-
+                setup.run();
                 connection.add(model, context);
 
             }));
 
         }).apply(elapsed -> service(logger()).info(Tasks.class, format(
-                "updated <%d> resources in <%s> in <%d> ms", subjects.size(), context, elapsed
+                "updated <%d> resources in <%s> in <%d> ms", subjects, context, elapsed
         )));
     }
 

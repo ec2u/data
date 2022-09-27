@@ -16,6 +16,15 @@ resource searches and selective publishing use cases.
 
 EC2U concepts are described using a controlled subset of the [SKOS](https://www.w3.org/TR/skos-reference/) data model.
 
+## ec2u:ConceptScheme
+
+> ❗️TBC
+
+| property                                     | description          |
+| -------------------------------------------- | -------------------- |
+| all [ec2u:Resource](resources.md) properties | inherited properties |
+| …                                            |                      |
+
 ## ec2u:Concept
 
 > ❗️TBC
@@ -25,12 +34,10 @@ EC2U concepts are described using a controlled subset of the [SKOS](https://www.
 | all [ec2u:Resource](resources.md) properties | inherited properties |
 | …                                            |                      |
 
+
 # Licensing
 
-> ❗️ To be confirmed.
-
-[EC2U Persons Dataset](https://data.ec2u.eu/persons/) © 2022 by [EC2U Alliance](https://www.ec2u.eu/) is licensed
-under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
+> ❗️source-level license / copyright holder
 
 > ❗️ Handle licensing for third-party embedded schemes
 

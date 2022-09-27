@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="188 122 424 239"
-     width="424" height="239">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="173 122 410 281"
+     width="410" height="281">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
             stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
@@ -25,31 +25,41 @@
         <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
       </g>
     </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="NegativeControls_Marker"
+            stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -13 2 26" markerWidth="2" markerHeight="26"
+            color="black">
+      <g>
+        <line x1="0" y1="-12" x2="0" y2="12" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
   </defs>
-  <g id="concepts" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none" stroke="none">
+  <g id="concepts" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
     <title>concepts</title>
-    <rect fill="white" x="188" y="122" width="424" height="239"/>
+    <rect fill="white" x="173" y="122" width="410" height="281"/>
     <g id="concepts_Layer_1">
       <title>Layer 1</title>
       <g id="Group_2">
         <g id="Graphic_5">
-          <rect x="339.3248" y="314.1042" width="111.855" height="18" fill="white"/>
-          <rect x="339.3248" y="314.1042" width="111.855" height="18" stroke="black" stroke-linecap="round"
+          <rect x="326.5689" y="356.1769" width="126.03" height="18" fill="white"/>
+          <rect x="326.5689" y="356.1769" width="126.03" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_4">
-          <rect x="339.3248" y="296.84313" width="111.855" height="17.261063" fill="white"/>
-          <rect x="339.3248" y="296.84313" width="111.855" height="17.261063" stroke="black" stroke-linecap="round"
+          <rect x="326.5689" y="327.65477" width="126.03" height="28.522125" fill="white"/>
+          <rect x="326.5689" y="327.65477" width="126.03" height="28.522125" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(345.3248 299.84313)" fill="black">
+          <text transform="translate(332.5689 330.65477)" fill="black">
             <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">skos:prefLabel :Dictionary</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">skos:altLabel :Dictionary
+              [0..*]
+            </tspan>
           </text>
         </g>
         <g id="Graphic_3">
-          <rect x="339.3248" y="279.58207" width="111.855" height="17.261063" fill="white"/>
-          <rect x="339.3248" y="279.58207" width="111.855" height="17.261063" stroke="black" stroke-linecap="round"
+          <rect x="326.5689" y="310.3937" width="126.03" height="17.261063" fill="white"/>
+          <rect x="326.5689" y="310.3937" width="126.03" height="17.261063" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(365.5838 282.58207)" fill="black">
+          <text transform="translate(359.9154 313.3937)" fill="black">
             <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">skos:Concept
             </tspan>
           </text>
@@ -57,7 +67,7 @@
       </g>
       <g id="Graphic_7">
         <a xl:href="http://www.w3.org/2004/02/skos/core#">
-          <text transform="translate(326.31496 164.49728)" fill="black">
+          <text transform="translate(326.31496 177.75835)" fill="black">
             <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</tspan>
           </text>
         </a>
@@ -88,20 +98,20 @@
       </g>
       <g id="Group_9">
         <g id="Graphic_12">
-          <rect x="219.1004" y="314.1042" width="71.679" height="18" fill="white"/>
-          <rect x="219.1004" y="314.1042" width="71.679" height="18" stroke="black" stroke-linecap="round"
+          <rect x="219.1004" y="350.91583" width="71.679" height="18" fill="white"/>
+          <rect x="219.1004" y="350.91583" width="71.679" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_11">
-          <rect x="219.1004" y="296.1042" width="71.679" height="18" fill="white"/>
-          <rect x="219.1004" y="296.1042" width="71.679" height="18" stroke="black" stroke-linecap="round"
+          <rect x="219.1004" y="332.91583" width="71.679" height="18" fill="white"/>
+          <rect x="219.1004" y="332.91583" width="71.679" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_10">
-          <rect x="219.1004" y="278.84313" width="71.679" height="17.261063" fill="white"/>
-          <rect x="219.1004" y="278.84313" width="71.679" height="17.261063" stroke="black" stroke-linecap="round"
+          <rect x="219.1004" y="315.65477" width="71.679" height="17.261063" fill="white"/>
+          <rect x="219.1004" y="315.65477" width="71.679" height="17.261063" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(225.1004 281.84313)" fill="black">
+          <text transform="translate(225.1004 318.65477)" fill="black">
             <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="4272461e-13" y="9">
               ec2u:Concept
             </tspan>
@@ -109,13 +119,12 @@
         </g>
       </g>
       <g id="Line_8">
-        <line x1="254.9399" y1="278.84313" x2="254.9399" y2="213.24728" marker-end="url(#UMLInheritance_Marker)"
+        <line x1="254.9399" y1="233.85827" x2="254.9399" y2="213.24728" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Line_17">
-        <path d="M 290.7794 305.47366 L 301.7794 305.47366 L 328.3248 305.8431 L 329.5748 305.8431"
-              marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-              stroke-width=".25"/>
+        <line x1="290.7794" y1="342.2853" x2="316.8189" y2="342.28528" marker-end="url(#UMLInheritance_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_18">
         <text transform="translate(326.31496 151.23622)" fill="black">
@@ -124,25 +133,62 @@
       </g>
       <g id="Group_19">
         <g id="Graphic_22">
-          <rect x="476.833" y="314.1042" width="106.167" height="18" fill="white"/>
-          <rect x="476.833" y="314.1042" width="106.167" height="18" stroke="black" stroke-linecap="round"
+          <rect x="342.99213" y="269.11933" width="106.167" height="18" fill="white"/>
+          <rect x="342.99213" y="269.11933" width="106.167" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_21">
-          <rect x="476.833" y="296.1042" width="106.167" height="18" fill="white"/>
-          <rect x="476.833" y="296.1042" width="106.167" height="18" stroke="black" stroke-linecap="round"
+          <rect x="342.99213" y="251.11933" width="106.167" height="18" fill="white"/>
+          <rect x="342.99213" y="251.11933" width="106.167" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_20">
-          <rect x="476.833" y="278.84313" width="106.167" height="17.261063" fill="white"/>
-          <rect x="476.833" y="278.84313" width="106.167" height="17.261063" stroke="black" stroke-linecap="round"
+          <rect x="342.99213" y="233.85827" width="106.167" height="17.261063" fill="white"/>
+          <rect x="342.99213" y="233.85827" width="106.167" height="17.261063" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(482.833 281.84313)" fill="black">
+          <text transform="translate(348.99213 236.85827)" fill="black">
             <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="6465939e-19" y="9">
               skos:ConceptScheme
             </tspan>
           </text>
         </g>
+      </g>
+      <g id="Group_23">
+        <g id="Graphic_26">
+          <rect x="201.6854" y="269.11933" width="106.509" height="18" fill="white"/>
+          <rect x="201.6854" y="269.11933" width="106.509" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_25">
+          <rect x="201.6854" y="251.11933" width="106.509" height="18" fill="white"/>
+          <rect x="201.6854" y="251.11933" width="106.509" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_24">
+          <rect x="201.6854" y="233.85827" width="106.509" height="17.261063" fill="white"/>
+          <rect x="201.6854" y="233.85827" width="106.509" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(207.6854 236.85827)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+              ec2u:ConceptScheme
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_27">
+        <line x1="254.9399" y1="315.65477" x2="254.9399" y2="288.99433" marker-end="url(#NegativeControls_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Line_28">
+        <line x1="308.1944" y1="260.4888" x2="333.24213" y2="260.48878" marker-end="url(#UMLInheritance_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_29">
+        <a xl:href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/">
+          <text transform="translate(326.5689 164.49728)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix dct: &lt;http://purl.org/dc/terms/&gt;</tspan>
+          </text>
+        </a>
       </g>
     </g>
   </g>

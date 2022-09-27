@@ -98,12 +98,6 @@ public final class Schema {
     }
 
 
-    //// Creative Work /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI dateCreated=term("dateCreated");
-    public static final IRI dateModified=term("dateModified");
-
-
     //// Organizations /////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI Organization=term("Organization");
@@ -123,6 +117,42 @@ public final class Schema {
     }
 
 
+    //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI inLanguage=term("inLanguage");
+
+
+    //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI Course=term("Course");
+
+    public static final IRI courseCode=term("courseCode");
+    public static final IRI coursePrerequisites=term("coursePrerequisites");
+    public static final IRI educationalCredentialAwarded=term("educationalCredentialAwarded");
+    public static final IRI occupationalCredentialAwarded=term("occupationalCredentialAwarded");
+    public static final IRI numberOfCredits=term("numberOfCredits");
+
+
+    //// Learning Resource /////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI LearningResource=term("LearningResource");
+
+    public static final IRI assesses=term("assesses");
+    public static final IRI competencyRequired=term("competencyRequired");
+    public static final IRI educationalLevel=term("educationalLevel");
+    public static final IRI learningResourceType=term("learningResourceType");
+    public static final IRI teaches=term("teaches");
+
+
+    //// Creative Work /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI provider=term("provider");
+    public static final IRI dateCreated=term("dateCreated");
+    public static final IRI dateModified=term("dateModified");
+    public static final IRI about=term("about");
+    public static final IRI timeRequired=term("timeRequired");
+
+
     //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public enum EventStatus {EventScheduled, EventMovedOnline, EventPostponed, EventRescheduled, EventCancelled}
@@ -134,7 +164,6 @@ public final class Schema {
     public static final IRI eventStatus=term("eventStatus");
     public static final IRI location=term("location");
     public static final IRI eventAttendanceMode=term("eventAttendanceMode");
-    public static final IRI inLanguage=term("inLanguage");
     public static final IRI startDate=term("startDate");
     public static final IRI endDate=term("endDate");
 

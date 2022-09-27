@@ -21,6 +21,7 @@ The following dataset are currently available:
 | [catalog](datasets/index.md)             | https://data.ec2u.eu/              | Local academic and public events   |
 | [universities](datasets/universities.md) | https://data.ec2u.eu/universities/ | EC2U Alliance partner universities |
 | [units](datasets/units.md)               | https://data.ec2u.eu/units/        | Research units and facilities      |
+| [courses](datasets/courses.md)           | https://data.ec2u.eu/courses/      | Academic courses                   |
 | [events](datasets/events.md)             | https://data.ec2u.eu/events/       | Local academic and public events   |
 
 # Licensing
