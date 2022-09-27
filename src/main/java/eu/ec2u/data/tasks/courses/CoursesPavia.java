@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.tasks.courses;
 
+import com.metreeca.core.Strings;
 import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.Fill;
 import com.metreeca.link.Frame;
@@ -25,12 +26,13 @@ import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.cities.Pavia;
-import eu.ec2u.data.terms.EC2U;
-import eu.ec2u.data.terms.VIVO;
-import org.eclipse.rdf4j.model.Literal;
+import eu.ec2u.data.terms.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -41,15 +43,25 @@ import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
+import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.ports.Courses.Course;
 import static eu.ec2u.data.tasks.Tasks.*;
+import static eu.ec2u.data.work.Work.localized;
 
-import static java.util.function.Predicate.not;
+import static java.util.Map.entry;
 
 public final class CoursesPavia implements Runnable {
+
+    private static final Map<String, String> Languages=Map.ofEntries(
+            entry("italian", "it"),
+            entry("italiano", "it"),
+            entry("english", "en"),
+            entry("inglese", "en")
+    );
+
 
     public static void main(final String... args) {
         exec(() -> new CoursesPavia().run());
@@ -129,13 +141,67 @@ public final class CoursesPavia implements Runnable {
                 .values(RDF.TYPE, EC2U.Course)
                 .value(EC2U.university, Pavia.University)
 
-                .value(DCTERMS.TITLE, frame.value(RDFS.LABEL)
-                        .filter(not(v -> v.stringValue().isEmpty()))
-                        .map(name -> literal(name.stringValue(), Values.literal(name)
-                                .flatMap(Literal::getLanguage)
-                                .orElse(Pavia.Language)
-                        ))
+                .values(DCTERMS.TITLE, localized(frame.values(RDFS.LABEL)))
+
+                .value(Schema.courseCode, frame.value(VIVO.identifier))
+
+                .value(Schema.inLanguage, literal(frame.value(HEMO.courseTeachingLanguage)
+                        .map(Value::stringValue)
+                        .map(Strings::normalize)
+                        .map((Strings::lower))
+                        .map(Languages::get)
+                        .orElse(Pavia.Language)
+                ))
+
+                .values(Schema.teaches, localized(frame.values(HEMO.courseContentsDescription)))
+                .values(Schema.assesses, localized(frame.values(HEMO.courseObjectiveDescription)))
+                .values(Schema.coursePrerequisites, localized(frame.values(HEMO.coursePrerequisitesDescription)))
+                .values(Schema.learningResourceType, localized(frame.values(HEMO.courseTeachingMethodsDescription)))
+                .values(Schema.competencyRequired, localized(frame.values(HEMO.courseAssessmentMethodsDescription)))
+
+                .integer(Schema.numberOfCredits, frame.value(VIVO.hasValue)
+                        .flatMap(Values::integer)
+                )
+
+                .value(Schema.timeRequired, frame.value(seq(VIVO.dateTimeValue, RDFS.LABEL))
+                        .flatMap(Values::integer)
+                        .map(hours -> literal(String.format("PT%dH", hours), XSD.DURATION))
                 );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final class HEMO {
+
+        private static final String Namespace="http://data.cineca.it/education/HEMO#";
+
+
+        /**
+         * Creates a term in the HEMO namespace.
+         *
+         * @param id the identifier of the term to be created
+         *
+         * @return the HEMO term identified by {@code id}
+         *
+         * @throws NullPointerException if {@code id} is null
+         */
+        private static IRI term(final String id) {
+
+            if ( id == null ) {
+                throw new NullPointerException("null id");
+            }
+
+            return iri(Namespace, id);
+        }
+
+        private static final IRI courseTeachingLanguage=term("courseTeachingLanguage");
+        private static final IRI courseContentsDescription=term("courseContentsDescription");
+        private static final IRI courseObjectiveDescription=term("courseObjectiveDescription");
+        private static final IRI coursePrerequisitesDescription=term("coursePrerequisitesDescription");
+        private static final IRI courseTeachingMethodsDescription=term("courseTeachingMethodsDescription");
+        private static final IRI courseAssessmentMethodsDescription=term("courseAssessmentMethodsDescription");
+
     }
 
 }

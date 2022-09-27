@@ -8,9 +8,11 @@ Direct RDF extraction from a VIVO-based internal knowledge hub (currently under 
 
 ## Pending
 
-* …
+* performance improvements
+* `schema:educationalLevel`
+* `schema:about`
 
-## 2022-09-26
+## 2022-09-27
 
 * initial integration
 
