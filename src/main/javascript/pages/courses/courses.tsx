@@ -24,6 +24,7 @@ import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
+import { NodeRange } from "@metreeca/tile/lenses/range";
 import { GraduationCap } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
@@ -73,6 +74,9 @@ export function DataCourses() {
         >
 
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
+            <NodeOptions path={"educationalLevel"} type={"string"} placeholder={"Level"} state={[query, setQuery]}/>
+            <NodeOptions path={"inLanguage"} type={"string"} placeholder={"Language"} state={[query, setQuery]}/> {/* !!! labels */}
+            <NodeRange path={"numberOfCredits"} type={"integer"} placeholder={"Credits"} state={[query, setQuery]}/>
 
         </DataPane>}
 

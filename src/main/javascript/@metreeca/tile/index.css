@@ -121,7 +121,7 @@ dl {
 
     & > dt {
 
-        margin-bottom: 0.25em;
+        margin-bottom: 0.5em;
 
         & > p:only-child {
             margin: 0;

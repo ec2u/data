@@ -28,9 +28,45 @@ import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+
+const Languages: { [language: string]: { [language: string]: string } }={ // !!! complete translations
+    "en": {
+        "en": "English",
+        "it": "Inglese"
+    },
+    "pt": {
+        "en": "Portuguese",
+        "it": "Portoghese"
+    },
+    "ro": {
+        "en": "Romanian",
+        "it": "Rumeno"
+    },
+    "de": {
+        "en": "German",
+        "it": "Tedesco"
+    },
+    "it": {
+        "en": "Italian",
+        "it": "Italiano"
+    },
+    "fr": {
+        "en": "French",
+        "it": "Francese"
+    },
+    "es": {
+        "en": "Spanish",
+        "it": "Spagnolo"
+    },
+    "fi": {
+        "en": "Finnish",
+        "it": "Finlandese"
+    }
+};
 
 
 export const Course=immutable({
@@ -48,7 +84,28 @@ export const Course=immutable({
 
     url: multiple(""),
 
-    courseCode: optional("")
+    courseCode: optional(""),
+    inLanguage: optional(""),
+    numberOfCredits: optional(0),
+    timeRequired: optional(""),
+
+    educationalLevel: optional({
+        id: "",
+        label: { "en": "" }
+    }),
+
+    about: multiple({
+        id: "",
+        label: { "en": "" }
+    }),
+
+    teaches: { "en": "" },
+    assesses: { "en": "" },
+    coursePrerequisites: { "en": "" },
+    learningResourceType: { "en": "" },
+    competencyRequired: { "en": "" },
+    educationalCredentialAwarded: { "en": "" },
+    occupationalCredentialAwarded: { "en": "" }
 
 });
 
@@ -96,9 +153,17 @@ function DataCourseInfo({
 
     children: {
 
+        label,
         university,
+
         url,
-        courseCode
+        courseCode,
+        educationalLevel,
+        inLanguage,
+        numberOfCredits,
+        timeRequired,
+        about
+
     }
 
 }: {
@@ -118,6 +183,22 @@ function DataCourseInfo({
         <DataInfo>{{
 
             "Code": courseCode && <span>{courseCode}</span>,
+            "Name": <span>{string(label)}</span>
+
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
+            "Level": educationalLevel && <span>{string(educationalLevel)}</span>,
+            "Language": inLanguage && <span>{string(Languages[inLanguage]) || inLanguage}</span>,
+            "Credits": numberOfCredits && <span>{numberOfCredits}</span>,
+            "Duration": timeRequired && <span>{timeRequired}</span>,  // !!! map to localized description
+            "Subjects": about && about.map(subject => <span key={subject.id}>{string(subject)}</span>) // !!! link
+
+        }}</DataInfo>
+
+        <DataInfo>{{
 
             "Info": url && url.map(item => {
 
@@ -139,8 +220,15 @@ function DataCourseBody({
 
     children: {
 
-        label,
-        comment
+        comment,
+
+        teaches,
+        assesses,
+        coursePrerequisites,
+        learningResourceType,
+        competencyRequired,
+        educationalCredentialAwarded,
+        occupationalCredentialAwarded
 
     }
 
@@ -150,17 +238,39 @@ function DataCourseBody({
 
 }) {
 
+    const description=string(comment);
+
+    const details={
+        "General Objectives": string(teaches),
+        "Learning Objectives and Intended Skills": string(assesses),
+        "Admission Requirements": string(coursePrerequisites),
+        "Teaching Methods and Mode of Study": string(learningResourceType),
+        "Graduation Requirements": string(competencyRequired),
+        "Educational Credential Awarded": string(educationalCredentialAwarded),
+        "Occupational Credential Awarded": string(occupationalCredentialAwarded)
+    };
+
+    const detailed=Object.values(details).some(v => v);
+
+
     return <DataCard>
 
-        <ReactMarkdown
+        {description && <ReactMarkdown remarkPlugins={[remarkGfm]}>{description}</ReactMarkdown>}
 
-            remarkPlugins={[remarkGfm]}
+        {description && detailed && <hr/>}
 
-        >{
+        {detailed && <dl>{Object.entries(details)
 
-            string(comment)
+            .filter(([, data]) => data)
 
-        }</ReactMarkdown>
+            .map(([term, data]) => <Fragment key={term}>
+
+                <dt>{term}</dt>
+                <dd><ReactMarkdown remarkPlugins={[remarkGfm]}>{data}</ReactMarkdown></dd>
+
+            </Fragment>)
+
+        }</dl>}
 
     </DataCard>;
 
