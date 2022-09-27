@@ -196,9 +196,28 @@ public final class CoursesCoimbra implements Runnable {
                     .values(Schema.name, label)
                     .values(Schema.courseCode, literal(id.toString()))
 
-                    // !!!
+                    // !!! see https://apps.uc.pt/courses/en/index
+
+                    // !!! cicloTipo
+
+                    // NAO_CONFERENTE_GRAU
+                    // SEGUNDO
+                    // TERCEIRO
+                    // PRIMEIRO
+
+                    // !!! categoriaCursoTipo
+
+                    // FORMACAO
+                    // ESPECIALIZACAO
+                    // ESPECIALIZACAO_AVANCADA
+                    // CONTINUIDADE
+                    // FORMACAO_LONGO_VIDA
+                    // POS_DOUTORAMENTO
+                    // FORMACAO_CONTINUA
+                    // INTEGRADO
 
                     ;
+
         });
     }
 

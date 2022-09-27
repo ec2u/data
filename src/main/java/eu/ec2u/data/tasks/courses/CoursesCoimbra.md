@@ -4,7 +4,11 @@
 
 # Integration
 
-## 2022-09-26
+## Pending
+
+* course details (e.g. https://apps.uc.pt/courses/EN/course/4604)
+
+## 2022-09-27
 
 * initial integration
 
