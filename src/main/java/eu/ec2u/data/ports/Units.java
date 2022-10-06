@@ -45,7 +45,7 @@ public final class Units extends Delegator {
 
                 hidden(field(RDF.TYPE, all(EC2U.Unit))),
 
-                field(FOAF.HOMEPAGE, optional(), datatype(IRIType)),
+                field(FOAF.HOMEPAGE, multiple(), datatype(IRIType)),
 
                 field(SKOS.PREF_LABEL, multilingual()),
                 field(SKOS.ALT_LABEL, multilingual()),

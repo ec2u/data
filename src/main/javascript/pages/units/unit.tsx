@@ -46,7 +46,7 @@ export const Unit=immutable({
         label: { "en": "" }
     },
 
-    homepage: optional(""),
+    homepage: multiple(""),
 
     altLabel: optional({ "en": "" }),
 
@@ -161,7 +161,9 @@ function DataEventInfo({
 
         <DataInfo>{{
 
-            "Info": homepage && <a href={homepage}>{new URL(homepage).host}</a>
+            "Info": homepage && homepage.length && homepage.map(url =>
+                <a key={url} href={url}>{new URL(url).host}</a>
+            )
 
         }}</DataInfo>
 

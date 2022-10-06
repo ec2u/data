@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="272 73 765 446"
-     width="765" height="446">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="272 73 764 446"
+     width="764" height="446">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
             stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
@@ -47,7 +47,7 @@
   </defs>
   <g id="units" stroke-opacity="1" fill="none" stroke-dasharray="none" fill-opacity="1" stroke="none">
     <title>units</title>
-    <rect fill="white" x="272" y="73" width="765" height="446"/>
+    <rect fill="white" x="272" y="73" width="764" height="446"/>
     <g id="units_Layer_1">
       <title>Layer 1</title>
       <g id="Group_248">
@@ -362,24 +362,24 @@
       </g>
       <g id="Group_190">
         <g id="Graphic_193">
-          <rect x="929.7638" y="132.68687" width="92.208" height="18" fill="white"/>
-          <rect x="929.7638" y="132.68687" width="92.208" height="18" stroke="black" stroke-linecap="round"
+          <rect x="929.7638" y="132.68687" width="90.372" height="18" fill="white"/>
+          <rect x="929.7638" y="132.68687" width="90.372" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_192">
-          <rect x="929.7638" y="115.42581" width="92.208" height="17.261063" fill="white"/>
-          <rect x="929.7638" y="115.42581" width="92.208" height="17.261063" stroke="black" stroke-linecap="round"
+          <rect x="929.7638" y="115.42581" width="90.372" height="17.261063" fill="white"/>
+          <rect x="929.7638" y="115.42581" width="90.372" height="17.261063" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
           <text transform="translate(935.7638 118.42581)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">foaf:homepage [0..1]</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">foaf:homepage [0..*]</tspan>
           </text>
         </g>
         <g id="Graphic_191">
           <a xl:href="http://xmlns.com/foaf/0.1/#term_Agent">
-            <rect x="929.7638" y="98.16475" width="92.208" height="17.261063" fill="white"/>
-            <rect x="929.7638" y="98.16475" width="92.208" height="17.261063" stroke="black" stroke-linecap="round"
+            <rect x="929.7638" y="98.16475" width="90.372" height="17.261063" fill="white"/>
+            <rect x="929.7638" y="98.16475" width="90.372" height="17.261063" stroke="black" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(953.6198 101.16475)" fill="black">
+            <text transform="translate(952.7018 101.16475)" fill="black">
               <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">foaf:Agent
               </tspan>
             </text>

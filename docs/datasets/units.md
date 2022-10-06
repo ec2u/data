@@ -19,7 +19,7 @@ the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extend
 | property                                                     | description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | all [ec2u:Resource](resources.md) properties                 | inherited properties                                         |
-| [foaf:homepage](http://xmlns.com/foaf/0.1/#term_homepage)    | the URL of the institutional home page                       |
+| [foaf:homepage](http://xmlns.com/foaf/0.1/#term_homepage)    | the URL of an institutional home page                        |
 | [skos:prefLabel](https://www.w3.org/TR/skos-reference/#labels) | the human-readable, localized official name of the unit      |
 | [skos:altLabel](https://www.w3.org/TR/skos-reference/#labels) | human-readable, localized alternate/shortened names for the unit; may be used also for informal acronyms |
 | [org:identifier](https://www.w3.org/TR/vocab-org/#org:identifier) | unique machine-readable unit registration identifier         |
