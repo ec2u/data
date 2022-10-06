@@ -21,7 +21,7 @@
 
 </units/glade> a ec2u:Unit ;
 
-	skos:prefLabel "Virtual Institute for Good Health and Well-Being (GLADE)"@en ;
+	skos:prefLabel "Virtual Institute for Good Health and Well‑Being (GLADE)"@en ;
     skos:altLabel "GLADE"@en ;
 	skos:definition """GLADE is the EC2U Alliance’s Virtual Institute aimed to develop specific approaches in education, research, innovation and service transfer to the community in areas of the third UNSDG: Good Health and Well-being for All.
 

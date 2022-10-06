@@ -17,6 +17,7 @@
 * extract institute data
 * add branch/RIS3 classification
 * add homepage link
+* add virtual institute membership
 
 ## 2022-09-26
 

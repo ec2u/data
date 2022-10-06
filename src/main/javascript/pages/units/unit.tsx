@@ -151,6 +151,7 @@ function DataEventInfo({
 
             "Parent": unitOf && unitOf.some(unit => !university || unit.id !== university.id) && <ul>{unitOf
                 .filter(unit => !university || unit.id !== university.id)
+                .sort((x, y) => string(x).localeCompare(string(y)))
                 .map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
             }</ul>,
 
