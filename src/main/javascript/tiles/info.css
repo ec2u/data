@@ -57,11 +57,20 @@ data-info {
             & > ul {
 
                 margin: 0;
+                padding: 0;
 
                 & > li {
-                    list-style: inside "› ";
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+
+                    list-style: outside "›";
+
+                    margin-left: 0.5em;
+
+                    &:not(:first-child) {
+                        margin-top: 0.2em;
+                        padding-top: 0.2em;
+                        border-top-style: dotted;
+                    }
+
                 }
 
             }

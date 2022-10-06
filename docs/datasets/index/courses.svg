@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="276 191 705 514"
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="276 191 705 514"
      width="705" height="514">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
@@ -32,7 +32,7 @@
       </g>
     </marker>
   </defs>
-  <g id="courses" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
+  <g id="courses" stroke-opacity="1" fill="none" stroke-dasharray="none" fill-opacity="1" stroke="none">
     <title>courses</title>
     <rect fill="white" x="276" y="191" width="705" height="514"/>
     <g id="courses_Layer_1">
@@ -325,12 +325,12 @@
         </text>
       </g>
       <g id="Graphic_242">
-        <path d="M 794.3808 632.5582 C 794.3808 630.92394 792.5902 630.72175 779.5101 629.1044 L 779.3719 629.08764 C 766.2227 627.45336 766.086 627.45336 752.5913 627.45336 C 734.6229 627.45336 653.3858 627.45336 653.3858 627.45336 L 653.3858 644.70536 L 794.3808 644.70536 L 794.3808 632.5582 Z"
+        <path d="M 799.7178 632.5582 C 799.7178 630.92394 797.8594 630.72175 784.2842 629.1044 L 784.1408 629.08764 C 770.4939 627.45336 770.3519 627.45336 756.3465 627.45336 C 737.6979 627.45336 653.3858 627.45336 653.3858 627.45336 L 653.3858 644.70536 L 799.7178 644.70536 L 799.7178 632.5582 Z"
               fill="#fffd78"/>
-        <path d="M 794.3808 632.5582 C 794.3808 630.92394 792.5902 630.72175 779.5101 629.1044 L 779.3719 629.08764 C 766.2227 627.45336 766.086 627.45336 752.5913 627.45336 C 734.6229 627.45336 653.3858 627.45336 653.3858 627.45336 L 653.3858 644.70536 L 794.3808 644.70536 L 794.3808 632.5582 Z M 794.3808 632.474 C 794.3808 630.92394 794.2427 630.92394 766.086 630.92394 L 766.086 630.92394 C 766.086 627.4703 766.086 627.45336 753.4176 627.45336"
+        <path d="M 799.7178 632.5582 C 799.7178 630.92394 797.8594 630.72175 784.2842 629.1044 L 784.1408 629.08764 C 770.4939 627.45336 770.3519 627.45336 756.3465 627.45336 C 737.6979 627.45336 653.3858 627.45336 653.3858 627.45336 L 653.3858 644.70536 L 799.7178 644.70536 L 799.7178 632.5582 Z M 799.7178 632.474 C 799.7178 630.92394 799.5744 630.92394 770.3519 630.92394 L 770.3519 630.92394 C 770.3519 627.4703 770.3519 627.45336 757.204 627.45336"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
         <text transform="translate(658.3858 630.45336)" fill="black">
-          <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">Integrate w/
+          <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">Integrated w/
             ec2u:University/Unit
           </tspan>
         </text>

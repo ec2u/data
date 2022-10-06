@@ -22,7 +22,7 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, optional, required, string } from "@metreeca/link";
+import { multiple, optional, repeatable, string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -60,7 +60,7 @@ export const Unit=immutable({
         label: { "en": "" }
     }),
 
-    unitOf: required({
+    unitOf: repeatable({
         id: "",
         label: { "en": "" }
     }),
@@ -141,7 +141,12 @@ function DataEventInfo({
         <DataInfo>{{
 
             "University": <NodeLink>{university}</NodeLink>,
-            "Parent": unitOf && unitOf.id !== university.id && <NodeLink>{unitOf}</NodeLink>,
+
+            "Parent": unitOf && unitOf.some(unit => unit.id !== university.id) && <ul>{unitOf
+                .filter(unit => unit.id !== university.id)
+                .map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
+            }</ul>,
+
             "Type": classification && <span>{string(classification)}</span>
 
         }}</DataInfo>
