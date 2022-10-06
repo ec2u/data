@@ -218,7 +218,7 @@ schema:Thing rdf:type owl:Class .
 ###  https://data.ec2u.eu/courses/
 <https://data.ec2u.eu/courses/> rdf:type owl:NamedIndividual ,
                                          ec2u:Dataset ;
-                                dct:description "Academic courses"@en ;
+                                dct:description "Academic courses."@en ;
                                 dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
                                 dct:rights "Copyright © 2022 EC2U Alliance" ;
                                 dct:title "Courses"@en .
