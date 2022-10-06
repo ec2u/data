@@ -162,6 +162,11 @@ public final class UnitsSalamanca implements Runnable {
                             .map(topics -> literal(topics, Salamanca.Language))
                     )
 
+                    .value(FOAF.HOMEPAGE, json.string("group_scientific_portal_url")
+                            .filter(not(String::isEmpty))
+                            .map(Values::iri)
+                    )
+
                     .value(SKOS.PREF_LABEL, label)
                     .value(SKOS.ALT_LABEL, json.string("acronym")
                             .filter(not(String::isEmpty))
@@ -177,24 +182,8 @@ public final class UnitsSalamanca implements Runnable {
         });
     }
 
-    private Optional<Frame> department(final JSONPath json) {
-        return json.string("department").map(name -> {
 
-            final Literal title=literal(name, Salamanca.Language);
-
-            return frame(iri(EC2U.units, md5(Salamanca.University+"@"+name)))
-
-                    .values(RDF.TYPE, EC2U.Unit)
-                    .value(EC2U.university, Salamanca.University)
-
-                    .value(DCTERMS.TITLE, title)
-                    .value(SKOS.PREF_LABEL, title)
-                    .value(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Values::iri))
-
-                    .value(ORG.CLASSIFICATION, Units.Department)
-                    .frame(ORG.UNIT_OF, frame(Salamanca.University));
-        });
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Optional<Frame> head(final JSONPath json) {
         return json.string("head")
@@ -219,6 +208,25 @@ public final class UnitsSalamanca implements Runnable {
                             .value(FOAF.FAMILY_NAME, literal(familyName));
 
                 });
+    }
+
+    private Optional<Frame> department(final JSONPath json) {
+        return json.string("department").map(name -> {
+
+            final Literal title=literal(name, Salamanca.Language);
+
+            return frame(iri(EC2U.units, md5(Salamanca.University+"@"+name)))
+
+                    .values(RDF.TYPE, EC2U.Unit)
+                    .value(EC2U.university, Salamanca.University)
+
+                    .value(DCTERMS.TITLE, title)
+                    .value(SKOS.PREF_LABEL, title)
+                    .value(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Values::iri))
+
+                    .value(ORG.CLASSIFICATION, Units.Department)
+                    .frame(ORG.UNIT_OF, frame(Salamanca.University));
+        });
     }
 
 }
