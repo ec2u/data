@@ -110,7 +110,7 @@ export function DataUnits() {
                 }
 
                 tags={<>
-                    <span>{string(university)}</span>
+                    <span>{string(university) || "EC2U Alliance"}</span>
                     {classification && <><br/><span>{string(classification)}</span></>}
                 </>}
 

@@ -5,6 +5,7 @@
 @prefix dct:	<http://purl.org/dc/terms/> .
 @prefix vivo:	<http://vivoweb.org/ontology/core#> .
 
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
 @prefix owl:	<http://www.w3.org/2002/07/owl#> .
 
@@ -12,6 +13,11 @@
 	dct:title "EC2U Research Unit Types"@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022 EC2U Alliance" .
+
+</concepts/units/virtual-institute> a ec2u:Concept ;
+	skos:topConceptOf </concepts/units/>  ;
+	skos:prefLabel "Virtual Institute"@en ;
+	owl:sameAs vivo:Institute .
 
 </concepts/units/institute> a ec2u:Concept ;
 	skos:topConceptOf </concepts/units/>  ;

@@ -147,10 +147,10 @@ function DataEventInfo({
 
         <DataInfo>{{
 
-            "University": <NodeLink>{university}</NodeLink>,
+            "University": university && <NodeLink>{university}</NodeLink>,
 
-            "Parent": unitOf && unitOf.some(unit => unit.id !== university.id) && <ul>{unitOf
-                .filter(unit => unit.id !== university.id)
+            "Parent": unitOf && unitOf.some(unit => !university || unit.id !== university.id) && <ul>{unitOf
+                .filter(unit => !university || unit.id !== university.id)
                 .map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
             }</ul>,
 

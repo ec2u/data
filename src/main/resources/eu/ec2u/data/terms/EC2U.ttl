@@ -59,6 +59,16 @@ rdfs:comment rdf:type owl:AnnotationProperty .
 rdfs:label rdf:type owl:AnnotationProperty .
 
 
+###  http://www.w3.org/2004/02/skos/core#definition
+<http://www.w3.org/2004/02/skos/core#definition> rdf:type owl:AnnotationProperty ;
+                                                 rdfs:subPropertyOf dct:description .
+
+
+###  http://www.w3.org/2004/02/skos/core#prefLabel
+<http://www.w3.org/2004/02/skos/core#prefLabel> rdf:type owl:AnnotationProperty ;
+                                                rdfs:subPropertyOf dct:title .
+
+
 ###  https://data.ec2u.eu/terms/image
 ec2u:image rdf:type owl:AnnotationProperty .
 

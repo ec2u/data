@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="272 73 764 446"
-     width="764" height="446">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="272 68 764 451"
+     width="764" height="451">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
             stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
@@ -47,7 +47,7 @@
   </defs>
   <g id="units" stroke-opacity="1" fill="none" stroke-dasharray="none" fill-opacity="1" stroke="none">
     <title>units</title>
-    <rect fill="white" x="272" y="73" width="764" height="446"/>
+    <rect fill="white" x="272" y="68" width="764" height="451"/>
     <g id="units_Layer_1">
       <title>Layer 1</title>
       <g id="Group_248">
@@ -203,25 +203,26 @@
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_223">
-        <rect x="406.76833" y="175.58312" width="75.016" height="21.261063" fill="white"/>
-        <text transform="translate(411.76833 180.58312)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">ec2u:university 1</tspan>
+        <rect x="401.76433" y="175.58312" width="85.024" height="21.261063" fill="white"/>
+        <text transform="translate(406.76434 180.58312)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="632383e-18" y="9">ec2u:university 0..1
+          </tspan>
         </text>
       </g>
       <g id="Line_222">
-        <path d="M 690.2662 322.5696 L 829.1449 322.5696 L 829.1449 167.63367" marker-end="url(#StickArrow_Marker)"
+        <path d="M 690.2662 322.5696 L 836.3329 322.5696 L 836.3329 172.74567" marker-end="url(#StickArrow_Marker)"
               marker-start="url(#StickArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
               stroke-width=".25"/>
       </g>
       <g id="Graphic_221">
-        <rect x="797.1359" y="172.90071" width="64.018" height="21.261063" fill="white"/>
-        <text transform="translate(802.1359 177.90071)" fill="black">
+        <rect x="804.3239" y="178.16628" width="64.018" height="21.261063" fill="white"/>
+        <text transform="translate(809.3239 183.16628)" fill="black">
           <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="14210855e-21" y="9">org:unitOf 1..*</tspan>
         </text>
       </g>
       <g id="Graphic_220">
-        <rect x="738.2084" y="311.93908" width="60.175" height="21.261063" fill="white"/>
-        <text transform="translate(743.2084 316.93908)" fill="black">
+        <rect x="738.7814" y="311.93908" width="60.175" height="21.261063" fill="white"/>
+        <text transform="translate(743.7814 316.93908)" fill="black">
           <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">org:hasUnit *</tspan>
         </text>
       </g>
@@ -387,34 +388,38 @@
         </g>
       </g>
       <g id="Line_189">
-        <line x1="881.5969" y1="124.42581" x2="920.0138" y2="124.42579" marker-end="url(#UMLInheritance_Marker)"
+        <line x1="895.9729" y1="124.42581" x2="920.0138" y2="124.42579" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Group_185">
         <g id="Graphic_188">
-          <rect x="776.6929" y="142.78367" width="104.904" height="18" fill="white"/>
-          <rect x="776.6929" y="142.78367" width="104.904" height="18" stroke="black" stroke-linecap="round"
+          <rect x="776.6929" y="147.89567" width="119.28" height="18" fill="white"/>
+          <rect x="776.6929" y="147.89567" width="119.28" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_187">
-          <rect x="776.6929" y="106.11168" width="104.904" height="36.671997" fill="white"/>
-          <rect x="776.6929" y="106.11168" width="104.904" height="36.671997" stroke="black" stroke-linecap="round"
+          <rect x="776.6929" y="100.99968" width="119.28" height="46.895996" fill="white"/>
+          <rect x="776.6929" y="100.99968" width="119.28" height="46.895996" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(782.6929 109.11168)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="8" fill="black" x="0" y="8">org:identifier: String</tspan>
+          <text transform="translate(782.6929 103.99968)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="8" fill="black" x="0" y="8">org:identifier: String [0..1]
+            </tspan>
             <tspan font-family="Helvetica Neue" font-size="8" fill="black" x="0" y="18.224">skos:prefLabel: Dictionary
             </tspan>
-            <tspan font-family="Helvetica Neue" font-size="8" fill="black" x="0" y="28.447998">skos:altLabel:
-              Dictionary
+            <tspan font-family="Helvetica Neue" font-size="8" fill="black" x="0" y="28.447998">skos:altLabel: Dictionary
+              [0..1]
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="8" fill="black" x="0" y="38.671997">skos:definition:
+              Dictionary [0..1]
             </tspan>
           </text>
         </g>
         <g id="Graphic_186">
           <a xl:href="https://www.w3.org/TR/vocab-org/#org:Organization">
-            <rect x="776.6929" y="88.06794" width="104.904" height="18.043732" fill="white"/>
-            <rect x="776.6929" y="88.06794" width="104.904" height="18.043732" stroke="black" stroke-linecap="round"
+            <rect x="776.6929" y="82.95594" width="119.28" height="18.043732" fill="white"/>
+            <rect x="776.6929" y="82.95594" width="119.28" height="18.043732" stroke="black" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(793.4014 91.45928)" fill="black">
+            <text transform="translate(800.5894 86.34728)" fill="black">
               <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="4902745e-19" y="9">
                 org:Organization
               </tspan>
@@ -423,7 +428,7 @@
         </g>
       </g>
       <g id="Line_252">
-        <line x1="685.9137" y1="124.42581" x2="766.9429" y2="124.42578" marker-end="url(#UMLInheritance_Marker)"
+        <line x1="685.9137" y1="124.42581" x2="766.9429" y2="124.42577" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Line_253">
