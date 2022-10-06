@@ -63,7 +63,11 @@ data-info {
 
                     list-style: outside "›";
 
-                    margin-left: 0.5em;
+                    margin-left: 0.75em;
+
+                    &::marker {
+                        color: var(--node--color-light);
+                    }
 
                     &:not(:first-child) {
                         margin-top: 0.2em;

@@ -29,6 +29,7 @@ import com.metreeca.rdf4j.actions.Update;
 import eu.ec2u.data.cities.Salamanca;
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Units;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -57,6 +58,9 @@ public final class UnitsSalamanca implements Runnable {
 
     private static final String APIUrl="units-salamanca-url"; // vault label
     private static final String APIKey="units-salamanca-key"; // vault label
+
+    private static final IRI BranchScheme=iri(EC2U.concepts, "units-salamanca-branch/");
+    private static final IRI RIS3Scheme=iri(EC2U.concepts, "units-salamanca-ris3/");
 
 
     private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");
@@ -166,6 +170,27 @@ public final class UnitsSalamanca implements Runnable {
                             .map(topics -> literal(topics, Salamanca.Language))
                     )
 
+
+                    .frames(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
+                            .flatMap(v -> Arrays.stream(SeparatorPattern.split(v)))
+                            .filter(not(String::isEmpty))
+                            .map(v -> frame(iri(BranchScheme, md5(v)))
+                                    .value(RDF.TYPE, SKOS.CONCEPT)
+                                    .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
+
+                            )
+                    )
+
+                    .frames(DCTERMS.SUBJECT, json.string("RIS3").stream()
+                            .flatMap(v -> Arrays.stream(SeparatorPattern.split(v)))
+                            .filter(not(String::isEmpty))
+                            .map(v -> frame(iri(RIS3Scheme, md5(v)))
+                                    .value(RDF.TYPE, SKOS.CONCEPT)
+                                    .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
+
+                            )
+                    )
+
                     .value(FOAF.HOMEPAGE, json.string("group_scientific_portal_url")
                             .filter(not(String::isEmpty))
                             .map(Values::iri)
@@ -258,6 +283,7 @@ public final class UnitsSalamanca implements Runnable {
 
                     .values(FOAF.HOMEPAGE, json.string("institute_webusal_url").stream()
                             .flatMap(v -> Arrays.stream(SeparatorPattern.split(v)))
+                            .filter(not(String::isEmpty))
                             .map(Values::iri))
 
                     .value(ORG.CLASSIFICATION, Units.Institute)

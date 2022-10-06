@@ -15,6 +15,7 @@
 ## 2022-10-06
 
 * extract institute data
+* add branch/RIS3 classification
 * add homepage link
 
 ## 2022-09-26
