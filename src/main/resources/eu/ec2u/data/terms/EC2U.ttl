@@ -216,15 +216,6 @@ schema:Thing rdf:type owl:Class .
                                                     dct:title "CC BY-NC-ND 4.0"@en .
 
 
-###  https://data.ec2u.eu/
-<https://data.ec2u.eu/> rdf:type owl:NamedIndividual ,
-                                 ec2u:Dataset ;
-                        dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                        dct:rights "Copyright © 2022 EC2U Alliance" ;
-                        dct:title "Datasets"@en ;
-                        rdfs:isDefinedBy "EC2U Knowledge Hub dataset catalog"@en .
-
-
 ###  https://data.ec2u.eu/courses/
 <https://data.ec2u.eu/courses/> rdf:type owl:NamedIndividual ,
                                          ec2u:Dataset ;
