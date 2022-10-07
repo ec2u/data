@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
+import { isArray } from "@metreeca/core";
 import React, { createElement, ReactNode } from "react";
 import "./info.css";
+
+
+interface Entry {
+    label: ReactNode,
+    value: ReactNode
+}
 
 
 export function DataInfo({
@@ -24,15 +31,20 @@ export function DataInfo({
 
 }: {
 
-    children: { [label: string]: ReactNode }
+    children: { [label: string]: ReactNode } | Array<{ label: ReactNode, value: ReactNode }>
 
 }) {
 
-    return createElement("data-info", {}, Object.entries(children)
+    const entries: Entry[]=isArray(children) ? children : Object.entries(children).map(([label, value]) => ({
+        label,
+        value
+    }));
 
-        .filter(([label, value]) => value)
+    return createElement("data-info", {}, entries
 
-        .map(([label, value]) => <div key={label}>
+        .filter(({ value }) => value)
+
+        .map(({ label, value }, index) => <div key={index}>
 
             <dt>{label}</dt>
             <dd>{value}</dd>
