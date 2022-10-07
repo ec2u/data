@@ -26,7 +26,7 @@ skos:broaderTransitive rdf:type owl:ObjectProperty ,
 
 ###  http://www.w3.org/2004/02/skos/core#hasTopConcept
 skos:hasTopConcept rdf:type owl:ObjectProperty ;
-                   owl:inverseOf skos:hasTopConcept .
+                   owl:inverseOf skos:topConceptOf .
 
 
 ###  http://www.w3.org/2004/02/skos/core#inScheme
