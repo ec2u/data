@@ -61,7 +61,7 @@ export const Universities=immutable({
 export function DataUniversities() {
 
     const [, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
+    const [query, setQuery]=useQuery({ /*".order": "label"*/ }, sessionStorage); // !!! broken multilingual sorting
 
 
     useEffect(() => { setRoute({ label: string(Universities) }); }, []);
