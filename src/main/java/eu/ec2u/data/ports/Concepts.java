@@ -22,23 +22,47 @@ import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Values.inverse;
+import static com.metreeca.link.Shape.required;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.link.shapes.Lang.lang;
-import static com.metreeca.link.shapes.Link.link;
-import static com.metreeca.link.shapes.Localized.localized;
+
+import static eu.ec2u.data.terms.EC2U.*;
 
 public final class Concepts extends Delegator {
 
-    private static Shape label() {
-        return field("label", SKOS.PREF_LABEL,
-                localized(), convey(lang("en", "it", "fr", "pt", "es", "fi", "ro", "de"))
+    private static Shape ConceptScheme() {
+        return relate(Resource(),
+
+                detail(
+
+                        field(SKOS.HAS_TOP_CONCEPT, Reference())
+
+                )
+
+        );
+    }
+
+    private static Shape Concept() {
+        return relate(Resource(),
+
+                field(SKOS.PREF_LABEL, multilingual()),
+                field(SKOS.ALT_LABEL, multilingual()),
+                field(SKOS.DEFINITION, multilingual()),
+
+                field(SKOS.IN_SCHEME, required(), Reference()),
+                field(SKOS.TOP_CONCEPT_OF, optional(), Reference()),
+
+                field(SKOS.BROADER_TRANSITIVE, Reference()),
+                field(SKOS.BROADER, Reference()),
+                field(SKOS.NARROWER, Reference()),
+                field(SKOS.RELATED, Reference())
+
+                // !!! link(OWL.SAMEAS, Concept())
+
         );
     }
 
@@ -46,22 +70,11 @@ public final class Concepts extends Delegator {
     public Concepts() {
         delegate(handler(
 
-                new Driver(relate(
+                new Driver(ConceptScheme(),
 
-                        filter(clazz(SKOS.CONCEPT)),
+                        filter(clazz(SKOS.CONCEPT_SCHEME))
 
-                        link(OWL.SAMEAS,
-
-                                label(), detail(
-
-                                        field("broader", SKOS.BROADER_TRANSITIVE, label(), link(inverse(OWL.SAMEAS))),
-
-                                        field(SKOS.NARROWER, label(), link(inverse(OWL.SAMEAS))),
-                                        field(SKOS.RELATED, label(), link(inverse(OWL.SAMEAS)))
-
-                                ))
-
-                )),
+                ),
 
                 new Router()
 
@@ -69,9 +82,22 @@ public final class Concepts extends Delegator {
                                 .get(new Relator())
                         )
 
-                        .path("/*", new Router()
+                        .path("/{scheme}", new Router()
                                 .get(new Relator())
                         )
+
+                        .path("/{scheme}/{concept}", handler(
+
+                                new Driver(Concept(),
+
+                                        filter(clazz(SKOS.CONCEPT))
+
+                                ),
+
+                                new Router()
+                                        .get(new Relator())
+
+                        ))
 
         ));
     }
