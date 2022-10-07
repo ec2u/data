@@ -134,21 +134,6 @@ public final class EC2U {
         );
     }
 
-    public static Shape Concept() {
-        return and(Reference(),
-
-                hidden(field(RDF.TYPE, all(SKOS.CONCEPT))),
-
-                field(SKOS.PREF_LABEL, multilingual()),
-                field(SKOS.ALT_LABEL, multilingual()),
-                field(SKOS.DEFINITION, multilingual()),
-
-                field(SKOS.BROADER, Reference()),
-                field(SKOS.NARROWER, Reference())
-
-        );
-    }
-
 
     public static final IRI College=term("College");
     public static final IRI Association=term("Association");
