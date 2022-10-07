@@ -26,8 +26,8 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.cities.Coimbra;
-import eu.ec2u.data.terms.EC2U;
-import eu.ec2u.data.terms.Schema;
+import eu.ec2u.data.terms.*;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -62,6 +62,26 @@ public final class CoursesCoimbra implements Runnable {
     private static final String APIUrl="courses-coimbra-url";
     private static final String APIId="courses-coimbra-id";
     private static final String APIToken="courses-coimbra-token";
+
+
+    private static final Map<String, IRI> TypesToISCEDLevel=Map.ofEntries(
+
+            entry("PRIMEIRO/*", ISCED2011.Level6),
+
+            entry("SEGUNDO/INTEGRADO", ISCED2011.Level7),
+            entry("SEGUNDO/CONTINUIDADE", ISCED2011.Level7),
+            entry("SEGUNDO/ESPECIALIZACAO_AVANCADA", ISCED2011.Level7),
+            entry("SEGUNDO/FORMACAO_LONGO_VIDA", ISCED2011.Level7),
+
+            entry("TERCEIRO/*", ISCED2011.Level8),
+
+            entry("NAO_CONFERENTE_GRAU/POS_DOUTORAMENTO", ISCED2011.Level9),
+            entry("NAO_CONFERENTE_GRAU/ESPECIALIZACAO", ISCED2011.Level9),
+            entry("NAO_CONFERENTE_GRAU/FORMACAO", ISCED2011.Level9),
+            entry("NAO_CONFERENTE_GRAU/FORMACAO_CONTINUA", ISCED2011.Level9),
+            entry("NAO_CONFERENTE_GRAU/ESPECIALIZACAO_AVANCADA", ISCED2011.Level9)
+
+    );
 
 
     public static void main(final String... args) {
@@ -183,6 +203,7 @@ public final class CoursesCoimbra implements Runnable {
 
                     .collect(toList());
 
+
             return frame(iri(EC2U.courses, md5(Coimbra.University+"@"+id)))
 
                     .values(RDF.TYPE, EC2U.Course)
@@ -196,27 +217,10 @@ public final class CoursesCoimbra implements Runnable {
                     .values(Schema.name, label)
                     .values(Schema.courseCode, literal(id.toString()))
 
-                    // !!! see https://apps.uc.pt/courses/en/index
-
-                    // !!! cicloTipo
-
-                    // NAO_CONFERENTE_GRAU
-                    // SEGUNDO
-                    // TERCEIRO
-                    // PRIMEIRO
-
-                    // !!! categoriaCursoTipo
-
-                    // FORMACAO
-                    // ESPECIALIZACAO
-                    // ESPECIALIZACAO_AVANCADA
-                    // CONTINUIDADE
-                    // FORMACAO_LONGO_VIDA
-                    // POS_DOUTORAMENTO
-                    // FORMACAO_CONTINUA
-                    // INTEGRADO
-
-                    ;
+                    .value(Schema.educationalLevel, Optional.ofNullable(TypesToISCEDLevel.get(format("%s/%s",
+                            json.string("cicloTipo").orElse("*"),
+                            json.string("categoriaCursoTipo").orElse("*")
+                    ))));
 
         });
     }
