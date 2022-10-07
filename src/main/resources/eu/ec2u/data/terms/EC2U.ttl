@@ -96,8 +96,7 @@ owl:sameAs rdf:type owl:ObjectProperty ,
 
 ###  http://www.w3.org/ns/org#classification
 org:classification rdf:type owl:ObjectProperty ;
-                   rdfs:subPropertyOf dct:subject ,
-                                      dct:type .
+                   rdfs:subPropertyOf dct:type .
 
 
 ###  https://schema.org/about
