@@ -21,7 +21,7 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/link";
+import { multiple, string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -58,6 +58,19 @@ export const University=immutable({
     location: optional({
         id: "",
         label: {}
+    }),
+
+    extent: multiple({
+
+        dataset: {
+
+            id: "",
+            label: { "en": "" }
+
+        },
+
+        entities: 0
+
     })
 
 });
@@ -83,30 +96,7 @@ export function DataUniversity() {
 
         >{entry({
 
-            value: ({
-
-                inception,
-                students,
-                country,
-                location
-
-            }) => <>
-
-                <DataInfo>{{
-
-                    "Country": country && <NodeLink>{country}</NodeLink>,
-                    "City": location && <NodeLink>{location}</NodeLink>
-
-                }}</DataInfo>
-
-                <DataInfo>{{
-
-                    "Inception": inception && inception.substring(0, 4) || "-",
-                    "Students": students && string(students)
-
-                }}</DataInfo>
-
-            </>
+            value: DataUniversityInfo
 
         })}</DataPane>}
 
@@ -114,25 +104,75 @@ export function DataUniversity() {
 
         fetch: <NodeHint>{UniversitiesIcon}</NodeHint>,
 
-        value: ({
-
-            image, label, comment
-
-        }) => (
-
-            <DataCard
-
-                icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
-
-            >
-
-                {string(comment)}
-
-            </DataCard>
-
-        ),
+        value: DataUniversityBody,
 
         error: error => <span>{error.status}</span> // !!! report
 
     })}</DataPage>;
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function DataUniversityInfo({
+
+    id,
+
+    inception,
+    students,
+    country,
+    location,
+    extent
+
+}: typeof University) {
+
+    return <>
+
+        <DataInfo>{{
+
+            "Country": country && <NodeLink>{country}</NodeLink>,
+            "City": location && <NodeLink>{location}</NodeLink>
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
+            "Inception": inception && inception.substring(0, 4) || "-",
+            "Students": students && string(students)
+
+        }}</DataInfo>
+
+        <DataInfo>{extent?.slice()
+
+            ?.sort(({ entities: x }, { entities: y }) => x-y)
+            ?.map(({ dataset, entities }) => ({
+
+                label: <NodeLink search={[dataset, { university: id }]}>{dataset}</NodeLink>,
+                value: string(entities)
+
+            }))
+
+        }</DataInfo>
+
+    </>;
+
+}
+
+function DataUniversityBody({
+
+    image, label, comment
+
+}: typeof University) {
+
+    return <DataCard
+
+        icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
+
+    >
+
+        {string(comment)}
+
+    </DataCard>;
+
 }
