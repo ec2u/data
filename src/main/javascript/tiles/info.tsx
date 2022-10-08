@@ -31,25 +31,33 @@ export function DataInfo({
 
 }: {
 
-    children: { [label: string]: ReactNode } | Array<{ label: ReactNode, value: ReactNode }>
+    children: undefined | { [label: string]: ReactNode } | Array<{ label: ReactNode, value: ReactNode }>
 
 }) {
 
-    const entries: Entry[]=isArray(children) ? children : Object.entries(children).map(([label, value]) => ({
-        label,
-        value
-    }));
+    if ( children ) {
 
-    return createElement("data-info", {}, entries
+        const entries: Entry[]=isArray(children) ? children : Object.entries(children).map(([label, value]) => ({
+            label,
+            value
+        }));
 
-        .filter(({ value }) => value)
+        return createElement("data-info", {}, entries
 
-        .map(({ label, value }, index) => <div key={index}>
+            .filter(({ value }) => value)
 
-            <dt>{label}</dt>
-            <dd>{value}</dd>
+            .map(({ label, value }, index) => <div key={index}>
 
-        </div>)
-    );
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+
+            </div>)
+        );
+
+    } else {
+
+        return null;
+
+    }
 
 }
