@@ -16,7 +16,8 @@
 
 ###  http://www.w3.org/2004/02/skos/core#broader
 skos:broader rdf:type owl:ObjectProperty ;
-             rdfs:subPropertyOf skos:broaderTransitive .
+             rdfs:subPropertyOf skos:broaderTransitive ;
+             owl:inverseOf skos:narrower .
 
 
 ###  http://www.w3.org/2004/02/skos/core#broaderTransitive

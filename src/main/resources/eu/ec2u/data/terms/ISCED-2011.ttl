@@ -4,8 +4,11 @@
 @prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
 
 </concepts/isced-2011> a skos:ConceptScheme ;
-	dct:title "ISCED 2011 Education Levels"@en .
+	dct:title "ISCED 2011"@en;
+	dct:description "ISCED 2011 Education Levels."@en .
 
+
+########################################################################################################################
 
 </concepts/isced-2011/0> a skos:Concept ;
 	skos:topConceptOf </concepts/isced-2011>  ;

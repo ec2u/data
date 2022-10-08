@@ -123,7 +123,7 @@ function DataCourseBody({
 
     return <DataCard>
 
-        {comment && <p>{comment}</p>}
+        {comment && <p>{string(comment)}</p>}
 
         {comment && hasTopConcept && hasTopConcept.length && <hr/>}
 

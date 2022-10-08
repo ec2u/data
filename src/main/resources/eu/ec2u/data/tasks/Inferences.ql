@@ -1,4 +1,5 @@
 prefix ec2u: <https://data.ec2u.eu/terms/>
+prefix skos:	<http://www.w3.org/2004/02/skos/core#>
 prefix void: <http://rdfs.org/ns/void#>
 prefix org:	<http://www.w3.org/ns/org#>
 prefix schema:	<https://schema.org/>
@@ -125,5 +126,33 @@ insert {
 		?entity ec2u:university ?university .
 
     } group by ?dataset ?university }
+
+};
+
+
+#### Compute Concept Schemes Size #####################################################################################
+
+delete  {
+
+	?scheme dct:extent ?concepts_ .
+
+}
+
+insert {
+
+	?scheme dct:extent ?concepts .
+
+}
+
+where {
+
+	{ select ?scheme (count(distinct ?concept) as ?concepts) {
+
+		?scheme a skos:ConceptScheme .
+		?concept skos:inScheme ?scheme .
+
+    } group by ?scheme }
+
+	optional { ?scheme dct:extent ?concepts_ }
 
 };

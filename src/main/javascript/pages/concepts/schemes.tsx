@@ -42,6 +42,8 @@ export const Schemes=immutable({
         label: {},
         comment: {},
 
+        extent: 0,
+
         university: {
             id: "",
             label: {}
@@ -82,13 +84,17 @@ export function DataSchemes() {
             id,
 
             label,
-            comment
+            comment,
+
+            extent
 
         }) =>
 
             <DataCard key={id} compact
 
                 name={<a href={id}>{string(label)}</a>}
+
+                tags={`${extent} concepts`}
 
             >
 
