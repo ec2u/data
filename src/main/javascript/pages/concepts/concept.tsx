@@ -22,6 +22,8 @@ import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { multiple, string } from "@metreeca/link";
+import { NodeLabel } from "@metreeca/tile/layouts/label";
+import { NodelPanel } from "@metreeca/tile/layouts/panel";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -172,25 +174,23 @@ function DataConceptBody({
 
     return <DataCard>
 
-        {broader && broader.length && <>
+        <NodelPanel>
 
-            <h1>Broader</h1>
+            {broader?.length && <NodeLabel name={"Broader"}>{[...broader]
 
-            <ul>{broader.map(concept =>
-                <li key={concept.id}><NodeLink>{concept}</NodeLink></li>
-            )}</ul>
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
 
-        </>}
+            }</NodeLabel>}
 
-        {narrower && narrower.length && <>
+            {narrower?.length && <NodeLabel name={"Narrower"}>{[...narrower]
 
-            <h1>Narrower</h1>
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
 
-            <ul>{narrower.map(concept =>
-                <li key={concept.id}><NodeLink>{concept}</NodeLink></li>
-            )}</ul>
+            }</NodeLabel>}
 
-        </>}
+        </NodelPanel>
 
     </DataCard>;
 

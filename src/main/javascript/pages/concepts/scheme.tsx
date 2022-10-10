@@ -21,6 +21,7 @@ import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { multiple, string } from "@metreeca/link";
+import { NodeLabel } from "@metreeca/tile/layouts/label";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -79,7 +80,7 @@ export function DataScheme() {
 
         fetch: <NodeHint>{SchemesIcon}</NodeHint>,
 
-        value: course => <DataCourseBody>{course}</DataCourseBody>,
+        value: course => <DataSchemaBody>{course}</DataSchemaBody>,
 
         error: error => <span>{error.status}</span> // !!! report
 
@@ -105,7 +106,7 @@ function DataSchemeInfo({
     </>;
 }
 
-function DataCourseBody({
+function DataSchemaBody({
 
     children: {
 
@@ -125,11 +126,14 @@ function DataCourseBody({
 
         {comment && <p>{string(comment)}</p>}
 
-        {comment && hasTopConcept && hasTopConcept.length && <hr/>}
+        {comment && hasTopConcept?.length && <hr/>}
 
-        {hasTopConcept && hasTopConcept.length && <ul>{hasTopConcept.map(concept =>
-            <li key={concept.id}><NodeLink>{concept}</NodeLink></li>
-        )}</ul>}
+        {hasTopConcept?.length && <NodeLabel name={"Top Concepts"}>{[...hasTopConcept]
+
+            .sort((x, y) => string(x).localeCompare(string(y)))
+            .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
+
+        }</NodeLabel>}
 
     </DataCard>;
 
