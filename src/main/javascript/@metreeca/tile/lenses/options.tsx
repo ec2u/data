@@ -145,7 +145,7 @@ export function NodeOptions({
     const count=cache?.length ?? 0;
     const paging=count > PageSize || offset > 0;
 
-    return createElement("node-terms", {
+    return createElement("node-options", {
 
         ref: element,
         class: classes({ "node-input": true, focused }),
