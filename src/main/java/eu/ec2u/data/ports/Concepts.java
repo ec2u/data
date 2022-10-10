@@ -21,13 +21,11 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.link.Values;
 
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.required;
-import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
@@ -69,15 +67,7 @@ public final class Concepts extends Delegator {
 
                         field(SKOS.BROADER, Reference()),
                         field(SKOS.NARROWER, Reference()),
-                        field(SKOS.RELATED, Reference()),
-
-                        field(DCTERMS.EXTENT, multiple(),
-
-                                field("dataset", inverse(VOID.SUBSET), required(), Reference()),
-                                field(VOID.PROPERTY, required(), datatype(Values.IRIType)),
-                                field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
-
-                        )
+                        field(SKOS.RELATED, Reference())
 
                 )
 

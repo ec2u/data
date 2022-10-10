@@ -17,7 +17,6 @@
 import { SchemesIcon } from "@ec2u/data/pages/concepts/schemes";
 import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
-import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
@@ -69,19 +68,6 @@ export const Concept=immutable({
 
         id: "",
         label: { "en": "" }
-
-    }),
-
-    extent: multiple({
-
-        dataset: {
-
-            id: "",
-            label: { "en": "" }
-
-        },
-
-        entities: 0
 
     })
 
@@ -135,8 +121,6 @@ function DataConceptInfo({
 
     children: {
 
-        extent
-
     }
 
 }: {
@@ -146,10 +130,6 @@ function DataConceptInfo({
 }) {
 
     return <>
-
-        {extent && extent.length && <DataInfo>{extent.map(({ dataset, entities }) =>
-            ({ label: <NodeLink>{dataset}</NodeLink>, value: entities })
-        )}</DataInfo>}
 
     </>;
 }

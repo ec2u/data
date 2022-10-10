@@ -39,55 +39,6 @@ insert {
 };
 
 
-#### Compute Dataset Subject Partitions Size ###########################################################################
-
-delete where  {
-
-    ?dataset void:subset ?subset .
-    ?subset dct:subject ?concept; void:property ?property; void:entities ?entities .
-    ?concept dct:extent ?subset .
-
-};
-
-insert {
-
-	?dataset void:subset ?subset .
-	?concept dct:extent ?subset .
-
-	?subset
-		dct:subject ?concept ;
-		void:property ?property ;
-		void:entities ?entities .
-
-} where {
-
-    bind (bnode() as ?subset)
-
-	{ select ?dataset ?property ?concept (count(distinct ?entity) as ?entities) {
-
-		values ?property {
-			dct:subject
-			org:classification
-			schema:educationalLevel
-		}
-
-		?dataset a ec2u:Dataset
-
-		optional { ?dataset void:uriSpace ?space }
-
-		bind (coalesce(?space, str(?dataset)) as ?prefix)
-
-		?class rdfs:subClassOf ec2u:Resource;
-			void:uriSpace ?prefix;
-			^a ?entity .
-
-		?entity ?property ?concept .
-
-    } group by ?dataset ?property ?concept }
-
-};
-
-
 #### Compute Dataset University Partitions Size ########################################################################
 
 delete where  {
