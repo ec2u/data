@@ -9,7 +9,7 @@
 
 </concepts/units> a skos:ConceptScheme ;
 	dct:title "EC2U Units"@en ;
-	dct:description "EC2U Research Unit Types"@en ;
+	dct:description "EC2U Research Unit Types."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022 EC2U Alliance" .
 

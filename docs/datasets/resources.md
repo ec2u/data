@@ -35,5 +35,5 @@ languages.
 
 > ❓Replace `ec2u:university` with `dct:coverage` ?
 >
-> ❓Convert `ec2u:COverage` to concept scheme?
+> ❓Convert `ec2u:Coverage` to concept scheme?
 
