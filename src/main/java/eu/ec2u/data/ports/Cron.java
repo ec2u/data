@@ -10,6 +10,7 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.services.Logger;
 
 import eu.ec2u.data.tasks.*;
+import eu.ec2u.data.tasks.courses.CoursesCoimbra;
 import eu.ec2u.data.tasks.courses.CoursesPavia;
 import eu.ec2u.data.tasks.events.Events;
 import eu.ec2u.data.tasks.events.*;
@@ -42,6 +43,7 @@ public final class Cron extends Delegator {
                 .path("/units/pavia", execute(new UnitsPavia()))
                 .path("/units/salamanca", execute(new UnitsSalamanca()))
 
+                .path("/courses/coimbra", execute(new CoursesCoimbra()))
                 .path("/courses/pavia", execute(new CoursesPavia()))
 
                 .path("/events/", execute(new Events()))
