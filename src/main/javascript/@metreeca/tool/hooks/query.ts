@@ -22,9 +22,9 @@ import { useEffect, useState } from "react";
 
 
 export function useQuery(initial: Query): [Query, (query: Query) => void];
-export function useQuery(initial: Query, storage: Storage): [Query, (query: Query) => void];
+export function useQuery(initial: Query, storage: Storage): [Query, (query: null | Query) => void];
 
-export function useQuery(initial: Query, storage?: Storage): [Query, (query: Query) => void] {
+export function useQuery(initial: Query, storage?: Storage): [Query, (query: null | Query) => void] {
 
     const [route]=useRoute();
 
@@ -43,8 +43,8 @@ export function useQuery(initial: Query, storage?: Storage): [Query, (query: Que
 
     return [state, state => {
 
-        setState(state);
-        query(state, initial);
+        setState(state || initial);
+        query(state || initial, initial);
 
     }];
 }

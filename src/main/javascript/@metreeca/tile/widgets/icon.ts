@@ -20,6 +20,11 @@ import "./icon.css";
 export * from "lucide-react";
 
 export { X as CancelIcon } from "lucide-react";
-export { Search as SearchIcon } from "lucide-react";
+export { X as ResetIcon } from "lucide-react";
 export { XCircle as ClearIcon } from "lucide-react";
+
+export { Search as SearchIcon } from "lucide-react";
 export { AlertTriangle as AlertIcon } from "lucide-react";
+
+export { ChevronRight as ExpandIcon } from "lucide-react";
+export { ChevronDown as CollapseIcon } from "lucide-react";
