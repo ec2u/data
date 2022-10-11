@@ -16,7 +16,6 @@
 
 import { isNumber } from "@metreeca/core";
 import { Setter } from "@metreeca/tool/hooks/index";
-import { useUpdate } from "@metreeca/tool/hooks/update";
 import { RefObject, useEffect, useRef } from "react";
 
 
@@ -37,8 +36,6 @@ export function useDelay(
 ): RefObject<HTMLInputElement> {
 
     const auto=isNumber(delay) ? delay : delay ? DefaultDelay : 0;
-
-    const update=useUpdate();
     const input=useRef<HTMLInputElement>(null);
 
 
@@ -53,7 +50,9 @@ export function useDelay(
 
                 timeout=setTimeout(() => setValue((e.target as HTMLInputElement).value), auto);
 
-                update();
+            } else {
+
+                setValue((e.target as HTMLInputElement).value);
 
             }
         }
@@ -81,8 +80,6 @@ export function useDelay(
         if ( input.current ) {
 
             input.current.value=value;
-
-            update();
 
         }
 
