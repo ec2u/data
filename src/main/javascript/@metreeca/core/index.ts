@@ -156,7 +156,7 @@ export function isFunction(value: unknown): value is Function {
 /**
  * Checks if a value is an empoty plain object or an empty array.
  */
-export function isEmpty(value: unknown): value is ({} | []) {
+export function isEmpty(value: unknown): value is ({ [key in any]: never } | []) {
     return isArray(value) ? value.length === 0
         : isObject(value) ? Object.keys(value).length === 0
             : false;
