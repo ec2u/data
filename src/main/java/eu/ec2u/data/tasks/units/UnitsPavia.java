@@ -142,6 +142,8 @@ public final class UnitsPavia implements Runnable {
                 .value(DCTERMS.TITLE, label)
                 .value(SKOS.PREF_LABEL, label)
 
+                .value(ORG.UNIT_OF, Pavia.University)
+
                 .value(ORG.CLASSIFICATION, frame.values(RDF.TYPE)
                         .map(Types::get)
                         .filter(Objects::nonNull)
