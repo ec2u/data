@@ -211,8 +211,8 @@ function DataEventInfo({
             "Organizer": organizer && [...organizer]
                 .sort((x, y) => string(x).localeCompare(string(y)))
                 .map(({ id, label, url }) => url
-                    ? <a href={url}>{string(label)}</a>
-                    : <span>{string(label)}</span>
+                    ? <a key={id} href={url}>{string(label)}</a>
+                    : <span key={id}>{string(label)}</span>
                 ),
 
             "Info": url && url.map(item => {
