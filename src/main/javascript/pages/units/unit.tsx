@@ -225,7 +225,7 @@ function DataEventBody({
 
                 <dt>
                     <ul>{hasUnit.map(unit =>
-                        <li><NodeLink key={unit.id}>{unit}</NodeLink></li>
+                        <li key={unit.id}><NodeLink>{unit}</NodeLink></li>
                     )}</ul>
                 </dt>
 
