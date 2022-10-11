@@ -14,17 +14,46 @@
  * limitations under the License.
  */
 
-import "./icon.css";
+import { createElement, ReactNode } from "react";
+import "./panel.css";
 
 
-export * from "lucide-react";
+export function NodelPanel({
 
-export { X as CancelIcon } from "lucide-react";
-export { X as ResetIcon } from "lucide-react";
-export { XCircle as ClearIcon } from "lucide-react";
+    name,
 
-export { Search as SearchIcon } from "lucide-react";
-export { AlertTriangle as AlertIcon } from "lucide-react";
+    stack=false,
+    cover=false,
 
-export { ChevronRight as ExpandIcon } from "lucide-react";
-export { ChevronDown as CollapseIcon } from "lucide-react";
+    large=false,
+    small=false,
+
+    children
+
+}: {
+
+    name?: ReactNode
+
+    stack?: boolean
+    cover?: boolean
+
+    large?: boolean
+    small?: boolean
+
+    children?: ReactNode
+
+}) {
+
+    return createElement("node-panel", {
+
+        stack: stack ? "" : undefined,
+        cover: cover ? "" : undefined,
+
+        large: large ? "" : undefined,
+        small: small ? "" : undefined,
+
+        "data-name": name
+
+    }, children);
+
+}

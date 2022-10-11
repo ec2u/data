@@ -100,7 +100,7 @@ export function NodeRange({
     const selected=cache?.gte !== undefined || cache?.lte !== undefined;
     const expanded=!compact || focused || selected;
 
-    return createElement("node-stats", {
+    return createElement("node-range", {
 
         ref: element,
 

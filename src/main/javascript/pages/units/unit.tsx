@@ -22,7 +22,7 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, optional, required, string } from "@metreeca/link";
+import { multiple, optional, repeatable, string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -46,7 +46,12 @@ export const Unit=immutable({
         label: { "en": "" }
     },
 
-    homepage: optional(""),
+    subject: multiple({
+        id: "",
+        label: { "en": "" }
+    }),
+
+    homepage: multiple(""),
 
     altLabel: optional({ "en": "" }),
 
@@ -60,7 +65,7 @@ export const Unit=immutable({
         label: { "en": "" }
     }),
 
-    unitOf: required({
+    unitOf: repeatable({
         id: "",
         label: { "en": "" }
     }),
@@ -118,6 +123,8 @@ function DataEventInfo({
 
         university,
 
+        subject,
+
         label,
         altLabel,
 
@@ -140,8 +147,14 @@ function DataEventInfo({
 
         <DataInfo>{{
 
-            "University": <NodeLink>{university}</NodeLink>,
-            "Parent": unitOf && unitOf.id !== university.id && <NodeLink>{unitOf}</NodeLink>,
+            "University": university && <NodeLink>{university}</NodeLink>,
+
+            "Parent": unitOf && unitOf.some(unit => !university || unit.id !== university.id) && <ul>{unitOf
+                .filter(unit => !university || unit.id !== university.id)
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
+            }</ul>,
+
             "Type": classification && <span>{string(classification)}</span>
 
         }}</DataInfo>
@@ -150,13 +163,23 @@ function DataEventInfo({
 
             "Acronym": altLabel && <span>{string(altLabel)}</span>,
             "Name": <span>{string(label)}</span>,
-            "Head": head && <span>{string(head)}</span>
+            "Head": head && <span>{string(head)}</span>,
+
+            "Topics": subject && subject.length && <ul>{[...subject]
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(subject => <li key={subject.id}>
+                    <NodeLink search={[Units, { university, subject }]}>{subject}</NodeLink>
+                </li>)
+            }</ul>
+
 
         }}</DataInfo>
 
         <DataInfo>{{
 
-            "Info": homepage && <a href={homepage}>{new URL(homepage).host}</a>
+            "Info": homepage && homepage.length && homepage.map(url =>
+                <a key={url} href={url}>{new URL(url).host}</a>
+            )
 
         }}</DataInfo>
 

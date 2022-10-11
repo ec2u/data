@@ -66,7 +66,7 @@ export const Event=immutable({
 
     subject: multiple({
         id: "",
-        label: {}
+        label: { "en": "" }
     }),
 
     isAccessibleForFree: optional(false),
@@ -168,7 +168,7 @@ function DataEventInfo({
 
             "Title": <span title={string(name)}>{string(name)}</span>,
 
-            "Topic": subject && <ul>{[...subject]
+            "Topics": subject && subject.length && <ul>{[...subject]
                 .sort((x, y) => string(x).localeCompare(string(y)))
                 .map(subject => <li key={subject.id}>
                     <NodeLink search={[Events, { university, subject }]}>{subject}</NodeLink>

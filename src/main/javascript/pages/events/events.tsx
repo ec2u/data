@@ -80,7 +80,7 @@ export function DataEvents() {
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
             <NodeOptions path={"publisher"} type={"anyURI"} placeholder={"Publisher"} state={[query, setQuery]}/>
 
-            <NodeOptions path={"subject"} type={"anyURI"} placeholder={"Topic"} state={[query, setQuery]}/>
+            <NodeOptions path={"subject"} type={"string"} placeholder={"Topic"} state={[query, setQuery]}/>
             <NodeRange path={"startDate"} type={"dateTime"} as={"date"} placeholder={"Start Date"} state={[query, setQuery]}/>
 
             <NodeOptions path={"isAccessibleForFree"} type={"boolean"} placeholder={"Free Entry"} state={[query, setQuery]}/>

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { University } from "@ec2u/data/pages/universities/university";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
@@ -23,53 +22,48 @@ import { multiple, string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
-import { NodeOptions } from "@metreeca/tile/lenses/options";
-import { FlaskConical } from "@metreeca/tile/widgets/icon";
+import { GraduationCap } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
 
 
-export const UnitsIcon=<FlaskConical/>;
+export const SchemesIcon=<GraduationCap/>;
 
-export const Units=immutable({
+export const Schemes=immutable({
 
-    id: "/units/",
-    label: { "en": "Research Units" },
+    id: "/concepts/",
+    label: { "en": "Concept Schemes" },
 
     contains: multiple({
 
         id: "",
-        label: { "en": "" },
-        comment: { "en": "" },
+        label: {},
+        comment: {},
 
-        classification: {
-            id: "",
-            label: { "en": "" }
-        },
-
-        altLabel: { "en": "" },
+        extent: 0,
 
         university: {
             id: "",
-            label: { "en": "" }
+            label: {}
         }
 
     })
+
 });
 
 
-export function DataUnits() {
+export function DataSchemes() {
 
     const [, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
+    const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Units) }); }, []);
+    useEffect(() => { setRoute({ label: string(Schemes) }); }, []);
 
 
-    return <DataPage item={string(Units)}
+    return <DataPage item={string(Schemes)}
 
         pane={<DataPane
 
@@ -78,9 +72,6 @@ export function DataUnits() {
 
         >
 
-            <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
-            <NodeOptions path={"type"} type={"anyURI"} placeholder={"Type"} state={[query, setQuery]}/>
-            <NodeOptions path={"subject"} type={"string"} placeholder={"Topic"} state={[query, setQuery]}/>
 
         </DataPane>}
 
@@ -88,31 +79,22 @@ export function DataUnits() {
 
     >
 
-        <NodeItems model={Units} placeholder={UnitsIcon} state={[query, setQuery]}>{({
+        <NodeItems model={Schemes} placeholder={SchemesIcon} state={[query, setQuery]}>{({
 
             id,
+
             label,
             comment,
 
-            classification,
-
-            university,
-            altLabel
+            extent
 
         }) =>
 
             <DataCard key={id} compact
 
-                name={<a href={id}>{altLabel && <>
-                    <span>{string(altLabel)}</span>
-                    <span> / </span>
-                </>}{string(label)}</a>
-                }
+                name={<a href={id}>{string(label)}</a>}
 
-                tags={<>
-                    <span>{string(university) || "EC2U Alliance"}</span>
-                    {classification && <><br/><span>{string(classification)}</span></>}
-                </>}
+                tags={`${extent} concepts`}
 
             >
 
@@ -125,3 +107,4 @@ export function DataUnits() {
     </DataPage>;
 
 }
+

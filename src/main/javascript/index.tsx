@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { Concept, DataConcept } from "@ec2u/data/pages/concepts/concept";
+import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
+import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { Course, DataCourse } from "@ec2u/data/pages/courses/course";
 import { Courses, DataCourses } from "@ec2u/data/pages/courses/courses";
 import { DataSets, Datasets } from "@ec2u/data/pages/datasets";
@@ -75,6 +78,10 @@ render((
 
                     [Events.id]: DataEvents,
                     [Event.id]: DataEvent,
+
+                    [Schemes.id]: DataSchemes,
+                    [Scheme.id]: DataScheme,
+                    [Concept.id]: DataConcept,
 
                     "*": DataNone
 

@@ -29,12 +29,14 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Shape.required;
 import static com.metreeca.link.Values.IRIType;
+import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.link.shapes.Link.link;
 
+import static eu.ec2u.data.terms.EC2U.Reference;
 import static eu.ec2u.data.terms.EC2U.multilingual;
 
 
@@ -68,6 +70,17 @@ public final class Universities extends Delegator {
 
                                 field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
                                 field(WGS84.LONG, optional(), datatype(XSD.DECIMAL))
+                        )
+
+                ),
+
+                detail(
+
+                        field(DCTERMS.EXTENT, multiple(),
+
+                                field("dataset", inverse(VOID.SUBSET), required(), Reference()),
+                                field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
+
                         )
 
                 )

@@ -15,6 +15,7 @@
  */
 
 import { Query, string } from "@metreeca/link";
+import { ResetIcon } from "@metreeca/tile/widgets/icon";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { Setter } from "@metreeca/tool/hooks";
 import { useCache } from "@metreeca/tool/hooks/cache";
@@ -37,7 +38,7 @@ export function NodeCount({
     id?: string,
     path?: string,
 
-    state: [Query, Setter<Query>]
+    state: [Query, Setter<null | Query>]
 
 }) {
 
@@ -46,11 +47,23 @@ export function NodeCount({
     const stats=useStats(id || route, path, query);
     const count=useCache(stats({ value: ({ count }) => count }));
 
-    return createElement("node-count", {},
-        count === undefined ? <NodeSpin/>
-            : count === 0 ? "no matches"
-                : count === 1 ? "1 match"
-                    : `${string(count)} matches`
+
+    function doClear() {
+        setQuery(null);
+    }
+
+
+    return createElement("node-count", {}, <>
+
+            <span>{count === undefined ? <NodeSpin/>
+                : count === 0 ? "no matches"
+                    : count === 1 ? "1 match"
+                        : `${string(count)} matches`
+            }</span>
+
+            <button title={"Clear filters"} onClick={doClear}><ResetIcon/></button>
+
+        </>
     );
 
 }

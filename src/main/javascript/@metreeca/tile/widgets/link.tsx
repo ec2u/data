@@ -27,7 +27,7 @@ export function NodeLink({
 
 }: {
 
-    search?: [Focus, { readonly [path: string]: undefined | Literal | Focus; }]
+    search?: [string | Focus, { readonly [path: string]: undefined | Literal | Focus; }]
 
     children: Focus
 
@@ -37,11 +37,16 @@ export function NodeLink({
 
     if ( search ) {
 
-        const query=Object.entries(search[1])
+        const target=search[0];
+        const collection=isFocus(target) ? target.id : target;
+        const constraints=search[1];
+
+        const query=Object.entries(constraints)
             .filter(([, value]) => value !== undefined && value !== "")
             .reduce((query, [key, value]) => Object.assign(query, { [key]: isFocus(value) ? value.id : value }), {});
 
-        const href=isEmpty(query) ? search[0].id : `${search[0].id}?${encodeURI(JSON.stringify(query))}`;
+
+        const href=isEmpty(query) ? collection : `${collection}?${encodeURI(JSON.stringify(query))}`;
 
         return <a href={href} title={label}>{label}</a>;
 

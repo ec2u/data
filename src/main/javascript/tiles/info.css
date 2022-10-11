@@ -57,11 +57,22 @@ data-info {
             & > ul {
 
                 margin: 0;
+                padding: 0;
 
                 & > li {
-                    list-style: inside "› ";
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+
+                    list-style: outside "›";
+
+                    margin-left: 0.75em;
+
+                    &::marker {
+                        color: var(--node--color-light);
+                    }
+
+                    &:not(:first-child) {
+                        margin-top: 0.1em;
+                    }
+
                 }
 
             }

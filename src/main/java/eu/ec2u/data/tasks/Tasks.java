@@ -71,6 +71,7 @@ public final class Tasks {
 
                         resource(EC2U.class, ".ttl"),
                         resource(EC2U.class, "Units.ttl"),
+                        resource(EC2U.class, "Institutes.ttl"),
                         resource(EC2U.class, "ISCED-2011.ttl"),
 
                         resource(EC2U.class, "SKOS.ttl"),
