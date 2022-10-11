@@ -36,15 +36,15 @@ export function useQuery(initial: Query, storage?: Storage): [Query, (query: nul
 
     useEffect(() => {
 
+        query(value, initial); // update query string before altering hook-based state to avoid race conditions
         setState(value);
-        query(value, initial);
 
     }, [JSON.stringify([initial, value])]);
 
     return [state, state => {
 
-        setState(state || initial);
         query(state || initial, initial);
+        setState(state || initial);
 
     }];
 }
