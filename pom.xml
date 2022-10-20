@@ -116,6 +116,11 @@
 
         <dependency>
             <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-csv</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
             <artifactId>metreeca-ical</artifactId>
         </dependency>
 
