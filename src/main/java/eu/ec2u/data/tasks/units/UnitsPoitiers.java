@@ -159,7 +159,7 @@ public final class UnitsPoitiers implements Runnable {
                     .map(a -> description.map(d -> format("%s - %s", a, d)).orElse(a))
                     .or(() -> description);
 
-            return frame(iri(EC2U.units, md5(Poitiers.University+"@"+id)))
+            return frame(EC2U.id(EC2U.units, Poitiers.University, id))
 
                     .values(RDF.TYPE, EC2U.Unit)
                     .value(EC2U.university, Poitiers.University)
@@ -185,7 +185,7 @@ public final class UnitsPoitiers implements Runnable {
                     .frame(inverse(ORG.HEAD_OF), head(record))
 
                     .value(ORG.UNIT_OF, Optional.ofNullable(record.get("parent unit"))
-                            .map(parent -> iri(EC2U.units, md5(Poitiers.University+"@"+parent)))
+                            .map(id1 -> EC2U.id(EC2U.units, Poitiers.University, id1))
                             .orElse(Poitiers.University));
 
         });
@@ -235,7 +235,7 @@ public final class UnitsPoitiers implements Runnable {
                     final String givenName=matcher.group(2);
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(iri(EC2U.persons, md5(Poitiers.University+"@"+fullName)))
+                    return frame(EC2U.id(EC2U.persons, Poitiers.University, fullName))
 
                             .value(RDF.TYPE, EC2U.Person)
 

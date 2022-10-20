@@ -160,7 +160,7 @@ public final class UnitsSalamancaData implements Runnable {
             final Optional<Frame> department=department(json);
             final Optional<Frame> institute=institute(json);
 
-            return frame(iri(EC2U.units, md5(Salamanca.University+"@"+id)))
+            return frame(EC2U.id(EC2U.units, Salamanca.University, id))
 
                     .values(RDF.TYPE, EC2U.Unit)
                     .value(EC2U.university, Salamanca.University)
@@ -232,7 +232,7 @@ public final class UnitsSalamancaData implements Runnable {
                     final String givenName=matcher.group(2);
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(iri(EC2U.persons, md5(Salamanca.University+"@"+fullName)))
+                    return frame(EC2U.id(EC2U.persons, Salamanca.University, fullName))
 
                             .value(RDF.TYPE, EC2U.Person)
 
@@ -251,7 +251,7 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(iri(EC2U.units, md5(Salamanca.University+"@"+name)))
+            return frame(EC2U.id(EC2U.units, Salamanca.University, name))
 
                     .values(RDF.TYPE, EC2U.Unit)
                     .value(EC2U.university, Salamanca.University)
@@ -272,7 +272,7 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(iri(EC2U.units, md5(Salamanca.University+"@"+name)))
+            return frame(EC2U.id(EC2U.units, Salamanca.University, name))
 
                     .values(RDF.TYPE, EC2U.Unit)
                     .value(EC2U.university, Salamanca.University)

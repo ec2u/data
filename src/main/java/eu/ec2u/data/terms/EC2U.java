@@ -26,6 +26,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.util.Map;
 import java.util.Set;
 
+import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.link.Shape.multiple;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Values.iri;
@@ -63,6 +64,11 @@ public final class EC2U {
     public static IRI item(final String name) {
         return iri(Base, name);
     }
+
+    public static IRI id(final IRI database, final IRI university, final String name) {
+        return iri(database, md5(university+"@"+name));
+    }
+
 
     public static IRI term(final String name) {
         return iri(item("/terms/"), name);
