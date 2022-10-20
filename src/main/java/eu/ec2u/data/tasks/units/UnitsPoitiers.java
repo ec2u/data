@@ -16,20 +16,24 @@
 
 package eu.ec2u.data.tasks.units;
 
+import com.metreeca.core.Strings;
 import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.GET;
 import com.metreeca.http.services.Vault;
-import com.metreeca.json.JSONPath;
 import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.cities.Poitiers;
 import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.terms.Units;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.query.TupleQuery;
 
 import java.time.Instant;
 import java.util.*;
@@ -42,8 +46,7 @@ import static com.metreeca.core.Lambdas.task;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.ports.Units.Unit;
@@ -58,17 +61,16 @@ public final class UnitsPoitiers implements Runnable {
             .setHeader()
             .setSkipHeaderRecord(true)
             .setIgnoreHeaderCase(true)
-            .setDelimiter(',')
-            .setQuote('"')
+            .setNullString("")
             .build();
 
 
     private static final String DataUrl="units-poitiers-url"; // vault label
 
-    private static final IRI SectorScheme=iri(EC2U.concepts, "units-poitier-sector/");
+    private static final IRI TopicsScheme=iri(EC2U.concepts, "units-poitier-topics/");
 
 
-    private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");
+    private static final Pattern HeadPattern=Pattern.compile("\\s*([- 'A-Z]+)\\s+([A-Z].*)\\s*");
 
 
     public static void main(final String... args) {
@@ -77,6 +79,8 @@ public final class UnitsPoitiers implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Map<String, Value> types=new HashMap<>();
 
     private final Vault vault=service(vault());
 
@@ -143,16 +147,16 @@ public final class UnitsPoitiers implements Runnable {
     }
 
     private Optional<Frame> unit(final CSVRecord record) {
-        return Optional.ofNullable(record.get("Référence")).map(id -> {
+        return Optional.ofNullable(record.get("unit code")).map(id -> {
 
-            final Optional<String> acronym=Optional.ofNullable(record.get("Nom"))
+            final Optional<String> acronym=Optional.ofNullable(record.get("short name"))
                     .filter(not(String::isEmpty));
 
-            final Optional<String> description=Optional.ofNullable(record.get("Description"))
+            final Optional<String> description=Optional.ofNullable(record.get("full name"))
                     .filter(not(String::isEmpty));
 
             final Optional<String> label=acronym
-                    .map(a -> description.map(d -> String.format("%s - %s", a, d)).orElse(a))
+                    .map(a -> description.map(d -> format("%s - %s", a, d)).orElse(a))
                     .or(() -> description);
 
             return frame(iri(EC2U.units, md5(Poitiers.University+"@"+id)))
@@ -162,9 +166,9 @@ public final class UnitsPoitiers implements Runnable {
 
                     .value(DCTERMS.TITLE, label.map(v -> literal(v, Poitiers.Language)))
 
-                    .frame(DCTERMS.SUBJECT, Optional.ofNullable(record.get("Secteur"))
-                            .filter(not(String::isEmpty))
-                            .map(v -> frame(iri(SectorScheme, md5(v)))
+                    .frames(DCTERMS.SUBJECT, Optional.ofNullable(record.get("topics")).stream()
+                            .flatMap(Strings::split)
+                            .map(v -> frame(iri(TopicsScheme, md5(v)))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
                                     .value(SKOS.PREF_LABEL, literal(v, Poitiers.Language))
                             )
@@ -173,10 +177,16 @@ public final class UnitsPoitiers implements Runnable {
                     .value(SKOS.PREF_LABEL, label.map(v -> literal(v, Poitiers.Language)))
                     .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, Poitiers.Language)))
 
-                    //.value(ORG.CLASSIFICATION, Units.GroupRecognized)
-                    //.frame(inverse(ORG.HEAD_OF), head(record))
+                    .value(FOAF.HOMEPAGE, Optional.ofNullable(record.get("website"))
+                            .map(Values::iri)
+                    )
 
-                    .frame(ORG.UNIT_OF, frame(Poitiers.University));
+                    .value(ORG.CLASSIFICATION, Optional.ofNullable(record.get("type")).flatMap(this::type))
+                    .frame(inverse(ORG.HEAD_OF), head(record))
+
+                    .value(ORG.UNIT_OF, Optional.ofNullable(record.get("parent unit"))
+                            .map(parent -> iri(EC2U.units, md5(Poitiers.University+"@"+parent)))
+                            .orElse(Poitiers.University));
 
         });
     }
@@ -184,8 +194,38 @@ public final class UnitsPoitiers implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Optional<Frame> head(final JSONPath json) {
-        return json.string("head")
+    private Optional<Value> type(final String type) {
+        return Optional
+
+                .of(types.computeIfAbsent(type, key -> service(graph()).query(connection -> {
+
+                    final TupleQuery query=connection.prepareTupleQuery(""
+                            +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                            +"\n"
+                            +"select ?concept {\n"
+                            +"\n"
+                            +"\t?concept skos:inScheme $scheme; skos:prefLabel $label. \n"
+                            +"\n"
+                            +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
+                            +"\n"
+                            +"}\n"
+                    );
+
+                    query.setBinding("scheme", Units.Name);
+                    query.setBinding("value", literal(key));
+
+                    return query.evaluate().stream().findFirst()
+                            .map(bindings -> bindings.getValue("concept"))
+                            .orElse(RDF.NIL);
+
+                })))
+
+                .filter(not(RDF.NIL::equals));
+    }
+
+
+    private Optional<Frame> head(final CSVRecord record) {
+        return Optional.ofNullable(record.get("Head"))
 
                 .map(HeadPattern::matcher)
                 .filter(Matcher::matches)

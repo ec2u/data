@@ -1,24 +1,11 @@
-* site?
-* classification?
-* 
-
 # Sites
 
-*  
+*  none
 
 # Integration
 
+* data loaded from manually curated Google Sheet
 
-
-## Pending
-
-* contact info / address
-* subject area
-
-## 2022-10-17
+## 2022-10-20
 
 * Initial integration
-
-# Feeds
-
-* 

@@ -25,16 +25,16 @@ import static com.metreeca.link.Values.iri;
  */
 public final class Units {
 
-    public static final IRI Base=EC2U.item("/concepts/units/");
+    public static final IRI Name=EC2U.item("/concepts/units");
 
 
-    public static final IRI Institute=iri(Base, "institute");
-    public static final IRI Center=iri(Base, "center");
-    public static final IRI Department=iri(Base, "department");
-    public static final IRI Laboratory=iri(Base, "laboratory");
-    public static final IRI Group=iri(Base, "group");
-    public static final IRI GroupRecognized=iri(Base, "group-recognized");
-    public static final IRI GroupInformal=iri(Base, "group-informal");
+    public static final IRI Institute=iri(Name, "institute");
+    public static final IRI Center=iri(Name, "center");
+    public static final IRI Department=iri(Name, "department");
+    public static final IRI Laboratory=iri(Name, "laboratory");
+    public static final IRI Group=iri(Name, "group");
+    public static final IRI GroupRecognized=iri(Name, "group-recognized");
+    public static final IRI GroupInformal=iri(Name, "group-informal");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
