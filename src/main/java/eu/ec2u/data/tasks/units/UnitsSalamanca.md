@@ -5,12 +5,19 @@
 
 # Integration
 
+* general research unit data extracted from dedicated REST/JSON API
+* research unit ‹› virtual institute associations extracted from manually curated Google Sheet
+
 ## Pending
 
 * waiting for API extensions
   * research  centres
   * description
   * extended contact data
+
+## 2022-10-20
+
+* automated ingestion of research unit ‹› virtual institute associations 
 
 ## 2022-10-06
 
