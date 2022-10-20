@@ -109,7 +109,6 @@ public final class UnitsSalamancaVIs implements Runnable {
             return parser.stream()
 
                     .filter(record -> !record.get("Unit").isEmpty())
-                    // !!! .filter(record -> record.get("Active").equals("TRUE"))
 
                     .map(record -> {
 

@@ -41,6 +41,7 @@ import java.util.stream.Stream;
 
 import static com.metreeca.core.Identifiers.md5;
 import static com.metreeca.core.Lambdas.task;
+import static com.metreeca.core.Strings.split;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.frame;
@@ -64,7 +65,6 @@ public final class UnitsSalamanca implements Runnable {
 
 
     private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");
-    private static final Pattern SeparatorPattern=Pattern.compile("\\s*[,;]\\s*");
 
 
     public static void main(final String... args) {
@@ -172,8 +172,7 @@ public final class UnitsSalamanca implements Runnable {
 
 
                     .frames(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
-                            .flatMap(v -> Arrays.stream(SeparatorPattern.split(v)))
-                            .filter(not(String::isEmpty))
+                            .flatMap(v -> split(v, ','))
                             .map(v -> frame(iri(BranchScheme, md5(v)))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
                                     .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
@@ -182,8 +181,7 @@ public final class UnitsSalamanca implements Runnable {
                     )
 
                     .frames(DCTERMS.SUBJECT, json.string("RIS3").stream()
-                            .flatMap(v -> Arrays.stream(SeparatorPattern.split(v)))
-                            .filter(not(String::isEmpty))
+                            .flatMap(v -> split(v, ','))
                             .map(v -> frame(iri(RIS3Scheme, md5(v)))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
                                     .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
@@ -282,8 +280,7 @@ public final class UnitsSalamanca implements Runnable {
                     .value(SKOS.PREF_LABEL, title)
 
                     .values(FOAF.HOMEPAGE, json.string("institute_webusal_url").stream()
-                            .flatMap(v -> Arrays.stream(SeparatorPattern.split(v)))
-                            .filter(not(String::isEmpty))
+                            .flatMap(v -> split(v, ','))
                             .map(Values::iri))
 
                     .value(ORG.CLASSIFICATION, Units.Institute)
