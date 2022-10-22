@@ -29,8 +29,8 @@ import java.io.*;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.inverse;
 import static com.metreeca.rdf.codecs.RDF.rdf;

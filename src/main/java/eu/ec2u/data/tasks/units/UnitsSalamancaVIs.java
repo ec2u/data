@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.tasks.units;
 
+import com.metreeca.core.Xtream;
 import com.metreeca.csv.codecs.CSV;
-import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.GET;
 
 import eu.ec2u.data.terms.EC2U;
@@ -29,8 +29,8 @@ import org.eclipse.rdf4j.query.QueryLanguage;
 
 import java.util.*;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.statement;
 import static com.metreeca.rdf4j.services.Graph.graph;

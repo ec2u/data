@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.tasks;
 
-import com.metreeca.http.Xtream;
+import com.metreeca.core.Xtream;
 import com.metreeca.link.Values;
 import com.metreeca.open.actions.WikidataMirror;
 

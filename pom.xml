@@ -129,9 +129,9 @@
             <artifactId>metreeca-open</artifactId>
         </dependency>
 
-        <dependency> <!-- !!! remove -->
+        <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-gcp-rdf4j</artifactId>
+            <artifactId>metreeca-gcp</artifactId>
         </dependency>
 
         <dependency>

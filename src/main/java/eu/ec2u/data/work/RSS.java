@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.work;
 
-import com.metreeca.http.Xtream;
+import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.xml.XPath;

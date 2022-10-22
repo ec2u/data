@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.http.Xtream;
-import com.metreeca.http.services.Logger;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.services.Logger;
 import com.metreeca.rdf4j.actions.TupleQuery;
 import com.metreeca.rdf4j.services.Graph;
 
@@ -28,9 +28,9 @@ import org.eclipse.rdf4j.model.Value;
 import java.time.Duration;
 import java.time.Instant;
 
-import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 

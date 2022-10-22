@@ -4,7 +4,7 @@
 
 package eu.ec2u.data.tasks;
 
-import com.metreeca.http.services.Logger;
+import com.metreeca.core.services.Logger;
 
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
@@ -15,9 +15,9 @@ import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.tasks.Tasks.exec;

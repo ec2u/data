@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.http.Xtream;
+import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.cities.Coimbra;

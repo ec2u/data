@@ -16,10 +16,10 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.core.Identifiers;
-import com.metreeca.core.Strings;
-import com.metreeca.http.Xtream;
-import com.metreeca.http.actions.Fill;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.actions.Fill;
+import com.metreeca.core.toolkits.Identifiers;
+import com.metreeca.core.toolkits.Strings;
 import com.metreeca.http.actions.GET;
 import com.metreeca.ical.codecs.iCal;
 import com.metreeca.link.Frame;
@@ -41,8 +41,8 @@ import java.time.*;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.metreeca.core.Identifiers.AbsoluteIRIPattern;
-import static com.metreeca.core.Strings.TextLength;
+import static com.metreeca.core.toolkits.Identifiers.AbsoluteIRIPattern;
+import static com.metreeca.core.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;

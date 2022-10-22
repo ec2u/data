@@ -4,10 +4,10 @@
 
 package eu.ec2u.data.ports;
 
+import com.metreeca.core.services.Logger;
 import com.metreeca.http.Handler;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
-import com.metreeca.http.services.Logger;
 
 import eu.ec2u.data.tasks.*;
 import eu.ec2u.data.tasks.courses.CoursesCoimbra;
@@ -16,12 +16,12 @@ import eu.ec2u.data.tasks.events.Events;
 import eu.ec2u.data.tasks.events.*;
 import eu.ec2u.data.tasks.units.*;
 
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.services.Logger.time;
 import static com.metreeca.gcp.GCPServer.cron;
-import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.BadGateway;
 import static com.metreeca.http.Response.OK;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.services.Logger.time;
 
 import static java.lang.String.format;
 

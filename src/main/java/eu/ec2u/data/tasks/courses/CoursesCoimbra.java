@@ -16,9 +16,10 @@
 
 package eu.ec2u.data.tasks.courses;
 
-import com.metreeca.http.Xtream;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.actions.Fill;
+import com.metreeca.core.services.Vault;
 import com.metreeca.http.actions.*;
-import com.metreeca.http.services.Vault;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
@@ -38,13 +39,13 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.http.Locator.service;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.services.Vault.vault;
+import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.http.Request.POST;
 import static com.metreeca.http.Request.query;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;

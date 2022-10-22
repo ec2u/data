@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.tasks;
 
-import com.metreeca.http.Locator;
-import com.metreeca.http.Xtream;
+import com.metreeca.core.Locator;
+import com.metreeca.core.Xtream;
 import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
@@ -34,11 +34,11 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.core.Resources.resource;
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.services.Logger.time;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.services.Logger.time;
+import static com.metreeca.core.toolkits.Lambdas.task;
+import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.Values.pattern;

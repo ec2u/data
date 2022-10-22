@@ -26,7 +26,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.util.Map;
 import java.util.Set;
 
-import static com.metreeca.core.Identifiers.md5;
+import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Shape.multiple;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Values.iri;

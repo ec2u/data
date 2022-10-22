@@ -16,11 +16,11 @@
 
 package eu.ec2u.data.tasks.units;
 
-import com.metreeca.core.Strings;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.services.Vault;
+import com.metreeca.core.toolkits.Strings;
 import com.metreeca.csv.codecs.CSV;
-import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.GET;
-import com.metreeca.http.services.Vault;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
@@ -41,10 +41,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Vault.vault;
+import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf4j.services.Graph.graph;
