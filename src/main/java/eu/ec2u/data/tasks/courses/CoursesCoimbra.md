@@ -4,6 +4,8 @@
 
 # Integration
 
+* data extracted from dedicated REST/JSON API
+
 ## Pending
 
 * course details (e.g. https://apps.uc.pt/courses/EN/course/4604)
