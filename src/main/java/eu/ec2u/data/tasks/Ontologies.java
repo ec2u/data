@@ -4,17 +4,14 @@
 
 package eu.ec2u.data.tasks;
 
-import com.metreeca.link.Values;
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.rdf4j.actions.Configure;
 
 import eu.ec2u.data.terms.EC2U;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-
-import java.io.*;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 import static eu.ec2u.data.tasks.Tasks.ontologies;
+
+import static java.util.stream.Collectors.toList;
 
 
 public final class Ontologies implements Runnable {
@@ -25,38 +22,12 @@ public final class Ontologies implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override public void run() {
-        ontologies()
+        new Configure(EC2U.ontologies)
 
-                .flatMap(url -> {
+                .langs(EC2U.Languages)
 
-                    try ( final InputStream input=url.openStream() ) {
-
-                        return Rio.parse(input, RDFFormat.TURTLE).stream();
-
-                    } catch ( final IOException e ) {
-
-                        throw new UncheckedIOException(e);
-
-                    }
-
-                })
-
-                .filter(statement -> {
-
-                    final String lang=Values.lang(statement.getObject());
-
-                    return lang.isEmpty() || EC2U.Languages.contains(lang);
-
-                })
-
-                .batch(0) // avoid multiple truth-maintenance rounds
-
-                .forEach(new Upload()
-                        .clear(true)
-                        .contexts(EC2U.ontologies)
-                );
+                .accept(ontologies().collect(toList()));
     }
 
 }

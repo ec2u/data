@@ -25,7 +25,8 @@ import static com.metreeca.link.Values.iri;
  */
 public final class Units {
 
-    public static final IRI Base=EC2U.item("/concepts/units/");
+    public static final IRI Name=EC2U.item("/concepts/units");
+    public static final IRI Base=iri(Name, "/");
 
 
     public static final IRI Institute=iri(Base, "institute");

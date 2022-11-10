@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.tasks.events;
 
+import com.metreeca.core.Xtream;
 import com.metreeca.http.CodecException;
-import com.metreeca.http.Xtream;
 import com.metreeca.http.actions.GET;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
@@ -38,8 +38,8 @@ import java.time.*;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;

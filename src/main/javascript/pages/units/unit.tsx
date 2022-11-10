@@ -155,7 +155,7 @@ function DataEventInfo({
                 .map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
             }</ul>,
 
-            "Type": classification && <span>{string(classification)}</span>
+            "Type": classification && <NodeLink>{classification}</NodeLink>
 
         }}</DataInfo>
 
@@ -225,7 +225,7 @@ function DataEventBody({
 
                 <dt>
                     <ul>{hasUnit.map(unit =>
-                        <li><NodeLink key={unit.id}>{unit}</NodeLink></li>
+                        <li key={unit.id}><NodeLink>{unit}</NodeLink></li>
                     )}</ul>
                 </dt>
 

@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.tasks.courses;
 
-import com.metreeca.core.Strings;
-import com.metreeca.http.Xtream;
-import com.metreeca.http.actions.Fill;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.actions.Fill;
+import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.GraphQuery;
@@ -36,11 +36,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.services.Logger.time;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.services.Logger.time;
+import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shifts.Seq.seq;

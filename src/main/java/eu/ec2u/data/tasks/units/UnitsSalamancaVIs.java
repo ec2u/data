@@ -16,36 +16,38 @@
 
 package eu.ec2u.data.tasks.units;
 
+import com.metreeca.core.Xtream;
+import com.metreeca.csv.codecs.CSV;
+import com.metreeca.http.actions.GET;
+
 import eu.ec2u.data.terms.EC2U;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.query.QueryLanguage;
 
-import java.io.*;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
-import static com.metreeca.core.Resources.reader;
-import static com.metreeca.http.Locator.service;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.statement;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.tasks.Tasks.exec;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
 public final class UnitsSalamancaVIs implements Runnable {
+
+    private static final String DataUrl="units-salamanca-vis-url";
 
     private static final CSVFormat Format=CSVFormat.Builder.create()
             .setHeader()
             .setSkipHeaderRecord(true)
             .setIgnoreHeaderCase(true)
-            .setDelimiter('\t')
-            .setQuote('\0') // some labels include double quotes
             .build();
 
 
@@ -101,32 +103,33 @@ public final class UnitsSalamancaVIs implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private List<Statement> associations() {
-        try (
-                final Reader reader=reader(this, ".tsv");
-                final CSVParser parser=Format.parse(reader)
-        ) {
 
-            return parser.stream()
+        final String url=service(vault())
+                .get(DataUrl)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined data URL <%s>", DataUrl
+                )));
 
-                    .filter(record -> !record.get("Unit").isEmpty())
-                    // !!! .filter(record -> record.get("Active").equals("TRUE"))
 
-                    .map(record -> {
+        return Xtream.of(url)
 
-                        final IRI vi=iri(EC2U.units, record.get("VI").toLowerCase(Locale.ROOT));
-                        final IRI unit=iri(record.get("Unit"));
+                .optMap(new GET<>(new CSV(Format)))
 
-                        return statement(unit, ORG.UNIT_OF, vi);
+                .flatMap(Collection::stream)
 
-                    })
+                .filter(record -> !record.get("Unit").isEmpty())
 
-                    .collect(toList());
+                .map(record -> {
 
-        } catch ( final IOException e ) {
+                    final IRI vi=iri(EC2U.units, record.get("VI").toLowerCase(Locale.ROOT));
+                    final IRI unit=iri(record.get("Unit"));
 
-            throw new UncheckedIOException(e);
+                    return statement(unit, ORG.UNIT_OF, vi);
 
-        }
+                })
+
+                .collect(toList());
+
     }
 
 }

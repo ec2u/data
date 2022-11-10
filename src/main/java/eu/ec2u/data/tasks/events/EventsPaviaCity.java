@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.http.Xtream;
-import com.metreeca.http.actions.Fill;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.actions.Fill;
 import com.metreeca.http.actions.GET;
 import com.metreeca.link.Frame;
 import com.metreeca.rdf.actions.*;

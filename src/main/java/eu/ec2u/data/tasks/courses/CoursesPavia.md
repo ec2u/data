@@ -4,7 +4,7 @@
 
 # Integration
 
-Direct RDF extraction from a VIVO-based internal knowledge hub (currently under development).
+* direct RDF extraction from a VIVO-based local knowledge hub (https://unipv.unifind.cineca.it/).
 
 ## Pending
 

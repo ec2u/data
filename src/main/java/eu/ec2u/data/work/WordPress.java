@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.work;
 
-import com.metreeca.core.Strings;
+import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
 import com.metreeca.xml.actions.Untag;
 
@@ -27,8 +27,8 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Optional;
 
-import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Strings.TextLength;
+import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;

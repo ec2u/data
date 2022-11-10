@@ -21,30 +21,31 @@ import { useRoute } from "@metreeca/tool/nests/router";
 import { useEffect, useState } from "react";
 
 
-export function useQuery(initial: Query): [Query, (query: Query) => void];
-export function useQuery(initial: Query, storage: Storage): [Query, (query: null | Query) => void];
+export function useQuery(defaults: Query): [Query, (query: Query) => void];
+export function useQuery(defaults: Query, storage: Storage): [Query, (query: null | Query) => void];
 
-export function useQuery(initial: Query, storage?: Storage): [Query, (query: null | Query) => void] {
+export function useQuery(defaults: Query, storage?: Storage): [Query, (query: null | Query) => void] {
 
     const [route]=useRoute();
 
     const [state, setState]=(storage === undefined)
-        ? useState(initial)
-        : useStorage(storage, route, initial);
+        ? useState({})
+        : useStorage(storage, route, {});
 
-    const value={ ...state, ...query() };
+    const facets=query();
+    const value={ ...defaults, ...(isEmpty(facets) ? state : facets) };
 
     useEffect(() => {
 
+        query(value, defaults); // update query string before altering hook-based state to avoid race conditions
         setState(value);
-        query(value, initial);
 
-    }, [JSON.stringify([initial, value])]);
+    }, [JSON.stringify([defaults, value])]);
 
-    return [state, state => {
+    return [value, state => {
 
-        setState(state || initial);
-        query(state || initial, initial);
+        query(state || defaults, defaults);
+        setState(state || defaults);
 
     }];
 }

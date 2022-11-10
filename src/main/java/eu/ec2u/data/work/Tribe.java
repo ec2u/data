@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.work;
 
-import com.metreeca.core.Strings;
-import com.metreeca.http.Xtream;
-import com.metreeca.http.actions.Fill;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.actions.Fill;
+import com.metreeca.core.toolkits.Strings;
 import com.metreeca.http.actions.GET;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
@@ -37,9 +37,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.metreeca.core.Formats.SQL_TIMESTAMP;
-import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Strings.TextLength;
+import static com.metreeca.core.toolkits.Formats.SQL_TIMESTAMP;
+import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;

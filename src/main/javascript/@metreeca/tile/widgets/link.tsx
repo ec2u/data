@@ -45,7 +45,6 @@ export function NodeLink({
             .filter(([, value]) => value !== undefined && value !== "")
             .reduce((query, [key, value]) => Object.assign(query, { [key]: isFocus(value) ? value.id : value }), {});
 
-
         const href=isEmpty(query) ? collection : `${collection}?${encodeURI(JSON.stringify(query))}`;
 
         return <a href={href} title={label}>{label}</a>;

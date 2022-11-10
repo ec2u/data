@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.tasks.units;
 
-import com.metreeca.http.Xtream;
-import com.metreeca.http.actions.Fill;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.actions.Fill;
 import com.metreeca.link.Frame;
 import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.actions.Update;
@@ -33,9 +33,9 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Lambdas.task;
-import static com.metreeca.http.Locator.service;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf4j.services.Graph.graph;
@@ -141,6 +141,8 @@ public final class UnitsPavia implements Runnable {
 
                 .value(DCTERMS.TITLE, label)
                 .value(SKOS.PREF_LABEL, label)
+
+                .value(ORG.UNIT_OF, Pavia.University)
 
                 .value(ORG.CLASSIFICATION, frame.values(RDF.TYPE)
                         .map(Types::get)

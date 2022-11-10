@@ -116,6 +116,11 @@
 
         <dependency>
             <groupId>com.metreeca</groupId>
+            <artifactId>metreeca-csv</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
             <artifactId>metreeca-ical</artifactId>
         </dependency>
 
@@ -124,9 +129,9 @@
             <artifactId>metreeca-open</artifactId>
         </dependency>
 
-        <dependency> <!-- !!! remove -->
+        <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-gcp-rdf4j</artifactId>
+            <artifactId>metreeca-gcp</artifactId>
         </dependency>
 
         <dependency>
@@ -137,13 +142,6 @@
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-repository-http</artifactId>
-        </dependency>
-
-
-        <dependency> <!-- https://commons.apache.org/proper/commons-csv/ -->
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>1.9.0</version>
         </dependency>
 
 

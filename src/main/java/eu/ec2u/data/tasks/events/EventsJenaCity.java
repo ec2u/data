@@ -16,7 +16,9 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.http.*;
+import com.metreeca.core.Xtream;
+import com.metreeca.http.CodecException;
+import com.metreeca.http.Request;
 import com.metreeca.http.actions.Fetch;
 import com.metreeca.http.actions.GET;
 import com.metreeca.json.JSONPath;
@@ -42,11 +44,11 @@ import java.util.stream.Stream;
 
 import javax.json.Json;
 
-import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Strings.clip;
-import static com.metreeca.http.Locator.service;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Strings.clip;
 import static com.metreeca.http.Request.POST;
-import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;

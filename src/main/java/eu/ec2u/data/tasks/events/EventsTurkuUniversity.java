@@ -16,8 +16,10 @@
 
 package eu.ec2u.data.tasks.events;
 
-import com.metreeca.http.Xtream;
-import com.metreeca.http.actions.*;
+import com.metreeca.core.Xtream;
+import com.metreeca.core.actions.Fill;
+import com.metreeca.http.actions.Fetch;
+import com.metreeca.http.actions.Query;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
@@ -41,13 +43,13 @@ import java.util.*;
 import javax.json.Json;
 import javax.json.JsonReader;
 
-import static com.metreeca.core.Formats.SQL_TIMESTAMP;
-import static com.metreeca.core.Identifiers.md5;
-import static com.metreeca.core.Strings.TextLength;
-import static com.metreeca.core.Strings.clip;
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.services.Vault.vault;
+import static com.metreeca.core.toolkits.Formats.SQL_TIMESTAMP;
+import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Strings.TextLength;
+import static com.metreeca.core.toolkits.Strings.clip;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;

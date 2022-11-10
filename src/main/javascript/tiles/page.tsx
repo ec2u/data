@@ -38,7 +38,6 @@ export function DataPage({
 
     pane?: ReactNode
 
-
     children: ReactNode
     deps?: DependencyList
 

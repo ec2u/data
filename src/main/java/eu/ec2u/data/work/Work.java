@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.work;
 
-import com.metreeca.http.Xtream;
+import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.cities.Pavia;
@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Identifiers.md5;
+import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
