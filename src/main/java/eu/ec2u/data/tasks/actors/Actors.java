@@ -52,14 +52,16 @@ public final class Actors implements Runnable {
     private static final String DataTermsUrl="actors-terms-url";
     private static final String DataEntriesUrl="actors-entries-url";
 
-    private static final IRI Actors=EC2U.item("/actors/");
-
-
     private static final CSVFormat Format=CSVFormat.Builder.create()
             .setHeader()
             .setSkipHeaderRecord(true)
             .setAllowMissingColumnNames(true)
             .build();
+
+
+    private static IRI term(final String name) {
+        return EC2U.term(format("actors/%s", name));
+    }
 
 
     public static void main(final String... args) {
@@ -80,7 +82,7 @@ public final class Actors implements Runnable {
                 .batch(0)
 
                 .forEach(new Upload()
-                        .contexts(Actors)
+                        .contexts(EC2U.actors)
                         .clear(true)
                 );
     }
@@ -109,8 +111,8 @@ public final class Actors implements Runnable {
                         .stream()
 
                         .flatMap(term -> Stream.of(
-                                statement(EC2U.term(term), RDFS.LABEL, literal(record.get("label"), "en")),
-                                statement(EC2U.term(term), RDFS.COMMENT, literal(record.get("description"), "en"))
+                                statement(term(term), RDFS.LABEL, literal(record.get("label"), "en")),
+                                statement(term(term), RDFS.COMMENT, literal(record.get("description"), "en"))
                         ))
 
                 );
@@ -124,8 +126,6 @@ public final class Actors implements Runnable {
 
                 .flatMap(this::actors)
                 .map(this::actor)
-
-                .peek(frame -> System.out.println(Values.format(frame)))
 
                 .flatMap(Frame::stream);
     }
@@ -149,26 +149,26 @@ public final class Actors implements Runnable {
     }
 
     private Frame actor(final CSVRecord record) {
-        return frame(iri(Actors, normalize(record.get(col("A")))))
+        return frame(iri(EC2U.actors, normalize(record.get(col("A")))))
 
                 .value(RDF.TYPE, EC2U.term("Actor"))
 
-                .value(EC2U.university, university(record))
+                .value(EC2U.university, university(record)) // !!! missing in the survey
 
-                .value(EC2U.term("actors1-1"), profile(record))
-                .values(EC2U.term("actors1-2"), activityArea(record))
-                .value(EC2U.term("actors2-1"), activityCoverage(record))
-                .value(EC2U.term("actors2-4"), size(record))
+                .value(term("Q1-1"), profile(record))
+                .values(term("Q1-2"), activityArea(record))
+                .value(term("Q2-1"), activityCoverage(record))
+                .value(term("Q2-4"), size(record))
 
-                .value(EC2U.term("actors2-6"), researchPartnerships(record))
-                .value(EC2U.term("actors2-6b"), researchPartners(record))
-                .values(EC2U.term("actors2-7"), researchArea(record))
-                .values(EC2U.term("actors2-8"), researchRelation(record))
-                // !!! .values(EC2U.term("actors2-9"), researchRelationQuality(record))
-                .values(EC2U.term("actors2-10"), researchIssue(record))
-                .value(EC2U.term("actors2-11"), researchProjects(record))
-                .values(EC2U.term("actors2-14"), researchValorization(record))
-                .values(EC2U.term("actors2-16"), researchDigitization(record))
+                .value(term("Q2-6"), researchPartnerships(record))
+                .value(term("Q2-6b"), researchPartners(record))
+                .values(term("Q2-7"), researchArea(record))
+                .values(term("Q2-8"), researchRelation(record))
+                // !!! .values(term("Q2-9"), researchRelationQuality(record))
+                .values(term("Q2-10"), researchIssue(record))
+                .value(term("Q2-11"), researchProjects(record))
+                .values(term("Q2-14"), researchValorization(record))
+                .values(term("Q2-16"), researchDigitization(record))
 
                 ;
     }
@@ -176,7 +176,7 @@ public final class Actors implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static Optional<Literal> profile(final CSVRecord record) {
+    private Optional<Literal> profile(final CSVRecord record) {
         return Optional.ofNullable(map(
 
                 entry("universities and research entities", "Universities and Research Entities (e.g. Universities/ "
@@ -230,7 +230,7 @@ public final class Actors implements Runnable {
         );
     }
 
-    private static Optional<IRI> university(final CSVRecord record) {
+    private Optional<IRI> university(final CSVRecord record) {
         return Optional.ofNullable(Map.ofEntries(
 
                 entry("coimbra", Coimbra.University),
@@ -244,7 +244,7 @@ public final class Actors implements Runnable {
         ).get(normalize(record.get(col("FO")))));
     }
 
-    private static Stream<Literal> activityArea(final CSVRecord record) {
+    private Stream<Literal> activityArea(final CSVRecord record) {
         return Stream
 
                 .of(
@@ -275,7 +275,7 @@ public final class Actors implements Runnable {
                 .map(entry -> literal(entry.getValue()));
     }
 
-    private static Optional<Literal> activityCoverage(final CSVRecord record) {
+    private Optional<Literal> activityCoverage(final CSVRecord record) {
         return Optional.ofNullable(map(
 
                 entry("international", "At international level"),
@@ -286,7 +286,7 @@ public final class Actors implements Runnable {
         ).get(normalize(record.get(col("AB")))));
     }
 
-    private static Optional<Literal> size(final CSVRecord record) {
+    private Optional<Literal> size(final CSVRecord record) {
         return Optional.ofNullable(map(
 
                 entry("0-9", "0-9"),
@@ -305,7 +305,7 @@ public final class Actors implements Runnable {
         );
     }
 
-    private static Optional<Literal> researchPartners(final CSVRecord record) {
+    private Optional<Literal> researchPartners(final CSVRecord record) {
         return Optional.ofNullable(map(
 
                 entry("mainly public entities", "Mainly with public entities"),
@@ -315,7 +315,7 @@ public final class Actors implements Runnable {
         ).get(normalize(record.get(col("AI")))));
     }
 
-    private static Stream<Literal> researchArea(final CSVRecord record) {
+    private Stream<Literal> researchArea(final CSVRecord record) {
         return Stream
 
                 .of(
@@ -346,7 +346,7 @@ public final class Actors implements Runnable {
                 .map(entry -> literal(entry.getValue()));
     }
 
-    private static Stream<Literal> researchRelation(final CSVRecord record) {
+    private Stream<Literal> researchRelation(final CSVRecord record) {
         return Stream
 
                 .of(
@@ -366,7 +366,7 @@ public final class Actors implements Runnable {
                 .map(entry -> literal(entry.getValue()));
     }
 
-    private static Stream<Literal> researchIssue(final CSVRecord record) {
+    private Stream<Literal> researchIssue(final CSVRecord record) {
         return Stream
 
                 .of(
@@ -391,7 +391,7 @@ public final class Actors implements Runnable {
                 .map(entry -> literal(entry.getValue()));
     }
 
-    private static Optional<Literal> researchProjects(final CSVRecord record) {
+    private Optional<Literal> researchProjects(final CSVRecord record) {
         return Optional.ofNullable(map(
 
                 entry("1-3", "1-3"),
@@ -402,7 +402,7 @@ public final class Actors implements Runnable {
         ).get(normalize(record.get(col("BY")))));
     }
 
-    private static Stream<Literal> researchValorization(final CSVRecord record) {
+    private Stream<Literal> researchValorization(final CSVRecord record) {
         return Stream
 
                 .of(
@@ -421,7 +421,7 @@ public final class Actors implements Runnable {
 
     }
 
-    private static Stream<Literal> researchDigitization(final CSVRecord record) {
+    private Stream<Literal> researchDigitization(final CSVRecord record) {
         return Stream
 
                 .of(

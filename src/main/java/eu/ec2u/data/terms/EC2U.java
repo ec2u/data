@@ -91,6 +91,7 @@ public final class EC2U {
     public static final IRI units=item("/units/");
     public static final IRI courses=item("/courses/");
     public static final IRI persons=item("/persons/");
+    public static final IRI actors=item("/actors/");
 
     public static final IRI events=item("/events/");
     public static final IRI locations=item("/locations/");
