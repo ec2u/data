@@ -32,10 +32,9 @@ export const Actors=immutable({
 
 export function DataActors() {
 
-    const [route, setRoute]=useRoute();
+    const [, setRoute]=useRoute();
 
-
-    useEffect(() => { window.open("https://demo.metreeca.com/self/#endpoint=https://data.ec2u.eu/sparql&collection=https://data.ec2u.eu/terms/Actor", "_blank");}, []);
+    useEffect(() => { window.open("https://tinyurl.com/25r4u5gf", "_blank");}, []);
     useEffect(() => { setRoute({ route: "/" }); }, []);
 
     return null;
