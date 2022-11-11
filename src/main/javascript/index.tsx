@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Actors, DataActors } from "@ec2u/data/pages/actors";
 import { Concept, DataConcept } from "@ec2u/data/pages/concepts/concept";
 import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
 import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
@@ -75,6 +76,8 @@ render((
 
                     [Courses.id]: DataCourses,
                     [Course.id]: DataCourse,
+
+                    [Actors.id]: DataActors,
 
                     [Events.id]: DataEvents,
                     [Event.id]: DataEvent,

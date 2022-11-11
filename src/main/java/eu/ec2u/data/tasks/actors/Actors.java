@@ -127,8 +127,6 @@ public final class Actors implements Runnable {
                 .flatMap(this::actors)
                 .map(this::actor)
 
-                .peek(frame -> System.out.println(Values.format(frame)))
-
                 .flatMap(Frame::stream);
     }
 
@@ -155,7 +153,7 @@ public final class Actors implements Runnable {
 
                 .value(RDF.TYPE, EC2U.term("Actor"))
 
-                .value(EC2U.university, university(record))
+                .value(EC2U.university, university(record)) // !!! missing in the survey
 
                 .value(term("Q1-1"), profile(record))
                 .values(term("Q1-2"), activityArea(record))
