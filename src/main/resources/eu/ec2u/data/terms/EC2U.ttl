@@ -1,3 +1,4 @@
+@prefix : <https://data.ec2u.eu/terms/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix org: <http://www.w3.org/ns/org#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -11,15 +12,15 @@
 @prefix vivo: <http://vivoweb.org/ontology/core#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix schema: <https://schema.org/> .
-@base <http://www.w3.org/2002/07/owl#> .
+@base <https://data.ec2u.eu/terms/> .
 
-[ rdf:type owl:Ontology ;
-   void:rootResource ec2u:Course ,
-                     ec2u:Dataset ,
-                     ec2u:Event ,
-                     ec2u:Unit ,
-                     ec2u:University
- ] .
+<https://data.ec2u.eu/terms/> rdf:type owl:Ontology ;
+                               void:rootResource ec2u:Actor ,
+                                                 ec2u:Course ,
+                                                 ec2u:Dataset ,
+                                                 ec2u:Event ,
+                                                 ec2u:Unit ,
+                                                 ec2u:University .
 
 #################################################################
 #    Annotation properties
@@ -136,6 +137,13 @@ org:OrganizationalUnit rdf:type owl:Class .
 foaf:Person rdf:type owl:Class .
 
 
+###  https://data.ec2u.eu/terms/Actor
+ec2u:Actor rdf:type owl:Class ;
+           rdfs:subClassOf ec2u:Resource ;
+           dct:description "Knowledge ecosystem actor."@en ;
+           void:uriSpace "https://data.ec2u.eu/actors/" .
+
+
 ###  https://data.ec2u.eu/terms/Concept
 ec2u:Concept rdf:type owl:Class ;
              rdfs:subClassOf <http://www.w3.org/2004/02/skos/core#Concept> ,
@@ -216,6 +224,15 @@ schema:Thing rdf:type owl:Class .
                                                     dct:title "CC BY-NC-ND 4.0"@en .
 
 
+###  https://data.ec2u.eu/actors/
+<https://data.ec2u.eu/actors/> rdf:type owl:NamedIndividual ,
+                                        ec2u:Dataset ;
+                               dct:description "Knowledge ecosystem actors."@en ;
+                               dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+                               dct:rights "Copyright © 2022 EC2U Alliance" ;
+                               dct:title "Actors"@en .
+
+
 ###  https://data.ec2u.eu/courses/
 <https://data.ec2u.eu/courses/> rdf:type owl:NamedIndividual ,
                                          ec2u:Dataset ;
@@ -228,7 +245,7 @@ schema:Thing rdf:type owl:Class .
 ###  https://data.ec2u.eu/events/
 <https://data.ec2u.eu/events/> rdf:type owl:NamedIndividual ,
                                         ec2u:Dataset ;
-                               dct:description "Local academic and public events."@en ;
+                               dct:description "Academic and public local events."@en ;
                                dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
                                dct:rights "Copyright © 2022 EC2U Alliance" ;
                                dct:title "Events"@en .
@@ -246,7 +263,7 @@ schema:Thing rdf:type owl:Class .
 ###  https://data.ec2u.eu/universities/
 <https://data.ec2u.eu/universities/> rdf:type owl:NamedIndividual ,
                                               ec2u:Dataset ;
-                                     dct:description "EC2U Alliance partner universities."@en ;
+                                     dct:description "Partner universities."@en ;
                                      dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
                                      dct:rights "Copyright © 2022 EC2U Alliance" ;
                                      dct:title "Universities"@en .
