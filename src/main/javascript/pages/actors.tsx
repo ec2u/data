@@ -34,7 +34,7 @@ export function DataActors() {
 
     const [, setRoute]=useRoute();
 
-    useEffect(() => { window.open("https://tinyurl.com/25r4u5gf", "_blank");}, []);
+    useEffect(() => { window.open("https://tinyurl.com/24f693ej", "_blank");}, []);
     useEffect(() => { setRoute({ route: "/" }); }, []);
 
     return null;
