@@ -28,6 +28,7 @@ import com.metreeca.http.services.Fetcher.URLFetcher;
 import com.metreeca.http.services.Translator.ComboTranslator;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.services.Translator.ComboTranslator;
 import com.metreeca.rdf4j.handlers.Graphs;
 import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.*;
@@ -100,6 +101,11 @@ public final class Data implements Runnable {
 
                 .set(graph(), () -> new Graph(repository(GraphDBRepository)))
                 .set(engine(), GraphEngine::new)
+
+                .set(translator(), () -> new ComboTranslator(
+                        new GraphTranslator(),
+                        new GCPTranslator()
+                ))
 
                 .set(keywords(), () -> Map.ofEntries(
                         entry("@id", "id")
