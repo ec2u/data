@@ -19,15 +19,16 @@ package eu.ec2u.data;
 import com.metreeca.core.Locator;
 import com.metreeca.core.services.Cache.FileCache;
 import com.metreeca.gcp.GCPServer;
+import com.metreeca.gcp.services.GCPTranslator;
 import com.metreeca.gcp.services.GCPVault;
 import com.metreeca.http.Request;
 import com.metreeca.http.handlers.*;
 import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
+import com.metreeca.http.services.Translator.ComboTranslator;
 import com.metreeca.rdf4j.handlers.Graphs;
 import com.metreeca.rdf4j.handlers.SPARQL;
-import com.metreeca.rdf4j.services.Graph;
-import com.metreeca.rdf4j.services.GraphEngine;
+import com.metreeca.rdf4j.services.*;
 
 import eu.ec2u.data.ports.*;
 import eu.ec2u.data.terms.EC2U;
@@ -45,6 +46,7 @@ import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Response.SeeOther;
 import static com.metreeca.http.services.Fetcher.fetcher;
+import static com.metreeca.http.services.Translator.translator;
 import static com.metreeca.jsonld.codecs.JSONLD.keywords;
 import static com.metreeca.jsonld.services.Engine.engine;
 import static com.metreeca.rdf4j.services.Graph.graph;
@@ -80,8 +82,12 @@ public final class Data implements Runnable {
 
                 .set(graph(), () -> new Graph(repository(GraphDBRepository)))
                 .set(engine(), GraphEngine::new)
+                .set(keywords(), () -> EC2U.Keywords)
 
-                .set(keywords(), () -> EC2U.Keywords);
+                .set(translator(), () -> new ComboTranslator(
+                        new GraphTranslator(),
+                        new GCPTranslator()
+                ));
     }
 
     public static Repository repository(final String name) {

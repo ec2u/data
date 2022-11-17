@@ -184,12 +184,19 @@ public final class Tasks {
                 .distinct()
                 .count();
 
+        // ;(gdb) bindings apparently ignored inside transaction
+
+        // !!! final Collection<Statement> translate=translate(model, EC2U.Languages);
+
+
         time(() -> {
 
             service(graph()).update(task(connection -> {
 
                 setup.run();
+
                 connection.add(model, context);
+                // !!! connection.add(translate, context);
 
             }));
 
