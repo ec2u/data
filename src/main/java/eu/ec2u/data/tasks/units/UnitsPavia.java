@@ -50,7 +50,7 @@ public final class UnitsPavia implements Runnable {
 
     private static final Map<IRI, IRI> Types=Map.ofEntries(
             Map.entry(VIVO.AcademicDepartment, Units.Department),
-            Map.entry(VIVO.Center, Units.Center)
+            Map.entry(VIVO.Center, Units.Centre)
     );
 
 

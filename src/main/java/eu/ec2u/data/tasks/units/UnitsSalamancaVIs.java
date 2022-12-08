@@ -82,7 +82,7 @@ public final class UnitsSalamancaVIs implements Runnable {
                                     +"\t"
                                     +"\t\torg:unitOf ?i .\n"
                                     +"\n"
-                                    +"\t?i org:classification </concepts/units/virtual-institute> .\n"
+                                    +"\t?i org:classification </concepts/units/institute-virtual> .\n"
                                     +"\n"
                                     +"}",
 

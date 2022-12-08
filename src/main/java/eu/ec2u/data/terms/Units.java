@@ -30,12 +30,17 @@ public final class Units {
 
 
     public static final IRI Institute=iri(Base, "institute");
-    public static final IRI Center=iri(Base, "center");
+    public static final IRI InstituteVirtual=iri(Base, "institute-virtual");
+    public static final IRI Centre=iri(Base, "centre");
+    public static final IRI CentreResearch=iri(Base, "centre-research");
+    public static final IRI CentreTransfer=iri(Base, "centre-transfer");
     public static final IRI Department=iri(Base, "department");
     public static final IRI Laboratory=iri(Base, "laboratory");
     public static final IRI Group=iri(Base, "group");
     public static final IRI GroupRecognized=iri(Base, "group-recognized");
     public static final IRI GroupInformal=iri(Base, "group-informal");
+    public static final IRI GroupStudent=iri(Base, "group-student");
+    public static final IRI Station=iri(Base, "station");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
