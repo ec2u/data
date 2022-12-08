@@ -60,7 +60,7 @@ export const Unit=immutable({
         label: { "en": "" }
     }),
 
-    head: optional({
+    head: multiple({
         id: "",
         label: { "en": "" }
     }),
@@ -163,7 +163,11 @@ function DataEventInfo({
 
             "Acronym": altLabel && <span>{string(altLabel)}</span>,
             "Name": <span>{string(label)}</span>,
-            "Head": head && <span>{string(head)}</span>,
+
+            "Head": head?.length === 1 ? <span>{string(head[0])}</span> : head?.length && <ul>{[...head]
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(head => <li key={head.id}>{string(head)}</li>)
+            }</ul>,
 
             "Topics": subject && subject.length && <ul>{[...subject]
                 .sort((x, y) => string(x).localeCompare(string(y)))
@@ -171,7 +175,6 @@ function DataEventInfo({
                     <NodeLink search={[Units, { university, subject }]}>{subject}</NodeLink>
                 </li>)
             }</ul>
-
 
         }}</DataInfo>
 

@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="-49 45 320 186"
-     width="320" height="186">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-49 45 320 191"
+     width="320" height="191">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
             stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
@@ -26,9 +26,9 @@
       </g>
     </marker>
   </defs>
-  <g id="persons" stroke-dasharray="none" stroke="none" stroke-opacity="1" fill="none" fill-opacity="1">
+  <g id="persons" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill="none" fill-opacity="1">
     <title>persons</title>
-    <rect fill="white" x="-49" y="45" width="320" height="186"/>
+    <rect fill="white" x="-49" y="45" width="320" height="191"/>
     <g id="persons_Layer_1">
       <title>Layer 1</title>
       <g id="Group_2">
@@ -96,26 +96,28 @@
       </g>
       <g id="Group_120">
         <g id="Graphic_123">
-          <rect x="82.20473" y="198.17408" width="101.685" height="18" fill="white"/>
-          <rect x="82.20473" y="198.17408" width="101.685" height="18" stroke="black" stroke-linecap="round"
+          <rect x="83.33858" y="203.8046" width="101.685" height="18" fill="white"/>
+          <rect x="83.33858" y="203.8046" width="101.685" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_122">
-          <rect x="82.20473" y="169.65195" width="101.685" height="28.522125" fill="white"/>
-          <rect x="82.20473" y="169.65195" width="101.685" height="28.522125" stroke="black" stroke-linecap="round"
+          <rect x="83.33858" y="164.02142" width="101.685" height="39.78319" fill="white"/>
+          <rect x="83.33858" y="164.02142" width="101.685" height="39.78319" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(88.20473 172.65195)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">foaf:givenName: String</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">foaf:familyName: String
+          <text transform="translate(89.33858 167.02142)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">foaf:title : String [0..1]</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">foaf:givenName: String
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">foaf:familyName: String
             </tspan>
           </text>
         </g>
         <g id="Graphic_121">
           <a xl:href="http://xmlns.com/foaf/spec/#term_Person">
-            <rect x="82.20473" y="152.06177" width="101.685" height="17.59018" fill="white"/>
-            <rect x="82.20473" y="152.06177" width="101.685" height="17.59018" stroke="black" stroke-linecap="round"
+            <rect x="83.33858" y="146.43124" width="101.685" height="17.59018" fill="white"/>
+            <rect x="83.33858" y="146.43124" width="101.685" height="17.59018" stroke="black" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(108.29722 155.22633)" fill="black">
+            <text transform="translate(109.43108 149.5958)" fill="black">
               <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">foaf:Person
               </tspan>
             </text>
@@ -123,7 +125,7 @@
         </g>
       </g>
       <g id="Line_124">
-        <line x1="36.83075" y1="184.11793" x2="72.454725" y2="184.1179" marker-end="url(#UMLInheritance_Marker)"
+        <line x1="36.83075" y1="184.11793" x2="73.58858" y2="184.1179" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
     </g>
