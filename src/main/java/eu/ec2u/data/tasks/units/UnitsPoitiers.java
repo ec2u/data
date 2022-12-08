@@ -23,7 +23,6 @@ import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.actions.GET;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
-import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.cities.Poitiers;
 import eu.ec2u.data.terms.EC2U;
@@ -39,18 +38,17 @@ import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.ports.Units.Unit;
 import static eu.ec2u.data.tasks.Tasks.*;
+import static eu.ec2u.data.tasks.units.Units_.clear;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
@@ -92,38 +90,8 @@ public final class UnitsPoitiers implements Runnable {
                 .optMap(this::unit)
 
                 .sink(units -> upload(EC2U.units,
-
                         validate(Unit(), Set.of(EC2U.Unit), units),
-
-                        () -> service(graph()).update(task(connection -> Stream
-
-                                .of(""
-                                        +"prefix ec2u: </terms/>\n"
-                                        +"prefix org: <http://www.w3.org/ns/org#>\n"
-                                        +"\n"
-                                        +"delete {\n"
-                                        +"\n"
-                                        +"\t?u ?p ?o.\n"
-                                        +"\t?h org:headOf ?u.\n"
-                                        +"\t\n"
-                                        +"} where {\n"
-                                        +"\n"
-                                        +"\t?u a ec2u:Unit;\n"
-                                        +"\t\tec2u:university $university.\n"
-                                        +"\n"
-                                        +"\toptional { ?u ?p ?o }\n"
-                                        +"\toptional { ?h org:headOf ?u }\n"
-                                        +"\n"
-                                        +"}"
-                                )
-
-                                .forEach(new Update()
-                                        .base(EC2U.Base)
-                                        .binding("university", Poitiers.University)
-                                )
-
-                        ))
-
+                        () -> clear(Poitiers.University)
                 ));
     }
 
