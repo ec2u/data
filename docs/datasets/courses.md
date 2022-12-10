@@ -3,13 +3,31 @@ title: Courses
 ---
 
 The [EC2U Courses Dataset](http://data.ec2u.eu/courses/) provides identifying and background information about
-formal academic courses offered at EC2U partner universities.
+formal academic programs and courses offered at EC2U partner universities.
 
 ![course data model](index/courses.svg)
 
 # Model
 
-EC2U courses are described using a controlled subset of the [schema:Course](https://schema.org/Course) data model.
+EC2U courses are described using a controlled subset of the [schema:EducationalOccupationalProgram](https://schema.org/EducationalOccupationalProgram) and  [schema:Course](https://schema.org/Course) data models.
+
+## ec2u:Program
+
+A program offered by an institution which determines the learning progress to achieve an outcome, usually a credential like a degree or certificate. This would define a discrete set of opportunities (e.g., courses) that together constitute a program.
+
+| property                                                     | description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| all [ec2u:Resource](resources.md) properties                 | inherited properties                                         |
+| all [schema:Thing](things.md) properties                     | inherited properties                                         |
+| [schema:provider](https://schema.org/provider)               | link to the provider                                         |
+| [schema:identifier](https://schema.org/identifier)           | program identifier assigned by the course provider           |
+| [schema:programType](https://schema.org/programType)         | link to a [TBD] program type in the `https://data.ec2u.eu/concepts/???/` [concept](concepts.md) scheme |
+| [schema:hasCourse](https://schema.org/hasCourse)             | link to course that is one of the learning opportunities that are part of the program |
+| [schema:numberOfCredits](https://schema.org/numberOfCredits) | number of [European Credit Transfer and Accumulation System (ECTS)](https://education.ec.europa.eu/education-levels/higher-education/inclusive-and-connected-higher-education/european-credit-transfer-and-accumulation-system) credits required to complete the program |
+| [schema:programPrerequisites](https://schema.org/programPrerequisites) | human-readable, localized description of enrolment requirements |
+| [schema:timeToComplete](https://schema.org/timeToComplete)   | the expected length of time to complete the program if attending full-time |
+| [schema:educationalCredentialAwarded](https://schema.org/educationalCredentialAwarded) | human-readable, localized description of the qualification, award, certificate, diploma or other educational credential awarded as a consequence of successful completion |
+| [schema:occupationalCredentialAwarded](https://schema.org/occupationalCredentialAwarded) | human-readable, localized description of the qualification, award, certificate, diploma or other occupational credential awarded as a consequence of successful completion |
 
 ## ec2u:Course
 
@@ -18,9 +36,9 @@ EC2U courses are described using a controlled subset of the [schema:Course](http
 | all [ec2u:Resource](resources.md) properties                 | inherited properties                                         |
 | all [schema:Thing](things.md) properties                     | inherited properties                                         |
 | [schema:provider](https://schema.org/provider)               | link to the provider                                         |
-| [schema:courseCode](https://schema.org/courseCode)           | course identifier assigned by the course provider            |
+| [schema:courseCode](https://schema.org/courseCode)<br />/[schema:identifier](https://schema.org/identifier) | course identifier assigned by the course provider            |
 | [schema:educationalLevel](https://schema.org/educationalLevel) | link to a 1-digit [ISCED 2011](http://uis.unesco.org/en/topic/international-standard-classification-education-isced) education level in the `https://data.ec2u.eu/concepts/isced-2011/` [concept](concepts.md) scheme |
-| [schema:inLanguage](https://schema.org/inLanguage)           | 2-letters [IETF BCP 47](http://tools.ietf.org/html/bcp47) code of the teaching / evaluation language (e.g. `en` ) |
+| [schema:inLanguage](https://schema.org/inLanguage)           | 2-letters [IETF BCP 47](http://tools.ietf.org/html/bcp47) code of the teaching / evaluation language (e.g. `en` ) |
 | [schema:numberOfCredits](https://schema.org/numberOfCredits) | number of [European Credit Transfer and Accumulation System (ECTS)](https://education.ec.europa.eu/education-levels/higher-education/inclusive-and-connected-higher-education/european-credit-transfer-and-accumulation-system) credits awarded |
 | [schema:timeRequired](https://schema.org/timeRequired)       | scheduled workload in [ISO 8601 duration](https://www.w3.org/TR/xmlschema-2/#duration) format; hour‑based duration (e.g. `PT60H`) strongly suggested |
 | [schema:about](https://schema.org/about)                     | link to a subject; must reference one the SKOS concepts managed by the *Knowledge Hub* (see also `dct:subject` [Resource](resources.md#model) property) |
@@ -54,3 +72,4 @@ source analysis and integration status are detailed in the linked source sheets.
 * Data sources are crawled nightly using custom data integration scripts that extract structured data from dedicated
   APIs, RSS feed, embedded HTML micro-annotations or embedded JSON/LD metadata; custom scraping from HTML content is
   currently not supported in order to improve the overall robustness of the process
+

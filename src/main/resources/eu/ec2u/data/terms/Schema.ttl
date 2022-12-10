@@ -25,6 +25,15 @@ dct:title rdf:type owl:DatatypeProperty ;
           rdfs:subPropertyOf rdfs:label .
 
 
+###  http://schema.org/courseCode
+<http://schema.org/courseCode> rdf:type owl:DatatypeProperty ;
+                               rdfs:subPropertyOf <http://schema.org/identifier> .
+
+
+###  http://schema.org/identifier
+<http://schema.org/identifier> rdf:type owl:DatatypeProperty .
+
+
 ###  http://www.w3.org/2000/01/rdf-schema#comment
 rdfs:comment rdf:type owl:DatatypeProperty .
 
@@ -65,6 +74,11 @@ schema:name rdf:type owl:DatatypeProperty ;
 #    Classes
 #################################################################
 
+###  http://schema.org/EducationalOccupationalProgram
+<http://schema.org/EducationalOccupationalProgram> rdf:type owl:Class ;
+                                                   rdfs:subClassOf schema:Thing .
+
+
 ###  https://schema.org/ContactPoint
 schema:ContactPoint rdf:type owl:Class ;
                     rdfs:subClassOf schema:Thing .
@@ -72,13 +86,12 @@ schema:ContactPoint rdf:type owl:Class ;
 
 ###  https://schema.org/Course
 schema:Course rdf:type owl:Class ;
-              rdfs:subClassOf schema:CreativeWork .
+              rdfs:subClassOf schema:LearningResource .
 
 
 ###  https://schema.org/CreativeWork
 schema:CreativeWork rdf:type owl:Class ;
-                    rdfs:subClassOf schema:LearningResource ,
-                                    schema:Thing .
+                    rdfs:subClassOf schema:Thing .
 
 
 ###  https://schema.org/Event

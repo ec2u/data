@@ -18,6 +18,7 @@ package eu.ec2u.data.tasks.units;
 
 import com.metreeca.core.services.Vault;
 
+import eu.ec2u.data.cities.Iasi;
 import eu.ec2u.data.cities.Poitiers;
 import eu.ec2u.data.terms.EC2U;
 
@@ -32,13 +33,13 @@ import static eu.ec2u.data.tasks.units.Units_.clear;
 
 import static java.lang.String.format;
 
-public final class UnitsPoitiers implements Runnable {
+public final class UnitsIasi implements Runnable {
 
-    private static final String DataUrl="units-poitiers-url"; // vault label
+    private static final String DataUrl="units-iasi-url"; // vault label
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitsPoitiers().run());
+        exec(() -> new UnitsIasi().run());
     }
 
 
@@ -55,7 +56,7 @@ public final class UnitsPoitiers implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        new Units_.CSVLoader(Poitiers.University, Poitiers.Language)
+        new Units_.CSVLoader(Iasi.University, Iasi.Language)
 
                 .load(url)
 

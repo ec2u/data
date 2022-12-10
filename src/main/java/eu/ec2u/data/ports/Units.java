@@ -56,7 +56,7 @@ public final class Units extends Delegator {
                 field(ORG.UNIT_OF, repeatable(), Reference()),
                 field(ORG.HAS_UNIT, multiple(), Reference()),
 
-                field("head", inverse(ORG.HEAD_OF), optional(), Reference())
+                field("head", inverse(ORG.HEAD_OF), multiple(), Reference())
 
         );
     }

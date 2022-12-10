@@ -20,7 +20,6 @@ import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
 import com.metreeca.link.Frame;
 import com.metreeca.rdf4j.actions.GraphQuery;
-import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.cities.Pavia;
@@ -31,18 +30,15 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
-import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.ports.Units.Unit;
 import static eu.ec2u.data.tasks.Tasks.*;
+import static eu.ec2u.data.tasks.units.Units_.clear;
 
 import static java.util.function.Predicate.not;
 
@@ -50,7 +46,7 @@ public final class UnitsPavia implements Runnable {
 
     private static final Map<IRI, IRI> Types=Map.ofEntries(
             Map.entry(VIVO.AcademicDepartment, Units.Department),
-            Map.entry(VIVO.Center, Units.Center)
+            Map.entry(VIVO.Center, Units.Centre)
     );
 
 
@@ -70,27 +66,7 @@ public final class UnitsPavia implements Runnable {
 
                 .sink(units -> upload(EC2U.units,
                         validate(Unit(), Set.of(EC2U.Unit), units),
-                        () -> service(graph()).update(task(connection -> Stream
-
-                                .of(""
-                                        +"prefix ec2u: </terms/>\n"
-                                        +"prefix org: <http://www.w3.org/ns/org#>\n"
-                                        +"\n"
-                                        +"delete where {\n"
-                                        +"\n"
-                                        +"\t?u a ec2u:Unit ;\n"
-                                        +"\t\tec2u:university $university ;\n"
-                                        +"\t\t?p ?o .\n"
-                                        +"\n"
-                                        +"}"
-                                )
-
-                                .forEach(new Update()
-                                        .base(EC2U.Base)
-                                        .binding("university", Pavia.University)
-                                )
-
-                        ))
+                        () -> clear(Pavia.University)
                 ));
     }
 
