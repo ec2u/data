@@ -6,6 +6,6 @@
 
 * data loaded from manually curated Google Sheet
 
-## 2022-12-10
+## 2022-10-20
 
 * Initial integration
