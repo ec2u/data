@@ -45,7 +45,7 @@
       </g>
     </marker>
   </defs>
-  <g id="concepts" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill="none" fill-opacity="1">
+  <g id="concepts" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
     <title>concepts</title>
     <rect fill="white" x="453" y="296" width="423" height="470"/>
     <g id="concepts_Layer_1">

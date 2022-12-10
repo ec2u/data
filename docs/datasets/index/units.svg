@@ -45,7 +45,7 @@
       </g>
     </marker>
   </defs>
-  <g id="units" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill="none" fill-opacity="1">
+  <g id="units" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
     <title>units</title>
     <rect fill="white" x="272" y="68" width="764" height="446"/>
     <g id="units_Layer_1">
@@ -334,24 +334,25 @@
       </g>
       <g id="Group_190">
         <g id="Graphic_193">
-          <rect x="929.7638" y="132.68687" width="90.372" height="18" fill="white"/>
-          <rect x="929.7638" y="132.68687" width="90.372" height="18" stroke="black" stroke-linecap="round"
+          <rect x="931.1811" y="138.3174" width="80.364" height="18" fill="white"/>
+          <rect x="931.1811" y="138.3174" width="80.364" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_192">
-          <rect x="929.7638" y="115.42581" width="90.372" height="17.261063" fill="white"/>
-          <rect x="929.7638" y="115.42581" width="90.372" height="17.261063" stroke="black" stroke-linecap="round"
+          <rect x="931.1811" y="109.79528" width="80.364" height="28.522125" fill="white"/>
+          <rect x="931.1811" y="109.79528" width="80.364" height="28.522125" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(935.7638 118.42581)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">foaf:homepage [0..*]</tspan>
+          <text transform="translate(937.1811 112.79528)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">foaf:homepage [*]</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">foaf:mbox [*]</tspan>
           </text>
         </g>
         <g id="Graphic_191">
           <a xl:href="http://xmlns.com/foaf/0.1/#term_Agent">
-            <rect x="929.7638" y="98.16475" width="90.372" height="17.261063" fill="white"/>
-            <rect x="929.7638" y="98.16475" width="90.372" height="17.261063" stroke="black" stroke-linecap="round"
+            <rect x="931.1811" y="92.53421" width="80.364" height="17.261063" fill="white"/>
+            <rect x="931.1811" y="92.53421" width="80.364" height="17.261063" stroke="black" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(952.7018 101.16475)" fill="black">
+            <text transform="translate(949.1151 95.53421)" fill="black">
               <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">foaf:Agent
               </tspan>
             </text>
@@ -359,7 +360,7 @@
         </g>
       </g>
       <g id="Line_189">
-        <line x1="895.9729" y1="124.42581" x2="920.0138" y2="124.42579" marker-end="url(#UMLInheritance_Marker)"
+        <line x1="895.9729" y1="124.42581" x2="921.4311" y2="124.42579" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Group_185">

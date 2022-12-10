@@ -38,7 +38,7 @@
       </g>
     </marker>
   </defs>
-  <g id="universities" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill="none" fill-opacity="1">
+  <g id="universities" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
     <title>universities</title>
     <rect fill="white" x="-61" y="44" width="404" height="442"/>
     <g id="universities_Layer_1">

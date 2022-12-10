@@ -16,59 +16,21 @@
 
 package eu.ec2u.data.tasks.units;
 
-import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Vault;
-import com.metreeca.core.toolkits.Strings;
-import com.metreeca.csv.codecs.CSV;
-import com.metreeca.http.actions.GET;
-import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data.cities.Poitiers;
-import eu.ec2u.data.terms.EC2U;
-import eu.ec2u.data.terms.Units;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
-import org.eclipse.rdf4j.query.TupleQuery;
-
-import java.time.Instant;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data.ports.Units.Unit;
-import static eu.ec2u.data.tasks.Tasks.*;
-import static eu.ec2u.data.tasks.units.Units_.clear;
+import static eu.ec2u.data.tasks.Tasks.exec;
 
 import static java.lang.String.format;
-import static java.util.function.Predicate.not;
 
 public final class UnitsPoitiers implements Runnable {
 
-    private static final CSVFormat Format=CSVFormat.Builder.create()
-            .setHeader()
-            .setSkipHeaderRecord(true)
-            .setIgnoreHeaderCase(true)
-            .setNullString("")
-            .build();
-
-
     private static final String DataUrl="units-poitiers-url"; // vault label
-
-    private static final IRI TopicsScheme=iri(EC2U.concepts, "units-poitier-topics/");
-
-
-    private static final Pattern HeadPattern=Pattern.compile("\\s*([- 'A-Z]+)\\s+([A-Z].*)\\s*");
 
 
     public static void main(final String... args) {
@@ -78,27 +40,10 @@ public final class UnitsPoitiers implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Map<String, Value> types=new HashMap<>();
-
     private final Vault vault=service(vault());
 
 
     @Override public void run() {
-        Xtream.of(Instant.EPOCH)
-
-                .flatMap(this::units)
-                .optMap(this::unit)
-
-                .sink(units -> upload(EC2U.units,
-                        validate(Unit(), Set.of(EC2U.Unit), units),
-                        () -> clear(Poitiers.University)
-                ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Xtream<CSVRecord> units(final Instant synced) {
 
         final String url=vault
                 .get(DataUrl)
@@ -106,115 +51,16 @@ public final class UnitsPoitiers implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
+        new Units_.CSVLoader(Poitiers.University, Poitiers.Language)
 
-        return Xtream.of(url)
+                .load(url)
 
-                .optMap(new GET<>(new CSV(Format)))
+                .forEach(frame -> System.out.println(Values.format(frame)));
 
-                .flatMap(Collection::stream);
-    }
-
-    private Optional<Frame> unit(final CSVRecord record) {
-        return Optional.ofNullable(record.get("unit code")).map(id -> {
-
-            final Optional<String> acronym=Optional.ofNullable(record.get("short name"))
-                    .filter(not(String::isEmpty));
-
-            final Optional<String> description=Optional.ofNullable(record.get("full name"))
-                    .filter(not(String::isEmpty));
-
-            final Optional<String> label=acronym
-                    .map(a -> description.map(d -> format("%s - %s", a, d)).orElse(a))
-                    .or(() -> description);
-
-            return frame(EC2U.id(EC2U.units, Poitiers.University, id))
-
-                    .values(RDF.TYPE, EC2U.Unit)
-                    .value(EC2U.university, Poitiers.University)
-
-                    .value(DCTERMS.TITLE, label.map(v -> literal(v, Poitiers.Language)))
-
-                    .frames(DCTERMS.SUBJECT, Optional.ofNullable(record.get("topics")).stream()
-                            .flatMap(Strings::split)
-                            .map(v -> frame(iri(TopicsScheme, md5(v)))
-                                    .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .value(SKOS.PREF_LABEL, literal(v, Poitiers.Language))
-                            )
-                    )
-
-                    .value(SKOS.PREF_LABEL, label.map(v -> literal(v, Poitiers.Language)))
-                    .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, Poitiers.Language)))
-
-                    .value(FOAF.HOMEPAGE, Optional.ofNullable(record.get("website"))
-                            .map(Values::iri)
-                    )
-
-                    .value(ORG.CLASSIFICATION, Optional.ofNullable(record.get("type")).flatMap(this::type))
-                    .frame(inverse(ORG.HEAD_OF), head(record))
-
-                    .value(ORG.UNIT_OF, Optional.ofNullable(record.get("parent unit"))
-                            .map(id1 -> EC2U.id(EC2U.units, Poitiers.University, id1))
-                            .orElse(Poitiers.University));
-
-        });
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Optional<Value> type(final String type) {
-        return Optional
-
-                .of(types.computeIfAbsent(type, key -> service(graph()).query(connection -> {
-
-                    final TupleQuery query=connection.prepareTupleQuery(""
-                            +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-                            +"\n"
-                            +"select ?concept {\n"
-                            +"\n"
-                            +"\t?concept skos:inScheme $scheme; skos:prefLabel $label. \n"
-                            +"\n"
-                            +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
-                            +"\n"
-                            +"}\n"
-                    );
-
-                    query.setBinding("scheme", Units.Name);
-                    query.setBinding("value", literal(key));
-
-                    return query.evaluate().stream().findFirst()
-                            .map(bindings -> bindings.getValue("concept"))
-                            .orElse(RDF.NIL);
-
-                })))
-
-                .filter(not(RDF.NIL::equals));
-    }
-
-
-    private Optional<Frame> head(final CSVRecord record) {
-        return Optional.ofNullable(record.get("Head"))
-
-                .map(HeadPattern::matcher)
-                .filter(Matcher::matches)
-                .map(matcher -> {
-
-                    final String familyName=matcher.group(1);
-                    final String givenName=matcher.group(2);
-                    final String fullName=format("%s %s", givenName, familyName);
-
-                    return frame(EC2U.id(EC2U.persons, Poitiers.University, fullName))
-
-                            .value(RDF.TYPE, EC2U.Person)
-
-                            .value(RDFS.LABEL, literal(fullName, Poitiers.Language))
-
-                            .value(EC2U.university, Poitiers.University)
-
-                            .value(FOAF.GIVEN_NAME, literal(givenName))
-                            .value(FOAF.FAMILY_NAME, literal(familyName));
-
-                });
+        //.sink(units -> upload(EC2U.units,
+        //        validate(Unit(), Set.of(EC2U.Unit), units),
+        //        () -> clear(Poitiers.University)
+        //));
     }
 
 }

@@ -32,7 +32,7 @@
       </g>
     </marker>
   </defs>
-  <g id="resources" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill="none" fill-opacity="1">
+  <g id="resources" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
     <title>resources</title>
     <rect fill="white" x="146" y="24" width="634" height="459"/>
     <g id="resources_Layer_1">

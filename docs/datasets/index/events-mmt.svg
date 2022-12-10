@@ -25,7 +25,7 @@
       </g>
     </marker>
   </defs>
-  <g id="events-mmt" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill="none" fill-opacity="1">
+  <g id="events-mmt" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
     <title>events-mmt</title>
     <rect fill="white" x="21" y="157" width="710" height="212"/>
     <g id="events-mmt_Layer_1">

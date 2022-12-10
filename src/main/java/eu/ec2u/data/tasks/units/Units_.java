@@ -16,16 +16,38 @@
 
 package eu.ec2u.data.tasks.units;
 
+import com.metreeca.core.Xtream;
+import com.metreeca.core.toolkits.Strings;
+import com.metreeca.csv.codecs.CSV;
+import com.metreeca.http.actions.GET;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.terms.EC2U;
-import org.eclipse.rdf4j.model.IRI;
+import eu.ec2u.data.terms.Units;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.query.TupleQuery;
 
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.core.toolkits.Lambdas.task;
+import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf4j.services.Graph.graph;
+
+import static java.lang.String.format;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toList;
 
 public final class Units_ {
 
@@ -64,5 +86,321 @@ public final class Units_ {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Units_() { }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    static final class CSVLoader {
+
+        private static final CSVFormat Format=CSVFormat.Builder.create()
+                .setHeader()
+                .setSkipHeaderRecord(true)
+                .setIgnoreHeaderCase(true)
+                .setNullString("")
+                .build();
+
+        private static final Pattern URLPattern=Pattern.compile("^https?://\\S+$");
+        private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
+        private static final Pattern HeadPattern=Pattern.compile("([^,]+)\\s*,\\s*([^(]+)(?:\\s*\\(([^)]+)\\))?");
+
+        private static final Frame TopicsScheme=frame(iri(EC2U.concepts, "units-topics/"))
+                .value(RDF.TYPE, SKOS.CONCEPT_SCHEME)
+                .value(RDFS.LABEL, literal("Research Unit Topics", "en"));
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private final IRI university;
+        private final String language;
+
+        private final Map<String, Value> types=new HashMap<>();
+        private final Map<String, Value> vis=new HashMap<>();
+
+
+        CSVLoader(final IRI university, final String language) {
+
+            if ( university == null ) {
+                throw new NullPointerException("null university");
+            }
+
+            if ( language == null ) {
+                throw new NullPointerException("null language");
+            }
+
+            this.university=university;
+            this.language=language;
+        }
+
+
+        Stream<Frame> load(final String url) {
+
+
+            final Collection<CSVRecord> units=Xtream.of(url)
+                    .flatMap(this::units)
+                    .collect(toList());
+
+            return Xtream.from(units)
+
+                    .optMap(record -> unit(record, units));
+
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private Xtream<CSVRecord> units(final String url) {
+
+            return Xtream.of(url)
+                    .optMap(new GET<>(new CSV(Format)))
+                    .flatMap(Collection::stream);
+        }
+
+
+        private Optional<Frame> unit(final CSVRecord record, final Collection<CSVRecord> records) {
+
+            final Optional<String> code=field(record, "Code");
+            final Optional<String> acronym=field(record, "Acronym");
+
+            final Optional<String> nameEnglish=field(record, "Name (English)");
+            final Optional<String> nameLocal=field(record, "Name (Local)");
+
+            if ( nameEnglish.isEmpty() && nameLocal.isEmpty() ) {
+
+                service(logger()).warning(Units_.class, format("line <%d> - no name provided",
+                        record.getRecordNumber()));
+
+                return Optional.empty();
+
+            } else {
+
+                final Optional<Literal> labelEnglish=acronym
+                        .flatMap(a -> nameEnglish.map(n -> format("%s - %s", a, n)))
+                        .or(() -> nameEnglish)
+                        .map(v -> literal(v, "en"));
+
+                final Optional<Literal> labelLocal=acronym
+                        .flatMap(a -> nameLocal.map(n -> format("%s - %s", a, n)))
+                        .or(() -> nameLocal)
+                        .map(v -> literal(v, language));
+
+                return Optional.of(frame(EC2U.id(EC2U.units, university, code
+                                .or(() -> nameEnglish)
+                                .or(() -> nameLocal)
+                                .orElse("") // unexpected
+                        ))
+
+                                .values(RDF.TYPE, EC2U.Unit)
+                                .value(EC2U.university, university)
+
+                                .value(ORG.CLASSIFICATION, field(record, "Type")
+                                        .flatMap(this::type)
+                                )
+
+                                .value(ORG.IDENTIFIER, code.map(Values::literal))
+
+                                .values(ORG.UNIT_OF, field(record, "Parent")
+                                        .map(parent -> parents(parent, records))
+                                        .orElseGet(() -> Stream.of(university))
+                                )
+
+                                .value(ORG.UNIT_OF, field(record, "VI")
+                                        .flatMap(this::vi)
+                                )
+
+                                .value(DCTERMS.TITLE, labelEnglish)
+                                .value(DCTERMS.TITLE, labelLocal)
+
+                                .value(DCTERMS.DESCRIPTION, field(record, "Description (English)")
+                                        .map(v -> literal(v, "en"))
+                                )
+
+                                .value(DCTERMS.DESCRIPTION, field(record, "Description (Local)")
+                                        .map(v -> literal(v, language))
+                                )
+
+                                .frames(DCTERMS.SUBJECT, Stream.concat(
+
+                                        field(record, "Topics (English)").stream()
+                                                .flatMap(topics -> topics(topics, "en")),
+
+                                        field(record, "Topics (Local)").stream()
+                                                .flatMap(topics -> topics(topics, language))
+
+                                ))
+
+                                .value(SKOS.PREF_LABEL, labelEnglish)
+                                .value(SKOS.PREF_LABEL, labelLocal)
+
+                                .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, "en"))) // !!! no language
+                                .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, language))) // !!! no language
+
+                                .value(FOAF.HOMEPAGE, field(record, "Factsheet")
+                                        .filter(URLPattern.asMatchPredicate())
+                                        .map(Values::iri)
+                                )
+
+                                .value(FOAF.HOMEPAGE, field(record, "Homepage")
+                                        .filter(URLPattern.asMatchPredicate())
+                                        .map(Values::iri)
+                                )
+
+                                .value(FOAF.MBOX, field(record, "Email")
+                                        .filter(EmailPattern.asMatchPredicate())
+                                        .map(Values::literal)
+                                )
+
+                                .frame(inverse(ORG.HEAD_OF), field(record, "Head")
+                                        .flatMap(this::head)
+                                )
+
+                );
+            }
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private Optional<String> field(final CSVRecord record, final String label) {
+            return record.getParser().getHeaderNames().contains(label)
+                    ? Optional.ofNullable(record.get(label)).map(Strings::normalize).filter(not(String::isEmpty))
+                    : Optional.empty();
+        }
+
+        private Optional<Value> type(final String type) {
+            return Optional
+
+                    .of(types.computeIfAbsent(type, key -> service(graph()).query(connection -> {
+
+                        final TupleQuery query=connection.prepareTupleQuery(""
+                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                +"\n"
+                                +"select ?concept {\n"
+                                +"\n"
+                                +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
+                                +"\n"
+                                +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
+                                +"\n"
+                                +"}\n"
+                        );
+
+                        query.setBinding("scheme", Units.Name);
+                        query.setBinding("value", literal(key));
+
+                        return query.evaluate().stream().findFirst()
+                                .map(bindings -> bindings.getValue("concept"))
+                                .orElseGet(() -> {
+
+                                    service(logger()).warning(Units_.class, format(
+                                            "unknown unit type <%s>", key
+                                    ));
+
+                                    return RDF.NIL;
+
+                                });
+
+                    })))
+
+                    .filter(not(RDF.NIL::equals));
+        }
+
+        private Stream<Value> parents(final String parent, final Collection<CSVRecord> records) {
+
+            // !!! handle unknown non-research units
+
+            final List<Value> parents=Stream.of(parent)
+                    .flatMap(Strings::split)
+                    .map(id1 -> EC2U.id(EC2U.units, university, id1))
+                    .collect(toList());
+
+            //return parents.isEmpty() ? Stream.of(university) : parents.stream();
+            return Stream.of(university);
+        }
+
+        private Optional<Value> vi(final String code) {
+            return Optional
+
+                    .of(vis.computeIfAbsent(code, key -> service(graph()).query(connection -> {
+
+                        final TupleQuery query=connection.prepareTupleQuery(""
+                                +"prefix ec2u: <https://data.ec2u.eu/terms/>\n"
+                                +"prefix org: <http://www.w3.org/ns/org#>\n"
+                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                +"\n"
+                                +"select ?vi {\n"
+                                +"\n"
+                                +"\t?vi a ec2u:Unit;\n"
+                                +"\t\torg:classification $type;\n"
+                                +"\t\tskos:altLabel $code.\n"
+                                +"\n"
+                                +"}"
+                        );
+
+                        query.setBinding("type", Units.InstituteVirtual);
+                        query.setBinding("code", literal(key, "en"));
+
+                        return query.evaluate().stream().findFirst()
+                                .map(bindings -> bindings.getValue("vi"))
+                                .orElseGet(() -> {
+
+                                    service(logger()).warning(Units_.class, format(
+                                            "unknown virtual institute <%s>", key
+                                    ));
+
+                                    return RDF.NIL;
+
+                                });
+
+                    })))
+
+                    .filter(not(RDF.NIL::equals));
+        }
+
+        private Optional<Frame> head(final String head) {
+
+            return Optional.of(head)
+
+                    .map(HeadPattern::matcher)
+                    .filter(Matcher::matches)
+                    .map(matcher -> {
+
+                        final String title=matcher.group(3);
+                        final String familyName=matcher.group(1);
+                        final String givenName=matcher.group(2);
+
+                        final String fullName=format("%s %s", givenName, familyName);
+
+                        return frame(EC2U.id(EC2U.persons, university, fullName))
+
+                                .value(RDF.TYPE, EC2U.Person)
+
+                                .value(RDFS.LABEL, literal(fullName, language)) // !!! no language
+
+                                .value(EC2U.university, university)
+
+                                .value(FOAF.TITLE, Optional.ofNullable(title).map(Values::literal))
+                                .value(FOAF.GIVEN_NAME, literal(givenName))
+                                .value(FOAF.FAMILY_NAME, literal(familyName));
+
+                    });
+        }
+
+        private Stream<Frame> topics(final String topics, final String language) {
+            return Stream.of(topics)
+
+                    .flatMap(Strings::split)
+                    .map(v -> literal(v, this.language))
+
+                    .map(label -> frame(iri(
+                                    TopicsScheme.focus().stringValue(),
+                                    md5(label.stringValue())
+                            ))
+                                    .value(RDF.TYPE, SKOS.CONCEPT)
+                                    .frame(SKOS.IN_SCHEME, TopicsScheme)
+                                    .frame(SKOS.TOP_CONCEPT_OF, TopicsScheme)
+                                    .value(SKOS.PREF_LABEL, label)
+                    );
+        }
+
+    }
 
 }
