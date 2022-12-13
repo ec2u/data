@@ -18,7 +18,7 @@ package eu.ec2u.data.tasks.units;
 
 import com.metreeca.core.services.Vault;
 
-import eu.ec2u.data.cities.Poitiers;
+import eu.ec2u.data.cities.Coimbra;
 import eu.ec2u.data.terms.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
@@ -33,16 +33,16 @@ import static eu.ec2u.data.tasks.units.Units_.clear;
 
 import static java.lang.String.format;
 
-public final class UnitsPoitiers implements Runnable {
+public final class UnitsCoimbra implements Runnable {
 
-    private static final IRI University=Poitiers.University;
-    private static final String Language=Poitiers.Language;
+    private static final IRI University=Coimbra.University;
+    private static final String Language=Coimbra.Language;
 
-    private static final String DataUrl="units-poitiers-url"; // vault label
+    private static final String DataUrl="units-coimbra-url"; // vault label
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitsPoitiers().run());
+        exec(() -> new UnitsCoimbra().run());
     }
 
 

@@ -5,6 +5,10 @@ cron:
     schedule: every day 00:00
 
 
+  - description: "units › coimbra - nightly crawling"
+    url: /cron/units/coimbra
+    schedule: every day 00:00
+
   - description: "units › iasi - nightly crawling"
     url: /cron/units/iasi
     schedule: every day 00:00
