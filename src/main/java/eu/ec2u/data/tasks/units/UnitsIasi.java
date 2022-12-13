@@ -19,8 +19,8 @@ package eu.ec2u.data.tasks.units;
 import com.metreeca.core.services.Vault;
 
 import eu.ec2u.data.cities.Iasi;
-import eu.ec2u.data.cities.Poitiers;
 import eu.ec2u.data.terms.EC2U;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
 
@@ -34,6 +34,9 @@ import static eu.ec2u.data.tasks.units.Units_.clear;
 import static java.lang.String.format;
 
 public final class UnitsIasi implements Runnable {
+
+    private static final IRI University=Iasi.University;
+    private static final String Language=Iasi.Language;
 
     private static final String DataUrl="units-iasi-url"; // vault label
 
@@ -56,13 +59,13 @@ public final class UnitsIasi implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        new Units_.CSVLoader(Iasi.University, Iasi.Language)
+        new Units_.CSVLoader(University, Language)
 
                 .load(url)
 
                 .sink(units -> upload(EC2U.units,
                         validate(Unit(), Set.of(EC2U.Unit), units),
-                        () -> clear(Poitiers.University)
+                        () -> clear(University)
                 ));
     }
 
