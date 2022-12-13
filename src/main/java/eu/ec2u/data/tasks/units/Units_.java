@@ -28,28 +28,38 @@ import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.terms.EC2U;
 import eu.ec2u.data.terms.Units;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
+import eu.ec2u.data.work.Cursor;
+import org.apache.commons.csv.*;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.Locator.storage;
 import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
+import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
+import static eu.ec2u.data.tasks.Tasks.exec;
+
 import static java.lang.String.format;
+import static java.util.Comparator.comparing;
 import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public final class Units_ {
@@ -104,7 +114,7 @@ public final class Units_ {
 
         private static final Pattern URLPattern=Pattern.compile("^https?://\\S+$");
         private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
-        private static final Pattern HeadPattern=Pattern.compile("([^,]+)\\s*,\\s*([^(]+)(?:\\s*\\(([^)]+)\\))?");
+        private static final Pattern HeadPattern=Pattern.compile("([^,]?+)\\s*,\\s*([^(]?+)(?:\\s*\\(([^)]+)\\))?");
 
         private static final Frame TopicsScheme=frame(iri(EC2U.concepts, "units-topics/"))
                 .value(RDF.TYPE, SKOS.CONCEPT_SCHEME)
@@ -440,6 +450,123 @@ public final class Units_ {
                                     .frame(SKOS.TOP_CONCEPT_OF, TopicsScheme)
                                     .value(SKOS.PREF_LABEL, label)
                     );
+        }
+
+    }
+
+    public static final class CSVExtractor implements Runnable {
+
+        private static final String Output=format(
+                "EC2U Research Units %s.csv", LocalDate.now().format(ISO_LOCAL_DATE_COMPACT)
+        );
+
+        private static final CSVFormat Format=CSVFormat.Builder.create()
+                .setHeader(
+                        "Id", "University", "Type", "Code", "Parent", "VI",
+                        "Acronym", "Name",
+                        "Homepage", "Email", "Head"
+                )
+                .setDelimiter(',')
+                .setQuote('"')
+                .setNullString("")
+                .build();
+
+
+        public static void main(final String... args) {
+            exec(() -> new CSVExtractor().run());
+        }
+
+
+        @Override public void run() {
+
+            try (
+                    final Writer writer=Files.newBufferedWriter(service(storage()).resolve(Output));
+                    final CSVPrinter printer=new CSVPrinter(writer, Format);
+            ) {
+
+                service(graph()).query(connection -> {
+
+                    new Cursor(EC2U.Unit, connection)
+
+                            .cursors(inverse(RDF.TYPE))
+
+                            .map(unit -> List.of(
+
+                                    unit.focus().stringValue(),
+
+                                    unit.values(seq(EC2U.university, RDFS.LABEL))
+                                            .filter(value -> lang(value).equals("en"))
+                                            .findFirst()
+                                            .map(Value::stringValue)
+                                            .orElse(""),
+
+                                    unit.values(seq(ORG.CLASSIFICATION, SKOS.PREF_LABEL))
+                                            .filter(value -> lang(value).equals("en"))
+                                            .findFirst()
+                                            .map(Value::stringValue)
+                                            .orElse(""),
+
+                                    unit.value(ORG.IDENTIFIER)
+                                            .map(Value::stringValue)
+                                            .orElse(""),
+
+                                    unit.cursors(ORG.UNIT_OF)
+                                            .filter(parent -> parent.values(RDF.TYPE).noneMatch(EC2U.university::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(Units.InstituteVirtual::equals))
+                                            .flatMap(parent -> parent.localizeds(RDFS.LABEL, "en"))
+                                            .filter(not(v -> v.startsWith("University "))) // !!!
+                                            .collect(joining("; ")),
+
+                                    unit.cursors(ORG.UNIT_OF)
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(Units.InstituteVirtual::equals))
+                                            .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
+                                            .collect(joining("; ")),
+
+                                    unit.string(SKOS.ALT_LABEL)
+                                            .orElse(""),
+
+                                    unit.string(SKOS.PREF_LABEL)
+                                            .orElse(""),
+
+                                    unit.iris(FOAF.HOMEPAGE)
+                                            .map(Value::stringValue)
+                                            .collect(joining("; ")),
+
+                                    unit.strings(FOAF.MBOX)
+                                            .collect(joining("; ")),
+
+                                    unit.strings(seq(inverse(ORG.HEAD_OF), RDFS.LABEL))
+                                            .collect(joining("; "))
+
+                            ))
+
+                            .peek(System.out::println)
+
+                            .sorted(comparing((List<String> record) -> record.get(1)) // University
+                                    .thenComparing(record -> record.get(2)) // Type
+                                    .thenComparing(record -> record.get(7)) // Name
+                            )
+
+                            .forEach(record -> {
+
+                                try {
+
+                                    printer.printRecord(record);
+
+                                } catch ( final IOException e ) {
+                                    throw new UncheckedIOException(e);
+                                }
+
+                            });
+
+                    return this;
+
+                });
+
+            } catch ( final IOException e ) {
+                throw new UncheckedIOException(e);
+            }
+
         }
 
     }
