@@ -5,6 +5,14 @@ cron:
     schedule: every day 00:00
 
 
+  - description: "units › coimbra - nightly crawling"
+    url: /cron/units/coimbra
+    schedule: every day 00:00
+
+  - description: "units › jena - nightly crawling"
+    url: /cron/units/jena
+    schedule: every day 00:00
+
   - description: "units › iasi - nightly crawling"
     url: /cron/units/iasi
     schedule: every day 00:00
@@ -19,6 +27,10 @@ cron:
 
   - description: "units › salamanca - nightly crawling"
     url: /cron/units/salamanca
+    schedule: every day 00:00
+
+  - description: "units › turku - nightly crawling"
+    url: /cron/units/turku
     schedule: every day 00:00
 
 

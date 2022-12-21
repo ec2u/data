@@ -464,7 +464,8 @@ public final class Units_ {
                 .setHeader(
                         "Id", "University", "Type", "Code", "Parent", "VI",
                         "Acronym", "Name",
-                        "Homepage", "Email", "Head"
+                        "Homepage", "Email", "Head",
+                        "Description"
                 )
                 .setDelimiter(',')
                 .setQuote('"')
@@ -522,10 +523,10 @@ public final class Units_ {
                                             .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
                                             .collect(joining("; ")),
 
-                                    unit.string(SKOS.ALT_LABEL)
+                                    unit.string(SKOS.ALT_LABEL) // !!! language
                                             .orElse(""),
 
-                                    unit.string(SKOS.PREF_LABEL)
+                                    unit.string(SKOS.PREF_LABEL) // !!! language
                                             .orElse(""),
 
                                     unit.iris(FOAF.HOMEPAGE)
@@ -536,7 +537,10 @@ public final class Units_ {
                                             .collect(joining("; ")),
 
                                     unit.strings(seq(inverse(ORG.HEAD_OF), RDFS.LABEL))
-                                            .collect(joining("; "))
+                                            .collect(joining("; ")),
+
+                                    unit.string(DCTERMS.DESCRIPTION) // !!! language
+                                            .orElse("")
 
                             ))
 
