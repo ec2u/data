@@ -240,7 +240,7 @@
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
         <text transform="translate(131.14173 324.7323)" fill="black">
           <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">computed by
-            eu.ec2u.data.tasks.Inferences
+              eu.ec2u.data._tasks.Inferences
           </tspan>
         </text>
       </g>

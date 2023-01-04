@@ -60,9 +60,9 @@ source analysis and integration status are detailed in the linked source sheets.
 
 | status      | university                                                   |
 | ----------- | ------------------------------------------------------------ |
-| ✓           | [Pavia](../../src/main/java/eu/ec2u/data/tasks/units/UnitsPavia.md) |
-| ✓           | [Salamanca](../../src/main/java/eu/ec2u/data/tasks/units/UnitsSalamanca.md) |
-| in progress | [Coimbra](../../src/main/java/eu/ec2u/data/tasks/units/UnitsCoimbra.md) |
+| ✓           | [Pavia](../../src/main/java/eu/ec2u/data/_tasks/units/UnitsPavia.md) |
+| ✓           | [Salamanca](../../src/main/java/eu/ec2u/data/_tasks/units/UnitsSalamanca.md) |
+| in progress | [Coimbra](../../src/main/java/eu/ec2u/data/_tasks/units/UnitsCoimbra.md) |
 
 # Updating
 
