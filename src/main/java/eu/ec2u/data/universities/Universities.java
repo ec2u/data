@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._ports;
+package eu.ec2u.data.universities;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
+import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
+import java.util.stream.Stream;
+
+import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Shape.required;
@@ -36,11 +42,14 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.link.shapes.Link.link;
 
-import static eu.ec2u.data.ontologies.EC2U.Reference;
-import static eu.ec2u.data.ontologies.EC2U.multilingual;
+import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.ontologies.EC2U.*;
 
 
 public final class Universities extends Delegator {
+
+    public static final IRI Context=item("/universities/");
+
 
     public static Shape University() {
         return relate(
@@ -88,6 +97,23 @@ public final class Universities extends Delegator {
         );
     }
 
+
+    public static void main(final String... args) {
+        exec(() -> Stream.of(resource(Universities.class, ".ttl").toString())
+
+                .map(new Retrieve()
+                        .base(EC2U.Base)
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Universities() {
         delegate(handler(new Driver(University()), new Router()
