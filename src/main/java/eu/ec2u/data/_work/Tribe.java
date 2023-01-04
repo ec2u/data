@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._;
+package eu.ec2u.data._work;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -29,6 +29,7 @@ import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.concepts.Concepts;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -233,7 +234,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             final Optional<Literal> name=category.string("name").map(text -> literal(text, language));
 
-            return frame(iri(EC2U.concepts, md5(self)))
+            return frame(iri(Concepts.Context, md5(self)))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, name)
                     .value(SKOS.PREF_LABEL, name);

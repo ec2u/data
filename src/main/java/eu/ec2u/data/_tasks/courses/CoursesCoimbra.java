@@ -27,9 +27,9 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data._cities.Coimbra;
-import eu.ec2u.data._tasks.concepts.ISCED2011;
 import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.concepts.ISCED2011;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;

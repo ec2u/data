@@ -26,9 +26,10 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data._.Cursor;
-import eu.ec2u.data._tasks.concepts.Units;
 import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data._work.Cursor;
+import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.concepts.Units;
 import org.apache.commons.csv.*;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -116,7 +117,7 @@ public final class Units_ {
         private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
         private static final Pattern HeadPattern=Pattern.compile("([^,]?+)\\s*,\\s*([^(]?+)(?:\\s*\\(([^)]+)\\))?");
 
-        private static final Frame TopicsScheme=frame(iri(EC2U.concepts, "units-topics/"))
+        private static final Frame TopicsScheme=frame(iri(Concepts.Context, "units-topics/"))
                 .value(RDF.TYPE, SKOS.CONCEPT_SCHEME)
                 .value(RDFS.LABEL, literal("Research Unit Topics", "en"));
 

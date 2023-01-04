@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.concepts;
+package eu.ec2u.data.concepts;
 
 import com.metreeca.link.Values;
 
-import eu.ec2u.data._terms.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.link.Values.iri;
@@ -35,7 +34,7 @@ import static com.metreeca.link.Values.iri;
  */
 public final class EuroSciVoc {
 
-    public static final IRI Scheme=Values.iri(EC2U.concepts, "/isced-2011/");
+    public static final IRI Scheme=Values.iri(Concepts.Context, "/isced-2011/");
 
 
     public static final IRI Level0=iri(Scheme, "0");

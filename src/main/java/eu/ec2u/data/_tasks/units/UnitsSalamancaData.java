@@ -26,8 +26,9 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data._cities.Salamanca;
-import eu.ec2u.data._tasks.concepts.Units;
 import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.concepts.Units;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -57,8 +58,8 @@ public final class UnitsSalamancaData implements Runnable {
     private static final String APIUrl="units-salamanca-url"; // vault label
     private static final String APIKey="units-salamanca-key"; // vault label
 
-    private static final IRI BranchScheme=iri(EC2U.concepts, "units-salamanca-branch/");
-    private static final IRI RIS3Scheme=iri(EC2U.concepts, "units-salamanca-ris3/");
+    private static final IRI BranchScheme=iri(Concepts.Context, "units-salamanca-branch/");
+    private static final IRI RIS3Scheme=iri(Concepts.Context, "units-salamanca-ris3/");
 
 
     private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");

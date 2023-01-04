@@ -14,36 +14,40 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks;
+package eu.ec2u.data.concepts;
 
-import com.metreeca.rdf4j.services.Graph;
+import com.metreeca.core.Xtream;
+import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Upload;
 
 import static com.metreeca.core.Locator.service;
+import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data._tasks.Tasks.exec;
 
 
-public final class Clear implements Runnable {
+final class ISCED_F_2013 {
 
 	public static void main(final String... args) {
-		exec(() -> new Clear().run());
-	}
+		exec(() -> service(graph()).update(task(connection -> {
 
+			Xtream
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					.of("https://op.europa.eu/o/opportal-service/euvoc-download-handler?cellarURI=http%3A%2F"
+							+"%2Fpublications.europa.eu%2Fresource%2Fcellar%2F2d457b09-b648-11ea-bb7a-01aa75ed71a1"
+							+".0001.01%2FDOC_1&fileName=international-education-classification-skos-ap-eu.rdf")
 
-	private final Graph graph=service(graph());
+					.bagMap(new Retrieve())
 
+					.batch(100*1000)
 
-	@Override public void run() {
-		graph.update(connection -> {
+					.forEach(new Upload()
+							.clear(true)
+							.contexts(Concepts.Context)
+					);
 
-			connection.clear();
-
-			return this;
-
-		});
+		})));
 	}
 
 }

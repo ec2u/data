@@ -32,6 +32,7 @@ import com.metreeca.xml.codecs.HTML;
 import eu.ec2u.data._cities.Jena;
 import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.concepts.Concepts;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -54,10 +55,10 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
-import static eu.ec2u.data._.JSONLD.jsonld;
 import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.*;
 import static eu.ec2u.data._tasks.events.Events.synced;
+import static eu.ec2u.data._work.JSONLD.jsonld;
 
 import static java.util.function.Predicate.not;
 
@@ -182,7 +183,7 @@ public final class EventsJenaCity implements Runnable {
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))
                             .filter(not(keyword -> keyword.startsWith("import_")))
                             .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
-                            .map(keyword -> frame(iri(EC2U.concepts, md5(keyword)))
+                            .map(keyword -> frame(iri(Concepts.Context, md5(keyword)))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
                                     .value(RDFS.LABEL, literal(keyword, Jena.Language))
                                     .value(SKOS.PREF_LABEL, literal(keyword, Jena.Language))

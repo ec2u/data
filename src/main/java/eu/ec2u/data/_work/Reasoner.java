@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._;
+package eu.ec2u.data._work;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._ports;
+package eu.ec2u.data.concepts;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
@@ -22,6 +22,7 @@ import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.http.Handler.handler;
@@ -34,6 +35,9 @@ import static com.metreeca.link.shapes.Guard.*;
 import static eu.ec2u.data._terms.EC2U.*;
 
 public final class Concepts extends Delegator {
+
+    public static final IRI Context=item("/concepts/");
+
 
     private static Shape ConceptScheme() {
         return relate(Resource(),
@@ -92,11 +96,11 @@ public final class Concepts extends Delegator {
                                 .get(new Relator())
                         )
 
-                        .path("/{scheme}", new Router()
+                        .path("/{scheme}/", new Router()
                                 .get(new Relator())
                         )
 
-                        .path("/{scheme}/{concept}", handler(
+                        .path("/{scheme}/*", handler(
 
                                 new Driver(Concept(),
 

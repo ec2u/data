@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._;
+package eu.ec2u.data._work;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;

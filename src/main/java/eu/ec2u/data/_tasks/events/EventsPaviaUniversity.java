@@ -22,9 +22,9 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.link.Frame;
 import com.metreeca.xml.codecs.XML;
 
-import eu.ec2u.data._.RSS;
 import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data._work.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -35,10 +35,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._.WordPress.WordPress;
 import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.*;
 import static eu.ec2u.data._tasks.events.Events.synced;
+import static eu.ec2u.data._work.WordPress.WordPress;
 
 import static java.time.ZoneOffset.UTC;
 

@@ -27,6 +27,7 @@ import com.metreeca.link.Values;
 import eu.ec2u.data._cities.Coimbra;
 import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.concepts.Concepts;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -181,7 +182,7 @@ public final class EventsCoimbraCity implements Runnable {
             final Optional<Literal> label=category.string("codename")
                     .map(text -> literal(text, Coimbra.Language));
 
-            return frame(iri(EC2U.concepts, md5(id)))
+            return frame(iri(Concepts.Context, md5(id)))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);

@@ -82,9 +82,6 @@ public final class EC2U {
 
     //// Contexts //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI ontologies=item("/ontologies/");
-
-    public static final IRI concepts=item("/concepts/");
     public static final IRI wikidata=item("/wikidata");
     public static final IRI inferences=item("/inferences");
 

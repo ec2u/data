@@ -47,9 +47,9 @@ import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data._.Work.localized;
 import static eu.ec2u.data._ports.Courses.Course;
 import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._work.Work.localized;
 
 import static java.util.Map.entry;
 

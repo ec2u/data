@@ -21,6 +21,7 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data._terms.Ontologies;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Collection;
@@ -41,7 +42,7 @@ import static java.util.stream.Collectors.joining;
 public final class Chores implements Runnable {
 
     private static Collection<IRI> locked=Set.of(
-            EC2U.ontologies
+            Ontologies.ontologies
     );
 
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._;
+package eu.ec2u.data._work;
 
 import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
@@ -22,6 +22,7 @@ import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.concepts.Concepts;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -33,7 +34,7 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._.RSS.*;
+import static eu.ec2u.data._work.RSS.*;
 
 public final class WordPress {
 
@@ -60,7 +61,7 @@ public final class WordPress {
                 .value(DCTERMS.SOURCE, frame.value(Link))
 
                 .frames(DCTERMS.SUBJECT, frame.strings(Category)
-                        .map(category -> frame(iri(EC2U.concepts, md5(category)))
+                        .map(category -> frame(iri(Concepts.Context, md5(category)))
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(category, lang))
                                 .value(SKOS.PREF_LABEL, literal(category, lang))

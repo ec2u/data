@@ -26,10 +26,11 @@ import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.XML;
 
-import eu.ec2u.data._.RSS;
 import eu.ec2u.data._cities.Poitiers;
 import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data._work.RSS;
+import eu.ec2u.data.concepts.Concepts;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -162,7 +163,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             final Literal label=literal(category, Poitiers.Language);
 
-            return frame(iri(EC2U.concepts, md5(category)))
+            return frame(iri(Concepts.Context, md5(category)))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);

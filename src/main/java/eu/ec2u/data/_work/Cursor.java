@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._;
+package eu.ec2u.data._work;
 
 import com.metreeca.link.Shift;
 import com.metreeca.link.Values;

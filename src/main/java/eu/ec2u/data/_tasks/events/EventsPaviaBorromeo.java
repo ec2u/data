@@ -19,9 +19,9 @@ package eu.ec2u.data._tasks.events;
 import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data._.Tribe;
 import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data._work.Tribe;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.ZonedDateTime;
