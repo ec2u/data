@@ -34,37 +34,33 @@ import static eu.ec2u.data.Data.exec;
 
 public final class Ontologies implements Runnable {
 
-    public static final IRI ontologies=EC2U.item("/ontologies/");
+    public static final IRI Context=EC2U.item("/ontologies/");
 
 
     public static void main(final String... args) {
         exec(() -> new Ontologies().run());
     }
 
-    public static Xtream<URL> ontologies() {
-        return Xtream
-
-                .of(
-
-                        resource(EC2U.class, ".ttl"),
-                        resource(EC2U.class, "Licenses.ttl"),
-                        resource(EC2U.class, "Institutes.ttl"),
-
-                        resource(EC2U.class, "SKOS.ttl"),
-                        resource(EC2U.class, "Org.ttl"),
-                        resource(EC2U.class, "DCAT2.ttl"),
-
-                        resource(EC2U.class, "Schema.ttl"),
-                        resource(EC2U.class, "Wikidata.ttl")
-
-                );
-    }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        ontologies()
+        Xtream
+
+                .of(
+
+                        resource(Ontologies.class, ".ttl"),
+                        resource(Ontologies.class, "Licenses.ttl"),
+                        resource(Ontologies.class, "Institutes.ttl"),
+
+                        resource(Ontologies.class, "SKOS.ttl"),
+                        resource(Ontologies.class, "Org.ttl"),
+                        resource(Ontologies.class, "DCAT2.ttl"),
+
+                        resource(Ontologies.class, "Schema.ttl"),
+                        resource(Ontologies.class, "Wikidata.ttl")
+
+                )
 
                 .map(URL::toString)
                 .map(new Retrieve())
@@ -85,7 +81,7 @@ public final class Ontologies implements Runnable {
                 })
 
                 .forEach(new Upload()
-                        .contexts(ontologies)
+                        .contexts(Context)
                         .langs(EC2U.Languages)
                         .clear(true)
                 );

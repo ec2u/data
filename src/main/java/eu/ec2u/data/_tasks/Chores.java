@@ -42,7 +42,7 @@ import static java.util.stream.Collectors.joining;
 public final class Chores implements Runnable {
 
     private static Collection<IRI> locked=Set.of(
-            Ontologies.ontologies
+            Ontologies.Context
     );
 
 

@@ -20,14 +20,10 @@ import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.ontologies.Ontologies;
 import eu.ec2u.data.utilities.Reasoner;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
 
-import java.io.*;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -56,24 +52,7 @@ public final class Tasks {
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames, final Stream<Frame> context
     ) {
 
-        final Reasoner reasoner=service(() -> new Reasoner(Ontologies.ontologies()
-
-                .flatMap(url -> {
-
-                    try ( final InputStream input=url.openStream() ) {
-
-                        return Rio.parse(input, RDFFormat.TURTLE).stream();
-
-                    } catch ( final IOException e ) {
-
-                        throw new UncheckedIOException(e);
-
-                    }
-
-                })
-
-                .collect(toSet()))
-        );
+        final Reasoner reasoner=service(() -> new Reasoner());
 
 
         final List<Frame> batch=frames.collect(toList());

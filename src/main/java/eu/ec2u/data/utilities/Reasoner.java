@@ -24,8 +24,10 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+import static com.metreeca.core.Locator.service;
 import static com.metreeca.link.Values.pattern;
 import static com.metreeca.link.Values.statement;
+import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static java.util.stream.Collectors.toList;
 
@@ -34,23 +36,32 @@ public final class Reasoner implements UnaryOperator<Collection<Statement>> {
     private final List<Function<Collection<Statement>, Stream<Statement>>> rules;
 
 
+    public Reasoner() {
+
+        this.rules=rules(service(graph()).query(connection -> Stream
+
+                .of(
+                        connection.getStatements(null, RDFS.SUBCLASSOF, null, true).stream(),
+                        connection.getStatements(null, RDFS.SUBPROPERTYOF, null, true).stream(),
+                        connection.getStatements(null, OWL.INVERSEOF, null, true).stream()
+                )
+
+                .flatMap(stream -> stream)
+                .collect(toList())
+
+        ));
+
+    }
+
     public Reasoner(final Collection<Statement> ontology) {
 
         if ( ontology == null ) {
             throw new NullPointerException("null ontology");
         }
 
-        this.rules=Stream
-
-                .of(
-                        subClassOf(ontology),
-                        subPropertyOf(ontology),
-                        inverseOf(ontology)
-                )
-
-                .flatMap(stream -> stream)
-                .collect(toList());
+        this.rules=rules(ontology);
     }
+
 
     @Override public Collection<Statement> apply(final Collection<Statement> statements) {
 
@@ -66,6 +77,20 @@ public final class Reasoner implements UnaryOperator<Collection<Statement>> {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private List<Function<Collection<Statement>, Stream<Statement>>> rules(final Collection<Statement> ontology) {
+        return Stream
+
+                .of(
+                        subClassOf(ontology),
+                        subPropertyOf(ontology),
+                        inverseOf(ontology)
+                )
+
+                .flatMap(stream -> stream)
+                .collect(toList());
+    }
+
 
     private Stream<SubClassOf> subClassOf(final Collection<Statement> ontology) {
         return ontology.stream()
