@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.datasets;
+package eu.ec2u.data.datasets.universities;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
@@ -35,45 +35,71 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Shape.required;
 import static com.metreeca.link.Values.IRIType;
+import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.filter;
-import static com.metreeca.link.shapes.Guard.relate;
+import static com.metreeca.link.shapes.Guard.*;
+import static com.metreeca.link.shapes.Link.link;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.item;
-import static eu.ec2u.data.ontologies.EC2U.multilingual;
-
-public final class Datasets extends Delegator {
-
-    private static final IRI Context=item("/");
+import static eu.ec2u.data.ontologies.EC2U.*;
 
 
-    private static Shape Dataset() {
-        return relate(EC2U.Resource(),
+public final class Universities extends Delegator {
 
-                filter(clazz(EC2U.Dataset)),
+    private static final IRI Context=item("/universities/");
+
+
+    public static Shape University() {
+        return relate(
+
+                filter(clazz(EC2U.University)),
 
                 field(RDFS.LABEL, multilingual()),
                 field(RDFS.COMMENT, multilingual()),
 
-                field(DCTERMS.LICENSE, required(), datatype(IRIType),
-                        field(RDFS.LABEL, multilingual())
+                field(EC2U.schac, required(), datatype(XSD.STRING)),
+                field(EC2U.image, optional(), datatype(IRIType)),
+
+                link(OWL.SAMEAS,
+
+                        field(EC2U.country, optional(),
+                                field(RDFS.LABEL, multilingual())
+                        ),
+
+                        field(EC2U.inception, optional(), datatype(XSD.DATETIME)),
+                        field(EC2U.students, optional(), datatype(XSD.DECIMAL)),
+
+                        detail(
+
+                                field(EC2U.location, optional(),
+                                        field(RDFS.LABEL, multilingual())
+                                ),
+
+                                field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
+                                field(WGS84.LONG, optional(), datatype(XSD.DECIMAL))
+                        )
+
                 ),
 
-                field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
-                field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
+                detail(
 
-                field(VOID.URI_SPACE, optional(), datatype(XSD.STRING)),
-                field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER))
+                        field(DCTERMS.EXTENT, multiple(),
+
+                                field("dataset", inverse(VOID.SUBSET), required(), Reference()),
+                                field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
+
+                        )
+
+                )
 
         );
     }
 
 
     public static void main(final String... args) {
-        exec(() -> Stream.of(resource(Datasets.class, ".ttl").toString())
+        exec(() -> Stream.of(resource(Universities.class, ".ttl").toString())
 
                 .map(new Retrieve()
                         .base(EC2U.Base)
@@ -89,16 +115,16 @@ public final class Datasets extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Datasets() {
-        delegate(handler(
+    public Universities() {
+        delegate(handler(new Driver(University()), new Router()
 
-                new Driver(Dataset()),
-
-                new Router()
-
+                .path("/", new Router()
                         .get(new Relator())
+                )
 
-        ));
+                .path("/{id}", new Router()
+                        .get(new Relator())
+                )));
     }
 
 }

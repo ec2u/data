@@ -31,14 +31,14 @@ import com.metreeca.rdf4j.services.GraphEngine;
 
 import eu.ec2u.data._tasks.Cron;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.events.Events;
+import eu.ec2u.data.datasets.courses.Courses;
+import eu.ec2u.data.datasets.events.Events;
+import eu.ec2u.data.datasets.persons.Persons;
+import eu.ec2u.data.datasets.units.Units;
+import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.ontologies.EC2U;
-import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.units.Units;
-import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -153,18 +153,17 @@ public final class Data implements Runnable {
                                 ))
 
                                 .path("/cron/*", new Cron())
+                                .path("/resources/", new Resources())
+                                .path("/concepts/*", new Concepts())
 
                                 .path("/*", new Router()
 
                                         .path("/", new Datasets())
-                                        .path("/resources/", new Resources())
-
                                         .path("/universities/*", new Universities())
                                         .path("/units/*", new Units())
                                         .path("/courses/*", new Courses())
                                         .path("/persons/*", new Persons())
                                         .path("/events/*", new Events())
-                                        .path("/concepts/*", new Concepts())
 
                                 )
 

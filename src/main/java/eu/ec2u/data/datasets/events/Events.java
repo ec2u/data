@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.datasets;
+package eu.ec2u.data.datasets.events;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
@@ -25,55 +25,41 @@ import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Shape.optional;
-import static com.metreeca.link.Shape.required;
-import static com.metreeca.link.Values.IRIType;
+import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.filter;
-import static com.metreeca.link.shapes.Guard.relate;
+import static com.metreeca.link.shapes.Guard.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.item;
-import static eu.ec2u.data.ontologies.EC2U.multilingual;
 
-public final class Datasets extends Delegator {
+public final class Events extends Delegator {
 
-    private static final IRI Context=item("/");
+    public static final IRI Context=EC2U.item("/events/");
 
 
-    private static Shape Dataset() {
-        return relate(EC2U.Resource(),
+    public static Shape Event() {
+        return relate(EC2U.Resource(), Schema.Event(),
 
-                filter(clazz(EC2U.Dataset)),
+                hidden(field(RDF.TYPE, all(EC2U.Event))),
 
-                field(RDFS.LABEL, multilingual()),
-                field(RDFS.COMMENT, multilingual()),
-
-                field(DCTERMS.LICENSE, required(), datatype(IRIType),
-                        field(RDFS.LABEL, multilingual())
-                ),
-
-                field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
-                field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
-
-                field(VOID.URI_SPACE, optional(), datatype(XSD.STRING)),
-                field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER))
+                field(DCTERMS.MODIFIED, required()), // housekeeping timestamp
+                field("fullDescription", Schema.description) // prevent clashes with dct:description
 
         );
     }
 
 
     public static void main(final String... args) {
-        exec(() -> Stream.of(resource(Datasets.class, ".ttl").toString())
+        exec(() -> Stream.of(resource(Events.class, ".ttl").toString())
 
                 .map(new Retrieve()
                         .base(EC2U.Base)
@@ -89,14 +75,24 @@ public final class Datasets extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Datasets() {
+    public Events() {
         delegate(handler(
 
-                new Driver(Dataset()),
+                new Driver(Event(),
+
+                        filter(clazz(EC2U.Event))
+
+                ),
 
                 new Router()
 
-                        .get(new Relator())
+                        .path("/", new Router()
+                                .get(new Relator())
+                        )
+
+                        .path("/{id}", new Router()
+                                .get(new Relator())
+                        )
 
         ));
     }

@@ -21,8 +21,8 @@ import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._work.Reasoner;
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.utilities.Reasoner;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFFormat;
