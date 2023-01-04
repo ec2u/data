@@ -30,15 +30,15 @@ import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 
 import eu.ec2u.data._tasks.Cron;
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.datasets.courses.Courses;
-import eu.ec2u.data.datasets.events.Events;
-import eu.ec2u.data.datasets.persons.Persons;
-import eu.ec2u.data.datasets.units.Units;
-import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.concepts.Concepts;
+import eu.ec2u.data.resources.courses.Courses;
+import eu.ec2u.data.resources.datasets.Datasets;
+import eu.ec2u.data.resources.events.Events;
+import eu.ec2u.data.resources.persons.Persons;
+import eu.ec2u.data.resources.units.Units;
+import eu.ec2u.data.resources.universities.Universities;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 

@@ -20,7 +20,7 @@ import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.utilities.Reasoner;
+import eu.ec2u.data.work.Reasoner;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -52,7 +52,7 @@ public final class Tasks {
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames, final Stream<Frame> context
     ) {
 
-        final Reasoner reasoner=service(() -> new Reasoner());
+        final Reasoner reasoner=service(Reasoner::new);
 
 
         final List<Frame> batch=frames.collect(toList());
