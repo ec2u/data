@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,12 +139,12 @@ public final class Data implements Runnable {
                                         .path("/", new Datasets())
                                         .path("/resources/", new Resources())
 
-                                        .path("/concepts/*", new Concepts())
                                         .path("/universities/*", new Universities())
                                         .path("/units/*", new Units())
                                         .path("/courses/*", new Courses())
                                         .path("/persons/*", new Persons())
                                         .path("/events/*", new Events())
+                                        .path("/concepts/*", new Concepts())
 
                                 )
 

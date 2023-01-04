@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,9 @@ import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.cities.Pavia;
-import eu.ec2u.data.terms.*;
+import eu.ec2u.data.tasks.concepts.Units;
+import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.terms.VIVO;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;

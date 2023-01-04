@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,9 @@ import com.metreeca.link.Frame;
 import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.cities.Poitiers;
-import eu.ec2u.data.terms.*;
+import eu.ec2u.data.tasks.concepts.ISCED2011;
+import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.terms.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;

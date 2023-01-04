@@ -1,0 +1,79 @@
+@base			<https://data.ec2u.eu/> .
+
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix vivo:	<http://vivoweb.org/ontology/core#> .
+
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+
+</concepts/units> a skos:ConceptScheme ;
+	dct:title "EC2U Units"@en ;
+	dct:description "EC2U Research Unit Types."@en ;
+	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+	dct:rights "Copyright © 2022-2023 EC2U Alliance" .
+
+
+########################################################################################################################
+
+</concepts/units/institute> a skos:Concept ;
+	skos:topConceptOf </concepts/units>  ;
+	skos:prefLabel "Institute"@en ;
+	owl:sameAs vivo:Institute .
+
+	</concepts/units/institute-virtual> a skos:Concept ;
+		skos:inScheme </concepts/units>  ;
+		skos:prefLabel "Virtual Institute"@en ;
+		skos:broader </concepts/units/institute> .
+
+</concepts/units/department> a skos:Concept ;
+	skos:topConceptOf </concepts/units>  ;
+	skos:prefLabel "Department"@en ;
+	owl:sameAs vivo:AcademicDepartment .
+
+</concepts/units/centre> a skos:Concept ;
+	skos:topConceptOf </concepts/units>  ;
+	skos:prefLabel "Centre"@en ;
+	skos:altLabel "Center"@en ;
+	owl:sameAs vivo:Center .
+
+	</concepts/units/centre-research> a skos:Concept ;
+		skos:inScheme </concepts/units>  ;
+		skos:prefLabel "Research Centre"@en ;
+		skos:altLabel "Research Center"@en ;
+		skos:broader </concepts/units/centre> .
+
+	</concepts/units/centre-transfer> a skos:Concept ;
+		skos:inScheme </concepts/units>  ;
+		skos:prefLabel "Technology Transfer Centre"@en ;
+		skos:altLabel "Technology Transfer Center"@en ;
+		skos:broader </concepts/units/centre> .
+
+</concepts/units/group> a skos:Concept ;
+	skos:topConceptOf </concepts/units>  ;
+	skos:prefLabel "Research Group"@en .
+
+	</concepts/units/group-recognized> a skos:Concept ;
+		skos:inScheme </concepts/units>  ;
+		skos:prefLabel "Recognized Research Group"@en ;
+		skos:broader </concepts/units/group> .
+
+	</concepts/units/group-informal> a skos:Concept ;
+		skos:inScheme </concepts/units>  ;
+		skos:prefLabel "Informal Research Group"@en ;
+		skos:broader </concepts/units/group> .
+
+	</concepts/units/group-student> a skos:Concept ;
+		skos:inScheme </concepts/units>  ;
+		skos:prefLabel "Student Research Group"@en ;
+		skos:broader </concepts/units/group> .
+
+</concepts/units/laboratory> a skos:Concept ;
+	skos:topConceptOf </concepts/units>  ;
+	skos:prefLabel "Laboratory"@en ;
+	owl:sameAs vivo:Laboratory .
+
+</concepts/units/station> a skos:Concept ;
+	skos:topConceptOf </concepts/units>  ;
+	skos:prefLabel "Research Station"@en ;
+	skos:altLabel "Research Base"@en .

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,9 +70,7 @@ public final class Tasks {
                 .of(
 
                         resource(EC2U.class, ".ttl"),
-                        resource(EC2U.class, "Units.ttl"),
                         resource(EC2U.class, "Institutes.ttl"),
-                        resource(EC2U.class, "ISCED-2011.ttl"),
 
                         resource(EC2U.class, "SKOS.ttl"),
                         resource(EC2U.class, "Org.ttl"),
