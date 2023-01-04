@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -462,7 +462,8 @@ public final class Units_ {
 
         private static final CSVFormat Format=CSVFormat.Builder.create()
                 .setHeader(
-                        "Id", "University", "Type", "Code", "Parent", "VI",
+                        "Id", "University",
+                        "Sector", "Type", "Code", "Parent", "VI",
                         "Acronym", "Name",
                         "Homepage", "Email", "Head",
                         "Description"
@@ -501,6 +502,8 @@ public final class Units_ {
                                             .map(Value::stringValue)
                                             .orElse(""),
 
+                                    "", // !!! sector
+
                                     unit.values(seq(ORG.CLASSIFICATION, SKOS.PREF_LABEL))
                                             .filter(value -> lang(value).equals("en"))
                                             .findFirst()
@@ -523,10 +526,12 @@ public final class Units_ {
                                             .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
                                             .collect(joining("; ")),
 
-                                    unit.string(SKOS.ALT_LABEL) // !!! language
+                                    unit.localized(SKOS.ALT_LABEL, "en")
+                                            .or(() -> unit.string(SKOS.ALT_LABEL)) // !!! local language
                                             .orElse(""),
 
-                                    unit.string(SKOS.PREF_LABEL) // !!! language
+                                    unit.localized(SKOS.PREF_LABEL, "en")
+                                            .or(() -> unit.string(SKOS.PREF_LABEL)) // !!! local language
                                             .orElse(""),
 
                                     unit.iris(FOAF.HOMEPAGE)
@@ -539,7 +544,8 @@ public final class Units_ {
                                     unit.strings(seq(inverse(ORG.HEAD_OF), RDFS.LABEL))
                                             .collect(joining("; ")),
 
-                                    unit.string(DCTERMS.DESCRIPTION) // !!! language
+                                    unit.localized(DCTERMS.DESCRIPTION, "en")
+                                            .or(() -> unit.string(DCTERMS.DESCRIPTION)) // !!! local language
                                             .orElse("")
 
                             ))
