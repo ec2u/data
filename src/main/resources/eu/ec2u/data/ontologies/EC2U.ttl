@@ -15,7 +15,7 @@
 @base <https://data.ec2u.eu/terms/> .
 
 <https://data.ec2u.eu/terms/> rdf:type owl:Ontology ;
-                               void:rootResource ec2u:Actor ,
+                               void:rootResource
                                                  ec2u:Dataset ,
                                                  ec2u:Event .
 
@@ -218,15 +218,6 @@ schema:Thing rdf:type owl:Class .
 #################################################################
 #    Individuals
 #################################################################
-
-
-###  https://data.ec2u.eu/actors/
-<https://data.ec2u.eu/actors/> rdf:type owl:NamedIndividual ,
-                                        ec2u:Dataset ;
-                               dct:description "Knowledge ecosystem actors."@en ;
-                               dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                               dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-                               dct:title "Actors"@en .
 
 
 

@@ -40,6 +40,7 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.Locator.storage;
@@ -55,6 +56,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
+import static java.util.Map.entry;
 
 public final class Data implements Runnable {
 
@@ -89,7 +91,9 @@ public final class Data implements Runnable {
                 .set(graph(), () -> new Graph(repository(GraphDBRepository)))
                 .set(engine(), GraphEngine::new)
 
-                .set(keywords(), () -> EC2U.Keywords);
+                .set(keywords(), () -> Map.ofEntries(
+                        entry("@id", "id")
+                ));
     }
 
     public static Repository repository(final String name) {

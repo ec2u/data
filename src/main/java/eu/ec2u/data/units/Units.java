@@ -104,21 +104,7 @@ public final class Units extends Delegator {
     }
 
 
-    public static void main(final String... args) {
-        exec(() -> Stream.of(resource(Units.class, ".ttl").toString())
-
-                .map(new Retrieve()
-                        .base(EC2U.Base)
-                )
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
-    }
-
-    public static void clear(final IRI university) {
+    public static void clear(final IRI university) { // !!! remove
         service(graph()).update(task(connection -> Stream
 
                 .of(""
@@ -150,6 +136,21 @@ public final class Units extends Delegator {
     }
 
 
+    public static void main(final String... args) {
+        exec(() -> Stream.of(resource(Units.class, ".ttl").toString())
+
+                .map(new Retrieve()
+                        .base(EC2U.Base)
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Units() {
@@ -173,6 +174,9 @@ public final class Units extends Delegator {
 
         ));
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static final class CSVLoader {
 
@@ -651,4 +655,5 @@ public final class Units extends Delegator {
         }
 
     }
+
 }

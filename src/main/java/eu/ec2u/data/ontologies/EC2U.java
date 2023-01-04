@@ -23,7 +23,6 @@ import eu.ec2u.data._cities.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.util.Map;
 import java.util.Set;
 
 import static com.metreeca.core.toolkits.Identifiers.md5;
@@ -37,8 +36,6 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.hidden;
 import static com.metreeca.link.shapes.Localized.localized;
 import static com.metreeca.link.shapes.Range.range;
-
-import static java.util.Map.entry;
 
 public final class EC2U {
 
@@ -54,10 +51,6 @@ public final class EC2U {
             Poitiers.Language,
             Salamanca.Language,
             Turku.Language
-    );
-
-    public static final Map<String, String> Keywords=Map.ofEntries(
-            entry("@id", "id")
     );
 
 
@@ -86,7 +79,6 @@ public final class EC2U {
     public static final IRI inferences=item("/inferences");
 
     public static final IRI persons=item("/persons/");
-    public static final IRI actors=item("/actors/");
 
     public static final IRI events=item("/events/");
     public static final IRI locations=item("/locations/");

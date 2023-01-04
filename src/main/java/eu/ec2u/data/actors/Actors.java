@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.actors;
+package eu.ec2u.data.actors;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.actions.GET;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
+import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data._cities.*;
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.units.Units;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.*;
@@ -38,11 +40,11 @@ import java.util.stream.Stream;
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.core.toolkits.Identifiers.md5;
+import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.actors;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -50,6 +52,9 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
 
 public final class Actors implements Runnable {
+
+    private static final IRI Context=EC2U.item("/actors/");
+
 
     private static final String DataTermsUrl="actors-terms-url";
     private static final String DataEntriesUrl="actors-entries-url";
@@ -78,13 +83,14 @@ public final class Actors implements Runnable {
 
                 .from(
                         terms(),
+                        fields(),
                         entries()
                 )
 
                 .batch(0)
 
                 .forEach(new Upload()
-                        .contexts(actors)
+                        .contexts(Context)
                         .clear(true)
                 );
     }
@@ -93,6 +99,16 @@ public final class Actors implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Stream<Statement> terms() {
+        return Stream.of(resource(Units.class, ".ttl").toString())
+
+                .map(new Retrieve()
+                        .base(EC2U.Base)
+                )
+
+                .flatMap(Collection::stream);
+    }
+
+    private Stream<Statement> fields() {
 
         final String url=service(vault())
                 .get(DataTermsUrl)
@@ -152,7 +168,7 @@ public final class Actors implements Runnable {
     }
 
     private Frame actor(final CSVRecord record) {
-        return frame(iri(actors, normalize(record.get(col("A")))))
+        return frame(iri(Context, normalize(record.get(col("A")))))
 
                 .value(RDF.TYPE, EC2U.term("Actor"))
 
@@ -441,7 +457,7 @@ public final class Actors implements Runnable {
                         .filter(v -> v.matches("\\d+"))
                         .map(Integer::valueOf)
 
-                        .map(v -> frame(iri(actors, format("%s/%s", id, md5())))
+                        .map(v -> frame(iri(Context, format("%s/%s", id, md5())))
                                 .value(RDF.SUBJECT, literal(entry.getValue()))
                                 .value(RDF.VALUE, literal(v))
                         )
