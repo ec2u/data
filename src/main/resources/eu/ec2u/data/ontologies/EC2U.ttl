@@ -142,6 +142,10 @@ ec2u:Actor rdf:type owl:Class ;
            void:uriSpace "https://data.ec2u.eu/actors/" .
 
 
+###  https://data.ec2u.eu/terms/License
+ec2u:License rdf:type owl:Class ;
+             rdfs:subClassOf ec2u:Resource .
+
 ###  https://data.ec2u.eu/terms/Concept
 ec2u:Concept rdf:type owl:Class ;
              rdfs:subClassOf <http://www.w3.org/2004/02/skos/core#Concept> ,
@@ -215,11 +219,6 @@ schema:Thing rdf:type owl:Class .
 #################################################################
 #    Individuals
 #################################################################
-
-###  http://creativecommons.org/licenses/by-nc-nd/4.0/
-<http://creativecommons.org/licenses/by-nc-nd/4.0/> rdf:type owl:NamedIndividual ;
-                                                    dct:description "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"@en ;
-                                                    dct:title "CC BY-NC-ND 4.0"@en .
 
 
 ###  https://data.ec2u.eu/actors/
