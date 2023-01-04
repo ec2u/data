@@ -27,6 +27,7 @@ import com.metreeca.rdf4j.actions.Upload;
 import eu.ec2u.data._cities.*;
 import eu.ec2u.data.datasets.units.Units;
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.*;
@@ -172,7 +173,7 @@ public final class Actors implements Runnable {
 
                 .value(RDF.TYPE, EC2U.term("Actor"))
 
-                .value(EC2U.university, university(record)) // !!! missing in the survey
+                .value(Resources.university, university(record)) // !!! missing in the survey
 
                 .value(term("Q1-1"), profile(record))
                 .values(term("Q1-2"), activityArea(record))

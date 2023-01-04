@@ -29,8 +29,8 @@ import com.metreeca.xml.codecs.XML;
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Poitiers;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.utilities.RSS;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -56,8 +56,8 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsPoitiersCityGrand implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.City)
             .values(RDFS.LABEL,
                     literal("Grand Poitiers / Events", "en"),
                     literal("Grand Poitiers / Sortir", Poitiers.Language)
@@ -81,7 +81,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -126,11 +126,11 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             return frame(iri(Events.Context, md5(url)))
 
-                    .values(RDF.TYPE, EC2U.Event)
+                    .values(RDF.TYPE, Events.Event)
 
                     .frame(DCTERMS.SUBJECT, category(item))
 
-                    .value(EC2U.university, Poitiers.University)
+                    .value(Resources.university, Poitiers.University)
 
                     .value(DCTERMS.SOURCE, iri(url))
                     .frame(DCTERMS.PUBLISHER, Publisher)

@@ -28,6 +28,7 @@ import com.metreeca.rdf4j.services.Graph;
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data.ontologies.*;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -80,7 +81,7 @@ public final class CoursesPavia implements Runnable {
                 .map(this::course)
 
                 .sink(courses -> upload(Courses.Context,
-                        validate(Course(), Set.of(EC2U.Course), courses),
+                        validate(Course(), Set.of(Courses.Course), courses),
                         () -> service(graph()).update(task(connection -> Stream
 
                                 .of(""
@@ -140,8 +141,8 @@ public final class CoursesPavia implements Runnable {
     private Frame course(final Frame frame) {
         return frame(iri(Courses.Context, md5(frame.focus().stringValue())))
 
-                .values(RDF.TYPE, EC2U.Course)
-                .value(EC2U.university, Pavia.University)
+                .values(RDF.TYPE, Courses.Course)
+                .value(Resources.university, Pavia.University)
 
                 .values(DCTERMS.TITLE, localized(frame.values(RDFS.LABEL)))
 

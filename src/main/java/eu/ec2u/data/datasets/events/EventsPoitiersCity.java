@@ -18,7 +18,7 @@ package eu.ec2u.data.datasets.events;
 
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -35,8 +35,8 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsPoitiersCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.poitiers.fr/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.City)
             .values(RDFS.LABEL,
                     literal("Ville de Poitiers / Evenements", "fr"),
                     literal("City of Poitiers / Events", "en")

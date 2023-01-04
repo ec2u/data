@@ -30,6 +30,8 @@ import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Turku;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.locations.Locations;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -68,8 +70,8 @@ public final class EventsTurkuCity implements Runnable {
     private static final Pattern EOLPattern=Pattern.compile("\n+");
 
     private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.City)
             .values(RDFS.LABEL,
                     literal("City of Turku / Event's Calendar", "en"),
                     literal("Turun kaupunki / Tapahtumakalenteri", Turku.Language)
@@ -115,12 +117,12 @@ public final class EventsTurkuCity implements Runnable {
 
             upload(Events.Context, validate(
                     Event(),
-                    Set.of(EC2U.Event),
+                    Set.of(Events.Event),
                     events.stream(),
                     places.stream()
             ));
 
-            upload(EC2U.locations, validate(
+            upload(Locations.Context, validate(
                     Schema.Location(),
                     Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
                     places.stream()
@@ -179,9 +181,9 @@ public final class EventsTurkuCity implements Runnable {
 
             return frame(iri(Events.Context, md5(id)))
 
-                    .value(RDF.TYPE, EC2U.Event)
+                    .value(RDF.TYPE, Events.Event)
 
-                    .value(EC2U.university, Turku.University)
+                    .value(Resources.university, Turku.University)
 
                     .frame(DCTERMS.PUBLISHER, Publisher)
                     .value(DCTERMS.SOURCE, iri(id))
@@ -236,7 +238,7 @@ public final class EventsTurkuCity implements Runnable {
 
         return json.string("location.@id")
                 .map(Values::iri)
-                .map(iri -> frame(iri(EC2U.locations, md5(iri.stringValue())))
+                .map(iri -> frame(iri(Locations.Context, md5(iri.stringValue())))
                         .value(RDF.TYPE, Schema.Place)
                         .value(Schema.url, iri)
                 )
@@ -246,7 +248,7 @@ public final class EventsTurkuCity implements Runnable {
                         .filter(entry -> EC2U.Languages.contains(entry.getKey()))
                         .optMap(entry -> entry.getValue().string("")
                                 .map(Strings::normalize)
-                                .map(info -> frame(iri(EC2U.locations, md5(info)))
+                                .map(info -> frame(iri(Locations.Context, md5(info)))
                                         .value(RDF.TYPE, Schema.Place)
                                         .value(Schema.name, literal(info, entry.getKey()))
                                 )
@@ -272,7 +274,7 @@ public final class EventsTurkuCity implements Runnable {
                 .values(Schema.email, label(json.entries("email")))
                 .values(Schema.telephone, label(json.entries("telephone")));
 
-        return frame(iri(EC2U.locations, md5(id)))
+        return frame(iri(Locations.Context, md5(id)))
 
                 .value(RDF.TYPE, json.string("@type").map(Schema::term).orElse(Schema.Place))
 
@@ -287,7 +289,7 @@ public final class EventsTurkuCity implements Runnable {
 
                                 .value(RDF.TYPE, Schema.PostalAddress)
 
-                                .refocus(iri(EC2U.locations, frame.skolemize( // !!! wildcard
+                                .refocus(iri(Locations.Context, frame.skolemize( // !!! wildcard
                                         Schema.addressCountry,
                                         Schema.addressRegion,
                                         Schema.addressLocality,

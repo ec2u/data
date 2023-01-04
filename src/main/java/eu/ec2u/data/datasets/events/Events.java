@@ -40,16 +40,23 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Events extends Delegator {
 
     public static final IRI Context=EC2U.item("/events/");
 
+    public static final IRI Event=EC2U.term("Event");
+
+    public static final IRI College=EC2U.term("College");
+    public static final IRI Association=EC2U.term("Association");
+    public static final IRI City=EC2U.term("City");
+
 
     public static Shape Event() {
-        return relate(EC2U.Resource(), Schema.Event(),
+        return relate(Resource(), Schema.Event(),
 
-                hidden(field(RDF.TYPE, all(EC2U.Event))),
+                hidden(field(RDF.TYPE, all(Event))),
 
                 field(DCTERMS.MODIFIED, required()), // housekeeping timestamp
                 field("fullDescription", Schema.description) // prevent clashes with dct:description
@@ -80,7 +87,7 @@ public final class Events extends Delegator {
 
                 new Driver(Event(),
 
-                        filter(clazz(EC2U.Event))
+                        filter(clazz(Event))
 
                 ),
 

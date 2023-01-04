@@ -49,7 +49,7 @@ public final class Ontologies implements Runnable {
 
                 .of(
 
-                        resource(Ontologies.class, ".ttl"),
+                        resource(Ontologies.class, "EC2U.ttl"),
                         resource(Ontologies.class, "Licenses.ttl"),
                         resource(Ontologies.class, "Institutes.ttl"),
 

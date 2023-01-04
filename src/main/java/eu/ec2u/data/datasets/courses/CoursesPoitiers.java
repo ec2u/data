@@ -93,7 +93,7 @@ public final class CoursesPoitiers implements Runnable {
                 .optMap(this::course)
 
                 .sink(courses -> upload(Courses.Context,
-                        validate(Course(), Set.of(EC2U.Course), courses),
+                        validate(Course(), Set.of(Courses.Course), courses),
                         () -> service(graph()).update(task(connection -> Stream
 
                                 .of(""
@@ -196,10 +196,10 @@ public final class CoursesPoitiers implements Runnable {
                     .map(v -> literal(v, Poitiers.Language));
 
 
-            return frame(EC2U.id(Courses.Context, Poitiers.University, String.valueOf(id)))
+            return frame(EC2U.item(Courses.Context, Poitiers.University, String.valueOf(id)))
 
-                    .values(RDF.TYPE, EC2U.Course)
-                    .value(EC2U.university, Poitiers.University)
+                    .values(RDF.TYPE, Courses.Course)
+                    .value(eu.ec2u.data.resources.Resources.university, Poitiers.University)
 
                     .value(DCTERMS.TITLE, label)
 

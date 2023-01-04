@@ -31,6 +31,7 @@ import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.Units;
 import eu.ec2u.data.datasets.persons.Persons;
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -85,7 +86,7 @@ public final class UnitsSalamancaData implements Runnable {
                 .optMap(this::unit)
 
                 .sink(units -> upload(eu.ec2u.data.datasets.units.Units.Context,
-                        validate(Unit(), Set.of(EC2U.Unit), units),
+                        validate(Unit(), Set.of(eu.ec2u.data.datasets.units.Units.Unit), units),
                         () -> clear(Salamanca.University)
                 ));
     }
@@ -133,10 +134,10 @@ public final class UnitsSalamancaData implements Runnable {
             final Optional<Frame> department=department(json);
             final Optional<Frame> institute=institute(json);
 
-            return frame(EC2U.id(eu.ec2u.data.datasets.units.Units.Context, Salamanca.University, id))
+            return frame(EC2U.item(eu.ec2u.data.datasets.units.Units.Context, Salamanca.University, id))
 
-                    .values(RDF.TYPE, EC2U.Unit)
-                    .value(EC2U.university, Salamanca.University)
+                    .values(RDF.TYPE, eu.ec2u.data.datasets.units.Units.Unit)
+                    .value(Resources.university, Salamanca.University)
 
                     .value(DCTERMS.TITLE, label)
                     .value(DCTERMS.DESCRIPTION, json.string("topics")
@@ -205,13 +206,13 @@ public final class UnitsSalamancaData implements Runnable {
                     final String givenName=matcher.group(2);
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(EC2U.id(Persons.Context, Salamanca.University, fullName))
+                    return frame(EC2U.item(Persons.Context, Salamanca.University, fullName))
 
-                            .value(RDF.TYPE, EC2U.Person)
+                            .value(RDF.TYPE, Persons.Person)
 
                             .value(RDFS.LABEL, literal(fullName, Salamanca.Language))
 
-                            .value(EC2U.university, Salamanca.University)
+                            .value(Resources.university, Salamanca.University)
 
                             .value(FOAF.GIVEN_NAME, literal(givenName))
                             .value(FOAF.FAMILY_NAME, literal(familyName));
@@ -224,10 +225,10 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(EC2U.id(eu.ec2u.data.datasets.units.Units.Context, Salamanca.University, name))
+            return frame(EC2U.item(eu.ec2u.data.datasets.units.Units.Context, Salamanca.University, name))
 
-                    .values(RDF.TYPE, EC2U.Unit)
-                    .value(EC2U.university, Salamanca.University)
+                    .values(RDF.TYPE, eu.ec2u.data.datasets.units.Units.Unit)
+                    .value(Resources.university, Salamanca.University)
 
                     .value(DCTERMS.TITLE, title)
                     .value(SKOS.PREF_LABEL, title)
@@ -245,10 +246,10 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(EC2U.id(eu.ec2u.data.datasets.units.Units.Context, Salamanca.University, name))
+            return frame(EC2U.item(eu.ec2u.data.datasets.units.Units.Context, Salamanca.University, name))
 
-                    .values(RDF.TYPE, EC2U.Unit)
-                    .value(EC2U.university, Salamanca.University)
+                    .values(RDF.TYPE, eu.ec2u.data.datasets.units.Units.Unit)
+                    .value(Resources.university, Salamanca.University)
 
                     .value(DCTERMS.TITLE, title)
                     .value(SKOS.PREF_LABEL, title)

@@ -23,6 +23,7 @@ import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -33,17 +34,19 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
-import static eu.ec2u.data.ontologies.EC2U.Reference;
+import static eu.ec2u.data.resources.Resources.Reference;
 
 public final class Persons extends Delegator {
 
     public static final IRI Context=EC2U.item("/persons/");
 
+    public static final IRI Person=EC2U.term("Person");
+
 
     public static Shape Person() {
-        return relate(EC2U.Resource(),
+        return relate(Resources.Resource(),
 
-                hidden(field(RDF.TYPE, all(EC2U.Person))),
+                hidden(field(RDF.TYPE, all(Person))),
 
                 field(FOAF.GIVEN_NAME, required(), datatype(XSD.STRING)),
                 field(FOAF.FAMILY_NAME, required(), datatype(XSD.STRING)),
@@ -62,7 +65,7 @@ public final class Persons extends Delegator {
 
                 new Driver(Person(),
 
-                        filter(clazz(EC2U.Person))
+                        filter(clazz(Person))
 
                 ),
 

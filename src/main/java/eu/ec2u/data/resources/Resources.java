@@ -20,27 +20,86 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.Shape;
+import com.metreeca.link.Values;
 
 import eu.ec2u.data.ontologies.EC2U;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Shape.multiple;
+import static com.metreeca.link.Shape.optional;
+import static com.metreeca.link.shapes.All.all;
+import static com.metreeca.link.shapes.And.and;
 import static com.metreeca.link.shapes.Clazz.clazz;
+import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
-
-import static eu.ec2u.data.ontologies.EC2U.Reference;
+import static com.metreeca.link.shapes.Guard.hidden;
 
 
 public final class Resources extends Delegator {
 
+    public static final IRI Resource=EC2U.term("Resource");
+    public static final IRI Publisher=EC2U.term("Publisher");
+
+    public static final IRI university=EC2U.term("university");
+
+
+    public static Shape Resource() {
+        return and(Reference(),
+
+                hidden(field(RDF.TYPE, all(Resource))),
+
+                field(university, optional(),
+                        field(RDFS.LABEL, EC2U.multilingual())
+                ),
+
+                field(DCTERMS.TITLE, EC2U.multilingual()),
+                field(DCTERMS.DESCRIPTION, EC2U.multilingual()),
+
+                field(DCTERMS.PUBLISHER, optional(), Publisher()),
+                field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
+
+                field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
+                field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
+                field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
+
+                field(DCTERMS.TYPE, multiple(), Reference()),
+                field(DCTERMS.SUBJECT, multiple(), Reference())
+
+        );
+    }
+
+    public static Shape Reference() {
+        return and(
+
+                datatype(Values.IRIType),
+
+                field(RDFS.LABEL, EC2U.multilingual()),
+                field(RDFS.COMMENT, EC2U.multilingual())
+
+        );
+    }
+
+    public static Shape Publisher() {
+        return and(Reference(),
+
+                field(DCTERMS.COVERAGE, optional(), datatype(Values.IRIType))
+
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public Resources() {
         delegate(handler(
 
-                new Driver(EC2U.Resource(),
+                new Driver(Resource(),
 
-                        filter(clazz(EC2U.Resource)),
+                        filter(clazz(Resource)),
 
                         field(RDF.TYPE, Reference()),
                         field(DCTERMS.SUBJECT, Reference())

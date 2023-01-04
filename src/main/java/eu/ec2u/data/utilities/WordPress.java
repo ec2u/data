@@ -22,7 +22,6 @@ import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.events.Events;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -56,7 +55,7 @@ public final class WordPress {
 
         return frame(iri(Events.Context, frame.skolemize(Link)))
 
-                .values(RDF.TYPE, EC2U.Event)
+                .values(RDF.TYPE, Events.Event)
 
                 .value(DCTERMS.CREATED, frame.value(PubDate))
                 .value(DCTERMS.SOURCE, frame.value(Link))

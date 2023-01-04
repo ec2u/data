@@ -26,8 +26,9 @@ import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Jena;
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.utilities.Work;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
@@ -90,9 +91,9 @@ public final class EventsJenaUniversity implements Runnable {
             )
 
             .map(frame -> frame
-                    .value(RDF.TYPE, EC2U.Publisher)
-                    .value(DCTERMS.COVERAGE, EC2U.University)
-                    .value(EC2U.university, Jena.University)
+                    .value(RDF.TYPE, Resources.Publisher)
+                    .value(DCTERMS.COVERAGE, Universities.University)
+                    .value(Resources.university, Jena.University)
             )
 
             .collect(toList());
@@ -121,7 +122,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .distinct(Frame::focus) // events may be published multiple times by different publishers
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -208,9 +209,9 @@ public final class EventsJenaUniversity implements Runnable {
 
         return frame(iri(Events.Context, frame.skolemize(Schema.url)))
 
-                .value(RDF.TYPE, EC2U.Event)
+                .value(RDF.TYPE, Events.Event)
 
-                .value(EC2U.university, Jena.University)
+                .value(Resources.university, Jena.University)
 
                 .value(DCTERMS.SOURCE, frame.value(Schema.url))
 

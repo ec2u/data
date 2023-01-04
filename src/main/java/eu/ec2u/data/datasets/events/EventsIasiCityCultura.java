@@ -24,7 +24,7 @@ import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Iasi;
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.utilities.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -47,8 +47,8 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsIasiCityCultura implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.City)
             .values(RDFS.LABEL,
                     literal("Iaşul Cultural / Evenimente in Iași", "ro"),
                     literal("Culture in Iasi / Events in Iasi", "en")
@@ -72,7 +72,7 @@ public final class EventsIasiCityCultura implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -94,7 +94,7 @@ public final class EventsIasiCityCultura implements Runnable {
     private Frame event(final Frame frame) {
         return WordPress(frame, Iasi.Language)
 
-                .value(EC2U.university, Iasi.University)
+                .value(Resources.university, Iasi.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

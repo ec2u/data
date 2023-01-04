@@ -22,7 +22,7 @@ import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -33,7 +33,8 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
-import static eu.ec2u.data.ontologies.EC2U.*;
+import static eu.ec2u.data.ontologies.EC2U.item;
+import static eu.ec2u.data.ontologies.EC2U.multilingual;
 
 public final class Concepts extends Delegator {
 
@@ -41,13 +42,13 @@ public final class Concepts extends Delegator {
 
 
     private static Shape ConceptScheme() {
-        return relate(EC2U.Resource(),
+        return relate(Resources.Resource(),
 
                 field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
 
                 detail(
 
-                        field(SKOS.HAS_TOP_CONCEPT, Reference())
+                        field(SKOS.HAS_TOP_CONCEPT, Resources.Reference())
 
                 )
 
@@ -55,24 +56,24 @@ public final class Concepts extends Delegator {
     }
 
     private static Shape Concept() {
-        return relate(EC2U.Resource(),
+        return relate(Resources.Resource(),
 
                 field(SKOS.PREF_LABEL, multilingual()),
                 field(SKOS.ALT_LABEL, multilingual()),
                 field(SKOS.DEFINITION, multilingual()),
 
-                field(SKOS.IN_SCHEME, required(), Reference()),
-                field(SKOS.TOP_CONCEPT_OF, optional(), Reference()),
+                field(SKOS.IN_SCHEME, required(), Resources.Reference()),
+                field(SKOS.TOP_CONCEPT_OF, optional(), Resources.Reference()),
 
                 detail(
 
-                        field(SKOS.BROADER_TRANSITIVE, Reference(),
-                                field(SKOS.BROADER, Reference())
+                        field(SKOS.BROADER_TRANSITIVE, Resources.Reference(),
+                                field(SKOS.BROADER, Resources.Reference())
                         ),
 
-                        field(SKOS.BROADER, Reference()),
-                        field(SKOS.NARROWER, Reference()),
-                        field(SKOS.RELATED, Reference())
+                        field(SKOS.BROADER, Resources.Reference()),
+                        field(SKOS.NARROWER, Resources.Reference()),
+                        field(SKOS.RELATED, Resources.Reference())
 
                 )
 

@@ -28,8 +28,8 @@ import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Salamanca;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.utilities.RSS;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -55,8 +55,8 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda"
             +"-salamanca/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.City)
             .values(RDFS.LABEL,
                     literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en"),
                     literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.Language)
@@ -80,7 +80,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -125,9 +125,9 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
             return frame(iri(Events.Context, md5(url)))
 
-                    .values(RDF.TYPE, EC2U.Event)
+                    .values(RDF.TYPE, Events.Event)
 
-                    .value(EC2U.university, Salamanca.University)
+                    .value(Resources.university, Salamanca.University)
 
                     .value(DCTERMS.SOURCE, iri(url))
                     .frame(DCTERMS.PUBLISHER, Publisher)

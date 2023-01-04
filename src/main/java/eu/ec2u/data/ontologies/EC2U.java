@@ -17,25 +17,15 @@
 package eu.ec2u.data.ontologies;
 
 import com.metreeca.link.Shape;
-import com.metreeca.link.Values;
 
 import eu.ec2u.data._cities.*;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Set;
 
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.link.Shape.multiple;
-import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.And.and;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.hidden;
 import static com.metreeca.link.shapes.Localized.localized;
-import static com.metreeca.link.shapes.Range.range;
 
 public final class EC2U {
 
@@ -58,8 +48,8 @@ public final class EC2U {
         return iri(Base, name);
     }
 
-    public static IRI id(final IRI database, final IRI university, final String name) {
-        return iri(database, md5(university+"@"+name));
+    public static IRI item(final IRI dataset, final IRI university, final String name) {
+        return iri(dataset, md5(university+"@"+name));
     }
 
 
@@ -71,113 +61,6 @@ public final class EC2U {
     public static Shape multilingual() {
         return localized(Languages);
     }
-
-
-    //// Contexts //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI locations=item("/locations/");
-    public static final IRI organizations=item("/organizations/");
-
-
-    //// Resources /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Resource=term("Resource");
-
-    public static final IRI university=term("university");
-
-
-    public static Shape Reference() {
-        return and(
-
-                datatype(Values.IRIType),
-
-                field(RDFS.LABEL, multilingual()),
-                field(RDFS.COMMENT, multilingual())
-
-        );
-    }
-
-    public static Shape Resource() {
-        return and(Reference(),
-
-                hidden(field(RDF.TYPE, all(Resource))),
-
-                field(university, optional(),
-                        field(RDFS.LABEL, multilingual())
-                ),
-
-                field(DCTERMS.TITLE, multilingual()),
-                field(DCTERMS.DESCRIPTION, multilingual()),
-
-                field(DCTERMS.PUBLISHER, optional(), Publisher()),
-                field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
-
-                field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
-                field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
-                field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
-
-                field(DCTERMS.TYPE, multiple(), Reference()),
-                field(DCTERMS.SUBJECT, multiple(), Reference())
-
-        );
-    }
-
-
-    public static final IRI College=term("College");
-    public static final IRI Association=term("Association");
-    public static final IRI City=term("City");
-    public static final IRI Other=term("Other");
-
-
-    //// Datasets /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Dataset=term("Dataset");
-
-
-    //// Publishers ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Publisher=term("Publisher");
-
-
-    public static Shape Publisher() {
-        return and(Reference(),
-
-                field(DCTERMS.COVERAGE, optional(), range(University, College, Association, City, Other))
-
-        );
-    }
-
-
-    //// Universities //////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI University=term("University");
-
-    public static final IRI schac=term("schac");
-    public static final IRI country=term("country");
-    public static final IRI location=term("location");
-    public static final IRI image=term("image");
-    public static final IRI inception=term("inception");
-    public static final IRI students=term("students");
-
-
-    //// Units ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Unit=term("Unit");
-
-
-    //// Courses ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Course=term("Course");
-
-
-    //// Persons ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Person=term("Person");
-
-
-    //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Event=term("Event");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

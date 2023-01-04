@@ -26,6 +26,7 @@ import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
@@ -44,19 +45,21 @@ import static com.metreeca.link.shapes.MinInclusive.minInclusive;
 import static com.metreeca.link.shapes.Pattern.pattern;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.Reference;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
+import static eu.ec2u.data.resources.Resources.Reference;
 
 
 public final class Courses extends Delegator {
 
     public static final IRI Context=EC2U.item("/courses/");
 
+    public static final IRI Course=EC2U.term("Course");
+
 
     public static Shape Course() {
-        return relate(EC2U.Resource(), Schema.Thing(),
+        return relate(Resources.Resource(), Schema.Thing(),
 
-                hidden(field(RDF.TYPE, all(EC2U.Course))),
+                hidden(field(RDF.TYPE, all(Course))),
 
                 field("fullDescription", Schema.description), // prevent clashes with dct:description
 
@@ -104,7 +107,7 @@ public final class Courses extends Delegator {
 
                 new Driver(Course(),
 
-                        filter(clazz(EC2U.Course))
+                        filter(clazz(Course))
 
                 ),
 

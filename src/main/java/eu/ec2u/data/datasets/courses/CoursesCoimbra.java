@@ -31,6 +31,7 @@ import eu.ec2u.data._cities.Coimbra;
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
@@ -106,7 +107,7 @@ public final class CoursesCoimbra implements Runnable {
                 .optMap(this::course)
 
                 .sink(courses -> upload(Courses.Context,
-                        validate(Course(), Set.of(EC2U.Course), courses),
+                        validate(Course(), Set.of(Courses.Course), courses),
                         () -> service(graph()).update(task(connection -> Stream
 
                                 .of(""
@@ -211,8 +212,8 @@ public final class CoursesCoimbra implements Runnable {
 
             return frame(iri(Courses.Context, md5(Coimbra.University+"@"+id)))
 
-                    .values(RDF.TYPE, EC2U.Course)
-                    .value(EC2U.university, Coimbra.University)
+                    .values(RDF.TYPE, Courses.Course)
+                    .value(Resources.university, Coimbra.University)
 
                     .values(DCTERMS.TITLE, label)
 

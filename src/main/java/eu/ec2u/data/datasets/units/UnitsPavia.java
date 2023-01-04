@@ -25,8 +25,8 @@ import com.metreeca.rdf4j.services.Graph;
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data.concepts.Units;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.VIVO;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -69,7 +69,7 @@ public final class UnitsPavia implements Runnable {
                 .map(this::unit)
 
                 .sink(units -> upload(eu.ec2u.data.datasets.units.Units.Context,
-                        validate(Unit(), Set.of(EC2U.Unit), units),
+                        validate(Unit(), Set.of(eu.ec2u.data.datasets.units.Units.Unit), units),
                         () -> clear(Pavia.University)
                 ));
     }
@@ -116,8 +116,8 @@ public final class UnitsPavia implements Runnable {
 
         return frame(iri(eu.ec2u.data.datasets.units.Units.Context, md5(frame.focus().stringValue())))
 
-                .values(RDF.TYPE, EC2U.Unit)
-                .value(EC2U.university, Pavia.University)
+                .values(RDF.TYPE, eu.ec2u.data.datasets.units.Units.Unit)
+                .value(Resources.university, Pavia.University)
 
                 .value(DCTERMS.TITLE, label)
                 .value(SKOS.PREF_LABEL, label)

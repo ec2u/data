@@ -27,8 +27,9 @@ import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Pavia;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.locations.Locations;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
@@ -51,8 +52,8 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsPaviaCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.City)
             .values(RDFS.LABEL,
                     literal("Comune di Pavia / ViviPavia", "it"),
                     literal("City of Pavia / ViviPavia", "en")
@@ -76,7 +77,7 @@ public final class EventsPaviaCity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -136,9 +137,9 @@ public final class EventsPaviaCity implements Runnable {
     private Frame event(final Frame frame) {
         return frame(iri(Events.Context, frame.skolemize(DCTERMS.SOURCE)))
 
-                .values(RDF.TYPE, EC2U.Event)
+                .values(RDF.TYPE, Events.Event)
 
-                .value(EC2U.university, Pavia.University)
+                .value(Resources.university, Pavia.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
@@ -162,7 +163,7 @@ public final class EventsPaviaCity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Frame location(final Frame location) {
-        return frame(iri(EC2U.locations, location.skolemize(
+        return frame(iri(Locations.Context, location.skolemize(
                 seq(Schema.name),
                 seq(step(Schema.address), alt(Schema.name, Schema.streetAddress, Schema.addressLocality))
         )))
@@ -174,7 +175,7 @@ public final class EventsPaviaCity implements Runnable {
     }
 
     private Frame address(final Frame address) {
-        return frame(iri(EC2U.locations, address.skolemize(Schema.streetAddress, Schema.addressLocality)))
+        return frame(iri(Locations.Context, address.skolemize(Schema.streetAddress, Schema.addressLocality)))
 
                 .value(RDF.TYPE, Schema.PostalAddress)
 

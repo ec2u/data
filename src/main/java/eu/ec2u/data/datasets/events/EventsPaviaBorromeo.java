@@ -21,7 +21,7 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Pavia;
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.utilities.Tribe;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -42,8 +42,8 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsPaviaBorromeo implements Runnable {
 
     private static final Frame Publisher=frame(iri("http://www.collegioborromeo.it/it/eventi/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.College)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.College)
             .values(RDFS.LABEL,
                     literal("Almo Collegio Borromeo / Calendar", "en"),
                     literal("Almo Collegio Borromeo / Calendario", Pavia.Language)
@@ -72,7 +72,7 @@ public final class EventsPaviaBorromeo implements Runnable {
 
                 .map(event -> event
 
-                        .value(EC2U.university, Pavia.University)
+                        .value(Resources.university, Pavia.University)
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
@@ -80,7 +80,7 @@ public final class EventsPaviaBorromeo implements Runnable {
                 )
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 

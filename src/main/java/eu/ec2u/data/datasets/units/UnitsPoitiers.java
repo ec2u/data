@@ -20,7 +20,6 @@ import com.metreeca.core.services.Vault;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Poitiers;
-import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
@@ -66,7 +65,7 @@ public final class UnitsPoitiers implements Runnable {
                 .load(url)
 
                 .sink(units -> upload(Units.Context,
-                        validate(Unit(), Set.of(EC2U.Unit), units),
+                        validate(Unit(), Set.of(Units.Unit), units),
                         () -> clear(University)
                 ));
     }

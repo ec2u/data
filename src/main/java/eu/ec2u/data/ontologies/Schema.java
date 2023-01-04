@@ -33,8 +33,8 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.hidden;
 import static com.metreeca.link.shapes.Or.or;
 
-import static eu.ec2u.data.ontologies.EC2U.Reference;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
+import static eu.ec2u.data.resources.Resources.Reference;
 
 /**
  * Schema.org RDF vocabulary.

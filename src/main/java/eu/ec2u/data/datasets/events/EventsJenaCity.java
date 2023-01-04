@@ -32,8 +32,10 @@ import com.metreeca.xml.codecs.HTML;
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Jena;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.locations.Locations;
+import eu.ec2u.data.resources.organizations.Organizations;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -67,8 +69,8 @@ import static java.util.function.Predicate.not;
 public final class EventsJenaCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.jena-veranstaltungen.de/veranstaltungen"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.City)
             .values(RDFS.LABEL,
                     literal("City of Jena / Event Calendar", "en"),
                     literal("Stadt Jena / Veranstaltungskalender", Jena.Language)
@@ -92,7 +94,7 @@ public final class EventsJenaCity implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -179,7 +181,7 @@ public final class EventsJenaCity implements Runnable {
 
             return frame(iri(Events.Context, frame.skolemize(Schema.url, Schema.startDate)))
 
-                    .values(RDF.TYPE, EC2U.Event)
+                    .values(RDF.TYPE, Events.Event)
 
                     .frames(DCTERMS.SUBJECT, frame.string(Schema.term("keywords")).stream()
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))
@@ -200,7 +202,7 @@ public final class EventsJenaCity implements Runnable {
                             .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
                     )
 
-                    .value(EC2U.university, Jena.University)
+                    .value(Resources.university, Jena.University)
 
                     .value(Schema.url, url)
                     .value(Schema.name, name)
@@ -212,11 +214,11 @@ public final class EventsJenaCity implements Runnable {
                     .value(Schema.endDate, frame.value(Schema.endDate).map(this::datetime))
 
                     .frame(Schema.organizer, frame.frame(Schema.organizer)
-                            .flatMap(location -> thing(location, EC2U.organizations))
+                            .flatMap(location -> thing(location, Organizations.Context))
                     )
 
                     .frame(Schema.location, frame.frame(Schema.location)
-                            .flatMap(location -> thing(location, EC2U.locations))
+                            .flatMap(location -> thing(location, Locations.Context))
                     );
 
         });

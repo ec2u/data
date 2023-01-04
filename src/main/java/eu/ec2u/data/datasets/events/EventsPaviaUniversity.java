@@ -24,7 +24,8 @@ import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Pavia;
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.datasets.universities.Universities;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.utilities.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -47,8 +48,8 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsPaviaUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("http://news.unipv.it/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Universities.University)
             .values(RDFS.LABEL,
                     literal("University of Pavia / News", "en"),
                     literal("Università di Pavia / News", Pavia.Language)
@@ -72,7 +73,7 @@ public final class EventsPaviaUniversity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -95,7 +96,7 @@ public final class EventsPaviaUniversity implements Runnable {
     private Frame event(final Frame frame) {
         return WordPress(frame, "it")
 
-                .value(EC2U.university, Pavia.University)
+                .value(Resources.university, Pavia.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

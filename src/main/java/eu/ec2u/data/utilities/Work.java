@@ -20,8 +20,9 @@ import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data._cities.Pavia;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.locations.Locations;
+import eu.ec2u.data.resources.organizations.Organizations;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -92,7 +93,7 @@ public final class Work {
         final Optional<Value> name=frame.string(Schema.name).map(value -> literal(value, lang));
         final Optional<Value> legalName=frame.string(Schema.legalName).map(value -> literal(value, lang));
 
-        return frame(iri(EC2U.organizations, md5(frame.skolemize(
+        return frame(iri(Organizations.Context, md5(frame.skolemize(
                 seq(Schema.name),
                 seq(Schema.legalName)
         ))))
@@ -105,7 +106,7 @@ public final class Work {
     }
 
     public static Frame location(final Frame frame, final Frame defaults) {
-        return frame(iri(EC2U.locations, md5(frame.skolemize(
+        return frame(iri(Locations.Context, md5(frame.skolemize(
                 seq(Schema.name),
                 seq(Schema.address, Schema.addressLocality),
                 seq(Schema.address, Schema.streetAddress)
@@ -120,7 +121,7 @@ public final class Work {
 
     public static Frame address(final Frame frame, final Frame defaults) {
 
-        return frame(iri(EC2U.locations, frame.skolemize(Schema.addressLocality, Schema.streetAddress)))
+        return frame(iri(Locations.Context, frame.skolemize(Schema.addressLocality, Schema.streetAddress)))
 
                 .values(RDF.TYPE, frame.values(RDF.TYPE))
 

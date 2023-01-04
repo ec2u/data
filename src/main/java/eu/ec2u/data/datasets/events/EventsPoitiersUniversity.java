@@ -30,8 +30,10 @@ import com.metreeca.xml.codecs.XML;
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Poitiers;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.locations.Locations;
 import eu.ec2u.data.utilities.RSS;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -60,8 +62,8 @@ import static java.util.function.Predicate.not;
 public final class EventsPoitiersUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Universities.University)
             .values(RDFS.LABEL,
                     literal("University of Poitiers / News and Events", "en"),
                     literal("Université de Poitiers / Actualités et événements", Poitiers.Language)
@@ -113,7 +115,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -155,9 +157,9 @@ public final class EventsPoitiersUniversity implements Runnable {
                 link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
         ))
 
-                .values(RDF.TYPE, EC2U.Event)
+                .values(RDF.TYPE, Events.Event)
 
-                .value(EC2U.university, Poitiers.University)
+                .value(Resources.university, Poitiers.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, link)
@@ -230,7 +232,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return item.string("place/place_name").filter(not(String::isEmpty))
 
-                .map(name -> frame(iri(EC2U.locations, md5(name)))
+                .map(name -> frame(iri(Locations.Context, md5(name)))
 
                         .value(RDF.TYPE, Schema.Place)
 

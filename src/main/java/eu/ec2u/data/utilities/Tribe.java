@@ -29,8 +29,9 @@ import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.events.Events;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.locations.Locations;
+import eu.ec2u.data.resources.organizations.Organizations;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -202,7 +203,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
         return event.string("url").map(id -> frame(iri(Events.Context, md5(id)))
 
-                .value(RDF.TYPE, EC2U.Event)
+                .value(RDF.TYPE, Events.Event)
 
                 .value(DCTERMS.SOURCE, event.string("url").flatMap(Work::url).map(Values::iri))
                 .value(DCTERMS.CREATED, event.string("date_utc").map(Tribe::instant))
@@ -244,7 +245,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
     }
 
     private Optional<Frame> organizer(final JSONPath organizer) {
-        return organizer.string("url").map(id -> frame(iri(EC2U.organizations, md5(id)))
+        return organizer.string("url").map(id -> frame(iri(Organizations.Context, md5(id)))
 
                 .value(RDF.TYPE, Schema.Organization)
 
@@ -266,7 +267,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
             final Optional<Value> addressLocality=Optional.ofNullable(locality);
             final Optional<Value> streetAddress=location.string("address").map(Values::literal);
 
-            return frame(iri(EC2U.locations, md5(id)))
+            return frame(iri(Locations.Context, md5(id)))
 
                     .value(RDF.TYPE, Schema.Place)
 
@@ -276,7 +277,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                     .value(Schema.latitude, location.decimal("geo_lat").map(Values::literal))
                     .value(Schema.longitude, location.decimal("geo_lng").map(Values::literal))
 
-                    .frame(Schema.address, frame(iri(EC2U.locations, md5(Xtream
+                    .frame(Schema.address, frame(iri(Locations.Context, md5(Xtream
 
                                     .of(addressCountry, addressLocality, streetAddress)
 

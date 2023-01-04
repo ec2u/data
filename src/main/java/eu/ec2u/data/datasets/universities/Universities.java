@@ -25,6 +25,7 @@ import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -50,30 +51,39 @@ public final class Universities extends Delegator {
 
     private static final IRI Context=item("/universities/");
 
+    public static final IRI University=term("University");
 
-    public static Shape University() {
+    public static final IRI schac=term("schac");
+    public static final IRI country=term("country");
+    public static final IRI location=term("location");
+    public static final IRI image=term("image");
+    public static final IRI inception=term("inception");
+    public static final IRI students=term("students");
+
+
+    private static Shape University() {
         return relate(
 
-                filter(clazz(EC2U.University)),
+                filter(clazz(University)),
 
                 field(RDFS.LABEL, multilingual()),
                 field(RDFS.COMMENT, multilingual()),
 
-                field(EC2U.schac, required(), datatype(XSD.STRING)),
-                field(EC2U.image, optional(), datatype(IRIType)),
+                field(schac, required(), datatype(XSD.STRING)),
+                field(image, optional(), datatype(IRIType)),
 
                 link(OWL.SAMEAS,
 
-                        field(EC2U.country, optional(),
+                        field(country, optional(),
                                 field(RDFS.LABEL, multilingual())
                         ),
 
-                        field(EC2U.inception, optional(), datatype(XSD.DATETIME)),
-                        field(EC2U.students, optional(), datatype(XSD.DECIMAL)),
+                        field(inception, optional(), datatype(XSD.DATETIME)),
+                        field(students, optional(), datatype(XSD.DECIMAL)),
 
                         detail(
 
-                                field(EC2U.location, optional(),
+                                field(location, optional(),
                                         field(RDFS.LABEL, multilingual())
                                 ),
 
@@ -87,7 +97,7 @@ public final class Universities extends Delegator {
 
                         field(DCTERMS.EXTENT, multiple(),
 
-                                field("dataset", inverse(VOID.SUBSET), required(), Reference()),
+                                field("dataset", inverse(VOID.SUBSET), required(), Resources.Reference()),
                                 field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
 
                         )

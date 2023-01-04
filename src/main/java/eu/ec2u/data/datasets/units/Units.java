@@ -34,6 +34,7 @@ import com.metreeca.rdf4j.services.Graph;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.persons.Persons;
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.utilities.Cursor;
 import org.apache.commons.csv.*;
 import org.eclipse.rdf4j.model.*;
@@ -68,8 +69,8 @@ import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.Reference;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
+import static eu.ec2u.data.resources.Resources.Reference;
 
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
@@ -82,11 +83,13 @@ public final class Units extends Delegator {
 
     public static final IRI Context=EC2U.item("/units/");
 
+    public static final IRI Unit=EC2U.term("Unit");
+
 
     public static Shape Unit() {
-        return relate(EC2U.Resource(),
+        return relate(Resources.Resource(),
 
-                hidden(field(RDF.TYPE, all(EC2U.Unit))),
+                hidden(field(RDF.TYPE, all(Unit))),
 
                 field(FOAF.HOMEPAGE, multiple(), datatype(IRIType)),
 
@@ -159,7 +162,7 @@ public final class Units extends Delegator {
 
                 new Driver(Unit(),
 
-                        filter(clazz(EC2U.Unit))
+                        filter(clazz(Unit))
 
                 ),
 
@@ -267,8 +270,8 @@ public final class Units extends Delegator {
 
             return id(record).map(id -> frame(id)
 
-                    .values(RDF.TYPE, EC2U.Unit)
-                    .value(EC2U.university, university)
+                    .values(RDF.TYPE, Unit)
+                    .value(Resources.university, university)
 
                     .value(ORG.CLASSIFICATION, field(record, "Type")
                             .flatMap(this::type)
@@ -352,7 +355,7 @@ public final class Units extends Delegator {
 
             } else {
 
-                return Optional.of(EC2U.id(Context, university, code
+                return Optional.of(EC2U.item(Context, university, code
                         .or(() -> nameEnglish)
                         .or(() -> nameLocal)
                         .orElse("") // unexpected
@@ -496,13 +499,13 @@ public final class Units extends Delegator {
 
                         final String fullName=format("%s %s", givenName, familyName);
 
-                        return frame(EC2U.id(Persons.Context, university, fullName))
+                        return frame(EC2U.item(Persons.Context, university, fullName))
 
-                                .value(RDF.TYPE, EC2U.Person)
+                                .value(RDF.TYPE, Persons.Person)
 
                                 .value(RDFS.LABEL, literal(fullName, language)) // !!! no language
 
-                                .value(EC2U.university, university)
+                                .value(Resources.university, university)
 
                                 .value(FOAF.TITLE, Optional.ofNullable(title).map(Values::literal))
                                 .value(FOAF.GIVEN_NAME, literal(givenName))
@@ -564,7 +567,7 @@ public final class Units extends Delegator {
 
                 service(graph()).query(connection -> {
 
-                    new Cursor(EC2U.Unit, connection)
+                    new Cursor(Unit, connection)
 
                             .cursors(inverse(RDF.TYPE))
 
@@ -572,7 +575,7 @@ public final class Units extends Delegator {
 
                                     unit.focus().stringValue(),
 
-                                    unit.values(seq(EC2U.university, RDFS.LABEL))
+                                    unit.values(seq(Resources.university, RDFS.LABEL))
                                             .filter(value -> lang(value).equals("en"))
                                             .findFirst()
                                             .map(Value::stringValue)
@@ -591,7 +594,7 @@ public final class Units extends Delegator {
                                             .orElse(""),
 
                                     unit.cursors(ORG.UNIT_OF)
-                                            .filter(parent -> parent.values(RDF.TYPE).noneMatch(EC2U.university::equals))
+                                            .filter(parent -> parent.values(RDF.TYPE).noneMatch(Resources.university::equals))
                                             .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(eu.ec2u.data.concepts.Units.InstituteVirtual::equals))
                                             .flatMap(parent -> parent.localizeds(RDFS.LABEL, "en"))
                                             .filter(not(v -> v.startsWith("University "))) // !!!

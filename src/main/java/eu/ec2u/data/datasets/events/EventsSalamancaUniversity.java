@@ -28,8 +28,9 @@ import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Salamanca;
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -60,8 +61,8 @@ import static java.util.function.Predicate.not;
 public final class EventsSalamancaUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://sac.usal.es/programacion/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Universities.University)
             .values(RDFS.LABEL,
                     literal("University of Salamanca / Cultural Activities Service", "en"),
                     literal("Universidad de Salamanca / Servicio de Actividades Culturales", "es")
@@ -85,7 +86,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                 .map(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -162,9 +163,9 @@ public final class EventsSalamancaUniversity implements Runnable {
                 .orElseGet(Identifiers::md5)
         ))
 
-                .values(RDF.TYPE, EC2U.Event)
+                .values(RDF.TYPE, Events.Event)
 
-                .value(EC2U.university, Salamanca.University)
+                .value(Resources.university, Salamanca.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, url)

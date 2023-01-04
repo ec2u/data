@@ -27,8 +27,9 @@ import com.metreeca.link.Values;
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Coimbra;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.locations.Locations;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -54,8 +55,8 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 public final class EventsCoimbraCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.coimbragenda.pt/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.City)
             .values(RDFS.LABEL,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
                     literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.Language)
@@ -78,7 +79,7 @@ public final class EventsCoimbraCity implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -128,7 +129,7 @@ public final class EventsCoimbraCity implements Runnable {
 
                     return frame(iri(Events.Context, md5(url)))
 
-                            .values(RDF.TYPE, EC2U.Event)
+                            .values(RDF.TYPE, Events.Event)
 
                             .frames(DCTERMS.SUBJECT, subjects(json))
 
@@ -137,7 +138,7 @@ public final class EventsCoimbraCity implements Runnable {
                             .value(DCTERMS.CREATED, json.string("createdAt").map(this::timestamp))
                             .value(DCTERMS.MODIFIED, json.string("updatedAt").map(this::timestamp))
 
-                            .value(EC2U.university, Coimbra.University)
+                            .value(Resources.university, Coimbra.University)
 
                             .value(Schema.url, iri(url))
                             .value(Schema.name, name)
@@ -193,7 +194,7 @@ public final class EventsCoimbraCity implements Runnable {
     }
 
     private Optional<Frame> location(final JSONPath json) {
-        return json.string("place.name").map(name -> frame(iri(EC2U.locations, md5(name)))
+        return json.string("place.name").map(name -> frame(iri(Locations.Context, md5(name)))
                 .value(RDF.TYPE, Schema.Place)
                 .value(Schema.name, literal(name, Coimbra.Language))
                 .value(Schema.longitude, json.decimal("place.longitude").map(Values::literal))

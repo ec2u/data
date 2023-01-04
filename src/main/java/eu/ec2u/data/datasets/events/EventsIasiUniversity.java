@@ -21,7 +21,8 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Iasi;
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.datasets.universities.Universities;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.utilities.Tribe;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -42,8 +43,8 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsIasiUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.uaic.ro/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Universities.University)
             .values(RDFS.LABEL,
                     literal("University of Iasi / Events", "en"),
                     literal("Universitatea din Iași / Evenimente", Iasi.Language)
@@ -72,7 +73,7 @@ public final class EventsIasiUniversity implements Runnable {
 
                 .map(event -> event
 
-                        .value(EC2U.university, Iasi.University)
+                        .value(Resources.university, Iasi.University)
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
@@ -80,7 +81,7 @@ public final class EventsIasiUniversity implements Runnable {
                 )
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 

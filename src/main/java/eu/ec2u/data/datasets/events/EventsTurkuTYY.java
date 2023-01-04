@@ -28,8 +28,10 @@ import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Turku;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.locations.Locations;
+import eu.ec2u.data.resources.organizations.Organizations;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -56,8 +58,8 @@ import static java.time.ZoneOffset.UTC;
 public final class EventsTurkuTYY implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.tyy.fi/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.Association)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Events.Association)
             .values(RDFS.LABEL,
                     literal("The Student Union of the University of Turku (TYY) / Calendar of Events", "en"),
                     literal("Turun yliopiston ylioppilaskunta (TYY) / Tapahtumakalenteri", Turku.Language)
@@ -84,7 +86,7 @@ public final class EventsTurkuTYY implements Runnable {
 
                 .map(event -> event
 
-                        .value(EC2U.university, Turku.University)
+                        .value(Resources.university, Turku.University)
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
@@ -92,7 +94,7 @@ public final class EventsTurkuTYY implements Runnable {
                 )
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -140,7 +142,7 @@ public final class EventsTurkuTYY implements Runnable {
 
                 .map(id -> frame(iri(Events.Context, id))
 
-                                .value(RDF.TYPE, EC2U.Event)
+                                .value(RDF.TYPE, Events.Event)
 
                                 .value(DCTERMS.SOURCE, source.map(Values::iri))
 
@@ -168,7 +170,7 @@ public final class EventsTurkuTYY implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Optional<Frame> organizer(final JSONPath json) {
-        return json.string("organiser").map(organizer -> frame(iri(EC2U.organizations, md5(organizer)))
+        return json.string("organiser").map(organizer -> frame(iri(Organizations.Context, md5(organizer)))
 
                 .value(RDF.TYPE, Schema.Organization)
 
@@ -180,7 +182,7 @@ public final class EventsTurkuTYY implements Runnable {
     private Optional<Frame> location(final JSONPath json) {
         return json.string("location")
 
-                .map(location -> frame(iri(EC2U.locations, md5(md5(format("%s{%s}", Publisher.focus(), location)))))
+                .map(location -> frame(iri(Locations.Context, md5(md5(format("%s{%s}", Publisher.focus(), location)))))
 
                         .value(RDF.TYPE, Schema.Place)
 
@@ -195,7 +197,7 @@ public final class EventsTurkuTYY implements Runnable {
     private Optional<Frame> address(final JSONPath json) {
         return json.string("address")
 
-                .map(address -> frame(iri(EC2U.locations, md5(format("%s{%s}", Publisher.focus(), address))))
+                .map(address -> frame(iri(Locations.Context, md5(format("%s{%s}", Publisher.focus(), address))))
 
                         .value(RDF.TYPE, Schema.PostalAddress)
 

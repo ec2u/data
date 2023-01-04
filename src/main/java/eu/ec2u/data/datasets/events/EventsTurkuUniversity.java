@@ -29,8 +29,11 @@ import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Turku;
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.locations.Locations;
+import eu.ec2u.data.resources.organizations.Organizations;
 import eu.ec2u.data.utilities.Work;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -69,8 +72,8 @@ import static java.util.stream.Collectors.toList;
 public final class EventsTurkuUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.utu.fi/event-search/"))
-            .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
+            .value(RDF.TYPE, Resources.Publisher)
+            .value(DCTERMS.COVERAGE, Universities.University)
             .values(RDFS.LABEL,
                     literal("University of Turku / News", "en"),
                     literal("Turun yliopisto / Ajankohtaista", Turku.Language)
@@ -113,14 +116,14 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 .map(event -> event
 
-                        .value(EC2U.university, Turku.University)
+                        .value(Resources.university, Turku.University)
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
                 )
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(EC2U.Event), events)
+                        validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
@@ -205,7 +208,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
         return json.integer("id").map(id -> frame(iri(Events.Context, md5(Publisher.focus().stringValue()+id)))
 
-                .value(RDF.TYPE, EC2U.Event)
+                .value(RDF.TYPE, Events.Event)
 
                 .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Work::url).map(Values::iri))
                 .value(DCTERMS.CREATED, json.string("published").map(EventsTurkuUniversity::instant))
@@ -246,7 +249,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
             // the same URL may be used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
 
-            return frame(iri(EC2U.locations, md5(md5(Xtream
+            return frame(iri(Locations.Context, md5(md5(Xtream
 
                     .of(
                             Optional.of(id).map(Values::literal), name.map(Values::literal),
@@ -264,7 +267,7 @@ public final class EventsTurkuUniversity implements Runnable {
                     .value(Schema.url, url)
                     .value(Schema.name, name.map(text -> literal(text, Turku.Language)))
 
-                    .frame(Schema.address, frame(iri(EC2U.locations, md5(Xtream
+                    .frame(Schema.address, frame(iri(Locations.Context, md5(Xtream
 
                                     .of(url, addressCountry, addressLocality, postalCode, streetAddress)
 
@@ -288,7 +291,7 @@ public final class EventsTurkuUniversity implements Runnable {
     }
 
     private Optional<Frame> organizer(final JSONPath json) {
-        return json.string("url").map(id -> frame(iri(EC2U.organizations, md5(id)))
+        return json.string("url").map(id -> frame(iri(Organizations.Context, md5(id)))
 
                 .value(RDF.TYPE, Schema.Organization)
 
