@@ -34,7 +34,7 @@ import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
 public final class Events implements Runnable {

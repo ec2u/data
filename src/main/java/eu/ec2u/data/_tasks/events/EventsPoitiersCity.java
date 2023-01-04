@@ -28,7 +28,7 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 
 import static java.time.ZoneOffset.UTC;
 

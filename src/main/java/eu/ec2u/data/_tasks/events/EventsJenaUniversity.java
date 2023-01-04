@@ -24,6 +24,7 @@ import com.metreeca.link.Values;
 import com.metreeca.xml.XPath;
 import com.metreeca.xml.codecs.HTML;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Jena;
 import eu.ec2u.data._work.Work;
 import eu.ec2u.data.ontologies.EC2U;
@@ -46,7 +47,8 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
 import static eu.ec2u.data._ports.Events.Event;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._tasks.events.Events.synced;
 import static eu.ec2u.data._work.Work.location;
 
@@ -97,7 +99,7 @@ public final class EventsJenaUniversity implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsJenaUniversity().run());
+        Data.exec(() -> new EventsJenaUniversity().run());
     }
 
 

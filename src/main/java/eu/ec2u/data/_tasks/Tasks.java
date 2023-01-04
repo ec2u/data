@@ -16,7 +16,6 @@
 
 package eu.ec2u.data._tasks;
 
-import com.metreeca.core.Locator;
 import com.metreeca.core.Xtream;
 import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
@@ -44,25 +43,11 @@ import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.Values.pattern;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data.Data.services;
-
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public final class Tasks {
-
-    static { System.setProperty("com.sun.security.enableAIAcaIssuers", "true"); } // ;( retrieve missing certificates
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void exec(final Runnable... tasks) {
-        services(new Locator()).exec(tasks).clear();
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static Xtream<URL> ontologies() {
         return Xtream

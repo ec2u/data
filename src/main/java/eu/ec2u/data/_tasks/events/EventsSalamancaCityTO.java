@@ -26,6 +26,7 @@ import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.XML;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Salamanca;
 import eu.ec2u.data._work.RSS;
 import eu.ec2u.data.ontologies.EC2U;
@@ -47,7 +48,8 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data._ports.Events.Event;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._tasks.events.Events.synced;
 
 import static java.time.ZoneOffset.UTC;
@@ -83,7 +85,7 @@ public final class EventsSalamancaCityTO implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsSalamancaCityTO().run());
+        Data.exec(() -> new EventsSalamancaCityTO().run());
     }
 
 

@@ -16,7 +16,7 @@
 
 package eu.ec2u.data._tasks.units;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 
 public final class UnitsSalamanca implements Runnable {
 

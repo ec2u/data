@@ -22,6 +22,7 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.link.Frame;
 import com.metreeca.xml.codecs.XML;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Iasi;
 import eu.ec2u.data._work.RSS;
 import eu.ec2u.data.ontologies.EC2U;
@@ -36,7 +37,8 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data._ports.Events.Event;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._tasks.events.Events.synced;
 import static eu.ec2u.data._work.WordPress.WordPress;
 
@@ -54,7 +56,7 @@ public final class EventsIasiUniversity360 implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsIasiUniversity360().run());
+        Data.exec(() -> new EventsIasiUniversity360().run());
     }
 
 

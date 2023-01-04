@@ -24,7 +24,7 @@ import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 
 
 final class ISCED_F_2013 {

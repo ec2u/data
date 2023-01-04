@@ -18,6 +18,7 @@ package eu.ec2u.data._tasks.units;
 
 import com.metreeca.core.services.Vault;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Poitiers;
 import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
@@ -28,7 +29,8 @@ import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 
 import static eu.ec2u.data._ports.Units.Unit;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._tasks.units.Units_.clear;
 
 import static java.lang.String.format;
@@ -42,7 +44,7 @@ public final class UnitsPoitiers implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitsPoitiers().run());
+        Data.exec(() -> new UnitsPoitiers().run());
     }
 
 

@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.link.Values.iri;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 
 /**
  * EC2U Research Unit SKOS Concept Schema.

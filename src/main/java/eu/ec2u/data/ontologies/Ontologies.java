@@ -26,7 +26,7 @@ import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import java.net.URL;
 import java.util.stream.Stream;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._tasks.Tasks.ontologies;
 
 

@@ -41,7 +41,7 @@ import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.actors;
 
 import static java.lang.String.format;

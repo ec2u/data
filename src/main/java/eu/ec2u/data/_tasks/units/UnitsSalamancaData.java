@@ -25,6 +25,7 @@ import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Salamanca;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.Units;
@@ -46,7 +47,8 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data._ports.Units.Unit;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._tasks.units.Units_.clear;
 
 import static java.lang.String.format;
@@ -66,7 +68,7 @@ public final class UnitsSalamancaData implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitsSalamancaData().run());
+        Data.exec(() -> new UnitsSalamancaData().run());
     }
 
 

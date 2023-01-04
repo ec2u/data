@@ -24,6 +24,7 @@ import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
 import com.metreeca.rdf4j.actions.Update;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Poitiers;
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.ontologies.EC2U;
@@ -46,7 +47,8 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data._ports.Courses.Course;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 
 import static java.util.Map.entry;
 
@@ -75,7 +77,7 @@ public final class CoursesPoitiers implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new CoursesPoitiers().run());
+        Data.exec(() -> new CoursesPoitiers().run());
     }
 
 

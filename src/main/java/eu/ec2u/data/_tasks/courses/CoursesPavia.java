@@ -25,6 +25,7 @@ import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data.ontologies.*;
 import org.eclipse.rdf4j.model.IRI;
@@ -48,7 +49,8 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data._ports.Courses.Course;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._work.Work.localized;
 
 import static java.util.Map.entry;
@@ -64,7 +66,7 @@ public final class CoursesPavia implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new CoursesPavia().run());
+        Data.exec(() -> new CoursesPavia().run());
     }
 
 

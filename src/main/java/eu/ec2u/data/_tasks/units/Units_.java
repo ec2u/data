@@ -55,7 +55,7 @@ import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;

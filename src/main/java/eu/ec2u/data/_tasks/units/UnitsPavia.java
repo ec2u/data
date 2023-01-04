@@ -22,6 +22,7 @@ import com.metreeca.link.Frame;
 import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.services.Graph;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data.concepts.Units;
 import eu.ec2u.data.ontologies.EC2U;
@@ -39,7 +40,8 @@ import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data._ports.Units.Unit;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._tasks.units.Units_.clear;
 
 import static java.util.function.Predicate.not;
@@ -53,7 +55,7 @@ public final class UnitsPavia implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitsPavia().run());
+        Data.exec(() -> new UnitsPavia().run());
     }
 
 

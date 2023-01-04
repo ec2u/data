@@ -26,6 +26,7 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.xml.actions.Untag;
 
+import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Turku;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
@@ -45,7 +46,8 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data._ports.Events.Event;
-import static eu.ec2u.data._tasks.Tasks.*;
+import static eu.ec2u.data._tasks.Tasks.upload;
+import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._tasks.events.Events.synced;
 
 import static java.lang.String.format;
@@ -65,7 +67,7 @@ public final class EventsTurkuTYY implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsTurkuTYY().run());
+        Data.exec(() -> new EventsTurkuTYY().run());
     }
 
 

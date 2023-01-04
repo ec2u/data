@@ -25,7 +25,7 @@ import eu.ec2u.data.ontologies.EC2U;
 
 import java.util.stream.Stream;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 
 import static java.util.stream.Collectors.joining;
 

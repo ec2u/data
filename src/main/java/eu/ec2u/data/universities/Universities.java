@@ -42,7 +42,7 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.link.shapes.Link.link;
 
-import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.*;
 
 

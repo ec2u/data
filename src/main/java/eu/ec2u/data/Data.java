@@ -68,6 +68,10 @@ public final class Data implements Runnable {
         debug.log("com.metreeca");
     }
 
+    static {
+        System.setProperty("com.sun.security.enableAIAcaIssuers", "true"); // ;( retrieve missing certificates
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -97,6 +101,10 @@ public final class Data implements Runnable {
         return repository;
     }
 
+
+    public static void exec(final Runnable... tasks) {
+        services(new Locator()).exec(tasks).clear();
+    }
 
     public static void main(final String... args) {
         new Data().run();
