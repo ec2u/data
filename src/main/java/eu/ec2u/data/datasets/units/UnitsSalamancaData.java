@@ -29,6 +29,7 @@ import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Salamanca;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.Units;
+import eu.ec2u.data.datasets.persons.Persons;
 import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -204,7 +205,7 @@ public final class UnitsSalamancaData implements Runnable {
                     final String givenName=matcher.group(2);
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(EC2U.id(EC2U.persons, Salamanca.University, fullName))
+                    return frame(EC2U.id(Persons.Context, Salamanca.University, fullName))
 
                             .value(RDF.TYPE, EC2U.Person)
 

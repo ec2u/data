@@ -1,7 +1,7 @@
 cron:
 
   - description: "wikidata - nightly sync"
-    url: /cron/wikidata
+    url: /cron/background/wikidata
     schedule: every day 00:00
 
 

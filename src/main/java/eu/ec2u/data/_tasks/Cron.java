@@ -21,6 +21,7 @@ import com.metreeca.http.Handler;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
+import eu.ec2u.data.background.Wikidata;
 import eu.ec2u.data.datasets.courses.CoursesCoimbra;
 import eu.ec2u.data.datasets.courses.CoursesPavia;
 import eu.ec2u.data.datasets.events.*;
@@ -47,7 +48,7 @@ public final class Cron extends Delegator {
                 .path("/chores", execute(new Chores()))
                 .path("/inferences", execute(new Inferences()))
 
-                .path("/wikidata", execute(new Wikidata()))
+                .path("/background/wikidata", execute(new Wikidata()))
 
                 .path("/units/coimbra", execute(new UnitsCoimbra()))
                 .path("/units/iasi", execute(new UnitsIasi()))

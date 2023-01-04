@@ -23,6 +23,7 @@ import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.ontologies.EC2U;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.http.Handler.handler;
@@ -35,6 +36,9 @@ import static com.metreeca.link.shapes.Guard.*;
 import static eu.ec2u.data.ontologies.EC2U.Reference;
 
 public final class Persons extends Delegator {
+
+    public static final IRI Context=EC2U.item("/persons/");
+
 
     public static Shape Person() {
         return relate(EC2U.Resource(),
@@ -50,6 +54,8 @@ public final class Persons extends Delegator {
         );
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Persons() {
         delegate(handler(

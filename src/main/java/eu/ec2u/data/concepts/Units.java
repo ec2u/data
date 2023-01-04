@@ -19,7 +19,6 @@ package eu.ec2u.data.concepts;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
@@ -28,14 +27,14 @@ import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.link.Values.iri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.ontologies.EC2U.item;
 
 /**
  * EC2U Research Unit SKOS Concept Schema.
  */
 public final class Units implements Runnable {
 
-    public static final IRI Name=iri(EC2U.Base, "/concepts/units"); // !!! remove
-    public static final IRI Scheme=iri(Name, "/");
+    public static final IRI Scheme=item("/concepts/units");
 
 
     public static final IRI Institute=iri(Scheme, "institute");

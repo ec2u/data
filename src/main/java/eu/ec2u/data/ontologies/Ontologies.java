@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.ontologies;
 
+import com.metreeca.core.Xtream;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
@@ -26,8 +27,9 @@ import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import java.net.URL;
 import java.util.stream.Stream;
 
+import static com.metreeca.core.toolkits.Resources.resource;
+
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._tasks.Tasks.ontologies;
 
 
 public final class Ontologies implements Runnable {
@@ -37,6 +39,24 @@ public final class Ontologies implements Runnable {
 
     public static void main(final String... args) {
         exec(() -> new Ontologies().run());
+    }
+
+    public static Xtream<URL> ontologies() {
+        return Xtream
+
+                .of(
+
+                        resource(EC2U.class, ".ttl"),
+                        resource(EC2U.class, "Institutes.ttl"),
+
+                        resource(EC2U.class, "SKOS.ttl"),
+                        resource(EC2U.class, "Org.ttl"),
+                        resource(EC2U.class, "DCAT2.ttl"),
+
+                        resource(EC2U.class, "Schema.ttl"),
+                        resource(EC2U.class, "Wikidata.ttl")
+
+                );
     }
 
 

@@ -75,11 +75,6 @@ public final class EC2U {
 
     //// Contexts //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI wikidata=item("/wikidata");
-    public static final IRI inferences=item("/inferences");
-
-    public static final IRI persons=item("/persons/");
-
     public static final IRI locations=item("/locations/");
     public static final IRI organizations=item("/organizations/");
 

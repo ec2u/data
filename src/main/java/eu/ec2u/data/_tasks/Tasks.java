@@ -16,12 +16,11 @@
 
 package eu.ec2u.data._tasks;
 
-import com.metreeca.core.Xtream;
 import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Ontologies;
 import eu.ec2u.data.utilities.Reasoner;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -29,7 +28,6 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -37,7 +35,6 @@ import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.services.Logger.time;
 import static com.metreeca.core.toolkits.Lambdas.task;
-import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.Values.pattern;
@@ -49,25 +46,6 @@ import static java.util.stream.Collectors.toSet;
 
 public final class Tasks {
 
-    public static Xtream<URL> ontologies() {
-        return Xtream
-
-                .of(
-
-                        resource(EC2U.class, ".ttl"),
-                        resource(EC2U.class, "Institutes.ttl"),
-
-                        resource(EC2U.class, "SKOS.ttl"),
-                        resource(EC2U.class, "Org.ttl"),
-                        resource(EC2U.class, "DCAT2.ttl"),
-
-                        resource(EC2U.class, "Schema.ttl"),
-                        resource(EC2U.class, "Wikidata.ttl")
-
-                );
-    }
-
-
     public static Collection<Statement> validate(
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames
     ) {
@@ -78,7 +56,7 @@ public final class Tasks {
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames, final Stream<Frame> context
     ) {
 
-        final Reasoner reasoner=service(() -> new Reasoner(ontologies()
+        final Reasoner reasoner=service(() -> new Reasoner(Ontologies.ontologies()
 
                 .flatMap(url -> {
 

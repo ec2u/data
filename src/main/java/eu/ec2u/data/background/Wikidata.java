@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks;
+package eu.ec2u.data.background;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.link.Values;
@@ -22,6 +22,7 @@ import com.metreeca.open.actions.WikidataMirror;
 
 import eu.ec2u.data._cities.*;
 import eu.ec2u.data.ontologies.EC2U;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
 
@@ -30,6 +31,9 @@ import static eu.ec2u.data.Data.exec;
 import static java.util.stream.Collectors.joining;
 
 public final class Wikidata implements Runnable {
+
+    private static final IRI Context=EC2U.item("/wikidata");
+
 
     public static void main(final String... args) {
         exec(() -> new Wikidata().run());
@@ -61,7 +65,7 @@ public final class Wikidata implements Runnable {
                 )
 
                 .sink(new WikidataMirror()
-                        .contexts(EC2U.wikidata)
+                        .contexts(Context)
                         .languages(EC2U.Languages)
                 );
     }

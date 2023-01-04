@@ -21,6 +21,7 @@ import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.ontologies.EC2U;
+import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.toolkits.Lambdas.task;
@@ -33,6 +34,9 @@ import static java.util.function.Predicate.not;
 
 
 public final class Inferences implements Runnable {
+
+    private static final IRI Context=EC2U.item("/inferences");
+
 
     public static void main(final String... args) {
         exec(() -> new Inferences().run());
@@ -47,13 +51,13 @@ public final class Inferences implements Runnable {
     @Override public void run() {
         graph.update(task(connection -> {
 
-            connection.clear(EC2U.inferences);
+            connection.clear(Context);
 
             Xtream.of(text(Inferences.class, ".ql"))
                     .filter(not(String::isEmpty))
                     .forEach(new Update()
                             .base(EC2U.Base)
-                            .insert(EC2U.inferences)
+                            .insert(Context)
                     );
 
         }));

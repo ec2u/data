@@ -32,6 +32,7 @@ import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.datasets.persons.Persons;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.utilities.Cursor;
 import org.apache.commons.csv.*;
@@ -383,7 +384,7 @@ public final class Units extends Delegator {
                                 +"}\n"
                         );
 
-                        query.setBinding("scheme", eu.ec2u.data.concepts.Units.Name);
+                        query.setBinding("scheme", eu.ec2u.data.concepts.Units.Scheme);
                         query.setBinding("value", literal(key));
 
                         try ( final TupleQueryResult evaluate=query.evaluate() ) {
@@ -495,7 +496,7 @@ public final class Units extends Delegator {
 
                         final String fullName=format("%s %s", givenName, familyName);
 
-                        return frame(EC2U.id(EC2U.persons, university, fullName))
+                        return frame(EC2U.id(Persons.Context, university, fullName))
 
                                 .value(RDF.TYPE, EC2U.Person)
 
