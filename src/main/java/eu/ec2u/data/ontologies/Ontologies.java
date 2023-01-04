@@ -47,6 +47,7 @@ public final class Ontologies implements Runnable {
                 .of(
 
                         resource(EC2U.class, ".ttl"),
+                        resource(EC2U.class, "Licenses.ttl"),
                         resource(EC2U.class, "Institutes.ttl"),
 
                         resource(EC2U.class, "SKOS.ttl"),

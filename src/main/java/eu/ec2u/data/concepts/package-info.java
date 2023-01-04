@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U standard licenses.
+ * SKOS concept schemes.
  */
-package eu.ec2u.data.licenses;
+package eu.ec2u.data.concepts;

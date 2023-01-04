@@ -30,7 +30,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.item;
 
 /**
- * EC2U Research Unit SKOS Concept Schema.
+ * EC2U Research Unit SKOS Concept Scheme.
  */
 public final class Units implements Runnable {
 
