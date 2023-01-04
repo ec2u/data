@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._ports;
+package eu.ec2u.data.resources;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
