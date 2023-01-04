@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.units;
+package eu.ec2u.data.units;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -39,10 +39,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data._ports.Units.Unit;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.units.Units_.clear;
+import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.units.Units.clear;
 
 import static java.util.function.Predicate.not;
 
@@ -68,7 +68,7 @@ public final class UnitsPavia implements Runnable {
                 .flatMap(this::units)
                 .map(this::unit)
 
-                .sink(units -> upload(EC2U.units,
+                .sink(units -> upload(eu.ec2u.data.units.Units.Context,
                         validate(Unit(), Set.of(EC2U.Unit), units),
                         () -> clear(Pavia.University)
                 ));
@@ -114,7 +114,7 @@ public final class UnitsPavia implements Runnable {
                 .filter(not(String::isEmpty))
                 .map(name -> literal(name, Pavia.Language));
 
-        return frame(iri(EC2U.units, md5(frame.focus().stringValue())))
+        return frame(iri(eu.ec2u.data.units.Units.Context, md5(frame.focus().stringValue())))
 
                 .values(RDF.TYPE, EC2U.Unit)
                 .value(EC2U.university, Pavia.University)

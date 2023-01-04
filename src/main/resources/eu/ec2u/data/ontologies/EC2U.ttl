@@ -17,8 +17,7 @@
 <https://data.ec2u.eu/terms/> rdf:type owl:Ontology ;
                                void:rootResource ec2u:Actor ,
                                                  ec2u:Dataset ,
-                                                 ec2u:Event ,
-                                                 ec2u:Unit .
+                                                 ec2u:Event .
 
 #################################################################
 #    Annotation properties
@@ -238,15 +237,6 @@ schema:Thing rdf:type owl:Class .
                                dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
                                dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
                                dct:title "Events"@en .
-
-
-###  https://data.ec2u.eu/units/
-<https://data.ec2u.eu/units/> rdf:type owl:NamedIndividual ,
-                                       ec2u:Dataset ;
-                              dct:description "Research units and facilities."@en ;
-                              dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                              dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-                              dct:title "Research Units"@en .
 
 
 

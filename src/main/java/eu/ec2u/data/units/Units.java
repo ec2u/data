@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.units;
+package eu.ec2u.data.units;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Logger;
 import com.metreeca.core.toolkits.Strings;
 import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.actions.GET;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.jsonld.handlers.Driver;
+import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.*;
+import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Update;
+import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data._work.Cursor;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.concepts.Units;
 import eu.ec2u.data.ontologies.EC2U;
 import org.apache.commons.csv.*;
 import org.eclipse.rdf4j.model.*;
@@ -50,12 +54,21 @@ import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.core.toolkits.Lambdas.task;
+import static com.metreeca.core.toolkits.Resources.resource;
+import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
+import static com.metreeca.link.shapes.All.all;
+import static com.metreeca.link.shapes.Clazz.clazz;
+import static com.metreeca.link.shapes.Datatype.datatype;
+import static com.metreeca.link.shapes.Field.field;
+import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.ontologies.EC2U.Reference;
+import static eu.ec2u.data.ontologies.EC2U.multilingual;
 
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
@@ -63,7 +76,47 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-public final class Units_ {
+
+public final class Units extends Delegator {
+
+    public static final IRI Context=EC2U.item("/units/");
+
+
+    public static Shape Unit() {
+        return relate(EC2U.Resource(),
+
+                hidden(field(RDF.TYPE, all(EC2U.Unit))),
+
+                field(FOAF.HOMEPAGE, multiple(), datatype(IRIType)),
+
+                field(SKOS.PREF_LABEL, multilingual()),
+                field(SKOS.ALT_LABEL, multilingual()),
+
+                field(ORG.IDENTIFIER, optional(), datatype(XSD.STRING)),
+                field(ORG.CLASSIFICATION, optional(), Reference()),
+
+                field(ORG.UNIT_OF, repeatable(), Reference()),
+                field(ORG.HAS_UNIT, multiple(), Reference()),
+
+                field("head", inverse(ORG.HEAD_OF), multiple(), Reference())
+
+        );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> Stream.of(resource(Units.class, ".ttl").toString())
+
+                .map(new Retrieve()
+                        .base(EC2U.Base)
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
 
     public static void clear(final IRI university) {
         service(graph()).update(task(connection -> Stream
@@ -99,10 +152,27 @@ public final class Units_ {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Units_() { }
+    public Units() {
+        delegate(handler(
 
+                new Driver(Unit(),
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        filter(clazz(EC2U.Unit))
+
+                ),
+
+                new Router()
+
+                        .path("/", new Router()
+                                .get(new Relator())
+                        )
+
+                        .path("/{id}", new Router()
+                                .get(new Relator())
+                        )
+
+        ));
+    }
 
     static final class CSVLoader {
 
@@ -270,14 +340,14 @@ public final class Units_ {
 
             if ( nameEnglish.isEmpty() && nameLocal.isEmpty() ) {
 
-                logger.warning(Units_.class, format("line <%d> - no name provided",
+                logger.warning(Units.class, format("line <%d> - no name provided",
                         record.getRecordNumber()));
 
                 return Optional.empty();
 
             } else {
 
-                return Optional.of(EC2U.id(EC2U.units, university, code
+                return Optional.of(EC2U.id(Context, university, code
                         .or(() -> nameEnglish)
                         .or(() -> nameLocal)
                         .orElse("") // unexpected
@@ -309,7 +379,7 @@ public final class Units_ {
                                 +"}\n"
                         );
 
-                        query.setBinding("scheme", Units.Name);
+                        query.setBinding("scheme", eu.ec2u.data.concepts.Units.Name);
                         query.setBinding("value", literal(key));
 
                         try ( final TupleQueryResult evaluate=query.evaluate() ) {
@@ -318,7 +388,7 @@ public final class Units_ {
                                     .map(bindings -> bindings.getValue("concept"))
                                     .orElseGet(() -> {
 
-                                        logger.warning(Units_.class, format(
+                                        logger.warning(Units.class, format(
                                                 "unknown unit type <%s>", key
                                         ));
 
@@ -383,7 +453,7 @@ public final class Units_ {
                                 +"}"
                         );
 
-                        query.setBinding("type", Units.InstituteVirtual);
+                        query.setBinding("type", eu.ec2u.data.concepts.Units.InstituteVirtual);
                         query.setBinding("code", literal(key, "en"));
 
                         try ( final TupleQueryResult evaluate=query.evaluate() ) {
@@ -392,7 +462,7 @@ public final class Units_ {
                                     .map(bindings -> bindings.getValue("vi"))
                                     .orElseGet(() -> {
 
-                                        logger.warning(Units_.class, format(
+                                        logger.warning(Units.class, format(
                                                 "unknown virtual institute <%s>", key
                                         ));
 
@@ -517,13 +587,13 @@ public final class Units_ {
 
                                     unit.cursors(ORG.UNIT_OF)
                                             .filter(parent -> parent.values(RDF.TYPE).noneMatch(EC2U.university::equals))
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(Units.InstituteVirtual::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(eu.ec2u.data.concepts.Units.InstituteVirtual::equals))
                                             .flatMap(parent -> parent.localizeds(RDFS.LABEL, "en"))
                                             .filter(not(v -> v.startsWith("University "))) // !!!
                                             .collect(joining("; ")),
 
                                     unit.cursors(ORG.UNIT_OF)
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(Units.InstituteVirtual::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(eu.ec2u.data.concepts.Units.InstituteVirtual::equals))
                                             .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
                                             .collect(joining("; ")),
 
@@ -581,5 +651,4 @@ public final class Units_ {
         }
 
     }
-
 }

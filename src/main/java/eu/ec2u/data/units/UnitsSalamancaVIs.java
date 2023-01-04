@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.units;
+package eu.ec2u.data.units;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.csv.codecs.CSV;
@@ -91,7 +91,7 @@ public final class UnitsSalamancaVIs implements Runnable {
 
                     .execute();
 
-            connection.add(associations, EC2U.units);
+            connection.add(associations, Units.Context);
 
             return this;
 
@@ -121,7 +121,7 @@ public final class UnitsSalamancaVIs implements Runnable {
 
                 .map(record -> {
 
-                    final IRI vi=iri(EC2U.units, record.get("VI").toLowerCase(Locale.ROOT));
+                    final IRI vi=iri(Units.Context, record.get("VI").toLowerCase(Locale.ROOT));
                     final IRI unit=iri(record.get("Unit"));
 
                     return statement(unit, ORG.UNIT_OF, vi);

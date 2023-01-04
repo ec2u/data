@@ -81,6 +81,7 @@ public final class Courses extends Delegator {
         );
     }
 
+
     public static void main(final String... args) {
         exec(() -> Stream.of(resource(Courses.class, ".ttl").toString())
 

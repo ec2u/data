@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.units;
+package eu.ec2u.data.units;
 
 import com.metreeca.core.services.Vault;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Poitiers;
+import eu.ec2u.data._cities.Jena;
 import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
@@ -28,23 +28,23 @@ import java.util.Set;
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 
-import static eu.ec2u.data._ports.Units.Unit;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.units.Units_.clear;
+import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.units.Units.clear;
 
 import static java.lang.String.format;
 
-public final class UnitsPoitiers implements Runnable {
+public final class UnitsJena implements Runnable {
 
-    private static final IRI University=Poitiers.University;
-    private static final String Language=Poitiers.Language;
+    private static final IRI University=Jena.University;
+    private static final String Language=Jena.Language;
 
-    private static final String DataUrl="units-poitiers-url"; // vault label
+    private static final String DataUrl="units-jena-url"; // vault label
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new UnitsPoitiers().run());
+        Data.exec(() -> new UnitsJena().run());
     }
 
 
@@ -61,11 +61,11 @@ public final class UnitsPoitiers implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        new Units_.CSVLoader(University, Language)
+        new Units.CSVLoader(University, Language)
 
                 .load(url)
 
-                .sink(units -> upload(EC2U.units,
+                .sink(units -> upload(Units.Context,
                         validate(Unit(), Set.of(EC2U.Unit), units),
                         () -> clear(University)
                 ));

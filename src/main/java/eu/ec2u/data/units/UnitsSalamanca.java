@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.units;
+package eu.ec2u.data.units;
 
 import static eu.ec2u.data.Data.exec;
 
