@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Logger;
@@ -37,7 +37,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 import static eu.ec2u.data.Data.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
-public final class Events implements Runnable {
+public final class Events_ implements Runnable {
 
     public static Instant synced(final Value publisher) {
         return Xtream
@@ -56,7 +56,7 @@ public final class Events implements Runnable {
                 .flatMap(new TupleQuery()
                         .base(EC2U.Base)
                         .binding("publisher", publisher)
-                        .dflt(EC2U.events)
+                        .dflt(Events.Context)
                 )
 
                 .optMap(bindings -> literal(bindings.getValue("synced")))
@@ -71,7 +71,7 @@ public final class Events implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new Events().run());
+        exec(() -> new Events_().run());
     }
 
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.http.CodecException;
@@ -56,11 +56,11 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
 import static eu.ec2u.data._work.JSONLD.jsonld;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.util.function.Predicate.not;
 
@@ -91,7 +91,7 @@ public final class EventsJenaCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
@@ -177,7 +177,7 @@ public final class EventsJenaCity implements Runnable {
 
             // repeating events are described multiple times with different start dates
 
-            return frame(iri(EC2U.events, frame.skolemize(Schema.url, Schema.startDate)))
+            return frame(iri(Events.Context, frame.skolemize(Schema.url, Schema.startDate)))
 
                     .values(RDF.TYPE, EC2U.Event)
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -43,10 +43,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
@@ -77,7 +77,7 @@ public final class EventsCoimbraCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
@@ -126,7 +126,7 @@ public final class EventsCoimbraCity implements Runnable {
                     final Optional<Literal> disambiguatingDescription=description
                             .map(literal -> literal(clip(literal.stringValue()), Coimbra.Language));
 
-                    return frame(iri(EC2U.events, md5(url)))
+                    return frame(iri(Events.Context, md5(url)))
 
                             .values(RDF.TYPE, EC2U.Event)
 

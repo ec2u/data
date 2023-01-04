@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -36,27 +36,27 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
 import static eu.ec2u.data._work.WordPress.WordPress;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsIasiUniversity360 implements Runnable {
+public final class EventsIasiCityCultura implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://360.uaic.ro/blog/category/evenimente/"))
+    private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
             .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.University)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("University of Iasi / 360 Events", "en"),
-                    literal("Universitatea din Iași / 360 Evenimente", Iasi.Language)
+                    literal("Iaşul Cultural / Evenimente in Iași", "ro"),
+                    literal("Culture in Iasi / Events in Iasi", "en")
             );
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new EventsIasiUniversity360().run());
+        Data.exec(() -> new EventsIasiCityCultura().run());
     }
 
 
@@ -71,7 +71,7 @@ public final class EventsIasiUniversity360 implements Runnable {
                 .flatMap(this::crawl)
                 .map(this::event)
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
@@ -83,7 +83,7 @@ public final class EventsIasiUniversity360 implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://360.uaic.ro/feed")
+                        .model("https://culturainiasi.ro/feed")
                 )
 
                 .optMap(new GET<>(new XML()))

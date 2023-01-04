@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -23,7 +23,7 @@ import com.metreeca.link.Frame;
 import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Iasi;
+import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data._work.RSS;
 import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -36,27 +36,27 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
 import static eu.ec2u.data._work.WordPress.WordPress;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsIasiCityCultura implements Runnable {
+public final class EventsPaviaUniversity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
+    private static final Frame Publisher=frame(iri("http://news.unipv.it/"))
             .value(RDF.TYPE, EC2U.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("Iaşul Cultural / Evenimente in Iași", "ro"),
-                    literal("Culture in Iasi / Events in Iasi", "en")
+                    literal("University of Pavia / News", "en"),
+                    literal("Università di Pavia / News", Pavia.Language)
             );
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new EventsIasiCityCultura().run());
+        Data.exec(() -> new EventsPaviaUniversity().run());
     }
 
 
@@ -71,7 +71,7 @@ public final class EventsIasiCityCultura implements Runnable {
                 .flatMap(this::crawl)
                 .map(this::event)
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
@@ -80,10 +80,11 @@ public final class EventsIasiCityCultura implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(synced)
+        return Xtream.of(7929, 7891, 8086, 8251)
 
-                .flatMap(new Fill<Instant>()
-                        .model("https://culturainiasi.ro/feed")
+                .flatMap(new Fill<Integer>()
+                        .model("http://news.unipv.it/?feed=rss2&cat={category}")
+                        .value("category")
                 )
 
                 .optMap(new GET<>(new XML()))
@@ -92,9 +93,9 @@ public final class EventsIasiCityCultura implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return WordPress(frame, Iasi.Language)
+        return WordPress(frame, "it")
 
-                .value(EC2U.university, Iasi.University)
+                .value(EC2U.university, Pavia.University)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

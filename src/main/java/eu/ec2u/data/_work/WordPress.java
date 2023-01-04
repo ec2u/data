@@ -21,6 +21,7 @@ import com.metreeca.link.Frame;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.events.Events;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.Value;
@@ -53,7 +54,7 @@ public final class WordPress {
                 .map(Untag::untag)
                 .map(text -> literal(text, lang));
 
-        return frame(iri(EC2U.events, frame.skolemize(Link)))
+        return frame(iri(Events.Context, frame.skolemize(Link)))
 
                 .values(RDF.TYPE, EC2U.Event)
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -41,10 +41,10 @@ import static com.metreeca.link.shifts.Alt.alt;
 import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.link.shifts.Step.step;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -75,7 +75,7 @@ public final class EventsPaviaCity implements Runnable {
                 .flatMap(this::crawl)
                 .map(this::event)
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
@@ -134,7 +134,7 @@ public final class EventsPaviaCity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return frame(iri(EC2U.events, frame.skolemize(DCTERMS.SOURCE)))
+        return frame(iri(Events.Context, frame.skolemize(DCTERMS.SOURCE)))
 
                 .values(RDF.TYPE, EC2U.Event)
 

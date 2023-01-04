@@ -28,6 +28,7 @@ import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.events.Events;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.*;
@@ -199,7 +200,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 .filter(not(String::isEmpty)) // eg single image link
                 .map(text -> literal(text, language));
 
-        return event.string("url").map(id -> frame(iri(EC2U.events, md5(id)))
+        return event.string("url").map(id -> frame(iri(Events.Context, md5(id)))
 
                 .value(RDF.TYPE, EC2U.Event)
 

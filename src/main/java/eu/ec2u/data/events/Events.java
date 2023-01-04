@@ -14,26 +14,37 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._ports;
+package eu.ec2u.data.events;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
+import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
+import java.util.stream.Stream;
+
+import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
+import static eu.ec2u.data.Data.exec;
+
 public final class Events extends Delegator {
+
+    public static final IRI Context=EC2U.item("/events/");
+
 
     public static Shape Event() {
         return relate(EC2U.Resource(), Schema.Event(),
@@ -46,6 +57,23 @@ public final class Events extends Delegator {
         );
     }
 
+
+    public static void main(final String... args) {
+        exec(() -> Stream.of(resource(Events.class, ".ttl").toString())
+
+                .map(new Retrieve()
+                        .base(EC2U.Base)
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Events() {
         delegate(handler(

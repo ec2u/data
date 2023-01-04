@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -27,51 +27,71 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Poitiers;
+import eu.ec2u.data._cities.Salamanca;
 import eu.ec2u.data._work.RSS;
-import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
+import java.text.ParsePosition;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.*;
 
 import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoField.*;
 
-public final class EventsPoitiersCityGrand implements Runnable {
+public final class EventsSalamancaCityTO implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
+    private static final Frame Publisher=frame(iri("https://salamanca.es/en/calendar"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
-                    literal("Grand Poitiers / Events", "en"),
-                    literal("Grand Poitiers / Sortir", Poitiers.Language)
+                    literal("Oficina de Turismo de Salamanca", "es"),
+                    literal("Salamanca Municipal Tourist Office", "en")
             );
 
 
+    private static final DateTimeFormatter FeedDateTime=new DateTimeFormatterBuilder()
+
+            .parseCaseInsensitive()
+            .parseLenient()
+
+            .appendValue(DAY_OF_MONTH)
+            .appendLiteral(' ')
+            .appendText(MONTH_OF_YEAR)
+            .appendLiteral(' ')
+            .appendValue(YEAR)
+            .appendLiteral(' ')
+            .appendValue(HOUR_OF_DAY)
+            .appendLiteral(':')
+            .appendValue(MINUTE_OF_HOUR)
+
+            .toFormatter(Locale.ROOT);
+
+
     public static void main(final String... args) {
-        Data.exec(() -> new EventsPoitiersCityGrand().run());
+        Data.exec(() -> new EventsSalamancaCityTO().run());
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final OffsetDateTime now=Instant.now().atOffset(UTC);
+    private final Instant now=Instant.now();
 
 
     @Override public void run() {
@@ -80,7 +100,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
@@ -92,7 +112,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<Instant>()
-                        .model("https://sortir.grandpoitiers.fr/agenda/rss")
+                        .model("https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss")
                 )
 
                 .optMap(new GET<>(new XML()))
@@ -109,66 +129,42 @@ public final class EventsPoitiersCityGrand implements Runnable {
         return item.link("link").map(url -> {
 
             final Optional<Literal> name=item.string("title")
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Salamanca.Language));
 
             final Optional<Literal> description=item.string("description")
                     .map(Untag::untag)
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Salamanca.Language));
 
             final Optional<Literal> disambiguatingDescription=description
                     .map(Value::stringValue)
                     .map(Strings::clip)
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Salamanca.Language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
                     .map(Values::literal);
 
 
-            return frame(iri(EC2U.events, md5(url)))
+            return frame(iri(Events.Context, md5(url)))
 
                     .values(RDF.TYPE, EC2U.Event)
 
-                    .frame(DCTERMS.SUBJECT, category(item))
-
-                    .value(EC2U.university, Poitiers.University)
+                    .value(EC2U.university, Salamanca.University)
 
                     .value(DCTERMS.SOURCE, iri(url))
                     .frame(DCTERMS.PUBLISHER, Publisher)
                     .value(DCTERMS.CREATED, pubDate)
-                    .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
+                    .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now.atOffset(UTC))))
 
                     .value(Schema.url, iri(url))
                     .value(Schema.name, name)
-                    .value(Schema.image, item.link("enclosure/@url").map(Values::iri))
                     .value(Schema.description, description)
                     .value(Schema.disambiguatingDescription, disambiguatingDescription)
 
-                    .value(Schema.startDate, datetime(item, "ev:startdate"))
-                    .value(Schema.endDate, datetime(item, "ev:enddate"));
-
-        });
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Optional<Literal> datetime(final XPath xml, final String xpath) {
-        return xml.string(xpath)
-                .map(OffsetDateTime::parse)
-                .map(OffsetDateTime::toLocalDateTime)
-                .map(v -> v.atOffset(Poitiers.TimeZone.getRules().getOffset(v)))
-                .map(Values::literal);
-    }
-
-    private Optional<Frame> category(final XPath item) {
-        return item.string("category").map(category -> {
-
-            final Literal label=literal(category, Poitiers.Language);
-
-            return frame(iri(Concepts.Context, md5(category)))
-                    .value(RDF.TYPE, SKOS.CONCEPT)
-                    .value(RDFS.LABEL, label)
-                    .value(SKOS.PREF_LABEL, label);
+                    .value(Schema.startDate, item.string("title")
+                            .map(v -> FeedDateTime.parse(v, new ParsePosition(0)))
+                            .map(v -> LocalDateTime.from(v).atOffset(Salamanca.TimeZone.getRules().getOffset(now)))
+                            .map(Values::literal)
+                    );
 
         });
     }

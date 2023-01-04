@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -52,10 +52,10 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -113,7 +113,7 @@ public final class EventsTurkuCity implements Runnable {
 
         service(graph()).update(task(connection -> {
 
-            upload(EC2U.events, validate(
+            upload(Events.Context, validate(
                     Event(),
                     Set.of(EC2U.Event),
                     events.stream(),
@@ -177,7 +177,7 @@ public final class EventsTurkuCity implements Runnable {
                     .flatMap(Optional::stream)
                     .map(l -> normalize(l, s -> EOLPattern.matcher(s).replaceAll("\n\n")));
 
-            return frame(iri(EC2U.events, md5(id)))
+            return frame(iri(Events.Context, md5(id)))
 
                     .value(RDF.TYPE, EC2U.Event)
 

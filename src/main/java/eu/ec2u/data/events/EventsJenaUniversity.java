@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.http.CodecException;
@@ -46,11 +46,11 @@ import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
 import static eu.ec2u.data._work.Work.location;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
@@ -120,7 +120,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .distinct(Frame::focus) // events may be published multiple times by different publishers
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
@@ -206,7 +206,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .or(() -> frame.string(Schema.description))
                 .map(text -> literal(text, "de"));
 
-        return frame(iri(EC2U.events, frame.skolemize(Schema.url)))
+        return frame(iri(Events.Context, frame.skolemize(Schema.url)))
 
                 .value(RDF.TYPE, EC2U.Event)
 

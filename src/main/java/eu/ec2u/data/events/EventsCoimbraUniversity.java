@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Iasi;
+import eu.ec2u.data._cities.Coimbra;
 import eu.ec2u.data._work.Tribe;
 import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -32,26 +32,26 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class EventsIasiUniversity implements Runnable {
+public final class EventsCoimbraUniversity implements Runnable {
 
-    private static final Frame Publisher=frame(iri("https://www.uaic.ro/"))
+    private static final Frame Publisher=frame(iri("https://agenda.uc.pt/"))
             .value(RDF.TYPE, EC2U.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.University)
             .values(RDFS.LABEL,
-                    literal("University of Iasi / Events", "en"),
-                    literal("Universitatea din Iași / Evenimente", Iasi.Language)
+                    literal("University of Coimbra / Agenda UC", "en"),
+                    literal("Universidade de Coimbra / Agenda UC", Coimbra.Language)
             );
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new EventsIasiUniversity().run());
+        Data.exec(() -> new EventsCoimbraUniversity().run());
     }
 
 
@@ -63,23 +63,23 @@ public final class EventsIasiUniversity implements Runnable {
 
         Xtream.of(synced(Publisher.focus()))
 
-                .flatMap(new Tribe("https://www.uaic.ro/")
-                        .country(Iasi.City)
-                        .locality(Iasi.Country)
-                        .language(Iasi.Language)
-                        .zone(Iasi.Zone)
+                .flatMap(new Tribe("https://agenda.uc.pt/")
+                        .country(Coimbra.Country)
+                        .locality(Coimbra.City)
+                        .language(Coimbra.Language)
+                        .zone(Coimbra.Zone)
                 )
 
                 .map(event -> event
 
-                        .value(EC2U.university, Iasi.University)
+                        .value(EC2U.university, Coimbra.University)
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
 
                 )
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.events;
+package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -48,10 +48,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._ports.Events.Event;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
-import static eu.ec2u.data._tasks.events.Events.synced;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events_.synced;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
@@ -112,7 +112,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .flatMap(this::crawl)
                 .map(this::event)
 
-                .sink(events -> upload(EC2U.events,
+                .sink(events -> upload(Events.Context,
                         validate(Event(), Set.of(EC2U.Event), events)
                 ));
     }
@@ -151,7 +151,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .map(text -> Strings.clip(text, TextLength))
                 .map(text -> literal(text, Poitiers.Language));
 
-        return frame(iri(EC2U.events,
+        return frame(iri(Events.Context,
                 link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
         ))
 
