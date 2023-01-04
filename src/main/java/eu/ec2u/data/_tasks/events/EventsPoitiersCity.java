@@ -18,7 +18,7 @@ package eu.ec2u.data._tasks.events;
 
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;

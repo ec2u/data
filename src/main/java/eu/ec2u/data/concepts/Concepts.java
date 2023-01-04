@@ -21,10 +21,16 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
+import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Upload;
 
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
+import java.util.stream.Stream;
+
+import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.required;
 import static com.metreeca.link.shapes.Clazz.clazz;
@@ -32,7 +38,8 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
-import static eu.ec2u.data._terms.EC2U.*;
+import static eu.ec2u.data._tasks.Tasks.exec;
+import static eu.ec2u.data.ontologies.EC2U.*;
 
 public final class Concepts extends Delegator {
 
@@ -40,7 +47,7 @@ public final class Concepts extends Delegator {
 
 
     private static Shape ConceptScheme() {
-        return relate(Resource(),
+        return relate(EC2U.Resource(),
 
                 field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
 
@@ -54,7 +61,7 @@ public final class Concepts extends Delegator {
     }
 
     private static Shape Concept() {
-        return relate(Resource(),
+        return relate(EC2U.Resource(),
 
                 field(SKOS.PREF_LABEL, multilingual()),
                 field(SKOS.ALT_LABEL, multilingual()),
@@ -80,6 +87,23 @@ public final class Concepts extends Delegator {
         );
     }
 
+
+    public static void main(final String... args) {
+        exec(() -> Stream.of(resource(Concepts.class, ".ttl").toString())
+
+                .map(new Retrieve()
+                        .base(EC2U.Base)
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Concepts() {
         delegate(handler(

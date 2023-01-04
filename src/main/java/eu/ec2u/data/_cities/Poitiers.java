@@ -23,7 +23,7 @@ import java.time.ZoneOffset;
 
 import static com.metreeca.open.actions.Wikidata.wd;
 
-import static eu.ec2u.data._terms.EC2U.item;
+import static eu.ec2u.data.ontologies.EC2U.item;
 
 public final class Poitiers {
 

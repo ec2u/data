@@ -26,7 +26,7 @@ import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data._cities.Pavia;
-import eu.ec2u.data._terms.*;
+import eu.ec2u.data.ontologies.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;

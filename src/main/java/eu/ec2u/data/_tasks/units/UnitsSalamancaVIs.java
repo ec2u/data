@@ -20,7 +20,7 @@ import com.metreeca.core.Xtream;
 import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.actions.GET;
 
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.apache.commons.csv.CSVFormat;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;

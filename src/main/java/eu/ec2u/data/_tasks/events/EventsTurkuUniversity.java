@@ -28,9 +28,9 @@ import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data._cities.Turku;
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
 import eu.ec2u.data._work.Work;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;

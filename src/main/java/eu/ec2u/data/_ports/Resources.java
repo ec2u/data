@@ -21,7 +21,7 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -30,7 +30,7 @@ import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
 
-import static eu.ec2u.data._terms.EC2U.Reference;
+import static eu.ec2u.data.ontologies.EC2U.Reference;
 
 
 public final class Resources extends Delegator {

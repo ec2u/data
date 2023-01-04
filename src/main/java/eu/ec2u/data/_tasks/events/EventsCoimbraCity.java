@@ -25,9 +25,9 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data._cities.Coimbra;
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 

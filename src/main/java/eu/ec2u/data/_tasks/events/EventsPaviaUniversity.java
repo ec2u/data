@@ -23,8 +23,8 @@ import com.metreeca.link.Frame;
 import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data._cities.Pavia;
-import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data._work.RSS;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;

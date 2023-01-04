@@ -21,7 +21,7 @@ import com.metreeca.core.services.Logger;
 import com.metreeca.rdf4j.actions.TupleQuery;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 

@@ -19,7 +19,7 @@ package eu.ec2u.data.concepts;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;

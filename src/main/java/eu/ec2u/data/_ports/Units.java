@@ -22,7 +22,7 @@ import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.http.Handler.handler;
@@ -34,8 +34,8 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
-import static eu.ec2u.data._terms.EC2U.Reference;
-import static eu.ec2u.data._terms.EC2U.multilingual;
+import static eu.ec2u.data.ontologies.EC2U.Reference;
+import static eu.ec2u.data.ontologies.EC2U.multilingual;
 
 
 public final class Units extends Delegator {

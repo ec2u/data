@@ -22,8 +22,8 @@ import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
@@ -37,8 +37,8 @@ import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.link.shapes.MinInclusive.minInclusive;
 import static com.metreeca.link.shapes.Pattern.pattern;
 
-import static eu.ec2u.data._terms.EC2U.Reference;
-import static eu.ec2u.data._terms.EC2U.multilingual;
+import static eu.ec2u.data.ontologies.EC2U.Reference;
+import static eu.ec2u.data.ontologies.EC2U.multilingual;
 
 
 public final class Courses extends Delegator {

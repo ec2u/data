@@ -20,8 +20,8 @@ import com.metreeca.core.services.Logger;
 import com.metreeca.link.Values;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Ontologies;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Ontologies;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Collection;

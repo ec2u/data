@@ -20,9 +20,9 @@ import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
 import com.metreeca.xml.actions.Untag;
 
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 

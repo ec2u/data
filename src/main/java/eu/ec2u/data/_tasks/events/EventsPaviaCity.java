@@ -26,8 +26,8 @@ import com.metreeca.rdf.actions.Normalize.StringToDate;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data._cities.Pavia;
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._terms;
+package eu.ec2u.data.ontologies;
 
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;

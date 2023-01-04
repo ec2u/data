@@ -19,7 +19,7 @@ package eu.ec2u.data._tasks.units;
 import com.metreeca.core.services.Vault;
 
 import eu.ec2u.data._cities.Turku;
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;

@@ -16,7 +16,7 @@
 
 package eu.ec2u.data._cities;
 
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.time.ZoneId;

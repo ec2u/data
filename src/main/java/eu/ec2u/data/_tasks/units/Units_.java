@@ -26,10 +26,10 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data._work.Cursor;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.Units;
+import eu.ec2u.data.ontologies.EC2U;
 import org.apache.commons.csv.*;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;

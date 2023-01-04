@@ -27,8 +27,8 @@ import com.metreeca.link.Values;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data._cities.Salamanca;
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;

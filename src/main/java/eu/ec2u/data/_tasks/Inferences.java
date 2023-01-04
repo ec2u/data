@@ -20,7 +20,7 @@ import com.metreeca.core.Xtream;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.toolkits.Lambdas.task;

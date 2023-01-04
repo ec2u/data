@@ -26,9 +26,9 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data._cities.Salamanca;
-import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.Units;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;

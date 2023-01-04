@@ -24,7 +24,7 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data._cities.*;
-import eu.ec2u.data._terms.EC2U;
+import eu.ec2u.data.ontologies.EC2U;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.*;
@@ -42,7 +42,7 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data._tasks.Tasks.exec;
-import static eu.ec2u.data._terms.EC2U.actors;
+import static eu.ec2u.data.ontologies.EC2U.actors;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;

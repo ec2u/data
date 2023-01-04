@@ -20,8 +20,8 @@ import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data._cities.Pavia;
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;

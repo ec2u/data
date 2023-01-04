@@ -25,9 +25,9 @@ import com.metreeca.xml.XPath;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data._cities.Jena;
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
 import eu.ec2u.data._work.Work;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.*;

@@ -30,9 +30,9 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data._cities.Jena;
-import eu.ec2u.data._terms.EC2U;
-import eu.ec2u.data._terms.Schema;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.Schema;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 

@@ -30,8 +30,8 @@ import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 
 import eu.ec2u.data._ports.*;
-import eu.ec2u.data._terms.EC2U;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
