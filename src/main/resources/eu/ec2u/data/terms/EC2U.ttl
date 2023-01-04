@@ -229,7 +229,7 @@ schema:Thing rdf:type owl:Class .
                                         ec2u:Dataset ;
                                dct:description "Knowledge ecosystem actors."@en ;
                                dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                               dct:rights "Copyright © 2022 EC2U Alliance" ;
+                               dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
                                dct:title "Actors"@en .
 
 
@@ -238,7 +238,7 @@ schema:Thing rdf:type owl:Class .
                                          ec2u:Dataset ;
                                 dct:description "Academic courses."@en ;
                                 dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                                dct:rights "Copyright © 2022 EC2U Alliance" ;
+                                dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
                                 dct:title "Courses"@en .
 
 
@@ -247,7 +247,7 @@ schema:Thing rdf:type owl:Class .
                                         ec2u:Dataset ;
                                dct:description "Academic and public local events."@en ;
                                dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                               dct:rights "Copyright © 2022 EC2U Alliance" ;
+                               dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
                                dct:title "Events"@en .
 
 
@@ -256,7 +256,7 @@ schema:Thing rdf:type owl:Class .
                                        ec2u:Dataset ;
                               dct:description "Research units and facilities."@en ;
                               dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                              dct:rights "Copyright © 2022 EC2U Alliance" ;
+                              dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
                               dct:title "Research Units"@en .
 
 
@@ -265,7 +265,7 @@ schema:Thing rdf:type owl:Class .
                                               ec2u:Dataset ;
                                      dct:description "Partner universities."@en ;
                                      dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                                     dct:rights "Copyright © 2022 EC2U Alliance" ;
+                                     dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
                                      dct:title "Universities"@en .
 
 
