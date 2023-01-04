@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.courses;
+package eu.ec2u.data.courses;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Vault;
@@ -46,9 +46,9 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._ports.Courses.Course;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
+import static eu.ec2u.data.courses.Courses.Course;
 
 import static java.util.Map.entry;
 
@@ -92,7 +92,7 @@ public final class CoursesPoitiers implements Runnable {
                 .flatMap(this::courses)
                 .optMap(this::course)
 
-                .sink(courses -> upload(EC2U.courses,
+                .sink(courses -> upload(Courses.Context,
                         validate(Course(), Set.of(EC2U.Course), courses),
                         () -> service(graph()).update(task(connection -> Stream
 
@@ -196,7 +196,7 @@ public final class CoursesPoitiers implements Runnable {
                     .map(v -> literal(v, Poitiers.Language));
 
 
-            return frame(EC2U.id(EC2U.courses, Poitiers.University, String.valueOf(id)))
+            return frame(EC2U.id(Courses.Context, Poitiers.University, String.valueOf(id)))
 
                     .values(RDF.TYPE, EC2U.Course)
                     .value(EC2U.university, Poitiers.University)

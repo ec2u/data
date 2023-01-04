@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.courses;
+package eu.ec2u.data.courses;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -48,10 +48,10 @@ import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data._ports.Courses.Course;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
 import static eu.ec2u.data._work.Work.localized;
+import static eu.ec2u.data.courses.Courses.Course;
 
 import static java.util.Map.entry;
 
@@ -79,7 +79,7 @@ public final class CoursesPavia implements Runnable {
                 .flatMap(this::courses)
                 .map(this::course)
 
-                .sink(courses -> upload(EC2U.courses,
+                .sink(courses -> upload(Courses.Context,
                         validate(Course(), Set.of(EC2U.Course), courses),
                         () -> service(graph()).update(task(connection -> Stream
 
@@ -138,7 +138,7 @@ public final class CoursesPavia implements Runnable {
     }
 
     private Frame course(final Frame frame) {
-        return frame(iri(EC2U.courses, md5(frame.focus().stringValue())))
+        return frame(iri(Courses.Context, md5(frame.focus().stringValue())))
 
                 .values(RDF.TYPE, EC2U.Course)
                 .value(EC2U.university, Pavia.University)

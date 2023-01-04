@@ -16,7 +16,6 @@
 
 <https://data.ec2u.eu/terms/> rdf:type owl:Ontology ;
                                void:rootResource ec2u:Actor ,
-                                                 ec2u:Course ,
                                                  ec2u:Dataset ,
                                                  ec2u:Event ,
                                                  ec2u:Unit .
@@ -231,14 +230,6 @@ schema:Thing rdf:type owl:Class .
                                dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
                                dct:title "Actors"@en .
 
-
-###  https://data.ec2u.eu/courses/
-<https://data.ec2u.eu/courses/> rdf:type owl:NamedIndividual ,
-                                         ec2u:Dataset ;
-                                dct:description "Academic courses."@en ;
-                                dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-                                dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-                                dct:title "Courses"@en .
 
 
 ###  https://data.ec2u.eu/events/

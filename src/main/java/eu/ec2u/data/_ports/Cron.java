@@ -22,11 +22,11 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
 import eu.ec2u.data._tasks.*;
-import eu.ec2u.data._tasks.courses.CoursesCoimbra;
-import eu.ec2u.data._tasks.courses.CoursesPavia;
 import eu.ec2u.data._tasks.events.Events;
 import eu.ec2u.data._tasks.events.*;
 import eu.ec2u.data._tasks.units.*;
+import eu.ec2u.data.courses.CoursesCoimbra;
+import eu.ec2u.data.courses.CoursesPavia;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks.courses;
+package eu.ec2u.data.courses;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -54,9 +54,9 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._ports.Courses.Course;
 import static eu.ec2u.data._tasks.Tasks.upload;
 import static eu.ec2u.data._tasks.Tasks.validate;
+import static eu.ec2u.data.courses.Courses.Course;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -105,7 +105,7 @@ public final class CoursesCoimbra implements Runnable {
                 .flatMap(this::courses)
                 .optMap(this::course)
 
-                .sink(courses -> upload(EC2U.courses,
+                .sink(courses -> upload(Courses.Context,
                         validate(Course(), Set.of(EC2U.Course), courses),
                         () -> service(graph()).update(task(connection -> Stream
 
@@ -209,7 +209,7 @@ public final class CoursesCoimbra implements Runnable {
                     .collect(toList());
 
 
-            return frame(iri(EC2U.courses, md5(Coimbra.University+"@"+id)))
+            return frame(iri(Courses.Context, md5(Coimbra.University+"@"+id)))
 
                     .values(RDF.TYPE, EC2U.Course)
                     .value(EC2U.university, Coimbra.University)

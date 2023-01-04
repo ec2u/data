@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._ports;
+package eu.ec2u.data.courses;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
+import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
+import java.util.stream.Stream;
+
+import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shapes.All.all;
@@ -37,11 +43,15 @@ import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.link.shapes.MinInclusive.minInclusive;
 import static com.metreeca.link.shapes.Pattern.pattern;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.Reference;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
 
 
 public final class Courses extends Delegator {
+
+    public static final IRI Context=EC2U.item("/courses/");
+
 
     public static Shape Course() {
         return relate(EC2U.Resource(), Schema.Thing(),
@@ -71,6 +81,22 @@ public final class Courses extends Delegator {
         );
     }
 
+    public static void main(final String... args) {
+        exec(() -> Stream.of(resource(Courses.class, ".ttl").toString())
+
+                .map(new Retrieve()
+                        .base(EC2U.Base)
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Courses() {
         delegate(handler(

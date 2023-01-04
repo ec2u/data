@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U allied universities.
+ * EC2U academic programs and courses.
  */
-package eu.ec2u.data.universities;
+package eu.ec2u.data.courses;
