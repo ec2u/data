@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._ports;
+package eu.ec2u.data._tasks;
 
 import com.metreeca.core.services.Logger;
 import com.metreeca.http.Handler;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
-import eu.ec2u.data._tasks.*;
 import eu.ec2u.data.courses.CoursesCoimbra;
 import eu.ec2u.data.courses.CoursesPavia;
 import eu.ec2u.data.events.*;

@@ -14,10 +14,6 @@
 @prefix schema: <https://schema.org/> .
 @base <https://data.ec2u.eu/terms/> .
 
-<https://data.ec2u.eu/terms/> rdf:type owl:Ontology ;
-                               void:rootResource
-                                                 ec2u:Dataset .
-
 #################################################################
 #    Annotation properties
 #################################################################

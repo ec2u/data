@@ -29,11 +29,14 @@ import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 
-import eu.ec2u.data._ports.*;
+import eu.ec2u.data._tasks.Cron;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.courses.Courses;
+import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.repository.Repository;

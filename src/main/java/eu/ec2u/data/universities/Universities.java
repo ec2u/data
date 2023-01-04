@@ -48,7 +48,7 @@ import static eu.ec2u.data.ontologies.EC2U.*;
 
 public final class Universities extends Delegator {
 
-    public static final IRI Context=item("/universities/");
+    private static final IRI Context=item("/universities/");
 
 
     public static Shape University() {
