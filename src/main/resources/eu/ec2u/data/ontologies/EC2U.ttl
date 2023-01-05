@@ -16,32 +16,13 @@
 
 
 
-#################################################################
-#    Object Properties
-#################################################################
-
-
-
-###  http://www.w3.org/ns/org#classification
-org:classification rdf:type owl:ObjectProperty ;
-                   rdfs:subPropertyOf dct:type .
-
-
-#################################################################
-#    Classes
-#################################################################
-
-
-###  http://www.w3.org/ns/org#FormalOrganization
-org:FormalOrganization rdf:type owl:Class .
-
-
-###  http://www.w3.org/ns/org#OrganizationalUnit
-org:OrganizationalUnit rdf:type owl:Class .
-
 
 ###  http://xmlns.com/foaf/0.1/Person
 foaf:Person rdf:type owl:Class .
+
+###  https://data.ec2u.eu/terms/Person
+ec2u:Person rdf:type owl:Class ;
+            rdfs:subClassOf foaf:Person .
 
 
 ###  https://data.ec2u.eu/terms/Actor
@@ -58,29 +39,18 @@ ec2u:Course rdf:type owl:Class ;
             void:uriSpace "https://data.ec2u.eu/courses/" .
 
 
+###  https://schema.org/Course
+schema:Course rdf:type owl:Class ;
+              rdfs:subClassOf schema:Thing .
+
+
+
 
 ###  https://data.ec2u.eu/terms/Event
 ec2u:Event rdf:type owl:Class ;
            rdfs:subClassOf ec2u:Resource ,
                            schema:Event ;
            void:uriSpace "https://data.ec2u.eu/events/" .
-
-
-###  https://data.ec2u.eu/terms/Person
-ec2u:Person rdf:type owl:Class ;
-            rdfs:subClassOf foaf:Person .
-
-
-###  https://data.ec2u.eu/terms/Unit
-ec2u:Unit rdf:type owl:Class ;
-          rdfs:subClassOf org:OrganizationalUnit ,
-                          ec2u:Resource ;
-          void:uriSpace "https://data.ec2u.eu/units/" .
-
-
-###  https://schema.org/Course
-schema:Course rdf:type owl:Class ;
-              rdfs:subClassOf schema:Thing .
 
 
 ###  https://schema.org/Event

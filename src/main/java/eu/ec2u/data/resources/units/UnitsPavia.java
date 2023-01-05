@@ -41,13 +41,14 @@ import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.ontologies.EC2U.Universities.Pavia;
 import static eu.ec2u.data.resources.units.Units.Unit;
-import static eu.ec2u.data.resources.units.Units.clear;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
+
+    private static final IRI Context=iri(eu.ec2u.data.resources.units.Units.Context, "/pavia/");
 
     private static final Map<IRI, IRI> Types=Map.ofEntries(
             entry(VIVO.AcademicDepartment, Units.Department),
@@ -69,10 +70,7 @@ public final class UnitsPavia implements Runnable {
                 .flatMap(this::units)
                 .map(this::unit)
 
-                .sink(units -> upload(eu.ec2u.data.resources.units.Units.Context,
-                        validate(Unit(), Set.of(eu.ec2u.data.resources.units.Units.Unit), units),
-                        () -> clear(Pavia.Id)
-                ));
+                .sink(units -> upload(Context, validate(Unit(), Set.of(Unit), units)));
     }
 
 
@@ -117,7 +115,7 @@ public final class UnitsPavia implements Runnable {
 
         return frame(iri(eu.ec2u.data.resources.units.Units.Context, md5(frame.focus().stringValue())))
 
-                .values(RDF.TYPE, eu.ec2u.data.resources.units.Units.Unit)
+                .values(RDF.TYPE, Unit)
                 .value(Resources.university, Pavia.Id)
 
                 .value(DCTERMS.TITLE, label)

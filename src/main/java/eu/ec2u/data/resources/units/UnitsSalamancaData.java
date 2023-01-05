@@ -50,7 +50,6 @@ import static com.metreeca.link.Values.*;
 import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.ontologies.EC2U.Universities.Salamanca;
 import static eu.ec2u.data.resources.units.Units.Unit;
-import static eu.ec2u.data.resources.units.Units.clear;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.lang.String.format;
@@ -58,6 +57,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.function.Predicate.not;
 
 public final class UnitsSalamancaData implements Runnable {
+
+    private static final IRI Context=iri(eu.ec2u.data.resources.units.Units.Context, "/salamanca/data/");
 
     private static final String APIUrl="units-salamanca-url"; // vault label
     private static final String APIKey="units-salamanca-key"; // vault label
@@ -85,10 +86,7 @@ public final class UnitsSalamancaData implements Runnable {
                 .flatMap(this::units)
                 .optMap(this::unit)
 
-                .sink(units -> upload(eu.ec2u.data.resources.units.Units.Context,
-                        validate(Unit(), Set.of(eu.ec2u.data.resources.units.Units.Unit), units),
-                        () -> clear(Salamanca.Id)
-                ));
+                .sink(units -> upload(Context, validate(Unit(), Set.of(Unit), units)));
     }
 
 

@@ -124,7 +124,6 @@ public final class Universities extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     public static final class Loader implements Runnable {
 
         public static void main(final String... args) {

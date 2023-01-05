@@ -52,8 +52,6 @@ public final class Ontologies implements Runnable {
                         resource(Ontologies.class, "EC2U.ttl"),
                         resource(Ontologies.class, "Institutes.ttl"),
 
-                        resource(Ontologies.class, "Org.ttl"),
-
                         resource(Ontologies.class, "Schema.ttl")
                 )
 

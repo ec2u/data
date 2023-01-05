@@ -26,12 +26,11 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.*;
-import com.metreeca.rdf.actions.Retrieve;
-import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.EC2U.Universities;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
 import eu.ec2u.data.resources.persons.Persons;
@@ -46,6 +45,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -55,8 +55,6 @@ import static com.metreeca.core.Locator.storage;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Lambdas.task;
-import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
@@ -66,9 +64,11 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.link.shifts.Seq.seq;
+import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.ontologies.EC2U.Base;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
@@ -109,53 +109,6 @@ public final class Units extends Delegator {
     }
 
 
-    public static void clear(final IRI university) { // !!! remove
-        service(graph()).update(task(connection -> Stream
-
-                .of(""
-                        +"prefix ec2u: </terms/>\n"
-                        +"prefix org: <http://www.w3.org/ns/org#>\n"
-                        +"\n"
-                        +"delete {\n"
-                        +"\n"
-                        +"\t?u ?p ?o.\n"
-                        +"\t?h org:headOf ?u.\n"
-                        +"\t\n"
-                        +"} where {\n"
-                        +"\n"
-                        +"\t?u a ec2u:Unit;\n"
-                        +"\t\tec2u:university $university.\n"
-                        +"\n"
-                        +"\toptional { ?u ?p ?o }\n"
-                        +"\toptional { ?h org:headOf ?u }\n"
-                        +"\n"
-                        +"}"
-                )
-
-                .forEach(new Update()
-                        .base(EC2U.Base)
-                        .binding("university", university)
-                )
-
-        ));
-    }
-
-
-    public static void main(final String... args) {
-        exec(() -> Stream.of(resource(Units.class, ".ttl").toString())
-
-                .map(new Retrieve()
-                        .base(EC2U.Base)
-                )
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Units() {
@@ -183,7 +136,28 @@ public final class Units extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static final class CSVLoader {
+    public static final class Loader implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Loader().run());
+        }
+
+        @Override public void run() {
+            Stream
+
+                    .of(
+                            rdf(Units.class, ".ttl", Base)
+                    )
+
+                    .forEach(new Upload()
+                            .contexts(Context)
+                            .clear(true)
+                    );
+        }
+
+    }
+
+    static final class CSVLoader implements Function<String, Xtream<Frame>> {
 
         private static final CSVFormat Format=CSVFormat.Builder.create()
                 .setHeader()
@@ -203,8 +177,7 @@ public final class Units extends Delegator {
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private final IRI university;
-        private final String language;
+        private final Universities university;
 
         private final Map<String, Value> types=new HashMap<>();
         private final Map<String, Value> vis=new HashMap<>();
@@ -213,22 +186,17 @@ public final class Units extends Delegator {
         private final Logger logger=service(logger());
 
 
-        CSVLoader(final IRI university, final String language) {
+        CSVLoader(final Universities university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");
             }
 
-            if ( language == null ) {
-                throw new NullPointerException("null language");
-            }
-
             this.university=university;
-            this.language=language;
         }
 
 
-        Xtream<Frame> load(final String url) {
+        @Override public Xtream<Frame> apply(final String url) {
 
 
             final Collection<CSVRecord> units=Xtream.of(url)
@@ -267,12 +235,12 @@ public final class Units extends Delegator {
             final Optional<Literal> labelLocal=acronym
                     .flatMap(a -> nameLocal.map(n -> format("%s - %s", a, n)))
                     .or(() -> nameLocal)
-                    .map(v -> literal(v, language));
+                    .map(v -> literal(v, university.Language));
 
             return id(record).map(id -> frame(id)
 
                     .values(RDF.TYPE, Unit)
-                    .value(Resources.university, university)
+                    .value(Resources.university, university.Id)
 
                     .value(ORG.CLASSIFICATION, field(record, "Type")
                             .flatMap(this::type)
@@ -282,7 +250,7 @@ public final class Units extends Delegator {
 
                     .values(ORG.UNIT_OF, field(record, "Parent")
                             .map(parent -> parents(parent, records))
-                            .orElseGet(() -> Stream.of(university))
+                            .orElseGet(() -> Stream.of(university.Id))
                     )
 
                     .value(ORG.UNIT_OF, field(record, "VI")
@@ -297,7 +265,7 @@ public final class Units extends Delegator {
                     )
 
                     .value(DCTERMS.DESCRIPTION, field(record, "Description (Local)")
-                            .map(v -> literal(v, language))
+                            .map(v -> literal(v, university.Language))
                     )
 
                     .frames(DCTERMS.SUBJECT, Stream.concat(
@@ -306,7 +274,7 @@ public final class Units extends Delegator {
                                     .flatMap(topics -> topics(topics, "en")),
 
                             field(record, "Topics (Local)").stream()
-                                    .flatMap(topics -> topics(topics, language))
+                                    .flatMap(topics -> topics(topics, university.Language))
 
                     ))
 
@@ -314,7 +282,7 @@ public final class Units extends Delegator {
                     .value(SKOS.PREF_LABEL, labelLocal)
 
                     .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, "en"))) // !!! no language
-                    .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, language))) // !!! no language
+                    .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, university.Language))) // !!! no language
 
                     .value(FOAF.HOMEPAGE, field(record, "Factsheet")
                             .filter(URLPattern.asMatchPredicate())
@@ -356,7 +324,7 @@ public final class Units extends Delegator {
 
             } else {
 
-                return Optional.of(EC2U.item(Context, university, code
+                return Optional.of(EC2U.item(Context, university.Id, code
                         .or(() -> nameEnglish)
                         .or(() -> nameLocal)
                         .orElse("") // unexpected
@@ -440,7 +408,7 @@ public final class Units extends Delegator {
                     })
                     .collect(toList());
 
-            return parents.isEmpty() ? Stream.of(university) : parents.stream();
+            return parents.isEmpty() ? Stream.of(university.Id) : parents.stream();
         }
 
         private Optional<Value> vi(final String code) {
@@ -500,13 +468,13 @@ public final class Units extends Delegator {
 
                         final String fullName=format("%s %s", givenName, familyName);
 
-                        return frame(EC2U.item(Persons.Context, university, fullName))
+                        return frame(EC2U.item(Persons.Context, university.Id, fullName))
 
                                 .value(RDF.TYPE, Persons.Person)
 
-                                .value(RDFS.LABEL, literal(fullName, language)) // !!! no language
+                                .value(RDFS.LABEL, literal(fullName, university.Language)) // !!! no language
 
-                                .value(Resources.university, university)
+                                .value(Resources.university, university.Id)
 
                                 .value(FOAF.TITLE, Optional.ofNullable(title).map(Values::literal))
                                 .value(FOAF.GIVEN_NAME, literal(givenName))
@@ -519,7 +487,7 @@ public final class Units extends Delegator {
             return Stream.of(topics)
 
                     .flatMap(Strings::split)
-                    .map(v -> literal(v, this.language))
+                    .map(v -> literal(v, language))
 
                     .map(label -> frame(iri(
                                     TopicsScheme.focus().stringValue(),

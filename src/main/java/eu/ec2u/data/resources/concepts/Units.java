@@ -37,18 +37,18 @@ public final class Units implements Runnable {
     public static final IRI Scheme=item("/concepts/units");
 
 
-    public static final IRI Institute=iri(Scheme, "institute");
-    public static final IRI InstituteVirtual=iri(Scheme, "institute-virtual");
-    public static final IRI Centre=iri(Scheme, "centre");
-    public static final IRI CentreResearch=iri(Scheme, "centre-research");
-    public static final IRI CentreTransfer=iri(Scheme, "centre-transfer");
-    public static final IRI Department=iri(Scheme, "department");
-    public static final IRI Laboratory=iri(Scheme, "laboratory");
-    public static final IRI Group=iri(Scheme, "group");
-    public static final IRI GroupRecognized=iri(Scheme, "group-recognized");
-    public static final IRI GroupInformal=iri(Scheme, "group-informal");
-    public static final IRI GroupStudent=iri(Scheme, "group-student");
-    public static final IRI Station=iri(Scheme, "station");
+    public static final IRI Institute=iri(Scheme, "/institute");
+    public static final IRI InstituteVirtual=iri(Scheme, "/institute-virtual");
+    public static final IRI Centre=iri(Scheme, "/centre");
+    public static final IRI CentreResearch=iri(Scheme, "/centre-research");
+    public static final IRI CentreTransfer=iri(Scheme, "/centre-transfer");
+    public static final IRI Department=iri(Scheme, "/department");
+    public static final IRI Laboratory=iri(Scheme, "/laboratory");
+    public static final IRI Group=iri(Scheme, "/group");
+    public static final IRI GroupRecognized=iri(Scheme, "/group-recognized");
+    public static final IRI GroupInformal=iri(Scheme, "/group-informal");
+    public static final IRI GroupStudent=iri(Scheme, "/group-student");
+    public static final IRI Station=iri(Scheme, "/station");
 
 
     public static void main(final String... args) {

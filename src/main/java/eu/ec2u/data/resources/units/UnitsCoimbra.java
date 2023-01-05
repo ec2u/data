@@ -16,34 +16,34 @@
 
 package eu.ec2u.data.resources.units;
 
+import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Vault;
 
-import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
+import static com.metreeca.link.Values.iri;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.ontologies.EC2U.Universities.Coimbra;
 import static eu.ec2u.data.resources.units.Units.Unit;
-import static eu.ec2u.data.resources.units.Units.clear;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.lang.String.format;
 
 public final class UnitsCoimbra implements Runnable {
 
-    private static final IRI University=Coimbra.Id;
-    private static final String Language=Coimbra.Language;
+    private static final IRI Context=iri(Units.Context, "/coimbra/");
 
     private static final String DataUrl="units-coimbra-url"; // vault label
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new UnitsCoimbra().run());
+        exec(() -> new UnitsCoimbra().run());
     }
 
 
@@ -60,14 +60,11 @@ public final class UnitsCoimbra implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        new Units.CSVLoader(University, Language)
+        Xtream.of(url)
 
-                .load(url)
+                .flatMap(new Units.CSVLoader(Coimbra))
 
-                .sink(units -> upload(Units.Context,
-                        validate(Unit(), Set.of(Units.Unit), units),
-                        () -> clear(University)
-                ));
+                .sink(units -> upload(Context, validate(Unit(), Set.of(Unit), units)));
     }
 
 }
