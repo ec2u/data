@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks;
+package eu.ec2u.data;
 
 import com.metreeca.core.services.Logger;
 import com.metreeca.http.Handler;
@@ -22,6 +22,7 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
 import eu.ec2u.data._delta.Chores;
+import eu.ec2u.data._tasks.Inferences;
 import eu.ec2u.data.background.Wikidata;
 import eu.ec2u.data.resources.courses.CoursesCoimbra;
 import eu.ec2u.data.resources.courses.CoursesPavia;
@@ -75,13 +76,13 @@ public final class Cron extends Delegator {
                 .path("/events/pavia/borromeo", execute(new EventsPaviaBorromeo()))
                 .path("/events/pavia/city", execute(new EventsPaviaCity()))
                 .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
-                //.path("/events/poitiers/city", execute(new EventsPoitiersCity()))
+                // !!! .path("/events/poitiers/city", execute(new EventsPoitiersCity()))
                 .path("/events/poitiers/city/grand", execute(new EventsPoitiersCityGrand()))
                 .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
                 .path("/events/salamanca/city/sacis", execute(new EventsSalamancaCitySACIS()))
                 .path("/events/salamanca/city/to", execute(new EventsSalamancaCityTO()))
                 .path("/events/turku/university", execute(new EventsTurkuUniversity()))
-                //.path("/events/turku/city", execute(new EventsTurkuCity()))
+                // !!! .path("/events/turku/city", execute(new EventsTurkuCity()))
                 .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
 
         )));
