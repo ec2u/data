@@ -24,10 +24,7 @@ import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
-import com.metreeca.rdf4j.actions.Update;
 
-import eu.ec2u.data.Data;
-import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.ISCED2011;
@@ -40,20 +37,18 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.http.Request.POST;
 import static com.metreeca.http.Request.query;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
-import static com.metreeca.rdf4j.services.Graph.graph;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.ontologies.EC2U.Universities.Coimbra;
 import static eu.ec2u.data.resources.courses.Courses.Course;
@@ -64,6 +59,9 @@ import static java.util.Map.entry;
 import static java.util.stream.Collectors.toList;
 
 public final class CoursesCoimbra implements Runnable {
+
+    private static final IRI Context=iri(Courses.Context, "/coimbra/");
+
 
     private static final String APIUrl="courses-coimbra-url";
     private static final String APIId="courses-coimbra-id";
@@ -91,7 +89,7 @@ public final class CoursesCoimbra implements Runnable {
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new CoursesCoimbra().run());
+        exec(() -> new CoursesCoimbra().run());
     }
 
 
@@ -106,28 +104,8 @@ public final class CoursesCoimbra implements Runnable {
                 .flatMap(this::courses)
                 .optMap(this::course)
 
-                .sink(courses -> upload(Courses.Context,
-                        validate(Course(), Set.of(Courses.Course), courses),
-                        () -> service(graph()).update(task(connection -> Stream
-
-                                .of(""
-                                        +"prefix ec2u: </terms/>\n"
-                                        +"\n"
-                                        +"delete where {\n"
-                                        +"\n"
-                                        +"\t?u a ec2u:Course ;\n"
-                                        +"\t\tec2u:university $university ;\n"
-                                        +"\t\t?p ?o .\n"
-                                        +"\n"
-                                        +"}"
-                                )
-
-                                .forEach(new Update()
-                                        .base(EC2U.Base)
-                                        .binding("university", Coimbra.Id)
-                                )
-
-                        ))
+                .sink(courses -> upload(Context,
+                        validate(Course(), Set.of(Course), courses)
                 ));
     }
 
@@ -212,7 +190,7 @@ public final class CoursesCoimbra implements Runnable {
 
             return frame(iri(Courses.Context, md5(Coimbra.Id+"@"+id)))
 
-                    .values(RDF.TYPE, Courses.Course)
+                    .values(RDF.TYPE, Course)
                     .value(Resources.university, Coimbra.Id)
 
                     .values(DCTERMS.TITLE, label)

@@ -22,11 +22,10 @@ import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.GraphQuery;
-import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data.Data;
-import eu.ec2u.data.ontologies.*;
+import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data.ontologies.VIVO;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
@@ -35,18 +34,16 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.services.Logger.time;
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shifts.Seq.seq;
-import static com.metreeca.rdf4j.services.Graph.graph;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.ontologies.EC2U.Universities.Pavia;
@@ -58,6 +55,8 @@ import static java.util.Map.entry;
 
 public final class CoursesPavia implements Runnable {
 
+    private static final IRI Context=iri(Courses.Context, "/pavia/");
+
     private static final Map<String, String> Languages=Map.ofEntries(
             entry("italian", "it"),
             entry("italiano", "it"),
@@ -67,7 +66,7 @@ public final class CoursesPavia implements Runnable {
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new CoursesPavia().run());
+        exec(() -> new CoursesPavia().run());
     }
 
 
@@ -80,28 +79,8 @@ public final class CoursesPavia implements Runnable {
                 .flatMap(this::courses)
                 .map(this::course)
 
-                .sink(courses -> upload(Courses.Context,
-                        validate(Course(), Set.of(Courses.Course), courses),
-                        () -> service(graph()).update(task(connection -> Stream
-
-                                .of(""
-                                        +"prefix ec2u: </terms/>\n"
-                                        +"\n"
-                                        +"delete where {\n"
-                                        +"\n"
-                                        +"\t?u a ec2u:Course ;\n"
-                                        +"\t\tec2u:university $university ;\n"
-                                        +"\t\t?p ?o .\n"
-                                        +"\n"
-                                        +"}"
-                                )
-
-                                .forEach(new Update()
-                                        .base(EC2U.Base)
-                                        .binding("university", Pavia.Id)
-                                )
-
-                        ))
+                .sink(courses -> upload(Context,
+                        validate(Course(), Set.of(Course), courses)
                 ));
     }
 
@@ -141,7 +120,7 @@ public final class CoursesPavia implements Runnable {
     private Frame course(final Frame frame) {
         return frame(iri(Courses.Context, md5(frame.focus().stringValue())))
 
-                .values(RDF.TYPE, Courses.Course)
+                .values(RDF.TYPE, Course)
                 .value(Resources.university, Pavia.Id)
 
                 .values(DCTERMS.TITLE, localized(frame.values(RDFS.LABEL)))

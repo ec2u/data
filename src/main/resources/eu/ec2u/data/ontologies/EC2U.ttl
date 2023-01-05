@@ -17,31 +17,12 @@
 
 
 
-###  http://xmlns.com/foaf/0.1/Person
-foaf:Person rdf:type owl:Class .
-
-###  https://data.ec2u.eu/terms/Person
-ec2u:Person rdf:type owl:Class ;
-            rdfs:subClassOf foaf:Person .
-
-
 ###  https://data.ec2u.eu/terms/Actor
 ec2u:Actor rdf:type owl:Class ;
            rdfs:subClassOf ec2u:Resource ;
            dct:description "Knowledge ecosystem actor."@en ;
            void:uriSpace "https://data.ec2u.eu/actors/" .
 
-
-###  https://data.ec2u.eu/terms/Course
-ec2u:Course rdf:type owl:Class ;
-            rdfs:subClassOf ec2u:Resource ,
-                            schema:Course ;
-            void:uriSpace "https://data.ec2u.eu/courses/" .
-
-
-###  https://schema.org/Course
-schema:Course rdf:type owl:Class ;
-              rdfs:subClassOf schema:Thing .
 
 
 

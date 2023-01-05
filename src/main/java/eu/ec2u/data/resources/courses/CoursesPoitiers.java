@@ -22,9 +22,7 @@ import com.metreeca.core.toolkits.Resources;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
-import com.metreeca.rdf4j.actions.Update;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.concepts.ISCED2011;
@@ -36,15 +34,14 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import java.io.*;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
+import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
-import static com.metreeca.rdf4j.services.Graph.graph;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.ontologies.EC2U.Universities.Poitiers;
 import static eu.ec2u.data.resources.courses.Courses.Course;
@@ -53,6 +50,8 @@ import static eu.ec2u.data.utilities.validation.Validators.validate;
 import static java.util.Map.entry;
 
 public final class CoursesPoitiers implements Runnable {
+
+    private static final IRI Context=iri(Courses.Context, "/poitiers/");
 
     private static final String APIUrl="courses-poitiers-url";
     private static final String APIId="courses-poitiers-id";
@@ -77,7 +76,7 @@ public final class CoursesPoitiers implements Runnable {
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new CoursesPoitiers().run());
+        exec(() -> new CoursesPoitiers().run());
     }
 
 
@@ -92,28 +91,8 @@ public final class CoursesPoitiers implements Runnable {
                 .flatMap(this::courses)
                 .optMap(this::course)
 
-                .sink(courses -> upload(Courses.Context,
-                        validate(Course(), Set.of(Courses.Course), courses),
-                        () -> service(graph()).update(task(connection -> Stream
-
-                                .of(""
-                                        +"prefix ec2u: </terms/>\n"
-                                        +"\n"
-                                        +"delete where {\n"
-                                        +"\n"
-                                        +"\t?u a ec2u:Course ;\n"
-                                        +"\t\tec2u:university $university ;\n"
-                                        +"\t\t?p ?o .\n"
-                                        +"\n"
-                                        +"}"
-                                )
-
-                                .forEach(new Update()
-                                        .base(EC2U.Base)
-                                        .binding("university", Poitiers.Id)
-                                )
-
-                        ))
+                .sink(courses -> upload(Context,
+                        validate(Course(), Set.of(Courses.Course), courses)
                 ));
     }
 
