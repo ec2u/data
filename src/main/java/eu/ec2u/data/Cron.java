@@ -21,11 +21,10 @@ import com.metreeca.http.Handler;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
-import eu.ec2u.data._delta.Chores;
-import eu.ec2u.data._tasks.Inferences;
 import eu.ec2u.data.background.Wikidata;
 import eu.ec2u.data.resources.courses.CoursesCoimbra;
 import eu.ec2u.data.resources.courses.CoursesPavia;
+import eu.ec2u.data.resources.datasets.Datasets;
 import eu.ec2u.data.resources.events.*;
 import eu.ec2u.data.resources.units.*;
 
@@ -45,10 +44,7 @@ public final class Cron extends Delegator {
 
 
     public Cron() {
-        delegate(cron(new Router().get(new Router()
-
-                .path("/chores", execute(new Chores()))
-                .path("/inferences", execute(new Inferences()))
+        delegate(cron(new Router()
 
                 .path("/background/wikidata", execute(new Wikidata()))
 
@@ -63,7 +59,6 @@ public final class Cron extends Delegator {
                 .path("/courses/coimbra", execute(new CoursesCoimbra()))
                 .path("/courses/pavia", execute(new CoursesPavia()))
 
-                .path("/events/", execute(new Events_()))
                 .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
                 .path("/events/coimbra/city", execute(new EventsCoimbraCity()))
                 .path("/events/iasi/university", execute(new EventsIasiUniversity()))
@@ -85,32 +80,38 @@ public final class Cron extends Delegator {
                 // !!! .path("/events/turku/city", execute(new EventsTurkuCity()))
                 .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
 
-        )));
+                .path("/events/", execute(new Events_()))
+
+                .path("/datasets/", execute(new Datasets.Updater()))
+
+        ));
     }
 
 
     private Handler execute(final Runnable task) {
-        return (request, forward) -> {
+        return new Router()
 
-            try {
+                .get((request, forward) -> {
 
-                time(task).apply(t -> logger.info(task.getClass(), format(
-                        "executed in <%,d> ms", t
-                )));
+                    try {
 
-                return request.reply(OK);
+                        time(task).apply(t -> logger.info(task.getClass(), format(
+                                "executed in <%,d> ms", t
+                        )));
 
-            } catch ( final RuntimeException e ) {
+                        return request.reply(OK);
 
-                service(logger()).warning(task.getClass(), "failed", e);
+                    } catch ( final RuntimeException e ) {
 
-                return request.reply(BadGateway, format(
-                        "task failed / %s", e.getMessage()
-                ));
+                        service(logger()).warning(task.getClass(), "failed", e);
 
-            }
+                        return request.reply(BadGateway, format(
+                                "task failed / %s", e.getMessage()
+                        ));
 
-        };
+                    }
+
+                });
     }
 
 }

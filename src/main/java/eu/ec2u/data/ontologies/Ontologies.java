@@ -50,14 +50,11 @@ public final class Ontologies implements Runnable {
                 .of(
 
                         resource(Ontologies.class, "EC2U.ttl"),
-                        resource(Ontologies.class, "Licenses.ttl"),
                         resource(Ontologies.class, "Institutes.ttl"),
 
                         resource(Ontologies.class, "Org.ttl"),
 
-                        resource(Ontologies.class, "Schema.ttl"),
-                        resource(Ontologies.class, "Wikidata.ttl")
-
+                        resource(Ontologies.class, "Schema.ttl")
                 )
 
                 .map(URL::toString)

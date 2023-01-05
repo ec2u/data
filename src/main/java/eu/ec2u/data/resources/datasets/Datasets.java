@@ -25,7 +25,6 @@ import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
-import eu.ec2u.data.resources.concepts.Concepts;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -51,7 +50,7 @@ import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Datasets extends Delegator {
 
-    private static final IRI Context=item("/");
+    private static final IRI Context=item("/datasets/");
 
     public static final IRI Dataset=EC2U.term("Dataset");
 
@@ -104,7 +103,7 @@ public final class Datasets extends Delegator {
             Stream
 
                     .of(
-                            rdf(Datasets.class, ".ttl"),
+                            rdf(Datasets.class, ".ttl", EC2U.Base),
 
                             rdf("http://rdfs.org/ns/void.ttl"),
                             rdf("http://www.w3.org/ns/dcat.ttl")
@@ -127,7 +126,7 @@ public final class Datasets extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(text(Concepts.class, ".ul"))
+                    .of(text(Datasets.class, ".ul"))
 
                     .forEach(new Update()
                             .base(EC2U.Base)

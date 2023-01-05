@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.joining;
 
 public final class Wikidata implements Runnable {
 
-    private static final IRI Context=EC2U.item("/wikidata");
+    private static final IRI Context=EC2U.item("/wikidata/");
 
 
     public static void main(final String... args) {

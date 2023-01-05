@@ -1,0 +1,12 @@
+@prefix ec2u:	</terms/> .
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+
+ec2u:Resource a owl:Class .
+
+dct:title rdfs:subPropertyOf rdfs:label .
+
+dct:description rdfs:subPropertyOf rdfs:comment .
+
+owl:sameAs a owl:SymmetricProperty .

@@ -21,16 +21,13 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.stream.Stream;
 
-import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Shape.required;
@@ -41,6 +38,7 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.link.shapes.Link.link;
+import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.*;
@@ -109,21 +107,6 @@ public final class Universities extends Delegator {
     }
 
 
-    public static void main(final String... args) {
-        exec(() -> Stream.of(resource(Universities.class, ".ttl").toString())
-
-                .map(new Retrieve()
-                        .base(EC2U.Base)
-                )
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Universities() {
@@ -136,6 +119,30 @@ public final class Universities extends Delegator {
                 .path("/{id}", new Router()
                         .get(new Relator())
                 )));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    public static final class Loader implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Loader().run());
+        }
+
+        @Override public void run() {
+            Stream
+
+                    .of(
+                            rdf(Universities.class, ".ttl", Base)
+                    )
+
+                    .forEach(new Upload()
+                            .contexts(Context)
+                            .clear(true)
+                    );
+        }
     }
 
 }

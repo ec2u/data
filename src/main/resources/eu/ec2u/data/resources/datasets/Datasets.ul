@@ -16,52 +16,47 @@ insert {
 
 } where {
 
-	{ select ?dataset (count(distinct ?entity) as ?entities) {
+	{ select ?dataset (count(distinct ?resource) as ?entities) {
 
-		?dataset a ec2u:Dataset
+		?dataset a ec2u:Dataset;
+			void:rootResource ?class.
 
-		optional { ?dataset void:uriSpace ?space }
+		?resource a ec2u:Resource, ?class.
 
-		bind (coalesce(?space, str(?dataset)) as ?prefix)
-
-		?class rdfs:subClassOf ec2u:Resource;
-			void:uriSpace ?prefix;
-			^a ?entity
-
-    } group by ?dataset }
+	} group by ?dataset }
 
 };
 
 
 #### Compute Dataset University Partitions Size ########################################################################
 
-insert {
-
-	?dataset void:subset ?subset .
-	?university dct:extent ?subset .
-
-	?subset
-		ec2u:university ?university ;
-		void:entities ?entities .
-
-} where {
-
-    bind (bnode() as ?subset)
-
-	{ select ?dataset ?university (count(distinct ?entity) as ?entities) {
-
-		?dataset a ec2u:Dataset
-
-		optional { ?dataset void:uriSpace ?space }
-
-		bind (coalesce(?space, str(?dataset)) as ?prefix)
-
-		?class rdfs:subClassOf ec2u:Resource;
-			void:uriSpace ?prefix;
-			^a ?entity .
-
-		?entity ec2u:university ?university .
-
-    } group by ?dataset ?university }
-
-};
+# insert {
+#
+# 	?dataset void:subset ?subset .
+# 	?university dct:extent ?subset .
+#
+# 	?subset
+# 		ec2u:university ?university ;
+# 		void:entities ?entities .
+#
+# } where {
+#
+#     bind (bnode() as ?subset)
+#
+# 	{ select ?dataset ?university (count(distinct ?entity) as ?entities) {
+#
+# 		?dataset a ec2u:Dataset
+#
+# 		optional { ?dataset void:uriSpace ?space }
+#
+# 		bind (coalesce(?space, str(?dataset)) as ?prefix)
+#
+# 		?class rdfs:subClassOf ec2u:Resource;
+# 			void:uriSpace ?prefix;
+# 			^a ?entity .
+#
+# 		?entity ec2u:university ?university .
+#
+#     } group by ?dataset ?university }
+#
+# };
