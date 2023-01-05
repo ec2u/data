@@ -154,7 +154,6 @@ public final class Data implements Runnable {
 
                                 .path("/cron/*", new Cron())
                                 .path("/resources/", new Resources())
-                                .path("/concepts/*", new Concepts())
 
                                 .path("/*", new Router()
 
@@ -164,6 +163,7 @@ public final class Data implements Runnable {
                                         .path("/courses/*", new Courses())
                                         .path("/persons/*", new Persons())
                                         .path("/events/*", new Events())
+                                        .path("/concepts/*", new Concepts())
 
                                 )
 

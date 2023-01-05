@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.work;
+package eu.ec2u.data.utilities.feeds;
 
 import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
@@ -34,7 +34,7 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data.work.RSS.*;
+import static eu.ec2u.data.utilities.feeds.RSS.*;
 
 public final class WordPress {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.work;
+package eu.ec2u.data.utilities;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
@@ -47,11 +47,7 @@ public final class Work {
         return Xtream.from(values).optMap(Work::localized);
     }
 
-    public static Optional<Literal> localized(final Optional<Value> value) {
-        return value.flatMap(Work::localized);
-    }
-
-    public static Optional<Literal> localized(final Value value) {
+    private static Optional<Literal> localized(final Value value) {
 
         final String text=literal(value)
                 .map(Value::stringValue)
@@ -60,7 +56,7 @@ public final class Work {
 
         final String lang=literal(value)
                 .flatMap(Literal::getLanguage)
-                .orElse(Pavia.Language);
+                .orElse(Pavia.Language); // !!!
 
         return text.isEmpty() ? Optional.empty() : Optional.of(literal(text, lang));
     }

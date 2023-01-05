@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.work;
+package eu.ec2u.data.utilities.validation;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -31,12 +31,12 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static java.util.stream.Collectors.toList;
 
-public final class Reasoner implements UnaryOperator<Collection<Statement>> {
+ final class Reasoner implements UnaryOperator<Collection<Statement>> {
 
     private final List<Function<Collection<Statement>, Stream<Statement>>> rules;
 
 
-    public Reasoner() {
+    Reasoner() {
 
         this.rules=rules(service(graph()).query(connection -> Stream
 
@@ -53,17 +53,8 @@ public final class Reasoner implements UnaryOperator<Collection<Statement>> {
 
     }
 
-    public Reasoner(final Collection<Statement> ontology) {
 
-        if ( ontology == null ) {
-            throw new NullPointerException("null ontology");
-        }
-
-        this.rules=rules(ontology);
-    }
-
-
-    @Override public Collection<Statement> apply(final Collection<Statement> statements) {
+     @Override public Collection<Statement> apply(final Collection<Statement> statements) {
 
         final Collection<Statement> expanded=new HashSet<>(statements);
 

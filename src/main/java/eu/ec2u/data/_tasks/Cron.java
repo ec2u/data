@@ -21,6 +21,7 @@ import com.metreeca.http.Handler;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
+import eu.ec2u.data._delta.Chores;
 import eu.ec2u.data.background.Wikidata;
 import eu.ec2u.data.resources.courses.CoursesCoimbra;
 import eu.ec2u.data.resources.courses.CoursesPavia;

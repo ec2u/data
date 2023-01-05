@@ -25,7 +25,6 @@ import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -45,6 +44,7 @@ import static com.metreeca.link.shapes.Guard.relate;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.item;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Datasets extends Delegator {
 
@@ -54,7 +54,7 @@ public final class Datasets extends Delegator {
 
 
     private static Shape Dataset() {
-        return relate(Resources.Resource(),
+        return relate(Resource(),
 
                 filter(clazz(Dataset)),
 

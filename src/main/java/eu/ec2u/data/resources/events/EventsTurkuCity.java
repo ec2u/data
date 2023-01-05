@@ -54,10 +54,10 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._tasks.Tasks.upload;
-import static eu.ec2u.data._tasks.Tasks.validate;
+import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
+import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;

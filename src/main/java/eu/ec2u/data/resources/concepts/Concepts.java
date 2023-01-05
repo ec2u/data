@@ -35,6 +35,7 @@ import static com.metreeca.link.shapes.Guard.*;
 
 import static eu.ec2u.data.ontologies.EC2U.item;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Concepts extends Delegator {
 
@@ -42,7 +43,7 @@ public final class Concepts extends Delegator {
 
 
     private static Shape ConceptScheme() {
-        return relate(Resources.Resource(),
+        return relate(Resource(),
 
                 field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
 
@@ -56,7 +57,7 @@ public final class Concepts extends Delegator {
     }
 
     private static Shape Concept() {
-        return relate(Resources.Resource(),
+        return relate(Resource(),
 
                 field(SKOS.PREF_LABEL, multilingual()),
                 field(SKOS.ALT_LABEL, multilingual()),

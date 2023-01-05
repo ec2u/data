@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.work;
+package eu.ec2u.data.utilities.feeds;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -32,6 +32,7 @@ import eu.ec2u.data.resources.concepts.Concepts;
 import eu.ec2u.data.resources.events.Events;
 import eu.ec2u.data.resources.locations.Locations;
 import eu.ec2u.data.resources.organizations.Organizations;
+import eu.ec2u.data.utilities.Work;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 

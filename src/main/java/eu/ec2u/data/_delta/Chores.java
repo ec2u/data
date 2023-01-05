@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks;
+package eu.ec2u.data._delta;
 
 import com.metreeca.core.services.Logger;
 import com.metreeca.link.Values;

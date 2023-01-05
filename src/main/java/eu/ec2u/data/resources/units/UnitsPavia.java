@@ -39,10 +39,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data._tasks.Tasks.upload;
-import static eu.ec2u.data._tasks.Tasks.validate;
+import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.resources.units.Units.Unit;
 import static eu.ec2u.data.resources.units.Units.clear;
+import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.util.function.Predicate.not;
 

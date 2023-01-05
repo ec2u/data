@@ -11,7 +11,7 @@ title: Create a New Dataset
     - e.g. `ec2u:University void:uriSpace 'https://data.ec2u.eu/universities/'`
     - supports entity counting in `eu.ec2u.data._tasks.Inferences.ql`
 - declare top-level dataset classes as `void:rootResources` in `eu/ec2u/data/terms/EC2U.ttl`
-  - prevent garbage collection from `eu.ec2u.data._tasks.Chores#collect()`
+  - prevent garbage collection from `eu.ec2u.data._delta.Chores#collect()`
 - define datasheet in `docs/datasets`
   - review linked datasets docs
   - update links/description in index.md

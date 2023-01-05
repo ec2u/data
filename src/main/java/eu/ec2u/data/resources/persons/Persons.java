@@ -23,7 +23,6 @@ import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.ontologies.EC2U;
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -35,6 +34,7 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
 
 import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Persons extends Delegator {
 
@@ -44,7 +44,7 @@ public final class Persons extends Delegator {
 
 
     public static Shape Person() {
-        return relate(Resources.Resource(),
+        return relate(Resource(),
 
                 hidden(field(RDF.TYPE, all(Person))),
 

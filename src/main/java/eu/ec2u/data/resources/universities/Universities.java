@@ -45,6 +45,7 @@ import static com.metreeca.link.shapes.Link.link;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.*;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 
 public final class Universities extends Delegator {
@@ -62,7 +63,7 @@ public final class Universities extends Delegator {
 
 
     private static Shape University() {
-        return relate(
+        return relate(Resource(),
 
                 filter(clazz(University)),
 

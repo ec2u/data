@@ -35,7 +35,7 @@ import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
 import eu.ec2u.data.resources.persons.Persons;
-import eu.ec2u.data.work.Cursor;
+import eu.ec2u.data.utilities.Cursor;
 import org.apache.commons.csv.*;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -71,6 +71,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
 import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
@@ -87,7 +88,7 @@ public final class Units extends Delegator {
 
 
     public static Shape Unit() {
-        return relate(Resources.Resource(),
+        return relate(Resource(),
 
                 hidden(field(RDF.TYPE, all(Unit))),
 

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._tasks;
+package eu.ec2u.data.utilities.validation;
 
 import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.work.Reasoner;
+import eu.ec2u.data._delta.Uploads;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -29,19 +29,15 @@ import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.core.services.Logger.time;
-import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.inverse;
 import static com.metreeca.link.Values.pattern;
-import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-public final class Tasks {
-
+public final class Validators {
     public static Collection<Statement> validate(
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames
     ) {
@@ -74,7 +70,7 @@ public final class Tasks {
 
                     if ( invalid ) {
 
-                        service(logger()).warning(Tasks.class, format(
+                        service(logger()).warning(Uploads.class, format(
                                 "mistyped frame <%s> %s", resource, extended.stream()
                                         .filter(pattern(resource, RDF.TYPE, null))
                                         .map(Statement::getObject)
@@ -105,42 +101,4 @@ public final class Tasks {
 
         return explicit;
     }
-
-
-    public static void upload(final IRI context, final Collection<Statement> model) {
-        upload(context, model, () -> service(graph()).update(task(connection -> model.stream()
-                .map(Statement::getSubject)
-                .distinct()
-                .forEach(subject ->
-                        connection.remove(subject, null, null, context)
-                )
-        )));
-    }
-
-    public static void upload(final IRI context, final Collection<Statement> model, final Runnable setup) {
-
-        final long subjects=model.stream()
-                .map(Statement::getSubject)
-                .distinct()
-                .count();
-
-        time(() -> {
-
-            service(graph()).update(task(connection -> {
-
-                setup.run();
-                connection.add(model, context);
-
-            }));
-
-        }).apply(elapsed -> service(logger()).info(Tasks.class, format(
-                "updated <%d> resources in <%s> in <%d> ms", subjects, context, elapsed
-        )));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Tasks() { }
-
 }

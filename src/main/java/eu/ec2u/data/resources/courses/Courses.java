@@ -26,7 +26,6 @@ import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
@@ -47,6 +46,7 @@ import static com.metreeca.link.shapes.Pattern.pattern;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
 import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 
 public final class Courses extends Delegator {
@@ -57,7 +57,7 @@ public final class Courses extends Delegator {
 
 
     public static Shape Course() {
-        return relate(Resources.Resource(), Schema.Thing(),
+        return relate(Resource(), Schema.Thing(),
 
                 hidden(field(RDF.TYPE, all(Course))),
 

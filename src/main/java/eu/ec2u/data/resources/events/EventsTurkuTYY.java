@@ -47,10 +47,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._tasks.Tasks.upload;
-import static eu.ec2u.data._tasks.Tasks.validate;
+import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
+import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;

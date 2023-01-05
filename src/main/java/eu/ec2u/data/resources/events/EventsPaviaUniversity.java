@@ -26,7 +26,7 @@ import eu.ec2u.data.Data;
 import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.universities.Universities;
-import eu.ec2u.data.work.RSS;
+import eu.ec2u.data.utilities.feeds.RSS;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -37,11 +37,11 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._tasks.Tasks.upload;
-import static eu.ec2u.data._tasks.Tasks.validate;
+import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
-import static eu.ec2u.data.work.WordPress.WordPress;
+import static eu.ec2u.data.utilities.feeds.WordPress.WordPress;
+import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 

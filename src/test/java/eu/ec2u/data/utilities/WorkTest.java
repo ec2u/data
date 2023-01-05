@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.work;
+package eu.ec2u.data.utilities;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static eu.ec2u.data.work.Work.url;
+import static eu.ec2u.data.utilities.Work.url;
 import static org.assertj.core.api.Assertions.assertThat;
 
 final class WorkTest {

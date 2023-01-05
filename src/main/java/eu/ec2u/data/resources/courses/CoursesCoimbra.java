@@ -55,9 +55,9 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._tasks.Tasks.upload;
-import static eu.ec2u.data._tasks.Tasks.validate;
+import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data.resources.courses.Courses.Course;
+import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
