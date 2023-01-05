@@ -68,7 +68,7 @@ public final class EventsCoimbraUniversity implements Runnable {
                         .country(Coimbra.Country)
                         .locality(Coimbra.City)
                         .language(Coimbra.Language)
-                        .zone(Coimbra.Zone)
+                        .zone(Coimbra.TimeZone)
                 )
 
                 .map(event -> event

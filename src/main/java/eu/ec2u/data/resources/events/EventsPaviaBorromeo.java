@@ -67,7 +67,7 @@ public final class EventsPaviaBorromeo implements Runnable {
                         .country(Pavia.Country)
                         .locality(Pavia.City)
                         .language(Pavia.Language)
-                        .zone(Pavia.Zone)
+                        .zone(Pavia.TimeZone)
                 )
 
                 .map(event -> event

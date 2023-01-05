@@ -25,7 +25,6 @@ import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -45,6 +44,7 @@ import static com.metreeca.link.shapes.Link.link;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.*;
+import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 
 
@@ -98,7 +98,7 @@ public final class Universities extends Delegator {
 
                         field(DCTERMS.EXTENT, multiple(),
 
-                                field("dataset", inverse(VOID.SUBSET), required(), Resources.Reference()),
+                                field("dataset", inverse(VOID.SUBSET), required(), Reference()),
                                 field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
 
                         )

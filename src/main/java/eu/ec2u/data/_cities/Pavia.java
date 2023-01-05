@@ -20,7 +20,6 @@ import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 
 import static com.metreeca.open.actions.Wikidata.wd;
 
@@ -31,7 +30,6 @@ public final class Pavia {
     public static final IRI City=wd("Q6259");
     public static final IRI Country=wd("Q38");
     public static final String Language="it";
-    public static final ZoneOffset Zone=ZoneOffset.ofHours(1); // !!! remove
     public static final ZoneId TimeZone=ZoneId.of("Europe/Rome");
 
 

@@ -67,9 +67,9 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
         );
     }
 
-    private static Literal datetime(final String timestamp, final ZoneOffset offset) {
+    private static Literal datetime(final String timestamp, final ZoneId zone, final Instant instant) {
         return literal(OffsetDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), offset)
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), zone.getRules().getOffset(instant))
                 .truncatedTo(ChronoUnit.SECONDS)
         );
     }
@@ -81,8 +81,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
     private IRI country;
     private IRI locality;
-    private String language; // !!! as IRI
-    private ZoneOffset zone=UTC;
+    private String language;
+    private ZoneId zone=ZoneId.of("UTC");
 
 
     public Tribe(final String base) {
@@ -128,7 +128,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
         return this;
     }
 
-    public Tribe zone(final ZoneOffset zone) {
+    public Tribe zone(final ZoneId zone) {
 
         if ( zone == null ) {
             throw new NullPointerException("null zone");
@@ -186,6 +186,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
     private Optional<Frame> event(final JSONPath event) {
 
+        final Instant now=Instant.now();
+
         final Optional<Literal> title=event.string("title")
                 .map(XPath::decode)
                 .map(text -> literal(text, language));
@@ -217,8 +219,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 .value(Schema.description, description)
                 .value(Schema.disambiguatingDescription, excerpt)
 
-                .value(Schema.startDate, event.string("start_date").map(timestamp -> datetime(timestamp, zone)))
-                .value(Schema.endDate, event.string("end_date").map(timestamp -> datetime(timestamp, zone)))
+                .value(Schema.startDate, event.string("start_date").map(timestamp -> datetime(timestamp, zone, now)))
+                .value(Schema.endDate, event.string("end_date").map(timestamp -> datetime(timestamp, zone, now)))
 
                 .bool(Schema.isAccessibleForFree, event
                         .string("cost").filter(v -> v.equalsIgnoreCase("livre")) // !!! localize

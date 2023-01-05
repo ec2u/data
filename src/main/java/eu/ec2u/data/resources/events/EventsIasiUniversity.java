@@ -65,10 +65,10 @@ public final class EventsIasiUniversity implements Runnable {
         Xtream.of(synced(Publisher.focus()))
 
                 .flatMap(new Tribe("https://www.uaic.ro/")
-                        .country(Iasi.City)
-                        .locality(Iasi.Country)
+                        .country(Iasi.Country)
+                        .locality(Iasi.City)
                         .language(Iasi.Language)
-                        .zone(Iasi.Zone)
+                        .zone(Iasi.TimeZone)
                 )
 
                 .map(event -> event

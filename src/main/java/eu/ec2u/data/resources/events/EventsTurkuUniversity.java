@@ -82,17 +82,17 @@ public final class EventsTurkuUniversity implements Runnable {
     private static final String APIKey="key-events-turku-university"; // vault label
 
 
-    private static Literal instant(final String timestamp) {
+    private static Literal instant(final String timestamp, final Instant instant) {
         return literal(OffsetDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.Zone)
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.TimeZone.getRules().getOffset(instant))
                 .truncatedTo(ChronoUnit.SECONDS)
                 .withOffsetSameInstant(UTC)
         );
     }
 
-    private static Literal datetime(final String timestamp) {
+    private static Literal datetime(final String timestamp, final Instant instant) {
         return literal(OffsetDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.Zone)
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.TimeZone.getRules().getOffset(instant))
                 .truncatedTo(ChronoUnit.SECONDS)
         );
     }
@@ -178,6 +178,8 @@ public final class EventsTurkuUniversity implements Runnable {
 
     private Optional<Frame> event(final JSONPath json) {
 
+        final Instant now=Instant.now();
+
         final List<Literal> title=json.entries("title")
                 .optMap(entry -> entry.getValue()
                         .string("")
@@ -211,8 +213,8 @@ public final class EventsTurkuUniversity implements Runnable {
                 .value(RDF.TYPE, Events.Event)
 
                 .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Work::url).map(Values::iri))
-                .value(DCTERMS.CREATED, json.string("published").map(EventsTurkuUniversity::instant))
-                .value(DCTERMS.MODIFIED, json.string("updated").map(EventsTurkuUniversity::instant))
+                .value(DCTERMS.CREATED, json.string("published").map(timestamp -> instant(timestamp, now)))
+                .value(DCTERMS.MODIFIED, json.string("updated").map(timestamp1 -> instant(timestamp1, now)))
 
                 .value(Schema.url, json.string("additional_information.link.url")
                         .or(() -> json.string("source_link"))
@@ -224,8 +226,8 @@ public final class EventsTurkuUniversity implements Runnable {
                 .values(Schema.description, description)
                 .values(Schema.disambiguatingDescription, excerpt)
 
-                .value(Schema.startDate, json.string("start_time").map(EventsTurkuUniversity::datetime))
-                .value(Schema.endDate, json.string("end_time").map(EventsTurkuUniversity::datetime))
+                .value(Schema.startDate, json.string("start_time").map(timestamp2 -> datetime(timestamp2, now)))
+                .value(Schema.endDate, json.string("end_time").map(timestamp3 -> datetime(timestamp3, now)))
 
                 .frame(Schema.location, json.path("location").flatMap(this::location))
                 .frames(Schema.organizer, json.paths("additional_information.contact").optMap(this::organizer))

@@ -174,7 +174,7 @@ public final class EventsCoimbraCity implements Runnable {
                 .map(OffsetDateTime::toLocalDate)
                 .flatMap(_date -> json.integer(hour)
                         .map(integer -> LocalTime.of(integer.intValue()/60, 0))
-                        .map(time -> LocalDateTime.of(_date, time).atZone(Coimbra.Zone))
+                        .map(time -> LocalDateTime.of(_date, time).atZone(Coimbra.TimeZone))
                 )
                 .map(Values::literal);
     }

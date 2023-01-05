@@ -206,7 +206,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return dateFrom
                 .map(date -> date.atTime(hourFrom))
-                .map(dateTime -> dateTime.atOffset(Poitiers.TimeOffset))
+                .map(dateTime -> dateTime.atZone(Poitiers.TimeZone))
                 .map(Values::literal);
     }
 
@@ -224,7 +224,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return dateTo
                 .map(date -> date.atTime(hourTo))
-                .map(dateTime -> dateTime.atOffset(Poitiers.TimeOffset))
+                .map(dateTime -> dateTime.atZone(Poitiers.TimeZone))
                 .map(Values::literal);
     }
 
