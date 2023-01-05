@@ -24,7 +24,6 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data._cities.*;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.units.Units;
@@ -46,6 +45,7 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.ontologies.EC2U.Universities.*;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -223,13 +223,13 @@ public final class Actors implements Runnable {
     private Optional<IRI> university(final CSVRecord record) {
         return Optional.ofNullable(Map.ofEntries(
 
-                entry("coimbra", Coimbra.University),
-                entry("iasi", Iasi.University),
-                entry("jena", Jena.University),
-                entry("pavia", Pavia.University),
-                entry("poitiers", Poitiers.University),
-                entry("salamanca", Salamanca.University),
-                entry("turku", Turku.University)
+                entry("coimbra", Coimbra.Id),
+                entry("iasi", Iasi.Id),
+                entry("jena", Jena.Id),
+                entry("pavia", Pavia.Id),
+                entry("poitiers", Poitiers.Id),
+                entry("salamanca", Salamanca.Id),
+                entry("turku", Turku.Id)
 
         ).get(normalize(record.get(col("FO")))));
     }

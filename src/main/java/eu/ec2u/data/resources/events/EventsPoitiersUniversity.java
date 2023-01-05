@@ -28,7 +28,6 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Poitiers;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
@@ -51,6 +50,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Poitiers;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -159,7 +159,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                 .values(RDF.TYPE, Events.Event)
 
-                .value(Resources.university, Poitiers.University)
+                .value(Resources.university, Poitiers.Id)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, link)

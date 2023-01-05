@@ -19,7 +19,6 @@ package eu.ec2u.data.resources.events;
 import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data._cities.Coimbra;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.universities.Universities;
 import eu.ec2u.data.utilities.feeds.Tribe;
@@ -34,6 +33,7 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Coimbra;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -73,7 +73,7 @@ public final class EventsCoimbraUniversity implements Runnable {
 
                 .map(event -> event
 
-                        .value(Resources.university, Coimbra.University)
+                        .value(Resources.university, Coimbra.Id)
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))

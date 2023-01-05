@@ -20,14 +20,15 @@ import com.metreeca.core.Xtream;
 import com.metreeca.link.Values;
 import com.metreeca.open.actions.WikidataMirror;
 
-import eu.ec2u.data._cities.*;
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.ontologies.EC2U.Universities;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
 
 import static eu.ec2u.data.Data.exec;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
 public final class Wikidata implements Runnable {
@@ -49,14 +50,9 @@ public final class Wikidata implements Runnable {
 
                         "values ?item "+Stream
 
-                                .of(
-                                        Coimbra.City, Coimbra.Country,
-                                        Iasi.City, Iasi.Country,
-                                        Jena.City, Jena.Country,
-                                        Pavia.City, Pavia.Country,
-                                        Poitiers.City, Poitiers.Country,
-                                        Salamanca.City, Salamanca.Country,
-                                        Turku.City, Turku.Country
+                                .concat(
+                                        stream(Universities.values()).map(university -> university.City),
+                                        stream(Universities.values()).map(university -> university.Country)
                                 )
 
                                 .map(Values::format)

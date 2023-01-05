@@ -25,7 +25,6 @@ import com.metreeca.xml.XPath;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Jena;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.universities.Universities;
@@ -48,6 +47,7 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Jena;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.Work.location;
@@ -93,7 +93,7 @@ public final class EventsJenaUniversity implements Runnable {
             .map(frame -> frame
                     .value(RDF.TYPE, Resources.Publisher)
                     .value(DCTERMS.COVERAGE, Universities.University)
-                    .value(Resources.university, Jena.University)
+                    .value(Resources.university, Jena.Id)
             )
 
             .collect(toList());
@@ -211,7 +211,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .value(RDF.TYPE, Events.Event)
 
-                .value(Resources.university, Jena.University)
+                .value(Resources.university, Jena.Id)
 
                 .value(DCTERMS.SOURCE, frame.value(Schema.url))
 

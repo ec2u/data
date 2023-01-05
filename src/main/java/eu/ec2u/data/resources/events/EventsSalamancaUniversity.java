@@ -27,7 +27,6 @@ import com.metreeca.link.Values;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Salamanca;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.universities.Universities;
@@ -50,6 +49,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Salamanca;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -165,7 +165,7 @@ public final class EventsSalamancaUniversity implements Runnable {
 
                 .values(RDF.TYPE, Events.Event)
 
-                .value(Resources.university, Salamanca.University)
+                .value(Resources.university, Salamanca.Id)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, url)

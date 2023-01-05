@@ -25,7 +25,6 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Coimbra;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
@@ -45,6 +44,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Coimbra;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -138,7 +138,7 @@ public final class EventsCoimbraCity implements Runnable {
                             .value(DCTERMS.CREATED, json.string("createdAt").map(this::timestamp))
                             .value(DCTERMS.MODIFIED, json.string("updatedAt").map(this::timestamp))
 
-                            .value(Resources.university, Coimbra.University)
+                            .value(Resources.university, Coimbra.Id)
 
                             .value(Schema.url, iri(url))
                             .value(Schema.name, name)

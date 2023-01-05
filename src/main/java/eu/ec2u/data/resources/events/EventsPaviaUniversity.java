@@ -23,7 +23,6 @@ import com.metreeca.link.Frame;
 import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Pavia;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.universities.Universities;
 import eu.ec2u.data.utilities.feeds.RSS;
@@ -38,6 +37,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Pavia;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.feeds.WordPress.WordPress;
@@ -96,7 +96,7 @@ public final class EventsPaviaUniversity implements Runnable {
     private Frame event(final Frame frame) {
         return WordPress(frame, "it")
 
-                .value(Resources.university, Pavia.University)
+                .value(Resources.university, Pavia.Id)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

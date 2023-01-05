@@ -21,7 +21,6 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.link.Values;
 
 import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
@@ -30,6 +29,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.multiple;
 import static com.metreeca.link.Shape.optional;
+import static com.metreeca.link.Values.IRIType;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.And.and;
 import static com.metreeca.link.shapes.Clazz.clazz;
@@ -37,6 +37,8 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
 import static com.metreeca.link.shapes.Guard.hidden;
+
+import static eu.ec2u.data.ontologies.EC2U.multilingual;
 
 
 public final class Resources extends Delegator {
@@ -53,14 +55,14 @@ public final class Resources extends Delegator {
                 hidden(field(RDF.TYPE, all(Resource))),
 
                 field(university, optional(),
-                        field(RDFS.LABEL, EC2U.multilingual())
+                        field(RDFS.LABEL, multilingual())
                 ),
 
-                field(DCTERMS.TITLE, EC2U.multilingual()),
-                field(DCTERMS.DESCRIPTION, EC2U.multilingual()),
+                field(DCTERMS.TITLE, multilingual()),
+                field(DCTERMS.DESCRIPTION, multilingual()),
 
                 field(DCTERMS.PUBLISHER, optional(), Publisher()),
-                field(DCTERMS.SOURCE, optional(), datatype(Values.IRIType)),
+                field(DCTERMS.SOURCE, optional(), datatype(IRIType)),
 
                 field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
                 field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
@@ -75,10 +77,10 @@ public final class Resources extends Delegator {
     public static Shape Reference() {
         return and(
 
-                datatype(Values.IRIType),
+                datatype(IRIType),
 
-                field(RDFS.LABEL, EC2U.multilingual()),
-                field(RDFS.COMMENT, EC2U.multilingual())
+                field(RDFS.LABEL, multilingual()),
+                field(RDFS.COMMENT, multilingual())
 
         );
     }
@@ -86,7 +88,7 @@ public final class Resources extends Delegator {
     public static Shape Publisher() {
         return and(Reference(),
 
-                field(DCTERMS.COVERAGE, optional(), datatype(Values.IRIType))
+                field(DCTERMS.COVERAGE, optional(), datatype(IRIType))
 
         );
     }

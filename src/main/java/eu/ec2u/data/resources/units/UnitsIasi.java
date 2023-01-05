@@ -19,7 +19,6 @@ package eu.ec2u.data.resources.units;
 import com.metreeca.core.services.Vault;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Iasi;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
@@ -28,6 +27,7 @@ import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Iasi;
 import static eu.ec2u.data.resources.units.Units.Unit;
 import static eu.ec2u.data.resources.units.Units.clear;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -36,7 +36,7 @@ import static java.lang.String.format;
 
 public final class UnitsIasi implements Runnable {
 
-    private static final IRI University=Iasi.University;
+    private static final IRI University=Iasi.Id;
     private static final String Language=Iasi.Language;
 
     private static final String DataUrl="units-iasi-url"; // vault label

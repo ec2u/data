@@ -38,6 +38,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public final class Validators {
+
     public static Collection<Statement> validate(
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames
     ) {
@@ -101,4 +102,5 @@ public final class Validators {
 
         return explicit;
     }
+
 }

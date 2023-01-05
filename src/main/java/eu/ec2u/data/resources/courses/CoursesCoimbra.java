@@ -27,7 +27,6 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Coimbra;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
@@ -56,6 +55,7 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Coimbra;
 import static eu.ec2u.data.resources.courses.Courses.Course;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
 
@@ -124,7 +124,7 @@ public final class CoursesCoimbra implements Runnable {
 
                                 .forEach(new Update()
                                         .base(EC2U.Base)
-                                        .binding("university", Coimbra.University)
+                                        .binding("university", Coimbra.Id)
                                 )
 
                         ))
@@ -210,10 +210,10 @@ public final class CoursesCoimbra implements Runnable {
                     .collect(toList());
 
 
-            return frame(iri(Courses.Context, md5(Coimbra.University+"@"+id)))
+            return frame(iri(Courses.Context, md5(Coimbra.Id+"@"+id)))
 
                     .values(RDF.TYPE, Courses.Course)
-                    .value(Resources.university, Coimbra.University)
+                    .value(Resources.university, Coimbra.Id)
 
                     .values(DCTERMS.TITLE, label)
 

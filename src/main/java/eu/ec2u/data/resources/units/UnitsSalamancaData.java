@@ -26,7 +26,6 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Salamanca;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
@@ -49,6 +48,7 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Salamanca;
 import static eu.ec2u.data.resources.units.Units.Unit;
 import static eu.ec2u.data.resources.units.Units.clear;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -87,7 +87,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                 .sink(units -> upload(eu.ec2u.data.resources.units.Units.Context,
                         validate(Unit(), Set.of(eu.ec2u.data.resources.units.Units.Unit), units),
-                        () -> clear(Salamanca.University)
+                        () -> clear(Salamanca.Id)
                 ));
     }
 
@@ -134,10 +134,10 @@ public final class UnitsSalamancaData implements Runnable {
             final Optional<Frame> department=department(json);
             final Optional<Frame> institute=institute(json);
 
-            return frame(EC2U.item(eu.ec2u.data.resources.units.Units.Context, Salamanca.University, id))
+            return frame(EC2U.item(eu.ec2u.data.resources.units.Units.Context, Salamanca.Id, id))
 
                     .values(RDF.TYPE, eu.ec2u.data.resources.units.Units.Unit)
-                    .value(Resources.university, Salamanca.University)
+                    .value(Resources.university, Salamanca.Id)
 
                     .value(DCTERMS.TITLE, label)
                     .value(DCTERMS.DESCRIPTION, json.string("topics")
@@ -179,13 +179,13 @@ public final class UnitsSalamancaData implements Runnable {
                     .frame(inverse(ORG.HEAD_OF), head(json))
 
                     .frame(ORG.UNIT_OF, department.orElseGet(
-                            () -> frame(Salamanca.University)
+                            () -> frame(Salamanca.Id)
                     ))
 
                     .frame(ORG.UNIT_OF, department)
                     .frame(ORG.UNIT_OF, institute)
 
-                    .frame(ORG.UNIT_OF, Optional.of(frame(Salamanca.University))
+                    .frame(ORG.UNIT_OF, Optional.of(frame(Salamanca.Id))
                             .filter(frame -> department.isEmpty() && institute.isEmpty())
                     );
 
@@ -206,13 +206,13 @@ public final class UnitsSalamancaData implements Runnable {
                     final String givenName=matcher.group(2);
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(EC2U.item(Persons.Context, Salamanca.University, fullName))
+                    return frame(EC2U.item(Persons.Context, Salamanca.Id, fullName))
 
                             .value(RDF.TYPE, Persons.Person)
 
                             .value(RDFS.LABEL, literal(fullName, Salamanca.Language))
 
-                            .value(Resources.university, Salamanca.University)
+                            .value(Resources.university, Salamanca.Id)
 
                             .value(FOAF.GIVEN_NAME, literal(givenName))
                             .value(FOAF.FAMILY_NAME, literal(familyName));
@@ -225,10 +225,10 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(EC2U.item(eu.ec2u.data.resources.units.Units.Context, Salamanca.University, name))
+            return frame(EC2U.item(eu.ec2u.data.resources.units.Units.Context, Salamanca.Id, name))
 
                     .values(RDF.TYPE, eu.ec2u.data.resources.units.Units.Unit)
-                    .value(Resources.university, Salamanca.University)
+                    .value(Resources.university, Salamanca.Id)
 
                     .value(DCTERMS.TITLE, title)
                     .value(SKOS.PREF_LABEL, title)
@@ -237,7 +237,7 @@ public final class UnitsSalamancaData implements Runnable {
                     .value(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Values::iri))
 
                     .value(ORG.CLASSIFICATION, Units.Department)
-                    .frame(ORG.UNIT_OF, frame(Salamanca.University));
+                    .frame(ORG.UNIT_OF, frame(Salamanca.Id));
         });
     }
 
@@ -246,10 +246,10 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(EC2U.item(eu.ec2u.data.resources.units.Units.Context, Salamanca.University, name))
+            return frame(EC2U.item(eu.ec2u.data.resources.units.Units.Context, Salamanca.Id, name))
 
                     .values(RDF.TYPE, eu.ec2u.data.resources.units.Units.Unit)
-                    .value(Resources.university, Salamanca.University)
+                    .value(Resources.university, Salamanca.Id)
 
                     .value(DCTERMS.TITLE, title)
                     .value(SKOS.PREF_LABEL, title)
@@ -259,7 +259,7 @@ public final class UnitsSalamancaData implements Runnable {
                             .map(Values::iri))
 
                     .value(ORG.CLASSIFICATION, Units.Institute)
-                    .frame(ORG.UNIT_OF, frame(Salamanca.University));
+                    .frame(ORG.UNIT_OF, frame(Salamanca.Id));
         });
     }
 

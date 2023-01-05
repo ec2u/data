@@ -28,7 +28,6 @@ import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Turku;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.locations.Locations;
@@ -59,6 +58,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Turku;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -116,7 +116,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 .map(event -> event
 
-                        .value(Resources.university, Turku.University)
+                        .value(Resources.university, Turku.Id)
 
                         .frame(DCTERMS.PUBLISHER, Publisher)
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))

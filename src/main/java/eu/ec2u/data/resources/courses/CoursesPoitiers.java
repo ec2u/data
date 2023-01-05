@@ -25,7 +25,6 @@ import com.metreeca.link.Frame;
 import com.metreeca.rdf4j.actions.Update;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Poitiers;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.concepts.ISCED2011;
@@ -47,6 +46,7 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Poitiers;
 import static eu.ec2u.data.resources.courses.Courses.Course;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
 
@@ -110,7 +110,7 @@ public final class CoursesPoitiers implements Runnable {
 
                                 .forEach(new Update()
                                         .base(EC2U.Base)
-                                        .binding("university", Poitiers.University)
+                                        .binding("university", Poitiers.Id)
                                 )
 
                         ))
@@ -196,10 +196,10 @@ public final class CoursesPoitiers implements Runnable {
                     .map(v -> literal(v, Poitiers.Language));
 
 
-            return frame(EC2U.item(Courses.Context, Poitiers.University, String.valueOf(id)))
+            return frame(EC2U.item(Courses.Context, Poitiers.Id, String.valueOf(id)))
 
                     .values(RDF.TYPE, Courses.Course)
-                    .value(eu.ec2u.data.resources.Resources.university, Poitiers.University)
+                    .value(eu.ec2u.data.resources.Resources.university, Poitiers.Id)
 
                     .value(DCTERMS.TITLE, label)
 

@@ -18,30 +18,110 @@ package eu.ec2u.data.ontologies;
 
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._cities.*;
 import org.eclipse.rdf4j.model.IRI;
 
+import java.time.ZoneId;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.shapes.Localized.localized;
+import static com.metreeca.open.actions.Wikidata.wd;
+
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public final class EC2U {
 
     public static final String Base="https://data.ec2u.eu/";
 
 
-    public static final Set<String> Languages=Set.of(
-            "en",
-            Coimbra.Language,
-            Iasi.Language,
-            Jena.Language,
-            Pavia.Language,
-            Poitiers.Language,
-            Salamanca.Language,
-            Turku.Language
-    );
+    public static final Set<String> Languages=Stream
+
+            .concat(
+                    Stream.of("en"),
+                    stream(Universities.values()).map(university -> university.Language)
+            )
+
+            .collect(toUnmodifiableSet());
+
+
+    public enum Universities {
+
+        Coimbra(
+                item("/universities/coimbra"),
+                wd("Q45412"),
+                wd("Q45"),
+                "pt",
+                ZoneId.of("Europe/Lisbon")
+        ),
+
+        Iasi(
+                item("/universities/iasi"),
+                wd("Q46852"),
+                wd("Q218"),
+                "ro",
+                ZoneId.of("Europe/Bucharest")
+        ),
+
+        Jena(
+                item("/universities/jena"),
+                wd("Q3150"),
+                wd("Q183"),
+                "de",
+                ZoneId.of("Europe/Berlin")
+        ),
+
+        Pavia(
+                item("/universities/pavia"),
+                wd("Q6259"),
+                wd("Q38"),
+                "it",
+                ZoneId.of("Europe/Rome")
+        ),
+
+        Poitiers(
+                item("/universities/poitiers"),
+                wd("Q6616"),
+                wd("Q142"),
+                "fr",
+                ZoneId.of("Europe/Paris")
+        ),
+
+        Salamanca(
+                item("/universities/salamanca"),
+                wd("Q15695"),
+                wd("Q29"),
+                "es",
+                ZoneId.of("Europe/Madrid")
+        ),
+
+        Turku(
+                item("/universities/turku"),
+                wd("Q38511"),
+                wd("Q38511"),
+                "fi",
+                ZoneId.of("Europe/Helsinki")
+        );
+
+
+        public final IRI Id;
+        public final IRI City;
+        public final IRI Country;
+        public final String Language;
+        public final ZoneId TimeZone;
+
+
+        Universities(final IRI id, final IRI city, final IRI country, final String language, final ZoneId zone) {
+            this.Id=id;
+            this.City=city;
+            this.Country=country;
+            this.Language=language;
+            this.TimeZone=zone;
+        }
+
+    }
 
 
     public static IRI item(final String name) {

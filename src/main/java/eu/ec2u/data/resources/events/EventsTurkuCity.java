@@ -27,7 +27,6 @@ import com.metreeca.link.Values;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._cities.Turku;
 import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
@@ -55,6 +54,7 @@ import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data._delta.Uploads.upload;
+import static eu.ec2u.data.ontologies.EC2U.Universities.Turku;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -183,7 +183,7 @@ public final class EventsTurkuCity implements Runnable {
 
                     .value(RDF.TYPE, Events.Event)
 
-                    .value(Resources.university, Turku.University)
+                    .value(Resources.university, Turku.Id)
 
                     .frame(DCTERMS.PUBLISHER, Publisher)
                     .value(DCTERMS.SOURCE, iri(id))
