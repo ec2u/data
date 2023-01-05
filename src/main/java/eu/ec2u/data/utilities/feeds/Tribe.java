@@ -239,7 +239,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             final Optional<Literal> name=category.string("name").map(text -> literal(text, language));
 
-            return frame(iri(Concepts.Context, md5(self)))
+            return frame(iri(Concepts.Id, md5(self)))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, name)
                     .value(SKOS.PREF_LABEL, name);

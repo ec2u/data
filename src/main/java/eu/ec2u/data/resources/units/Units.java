@@ -196,7 +196,7 @@ public final class Units extends Delegator {
         private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
         private static final Pattern HeadPattern=Pattern.compile("([^,]?+)\\s*,\\s*([^(]?+)(?:\\s*\\(([^)]+)\\))?");
 
-        private static final Frame TopicsScheme=frame(iri(Concepts.Context, "units-topics/"))
+        private static final Frame TopicsScheme=frame(iri(Concepts.Id, "units-topics/"))
                 .value(RDF.TYPE, SKOS.CONCEPT_SCHEME)
                 .value(RDFS.LABEL, literal("Research Unit Topics", "en"));
 

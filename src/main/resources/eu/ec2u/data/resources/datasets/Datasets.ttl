@@ -1,0 +1,17 @@
+@prefix ec2u:	</terms/> .
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix dcat:	<http://www.w3.org/ns/dcat#> .
+@prefix void:	<http://rdfs.org/ns/void#> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+
+<> a ec2u:Dataset ;
+	dct:title "Datasets"@en ;
+	dct:description "EC2U dataset catalog"@en ;
+	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+	dct:rights "Copyright © 2022-2023 EC2U Alliance" .
+
+
+########################################################################################################################
+
+ec2u:Dataset a owl:Class ;
+	rdfs:subClassOf ec2u:Resource, dcat:Dataset, void:Dataset .

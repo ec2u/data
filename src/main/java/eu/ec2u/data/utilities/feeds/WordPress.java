@@ -61,7 +61,7 @@ public final class WordPress {
                 .value(DCTERMS.SOURCE, frame.value(Link))
 
                 .frames(DCTERMS.SUBJECT, frame.strings(Category)
-                        .map(category -> frame(iri(Concepts.Context, md5(category)))
+                        .map(category -> frame(iri(Concepts.Id, md5(category)))
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(category, lang))
                                 .value(SKOS.PREF_LABEL, literal(category, lang))

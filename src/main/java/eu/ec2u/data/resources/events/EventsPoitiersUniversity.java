@@ -168,7 +168,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
 
                 .frames(DCTERMS.SUBJECT, item.strings("category")
-                        .map(c -> frame(iri(Concepts.Context, md5(c)))
+                        .map(c -> frame(iri(Concepts.Id, md5(c)))
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(c, Poitiers.Language))
                                 .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))

@@ -62,8 +62,8 @@ public final class UnitsSalamancaData implements Runnable {
     private static final String APIUrl="units-salamanca-url"; // vault label
     private static final String APIKey="units-salamanca-key"; // vault label
 
-    private static final IRI BranchScheme=iri(Concepts.Context, "units-salamanca-branch/");
-    private static final IRI RIS3Scheme=iri(Concepts.Context, "units-salamanca-ris3/");
+    private static final IRI BranchScheme=iri(Concepts.Id, "units-salamanca-branch/");
+    private static final IRI RIS3Scheme=iri(Concepts.Id, "units-salamanca-ris3/");
 
 
     private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");

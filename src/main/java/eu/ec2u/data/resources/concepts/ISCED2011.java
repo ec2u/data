@@ -16,13 +16,21 @@
 
 package eu.ec2u.data.resources.concepts;
 
+import com.metreeca.rdf4j.actions.Upload;
+
+import eu.ec2u.data.ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
+import java.util.stream.Stream;
+
 import static com.metreeca.link.Values.iri;
+import static com.metreeca.rdf.codecs.RDF.rdf;
 
-public final class ISCED2011 {
+import static eu.ec2u.data.Data.exec;
 
-    public static final IRI Scheme=iri(Concepts.Context, "/isced-2011/");
+public final class ISCED2011 implements Runnable {
+
+    public static final IRI Scheme=iri(Concepts.Id, "/isced-2011");
 
 
     public static final IRI Level0=iri(Scheme, "0");
@@ -37,8 +45,22 @@ public final class ISCED2011 {
     public static final IRI Level9=iri(Scheme, "9");
 
 
+    public static void main(final String... args) {
+        exec(() -> new ISCED2011().run());
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private ISCED2011() { }
+    @Override public void run() {
+        Stream
+
+                .of(rdf(this, ".ttl", EC2U.Base))
+
+                .forEach(new Upload()
+                        .contexts(Scheme)
+                        .clear(true)
+                );
+    }
 
 }

@@ -21,25 +21,28 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data.resources.concepts.Concepts;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.stream.Stream;
 
-import static com.metreeca.core.toolkits.Resources.resource;
+import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Shape.required;
 import static com.metreeca.link.Values.IRIType;
+import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
 import static com.metreeca.link.shapes.Guard.relate;
+import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.item;
@@ -75,21 +78,6 @@ public final class Datasets extends Delegator {
     }
 
 
-    public static void main(final String... args) {
-        exec(() -> Stream.of(resource(Datasets.class, ".ttl").toString())
-
-                .map(new Retrieve()
-                        .base(EC2U.Base)
-                )
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Datasets() {
@@ -102,6 +90,52 @@ public final class Datasets extends Delegator {
                         .get(new Relator())
 
         ));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final class Loader implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Loader().run());
+        }
+
+        @Override public void run() {
+            Stream
+
+                    .of(
+                            rdf(Datasets.class, ".ttl"),
+
+                            rdf("http://rdfs.org/ns/void.ttl"),
+                            rdf("http://www.w3.org/ns/dcat.ttl")
+
+                    )
+
+                    .forEach(new Upload()
+                            .contexts(Context)
+                            .clear(true)
+                    );
+        }
+    }
+
+    public static final class Updater implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Updater().run());
+        }
+
+        @Override public void run() {
+            Stream
+
+                    .of(text(Concepts.class, ".ul"))
+
+                    .forEach(new Update()
+                            .base(EC2U.Base)
+                            .insert(iri(Context, "~"))
+                            .clear(true)
+                    );
+        }
+
     }
 
 }

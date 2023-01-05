@@ -21,25 +21,36 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
+import com.metreeca.rdf4j.actions.Update;
+import com.metreeca.rdf4j.actions.Upload;
 
+import eu.ec2u.data.ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
+import java.util.stream.Stream;
+
+import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.required;
+import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
+import static com.metreeca.rdf.codecs.RDF.rdf;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.ontologies.EC2U.item;
 import static eu.ec2u.data.ontologies.EC2U.multilingual;
 import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Concepts extends Delegator {
 
-    public static final IRI Context=item("/concepts/");
+    public static final IRI Id=item("/concepts/");
 
 
     private static Shape ConceptScheme() {
@@ -119,6 +130,64 @@ public final class Concepts extends Delegator {
                         ))
 
         ));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final class Loader implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Loader().run());
+        }
+
+        @Override public void run() {
+            Stream
+
+                    .of(
+
+                            rdf(Concepts.class, ".ttl", EC2U.Base),
+
+                            skos(rdf("https://www.w3.org/2009/08/skos-reference/skos.rdf"))
+
+                    )
+
+                    .forEach(new Upload()
+                            .contexts(Id)
+                            .clear(true)
+                    );
+        }
+
+
+        private Model skos(final Model skos) {
+
+            final Model patched=new LinkedHashModel(skos);
+
+            patched.remove(null, RDFS.SUBPROPERTYOF, RDFS.LABEL);
+
+            return patched;
+        }
+
+    }
+
+    public static final class Updater implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Updater().run());
+        }
+
+        @Override public void run() {
+            Stream
+
+                    .of(text(Concepts.class, ".ul"))
+
+                    .forEach(new Update()
+                            .base(EC2U.Base)
+                            .insert(iri(Id, "~"))
+                            .clear(true)
+                    );
+        }
+
     }
 
 }

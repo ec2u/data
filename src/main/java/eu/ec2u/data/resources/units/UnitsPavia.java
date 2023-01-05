@@ -44,13 +44,14 @@ import static eu.ec2u.data.resources.units.Units.Unit;
 import static eu.ec2u.data.resources.units.Units.clear;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
 
+import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
 
     private static final Map<IRI, IRI> Types=Map.ofEntries(
-            Map.entry(VIVO.AcademicDepartment, Units.Department),
-            Map.entry(VIVO.Center, Units.Centre)
+            entry(VIVO.AcademicDepartment, Units.Department),
+            entry(VIVO.Center, Units.Centre)
     );
 
 

@@ -53,9 +53,7 @@ public final class Ontologies implements Runnable {
                         resource(Ontologies.class, "Licenses.ttl"),
                         resource(Ontologies.class, "Institutes.ttl"),
 
-                        resource(Ontologies.class, "SKOS.ttl"),
                         resource(Ontologies.class, "Org.ttl"),
-                        resource(Ontologies.class, "DCAT2.ttl"),
 
                         resource(Ontologies.class, "Schema.ttl"),
                         resource(Ontologies.class, "Wikidata.ttl")

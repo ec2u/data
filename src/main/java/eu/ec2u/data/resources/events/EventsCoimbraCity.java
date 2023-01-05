@@ -185,7 +185,7 @@ public final class EventsCoimbraCity implements Runnable {
             final Optional<Literal> label=category.string("codename")
                     .map(text -> literal(text, Coimbra.Language));
 
-            return frame(iri(Concepts.Context, md5(id)))
+            return frame(iri(Concepts.Id, md5(id)))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);

@@ -187,7 +187,7 @@ public final class EventsJenaCity implements Runnable {
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))
                             .filter(not(keyword -> keyword.startsWith("import_")))
                             .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
-                            .map(keyword -> frame(iri(Concepts.Context, md5(keyword)))
+                            .map(keyword -> frame(iri(Concepts.Id, md5(keyword)))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
                                     .value(RDFS.LABEL, literal(keyword, Jena.Language))
                                     .value(SKOS.PREF_LABEL, literal(keyword, Jena.Language))

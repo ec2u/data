@@ -52,16 +52,6 @@ rdfs:comment rdf:type owl:AnnotationProperty .
 rdfs:label rdf:type owl:AnnotationProperty .
 
 
-###  http://www.w3.org/2004/02/skos/core#definition
-<http://www.w3.org/2004/02/skos/core#definition> rdf:type owl:AnnotationProperty ;
-                                                 rdfs:subPropertyOf dct:description .
-
-
-###  http://www.w3.org/2004/02/skos/core#prefLabel
-<http://www.w3.org/2004/02/skos/core#prefLabel> rdf:type owl:AnnotationProperty ;
-                                                rdfs:subPropertyOf dct:title .
-
-
 ###  https://data.ec2u.eu/terms/image
 ec2u:image rdf:type owl:AnnotationProperty .
 
@@ -101,21 +91,6 @@ schema:about rdf:type owl:ObjectProperty ;
 #    Classes
 #################################################################
 
-###  http://rdfs.org/ns/void#Dataset
-void:Dataset rdf:type owl:Class .
-
-
-###  http://www.w3.org/2004/02/skos/core#Concept
-<http://www.w3.org/2004/02/skos/core#Concept> rdf:type owl:Class .
-
-
-###  http://www.w3.org/2004/02/skos/core#ConceptScheme
-<http://www.w3.org/2004/02/skos/core#ConceptScheme> rdf:type owl:Class .
-
-
-###  http://www.w3.org/ns/dcat#Dataset
-dcat:Dataset rdf:type owl:Class .
-
 
 ###  http://www.w3.org/ns/org#FormalOrganization
 org:FormalOrganization rdf:type owl:Class .
@@ -140,17 +115,6 @@ ec2u:Actor rdf:type owl:Class ;
 ec2u:License rdf:type owl:Class ;
              rdfs:subClassOf ec2u:Resource .
 
-###  https://data.ec2u.eu/terms/Concept
-ec2u:Concept rdf:type owl:Class ;
-             rdfs:subClassOf <http://www.w3.org/2004/02/skos/core#Concept> ,
-                             ec2u:Resource .
-
-
-###  https://data.ec2u.eu/terms/ConceptScheme
-ec2u:ConceptScheme rdf:type owl:Class ;
-                   rdfs:subClassOf <http://www.w3.org/2004/02/skos/core#ConceptScheme> ,
-                                   ec2u:Resource .
-
 
 ###  https://data.ec2u.eu/terms/Course
 ec2u:Course rdf:type owl:Class ;
@@ -158,12 +122,6 @@ ec2u:Course rdf:type owl:Class ;
                             schema:Course ;
             void:uriSpace "https://data.ec2u.eu/courses/" .
 
-
-###  https://data.ec2u.eu/terms/Dataset
-ec2u:Dataset rdf:type owl:Class ;
-             rdfs:subClassOf void:Dataset ,
-                             dcat:Dataset ,
-                             ec2u:Resource .
 
 
 ###  https://data.ec2u.eu/terms/Event
