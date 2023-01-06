@@ -33,7 +33,7 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._delta.Uploads.upload;
-import static eu.ec2u.data.ontologies.EC2U.Universities.Coimbra;
+import static eu.ec2u.data._ontologies.EC2U.Universities.Coimbra;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.validation.Validators.validate;

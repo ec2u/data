@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.ontologies;
+package eu.ec2u.data._ontologies;
 
 import org.eclipse.rdf4j.model.IRI;
 

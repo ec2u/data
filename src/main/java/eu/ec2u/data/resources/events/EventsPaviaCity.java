@@ -26,7 +26,7 @@ import com.metreeca.rdf.actions.Normalize.StringToDate;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.ontologies.Schema;
+import eu.ec2u.data._ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.locations.Locations;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -42,7 +42,7 @@ import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.link.shifts.Step.step;
 
 import static eu.ec2u.data._delta.Uploads.upload;
-import static eu.ec2u.data.ontologies.EC2U.Universities.Pavia;
+import static eu.ec2u.data._ontologies.EC2U.Universities.Pavia;
 import static eu.ec2u.data.resources.events.Events.Event;
 import static eu.ec2u.data.resources.events.Events_.synced;
 import static eu.ec2u.data.utilities.validation.Validators.validate;

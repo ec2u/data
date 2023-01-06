@@ -18,7 +18,7 @@ package eu.ec2u.data.resources.concepts;
 
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data._ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
@@ -27,7 +27,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.item;
+import static eu.ec2u.data._ontologies.EC2U.item;
 
 /**
  * EC2U Research Unit SKOS Concept Scheme.

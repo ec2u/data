@@ -21,12 +21,10 @@ import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.actions.GET;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
-import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data._ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.resources.units.Units;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.*;
@@ -40,12 +38,12 @@ import java.util.stream.Stream;
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
+import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.Universities.*;
+import static eu.ec2u.data._ontologies.EC2U.Universities.*;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -100,10 +98,10 @@ public final class Actors implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Stream<Statement> terms() {
-        return Stream.of(resource(Units.class, ".ttl").toString())
+        return Stream
 
-                .map(new Retrieve()
-                        .base(EC2U.Base)
+                .of(
+                        rdf(Actors.class, ".ttl", EC2U.Base)
                 )
 
                 .flatMap(Collection::stream);

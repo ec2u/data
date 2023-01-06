@@ -41,7 +41,7 @@ import static com.metreeca.link.shapes.Link.link;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.*;
+import static eu.ec2u.data._ontologies.EC2U.*;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 

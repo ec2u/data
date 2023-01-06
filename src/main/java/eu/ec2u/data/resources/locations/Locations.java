@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.resources.locations;
 
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data._ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 public final class Locations {

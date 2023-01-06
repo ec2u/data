@@ -20,8 +20,8 @@ import com.metreeca.core.Xtream;
 import com.metreeca.link.Values;
 import com.metreeca.open.actions.WikidataMirror;
 
-import eu.ec2u.data.ontologies.EC2U;
-import eu.ec2u.data.ontologies.EC2U.Universities;
+import eu.ec2u.data._ontologies.EC2U;
+import eu.ec2u.data._ontologies.EC2U.Universities;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;

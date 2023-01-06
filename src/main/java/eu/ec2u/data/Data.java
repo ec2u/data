@@ -29,7 +29,7 @@ import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data._ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
 import eu.ec2u.data.resources.courses.Courses;

@@ -23,7 +23,7 @@ import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.ontologies.EC2U;
+import eu.ec2u.data._ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -38,7 +38,7 @@ import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.Base;
+import static eu.ec2u.data._ontologies.EC2U.Base;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 

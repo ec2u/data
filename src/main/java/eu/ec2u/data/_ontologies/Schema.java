@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.ontologies;
+package eu.ec2u.data._ontologies;
 
 import com.metreeca.link.Shape;
 
@@ -33,7 +33,7 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.hidden;
 import static com.metreeca.link.shapes.Or.or;
 
-import static eu.ec2u.data.ontologies.EC2U.multilingual;
+import static eu.ec2u.data._ontologies.EC2U.multilingual;
 import static eu.ec2u.data.resources.Resources.Reference;
 
 /**

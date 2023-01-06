@@ -29,8 +29,8 @@ import com.metreeca.link.*;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data.ontologies.EC2U;
-import eu.ec2u.data.ontologies.EC2U.Universities;
+import eu.ec2u.data._ontologies.EC2U;
+import eu.ec2u.data._ontologies.EC2U.Universities;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
 import eu.ec2u.data.resources.persons.Persons;
@@ -68,8 +68,8 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.ontologies.EC2U.Base;
-import static eu.ec2u.data.ontologies.EC2U.multilingual;
+import static eu.ec2u.data._ontologies.EC2U.Base;
+import static eu.ec2u.data._ontologies.EC2U.multilingual;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 

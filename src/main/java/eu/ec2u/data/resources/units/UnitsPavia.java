@@ -23,7 +23,7 @@ import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.ontologies.VIVO;
+import eu.ec2u.data._ontologies.VIVO;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Units;
 import org.eclipse.rdf4j.model.IRI;
@@ -39,7 +39,7 @@ import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data._delta.Uploads.upload;
-import static eu.ec2u.data.ontologies.EC2U.Universities.Pavia;
+import static eu.ec2u.data._ontologies.EC2U.Universities.Pavia;
 import static eu.ec2u.data.resources.units.Units.Unit;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
 
