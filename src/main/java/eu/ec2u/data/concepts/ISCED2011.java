@@ -18,7 +18,7 @@ package eu.ec2u.data.concepts;
 
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
@@ -55,7 +55,7 @@ public final class ISCED2011 implements Runnable {
     @Override public void run() {
         Stream
 
-                .of(rdf(this, ".ttl", Resources.Base))
+                .of(rdf(this, ".ttl", EC2U.Base))
 
                 .forEach(new Upload()
                         .contexts(Scheme)

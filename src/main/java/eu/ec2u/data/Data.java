@@ -134,7 +134,7 @@ public final class Data implements Runnable {
 
                         new Wrapper()
 
-                                .before(request -> request.base(Resources.Base)), // define canonical base
+                                .before(request -> request.base(EC2U.Base)), // define canonical base
 
                         new Router()
 

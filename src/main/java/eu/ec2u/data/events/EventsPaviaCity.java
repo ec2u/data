@@ -42,10 +42,10 @@ import static com.metreeca.link.shifts.Alt.alt;
 import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.link.shifts.Step.step;
 
+import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events._Events.synced;
 import static eu.ec2u.data.events._Uploads.upload;
-import static eu.ec2u.data.universities.University.Pavia;
 
 import static java.time.ZoneOffset.UTC;
 

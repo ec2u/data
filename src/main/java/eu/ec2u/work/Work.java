@@ -37,7 +37,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
-import static eu.ec2u.data.universities.University.Pavia;
+import static eu.ec2u.data.EC2U.University.Pavia;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;

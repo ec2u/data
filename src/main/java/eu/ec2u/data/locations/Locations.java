@@ -16,12 +16,12 @@
 
 package eu.ec2u.data.locations;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 public final class Locations {
 
-    public static final IRI Context=Resources.item("/locations/");
+    public static final IRI Context=EC2U.item("/locations/");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

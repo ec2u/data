@@ -27,6 +27,7 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.Units;
 import eu.ec2u.data.persons.Persons;
@@ -47,8 +48,8 @@ import static com.metreeca.core.toolkits.Strings.split;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
+import static eu.ec2u.data.EC2U.University.Salamanca;
 import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.data.universities.University.Salamanca;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
@@ -136,7 +137,7 @@ public final class UnitsSalamancaData implements Runnable {
             final Optional<Frame> department=department(json);
             final Optional<Frame> institute=institute(json);
 
-            return frame(Resources.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, id))
+            return frame(EC2U.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, id))
 
                     .values(RDF.TYPE, eu.ec2u.data.units.Units.Unit)
                     .value(Resources.university, Salamanca.Id)
@@ -208,7 +209,7 @@ public final class UnitsSalamancaData implements Runnable {
                     final String givenName=matcher.group(2);
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(Resources.item(Persons.Context, Salamanca.Id, fullName))
+                    return frame(EC2U.item(Persons.Context, Salamanca.Id, fullName))
 
                             .value(RDF.TYPE, Persons.Person)
 
@@ -227,7 +228,7 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(Resources.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, name))
+            return frame(EC2U.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, name))
 
                     .values(RDF.TYPE, eu.ec2u.data.units.Units.Unit)
                     .value(Resources.university, Salamanca.Id)
@@ -248,7 +249,7 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(Resources.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, name))
+            return frame(EC2U.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, name))
 
                     .values(RDF.TYPE, eu.ec2u.data.units.Units.Unit)
                     .value(Resources.university, Salamanca.Id)

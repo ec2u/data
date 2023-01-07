@@ -29,10 +29,10 @@ import com.metreeca.link.*;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.universities.University;
 import eu.ec2u.work.Cursor;
 import org.apache.commons.csv.*;
 import org.eclipse.rdf4j.model.*;
@@ -67,7 +67,7 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Base;
+import static eu.ec2u.data.EC2U.Base;
 import static eu.ec2u.data.resources.Resources.*;
 
 import static java.lang.String.format;
@@ -79,9 +79,9 @@ import static java.util.stream.Collectors.toList;
 
 public final class Units extends Delegator {
 
-    public static final IRI Context=Resources.item("/units/");
+    public static final IRI Context=EC2U.item("/units/");
 
-    public static final IRI Unit=Resources.term("Unit");
+    public static final IRI Unit=EC2U.term("Unit");
 
 
     public static Shape Unit() {
@@ -174,7 +174,7 @@ public final class Units extends Delegator {
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private final University university;
+        private final EC2U.University university;
 
         private final Map<String, Value> types=new HashMap<>();
         private final Map<String, Value> vis=new HashMap<>();
@@ -183,7 +183,7 @@ public final class Units extends Delegator {
         private final Logger logger=service(logger());
 
 
-        CSVLoader(final University university) {
+        CSVLoader(final EC2U.University university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");
@@ -321,7 +321,7 @@ public final class Units extends Delegator {
 
             } else {
 
-                return Optional.of(Resources.item(Context, university.Id, code
+                return Optional.of(EC2U.item(Context, university.Id, code
                         .or(() -> nameEnglish)
                         .or(() -> nameLocal)
                         .orElse("") // unexpected
@@ -465,7 +465,7 @@ public final class Units extends Delegator {
 
                         final String fullName=format("%s %s", givenName, familyName);
 
-                        return frame(Resources.item(Persons.Context, university.Id, fullName))
+                        return frame(EC2U.item(Persons.Context, university.Id, fullName))
 
                                 .value(RDF.TYPE, Persons.Person)
 

@@ -33,10 +33,10 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.University.Coimbra;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events._Events.synced;
 import static eu.ec2u.data.events._Uploads.upload;
-import static eu.ec2u.data.universities.University.Coimbra;
 
 import static java.time.ZoneOffset.UTC;
 

@@ -23,7 +23,7 @@ import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
@@ -43,13 +43,13 @@ import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Events extends Delegator {
 
-    public static final IRI Context=Resources.item("/events/");
+    public static final IRI Context=EC2U.item("/events/");
 
-    public static final IRI Event=Resources.term("Event");
+    public static final IRI Event=EC2U.term("Event");
 
-    public static final IRI College=Resources.term("College");
-    public static final IRI Association=Resources.term("Association");
-    public static final IRI City=Resources.term("City");
+    public static final IRI College=EC2U.term("College");
+    public static final IRI Association=EC2U.term("Association");
+    public static final IRI City=EC2U.term("City");
 
 
     public static Shape Event() {
@@ -101,7 +101,7 @@ public final class Events extends Delegator {
             Stream
 
                     .of(
-                            rdf(Events.class, ".ttl", Resources.Base)
+                            rdf(Events.class, ".ttl", EC2U.Base)
 
                     )
 

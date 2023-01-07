@@ -23,7 +23,7 @@ import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -38,13 +38,14 @@ import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.*;
+import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Persons extends Delegator {
 
-    public static final IRI Context=Resources.item("/persons/");
+    public static final IRI Context=EC2U.item("/persons/");
 
-    public static final IRI Person=Resources.term("Person");
+    public static final IRI Person=EC2U.term("Person");
 
 
     public static Shape Person() {
@@ -98,7 +99,7 @@ public final class Persons extends Delegator {
             Stream
 
                     .of(
-                            rdf(Persons.class, ".ttl", Base)
+                            rdf(Persons.class, ".ttl", EC2U.Base)
                     )
 
                     .forEach(new Upload()

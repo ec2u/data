@@ -21,7 +21,7 @@ import com.metreeca.core.services.Logger;
 import com.metreeca.rdf4j.actions.TupleQuery;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 
@@ -54,7 +54,7 @@ public final class _Events implements Runnable {
                 )
 
                 .flatMap(new TupleQuery()
-                        .base(Resources.Base)
+                        .base(EC2U.Base)
                         .binding("publisher", publisher)
                         .dflt(Events.Context)
                 )
@@ -125,7 +125,7 @@ public final class _Events implements Runnable {
                         +"\toptional { ?e ?p ?o }\n"
                         +"\toptional { ?s ?q ?e }\n"
                         +"\n"
-                        +"}", Resources.Base)
+                        +"}", EC2U.Base)
 
                 .execute()
 

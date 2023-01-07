@@ -26,11 +26,11 @@ import com.metreeca.link.Values;
 import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rdf4j.actions.Upload;
 
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
@@ -48,25 +48,23 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.universities.University.values;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toUnmodifiableSet;
 
 
 public final class Universities extends Delegator {
 
-    private static final IRI Context=Resources.item("/universities/");
+    private static final IRI Context=EC2U.item("/universities/");
 
-    public static final IRI University=Resources.term("University");
+    public static final IRI University=EC2U.term("University");
 
-    public static final IRI schac=Resources.term("schac");
-    public static final IRI country=Resources.term("country");
-    public static final IRI location=Resources.term("location");
-    public static final IRI image=Resources.term("image");
-    public static final IRI inception=Resources.term("inception");
-    public static final IRI students=Resources.term("students");
+    public static final IRI schac=EC2U.term("schac");
+    public static final IRI country=EC2U.term("country");
+    public static final IRI location=EC2U.term("location");
+    public static final IRI image=EC2U.term("image");
+    public static final IRI inception=EC2U.term("inception");
+    public static final IRI students=EC2U.term("students");
 
 
     private static Shape University() {
@@ -131,16 +129,6 @@ public final class Universities extends Delegator {
     }
 
 
-    public static final Set<String> Languages=Stream
-
-            .concat(
-                    Stream.of("en"),
-                    stream(values()).map(university -> university.Language)
-            )
-
-            .collect(toUnmodifiableSet());
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
@@ -153,7 +141,7 @@ public final class Universities extends Delegator {
             Stream
 
                     .of(
-                            rdf(Universities.class, ".ttl", Resources.Base)
+                            rdf(Universities.class, ".ttl", EC2U.Base)
                     )
 
                     .forEach(new Upload()
@@ -179,8 +167,8 @@ public final class Universities extends Delegator {
                             "values ?item "+Stream
 
                                     .concat(
-                                            stream(values()).map(university -> university.City),
-                                            stream(values()).map(university -> university.Country)
+                                            stream(EC2U.University.values()).map(university -> university.City),
+                                            stream(EC2U.University.values()).map(university -> university.Country)
                                     )
 
                                     .map(Values::format)
@@ -190,7 +178,7 @@ public final class Universities extends Delegator {
 
                     .sink(new WikidataMirror()
                             .contexts(Context)
-                            .languages(Languages)
+                            .languages(Resources.Languages)
                     );
         }
 

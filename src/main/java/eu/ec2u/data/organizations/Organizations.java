@@ -18,7 +18,7 @@ package eu.ec2u.data.organizations;
 
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
@@ -26,11 +26,11 @@ import java.util.stream.Stream;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Base;
+import static eu.ec2u.data.EC2U.Base;
 
 public final class Organizations {
 
-    public static final IRI Context=Resources.item("/organizations/");
+    public static final IRI Context=EC2U.item("/organizations/");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

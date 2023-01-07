@@ -19,6 +19,7 @@ package eu.ec2u.data.things;
 import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
@@ -38,7 +39,8 @@ import static com.metreeca.link.shapes.Or.or;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.*;
+import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.multilingual;
 
 /**
  * Schema.org RDF vocabulary.
@@ -49,7 +51,7 @@ public final class Schema {
 
     public static final String Namespace="https://schema.org/";
 
-    private static final IRI Context=item("/things/");
+    private static final IRI Context=EC2U.item("/things/");
 
 
     /**

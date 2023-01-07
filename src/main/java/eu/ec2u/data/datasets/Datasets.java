@@ -24,7 +24,7 @@ import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -44,13 +44,14 @@ import static com.metreeca.link.shapes.Guard.relate;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.*;
+import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.multilingual;
 
 public final class Datasets extends Delegator {
 
-    private static final IRI Context=item("/datasets/");
+    private static final IRI Context=EC2U.item("/datasets/");
 
-    public static final IRI Dataset=Resources.term("Dataset");
+    public static final IRI Dataset=EC2U.term("Dataset");
 
 
     private static Shape Dataset() {
@@ -102,7 +103,7 @@ public final class Datasets extends Delegator {
             Stream
 
                     .of(
-                            rdf(Datasets.class, ".ttl", Resources.Base),
+                            rdf(Datasets.class, ".ttl", EC2U.Base),
 
                             rdf("http://rdfs.org/ns/void.ttl"),
                             rdf("http://www.w3.org/ns/dcat.ttl")
@@ -128,7 +129,7 @@ public final class Datasets extends Delegator {
                     .of(text(Datasets.class, ".ul"))
 
                     .forEach(new Update()
-                            .base(Resources.Base)
+                            .base(EC2U.Base)
                             .insert(iri(Context, "~"))
                             .clear(true)
                     );

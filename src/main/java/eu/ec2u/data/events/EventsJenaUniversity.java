@@ -47,10 +47,10 @@ import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
+import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events._Events.synced;
 import static eu.ec2u.data.events._Uploads.upload;
-import static eu.ec2u.data.universities.University.Jena;
 import static eu.ec2u.work.Work.location;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
