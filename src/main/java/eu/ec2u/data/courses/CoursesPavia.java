@@ -46,7 +46,7 @@ import static com.metreeca.link.shifts.Seq.seq;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.courses.Courses.Course;
-import static eu.ec2u.data.resources.Resources.Universities.Pavia;
+import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.Work.localized;
 import static eu.ec2u.work.validation.Validators.validate;
 

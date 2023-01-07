@@ -3,6 +3,7 @@
 @prefix dcat:	<http://www.w3.org/ns/dcat#> .
 @prefix void:	<http://rdfs.org/ns/void#> .
 @prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
 </datasets/> a ec2u:Dataset ;
 	dct:title "Datasets"@en ;

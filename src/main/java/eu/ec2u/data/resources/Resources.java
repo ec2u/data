@@ -23,11 +23,10 @@ import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
+import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.time.ZoneId;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.toolkits.Identifiers.md5;
@@ -44,13 +43,9 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
 import static com.metreeca.link.shapes.Guard.hidden;
 import static com.metreeca.link.shapes.Localized.localized;
-import static com.metreeca.open.actions.Wikidata.wd;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toUnmodifiableSet;
 
 
 public final class Resources extends Delegator {
@@ -112,7 +107,7 @@ public final class Resources extends Delegator {
 
 
     public static Shape multilingual() {
-        return localized(Languages);
+        return localized(Universities.Languages);
     }
 
 
@@ -127,96 +122,6 @@ public final class Resources extends Delegator {
     public static IRI term(final String name) {
         return iri(item("/terms/"), name);
     }
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final Set<String> Languages=Stream
-
-            .concat(
-                    Stream.of("en"),
-                    stream(Universities.values()).map(university -> university.Language)
-            )
-
-            .collect(toUnmodifiableSet());
-
-    public enum Universities {
-
-        Coimbra(
-                item("/universities/coimbra"),
-                wd("Q45412"),
-                wd("Q45"),
-                "pt",
-                ZoneId.of("Europe/Lisbon")
-        ),
-
-        Iasi(
-                item("/universities/iasi"),
-                wd("Q46852"),
-                wd("Q218"),
-                "ro",
-                ZoneId.of("Europe/Bucharest")
-        ),
-
-        Jena(
-                item("/universities/jena"),
-                wd("Q3150"),
-                wd("Q183"),
-                "de",
-                ZoneId.of("Europe/Berlin")
-        ),
-
-        Pavia(
-                item("/universities/pavia"),
-                wd("Q6259"),
-                wd("Q38"),
-                "it",
-                ZoneId.of("Europe/Rome")
-        ),
-
-        Poitiers(
-                item("/universities/poitiers"),
-                wd("Q6616"),
-                wd("Q142"),
-                "fr",
-                ZoneId.of("Europe/Paris")
-        ),
-
-        Salamanca(
-                item("/universities/salamanca"),
-                wd("Q15695"),
-                wd("Q29"),
-                "es",
-                ZoneId.of("Europe/Madrid")
-        ),
-
-        Turku(
-                item("/universities/turku"),
-                wd("Q38511"),
-                wd("Q38511"),
-                "fi",
-                ZoneId.of("Europe/Helsinki")
-        );
-
-
-        public final IRI Id;
-        public final IRI City;
-        public final IRI Country;
-        public final String Language;
-        public final ZoneId TimeZone;
-
-
-        Universities(final IRI id, final IRI city, final IRI country, final String language, final ZoneId zone) {
-            this.Id=id;
-            this.City=city;
-            this.Country=country;
-            this.Language=language;
-            this.TimeZone=zone;
-        }
-
-    }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

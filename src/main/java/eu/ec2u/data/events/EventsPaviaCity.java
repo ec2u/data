@@ -45,7 +45,7 @@ import static com.metreeca.link.shifts.Step.step;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events._Events.synced;
 import static eu.ec2u.data.events._Uploads.upload;
-import static eu.ec2u.data.resources.Resources.Universities.Pavia;
+import static eu.ec2u.data.universities.University.Pavia;
 
 import static java.time.ZoneOffset.UTC;
 

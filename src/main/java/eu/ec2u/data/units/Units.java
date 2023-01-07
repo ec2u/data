@@ -32,7 +32,7 @@ import com.metreeca.rdf4j.services.Graph;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.resources.Resources.*;
+import eu.ec2u.data.universities.University;
 import eu.ec2u.work.Cursor;
 import org.apache.commons.csv.*;
 import org.eclipse.rdf4j.model.*;
@@ -174,7 +174,7 @@ public final class Units extends Delegator {
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private final Universities university;
+        private final University university;
 
         private final Map<String, Value> types=new HashMap<>();
         private final Map<String, Value> vis=new HashMap<>();
@@ -183,7 +183,7 @@ public final class Units extends Delegator {
         private final Logger logger=service(logger());
 
 
-        CSVLoader(final Universities university) {
+        CSVLoader(final University university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");

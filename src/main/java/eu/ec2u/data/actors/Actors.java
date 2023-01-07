@@ -42,7 +42,7 @@ import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Universities.*;
+import static eu.ec2u.data.universities.University.*;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;

@@ -30,6 +30,7 @@ import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
@@ -47,9 +48,11 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.universities.University.values;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 
 public final class Universities extends Delegator {
@@ -128,6 +131,16 @@ public final class Universities extends Delegator {
     }
 
 
+    public static final Set<String> Languages=Stream
+
+            .concat(
+                    Stream.of("en"),
+                    stream(values()).map(university -> university.Language)
+            )
+
+            .collect(toUnmodifiableSet());
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
@@ -166,8 +179,8 @@ public final class Universities extends Delegator {
                             "values ?item "+Stream
 
                                     .concat(
-                                            stream(Resources.Universities.values()).map(university -> university.City),
-                                            stream(Resources.Universities.values()).map(university -> university.Country)
+                                            stream(values()).map(university -> university.City),
+                                            stream(values()).map(university -> university.Country)
                                     )
 
                                     .map(Values::format)
@@ -177,7 +190,7 @@ public final class Universities extends Delegator {
 
                     .sink(new WikidataMirror()
                             .contexts(Context)
-                            .languages(Resources.Languages)
+                            .languages(Languages)
                     );
         }
 

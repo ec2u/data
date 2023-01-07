@@ -36,7 +36,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events._Events.synced;
 import static eu.ec2u.data.events._Uploads.upload;
-import static eu.ec2u.data.resources.Resources.Universities.Coimbra;
+import static eu.ec2u.data.universities.University.Coimbra;
 
 import static java.time.ZoneOffset.UTC;
 

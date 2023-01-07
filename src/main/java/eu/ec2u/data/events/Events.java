@@ -23,7 +23,6 @@ import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -102,7 +101,7 @@ public final class Events extends Delegator {
             Stream
 
                     .of(
-                            rdf(Courses.class, ".ttl", Resources.Base)
+                            rdf(Events.class, ".ttl", Resources.Base)
 
                     )
 

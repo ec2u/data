@@ -51,7 +51,7 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.courses.Courses.Course;
-import static eu.ec2u.data.resources.Resources.Universities.Coimbra;
+import static eu.ec2u.data.universities.University.Coimbra;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;

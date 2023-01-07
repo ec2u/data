@@ -38,8 +38,8 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data.resources.Resources.Universities.Pavia;
 import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.util.Map.entry;

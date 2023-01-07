@@ -47,8 +47,8 @@ import static com.metreeca.core.toolkits.Strings.split;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
-import static eu.ec2u.data.resources.Resources.Universities.Salamanca;
 import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.universities.University.Salamanca;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;

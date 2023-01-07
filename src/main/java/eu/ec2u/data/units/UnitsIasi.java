@@ -29,8 +29,8 @@ import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.link.Values.iri;
 
-import static eu.ec2u.data.resources.Resources.Universities.Iasi;
 import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.universities.University.Iasi;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
