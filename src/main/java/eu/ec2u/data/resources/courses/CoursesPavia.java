@@ -24,9 +24,9 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data._ontologies.Schema;
 import eu.ec2u.data._ontologies.VIVO;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;

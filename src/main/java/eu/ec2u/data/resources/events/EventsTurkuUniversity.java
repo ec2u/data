@@ -28,10 +28,10 @@ import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.locations.Locations;
 import eu.ec2u.data.resources.organizations.Organizations;
+import eu.ec2u.data.resources.things.Schema;
 import eu.ec2u.data.resources.universities.Universities;
 import eu.ec2u.data.utilities.Work;
 import org.eclipse.rdf4j.model.Literal;

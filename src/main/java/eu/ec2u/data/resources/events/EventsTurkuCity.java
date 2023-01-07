@@ -28,9 +28,9 @@ import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._ontologies.EC2U;
-import eu.ec2u.data._ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.locations.Locations;
+import eu.ec2u.data.resources.things.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;

@@ -25,7 +25,7 @@ import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data._ontologies.EC2U;
-import eu.ec2u.data._ontologies.Schema;
+import eu.ec2u.data.resources.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;

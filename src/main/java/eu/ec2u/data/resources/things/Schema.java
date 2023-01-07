@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._ontologies;
+package eu.ec2u.data.resources.things;
 
 import com.metreeca.link.Shape;
 

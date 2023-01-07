@@ -26,9 +26,9 @@ import com.metreeca.rdf.actions.Normalize.StringToDate;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._ontologies.Schema;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.locations.Locations;
+import eu.ec2u.data.resources.things.Schema;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;

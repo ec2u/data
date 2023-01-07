@@ -19,9 +19,9 @@ package eu.ec2u.data.utilities;
 import com.metreeca.core.Xtream;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data._ontologies.Schema;
 import eu.ec2u.data.resources.locations.Locations;
 import eu.ec2u.data.resources.organizations.Organizations;
+import eu.ec2u.data.resources.things.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;

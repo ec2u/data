@@ -24,8 +24,8 @@ import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data._ontologies.EC2U;
-import eu.ec2u.data._ontologies.Schema;
 import eu.ec2u.data.resources.concepts.ISCED2011;
+import eu.ec2u.data.resources.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;

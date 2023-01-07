@@ -9,24 +9,10 @@
 
 
 
-###  https://schema.org/about
-schema:about rdf:type owl:ObjectProperty ;
-             rdfs:subPropertyOf dct:subject .
-
-
 
 #################################################################
 #    Data properties
 #################################################################
-
-###  http://purl.org/dc/terms/description
-dct:description rdf:type owl:DatatypeProperty ;
-                rdfs:subPropertyOf rdfs:comment .
-
-
-###  http://purl.org/dc/terms/title
-dct:title rdf:type owl:DatatypeProperty ;
-          rdfs:subPropertyOf rdfs:label .
 
 
 ###  http://schema.org/courseCode
@@ -34,44 +20,10 @@ dct:title rdf:type owl:DatatypeProperty ;
                                rdfs:subPropertyOf <http://schema.org/identifier> .
 
 
-###  http://schema.org/identifier
-<http://schema.org/identifier> rdf:type owl:DatatypeProperty .
-
-
-###  http://www.w3.org/2000/01/rdf-schema#comment
-rdfs:comment rdf:type owl:DatatypeProperty .
-
 
 ###  http://www.w3.org/2000/01/rdf-schema#label
 rdfs:label rdf:type owl:DatatypeProperty .
 
-
-###  http://www.w3.org/2003/01/geo/wgs84_pos#lat
-wgs84:lat rdf:type owl:DatatypeProperty .
-
-
-###  http://www.w3.org/2003/01/geo/wgs84_pos#long
-wgs84:long rdf:type owl:DatatypeProperty .
-
-
-###  https://schema.org/disambiguatingDescription
-schema:disambiguatingDescription rdf:type owl:DatatypeProperty ;
-                                 rdfs:subPropertyOf dct:description .
-
-
-###  https://schema.org/latitude
-schema:latitude rdf:type owl:DatatypeProperty ;
-                rdfs:subPropertyOf wgs84:lat .
-
-
-###  https://schema.org/longitude
-schema:longitude rdf:type owl:DatatypeProperty ;
-                 rdfs:subPropertyOf wgs84:long .
-
-
-###  https://schema.org/name
-schema:name rdf:type owl:DatatypeProperty ;
-            rdfs:subPropertyOf dct:title .
 
 
 #################################################################
@@ -121,11 +73,6 @@ schema:Place rdf:type owl:Class ;
 ###  https://schema.org/PostalAddress
 schema:PostalAddress rdf:type owl:Class ;
                      rdfs:subClassOf schema:ContactPoint .
-
-
-###  https://schema.org/Thing
-schema:Thing rdf:type owl:Class .
-
 
 ###  https://schema.org/VirtualLocation
 schema:VirtualLocation rdf:type owl:Class ;
