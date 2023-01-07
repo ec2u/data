@@ -21,12 +21,12 @@ import com.metreeca.http.Handler;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
-import eu.ec2u.data.resources.courses.CoursesCoimbra;
-import eu.ec2u.data.resources.courses.CoursesPavia;
-import eu.ec2u.data.resources.datasets.Datasets;
-import eu.ec2u.data.resources.events.*;
-import eu.ec2u.data.resources.units.*;
-import eu.ec2u.data.resources.universities.Universities;
+import eu.ec2u.data.courses.CoursesCoimbra;
+import eu.ec2u.data.courses.CoursesPavia;
+import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.events.*;
+import eu.ec2u.data.units.*;
+import eu.ec2u.data.universities.Universities;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
