@@ -24,7 +24,6 @@ import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data._ontologies.VIVO;
 import eu.ec2u.data.concepts.Units;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
@@ -39,7 +38,7 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data._ontologies.EC2U.Universities.Pavia;
+import static eu.ec2u.data.resources.Resources.Universities.Pavia;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.work.validation.Validators.validate;
 
@@ -133,6 +132,23 @@ public final class UnitsPavia implements Runnable {
                         .filter(Objects::nonNull)
                         .findFirst()
                 );
+
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * VIVO RDF vocabulary.
+     *
+     * @see <a href="https://bioportal.bioontology.org/ontologies/VIVO/">VIVO Ontology for Researcher Discovery</a>
+     */
+    private static final class VIVO {
+
+        private static final String Namespace="http://vivoweb.org/ontology/core#";
+
+        private static final IRI AcademicDepartment=iri(Namespace, "AcademicDepartment");
+        private static final IRI Center=iri(Namespace, "Center");
 
     }
 

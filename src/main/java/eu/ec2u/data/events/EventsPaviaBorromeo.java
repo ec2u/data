@@ -32,10 +32,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._ontologies.EC2U.Universities.Pavia;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events._Events.synced;
 import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.resources.Resources.Universities.Pavia;
 
 import static java.time.ZoneOffset.UTC;
 

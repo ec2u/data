@@ -23,7 +23,6 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data._ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -43,7 +42,7 @@ import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._ontologies.EC2U.Universities.*;
+import static eu.ec2u.data.resources.Resources.Universities.*;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -52,7 +51,7 @@ import static java.util.stream.Collectors.toMap;
 
 public final class Actors implements Runnable {
 
-    private static final IRI Context=EC2U.item("/actors/");
+    private static final IRI Context=Resources.item("/actors/");
 
 
     private static final String DataTermsUrl="actors-terms-url";
@@ -66,7 +65,7 @@ public final class Actors implements Runnable {
 
 
     private static IRI term(final String name) {
-        return EC2U.term(format("actors/%s", name));
+        return Resources.term(format("actors/%s", name));
     }
 
 
@@ -101,7 +100,7 @@ public final class Actors implements Runnable {
         return Stream
 
                 .of(
-                        rdf(Actors.class, ".ttl", EC2U.Base)
+                        rdf(Actors.class, ".ttl", Resources.Base)
                 )
 
                 .flatMap(Collection::stream);
@@ -169,7 +168,7 @@ public final class Actors implements Runnable {
     private Frame actor(final CSVRecord record) {
         return frame(iri(Context, normalize(record.get(col("A")))))
 
-                .value(RDF.TYPE, EC2U.term("Actor"))
+                .value(RDF.TYPE, Resources.term("Actor"))
 
                 .value(Resources.university, university(record)) // !!! missing in the survey
 

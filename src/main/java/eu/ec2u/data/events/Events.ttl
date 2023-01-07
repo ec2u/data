@@ -18,3 +18,18 @@ ec2u:Event a owl:Class ;
 
 schema:Event a owl:Class ;
 	rdfs:subClassOf schema:Thing .
+
+schema:Organization a owl:Class ;
+	rdfs:subClassOf schema:Thing .
+
+schema:Place a owl:Class ;
+	rdfs:subClassOf schema:Thing .
+
+schema:PostalAddress a owl:Class ;
+	rdfs:subClassOf schema:ContactPoint .
+
+schema:ContactPoint a owl:Class ;
+	rdfs:subClassOf schema:Thing .
+
+schema:VirtualLocation a owl:Class ;
+	rdfs:subClassOf schema:Thing .

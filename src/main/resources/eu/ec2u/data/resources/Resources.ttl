@@ -1,61 +1,18 @@
 @prefix ec2u:	</terms/> .
 @prefix dct:	<http://purl.org/dc/terms/> .
-@prefix schema: <https://schema.org/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 
 
 ec2u:Resource a owl:Class .
 
-dct:description a owl:DatatypeProperty ;
-	rdfs:subPropertyOf rdfs:comment .
-
 dct:title a owl:DatatypeProperty ;
 	rdfs:subPropertyOf rdfs:label .
 
-owl:sameAs a  a owl:ObjectProperty, owl:SymmetricProperty .
+dct:description a owl:DatatypeProperty ;
+	rdfs:subPropertyOf rdfs:comment .
 
+owl:sameAs a owl:ObjectProperty, owl:SymmetricProperty .
 
-########################################################################################################################
-
-
-###  https://schema.org/Thing
-schema:Thing rdf:type owl:Class .
-
-
-schema:about a owl:ObjectProperty ;
-	rdfs:subPropertyOf dct:subject .
-
-
-
-###  http://schema.org/identifier
-<http://schema.org/identifier> rdf:type owl:DatatypeProperty .
-
-###  https://schema.org/name
-schema:name rdf:type owl:DatatypeProperty ;
-            rdfs:subPropertyOf dct:title .
-
-
-
-###  https://schema.org/disambiguatingDescription
-schema:disambiguatingDescription rdf:type owl:DatatypeProperty ;
-                                 rdfs:subPropertyOf dct:description .
-
-
-########################################################################################################################
-
-wgs84:lat rdf:type owl:DatatypeProperty .
-
-
-wgs84:long rdf:type owl:DatatypeProperty .
-
-
-schema:latitude rdf:type owl:DatatypeProperty ;
-                rdfs:subPropertyOf wgs84:lat .
-
-
-schema:longitude rdf:type owl:DatatypeProperty ;
-                 rdfs:subPropertyOf wgs84:long .

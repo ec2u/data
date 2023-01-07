@@ -24,7 +24,6 @@ import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data._ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -44,9 +43,7 @@ import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._ontologies.EC2U.item;
-import static eu.ec2u.data._ontologies.EC2U.multilingual;
-import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.*;
 
 public final class Concepts extends Delegator {
 
@@ -146,7 +143,7 @@ public final class Concepts extends Delegator {
 
                     .of(
 
-                            rdf(Concepts.class, ".ttl", EC2U.Base),
+                            rdf(Concepts.class, ".ttl", Resources.Base),
 
                             skos(rdf("https://www.w3.org/2009/08/skos-reference/skos.rdf"))
 
@@ -182,7 +179,7 @@ public final class Concepts extends Delegator {
                     .of(text(Concepts.class, ".ul"))
 
                     .forEach(new Update()
-                            .base(EC2U.Base)
+                            .base(Resources.Base)
                             .insert(iri(Id, "~"))
                             .clear(true)
                     );

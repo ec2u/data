@@ -25,7 +25,6 @@ import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
-import eu.ec2u.data._ontologies.VIVO;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -46,8 +45,8 @@ import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data._ontologies.EC2U.Universities.Pavia;
 import static eu.ec2u.data.courses.Courses.Course;
+import static eu.ec2u.data.resources.Resources.Universities.Pavia;
 import static eu.ec2u.work.Work.localized;
 import static eu.ec2u.work.validation.Validators.validate;
 
@@ -162,30 +161,30 @@ public final class CoursesPavia implements Runnable {
         private static final String Namespace="http://data.cineca.it/education/HEMO#";
 
 
-        /**
-         * Creates a term in the HEMO namespace.
-         *
-         * @param id the identifier of the term to be created
-         *
-         * @return the HEMO term identified by {@code id}
-         *
-         * @throws NullPointerException if {@code id} is null
-         */
-        private static IRI term(final String id) {
+        private static final IRI courseTeachingLanguage=iri(Namespace, "courseTeachingLanguage");
+        private static final IRI courseContentsDescription=iri(Namespace, "courseContentsDescription");
+        private static final IRI courseObjectiveDescription=iri(Namespace, "courseObjectiveDescription");
+        private static final IRI coursePrerequisitesDescription=iri(Namespace, "coursePrerequisitesDescription");
+        private static final IRI courseTeachingMethodsDescription=iri(Namespace, "courseTeachingMethodsDescription");
+        private static final IRI courseAssessmentMethodsDescription=iri(Namespace, "courseAssessmentMethodsDescription");
 
-            if ( id == null ) {
-                throw new NullPointerException("null id");
-            }
+    }
 
-            return iri(Namespace, id);
-        }
+    /**
+     * VIVO RDF vocabulary.
+     *
+     * @see <a href="https://bioportal.bioontology.org/ontologies/VIVO/">VIVO Ontology for Researcher Discovery</a>
+     */
+    private static final class VIVO {
 
-        private static final IRI courseTeachingLanguage=term("courseTeachingLanguage");
-        private static final IRI courseContentsDescription=term("courseContentsDescription");
-        private static final IRI courseObjectiveDescription=term("courseObjectiveDescription");
-        private static final IRI coursePrerequisitesDescription=term("coursePrerequisitesDescription");
-        private static final IRI courseTeachingMethodsDescription=term("courseTeachingMethodsDescription");
-        private static final IRI courseAssessmentMethodsDescription=term("courseAssessmentMethodsDescription");
+        private static final String Namespace="http://vivoweb.org/ontology/core#";
+
+
+        private static final IRI Course=iri(Namespace, "Course");
+
+        private static final IRI identifier=iri(Namespace, "identifier");
+        private static final IRI hasValue=iri(Namespace, "hasValue");
+        private static final IRI dateTimeValue=iri(Namespace, "dateTimeValue");
 
     }
 

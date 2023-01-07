@@ -18,7 +18,7 @@ package eu.ec2u.data.concepts;
 
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data._ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
@@ -27,7 +27,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._ontologies.EC2U.item;
+import static eu.ec2u.data.resources.Resources.item;
 
 /**
  * EC2U Research Unit SKOS Concept Scheme.
@@ -61,7 +61,7 @@ public final class Units implements Runnable {
     @Override public void run() {
         Stream
 
-                .of(rdf(this, ".ttl", EC2U.Base))
+                .of(rdf(this, ".ttl", Resources.Base))
 
                 .forEach(new Upload()
                         .contexts(Scheme)

@@ -26,7 +26,7 @@ import com.metreeca.link.Values;
 import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data._ontologies.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -45,7 +45,6 @@ import static com.metreeca.link.shapes.Link.link;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._ontologies.EC2U.*;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 
@@ -55,16 +54,16 @@ import static java.util.stream.Collectors.joining;
 
 public final class Universities extends Delegator {
 
-    private static final IRI Context=item("/universities/");
+    private static final IRI Context=Resources.item("/universities/");
 
-    public static final IRI University=term("University");
+    public static final IRI University=Resources.term("University");
 
-    public static final IRI schac=term("schac");
-    public static final IRI country=term("country");
-    public static final IRI location=term("location");
-    public static final IRI image=term("image");
-    public static final IRI inception=term("inception");
-    public static final IRI students=term("students");
+    public static final IRI schac=Resources.term("schac");
+    public static final IRI country=Resources.term("country");
+    public static final IRI location=Resources.term("location");
+    public static final IRI image=Resources.term("image");
+    public static final IRI inception=Resources.term("inception");
+    public static final IRI students=Resources.term("students");
 
 
     private static Shape University() {
@@ -72,8 +71,8 @@ public final class Universities extends Delegator {
 
                 filter(clazz(University)),
 
-                field(RDFS.LABEL, multilingual()),
-                field(RDFS.COMMENT, multilingual()),
+                field(RDFS.LABEL, Resources.multilingual()),
+                field(RDFS.COMMENT, Resources.multilingual()),
 
                 field(schac, required(), datatype(XSD.STRING)),
                 field(image, optional(), datatype(IRIType)),
@@ -81,7 +80,7 @@ public final class Universities extends Delegator {
                 link(OWL.SAMEAS,
 
                         field(country, optional(),
-                                field(RDFS.LABEL, multilingual())
+                                field(RDFS.LABEL, Resources.multilingual())
                         ),
 
                         field(inception, optional(), datatype(XSD.DATETIME)),
@@ -90,7 +89,7 @@ public final class Universities extends Delegator {
                         detail(
 
                                 field(location, optional(),
-                                        field(RDFS.LABEL, multilingual())
+                                        field(RDFS.LABEL, Resources.multilingual())
                                 ),
 
                                 field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
@@ -141,7 +140,7 @@ public final class Universities extends Delegator {
             Stream
 
                     .of(
-                            rdf(Universities.class, ".ttl", Base)
+                            rdf(Universities.class, ".ttl", Resources.Base)
                     )
 
                     .forEach(new Upload()
@@ -167,8 +166,8 @@ public final class Universities extends Delegator {
                             "values ?item "+Stream
 
                                     .concat(
-                                            stream(EC2U.Universities.values()).map(university -> university.City),
-                                            stream(EC2U.Universities.values()).map(university -> university.Country)
+                                            stream(Resources.Universities.values()).map(university -> university.City),
+                                            stream(Resources.Universities.values()).map(university -> university.Country)
                                     )
 
                                     .map(Values::format)
@@ -178,7 +177,7 @@ public final class Universities extends Delegator {
 
                     .sink(new WikidataMirror()
                             .contexts(Context)
-                            .languages(Languages)
+                            .languages(Resources.Languages)
                     );
         }
 

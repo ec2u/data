@@ -29,7 +29,7 @@ import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.link.Values.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._ontologies.EC2U.Universities.Coimbra;
+import static eu.ec2u.data.resources.Resources.Universities.Coimbra;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.work.validation.Validators.validate;
 

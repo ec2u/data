@@ -22,6 +22,21 @@ ec2u:Course a owl:Class ;
 
 schema:EducationalOccupationalProgram a owl:Class ;
 	rdfs:subClassOf schema:Thing .
-
+	
 schema:Course a owl:Class ;
+	rdfs:subClassOf schema:LearningResource .
+
+schema:LearningResource a owl:Class ;
+	rdfs:subClassOf schema:CreativeWork .
+
+schema:CreativeWork a owl:Class ;
 	rdfs:subClassOf schema:Thing .
+
+
+schema:courseCode a owl:DatatypeProperty ;
+	rdfs:subPropertyOf schema:identifier .
+
+
+
+
+

@@ -29,7 +29,6 @@ import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 
-import eu.ec2u.data._ontologies.EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
@@ -135,7 +134,7 @@ public final class Data implements Runnable {
 
                         new Wrapper()
 
-                                .before(request -> request.base(EC2U.Base)), // define canonical base
+                                .before(request -> request.base(Resources.Base)), // define canonical base
 
                         new Router()
 

@@ -17,10 +17,13 @@
 package eu.ec2u.data.things;
 
 import com.metreeca.link.Shape;
+import com.metreeca.rdf4j.actions.Upload;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
+
+import java.util.stream.Stream;
 
 import static com.metreeca.link.Shape.multiple;
 import static com.metreeca.link.Shape.optional;
@@ -32,9 +35,10 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.hidden;
 import static com.metreeca.link.shapes.Or.or;
+import static com.metreeca.rdf.codecs.RDF.rdf;
 
-import static eu.ec2u.data._ontologies.EC2U.multilingual;
-import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.resources.Resources.*;
 
 /**
  * Schema.org RDF vocabulary.
@@ -44,6 +48,8 @@ import static eu.ec2u.data.resources.Resources.Reference;
 public final class Schema {
 
     public static final String Namespace="https://schema.org/";
+
+    private static final IRI Context=item("/things/");
 
 
     /**
@@ -280,5 +286,29 @@ public final class Schema {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Schema() { }
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final class Loader implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Loader().run());
+        }
+
+        @Override public void run() {
+            Stream
+
+                    .of(
+                            rdf(Schema.class, ".ttl")
+                    )
+
+                    .forEach(new Upload()
+                            .contexts(Context)
+                            .clear(true)
+                    );
+        }
+    }
 
 }
