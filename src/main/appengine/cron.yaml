@@ -1,7 +1,7 @@
 cron:
 
-  - description: "wikidata - nightly sync"
-    url: /cron/background/wikidata
+  - description: "universities - nightly housekeeping"
+    url: /cron/universities/
     schedule: every day 00:00
 
 

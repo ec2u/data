@@ -16,13 +16,17 @@
 
 package eu.ec2u.data.resources.universities;
 
+import com.metreeca.core.Xtream;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
+import com.metreeca.link.Values;
+import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rdf4j.actions.Upload;
 
+import eu.ec2u.data._ontologies.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -44,6 +48,9 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._ontologies.EC2U.*;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
+
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 
 public final class Universities extends Delegator {
@@ -142,6 +149,39 @@ public final class Universities extends Delegator {
                             .clear(true)
                     );
         }
+    }
+
+    public static final class Updater implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Updater().run());
+        }
+
+        @Override public void run() {
+            Xtream
+
+                    .of(
+
+                            "?item wdt:P463 wd:Q105627243", // <member of> <EC2U>
+
+                            "values ?item "+Stream
+
+                                    .concat(
+                                            stream(EC2U.Universities.values()).map(university -> university.City),
+                                            stream(EC2U.Universities.values()).map(university -> university.Country)
+                                    )
+
+                                    .map(Values::format)
+                                    .collect(joining(" ", "{ ", " }"))
+
+                    )
+
+                    .sink(new WikidataMirror()
+                            .contexts(Context)
+                            .languages(Languages)
+                    );
+        }
+
     }
 
 }
