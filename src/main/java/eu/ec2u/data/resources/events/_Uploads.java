@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._delta;
+package eu.ec2u.data.resources.events;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -29,19 +29,9 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static java.lang.String.format;
 
-public final class Uploads   {
+public final class _Uploads {
 
     public static void upload(final IRI context, final Collection<Statement> model) {
-        upload(context, model, () -> service(graph()).update(task(connection -> model.stream()
-                .map(Statement::getSubject)
-                .distinct()
-                .forEach(subject ->
-                        connection.remove(subject, null, null, context)
-                )
-        )));
-    }
-
-    public static void upload(final IRI context, final Collection<Statement> model, final Runnable setup) {
 
         final long subjects=model.stream()
                 .map(Statement::getSubject)
@@ -52,12 +42,18 @@ public final class Uploads   {
 
             service(graph()).update(task(connection -> {
 
-                setup.run();
+                model.stream()
+                        .map(Statement::getSubject)
+                        .distinct()
+                        .forEach(subject ->
+                                connection.remove(subject, null, null, context)
+                        );
+
                 connection.add(model, context);
 
             }));
 
-        }).apply(elapsed -> service(logger()).info(Uploads.class, format(
+        }).apply(elapsed -> service(logger()).info(_Uploads.class, format(
                 "updated <%d> resources in <%s> in <%d> ms", subjects, context, elapsed
         )));
     }
@@ -65,6 +61,6 @@ public final class Uploads   {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Uploads() { }
+    private _Uploads() { }
 
 }

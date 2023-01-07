@@ -37,7 +37,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 import static eu.ec2u.data.Data.exec;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
-public final class Events_ implements Runnable {
+public final class _Events implements Runnable {
 
     public static Instant synced(final Value publisher) {
         return Xtream
@@ -71,7 +71,7 @@ public final class Events_ implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new Events_().run());
+        exec(() -> new _Events().run());
     }
 
 

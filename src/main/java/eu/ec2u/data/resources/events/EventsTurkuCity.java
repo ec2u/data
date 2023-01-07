@@ -31,6 +31,7 @@ import eu.ec2u.data._ontologies.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.locations.Locations;
 import eu.ec2u.data.resources.things.Schema;
+import eu.ec2u.data.utilities.validation.Validators;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -53,11 +54,11 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Turku;
 import static eu.ec2u.data.resources.events.Events.Event;
-import static eu.ec2u.data.resources.events.Events_.synced;
-import static eu.ec2u.data.utilities.validation.Validators.validate;
+import static eu.ec2u.data.resources.events._Events.synced;
+import static eu.ec2u.data.resources.events._Uploads.upload;
+import static eu.ec2u.data.utilities.validation.Validators._validate;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -115,14 +116,14 @@ public final class EventsTurkuCity implements Runnable {
 
         service(graph()).update(task(connection -> {
 
-            upload(Events.Context, validate(
+            upload(Events.Context, _validate(
                     Event(),
                     Set.of(Events.Event),
                     events.stream(),
                     places.stream()
             ));
 
-            upload(Locations.Context, validate(
+            upload(Locations.Context, Validators._validate(
                     Schema.Location(),
                     Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
                     places.stream()

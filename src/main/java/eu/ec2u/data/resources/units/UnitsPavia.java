@@ -20,6 +20,7 @@ import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
 import com.metreeca.link.Frame;
 import com.metreeca.rdf4j.actions.GraphQuery;
+import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.Data;
@@ -38,7 +39,6 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Pavia;
 import static eu.ec2u.data.resources.units.Units.Unit;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -70,7 +70,12 @@ public final class UnitsPavia implements Runnable {
                 .flatMap(this::units)
                 .map(this::unit)
 
-                .sink(units -> upload(Context, validate(Unit(), Set.of(Unit), units)));
+                .pipe(units -> validate(Unit(), Set.of(Unit), units))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                );
     }
 
 

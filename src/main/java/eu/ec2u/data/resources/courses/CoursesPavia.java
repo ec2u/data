@@ -22,6 +22,7 @@ import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.GraphQuery;
+import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data._ontologies.VIVO;
@@ -45,7 +46,6 @@ import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Pavia;
 import static eu.ec2u.data.resources.courses.Courses.Course;
 import static eu.ec2u.data.utilities.Work.localized;
@@ -79,9 +79,12 @@ public final class CoursesPavia implements Runnable {
                 .flatMap(this::courses)
                 .map(this::course)
 
-                .sink(courses -> upload(Context,
-                        validate(Course(), Set.of(Course), courses)
-                ));
+                .pipe(courses -> validate(Course(), Set.of(Course), courses))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                );
     }
 
 

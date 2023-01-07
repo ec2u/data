@@ -24,6 +24,7 @@ import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
+import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.ISCED2011;
@@ -49,7 +50,6 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Coimbra;
 import static eu.ec2u.data.resources.courses.Courses.Course;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -104,9 +104,12 @@ public final class CoursesCoimbra implements Runnable {
                 .flatMap(this::courses)
                 .optMap(this::course)
 
-                .sink(courses -> upload(Context,
-                        validate(Course(), Set.of(Course), courses)
-                ));
+                .pipe(courses -> validate(Course(), Set.of(Course), courses))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                );
     }
 
 

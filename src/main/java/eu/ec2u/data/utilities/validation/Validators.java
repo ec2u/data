@@ -16,11 +16,11 @@
 
 package eu.ec2u.data.utilities.validation;
 
+import com.metreeca.core.Xtream;
 import com.metreeca.jsonld.actions.Validate;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._delta.Uploads;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -39,13 +39,20 @@ import static java.util.stream.Collectors.toSet;
 
 public final class Validators {
 
-    public static Collection<Statement> validate(
+    public static Xtream<Collection<Statement>> validate(
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames
     ) {
-        return validate(shape, types, frames, Stream.empty());
+        return Xtream.of(_validate(shape, types, frames, Stream.empty()));
     }
 
-    public static Collection<Statement> validate(
+
+    public static Collection<Statement> _validate(
+            final Shape shape, final Set<IRI> types, final Stream<Frame> frames
+    ) {
+        return _validate(shape, types, frames, Stream.empty());
+    }
+
+    public static Collection<Statement> _validate(
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames, final Stream<Frame> context
     ) {
 
@@ -57,8 +64,15 @@ public final class Validators {
         final Set<Value> resources=batch.stream().map(Frame::focus).collect(toSet());
 
         final Collection<Statement> explicit=batch.stream().flatMap(Frame::stream).collect(toSet());
-        final Collection<Statement> extended=reasoner.apply(Stream.concat(explicit.stream(),
-                context.flatMap(Frame::stream)).collect(toSet()));
+        final Collection<Statement> extended=reasoner.apply(Stream
+
+                .concat(
+                        explicit.stream(),
+                        context.flatMap(Frame::stream)
+                )
+
+                .collect(toSet())
+        );
 
         final long mistyped=resources.stream()
 
@@ -71,7 +85,7 @@ public final class Validators {
 
                     if ( invalid ) {
 
-                        service(logger()).warning(Uploads.class, format(
+                        service(logger()).warning(Validators.class, format(
                                 "mistyped frame <%s> %s", resource, extended.stream()
                                         .filter(pattern(resource, RDF.TYPE, null))
                                         .map(Statement::getObject)

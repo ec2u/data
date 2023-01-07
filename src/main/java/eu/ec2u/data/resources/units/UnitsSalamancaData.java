@@ -24,6 +24,7 @@ import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
+import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._ontologies.EC2U;
@@ -47,7 +48,6 @@ import static com.metreeca.core.toolkits.Strings.split;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Salamanca;
 import static eu.ec2u.data.resources.units.Units.Unit;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -86,7 +86,12 @@ public final class UnitsSalamancaData implements Runnable {
                 .flatMap(this::units)
                 .optMap(this::unit)
 
-                .sink(units -> upload(Context, validate(Unit(), Set.of(Unit), units)));
+                .pipe(units -> validate(Unit(), Set.of(Unit), units))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                );
     }
 
 

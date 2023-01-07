@@ -29,6 +29,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
 import eu.ec2u.data.resources.locations.Locations;
 import eu.ec2u.data.resources.things.Schema;
+import eu.ec2u.data.utilities.validation.Validators;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -43,11 +44,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Coimbra;
 import static eu.ec2u.data.resources.events.Events.Event;
-import static eu.ec2u.data.resources.events.Events_.synced;
-import static eu.ec2u.data.utilities.validation.Validators.validate;
+import static eu.ec2u.data.resources.events._Events.synced;
+import static eu.ec2u.data.resources.events._Uploads.upload;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
@@ -79,7 +79,7 @@ public final class EventsCoimbraCity implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(Events.Event), events)
+                        Validators._validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 

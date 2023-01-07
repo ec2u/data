@@ -18,6 +18,7 @@ package eu.ec2u.data.resources.units;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Vault;
+import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.IRI;
@@ -28,7 +29,6 @@ import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.link.Values.iri;
 
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Turku;
 import static eu.ec2u.data.resources.units.Units.Unit;
 import static eu.ec2u.data.utilities.validation.Validators.validate;
@@ -64,7 +64,12 @@ public final class UnitsTurku implements Runnable {
 
                 .flatMap(new Units.CSVLoader(Turku))
 
-                .sink(units -> upload(Context, validate(Unit(), Set.of(Unit), units)));
+                .pipe(units -> validate(Unit(), Set.of(Unit), units))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                );
     }
 
 }

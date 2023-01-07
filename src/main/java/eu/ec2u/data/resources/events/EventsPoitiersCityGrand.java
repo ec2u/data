@@ -31,6 +31,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.concepts.Concepts;
 import eu.ec2u.data.resources.things.Schema;
 import eu.ec2u.data.utilities.feeds.RSS;
+import eu.ec2u.data.utilities.validation.Validators;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -45,11 +46,10 @@ import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Poitiers;
 import static eu.ec2u.data.resources.events.Events.Event;
-import static eu.ec2u.data.resources.events.Events_.synced;
-import static eu.ec2u.data.utilities.validation.Validators.validate;
+import static eu.ec2u.data.resources.events._Events.synced;
+import static eu.ec2u.data.resources.events._Uploads.upload;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -81,7 +81,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(Events.Event), events)
+                        Validators._validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 

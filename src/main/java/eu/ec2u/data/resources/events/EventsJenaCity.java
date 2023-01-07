@@ -35,6 +35,7 @@ import eu.ec2u.data.resources.concepts.Concepts;
 import eu.ec2u.data.resources.locations.Locations;
 import eu.ec2u.data.resources.organizations.Organizations;
 import eu.ec2u.data.resources.things.Schema;
+import eu.ec2u.data.utilities.validation.Validators;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -57,12 +58,11 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Jena;
 import static eu.ec2u.data.resources.events.Events.Event;
-import static eu.ec2u.data.resources.events.Events_.synced;
+import static eu.ec2u.data.resources.events._Events.synced;
+import static eu.ec2u.data.resources.events._Uploads.upload;
 import static eu.ec2u.data.utilities.JSONLD.jsonld;
-import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.util.function.Predicate.not;
 
@@ -94,7 +94,7 @@ public final class EventsJenaCity implements Runnable {
                 .optMap(this::event)
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(Events.Event), events)
+                        Validators._validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 

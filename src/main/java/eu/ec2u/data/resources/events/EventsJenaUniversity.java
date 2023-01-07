@@ -29,6 +29,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.things.Schema;
 import eu.ec2u.data.resources.universities.Universities;
 import eu.ec2u.data.utilities.Work;
+import eu.ec2u.data.utilities.validation.Validators;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -46,12 +47,11 @@ import static com.metreeca.link.Values.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
-import static eu.ec2u.data._delta.Uploads.upload;
 import static eu.ec2u.data._ontologies.EC2U.Universities.Jena;
 import static eu.ec2u.data.resources.events.Events.Event;
-import static eu.ec2u.data.resources.events.Events_.synced;
+import static eu.ec2u.data.resources.events._Events.synced;
+import static eu.ec2u.data.resources.events._Uploads.upload;
 import static eu.ec2u.data.utilities.Work.location;
-import static eu.ec2u.data.utilities.validation.Validators.validate;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
@@ -122,7 +122,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .distinct(Frame::focus) // events may be published multiple times by different publishers
 
                 .sink(events -> upload(Events.Context,
-                        validate(Event(), Set.of(Events.Event), events)
+                        Validators._validate(Event(), Set.of(Events.Event), events)
                 ));
     }
 
