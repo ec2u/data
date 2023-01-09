@@ -19,6 +19,7 @@ package eu.ec2u.data;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.time.ZoneId;
+import java.util.regex.Pattern;
 
 import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Values.iri;
@@ -28,17 +29,19 @@ public final class EC2U {
 
     public static final String Base="https://data.ec2u.eu/";
 
+    private static final Pattern MD5Pattern=Pattern.compile("[a-f0-9]{32}");
+
 
     public static IRI item(final String name) {
         return iri(Base, name);
     }
 
     public static IRI item(final IRI dataset, final String name) {
-        return iri(dataset, "/"+md5(name));
+        return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(name)));
     }
 
     public static IRI item(final IRI dataset, final University university, final String name) {
-        return iri(dataset, "/"+md5(university.Id+"@"+name));
+        return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(university.Id+"@"+name)));
     }
 
     public static IRI term(final String name) {
