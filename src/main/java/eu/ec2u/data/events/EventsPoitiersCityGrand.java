@@ -31,9 +31,7 @@ import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
-import eu.ec2u.work.validation.Validators;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -48,12 +46,14 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Poitiers;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCityGrand implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/poitiers/city/grand/");
 
     private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -75,14 +75,14 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 
@@ -165,7 +165,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             final Literal label=literal(category, Poitiers.Language);
 
-            return frame(iri(Concepts.Id, md5(category)))
+            return frame(iri(Concepts.Context, md5(category)))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);

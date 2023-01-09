@@ -30,7 +30,7 @@ import static eu.ec2u.data.Data.exec;
 
 public final class ISCED2011 implements Runnable {
 
-    public static final IRI Scheme=iri(Concepts.Id, "/isced-2011");
+    public static final IRI Scheme=iri(Concepts.Context, "/isced-2011");
 
 
     public static final IRI Level0=iri(Scheme, "/0");

@@ -34,9 +34,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.Work;
-import eu.ec2u.work.validation.Validators;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.io.InputStream;
@@ -60,8 +58,8 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
@@ -70,6 +68,8 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public final class EventsTurkuUniversity implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/turku/university/");
 
     private static final Frame Publisher=frame(iri("https://www.utu.fi/event-search/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -109,7 +109,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
         final ZonedDateTime now=ZonedDateTime.now(UTC);
 
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -122,9 +122,9 @@ public final class EventsTurkuUniversity implements Runnable {
                         .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
                 )
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 

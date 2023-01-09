@@ -34,7 +34,6 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.feeds.RSS;
-import eu.ec2u.work.validation.Validators;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -52,14 +51,16 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Poitiers;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 import static java.util.function.Predicate.not;
 
 public final class EventsPoitiersUniversity implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/poitiers/university/");
 
     private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -109,14 +110,14 @@ public final class EventsPoitiersUniversity implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .map(this::event)
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 
@@ -168,7 +169,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
 
                 .frames(DCTERMS.SUBJECT, item.strings("category")
-                        .map(c -> frame(iri(Concepts.Id, md5(c)))
+                        .map(c -> frame(iri(Concepts.Context, md5(c)))
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(c, Poitiers.Language))
                                 .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))

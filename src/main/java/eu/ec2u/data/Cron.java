@@ -80,8 +80,6 @@ public final class Cron extends Delegator {
                 // !!! .path("/events/turku/city", execute(new EventsTurkuCity()))
                 .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
 
-                .path("/events/", execute(new _Events()))
-
                 .path("/datasets/", execute(new Datasets.Updater()))
 
         ));

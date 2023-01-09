@@ -34,7 +34,7 @@ import static com.metreeca.link.Values.iri;
  */
 public final class EuroSciVoc {
 
-    public static final IRI Scheme=iri(Concepts.Id, "/euro-sci-voc");
+    public static final IRI Scheme=iri(Concepts.Context, "/euro-sci-voc");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -25,7 +25,7 @@ import com.metreeca.xml.codecs.XML;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.feeds.RSS;
-import eu.ec2u.work.validation.Validators;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
@@ -38,13 +38,15 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Iasi;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiCityCultura implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/iasi/cultura/");
 
     private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -66,14 +68,14 @@ public final class EventsIasiCityCultura implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .map(this::event)
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 

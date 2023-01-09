@@ -30,9 +30,7 @@ import eu.ec2u.data.Data;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.work.validation.Validators;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.*;
@@ -44,20 +42,16 @@ import java.util.stream.Stream;
 
 import javax.json.JsonValue;
 
-import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
-import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
-import static eu.ec2u.work.validation.Validators._validate;
+import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -66,6 +60,8 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 
 public final class EventsTurkuCity implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/turku/city/");
 
     private static final Pattern EOLPattern=Pattern.compile("\n+");
 
@@ -90,7 +86,7 @@ public final class EventsTurkuCity implements Runnable {
 
     @Override public void run() {
 
-        final List<Frame> events=Xtream.of(synced(Publisher.focus()))
+        final List<Frame> events=Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .flatMap(this::event)
@@ -113,23 +109,24 @@ public final class EventsTurkuCity implements Runnable {
 
                 .collect(toList());
 
-        service(graph()).update(task(connection -> {
+        Xtream.from(
 
-            upload(Events.Context, _validate(
-                    Event(),
-                    Set.of(Events.Event),
-                    events.stream(),
-                    places.stream()
-            ));
+                        validate(
+                                Event(),
+                                Set.of(Event),
+                                events.stream(),
+                                places.stream()
+                        ),
 
-            upload(Locations.Context, Validators._validate(
-                    Schema.Location(),
-                    Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
-                    places.stream()
-            ));
+                        validate(
+                                Schema.Location(),
+                                Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
+                                places.stream()
+                        )
 
-        }));
+                )
 
+                .forEach(new Events.Updater(Context));
     }
 
 

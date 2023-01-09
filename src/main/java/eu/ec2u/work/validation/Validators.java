@@ -42,17 +42,10 @@ public final class Validators {
     public static Xtream<Collection<Statement>> validate(
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames
     ) {
-        return Xtream.of(_validate(shape, types, frames, Stream.empty()));
+        return (validate(shape, types, frames, Stream.empty()));
     }
 
-
-    public static Collection<Statement> _validate(
-            final Shape shape, final Set<IRI> types, final Stream<Frame> frames
-    ) {
-        return _validate(shape, types, frames, Stream.empty());
-    }
-
-    public static Collection<Statement> _validate(
+    public static Xtream<Collection<Statement>> validate(
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames, final Stream<Frame> context
     ) {
 
@@ -114,7 +107,8 @@ public final class Validators {
             throw new IllegalArgumentException(format("<%d> malformed frames in batch", invalid));
         }
 
-        return explicit;
+        return Xtream.of(explicit);
     }
+
 
 }

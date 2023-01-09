@@ -49,7 +49,7 @@ import static eu.ec2u.data.resources.Resources.multilingual;
 
 public final class Concepts extends Delegator {
 
-    public static final IRI Id=EC2U.item("/concepts/");
+    public static final IRI Context=EC2U.item("/concepts/");
 
 
     private static Shape ConceptScheme() {
@@ -152,7 +152,7 @@ public final class Concepts extends Delegator {
                     )
 
                     .forEach(new Upload()
-                            .contexts(Id)
+                            .contexts(Context)
                             .clear(true)
                     );
         }
@@ -182,7 +182,7 @@ public final class Concepts extends Delegator {
 
                     .forEach(new Update()
                             .base(EC2U.Base)
-                            .insert(iri(Id, "~"))
+                            .insert(iri(Context, "/~"))
                             .clear(true)
                     );
         }

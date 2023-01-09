@@ -22,7 +22,7 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.feeds.Tribe;
-import eu.ec2u.work.validation.Validators;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.ZonedDateTime;
@@ -34,12 +34,14 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaBorromeo implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/pavia/borromeo/");
 
     private static final Frame Publisher=frame(iri("http://www.collegioborromeo.it/it/eventi/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -61,7 +63,7 @@ public final class EventsPaviaBorromeo implements Runnable {
 
         final ZonedDateTime now=ZonedDateTime.now(UTC);
 
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(new Tribe("http://www.collegioborromeo.it/it/")
                         .country(Pavia.Country)
@@ -79,9 +81,9 @@ public final class EventsPaviaBorromeo implements Runnable {
 
                 )
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 }

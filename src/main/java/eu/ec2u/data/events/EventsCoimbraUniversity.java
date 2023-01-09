@@ -22,7 +22,7 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.feeds.Tribe;
-import eu.ec2u.work.validation.Validators;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.ZonedDateTime;
@@ -35,12 +35,14 @@ import static com.metreeca.link.Values.literal;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Coimbra;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsCoimbraUniversity implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/coimbra/university/");
 
     private static final Frame Publisher=frame(iri("https://agenda.uc.pt/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -62,7 +64,7 @@ public final class EventsCoimbraUniversity implements Runnable {
 
         final ZonedDateTime now=ZonedDateTime.now(UTC);
 
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(new Tribe("https://agenda.uc.pt/")
                         .country(Coimbra.Country)
@@ -80,9 +82,9 @@ public final class EventsCoimbraUniversity implements Runnable {
 
                 )
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 }

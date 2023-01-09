@@ -29,7 +29,7 @@ import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.work.validation.Validators;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -46,13 +46,15 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Coimbra;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 public final class EventsCoimbraCity implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/coimbra/city/");
 
     private static final Frame Publisher=frame(iri("https://www.coimbragenda.pt/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -73,14 +75,14 @@ public final class EventsCoimbraCity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 
@@ -185,7 +187,7 @@ public final class EventsCoimbraCity implements Runnable {
             final Optional<Literal> label=category.string("codename")
                     .map(text -> literal(text, Coimbra.Language));
 
-            return frame(iri(Concepts.Id, md5(id)))
+            return frame(iri(Concepts.Context, md5(id)))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);

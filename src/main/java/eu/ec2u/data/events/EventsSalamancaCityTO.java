@@ -30,9 +30,7 @@ import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
-import eu.ec2u.work.validation.Validators;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.text.ParsePosition;
@@ -49,13 +47,15 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Salamanca;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 
 public final class EventsSalamancaCityTO implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/salamanca/city/to/");
 
     private static final Frame Publisher=frame(iri("https://salamanca.es/en/calendar"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -95,14 +95,14 @@ public final class EventsSalamancaCityTO implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Publisher.focus()))
+        Xtream.of(synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 

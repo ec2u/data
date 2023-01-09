@@ -44,7 +44,7 @@ final class ISCEDF2013 {
 
                 .forEach(new Upload()
                         .clear(true)
-                        .contexts(Concepts.Id)
+                        .contexts(Concepts.Context)
 
                 )
         );

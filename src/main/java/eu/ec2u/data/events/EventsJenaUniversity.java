@@ -29,9 +29,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.Work;
-import eu.ec2u.work.validation.Validators;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
@@ -49,15 +47,17 @@ import static com.metreeca.rdf.schemas.Schema.normalize;
 
 import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events._Events.synced;
-import static eu.ec2u.data.events._Uploads.upload;
+import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.Work.location;
+import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
 
 public final class EventsJenaUniversity implements Runnable {
+
+    public static final IRI Context=iri(Events.Context, "/jena/university/");
 
     private static final List<Frame> Publishers=Xtream
 
@@ -112,7 +112,7 @@ public final class EventsJenaUniversity implements Runnable {
     @Override public void run() {
         Xtream.from(Publishers)
 
-                .flatMap(publisher -> Xtream.of(synced(publisher.focus()))
+                .flatMap(publisher -> Xtream.of(synced(Context, publisher.focus()))
 
                         .flatMap(synced -> crawl(publisher, synced))
                         .map(frame -> event(publisher, frame))
@@ -121,9 +121,9 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .distinct(Frame::focus) // events may be published multiple times by different publishers
 
-                .sink(events -> upload(Events.Context,
-                        Validators._validate(Event(), Set.of(Events.Event), events)
-                ));
+                .pipe(events -> validate(Event(), Set.of(Event), events))
+
+                .forEach(new Events.Updater(Context));
     }
 
 
