@@ -27,7 +27,7 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
@@ -53,7 +53,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCityGrand implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/poitiers/city/grand/");
+    private static final IRI Context=iri(Events.Context, "/poitiers/city/grand");
 
     private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -165,7 +165,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             final Literal label=literal(category, Poitiers.Language);
 
-            return frame(iri(Concepts.Context, md5(category)))
+            return frame(EC2U.item(Events.Scheme, category))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);

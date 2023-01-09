@@ -46,7 +46,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiCityInOras implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/iasi/in-oras/");
+    public static final IRI Context=iri(Events.Context, "/iasi/in-oras");
 
     private static final Frame Publisher=frame(iri("https://iasi.inoras.ro/evenimente"))
             .value(RDF.TYPE, Resources.Publisher)

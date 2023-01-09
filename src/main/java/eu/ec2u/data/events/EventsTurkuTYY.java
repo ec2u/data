@@ -48,6 +48,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Turku;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -57,7 +58,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsTurkuTYY implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/turku/tyy/");
+    private static final IRI Context=iri(Events.Context, "/turku/tyy");
 
     private static final Frame Publisher=frame(iri("https://www.tyy.fi/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -172,7 +173,7 @@ public final class EventsTurkuTYY implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Optional<Frame> organizer(final JSONPath json) {
-        return json.string("organiser").map(organizer -> frame(iri(Organizations.Context, md5(organizer)))
+        return json.string("organiser").map(organizer -> frame(item(Organizations.Context, organizer))
 
                 .value(RDF.TYPE, Schema.Organization)
 
@@ -184,7 +185,7 @@ public final class EventsTurkuTYY implements Runnable {
     private Optional<Frame> location(final JSONPath json) {
         return json.string("location")
 
-                .map(location -> frame(iri(Locations.Context, md5(md5(format("%s{%s}", Publisher.focus(), location)))))
+                .map(location -> frame(item(Locations.Context, format("%s{%s}", Publisher.focus(), location)))
 
                         .value(RDF.TYPE, Schema.Place)
 
@@ -199,7 +200,7 @@ public final class EventsTurkuTYY implements Runnable {
     private Optional<Frame> address(final JSONPath json) {
         return json.string("address")
 
-                .map(address -> frame(iri(Locations.Context, md5(format("%s{%s}", Publisher.focus(), address))))
+                .map(address -> frame(item(Locations.Context, format("%s{%s}", Publisher.focus(), address)))
 
                         .value(RDF.TYPE, Schema.PostalAddress)
 

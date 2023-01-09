@@ -37,7 +37,7 @@ import static java.lang.String.format;
 
 public final class UnitsJena implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/jena/");
+    private static final IRI Context=iri(Units.Context, "/jena");
 
     private static final String DataUrl="units-jena-url"; // vault label
 

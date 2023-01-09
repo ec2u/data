@@ -28,7 +28,7 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -43,13 +43,13 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.core.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Poitiers;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -60,7 +60,7 @@ import static java.util.function.Predicate.not;
 
 public final class EventsPoitiersUniversity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/poitiers/university/");
+    private static final IRI Context=iri(Events.Context, "/poitiers/university");
 
     private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -169,7 +169,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
 
                 .frames(DCTERMS.SUBJECT, item.strings("category")
-                        .map(c -> frame(iri(Concepts.Context, md5(c)))
+                        .map(c -> frame(EC2U.item(Events.Scheme, c))
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(c, Poitiers.Language))
                                 .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))
@@ -233,7 +233,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return item.string("place/place_name").filter(not(String::isEmpty))
 
-                .map(name -> frame(iri(Locations.Context, md5(name)))
+                .map(name -> frame(item(Locations.Context, name))
 
                         .value(RDF.TYPE, Schema.Place)
 

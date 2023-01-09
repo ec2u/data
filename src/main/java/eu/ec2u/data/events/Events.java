@@ -45,6 +45,7 @@ import static com.metreeca.core.services.Logger.time;
 import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
@@ -62,15 +63,16 @@ import static java.util.stream.Collectors.toSet;
 public final class Events extends Delegator {
 
     public static final IRI Context=EC2U.item("/events/");
+    public static final IRI Scheme=iri(Concepts.Context, "/events-topics");
 
     public static final IRI Event=EC2U.term("Event");
 
-    public static final IRI College=EC2U.term("College");
-    public static final IRI Association=EC2U.term("Association");
-    public static final IRI City=EC2U.term("City");
+    static final IRI College=EC2U.term("College");
+    static final IRI Association=EC2U.term("Association");
+    static final IRI City=EC2U.term("City");
 
 
-    public static Instant synced(final IRI context, final Value publisher) {
+    static Instant synced(final IRI context, final Value publisher) {
         return Xtream
 
                 .of("prefix ec2u: </terms/>\n"
@@ -101,7 +103,7 @@ public final class Events extends Delegator {
     }
 
 
-    public static Shape Event() {
+    static Shape Event() {
         return relate(Resource(), Schema.Event(),
 
                 hidden(field(RDF.TYPE, all(Event))),

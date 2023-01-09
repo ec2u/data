@@ -47,7 +47,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiUniversity360 implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/iasi/university-360/");
+    private static final IRI Context=iri(Events.Context, "/iasi/university-360");
 
     private static final Frame Publisher=frame(iri("https://360.uaic.ro/blog/category/evenimente/"))
             .value(RDF.TYPE, Resources.Publisher)

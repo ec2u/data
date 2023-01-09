@@ -33,8 +33,12 @@ public final class EC2U {
         return iri(Base, name);
     }
 
-    public static IRI item(final IRI dataset, final IRI university, final String name) {
-        return iri(dataset, md5(university+"@"+name));
+    public static IRI item(final IRI dataset, final String name) {
+        return iri(dataset, "/"+md5(name));
+    }
+
+    public static IRI item(final IRI dataset, final University university, final String name) {
+        return iri(dataset, "/"+md5(university.Id+"@"+name));
     }
 
     public static IRI term(final String name) {

@@ -20,7 +20,7 @@ import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
 import com.metreeca.xml.actions.Untag;
 
-import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.Value;
@@ -28,7 +28,6 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Optional;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.core.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
@@ -61,7 +60,7 @@ public final class WordPress {
                 .value(DCTERMS.SOURCE, frame.value(Link))
 
                 .frames(DCTERMS.SUBJECT, frame.strings(Category)
-                        .map(category -> frame(iri(Concepts.Context, md5(category)))
+                        .map(category -> frame(EC2U.item(Events.Scheme, category))
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(category, lang))
                                 .value(SKOS.PREF_LABEL, literal(category, lang))

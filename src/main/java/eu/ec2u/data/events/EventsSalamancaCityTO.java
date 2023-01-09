@@ -55,7 +55,7 @@ import static java.time.temporal.ChronoField.*;
 
 public final class EventsSalamancaCityTO implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/salamanca/city/to/");
+    private static final IRI Context=iri(Events.Context, "/salamanca/city/to");
 
     private static final Frame Publisher=frame(iri("https://salamanca.es/en/calendar"))
             .value(RDF.TYPE, Resources.Publisher)

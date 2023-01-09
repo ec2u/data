@@ -49,6 +49,7 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.EC2U.University.Turku;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -61,7 +62,7 @@ import static java.util.stream.Collectors.toList;
 
 public final class EventsTurkuCity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/turku/city/");
+    private static final IRI Context=iri(Events.Context, "/turku/city");
 
     private static final Pattern EOLPattern=Pattern.compile("\n+");
 
@@ -235,7 +236,7 @@ public final class EventsTurkuCity implements Runnable {
 
         return json.string("location.@id")
                 .map(Values::iri)
-                .map(iri -> frame(iri(Locations.Context, md5(iri.stringValue())))
+                .map(iri -> frame(item(Locations.Context, iri.stringValue()))
                         .value(RDF.TYPE, Schema.Place)
                         .value(Schema.url, iri)
                 )
@@ -245,7 +246,7 @@ public final class EventsTurkuCity implements Runnable {
                         .filter(entry -> Resources.Languages.contains(entry.getKey()))
                         .optMap(entry -> entry.getValue().string("")
                                 .map(Strings::normalize)
-                                .map(info -> frame(iri(Locations.Context, md5(info)))
+                                .map(info -> frame(item(Locations.Context, info))
                                         .value(RDF.TYPE, Schema.Place)
                                         .value(Schema.name, literal(info, entry.getKey()))
                                 )
@@ -271,7 +272,7 @@ public final class EventsTurkuCity implements Runnable {
                 .values(Schema.email, label(json.entries("email")))
                 .values(Schema.telephone, label(json.entries("telephone")));
 
-        return frame(iri(Locations.Context, md5(id)))
+        return frame(item(Locations.Context, id))
 
                 .value(RDF.TYPE, json.string("@type").map(Schema::term).orElse(Schema.Place))
 
@@ -286,7 +287,7 @@ public final class EventsTurkuCity implements Runnable {
 
                                 .value(RDF.TYPE, Schema.PostalAddress)
 
-                                .refocus(iri(Locations.Context, frame.skolemize( // !!! wildcard
+                                .refocus(item(Locations.Context, frame.skolemize( // !!! wildcard
                                         Schema.addressCountry,
                                         Schema.addressRegion,
                                         Schema.addressLocality,

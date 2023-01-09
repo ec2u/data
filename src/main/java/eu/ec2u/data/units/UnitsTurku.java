@@ -37,7 +37,7 @@ import static java.lang.String.format;
 
 public final class UnitsTurku implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/turku/");
+    private static final IRI Context=iri(Units.Context, "/turku");
 
     private static final String DataUrl="units-turku-url"; // vault label
 

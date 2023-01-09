@@ -51,7 +51,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsSalamancaCitySACIS implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/salamanca/city/sacis/");
+    private static final IRI Context=iri(Events.Context, "/salamanca/city/sacis");
 
     private static final Frame Publisher=frame(iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda"
             +"-salamanca/"))

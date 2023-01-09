@@ -24,7 +24,6 @@ import com.metreeca.json.codecs.JSON;
 import com.metreeca.link.Frame;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -44,6 +43,7 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Poitiers;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.work.validation.Validators.validate;
 
@@ -51,7 +51,7 @@ import static java.util.Map.entry;
 
 public final class CoursesPoitiers implements Runnable {
 
-    private static final IRI Context=iri(Courses.Context, "/poitiers/");
+    private static final IRI Context=iri(Courses.Context, "/poitiers");
 
     private static final String APIUrl="courses-poitiers-url";
     private static final String APIId="courses-poitiers-id";
@@ -178,7 +178,7 @@ public final class CoursesPoitiers implements Runnable {
                     .map(v -> literal(v, Poitiers.Language));
 
 
-            return frame(EC2U.item(Courses.Context, Poitiers.Id, String.valueOf(id)))
+            return frame(item(Courses.Context, Poitiers, id))
 
                     .values(RDF.TYPE, Courses.Course)
                     .value(eu.ec2u.data.resources.Resources.university, Poitiers.Id)

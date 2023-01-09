@@ -41,7 +41,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaBorromeo implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/pavia/borromeo/");
+    private static final IRI Context=iri(Events.Context, "/pavia/borromeo");
 
     private static final Frame Publisher=frame(iri("http://www.collegioborromeo.it/it/eventi/"))
             .value(RDF.TYPE, Resources.Publisher)

@@ -24,7 +24,8 @@ import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.concepts.Units;
+import eu.ec2u.data.EC2U;
+import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -33,7 +34,6 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import java.time.Instant;
 import java.util.*;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 
@@ -47,11 +47,11 @@ import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
 
-    private static final IRI Context=iri(eu.ec2u.data.units.Units.Context, "/pavia/");
+    private static final IRI Context=iri(Units.Context, "/pavia");
 
     private static final Map<IRI, IRI> Types=Map.ofEntries(
-            entry(VIVO.AcademicDepartment, Units.Department),
-            entry(VIVO.Center, Units.Centre)
+            entry(VIVO.AcademicDepartment, UnitTypes.Department),
+            entry(VIVO.Center, UnitTypes.Centre)
     );
 
 
@@ -117,7 +117,7 @@ public final class UnitsPavia implements Runnable {
                 .filter(not(String::isEmpty))
                 .map(name -> literal(name, Pavia.Language));
 
-        return frame(iri(eu.ec2u.data.units.Units.Context, md5(frame.focus().stringValue())))
+        return frame(EC2U.item(Units.Context, frame.focus().stringValue()))
 
                 .values(RDF.TYPE, Unit)
                 .value(Resources.university, Pavia.Id)

@@ -28,8 +28,7 @@ import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.concepts.Units;
+import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
@@ -43,7 +42,6 @@ import java.util.regex.Pattern;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.core.toolkits.Strings.split;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
@@ -58,13 +56,13 @@ import static java.util.function.Predicate.not;
 
 public final class UnitsSalamancaData implements Runnable {
 
-    private static final IRI Context=iri(eu.ec2u.data.units.Units.Context, "/salamanca/data/");
+    private static final IRI Context=iri(Units.Context, "/salamanca/data");
 
     private static final String APIUrl="units-salamanca-url"; // vault label
     private static final String APIKey="units-salamanca-key"; // vault label
 
-    private static final IRI BranchScheme=iri(Concepts.Context, "/units-salamanca-branch/");
-    private static final IRI RIS3Scheme=iri(Concepts.Context, "/units-salamanca-ris3/");
+    private static final IRI BranchScheme=iri(Units.Scheme, "/salamanca-branch");
+    private static final IRI RIS3Scheme=iri(Units.Scheme, "/salamanca-ris3");
 
 
     private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");
@@ -137,9 +135,9 @@ public final class UnitsSalamancaData implements Runnable {
             final Optional<Frame> department=department(json);
             final Optional<Frame> institute=institute(json);
 
-            return frame(EC2U.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, id))
+            return frame(EC2U.item(Units.Context, Salamanca, id))
 
-                    .values(RDF.TYPE, eu.ec2u.data.units.Units.Unit)
+                    .values(RDF.TYPE, Unit)
                     .value(Resources.university, Salamanca.Id)
 
                     .value(DCTERMS.TITLE, label)
@@ -151,7 +149,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                     .frames(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
                             .flatMap(v -> split(v, ','))
-                            .map(v -> frame(iri(BranchScheme, md5(v)))
+                            .map(v -> frame(EC2U.item(BranchScheme, v))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
                                     .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
 
@@ -160,7 +158,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                     .frames(DCTERMS.SUBJECT, json.string("RIS3").stream()
                             .flatMap(v -> split(v, ','))
-                            .map(v -> frame(iri(RIS3Scheme, md5(v)))
+                            .map(v -> frame(EC2U.item(RIS3Scheme, v))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
                                     .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
 
@@ -177,7 +175,7 @@ public final class UnitsSalamancaData implements Runnable {
                             .filter(not(String::isEmpty))
                             .map(value -> literal(value, Salamanca.Language)))
 
-                    .value(ORG.CLASSIFICATION, Units.GroupRecognized)
+                    .value(ORG.CLASSIFICATION, UnitTypes.GroupRecognized)
 
                     .frame(inverse(ORG.HEAD_OF), head(json))
 
@@ -209,7 +207,7 @@ public final class UnitsSalamancaData implements Runnable {
                     final String givenName=matcher.group(2);
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(EC2U.item(Persons.Context, Salamanca.Id, fullName))
+                    return frame(EC2U.item(Persons.Context, Salamanca, fullName))
 
                             .value(RDF.TYPE, Persons.Person)
 
@@ -228,9 +226,9 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(EC2U.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, name))
+            return frame(EC2U.item(Units.Context, Salamanca, name))
 
-                    .values(RDF.TYPE, eu.ec2u.data.units.Units.Unit)
+                    .values(RDF.TYPE, Unit)
                     .value(Resources.university, Salamanca.Id)
 
                     .value(DCTERMS.TITLE, title)
@@ -239,7 +237,7 @@ public final class UnitsSalamancaData implements Runnable {
                     .value(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Values::iri))
                     .value(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Values::iri))
 
-                    .value(ORG.CLASSIFICATION, Units.Department)
+                    .value(ORG.CLASSIFICATION, UnitTypes.Department)
                     .frame(ORG.UNIT_OF, frame(Salamanca.Id));
         });
     }
@@ -249,9 +247,9 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Literal title=literal(name, Salamanca.Language);
 
-            return frame(EC2U.item(eu.ec2u.data.units.Units.Context, Salamanca.Id, name))
+            return frame(EC2U.item(Units.Context, Salamanca, name))
 
-                    .values(RDF.TYPE, eu.ec2u.data.units.Units.Unit)
+                    .values(RDF.TYPE, Unit)
                     .value(Resources.university, Salamanca.Id)
 
                     .value(DCTERMS.TITLE, title)
@@ -261,7 +259,7 @@ public final class UnitsSalamancaData implements Runnable {
                             .flatMap(v -> split(v, ','))
                             .map(Values::iri))
 
-                    .value(ORG.CLASSIFICATION, Units.Institute)
+                    .value(ORG.CLASSIFICATION, UnitTypes.Institute)
                     .frame(ORG.UNIT_OF, frame(Salamanca.Id));
         });
     }

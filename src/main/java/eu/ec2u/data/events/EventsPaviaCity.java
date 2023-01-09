@@ -43,6 +43,7 @@ import static com.metreeca.link.shifts.Seq.seq;
 import static com.metreeca.link.shifts.Step.step;
 
 import static eu.ec2u.data.EC2U.University.Pavia;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -51,7 +52,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/pavia/city/");
+    private static final IRI Context=iri(Events.Context, "/pavia/city");
 
     private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -165,10 +166,9 @@ public final class EventsPaviaCity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Frame location(final Frame location) {
-        return frame(iri(Locations.Context, location.skolemize(
-                seq(Schema.name),
-                seq(step(Schema.address), alt(Schema.name, Schema.streetAddress, Schema.addressLocality))
-        )))
+        return frame(item(Locations.Context, location.skolemize(
+                seq(Schema.name), seq(step(Schema.address), alt(Schema.name, Schema.streetAddress,
+                        Schema.addressLocality)))))
 
                 .value(RDF.TYPE, Schema.Place)
 

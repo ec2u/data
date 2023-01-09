@@ -31,13 +31,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.EC2U.University.Pavia;
+import static eu.ec2u.data.EC2U.item;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
@@ -90,10 +89,10 @@ public final class Work {
         final Optional<Value> name=frame.string(Schema.name).map(value -> literal(value, lang));
         final Optional<Value> legalName=frame.string(Schema.legalName).map(value -> literal(value, lang));
 
-        return frame(iri(Organizations.Context, md5(frame.skolemize(
+        return frame(item(Organizations.Context, frame.skolemize(
                 seq(Schema.name),
                 seq(Schema.legalName)
-        ))))
+        )))
 
                 .value(RDF.TYPE, Schema.Organization)
 
@@ -103,11 +102,11 @@ public final class Work {
     }
 
     public static Frame location(final Frame frame, final Frame defaults) {
-        return frame(iri(Locations.Context, md5(frame.skolemize(
+        return frame(item(Locations.Context, frame.skolemize(
                 seq(Schema.name),
                 seq(Schema.address, Schema.addressLocality),
                 seq(Schema.address, Schema.streetAddress)
-        ))))
+        )))
 
                 .values(RDF.TYPE, frame.values(RDF.TYPE))
 
@@ -118,7 +117,7 @@ public final class Work {
 
     public static Frame address(final Frame frame, final Frame defaults) {
 
-        return frame(iri(Locations.Context, frame.skolemize(Schema.addressLocality, Schema.streetAddress)))
+        return frame(item(Locations.Context, frame.skolemize(Schema.addressLocality, Schema.streetAddress)))
 
                 .values(RDF.TYPE, frame.values(RDF.TYPE))
 

@@ -27,7 +27,7 @@ import com.metreeca.link.Values;
 import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
 
-import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
@@ -47,6 +47,8 @@ import static com.metreeca.core.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
+
+import static eu.ec2u.data.EC2U.item;
 
 import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
@@ -239,7 +241,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             final Optional<Literal> name=category.string("name").map(text -> literal(text, language));
 
-            return frame(iri(Concepts.Context, md5(self)))
+            return frame(EC2U.item(Events.Scheme, self))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, name)
                     .value(SKOS.PREF_LABEL, name);
@@ -248,7 +250,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
     }
 
     private Optional<Frame> organizer(final JSONPath organizer) {
-        return organizer.string("url").map(id -> frame(iri(Organizations.Context, md5(id)))
+        return organizer.string("url").map(id -> frame(item(Organizations.Context, id))
 
                 .value(RDF.TYPE, Schema.Organization)
 
@@ -270,7 +272,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
             final Optional<Value> addressLocality=Optional.ofNullable(locality);
             final Optional<Value> streetAddress=location.string("address").map(Values::literal);
 
-            return frame(iri(Locations.Context, md5(id)))
+            return frame(item(Locations.Context, id))
 
                     .value(RDF.TYPE, Schema.Place)
 
@@ -280,19 +282,17 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                     .value(Schema.latitude, location.decimal("geo_lat").map(Values::literal))
                     .value(Schema.longitude, location.decimal("geo_lng").map(Values::literal))
 
-                    .frame(Schema.address, frame(iri(Locations.Context, md5(Xtream
+                    .frame(Schema.address, frame(item(Locations.Context, Xtream
 
-                                    .of(addressCountry, addressLocality, streetAddress)
+                            .of(addressCountry, addressLocality, streetAddress)
 
-                                    .optMap(identity())
-                                    .map(Value::stringValue)
-                                    .collect(joining("\n"))
+                            .optMap(identity())
+                            .map(Value::stringValue)
+                            .collect(joining("\n"))))
 
-                            )))
+                            .value(RDF.TYPE, Schema.PostalAddress)
 
-                                    .value(RDF.TYPE, Schema.PostalAddress)
-
-                                    .value(Schema.addressCountry, addressCountry)
+                            .value(Schema.addressCountry, addressCountry)
                                     .value(Schema.addressLocality, addressLocality)
                                     .value(Schema.streetAddress, streetAddress)
 

@@ -38,7 +38,6 @@ import java.util.Set;
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.services.Logger.time;
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shifts.Seq.seq;
@@ -46,6 +45,7 @@ import static com.metreeca.link.shifts.Seq.seq;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.University.Pavia;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.work.Work.localized;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -54,7 +54,7 @@ import static java.util.Map.entry;
 
 public final class CoursesPavia implements Runnable {
 
-    private static final IRI Context=iri(Courses.Context, "/pavia/");
+    private static final IRI Context=iri(Courses.Context, "/pavia");
 
     private static final Map<String, String> Languages=Map.ofEntries(
             entry("italian", "it"),
@@ -120,7 +120,7 @@ public final class CoursesPavia implements Runnable {
     }
 
     private Frame course(final Frame frame) {
-        return frame(iri(Courses.Context, md5(frame.focus().stringValue())))
+        return frame(item(Courses.Context, Pavia, frame.focus().stringValue()))
 
                 .values(RDF.TYPE, Course)
                 .value(Resources.university, Pavia.Id)

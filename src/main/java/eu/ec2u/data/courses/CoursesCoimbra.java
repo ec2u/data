@@ -42,7 +42,6 @@ import java.util.*;
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.http.Request.POST;
 import static com.metreeca.http.Request.query;
 import static com.metreeca.link.Frame.frame;
@@ -51,6 +50,7 @@ import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Coimbra;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.work.validation.Validators.validate;
 
@@ -60,7 +60,7 @@ import static java.util.stream.Collectors.toList;
 
 public final class CoursesCoimbra implements Runnable {
 
-    private static final IRI Context=iri(Courses.Context, "/coimbra/");
+    private static final IRI Context=iri(Courses.Context, "/coimbra");
 
 
     private static final String APIUrl="courses-coimbra-url";
@@ -191,7 +191,7 @@ public final class CoursesCoimbra implements Runnable {
                     .collect(toList());
 
 
-            return frame(iri(Courses.Context, md5(Coimbra.Id+"@"+id)))
+            return frame(item(Courses.Context, Coimbra, String.valueOf(id)))
 
                     .values(RDF.TYPE, Course)
                     .value(Resources.university, Coimbra.Id)

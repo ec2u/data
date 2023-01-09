@@ -47,7 +47,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaUniversity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/pavia/university/");
+    private static final IRI Context=iri(Events.Context, "/pavia/university");
 
     private static final Frame Publisher=frame(iri("http://news.unipv.it/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -96,7 +96,7 @@ public final class EventsPaviaUniversity implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return WordPress(frame, "it")
+        return WordPress(frame, Pavia.Language)
 
                 .value(Resources.university, Pavia.Id)
 

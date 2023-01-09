@@ -37,7 +37,7 @@ import static java.lang.String.format;
 
 public final class UnitsCoimbra implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/coimbra/");
+    private static final IRI Context=iri(Units.Context, "/coimbra");
 
     private static final String DataUrl="units-coimbra-url"; // vault label
 

@@ -30,7 +30,6 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources;
@@ -49,7 +48,6 @@ import javax.json.Json;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.core.toolkits.Strings.clip;
 import static com.metreeca.http.Request.POST;
 import static com.metreeca.link.Frame.frame;
@@ -58,8 +56,7 @@ import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shifts.Seq.seq;
 
 import static eu.ec2u.data.EC2U.University.Jena;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.work.JSONLD.jsonld;
 import static eu.ec2u.work.validation.Validators.validate;
 
@@ -67,7 +64,7 @@ import static java.util.function.Predicate.not;
 
 public final class EventsJenaCity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/jena/city/");
+    private static final IRI Context=iri(Events.Context, "/jena/city");
 
     private static final Frame Publisher=frame(iri("https://www.jena-veranstaltungen.de/veranstaltungen"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -89,12 +86,12 @@ public final class EventsJenaCity implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
+        Xtream.of(Events.synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .pipe(events -> validate(Event(), Set.of(Event), events))
+                .pipe(events -> validate(Events.Event(), Set.of(Events.Event), events))
 
                 .forEach(new Events.Updater(Context));
     }
@@ -188,7 +185,7 @@ public final class EventsJenaCity implements Runnable {
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))
                             .filter(not(keyword -> keyword.startsWith("import_")))
                             .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
-                            .map(keyword -> frame(iri(Concepts.Context, md5(keyword)))
+                            .map(keyword -> frame(item(Events.Scheme, keyword))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
                                     .value(RDFS.LABEL, literal(keyword, Jena.Language))
                                     .value(SKOS.PREF_LABEL, literal(keyword, Jena.Language))
@@ -237,7 +234,7 @@ public final class EventsJenaCity implements Runnable {
 
                 .map(Value::stringValue)
 
-                .map(id -> frame(iri(collection, frame.skolemize(Schema.url, Schema.name)))
+                .map(id -> frame(item(collection, frame.skolemize(Schema.url, Schema.name)))
 
                         .value(RDF.TYPE, frame.value(RDF.TYPE))
 

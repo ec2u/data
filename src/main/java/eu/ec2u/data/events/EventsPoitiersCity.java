@@ -35,7 +35,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/poitiers/city/");
+    private static final IRI Context=iri(Events.Context, "/poitiers/city");
 
     private static final Frame Publisher=frame(iri("https://www.poitiers.fr/"))
             .value(RDF.TYPE, Resources.Publisher)

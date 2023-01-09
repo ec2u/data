@@ -32,7 +32,7 @@ import static eu.ec2u.data.EC2U.item;
 /**
  * EC2U Research Unit SKOS Concept Scheme.
  */
-public final class Units implements Runnable {
+public final class UnitTypes implements Runnable {
 
     public static final IRI Scheme=item("/concepts/units");
 
@@ -52,7 +52,7 @@ public final class Units implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new Units().run());
+        exec(() -> new UnitTypes().run());
     }
 
 

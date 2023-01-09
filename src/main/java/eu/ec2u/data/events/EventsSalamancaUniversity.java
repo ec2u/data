@@ -59,7 +59,7 @@ import static java.util.function.Predicate.not;
 
 public final class EventsSalamancaUniversity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/salamanca/university/");
+    private static final IRI Context=iri(Events.Context, "/salamanca/university");
 
     private static final Frame Publisher=frame(iri("https://sac.usal.es/programacion/"))
             .value(RDF.TYPE, Resources.Publisher)

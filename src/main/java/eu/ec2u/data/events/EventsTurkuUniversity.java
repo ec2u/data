@@ -57,6 +57,7 @@ import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Turku;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -69,7 +70,7 @@ import static java.util.stream.Collectors.toList;
 
 public final class EventsTurkuUniversity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/turku/university/");
+    private static final IRI Context=iri(Events.Context, "/turku/university");
 
     private static final Frame Publisher=frame(iri("https://www.utu.fi/event-search/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -251,7 +252,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
             // the same URL may be used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
 
-            return frame(iri(Locations.Context, md5(md5(Xtream
+            return frame(item(Locations.Context, Xtream
 
                     .of(
                             Optional.of(id).map(Values::literal), name.map(Values::literal),
@@ -262,14 +263,14 @@ public final class EventsTurkuUniversity implements Runnable {
                     .map(Value::stringValue)
                     .collect(joining("\n"))
 
-            ))))
+            ))
 
                     .value(RDF.TYPE, Schema.Place)
 
                     .value(Schema.url, url)
                     .value(Schema.name, name.map(text -> literal(text, Turku.Language)))
 
-                    .frame(Schema.address, frame(iri(Locations.Context, md5(Xtream
+                    .frame(Schema.address, frame(item(Locations.Context, Xtream
 
                                     .of(url, addressCountry, addressLocality, postalCode, streetAddress)
 
@@ -277,7 +278,7 @@ public final class EventsTurkuUniversity implements Runnable {
                                     .map(Value::stringValue)
                                     .collect(joining("\n"))
 
-                            )))
+                            ))
 
                                     .value(RDF.TYPE, Schema.PostalAddress)
 
@@ -293,7 +294,7 @@ public final class EventsTurkuUniversity implements Runnable {
     }
 
     private Optional<Frame> organizer(final JSONPath json) {
-        return json.string("url").map(id -> frame(iri(Organizations.Context, md5(id)))
+        return json.string("url").map(id -> frame(item(Organizations.Context, id))
 
                 .value(RDF.TYPE, Schema.Organization)
 

@@ -44,12 +44,13 @@ import static com.metreeca.link.shapes.Guard.*;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.multilingual;
 
 public final class Concepts extends Delegator {
 
-    public static final IRI Context=EC2U.item("/concepts/");
+    public static final IRI Context=item("/concepts/");
 
 
     private static Shape ConceptScheme() {

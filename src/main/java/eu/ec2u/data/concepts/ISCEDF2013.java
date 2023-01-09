@@ -20,6 +20,10 @@ import com.metreeca.core.Xtream;
 import com.metreeca.rdf.actions.Retrieve;
 import com.metreeca.rdf4j.actions.Upload;
 
+import org.eclipse.rdf4j.model.IRI;
+
+import static com.metreeca.link.Values.iri;
+
 import static eu.ec2u.data.Data.exec;
 
 
@@ -30,6 +34,8 @@ import static eu.ec2u.data.Data.exec;
  * .eu/resource/dataset/international-education-classification">...</a>
  */
 final class ISCEDF2013 {
+
+    public static final IRI Scheme=iri(Concepts.Context, "/isced-f2-2013");
 
     public static void main(final String... args) {
         exec(() -> Xtream
@@ -44,7 +50,7 @@ final class ISCEDF2013 {
 
                 .forEach(new Upload()
                         .clear(true)
-                        .contexts(Concepts.Context)
+                        .contexts(Scheme)
 
                 )
         );

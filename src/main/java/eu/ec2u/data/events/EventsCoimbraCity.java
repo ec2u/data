@@ -25,7 +25,6 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -38,13 +37,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.core.toolkits.Strings.clip;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Coimbra;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -54,7 +53,7 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 public final class EventsCoimbraCity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/coimbra/city/");
+    private static final IRI Context=iri(Events.Context, "/coimbra/city");
 
     private static final Frame Publisher=frame(iri("https://www.coimbragenda.pt/"))
             .value(RDF.TYPE, Resources.Publisher)
@@ -129,9 +128,9 @@ public final class EventsCoimbraCity implements Runnable {
                     final Optional<Literal> disambiguatingDescription=description
                             .map(literal -> literal(clip(literal.stringValue()), Coimbra.Language));
 
-                    return frame(iri(Events.Context, md5(url)))
+                    return frame(item(Context, url))
 
-                            .values(RDF.TYPE, Events.Event)
+                            .values(RDF.TYPE, Event)
 
                             .frames(DCTERMS.SUBJECT, subjects(json))
 
@@ -187,7 +186,7 @@ public final class EventsCoimbraCity implements Runnable {
             final Optional<Literal> label=category.string("codename")
                     .map(text -> literal(text, Coimbra.Language));
 
-            return frame(iri(Concepts.Context, md5(id)))
+            return frame(item(Events.Scheme, id))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);
@@ -196,7 +195,7 @@ public final class EventsCoimbraCity implements Runnable {
     }
 
     private Optional<Frame> location(final JSONPath json) {
-        return json.string("place.name").map(name -> frame(iri(Locations.Context, md5(name)))
+        return json.string("place.name").map(name -> frame(item(Locations.Context, name))
                 .value(RDF.TYPE, Schema.Place)
                 .value(Schema.name, literal(name, Coimbra.Language))
                 .value(Schema.longitude, json.decimal("place.longitude").map(Values::literal))

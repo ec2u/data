@@ -57,7 +57,7 @@ import static java.util.stream.Collectors.toList;
 
 public final class EventsJenaUniversity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/jena/university/");
+    private static final IRI Context=iri(Events.Context, "/jena/university");
 
     private static final List<Frame> Publishers=Xtream
 

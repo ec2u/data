@@ -41,7 +41,7 @@ import static java.util.stream.Collectors.toList;
 
 public final class UnitsSalamancaVIs implements Runnable {
 
-    private static final IRI Context=iri(eu.ec2u.data.units.Units.Context, "/salamanca/vis/");
+    private static final IRI Context=iri(Units.Context, "/salamanca/vis");
 
     private static final String DataUrl="units-salamanca-vis-url";
 
@@ -92,7 +92,7 @@ public final class UnitsSalamancaVIs implements Runnable {
 
                 .map(record -> {
 
-                    final IRI vi=iri(Units.Context, record.get("VI").toLowerCase(Locale.ROOT));
+                    final IRI vi=iri(Units.Context, "/"+record.get("VI").toLowerCase(Locale.ROOT));
                     final IRI unit=iri(record.get("Unit"));
 
                     return statement(unit, ORG.UNIT_OF, vi);

@@ -42,7 +42,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsCoimbraUniversity implements Runnable {
 
-    public static final IRI Context=iri(Events.Context, "/coimbra/university/");
+    public static final IRI Context=iri(Events.Context, "/coimbra/university");
 
     private static final Frame Publisher=frame(iri("https://agenda.uc.pt/"))
             .value(RDF.TYPE, Resources.Publisher)

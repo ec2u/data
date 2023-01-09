@@ -31,6 +31,7 @@ import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.Cursor;
@@ -53,7 +54,6 @@ import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.Locator.storage;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
-import static com.metreeca.core.toolkits.Identifiers.md5;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.frame;
 import static com.metreeca.link.Values.*;
@@ -80,6 +80,7 @@ import static java.util.stream.Collectors.toList;
 public final class Units extends Delegator {
 
     public static final IRI Context=EC2U.item("/units/");
+    public static final IRI Scheme=iri(Concepts.Context, "/units-topics");
 
     public static final IRI Unit=EC2U.term("Unit");
 
@@ -170,7 +171,7 @@ public final class Units extends Delegator {
         private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
         private static final Pattern HeadPattern=Pattern.compile("([^,]?+)\\s*,\\s*([^(]?+)(?:\\s*\\(([^)]+)\\))?");
 
-        private static final Frame TopicsScheme=frame(iri(Concepts.Context, "/units-topics/"))
+        private static final Frame TopicsScheme=frame(Scheme)
                 .value(RDF.TYPE, SKOS.CONCEPT_SCHEME)
                 .value(RDFS.LABEL, literal("Research Unit Topics", "en"));
 
@@ -324,7 +325,7 @@ public final class Units extends Delegator {
 
             } else {
 
-                return Optional.of(EC2U.item(Context, university.Id, code
+                return Optional.of(EC2U.item(Context, university, code
                         .or(() -> nameEnglish)
                         .or(() -> nameLocal)
                         .orElse("") // unexpected
@@ -356,7 +357,7 @@ public final class Units extends Delegator {
                                 +"}\n"
                         );
 
-                        query.setBinding("scheme", eu.ec2u.data.concepts.Units.Scheme);
+                        query.setBinding("scheme", UnitTypes.Scheme);
                         query.setBinding("value", literal(key));
 
                         try ( final TupleQueryResult evaluate=query.evaluate() ) {
@@ -430,7 +431,7 @@ public final class Units extends Delegator {
                                 +"}"
                         );
 
-                        query.setBinding("type", eu.ec2u.data.concepts.Units.InstituteVirtual);
+                        query.setBinding("type", UnitTypes.InstituteVirtual);
                         query.setBinding("code", literal(key, "en"));
 
                         try ( final TupleQueryResult evaluate=query.evaluate() ) {
@@ -468,7 +469,7 @@ public final class Units extends Delegator {
 
                         final String fullName=format("%s %s", givenName, familyName);
 
-                        return frame(EC2U.item(Persons.Context, university.Id, fullName))
+                        return frame(EC2U.item(Persons.Context, university, fullName))
 
                                 .value(RDF.TYPE, Persons.Person)
 
@@ -489,14 +490,11 @@ public final class Units extends Delegator {
                     .flatMap(Strings::split)
                     .map(v -> literal(v, language))
 
-                    .map(label -> frame(iri(
-                                    TopicsScheme.focus().stringValue(),
-                                    md5(label.stringValue())
-                            ))
-                                    .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .frame(SKOS.IN_SCHEME, TopicsScheme)
-                                    .frame(SKOS.TOP_CONCEPT_OF, TopicsScheme)
-                                    .value(SKOS.PREF_LABEL, label)
+                    .map(label -> frame(EC2U.item(Scheme, label.stringValue()))
+                            .value(RDF.TYPE, SKOS.CONCEPT)
+                            .frame(SKOS.IN_SCHEME, TopicsScheme)
+                            .frame(SKOS.TOP_CONCEPT_OF, TopicsScheme)
+                            .value(SKOS.PREF_LABEL, label)
                     );
         }
 
@@ -564,13 +562,13 @@ public final class Units extends Delegator {
 
                                     unit.cursors(ORG.UNIT_OF)
                                             .filter(parent -> parent.values(RDF.TYPE).noneMatch(Resources.university::equals))
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(eu.ec2u.data.concepts.Units.InstituteVirtual::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(UnitTypes.InstituteVirtual::equals))
                                             .flatMap(parent -> parent.localizeds(RDFS.LABEL, "en"))
                                             .filter(not(v -> v.startsWith("University "))) // !!!
                                             .collect(joining("; ")),
 
                                     unit.cursors(ORG.UNIT_OF)
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(eu.ec2u.data.concepts.Units.InstituteVirtual::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(UnitTypes.InstituteVirtual::equals))
                                             .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
                                             .collect(joining("; ")),
 
