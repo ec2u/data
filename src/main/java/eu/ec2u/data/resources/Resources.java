@@ -98,8 +98,8 @@ public final class Resources extends Delegator {
                 field(DCTERMS.PUBLISHER, optional(), Publisher()),
                 field(DCTERMS.SOURCE, optional(), datatype(IRIType)),
 
-                field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
                 field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
+                field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
                 field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
 
                 field(DCTERMS.TYPE, multiple(), Reference()),

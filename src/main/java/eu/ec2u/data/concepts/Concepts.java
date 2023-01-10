@@ -57,6 +57,8 @@ public final class Concepts extends Delegator {
     private static Shape ConceptScheme() {
         return relate(link(RDFS.ISDEFINEDBY, Resource(),
 
+                filter(clazz(SKOS.CONCEPT_SCHEME)),
+
                 field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
 
                 detail(
@@ -70,6 +72,8 @@ public final class Concepts extends Delegator {
 
     private static Shape Concept() {
         return relate(link(RDFS.ISDEFINEDBY, Resource(),
+
+                filter(clazz(SKOS.CONCEPT)),
 
                 field(SKOS.PREF_LABEL, multilingual()),
                 field(SKOS.ALT_LABEL, multilingual()),
@@ -99,11 +103,7 @@ public final class Concepts extends Delegator {
     public Concepts() {
         delegate(handler(
 
-                new Driver(ConceptScheme(),
-
-                        filter(clazz(SKOS.CONCEPT_SCHEME))
-
-                ),
+                new Driver(ConceptScheme()),
 
                 new Router()
 
@@ -117,11 +117,7 @@ public final class Concepts extends Delegator {
 
                         .path("/{scheme}/*", handler(
 
-                                new Driver(Concept(),
-
-                                        filter(clazz(SKOS.CONCEPT))
-
-                                ),
+                                new Driver(Concept()),
 
                                 new Router()
                                         .get(new Relator())
