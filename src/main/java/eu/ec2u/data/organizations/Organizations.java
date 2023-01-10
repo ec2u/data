@@ -19,6 +19,7 @@ package eu.ec2u.data.organizations;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
@@ -58,6 +59,7 @@ public final class Organizations {
 
                     .forEach(new Upload()
                             .contexts(Context)
+                            .langs(Resources.Languages)
                             .clear(true)
                     );
         }
