@@ -16,9 +16,25 @@
 
 package eu.ec2u.data.concepts;
 
-import org.eclipse.rdf4j.model.IRI;
+import com.metreeca.core.Xtream;
+import com.metreeca.rdf.actions.Retrieve;
+import com.metreeca.rdf4j.actions.Upload;
 
-import static com.metreeca.link.Values.iri;
+import eu.ec2u.data.EC2U;
+import eu.ec2u.data.resources.Resources;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.vocabulary.*;
+
+import java.util.Set;
+import java.util.stream.Stream;
+
+import static com.metreeca.link.Values.*;
+import static com.metreeca.rdf.codecs.RDF.rdf;
+
+import static eu.ec2u.data.Data.exec;
+import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * European Science Vocabulary (EuroSciVoc).
@@ -32,13 +48,86 @@ import static com.metreeca.link.Values.iri;
  * .eu/resource/dataset/euroscivoc">European
  * Science Vocabulary (EuroSciVoc)</a> .eu/resource/dataset/euroscivoc
  */
-public final class EuroSciVoc {
+public final class EuroSciVoc implements Runnable {
 
-    public static final IRI Scheme=iri(Concepts.Context, "/euro-sci-voc");
+    private static final IRI Scheme=iri(Concepts.Context, "/euroscivoc");
+
+    private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
+            +"?cellarURI=http%3A%2F%2Fpublications.europa.eu"
+            +"%2Fresource%2Fcellar%2Fa9cbda63-2d9c-11ec-bd8e-01aa75ed71a1.0001.02%2FDOC_1"
+            +"&fileName=EuroSciVoc-skos-ap-eu.ttl";
+
+
+    private static final String External="http://data.europa.eu/8mn/euroscivoc/";
+    private static final String Internal=Scheme+"/";
+
+    private static final Set<IRI> DCTTemporal=Set.of(DCTERMS.CREATED, DCTERMS.ISSUED, DCTERMS.MODIFIED);
+
+
+    public static void main(final String... args) {
+        exec(() -> new EuroSciVoc().run());
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private EuroSciVoc() { }
+    @Override public void run() {
+        Xtream.of(URL)
+
+                .map(new Retrieve()
+                        .format(TURTLE)
+                )
+
+                .flatMap(model -> Stream.of(
+
+                        rdf(this, ".ttl", EC2U.Base),
+
+                        model.stream()
+
+                                .map(statement -> {
+
+                                    final IRI predicate=statement.getPredicate();
+                                    final Resource subject=statement.getSubject();
+                                    final Value object=statement.getObject();
+
+                                    return DCTTemporal.contains(predicate) && literal(object)
+                                            .map(Literal::getDatatype)
+                                            .filter(XSD.DATE::equals)
+                                            .isPresent()
+
+                                            ? statement(subject, predicate,
+                                            literal(String.format("%sT00:00:00Z", object.stringValue()), XSD.DATETIME)
+                                    )
+
+                                            : statement;
+                                })
+
+                                .map(statement -> rewrite(statement, External, Internal))
+
+                                .collect(toList()),
+
+                        model.stream()
+
+                                .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT))
+                                .filter(statement -> statement.getSubject().stringValue()
+                                        .startsWith(External)
+                                )
+
+                                .map(statement -> statement(
+                                        statement.getSubject(),
+                                        OWL.SAMEAS,
+                                        rewrite((IRI)statement.getSubject(), External, Internal)
+                                ))
+
+                                .collect(toList())
+
+                ))
+
+                .forEach(new Upload()
+                        .contexts(Scheme)
+                        .langs(Resources.Languages)
+                        .clear(true)
+                );
+    }
 
 }
