@@ -25,6 +25,10 @@
 * data extracted from schema.org-based event description embedded into each page as
   a `<script type="application/ld+json">` HTML head element
 
+## 2023-01-10
+
+* remove legacy patch for malformed date time zones
+
 ## 2022-06-12
 
 * fix XPath expressions for page link scraping

@@ -271,7 +271,6 @@ public final class EventsJenaUniversity implements Runnable {
 
     private Optional<Literal> datetime(final Optional<String> datetime) {
         return datetime
-                .map(date -> date.replaceFirst("\\+\\d{2}", "$0:")) // fix broken zone
                 .map(OffsetDateTime::parse)
                 .map(Values::literal);
     }
