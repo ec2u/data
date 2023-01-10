@@ -78,7 +78,7 @@ public final class Universities extends Delegator {
                 field(schac, required(), datatype(XSD.STRING)),
                 field(image, optional(), datatype(IRIType)),
 
-                link(OWL.SAMEAS,
+                link(RDFS.SEEALSO,
 
                         field(country, optional(),
                                 field(RDFS.LABEL, Resources.multilingual())

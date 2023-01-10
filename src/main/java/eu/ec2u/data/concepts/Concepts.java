@@ -41,6 +41,7 @@ import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.*;
+import static com.metreeca.link.shapes.Link.link;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
@@ -54,7 +55,7 @@ public final class Concepts extends Delegator {
 
 
     private static Shape ConceptScheme() {
-        return relate(Resource(),
+        return relate(link(RDFS.ISDEFINEDBY, Resource(),
 
                 field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
 
@@ -64,11 +65,11 @@ public final class Concepts extends Delegator {
 
                 )
 
-        );
+        ));
     }
 
     private static Shape Concept() {
-        return relate(Resource(),
+        return relate(link(RDFS.ISDEFINEDBY, Resource(),
 
                 field(SKOS.PREF_LABEL, multilingual()),
                 field(SKOS.ALT_LABEL, multilingual()),
@@ -89,9 +90,7 @@ public final class Concepts extends Delegator {
 
                 )
 
-                // !!! link(OWL.SAMEAS, Concept())
-
-        );
+        ));
     }
 
 
@@ -112,7 +111,7 @@ public final class Concepts extends Delegator {
                                 .get(new Relator())
                         )
 
-                        .path("/{scheme}/", new Router()
+                        .path("/{scheme}", new Router()
                                 .get(new Relator())
                         )
 
