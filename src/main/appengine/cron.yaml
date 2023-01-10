@@ -119,9 +119,9 @@ cron:
   #    url: /cron/events/turku/city
   #    schedule: every day 00:00
 
-  - description: "events › turku › tyy - nightly crawling"
-    url: /cron/events/turku/tyy
-    schedule: every day 00:00
+  #  - description: "events › turku › tyy - nightly crawling"
+  #    url: /cron/events/turku/tyy
+  #    schedule: every day 00:00
 
 
   - description: "datasets - nightly housekeeping"
