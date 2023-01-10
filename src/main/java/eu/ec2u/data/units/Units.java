@@ -214,29 +214,17 @@ public final class Units extends Delegator {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private Xtream<CSVRecord> units(final String url) {
-
             return Xtream.of(url)
                     .optMap(new GET<>(new CSV(Format)))
                     .flatMap(Collection::stream);
         }
 
-
         private Optional<Frame> unit(final CSVRecord record, final Collection<CSVRecord> records) {
 
             final Optional<String> acronym=field(record, "Acronym");
 
-            final Optional<String> nameEnglish=field(record, "Name (English)");
-            final Optional<String> nameLocal=field(record, "Name (Local)");
-
-            final Optional<Literal> labelEnglish=acronym
-                    .flatMap(a -> nameEnglish.map(n -> format("%s - %s", a, n)))
-                    .or(() -> nameEnglish)
-                    .map(v -> literal(v, "en"));
-
-            final Optional<Literal> labelLocal=acronym
-                    .flatMap(a -> nameLocal.map(n -> format("%s - %s", a, n)))
-                    .or(() -> nameLocal)
-                    .map(v -> literal(v, university.Language));
+            final Optional<Literal> nameEnglish=field(record, "Name (English)").map(v -> literal(v, "en"));
+            final Optional<Literal> nameLocal=field(record, "Name (Local)").map(v -> literal(v, university.Language));
 
             return id(record).map(id -> frame(id)
 
@@ -258,8 +246,8 @@ public final class Units extends Delegator {
                             .flatMap(this::vi)
                     )
 
-                    .value(DCTERMS.TITLE, labelEnglish)
-                    .value(DCTERMS.TITLE, labelLocal)
+                    .value(DCTERMS.TITLE, nameEnglish)
+                    .value(DCTERMS.TITLE, nameLocal)
 
                     .value(DCTERMS.DESCRIPTION, field(record, "Description (English)")
                             .map(v -> literal(v, "en"))
@@ -279,8 +267,8 @@ public final class Units extends Delegator {
 
                     ))
 
-                    .value(SKOS.PREF_LABEL, labelEnglish)
-                    .value(SKOS.PREF_LABEL, labelLocal)
+                    .value(SKOS.PREF_LABEL, nameEnglish)
+                    .value(SKOS.PREF_LABEL, nameLocal)
 
                     .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, "en"))) // !!! no language
                     .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, university.Language))) // !!! no language

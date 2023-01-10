@@ -10,6 +10,15 @@
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	void:rootResource ec2u:Unit .
 
+<https://ec2u.eu/> a org:FormalOrganization ;
+
+	skos:prefLabel "European Campus of City‑Universities"@en ;
+	skos:altLabel "EC2U"@en ;
+
+	foaf:homepage <https://www.ec2u.eu/> ;
+
+    org:identifier "EC2U" .
+
 
 ########################################################################################################################
 
@@ -17,20 +26,12 @@ ec2u:Unit a owl:Class ;
 	rdfs:subClassOf ec2u:Resource, org:OrganizationalUnit .
 
 
+
 ##### Virtual Institutes ###############################################################################################
-
-<https://ec2u.eu/> a org:FormalOrganization ;
-
-	skos:prefLabel "European Campus of City‑Universities"@en ;
-
-	foaf:homepage <https://www.ec2u.eu/> ;
-
-    org:identifier "EC2U" .
-
 
 </units/glade> a ec2u:Unit ;
 
-	skos:prefLabel "Virtual Institute for Good Health and Well‑Being (GLADE)"@en ;
+	skos:prefLabel "Virtual Institute for Good Health and Well‑Being"@en ;
     skos:altLabel "GLADE"@en ;
 	skos:definition """GLADE is the EC2U Alliance’s Virtual Institute aimed to develop specific approaches in education, research, innovation and service transfer to the community in areas of the third UNSDG: Good Health and Well-being for All.
 
@@ -51,7 +52,7 @@ The main objective of the GLADE Virtual Institute is to develop cooperation’s 
 
 </units/viqe> a ec2u:Unit ;
 
-	skos:prefLabel "Virtual Institute for Quality Education (VIQE)"@en ;
+	skos:prefLabel "Virtual Institute for Quality Education"@en ;
     skos:altLabel "VIQE"@en ;
 	skos:definition """Virtual Institutes are a completely new way of approaching and solving a given challenge. The VIQE, Virtual Institue for Quality Edication combines education, research and innovation for advanced studies in quality education.
 
@@ -71,7 +72,7 @@ In practice, VIQE will carry out the following activities:
 
 </units/viscc> a ec2u:Unit ;
 
-	skos:prefLabel "Virtual Institute for Sustainable Cities and Communities (VISCC)"@en ;
+	skos:prefLabel "Virtual Institute for Sustainable Cities and Communities"@en ;
     skos:altLabel "VISCC"@en ;
 	skos:definition """The Virtual Institute for Sustainable Cities and Communities (VISCC) aims at bringing together research, education and innovation, and outreaching in the field of the United Nation’s sustainable development goal n°11: “Sustainable Cities and Communities”.
 

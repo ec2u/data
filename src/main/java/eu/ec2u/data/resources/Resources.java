@@ -66,11 +66,22 @@ public final class Resources extends Delegator {
 
             .concat(
                     Stream.of("en"),
-                    stream(EC2U.University.values()).map(university -> university.Language)
+                    stream(EC2U.University.values()).map(u -> u.Language)
             )
 
             .collect(toUnmodifiableSet());
 
+
+    public static Shape Reference() {
+        return and(
+
+                datatype(IRIType),
+
+                field(RDFS.LABEL, multilingual()),
+                field(RDFS.COMMENT, multilingual())
+
+        );
+    }
 
     public static Shape Resource() {
         return and(Reference(),
@@ -93,17 +104,6 @@ public final class Resources extends Delegator {
 
                 field(DCTERMS.TYPE, multiple(), Reference()),
                 field(DCTERMS.SUBJECT, multiple(), Reference())
-
-        );
-    }
-
-    public static Shape Reference() {
-        return and(
-
-                datatype(IRIType),
-
-                field(RDFS.LABEL, multilingual()),
-                field(RDFS.COMMENT, multilingual())
 
         );
     }
