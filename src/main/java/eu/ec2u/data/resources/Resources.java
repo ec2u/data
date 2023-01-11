@@ -77,8 +77,7 @@ public final class Resources extends Delegator {
 
                 datatype(IRIType),
 
-                field(RDFS.LABEL, multilingual()),
-                field(RDFS.COMMENT, multilingual())
+                field(RDFS.LABEL, multilingual())
 
         );
     }
@@ -87,6 +86,8 @@ public final class Resources extends Delegator {
         return and(Reference(),
 
                 hidden(field(RDF.TYPE, all(Resource))),
+
+                field(RDFS.COMMENT, multilingual()),
 
                 field(university, optional(),
                         field(RDFS.LABEL, multilingual())

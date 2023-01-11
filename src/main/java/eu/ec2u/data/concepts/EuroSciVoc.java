@@ -43,25 +43,23 @@ import static java.util.stream.Collectors.toList;
  * taxonomy. It was extended with fields of science categories extracted from CORDIS content through a semi-automatic
  * process developed with Natural Language Processing (NLP) techniques</p>
  *
- * @see <a
- * href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa
- * .eu/resource/dataset/euroscivoc">European
- * Science Vocabulary (EuroSciVoc)</a> .eu/resource/dataset/euroscivoc
+ * @see <a href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa
+ * .eu/resource/dataset/euroscivoc">European Science Vocabulary (EuroSciVoc)</a> .eu/resource/dataset/euroscivoc
  */
 public final class EuroSciVoc implements Runnable {
 
     private static final IRI Scheme=iri(Concepts.Context, "/euroscivoc");
-
-    private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
-            +"?cellarURI=http%3A%2F%2Fpublications.europa.eu"
-            +"%2Fresource%2Fcellar%2Fa9cbda63-2d9c-11ec-bd8e-01aa75ed71a1.0001.02%2FDOC_1"
-            +"&fileName=EuroSciVoc-skos-ap-eu.ttl";
-
+    private static final IRI Root=iri(Scheme, "/40c0f173-baa3-48a3-9fe6-d6e8fb366a00");
 
     private static final String External="http://data.europa.eu/8mn/euroscivoc/";
     private static final String Internal=Scheme+"/";
 
     private static final Set<IRI> DCTTemporal=Set.of(DCTERMS.CREATED, DCTERMS.ISSUED, DCTERMS.MODIFIED);
+
+    private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
+            +"?cellarURI=http%3A%2F%2Fpublications.europa.eu"
+            +"%2Fresource%2Fcellar%2Fa9cbda63-2d9c-11ec-bd8e-01aa75ed71a1.0001.02%2FDOC_1"
+            +"&fileName=EuroSciVoc-skos-ap-eu.ttl";
 
 
     public static void main(final String... args) {
@@ -78,11 +76,32 @@ public final class EuroSciVoc implements Runnable {
                         .format(TURTLE)
                 )
 
+
                 .flatMap(model -> Stream.of(
 
                         rdf(this, ".ttl", EC2U.Base),
 
                         model.stream()
+
+                                .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT_SCHEME)
+                                        .or(pattern(null, RDF.TYPE, SKOS.CONCEPT))
+                                )
+                                .filter(statement -> statement.getSubject().stringValue().startsWith(External))
+
+                                .map(statement -> statement(
+                                        rewrite((IRI)statement.getSubject(), External, Internal),
+                                        OWL.SAMEAS,
+                                        statement.getSubject()
+                                ))
+
+                                .collect(toList()),
+
+                        model.stream()
+
+                                .map(statement -> rewrite(statement, External, Internal))
+                                .map(statement -> replace(statement, Root, Scheme))
+
+                                // migrate dct: temporal properties to xsd:dateTime to comply with Resource data model
 
                                 .map(statement -> {
 
@@ -102,23 +121,6 @@ public final class EuroSciVoc implements Runnable {
                                             : statement;
                                 })
 
-                                .map(statement -> rewrite(statement, External, Internal))
-
-                                .collect(toList()),
-
-                        model.stream()
-
-                                .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT))
-                                .filter(statement -> statement.getSubject().stringValue()
-                                        .startsWith(External)
-                                )
-
-                                .map(statement -> statement(
-                                        statement.getSubject(),
-                                        OWL.SAMEAS,
-                                        rewrite((IRI)statement.getSubject(), External, Internal)
-                                ))
-
                                 .collect(toList())
 
                 ))
@@ -128,6 +130,21 @@ public final class EuroSciVoc implements Runnable {
                         .langs(Resources.Languages)
                         .clear(true)
                 );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Statement replace(final Statement statement, final IRI source, final IRI target) {
+        return statement(
+                replace(statement.getSubject(), source, target),
+                statement.getPredicate(),
+                replace(statement.getObject(), source, target)
+        );
+    }
+
+    private <V extends Value, R extends V> V replace(final V resource, final R source, final R target) {
+        return resource.equals(source) ? target : resource;
     }
 
 }
