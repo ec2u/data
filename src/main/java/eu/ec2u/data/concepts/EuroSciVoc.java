@@ -48,7 +48,8 @@ import static java.util.stream.Collectors.toList;
  */
 public final class EuroSciVoc implements Runnable {
 
-    private static final IRI Scheme=iri(Concepts.Context, "/euroscivoc");
+    public static final IRI Scheme=iri(Concepts.Context, "/euroscivoc");
+
     private static final IRI Root=iri(Scheme, "/40c0f173-baa3-48a3-9fe6-d6e8fb366a00");
 
     private static final String External="http://data.europa.eu/8mn/euroscivoc/";

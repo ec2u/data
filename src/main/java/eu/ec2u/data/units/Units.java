@@ -30,8 +30,7 @@ import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.concepts.UnitTypes;
+import eu.ec2u.data.concepts.*;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.Cursor;
@@ -180,6 +179,7 @@ public final class Units extends Delegator {
 
         private final EC2U.University university;
 
+        private final Map<String, Value> sectors=new HashMap<>();
         private final Map<String, Value> types=new HashMap<>();
         private final Map<String, Value> vis=new HashMap<>();
 
@@ -230,6 +230,10 @@ public final class Units extends Delegator {
 
                     .values(RDF.TYPE, Unit)
                     .value(Resources.university, university.Id)
+
+                    .value(DCTERMS.SUBJECT, field(record, "Sector")
+                            .flatMap(this::sector)
+                    )
 
                     .value(ORG.CLASSIFICATION, field(record, "Type")
                             .flatMap(this::type)
@@ -326,6 +330,47 @@ public final class Units extends Delegator {
             return record.getParser().getHeaderNames().contains(label)
                     ? Optional.ofNullable(record.get(label)).map(Strings::normalize).filter(not(String::isEmpty))
                     : Optional.empty();
+        }
+
+        private Optional<Value> sector(final String sector) {
+            return Optional
+
+                    .of(sectors.computeIfAbsent(sector, key -> graph.query(connection -> {
+
+                        final TupleQuery query=connection.prepareTupleQuery(""
+                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                +"\n"
+                                +"select ?concept {\n"
+                                +"\n"
+                                +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
+                                +"\n"
+                                +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
+                                +"\n"
+                                +"}\n"
+                        );
+
+                        query.setBinding("scheme", EuroSciVoc.Scheme);
+                        query.setBinding("value", literal(key));
+
+                        try ( final TupleQueryResult evaluate=query.evaluate() ) {
+
+                            return evaluate.stream().findFirst()
+                                    .map(bindings -> bindings.getValue("concept"))
+                                    .orElseGet(() -> {
+
+                                        logger.warning(Units.class, format(
+                                                "unknown sector <%s>", key
+                                        ));
+
+                                        return RDF.NIL;
+
+                                    });
+
+                        }
+
+                    })))
+
+                    .filter(not(RDF.NIL::equals));
         }
 
         private Optional<Value> type(final String type) {
@@ -500,7 +545,7 @@ public final class Units extends Delegator {
                         "Sector", "Type", "Code", "Parent", "VI",
                         "Acronym", "Name",
                         "Homepage", "Email", "Head",
-                        "Description"
+                        "Description", "Topics"
                 )
                 .setDelimiter(',')
                 .setQuote('"')
@@ -536,7 +581,13 @@ public final class Units extends Delegator {
                                             .map(Value::stringValue)
                                             .orElse(""),
 
-                                    "", // !!! sector
+                                    unit.cursors(DCTERMS.SUBJECT)
+                                            .filter(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/"))
+                                            .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
+                                            .filter(value -> lang(value).equals("en"))
+                                            .findFirst()
+                                            .map(Value::stringValue)
+                                            .orElse(""),
 
                                     unit.values(seq(ORG.CLASSIFICATION, SKOS.PREF_LABEL))
                                             .filter(value -> lang(value).equals("en"))
@@ -580,7 +631,14 @@ public final class Units extends Delegator {
 
                                     unit.localized(DCTERMS.DESCRIPTION, "en")
                                             .or(() -> unit.string(DCTERMS.DESCRIPTION)) // !!! local language
-                                            .orElse("")
+                                            .orElse(""),
+
+                                    unit.cursors(DCTERMS.SUBJECT)
+                                            .filter(not(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/")))
+                                            .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
+                                            // !!! .filter(value -> lang(value).equals("en"))
+                                            .map(Value::stringValue)
+                                            .collect(joining(";\n"))
 
                             ))
 
