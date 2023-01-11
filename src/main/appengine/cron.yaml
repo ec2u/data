@@ -124,6 +124,10 @@ cron:
   #    schedule: every day 00:00
 
 
+  - description: "concepts - nightly housekeeping"
+    url: /cron/concepts/
+    schedule: every day 00:30
+
   - description: "datasets - nightly housekeeping"
     url: /cron/datasets/
     schedule: every day 00:30

@@ -21,6 +21,7 @@ import com.metreeca.http.Handler;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
+import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.courses.CoursesCoimbra;
 import eu.ec2u.data.courses.CoursesPavia;
 import eu.ec2u.data.datasets.Datasets;
@@ -80,6 +81,7 @@ public final class Cron extends Delegator {
                 // !!! .path("/events/turku/city", execute(new EventsTurkuCity()))
                 // !!! .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
 
+                .path("/concepts/", execute(new Concepts.Updater()))
                 .path("/datasets/", execute(new Datasets.Updater()))
 
         ));
