@@ -91,18 +91,19 @@ not limited to the researchers of the University"""@en .
 	</concepts/units/facility/library> a skos:Concept ;
 		skos:inScheme </concepts/units> ;
 		skos:broader </concepts/units/facility> ;
-		skos:prefLabel "Library"@en .
-
-	</concepts/units/facility/museum> a skos:Concept ;
-		skos:inScheme </concepts/units> ;
-		skos:broader </concepts/units/facility> ;
-		skos:prefLabel "Museum"@en .
+		skos:prefLabel "Research Library"@en .
 
 	</concepts/units/facility/collection> a skos:Concept ;
 		skos:inScheme </concepts/units> ;
 		skos:broader </concepts/units/facility> ;
-		skos:prefLabel "Collection"@en ;
-		skos:definition "Archives, bio-bank, …"@en .
+		skos:prefLabel "Research Collection"@en ;
+		skos:definition "Museum, archive, bio-bank, …"@en .
+
+	</concepts/units/facility/instrument> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/facility> ;
+		skos:prefLabel "Research Instrument"@en ;
+		skos:definition "Large research instrument with dedicated management (telescope, reactor, accelerator, …)"@en .
 
 	</concepts/units/facility/station> a skos:Concept ;
 		skos:inScheme </concepts/units> ;

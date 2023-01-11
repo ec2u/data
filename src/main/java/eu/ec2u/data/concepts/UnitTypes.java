@@ -53,7 +53,7 @@ public final class UnitTypes implements Runnable {
     public static final IRI Facility=iri(Scheme, "/facility");
     public static final IRI FacilityLibrary=iri(Scheme, "/facility/library");
     public static final IRI FacilityCollection=iri(Scheme, "/facility/collection");
-    public static final IRI FacilityMuseum=iri(Scheme, "/facility/museum");
+    public static final IRI FacilityInstrument=iri(Scheme, "/facility/instrument");
     public static final IRI FacilityStation=iri(Scheme, "/facility/station");
 
 
