@@ -4,7 +4,7 @@
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
 </units/> a ec2u:Dataset ;
-	dct:title "Research Units"@en  ;
+	dct:title "Units"@en  ;
 	dct:description "EC2U research units and facilities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
