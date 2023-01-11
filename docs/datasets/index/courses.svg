@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-  - Copyright © 2020-2022 EC2U Alliance
+  - Copyright © 2020-2023 EC2U Alliance
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-520 390 873 606"
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-520 390 873 606"
      width="873" height="606">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
@@ -39,7 +39,7 @@
       </g>
     </marker>
   </defs>
-  <g id="courses" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
+  <g id="courses" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill-opacity="1" fill="none">
     <title>courses</title>
     <rect fill="white" x="-520" y="390" width="873" height="606"/>
     <g id="courses_Layer_1">
@@ -104,25 +104,21 @@
       </g>
       <g id="Group_387">
         <g id="Graphic_390">
-          <rect x="-315.1444" y="452.98004" width="126.867" height="18" fill="white"/>
-          <rect x="-315.1444" y="452.98004" width="126.867" height="18" stroke="black" stroke-linecap="round"
+          <rect x="-287.9599" y="453.719" width="72.498" height="18" fill="white"/>
+          <rect x="-287.9599" y="453.719" width="72.498" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_389">
-          <rect x="-315.1444" y="435.719" width="126.867" height="17.261063" fill="white"/>
-          <rect x="-315.1444" y="435.719" width="126.867" height="17.261063" stroke="black" stroke-linecap="round"
+          <rect x="-287.9599" y="435.43444" width="72.498" height="18.284536" fill="white"/>
+          <rect x="-287.9599" y="435.43444" width="72.498" height="18.284536" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(-309.1444 438.719)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">schema:identifier :String [0..1]
-            </tspan>
-          </text>
         </g>
         <g id="Graphic_388">
           <a xl:href="things.svg">
-            <rect x="-315.1444" y="418.4579" width="126.867" height="17.261063" fill="white"/>
-            <rect x="-315.1444" y="418.4579" width="126.867" height="17.261063" stroke="black" stroke-linecap="round"
+            <rect x="-287.9599" y="418.1734" width="72.498" height="17.261063" fill="white"/>
+            <rect x="-287.9599" y="418.1734" width="72.498" height="17.261063" stroke="black" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(-281.9599 421.4579)" fill="black">
+            <text transform="translate(-281.9599 421.1734)" fill="black">
               <tspan font-family="Helvetica Neue" font-style="italic" font-weight="bold" font-size="9" fill="black" x="0"
                      y="9">schema:Thing
               </tspan>
@@ -155,7 +151,7 @@
         </g>
       </g>
       <g id="Line_382">
-        <line x1="-251.7109" y1="516.13145" x2="-251.7109" y2="480.73004" marker-end="url(#UMLInheritance_Marker)"
+        <line x1="-251.7109" y1="516.13145" x2="-251.7109" y2="481.469" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_381">
@@ -173,7 +169,7 @@
         </text>
       </g>
       <g id="Line_380">
-        <line x1="-131.93564" y1="440.28055" x2="-188.2774" y2="444.719" stroke="black" stroke-linecap="round"
+        <line x1="-131.93578" y1="439.7072" x2="-215.4619" y2="444.9462" stroke="black" stroke-linecap="round"
               stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
       </g>
       <g id="Group_376">

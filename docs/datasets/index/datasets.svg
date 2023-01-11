@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-  - Copyright © 2020-2022 EC2U Alliance
+  - Copyright © 2020-2023 EC2U Alliance
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="130 76 409 258"
-     width="409" height="258">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="130 76 361 258"
+     width="361" height="258">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
             stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
@@ -26,9 +26,9 @@
       </g>
     </marker>
   </defs>
-  <g id="datasets" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
+  <g id="datasets" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill-opacity="1" fill="none">
     <title>datasets</title>
-    <rect fill="white" x="130" y="76" width="409" height="258"/>
+    <rect fill="white" x="130" y="76" width="361" height="258"/>
     <g id="datasets_Layer_1">
       <title>Layer 1</title>
       <g id="Graphic_149">
@@ -170,13 +170,6 @@
       <g id="Line_128">
         <line x1="216.91193" y1="200.96124" x2="282.79624" y2="200.9612" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-      </g>
-      <g id="Graphic_169">
-        <a xl:href="http://www.w3.org/2004/02/skos/core#">
-          <text transform="translate(297.12892 132.46827)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</tspan>
-          </text>
-        </a>
       </g>
     </g>
   </g>

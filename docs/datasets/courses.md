@@ -64,8 +64,8 @@ source analysis and integration status are detailed in the linked source sheets.
 
 | status | university                                                   |
 | ------ | ------------------------------------------------------------ |
-| ✓      | [Pavia](../../src/main/java/eu/ec2u/data/tasks/courses/CoursesPavia.md) |
-| ✓      | [Coimbra](../../src/main/java/eu/ec2u/data/tasks/courses/CoursesCoimbra.md) |
+| ✓      | [Pavia](../../src/main/java/eu/ec2u/data/_tasks/courses/CoursesPavia.md) |
+| ✓      | [Coimbra](../../src/main/java/eu/ec2u/data/_tasks/courses/CoursesCoimbra.md) |
 
 # Updating
 

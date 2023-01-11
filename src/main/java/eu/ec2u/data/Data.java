@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,20 @@ import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 
-import eu.ec2u.data.ports.*;
-import eu.ec2u.data.terms.EC2U;
+import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.courses.Courses;
+import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.events.Events;
+import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.units.Units;
+import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.Locator.storage;
@@ -51,6 +58,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
+import static java.util.Map.entry;
 
 public final class Data implements Runnable {
 
@@ -64,6 +72,10 @@ public final class Data implements Runnable {
 
     static {
         debug.log("com.metreeca");
+    }
+
+    static {
+        System.setProperty("com.sun.security.enableAIAcaIssuers", "true"); // ;( retrieve missing certificates
     }
 
 
@@ -81,7 +93,9 @@ public final class Data implements Runnable {
                 .set(graph(), () -> new Graph(repository(GraphDBRepository)))
                 .set(engine(), GraphEngine::new)
 
-                .set(keywords(), () -> EC2U.Keywords);
+                .set(keywords(), () -> Map.ofEntries(
+                        entry("@id", "id")
+                ));
     }
 
     public static Repository repository(final String name) {
@@ -95,6 +109,10 @@ public final class Data implements Runnable {
         return repository;
     }
 
+
+    public static void exec(final Runnable... tasks) {
+        services(new Locator()).exec(tasks).clear();
+    }
 
     public static void main(final String... args) {
         new Data().run();
@@ -133,18 +151,17 @@ public final class Data implements Runnable {
                                 ))
 
                                 .path("/cron/*", new Cron())
+                                .path("/resources/", new Resources())
 
                                 .path("/*", new Router()
 
                                         .path("/", new Datasets())
-                                        .path("/resources/", new Resources())
-
-                                        .path("/concepts/*", new Concepts())
                                         .path("/universities/*", new Universities())
                                         .path("/units/*", new Units())
                                         .path("/courses/*", new Courses())
                                         .path("/persons/*", new Persons())
                                         .path("/events/*", new Events())
+                                        .path("/concepts/*", new Concepts())
 
                                 )
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-  - Copyright © 2020-2022 EC2U Alliance
+  - Copyright © 2020-2023 EC2U Alliance
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -16,80 +16,132 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="116 20 515 157"
-     width="515" height="157">
-  <defs/>
-  <g id="things" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
-    <title>things</title>
-    <rect fill="white" x="116" y="20" width="515" height="157"/>
-    <g id="things_Layer_1">
-      <title>Layer 1</title>
-      <g id="Group_69">
-        <g id="Graphic_72">
-          <rect x="144.56693" y="130.59" width="212.871" height="18" fill="white"/>
-          <rect x="144.56693" y="130.59" width="212.871" height="18" stroke="black" stroke-linecap="round"
-                stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_71">
-          <rect x="144.56693" y="68.284685" width="212.871" height="62.30531" fill="white"/>
-          <rect x="144.56693" y="68.284685" width="212.871" height="62.30531" stroke="black" stroke-linecap="round"
-                stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(150.56693 71.284685)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">schema:url :URI [0..*]</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">schema:name :Dictionary
-            </tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">schema:image :URI [0..1]
-            </tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="42.78319">schema:description
-              :Dictionary
-            </tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="54.04425">
-              schema:disambiguatingDescription :Dictionary [0..1]
-            </tspan>
-          </text>
-        </g>
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="116 -129 442 317"
+     width="442" height="317">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter"
+                stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20" color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="things" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill-opacity="1" fill="none">
+        <title>things</title>
+        <rect fill="white" x="116" y="-129" width="442" height="317"/>
+        <g id="things_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_69">
+                <g id="Graphic_72">
+                    <rect x="144.56693" y="141.85106" width="212.871" height="18" fill="white"/>
+                    <rect x="144.56693" y="141.85106" width="212.871" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_71">
+                    <rect x="144.56693" y="68.284685" width="212.871" height="73.56638" fill="white"/>
+                    <rect x="144.56693" y="68.284685" width="212.871" height="73.56638" stroke="black"
+                          stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(150.56693 71.284685)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">schema:identifier
+                            :String [0..1]
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">schema:url
+                            :URI [0..*]
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">schema:name
+                            :Dictionary
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="42.78319">schema:image
+                            :URI [0..1]
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="54.04425">
+                            schema:description :Dictionary
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="65.30531">
+                            schema:disambiguatingDescription :Dictionary [0..1]
+                        </tspan>
+                    </text>
+                </g>
         <g id="Graphic_70">
           <a xl:href="https://schema.org/Thing">
             <rect x="144.56693" y="51.02362" width="212.871" height="17.261063" fill="white"/>
-            <rect x="144.56693" y="51.02362" width="212.871" height="17.261063" stroke="black" stroke-linecap="round"
-                  stroke-linejoin="round" stroke-width=".25"/>
+              <rect x="144.56693" y="51.02362" width="212.871" height="17.261063" stroke="black" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width=".25"/>
             <text transform="translate(220.75343 54.02362)" fill="black">
-              <tspan font-family="Helvetica Neue" font-style="italic" font-weight="bold" font-size="9" fill="black" x="0"
-                     y="9">schema:Thing
-              </tspan>
+                <tspan font-family="Helvetica Neue" font-style="italic" font-weight="bold" font-size="9" fill="black"
+                       x="0" y="9">schema:Thing
+                </tspan>
             </text>
           </a>
         </g>
       </g>
-      <g id="Graphic_74">
-        <path d="M 529.4784 122.74266 C 529.4784 121.10838 527.8441 120.90619 515.9062 119.28881 L 515.7801 119.27208 C 503.7791 117.6378 503.6543 117.6378 491.33803 117.6378 C 474.93867 117.6378 400.7954 117.6378 400.7954 117.6378 L 400.7954 134.8898 L 529.4784 134.8898 L 529.4784 122.74266 Z"
-              fill="white"/>
-        <path d="M 529.4784 122.74266 C 529.4784 121.10838 527.8441 120.90619 515.9062 119.28881 L 515.7801 119.27208 C 503.7791 117.6378 503.6543 117.6378 491.33803 117.6378 C 474.93867 117.6378 400.7954 117.6378 400.7954 117.6378 L 400.7954 134.8898 L 529.4784 134.8898 L 529.4784 122.74266 Z M 529.4784 122.65847 C 529.4784 121.10838 529.3523 121.10838 503.6543 121.10838 L 503.6543 121.10838 C 503.6543 117.6547 503.6543 117.6378 492.0921 117.6378"
-              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-        <text transform="translate(405.7954 120.6378)" fill="black">
-          <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">extended by all
-            schema types
-          </tspan>
-        </text>
-      </g>
+            <g id="Graphic_74">
+                <path d="M 529.4784 122.74266 C 529.4784 121.10838 527.8441 120.90619 515.9062 119.28881 L 515.7801 119.27208 C 503.7791 117.6378 503.6543 117.6378 491.33803 117.6378 C 474.93867 117.6378 400.7954 117.6378 400.7954 117.6378 L 400.7954 134.8898 L 529.4784 134.8898 L 529.4784 122.74266 Z"
+                      fill="white"/>
+                <path d="M 529.4784 122.74266 C 529.4784 121.10838 527.8441 120.90619 515.9062 119.28881 L 515.7801 119.27208 C 503.7791 117.6378 503.6543 117.6378 491.33803 117.6378 C 474.93867 117.6378 400.7954 117.6378 400.7954 117.6378 L 400.7954 134.8898 L 529.4784 134.8898 L 529.4784 122.74266 Z M 529.4784 122.65847 C 529.4784 121.10838 529.3523 121.10838 503.6543 121.10838 L 503.6543 121.10838 C 503.6543 117.6547 503.6543 117.6378 492.0921 117.6378"
+                      stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                <text transform="translate(405.7954 120.6378)" fill="black">
+                    <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">
+                        extended by all schema types
+                    </tspan>
+                </text>
+            </g>
       <g id="Line_73">
-        <line x1="400.6704" y1="125.0275" x2="357.43793" y2="124.1984" stroke="black" stroke-linecap="round"
-              stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
+          <line x1="420.4069" y1="117.61406" x2="357.43793" y2="105.43734" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
       </g>
       <g id="Group_77">
-        <g id="Graphic_78">
-          <text transform="translate(400.7954 49.188977)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
-          </text>
+          <g id="Graphic_78">
+              <text transform="translate(327.6774 -99.62992)" fill="black">
+                  <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
+              </text>
+          </g>
+      </g>
+            <g id="Graphic_76">
+                <a xl:href="https://schema.org/">
+                    <text transform="translate(327.6774 -86.36886)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;https://schema.org/&gt;</tspan>
+                    </text>
+                </a>
+            </g>
+            <g id="Group_81">
+                <g id="Graphic_84">
+                    <rect x="215.33393" y="-65.36886" width="71.337" height="18" fill="white"/>
+                    <rect x="215.33393" y="-65.36886" width="71.337" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_83">
+                    <rect x="215.33393" y="-83.36886" width="71.337" height="18" fill="white"/>
+                    <rect x="215.33393" y="-83.36886" width="71.337" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_82">
+                    <a xl:href="concepts.svg">
+                        <rect x="215.33393" y="-100.62992" width="71.337" height="17.261063" fill="white"/>
+                        <rect x="215.33393" y="-100.62992" width="71.337" height="17.261063" stroke="black"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(221.33393 -97.62992)" fill="black">
+                            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0"
+                                   y="9">skos:Concept
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_80">
+                <line x1="251.00243" y1="51.02362" x2="251.00243" y2="-40.51886" marker-end="url(#StickArrow_Marker)"
+                      stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_79">
+                <rect x="189.04493" y="-31.88484" width="123.915" height="28.522125" fill="white"/>
+                <text transform="translate(195.04493 -28.88484)" fill="black">
+                    <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="20.3625" y="9">schema:about 0..*
+                    </tspan>
+                    <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="4405365e-19" y="20.261063">
+                        /dct:subject = schema:about
+                    </tspan>
+                </text>
+            </g>
         </g>
-      </g>
-      <g id="Graphic_76">
-        <a xl:href="https://schema.org/">
-          <text transform="translate(400.7954 62.45004)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;https://schema.org/&gt;</tspan>
-          </text>
-        </a>
-      </g>
-    </g>
   </g>
 </svg>

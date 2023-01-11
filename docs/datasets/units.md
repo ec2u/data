@@ -52,20 +52,3 @@ the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extend
 
 [EC2U Research Units Dataset](https://data.ec2u.eu/units/) © 2022 by [EC2U Alliance](https://www.ec2u.eu/) is licensed
 under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
-
-# Sources
-
-Research units are crawled from different local academic sources and mapped as far as possible to the shared data model:
-source analysis and integration status are detailed in the linked source sheets.
-
-| status      | university                                                   |
-| ----------- | ------------------------------------------------------------ |
-| ✓           | [Pavia](../../src/main/java/eu/ec2u/data/tasks/units/UnitsPavia.md) |
-| ✓           | [Salamanca](../../src/main/java/eu/ec2u/data/tasks/units/UnitsSalamanca.md) |
-| in progress | [Coimbra](../../src/main/java/eu/ec2u/data/tasks/units/UnitsCoimbra.md) |
-
-# Updating
-
-* Data sources are crawled nightly using custom data integration scripts that extract structured data from dedicated
-  APIs, RSS feed, embedded HTML micro-annotations or embedded JSON/LD metadata; custom scraping from HTML content is
-  currently not supported in order to improve the overall robustness of the process

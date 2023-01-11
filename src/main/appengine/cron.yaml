@@ -1,7 +1,7 @@
 cron:
 
-  - description: "wikidata - nightly sync"
-    url: /cron/wikidata
+  - description: "universities - nightly housekeeping"
+    url: /cron/universities/
     schedule: every day 00:00
 
 
@@ -40,11 +40,6 @@ cron:
 
   - description: "courses › pavia - nightly crawling"
     url: /cron/courses/pavia
-    schedule: every day 00:00
-
-
-  - description: "events - nightly purging"
-    url: /cron/events/
     schedule: every day 00:00
 
 
@@ -124,15 +119,11 @@ cron:
   #    url: /cron/events/turku/city
   #    schedule: every day 00:00
 
-  - description: "events › turku › tyy - nightly crawling"
-    url: /cron/events/turku/tyy
-    schedule: every day 00:00
+  #  - description: "events › turku › tyy - nightly crawling"
+  #    url: /cron/events/turku/tyy
+  #    schedule: every day 00:00
 
 
-  - description: "system - nightly housekeeping"
-    url: /cron/chores
+  - description: "datasets - nightly housekeeping"
+    url: /cron/datasets/
     schedule: every day 00:30
-
-  - description: "system - nightly housekeeping"
-    url: /cron/inferences
-    schedule: every day 00:45

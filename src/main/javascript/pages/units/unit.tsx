@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ export const Unit=immutable({
 
     homepage: multiple(""),
 
+    prefLabel: { "en": "" },
     altLabel: optional({ "en": "" }),
 
     classification: optional({
@@ -88,7 +89,10 @@ export function DataUnit() {
     useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
 
 
-    return <DataPage item={entry({ value: string })}
+    return <DataPage item={entry({
+        value: ({ altLabel, prefLabel }) =>
+            altLabel ? `${string(altLabel)} - ${string(prefLabel)}` : string(prefLabel)
+    })}
 
         menu={entry({ fetch: <NodeSpin/> })}
 
