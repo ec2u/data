@@ -12,15 +12,30 @@
 
 ########################################################################################################################
 
+</concepts/units/area> a skos:Concept ;
+	skos:topConceptOf </concepts/units>  ;
+	skos:prefLabel "Research Area"@en ;
+	skos:definition """Thematic collaboration area gathering researchers from different disciplines to advance
+multidisciplinary research and education across faculty boundaries, create platforms for networks,business
+collaboration, innovations and strategic partnerships;
+part of the formal organization of the University with an appointed head/board.;"""@en .
+
+</concepts/units/network> a skos:Concept ;
+	skos:topConceptOf </concepts/units>  ;
+	skos:prefLabel "Research Network"@en ;
+	skos:definition """Networks of researchers sharing a research theme or topic;
+not part of the formal organization of the University;
+not limited to the researchers of the University"""@en .
+
 </concepts/units/institute> a skos:Concept ;
 	skos:topConceptOf </concepts/units>  ;
 	skos:prefLabel "Institute"@en ;
 	owl:sameAs vivo:Institute .
 
-	</concepts/units/institute-virtual> a skos:Concept ;
-		skos:inScheme </concepts/units>  ;
-		skos:prefLabel "Virtual Institute"@en ;
-		skos:broader </concepts/units/institute> .
+	</concepts/units/institute/virtual> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/institute>  ;
+		skos:prefLabel "Virtual Institute"@en .
 
 </concepts/units/department> a skos:Concept ;
 	skos:topConceptOf </concepts/units>  ;
@@ -33,43 +48,64 @@
 	skos:altLabel "Center"@en ;
 	owl:sameAs vivo:Center .
 
-	</concepts/units/centre-research> a skos:Concept ;
-		skos:inScheme </concepts/units>  ;
+	</concepts/units/centre/research> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/centre> ;
 		skos:prefLabel "Research Centre"@en ;
-		skos:altLabel "Research Center"@en ;
-		skos:broader </concepts/units/centre> .
+		skos:altLabel "Research Center"@en .
 
-	</concepts/units/centre-transfer> a skos:Concept ;
-		skos:inScheme </concepts/units>  ;
+	</concepts/units/centre/transfer> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/centre> ;
 		skos:prefLabel "Technology Transfer Centre"@en ;
-		skos:altLabel "Technology Transfer Center"@en ;
-		skos:broader </concepts/units/centre> .
+		skos:altLabel "Technology Transfer Center"@en .
 
 </concepts/units/group> a skos:Concept ;
 	skos:topConceptOf </concepts/units>  ;
 	skos:prefLabel "Research Group"@en .
 
-	</concepts/units/group-recognized> a skos:Concept ;
-		skos:inScheme </concepts/units>  ;
-		skos:prefLabel "Recognized Research Group"@en ;
-		skos:broader </concepts/units/group> .
+	</concepts/units/group/recognized> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/group> ;
+		skos:prefLabel "Recognized Research Group"@en .
 
-	</concepts/units/group-informal> a skos:Concept ;
-		skos:inScheme </concepts/units>  ;
-		skos:prefLabel "Informal Research Group"@en ;
-		skos:broader </concepts/units/group> .
+	</concepts/units/group/informal> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/group> ;
+		skos:prefLabel "Informal Research Group"@en .
 
-	</concepts/units/group-student> a skos:Concept ;
-		skos:inScheme </concepts/units>  ;
-		skos:prefLabel "Student Research Group"@en ;
-		skos:broader </concepts/units/group> .
+	</concepts/units/group/student> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/group> ;
+		skos:prefLabel "Student Research Group"@en .
 
 </concepts/units/laboratory> a skos:Concept ;
 	skos:topConceptOf </concepts/units>  ;
 	skos:prefLabel "Laboratory"@en ;
 	owl:sameAs vivo:Laboratory .
 
-</concepts/units/station> a skos:Concept ;
+</concepts/units/facility> a skos:Concept ;
 	skos:topConceptOf </concepts/units>  ;
-	skos:prefLabel "Research Station"@en ;
-	skos:altLabel "Research Base"@en .
+	skos:prefLabel "Research Facility"@en .
+
+	</concepts/units/facility/library> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/facility> ;
+		skos:prefLabel "Library"@en .
+
+	</concepts/units/facility/museum> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/facility> ;
+		skos:prefLabel "Museum"@en .
+
+	</concepts/units/facility/collection> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/facility> ;
+		skos:prefLabel "Collection"@en ;
+		skos:definition "Archives, bio-bank, …"@en .
+
+	</concepts/units/facility/station> a skos:Concept ;
+		skos:inScheme </concepts/units> ;
+		skos:broader </concepts/units/facility> ;
+		skos:prefLabel "Research Station"@en ;
+		skos:altLabel "Research Base"@en .
