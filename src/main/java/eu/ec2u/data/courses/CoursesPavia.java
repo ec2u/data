@@ -18,13 +18,13 @@ package eu.ec2u.data.courses;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
-import com.metreeca.core.toolkits.Strings;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
+import eu.ec2u.data.concepts.Languages;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -32,7 +32,6 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Set;
 
 import static com.metreeca.core.Locator.service;
@@ -50,18 +49,9 @@ import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.work.Work.localized;
 import static eu.ec2u.work.validation.Validators.validate;
 
-import static java.util.Map.entry;
-
 public final class CoursesPavia implements Runnable {
 
     private static final IRI Context=iri(Courses.Context, "/pavia");
-
-    private static final Map<String, String> Languages=Map.ofEntries(
-            entry("italian", "it"),
-            entry("italiano", "it"),
-            entry("english", "en"),
-            entry("inglese", "en")
-    );
 
 
     public static void main(final String... args) {
@@ -70,7 +60,6 @@ public final class CoursesPavia implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     @Override public void run() {
         Xtream.of(Instant.EPOCH)
@@ -131,9 +120,7 @@ public final class CoursesPavia implements Runnable {
 
                 .value(Schema.inLanguage, literal(frame.value(HEMO.courseTeachingLanguage)
                         .map(Value::stringValue)
-                        .map(Strings::normalize)
-                        .map((Strings::lower))
-                        .map(Languages::get)
+                        .flatMap(Languages::languageCode)
                         .orElse(Pavia.Language)
                 ))
 
