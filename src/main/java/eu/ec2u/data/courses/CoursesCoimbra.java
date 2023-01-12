@@ -62,7 +62,6 @@ public final class CoursesCoimbra implements Runnable {
 
     private static final IRI Context=iri(Courses.Context, "/coimbra");
 
-
     private static final String APIUrl="courses-coimbra-url";
     private static final String APIId="courses-coimbra-id";
     private static final String APIToken="courses-coimbra-token";
@@ -148,6 +147,8 @@ public final class CoursesCoimbra implements Runnable {
                         .input(() -> new ByteArrayInputStream(query(Map.ofEntries(
                                 entry("applicationId", List.of(id)),
                                 entry("accessToken", List.of(token)),
+                                entry("obterInformacaoFichaCurso", List.of("true")),
+                                entry("devolverSoCursosComFichaCurso", List.of("true")),
                                 entry("anoLectivo", List.of("2022/2023")) // !!! dynamic
                         )).getBytes(StandardCharsets.UTF_8)))
                 ))

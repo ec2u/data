@@ -10,9 +10,13 @@
 
 * course details (e.g. https://apps.uc.pt/courses/EN/course/4604)
 
+## 2023-01-12
+
+* Add additional parameters to exclude non-current courses (`obterInformacaoFichaCurso`/`devolverSoCursosComFichaCurso`)
+
 ## 2022-10-07
 
-- add `schema:educationalLevel` according to the following ISCED-2011 mapping
+- Add `schema:educationalLevel` according to the following ISCED-2011 mapping
 
 | Course  Cycle Code (cicloTipo) | Course Category  Code (categoriaCursoTipo) | ISCED Level | ISCED Label               |
 | ------------------------------ | ------------------------------------------ | ----------- | ------------------------- |
@@ -30,7 +34,7 @@
 
 ## 2022-09-27
 
-* initial integration
+* Initial integration
 
 # Feeds
 
