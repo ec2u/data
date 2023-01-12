@@ -114,7 +114,7 @@ public final class CoursesPavia implements Runnable {
                 .values(RDF.TYPE, Course)
                 .value(Resources.university, Pavia.Id)
 
-                .values(DCTERMS.TITLE, localized(frame.values(RDFS.LABEL)))
+                .values(Schema.name, localized(frame.values(RDFS.LABEL)))
 
                 .value(Schema.courseCode, frame.value(VIVO.identifier))
 
@@ -132,6 +132,7 @@ public final class CoursesPavia implements Runnable {
 
                 .integer(Schema.numberOfCredits, frame.value(VIVO.hasValue)
                         .flatMap(Values::integer)
+                        .map(Courses::ects)
                 )
 
                 .value(Schema.timeRequired, frame.value(seq(VIVO.dateTimeValue, RDFS.LABEL))

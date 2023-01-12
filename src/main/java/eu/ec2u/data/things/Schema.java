@@ -77,6 +77,7 @@ public final class Schema {
 
     public static final IRI Thing=term("Thing");
 
+    public static final IRI identifier=term("identifier");
     public static final IRI url=term("url");
     public static final IRI name=term("name");
     public static final IRI image=term("image");
@@ -96,10 +97,11 @@ public final class Schema {
 
                 hidden(field(RDF.TYPE, all(Thing))),
 
+                field(identifier, optional(), datatype(XSD.STRING)),
                 field(url, multiple(), datatype(IRIType)),
                 field(name, multilingual()),
                 field(image, multiple(), datatype(IRIType)),
-                field(description, multilingual()),
+                field("fullDescription", Schema.description), // ;( prevent clashes with dct:description
                 field(disambiguatingDescription, multilingual())
 
         );

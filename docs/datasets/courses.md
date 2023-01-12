@@ -36,7 +36,7 @@ A program offered by an institution which determines the learning progress to ac
 | all [ec2u:Resource](resources.md) properties                 | inherited properties                                         |
 | all [schema:Thing](things.md) properties                     | inherited properties                                         |
 | [schema:provider](https://schema.org/provider)               | link to the provider                                         |
-| [schema:courseCode](https://schema.org/courseCode)<br />/[schema:identifier](https://schema.org/identifier) | course identifier assigned by the course provider            |
+| [schema:courseCode](https://schema.org/courseCode)           | course identifier assigned by the course provider            |
 | [schema:educationalLevel](https://schema.org/educationalLevel) | link to a 1-digit [ISCED 2011](http://uis.unesco.org/en/topic/international-standard-classification-education-isced) education level in the `https://data.ec2u.eu/concepts/isced-2011/` [concept](concepts.md) scheme |
 | [schema:inLanguage](https://schema.org/inLanguage)           | 2-letters [IETF BCP 47](http://tools.ietf.org/html/bcp47) code of the teaching / evaluation language (e.g. `en` ) |
 | [schema:learningResourceType](https://schema.org/learningResourceType) | human-readable, localized description of teaching methods and mode of study |
@@ -56,20 +56,3 @@ A program offered by an institution which determines the learning progress to ac
 
 [EC2U Courses Dataset](https://data.ec2u.eu/units/) © 2022 by [EC2U Alliance](https://www.ec2u.eu/) is licensed
 under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
-
-# Sources
-
-Research units are crawled from different local academic sources and mapped as far as possible to the shared data model:
-source analysis and integration status are detailed in the linked source sheets.
-
-| status | university                                                   |
-| ------ | ------------------------------------------------------------ |
-| ✓      | [Pavia](../../src/main/java/eu/ec2u/data/_tasks/courses/CoursesPavia.md) |
-| ✓      | [Coimbra](../../src/main/java/eu/ec2u/data/_tasks/courses/CoursesCoimbra.md) |
-
-# Updating
-
-* Data sources are crawled nightly using custom data integration scripts that extract structured data from dedicated
-  APIs, RSS feed, embedded HTML micro-annotations or embedded JSON/LD metadata; custom scraping from HTML content is
-  currently not supported in order to improve the overall robustness of the process
-

@@ -61,7 +61,6 @@ import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
-import static java.util.stream.Collectors.toList;
 
 public final class CoursesCoimbra implements Runnable {
 
@@ -145,6 +144,7 @@ public final class CoursesCoimbra implements Runnable {
     private static String hours(final int value) {
         return format("PT%dH", value);
     }
+
 
     public static void main(final String... args) {
         exec(() -> new CoursesCoimbra().run());
@@ -252,7 +252,7 @@ public final class CoursesCoimbra implements Runnable {
 
                 .values(Schema.name, json.paths("designacoes.*")
                         .optMap(this::localized)
-                        .collect(toList()))
+                )
 
                 .values(Schema.courseCode, literal(id.toString()))
 
@@ -270,10 +270,10 @@ public final class CoursesCoimbra implements Runnable {
 
                 .values(Schema.learningResourceType, json.paths("regimesEstudo.*")
                         .optMap(this::localized)
-                        .collect(toList()))
+                )
 
                 .value(Schema.numberOfCredits, json.string("ects")
-                        .map((guarded(Integer::parseInt)))
+                        .map(Courses::ects)
                         .map(Values::literal)
                 )
 
@@ -291,23 +291,23 @@ public final class CoursesCoimbra implements Runnable {
 
                 .values(Schema.teaches, json.paths("objetivosCurso.*")
                         .optMap(this::localized)
-                        .collect(toList()))
+                )
 
                 .values(Schema.assesses, json.paths("objetivosAprendizagem.*")
                         .optMap(this::localized)
-                        .collect(toList()))
+                )
 
                 .values(Schema.coursePrerequisites, json.paths("condicoesAcesso.*")
                         .optMap(this::localized)
-                        .collect(toList()))
+                )
 
                 .values(Schema.competencyRequired, json.paths("regrasDeAvaliacao.*")
                         .optMap(this::localized)
-                        .collect(toList()))
+                )
 
                 .values(Schema.educationalCredentialAwarded, json.paths("qualificoesAtribuidas.*")
                         .optMap(this::localized)
-                        .collect(toList()))
+                )
 
         );
     }

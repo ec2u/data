@@ -247,7 +247,7 @@ function Input({
 
         case "decimal":
 
-            throw "to be implemented";
+            return <DecimalInput type={type} min={min} max={max} placeholder={placeholder} value={value} onChange={onChange}/>;
 
         case "string":
 
@@ -335,6 +335,74 @@ function IntegerInput({
 
         placeholder={encode(integer(placeholder))}
         defaultValue={integer(value)}
+
+        onChange={e => {
+
+            if ( e.target.checkValidity() ) {
+                onChange(literal(decode(e.target.value.trim())));
+            }
+
+        }}
+
+    />;
+
+}
+
+function DecimalInput({
+
+    type,
+
+    min,
+    max,
+    placeholder,
+
+    value,
+    onChange
+
+}: {
+
+    type: keyof typeof DataTypes
+
+    min?: Literal
+    max?: Literal
+    placeholder?: Literal
+
+    value: undefined | Literal
+    onChange: (value: undefined | Literal) => void
+
+}) {
+
+    function decimal(literal: undefined | Literal): undefined | number {
+        return literal === undefined ? undefined
+            : isNumber(literal) ? literal
+                : isString(literal) ? decimal(parseFloat(literal))
+                    : undefined;
+    }
+
+    function literal(value: undefined | number): undefined | Literal {
+        return value === undefined ? undefined
+            : type === "integer" || type === "decimal" ? value
+                : type === "string" ? value.toString()
+                    : undefined;
+    }
+
+
+    function decode(string: undefined | string): undefined | number {
+        return string ? parseFloat(string) : undefined;
+    }
+
+    function encode(integer: undefined | number): undefined | string {
+        return integer !== undefined ? integer.toLocaleString() : undefined;
+    }
+
+
+    return <input type={"number"} key={String(value)}
+
+        min={decimal(min)}
+        max={decimal(max)}
+
+        placeholder={encode(decimal(placeholder))}
+        defaultValue={decimal(value)}
 
         onChange={e => {
 

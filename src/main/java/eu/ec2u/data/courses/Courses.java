@@ -29,6 +29,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
@@ -58,27 +60,39 @@ public final class Courses extends Delegator {
 
                 hidden(field(RDF.TYPE, all(Course))),
 
-                field("fullDescription", Schema.description), // prevent clashes with dct:description
-
                 field(Schema.provider, optional(), Reference()),
                 field(Schema.courseCode, optional(), datatype(XSD.STRING)),
                 field(Schema.educationalLevel, optional(), Reference()),
                 field(Schema.inLanguage, optional(), datatype(XSD.STRING), pattern("[a-z]{2}")),
                 field(Schema.learningResourceType, multilingual()),
-                field(Schema.numberOfCredits, optional(), datatype(XSD.INTEGER), minInclusive(literal(0))),
+                field(Schema.numberOfCredits, optional(), datatype(XSD.DECIMAL), minInclusive(literal(0))),
                 field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
 
                 field(Schema.about, optional(), Reference()),
 
-                field(Schema.teaches, multilingual()),
-                field(Schema.assesses, multilingual()),
-                field(Schema.coursePrerequisites, multilingual()),
-                field(Schema.competencyRequired, multilingual()),
+                detail(
+
+                        field(Schema.teaches, multilingual()),
+                        field(Schema.assesses, multilingual()),
+                        field(Schema.coursePrerequisites, multilingual()),
+                        field(Schema.competencyRequired, multilingual())
+                ),
 
                 field(Schema.educationalCredentialAwarded, multilingual()),
                 field(Schema.occupationalCredentialAwarded, multilingual())
 
         );
+    }
+
+
+    static BigDecimal ects(final String ects) { return ects(new BigDecimal(ects)); }
+
+    static BigDecimal ects(final Number ects) {
+        return ects(ects instanceof BigDecimal ? ((BigDecimal)ects) : BigDecimal.valueOf(ects.doubleValue()));
+    }
+
+    static BigDecimal ects(final BigDecimal ects) {
+        return ects.setScale(1, RoundingMode.UP);
     }
 
 

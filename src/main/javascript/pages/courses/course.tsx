@@ -86,7 +86,8 @@ export const Course=immutable({
 
     courseCode: optional(""),
     inLanguage: optional(""),
-    numberOfCredits: optional(0),
+    learningResourceType: { "en": "" },
+    numberOfCredits: optional(0.0),
     timeRequired: optional(""),
 
     educationalLevel: optional({
@@ -102,7 +103,6 @@ export const Course=immutable({
     teaches: { "en": "" },
     assesses: { "en": "" },
     coursePrerequisites: { "en": "" },
-    learningResourceType: { "en": "" },
     competencyRequired: { "en": "" },
     educationalCredentialAwarded: { "en": "" },
     occupationalCredentialAwarded: { "en": "" }
@@ -162,7 +162,10 @@ function DataCourseInfo({
         inLanguage,
         numberOfCredits,
         timeRequired,
-        about
+        about,
+
+        educationalCredentialAwarded,
+        occupationalCredentialAwarded
 
     }
 
@@ -189,11 +192,20 @@ function DataCourseInfo({
         }}</DataInfo>
 
         <DataInfo>{{
+            "Awards": <>
+                {educationalCredentialAwarded && <span>{string(educationalCredentialAwarded)}</span>}
+                {occupationalCredentialAwarded && <span>{string(occupationalCredentialAwarded)}</span>}
+            </>,
 
             "Level": educationalLevel && <span>{string(educationalLevel)}</span>,
             "Language": inLanguage && <span>{string(Languages[inLanguage]) || inLanguage}</span>,
-            "Credits": numberOfCredits && <span>{numberOfCredits}</span>,
-            "Duration": timeRequired && <span>{timeRequired}</span>,  // !!! map to localized description
+            "Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
+            "Duration": timeRequired && <span>{timeRequired}</span>  // !!! map to localized description
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
             "Subjects": about && about.map(subject => <span key={subject.id}>{string(subject)}</span>) // !!! link
 
         }}</DataInfo>

@@ -76,7 +76,8 @@ export function DataCourses() {
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
             <NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
             <NodeOptions path={"inLanguage"} type={"string"} placeholder={"Language"} state={[query, setQuery]}/> {/* !!! labels */}
-            <NodeRange path={"numberOfCredits"} type={"integer"} placeholder={"Credits"} state={[query, setQuery]}/>
+            <NodeRange path={"numberOfCredits"} type={"decimal"} placeholder={"Credits"} state={[query, setQuery]}/>
+            {/*<NodeOptions path={"educationalCredentialAwarded"} type={"anyURI"} placeholder={"Title Awarded"} state={[query, setQuery]}/>*/}
 
         </DataPane>}
 
