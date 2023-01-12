@@ -87,6 +87,7 @@ public final class EuroSciVoc implements Runnable {
                                 .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT_SCHEME)
                                         .or(pattern(null, RDF.TYPE, SKOS.CONCEPT))
                                 )
+
                                 .filter(statement -> statement.getSubject().stringValue().startsWith(External))
 
                                 .map(statement -> statement(
@@ -131,21 +132,6 @@ public final class EuroSciVoc implements Runnable {
                         .langs(Resources.Languages)
                         .clear(true)
                 );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Statement replace(final Statement statement, final IRI source, final IRI target) {
-        return statement(
-                replace(statement.getSubject(), source, target),
-                statement.getPredicate(),
-                replace(statement.getObject(), source, target)
-        );
-    }
-
-    private <V extends Value, R extends V> V replace(final V resource, final R source, final R target) {
-        return resource.equals(source) ? target : resource;
     }
 
 }
