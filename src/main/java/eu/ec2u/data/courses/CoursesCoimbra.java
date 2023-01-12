@@ -36,7 +36,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
+import java.time.*;
 import java.util.*;
 
 import static com.metreeca.core.Locator.service;
@@ -134,6 +134,10 @@ public final class CoursesCoimbra implements Runnable {
                         "undefined API key <%s>", APIToken
                 )));
 
+        final Year year=LocalDate.now().getMonth().compareTo(Month.JULY) >= 0
+                ? Year.now()
+                : Year.now().minusYears(1);
+
         return Xtream.of(synced)
 
                 .flatMap(new Fill<>()
@@ -149,7 +153,10 @@ public final class CoursesCoimbra implements Runnable {
                                 entry("accessToken", List.of(token)),
                                 entry("obterInformacaoFichaCurso", List.of("true")),
                                 entry("devolverSoCursosComFichaCurso", List.of("true")),
-                                entry("anoLectivo", List.of("2022/2023")) // !!! dynamic
+                                entry("anoLectivo", List.of(
+                                        format("%s/%s", year, year.plusYears(1)),
+                                        format("%s/%s", year.plusYears(1), year.plusYears(2))
+                                ))
                         )).getBytes(StandardCharsets.UTF_8)))
                 ))
 

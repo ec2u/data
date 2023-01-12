@@ -13,6 +13,7 @@
 ## 2023-01-12
 
 * Add additional parameters to exclude non-current courses (`obterInformacaoFichaCurso`/`devolverSoCursosComFichaCurso`)
+* Select academic year dynamically on the current date
 
 ## 2022-10-07
 
