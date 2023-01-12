@@ -1,0 +1,36 @@
+@prefix ec2u:	</terms/> .
+@prefix schema: <https://schema.org/> .
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+
+</events/> a ec2u:Dataset ;
+	dct:title "Events"@en ;
+	dct:description "EC2U academic and public local events."@en ;
+	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	void:rootResource ec2u:Event .
+
+
+########################################################################################################################
+
+ec2u:Event a owl:Class ;
+	rdfs:subClassOf ec2u:Resource, schema:Event .
+
+schema:Event a owl:Class ;
+	rdfs:subClassOf schema:Thing .
+
+schema:Organization a owl:Class ;
+	rdfs:subClassOf schema:Thing .
+
+schema:Place a owl:Class ;
+	rdfs:subClassOf schema:Thing .
+
+schema:PostalAddress a owl:Class ;
+	rdfs:subClassOf schema:ContactPoint .
+
+schema:ContactPoint a owl:Class ;
+	rdfs:subClassOf schema:Thing .
+
+schema:VirtualLocation a owl:Class ;
+	rdfs:subClassOf schema:Thing .

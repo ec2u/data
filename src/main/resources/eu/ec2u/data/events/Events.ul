@@ -1,0 +1,47 @@
+prefix ec2u:	</terms/>
+prefix dct:		<http://purl.org/dc/terms/>
+prefix schema:	<https://schema.org/>
+
+
+#### Purge Stale Events ################################################################################################
+
+delete {
+
+	?e ?p ?o.
+	?s ?q ?e.
+
+} where {
+
+	?e a ec2u:Event.
+
+	optional { ?e schema:startDate ?start }
+	optional { ?e schema:endDate ?end }
+
+	optional { ?e dct:created ?created }
+	optional { ?e dct:modified ?modified }
+
+	bind (coalesce(?end, ?start) as ?date)
+	bind (coalesce(?modified, ?created) as ?mutated)
+
+	bind (?date < now() as ?stale)
+	bind ((year(now())*12+month(now()))-(year(?mutated)*12+month(?mutated)) as ?delta)
+
+	filter ( ?stale || !bound(?date) && ?delta >= 1)
+
+	optional { ?e ?p ?o }
+	optional { ?s ?q ?e }
+
+};
+
+
+#### Purge Unreferenced Resources ######################################################################################
+
+delete {
+
+	?r ?p ?o.
+
+} where {
+
+	?r ?p ?o filter not exists { ?s ?q ?r }
+
+};

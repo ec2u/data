@@ -1,0 +1,19 @@
+@prefix ec2u:	</terms/> .
+@prefix void:	<http://rdfs.org/ns/void#> .
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+
+</actors/> a ec2u:Dataset ;
+	dct:title "Actors"@en ;
+	dct:description "EC2U knowledge ecosystem actors."@en ;
+	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+	dct:rights "Copyright © 2022-2023 EC2U Alliance";
+	void:rootResource ec2u:Actor .
+
+
+########################################################################################################################
+
+ec2u:Actor a owl:Class ;
+   rdfs:subClassOf ec2u:Resource ;
+   rdfs:label "Knowledge ecosystem actor"@en .

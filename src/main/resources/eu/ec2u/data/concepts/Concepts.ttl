@@ -1,0 +1,26 @@
+@prefix ec2u:	</terms/> .
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+
+</concepts/> a ec2u:Resource ;
+	dct:title "Concept Schemes"@en  ;
+	dct:description "EC2U shared classification taxonomies."@en ;
+	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+	dct:rights "Copyright © 2022-2023 EC2U Alliance".
+
+
+########################################################################################################################
+
+ec2u:ConceptScheme a owl:Class ;
+	rdfs:subclassOf ec2u:Resource, skos:ConceptScheme .
+
+ec2u:Concept a owl:Class ;
+	rdfs:subclassOf ec2u:Resource, skos:Concept .
+
+skos:prefLabel a owl:DataProperty ;
+	rdfs:subPropertyOf dct:title .
+
+skos:definition a owl:DataProperty ;
+	rdfs:subPropertyOf dct:description .

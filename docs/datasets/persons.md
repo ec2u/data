@@ -35,7 +35,9 @@ EC2U staff are described using a controlled subset of the [FOAF](http://xmlns.co
 | property                                     | description          |
 | -------------------------------------------- | -------------------- |
 | all [ec2u:Resource](resources.md) properties | inherited properties |
-|                                              |                      |
+| foaf:title                                   |                      |
+| foaf:givenName                               |                      |
+| foaf:familyName                              |                      |
 
 # Licensing
 

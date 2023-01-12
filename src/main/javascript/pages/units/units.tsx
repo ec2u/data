@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 EC2U Alliance
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/link";
+import { multiple, optional, string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
@@ -49,7 +49,8 @@ export const Units=immutable({
             label: { "en": "" }
         },
 
-        altLabel: { "en": "" },
+        prefLabel: { "en": "" },
+        altLabel: optional({ "en": "" }),
 
         university: {
             id: "",
@@ -91,23 +92,19 @@ export function DataUnits() {
         <NodeItems model={Units} placeholder={UnitsIcon} state={[query, setQuery]}>{({
 
             id,
-            label,
             comment,
 
             classification,
 
             university,
+            prefLabel,
             altLabel
 
         }) =>
 
             <DataCard key={id} compact
 
-                name={<a href={id}>{altLabel && <>
-                    <span>{string(altLabel)}</span>
-                    <span> / </span>
-                </>}{string(label)}</a>
-                }
+                name={<a href={id}>{altLabel ? `${string(altLabel)} - ${string(prefLabel)}` : string(prefLabel)}</a>}
 
                 tags={<>
                     <span>{string(university) || "EC2U Alliance"}</span>
