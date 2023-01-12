@@ -19,6 +19,7 @@ package eu.ec2u.data.courses;
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
 import com.metreeca.core.services.Vault;
+import com.metreeca.core.toolkits.Strings;
 import com.metreeca.http.actions.*;
 import com.metreeca.json.JSONPath;
 import com.metreeca.json.codecs.JSON;
@@ -31,17 +32,21 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.util.*;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.services.Vault.vault;
+import static com.metreeca.core.toolkits.Lambdas.guarded;
 import static com.metreeca.http.Request.POST;
 import static com.metreeca.http.Request.query;
 import static com.metreeca.link.Frame.frame;
@@ -67,6 +72,8 @@ public final class CoursesCoimbra implements Runnable {
     private static final String APIToken="courses-coimbra-token";
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private static final Map<String, IRI> TypesToISCEDLevel=Map.ofEntries(
 
             entry("PRIMEIRO/*", ISCED2011.Level6),
@@ -86,6 +93,58 @@ public final class CoursesCoimbra implements Runnable {
 
     );
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final Pattern DurationPattern=Pattern.compile("(?<value>\\d+)\\s+(?<unit>\\w+)");
+
+    // ;( Java Duration natively supports only seconds
+
+    private static final Map<String, Function<Integer, String>> ValueToDuration=Map.ofEntries(
+            entry("year", CoursesCoimbra::years),
+            entry("years", CoursesCoimbra::years),
+            entry("semester", CoursesCoimbra::semesters),
+            entry("semesters", CoursesCoimbra::semesters),
+            entry("trimester", CoursesCoimbra::trimesters),
+            entry("trimesters", CoursesCoimbra::trimesters),
+            entry("month", CoursesCoimbra::months),
+            entry("months", CoursesCoimbra::months),
+            entry("week", CoursesCoimbra::weeks),
+            entry("weeks", CoursesCoimbra::weeks),
+            entry("day", CoursesCoimbra::days),
+            entry("days", CoursesCoimbra::days),
+            entry("hour", CoursesCoimbra::hours),
+            entry("hours", CoursesCoimbra::hours)
+    );
+
+
+    private static String years(final int value) {
+        return format("P%dY", value);
+    }
+
+    private static String semesters(final int value) {
+        return format("P%dM", 6*value);
+    }
+
+    private static String trimesters(final int value) {
+        return format("P%dM", 3*value);
+    }
+
+    private static String months(final int value) {
+        return format("P%dM", value);
+    }
+
+    private static String weeks(final int value) {
+        return format("P%dD", 7*value); // ISO weeks not supported by https://www.w3.org/TR/xmlschema-2/#duration
+    }
+
+    private static String days(final int value) {
+        return format("P%dD", value);
+    }
+
+    private static String hours(final int value) {
+        return format("PT%dH", value);
+    }
 
     public static void main(final String... args) {
         exec(() -> new CoursesCoimbra().run());
@@ -183,41 +242,86 @@ public final class CoursesCoimbra implements Runnable {
     }
 
     private Optional<Frame> course(final JSONPath json) {
-        return json.integer("cursoId").map(id -> {
+        return json.integer("cursoId").map(id -> frame(item(Courses.Context, Coimbra, String.valueOf(id)))
 
-            final Collection<Literal> label=json.paths("designacoes.*")
+                .values(RDF.TYPE, Course)
+                .value(Resources.university, Coimbra.Id)
 
-                    .optMap(d -> d.string("designacao")
+                .value(Schema.url, json.string("urlEN").map(Values::iri))
+                .value(Schema.url, json.string("urlPT").map(Values::iri))
 
-                            .map(v -> literal(v, d.string("locSigla")
-                                    .map(lang -> lang.toLowerCase(Locale.ROOT))
-                                    .orElse(Coimbra.Language)
-                            ))
+                .values(Schema.name, json.paths("designacoes.*")
+                        .optMap(this::localized)
+                        .collect(toList()))
 
-                    )
+                .values(Schema.courseCode, literal(id.toString()))
 
-                    .collect(toList());
+                .value(Schema.educationalLevel, Optional.ofNullable(TypesToISCEDLevel.get(format("%s/%s",
+                        json.string("cicloTipo").orElse("*"),
+                        json.string("categoriaCursoTipo").orElse("*")
+                ))))
+
+                //.value(Schema.inLanguage, json.paths("linguasAprendizagem.*")
+                //        .filter(path -> path.string("locSigla").filter("EN"::equals).isPresent())
+                //        .optMap(v -> v.string("designacao"))
+                //        .findFirst()
+                //        .map(Values::literal)
+                //)
+
+                .values(Schema.learningResourceType, json.paths("regimesEstudo.*")
+                        .optMap(this::localized)
+                        .collect(toList()))
+
+                .value(Schema.numberOfCredits, json.string("ects")
+                        .map((guarded(Integer::parseInt)))
+                        .map(Values::literal)
+                )
+
+                .value(Schema.timeRequired, json.string("duracaoEN")
+                        .map(Strings::lower)
+                        .map(DurationPattern::matcher)
+                        .filter(Matcher::matches)
+                        .flatMap((matcher -> Optional.ofNullable(ValueToDuration.get(matcher.group("unit")))
+                                .flatMap(function -> Optional.ofNullable(matcher.group("value"))
+                                        .map(guarded(Integer::parseInt))
+                                        .map(function)
+                                )))
+                        .map(v -> literal(v, XSD.DURATION))
+                )
+
+                .values(Schema.teaches, json.paths("objetivosCurso.*")
+                        .optMap(this::localized)
+                        .collect(toList()))
+
+                .values(Schema.assesses, json.paths("objetivosAprendizagem.*")
+                        .optMap(this::localized)
+                        .collect(toList()))
+
+                .values(Schema.coursePrerequisites, json.paths("condicoesAcesso.*")
+                        .optMap(this::localized)
+                        .collect(toList()))
+
+                .values(Schema.competencyRequired, json.paths("regrasDeAvaliacao.*")
+                        .optMap(this::localized)
+                        .collect(toList()))
+
+                .values(Schema.educationalCredentialAwarded, json.paths("qualificoesAtribuidas.*")
+                        .optMap(this::localized)
+                        .collect(toList()))
+
+        );
+    }
 
 
-            return frame(item(Courses.Context, Coimbra, String.valueOf(id)))
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    .values(RDF.TYPE, Course)
-                    .value(Resources.university, Coimbra.Id)
+    private Optional<Literal> localized(final JSONPath d) {
+        return d.string("designacao")
 
-                    .values(DCTERMS.TITLE, label)
-
-                    .value(Schema.url, json.string("urlEN").map(Values::iri))
-                    .value(Schema.url, json.string("urlPT").map(Values::iri))
-
-                    .values(Schema.name, label)
-                    .values(Schema.courseCode, literal(id.toString()))
-
-                    .value(Schema.educationalLevel, Optional.ofNullable(TypesToISCEDLevel.get(format("%s/%s",
-                            json.string("cicloTipo").orElse("*"),
-                            json.string("categoriaCursoTipo").orElse("*")
-                    ))));
-
-        });
+                .map(v -> literal(v, d.string("locSigla")
+                        .map(lang -> lang.toLowerCase(Locale.ROOT))
+                        .orElse(Coimbra.Language)
+                ));
     }
 
 }

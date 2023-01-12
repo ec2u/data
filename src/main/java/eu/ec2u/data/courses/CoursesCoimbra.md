@@ -6,14 +6,20 @@
 
 * data extracted from dedicated REST/JSON API
 
-## Pending
-
-* course details (e.g. https://apps.uc.pt/courses/EN/course/4604)
-
 ## 2023-01-12
 
 * Add additional parameters to exclude non-current courses (`obterInformacaoFichaCurso`/`devolverSoCursosComFichaCurso`)
 * Select academic year dynamically on the current date
+* Integrate additional data
+  * `schema:inLanguage`
+  * `schema:learningResourceType`
+  * `schema:numberOfCredits`
+  * ``schema:timeRequired`
+  * `schema:teaches`
+  * `schem:assesses`
+  * `schema:coursePrerequisites`
+  * `schema:competencyRequired`
+  * `schema:educationalCredentialAwarded`
 
 ## 2022-10-07
 
@@ -56,140 +62,138 @@ applicationId={{courses-coimbra-id}}
     "status": "SUCCESS",
     "additionalInformation": "Total Resultados: 716",
     "listaResultados": [
-        {
-            "cursoId": 4604,
-            "codigoInterno": "20134054",
+                {
+            "cursoId": 4601,
+            "codigoInterno": "20134051",
             "cicloTipo": "NAO_CONFERENTE_GRAU",
             "categoriaCursoTipo": "FORMACAO",
             "designacoes": [
                 {
-                    "id": 4604,
-                    "designacao": "French Language and Culture III",
-                    "locSigla": "EN"
+                    "id": 4601,
+                    "designacao": "Curso de Formação de Língua e Cultura Espanholas II",
+                    "locSigla": "PT"
                 },
                 {
-                    "id": 4604,
-                    "designacao": "Curso de Formação de Língua e Cultura Francesas III",
-                    "locSigla": "PT"
+                    "id": 4601,
+                    "designacao": "Spanish Language and Culture II",
+                    "locSigla": "EN"
                 }
             ],
             "designacoesCiclo": [
                 {
-                    "id": 4604,
-                    "designacao": "Postgraduation",
-                    "locSigla": "EN"
-                },
-                {
-                    "id": 4604,
+                    "id": 4601,
                     "designacao": "Cursos não conferentes de grau",
                     "locSigla": "PT"
+                },
+                {
+                    "id": 4601,
+                    "designacao": "Postgraduation",
+                    "locSigla": "EN"
                 }
             ],
             "designacoesCategoriaCurso": [
                 {
-                    "id": 4604,
-                    "designacao": "Formação",
-                    "locSigla": "EN"
-                },
-                {
-                    "id": 4604,
+                    "id": 4601,
                     "designacao": "Formação",
                     "locSigla": "PT"
-                }
-            ],
-            "urlPT": "https://apps.uc.pt/courses/PT/course/4604",
-            "urlEN": "https://apps.uc.pt/courses/EN/course/4604",
-            "unoId": 141
-        },
-        {
-            "cursoId": 4603,
-            "codigoInterno": "20134053",
-            "cicloTipo": "NAO_CONFERENTE_GRAU",
-            "categoriaCursoTipo": "FORMACAO",
-            "designacoes": [
-                {
-                    "id": 4603,
-                    "designacao": "French Language and Culture II",
-                    "locSigla": "EN"
                 },
                 {
-                    "id": 4603,
-                    "designacao": "Curso de Formação de Língua e Cultura Francesas II",
-                    "locSigla": "PT"
-                }
-            ],
-            "designacoesCiclo": [
-                {
-                    "id": 4603,
-                    "designacao": "Postgraduation",
-                    "locSigla": "EN"
-                },
-                {
-                    "id": 4603,
-                    "designacao": "Cursos não conferentes de grau",
-                    "locSigla": "PT"
-                }
-            ],
-            "designacoesCategoriaCurso": [
-                {
-                    "id": 4603,
+                    "id": 4601,
                     "designacao": "Formação",
                     "locSigla": "EN"
-                },
-                {
-                    "id": 4603,
-                    "designacao": "Formação",
-                    "locSigla": "PT"
                 }
             ],
-            "urlPT": "https://apps.uc.pt/courses/PT/course/4603",
-            "urlEN": "https://apps.uc.pt/courses/EN/course/4603",
-            "unoId": 141
-        },
-        {
-            "cursoId": 4602,
-            "codigoInterno": "20134052",
-            "cicloTipo": "NAO_CONFERENTE_GRAU",
-            "categoriaCursoTipo": "FORMACAO",
-            "designacoes": [
+            "urlPT": "https://apps.uc.pt/courses/PT/course/4601",
+            "urlEN": "https://apps.uc.pt/courses/EN/course/4601",
+            "unoId": 141,
+            "ects": "3",
+            "duracaoPT": "81 horas",
+            "duracaoEN": "81 hours",
+            "qualificoesAtribuidas": [
                 {
-                    "id": 4602,
-                    "designacao": "French Language and Culture I",
+                    "id": 4601,
+                    "designacao": "Pós-Graduação",
+                    "locSigla": "PT"
+                },
+                {
+                    "id": 4601,
+                    "designacao": "Master degree",
                     "locSigla": "EN"
-                },
-                {
-                    "id": 4602,
-                    "designacao": "Curso de Formação de Língua e Cultura Francesas I",
-                    "locSigla": "PT"
                 }
             ],
-            "designacoesCiclo": [
+            "objetivosCurso": [
                 {
-                    "id": 4602,
-                    "designacao": "Postgraduation",
+                    "id": 4601,
+                    "designacao": "O curso livre de Língua e Cultura Espanholas II continua o estudo do Espanhol como língua estrangeira do formando num nível de língua A2 (QECRL).",
+                    "locSigla": "PT"
+                },
+                {
+                    "id": 4601,
+                    "designacao": " This course provides a continuation to the study of Spanish as a foreign language at level A2 (CEFR).  ",
                     "locSigla": "EN"
-                },
-                {
-                    "id": 4602,
-                    "designacao": "Cursos não conferentes de grau",
-                    "locSigla": "PT"
                 }
             ],
-            "designacoesCategoriaCurso": [
+            "objetivosAprendizagem": [
                 {
-                    "id": 4602,
-                    "designacao": "Formação",
+                    "id": 4601,
+                    "designacao": "Compreender, tanto oral como por escrito, instruções e explicações de maior complexidade em âmbitos formais ou informais.\r\nSer capaz de defender una opinião com argumentações coerentes e convincentes.\r\nNível de correção: sensibilidade ao erro sendo capaz de autocorrigir-se.\r\nFluidez oral e registo fonético longe do português.\r\nRedação escrita adequada ao registo.\r\nCapacidade de autocorreção.\r\nUso de léxico específico.\r\n",
+                    "locSigla": "PT"
+                },
+                {
+                    "id": 4601,
+                    "designacao": "Understand instructions and explanations, in formal and informal register, whether oral or written, with a higher degree of complexity \r\nBeing able to defend an opinion with coherent and compelling arguments.\r\nLinguistic correction: recognize mistakes and being able to self-correction.\r\nOral fluency and correct pronunciation without the influence of Portuguese.\r\nWriting in an appropriate register.\r\nCapacity of self-correction.\r\nAbility to use specific vocabulary.\r\n",
                     "locSigla": "EN"
-                },
-                {
-                    "id": 4602,
-                    "designacao": "Formação",
-                    "locSigla": "PT"
                 }
             ],
-            "urlPT": "https://apps.uc.pt/courses/PT/course/4602",
-            "urlEN": "https://apps.uc.pt/courses/EN/course/4602",
-            "unoId": 141
+            "regimesEstudo": [
+                {
+                    "id": 4601,
+                    "designacao": "Presencial",
+                    "locSigla": "PT"
+                },
+                {
+                    "id": 4601,
+                    "designacao": "Face to face",
+                    "locSigla": "EN"
+                }
+            ],
+            "linguasAprendizagem": [
+                {
+                    "id": 4601,
+                    "designacao": "Espanhol",
+                    "locSigla": "PT"
+                },
+                {
+                    "id": 4601,
+                    "designacao": "Spanish",
+                    "locSigla": "EN"
+                }
+            ],
+            "regrasDeAvaliacao": [
+                {
+                    "id": 4601,
+                    "designacao": "A finalização do curso supõe a realização de todas as atividades propostas, conduzindo a uma nota final expressa na escala de 0-20 valores, sendo necessário o mínimo de 10 valores para aprovação final. Avaliação contínua. Incluirá trabalhos realizados nas aulas, participação ativa, redação de temas específicos e realização de um teste final.",
+                    "locSigla": "PT"
+                },
+                {
+                    "id": 4601,
+                    "designacao": "Successful course completion supposes the realization of all the proposed activities, the evaluation is expressed in a final grade on a scale of 0-20 points. Minimal pass grade is 10 points.\r\nContinuous assessment. Will include work carried out in class, active participation, writing on specific themes and partial exams.\r\n",
+                    "locSigla": "EN"
+                }
+            ],
+            "condicoesAcesso": [
+                {
+                    "id": 4601,
+                    "designacao": "Candidatos com idade igual ou superior a 16 anos.",
+                    "locSigla": "PT"
+                },
+                {
+                    "id": 4601,
+                    "designacao": "Applicants must be aged 16 years or over.",
+                    "locSigla": "EN"
+                }
+            ],
+            "cursoComFichaCursoNoAnoLetivo": true
         },
         …
     ]
