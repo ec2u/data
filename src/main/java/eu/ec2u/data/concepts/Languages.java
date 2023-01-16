@@ -18,25 +18,32 @@ package eu.ec2u.data.concepts;
 
 import com.metreeca.core.toolkits.Strings;
 
-import java.util.Map;
-import java.util.Optional;
+import eu.ec2u.data.resources.Resources;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Map.entry;
 
 public final class Languages {
 
-    private static final Map<String, String> LanguageCodes=Map.ofEntries(
-            entry("italian", "it"),
-            entry("italiano", "it"),
-            entry("english", "en"),
-            entry("inglese", "en")
-    );
+    private static final Map<String, String> NameToCode=Resources.Languages.stream()
+            .map(Locale::forLanguageTag)
+            .flatMap(target -> Arrays.stream(Locale.getAvailableLocales())
+                    .map(source -> entry(source, target))
+            )
+            .collect(Collectors.toMap(
+                    entry -> Strings.lower(entry.getKey().getDisplayLanguage(entry.getValue())),
+                    entry -> entry.getKey().getLanguage(),
+                    (x, y) -> x // !!! check x == y
+            ));
+
 
     public static Optional<String> languageCode(final String name) {
         return Optional.of(name)
                 .map(Strings::normalize)
                 .map((Strings::lower))
-                .map(LanguageCodes::get);
+                .map(NameToCode::get);
     }
 
 
