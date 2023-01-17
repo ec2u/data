@@ -21,21 +21,39 @@ import com.metreeca.core.toolkits.Strings;
 import eu.ec2u.data.resources.Resources;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
+import javax.json.Json;
 
 import static java.util.Map.entry;
+import static java.util.stream.Collectors.toMap;
 
 public final class Languages {
 
+    private static final Pattern TagPattern=Pattern.compile("[a-z]{2}");
+
+
     private static final Map<String, String> NameToCode=Resources.Languages.stream()
             .map(Locale::forLanguageTag)
-            .flatMap(target -> Arrays.stream(Locale.getAvailableLocales())
+            .flatMap(target -> locales()
                     .map(source -> entry(source, target))
             )
-            .collect(Collectors.toMap(
+            .collect(toMap(
                     entry -> Strings.lower(entry.getKey().getDisplayLanguage(entry.getValue())),
                     entry -> entry.getKey().getLanguage(),
                     (x, y) -> x // !!! check x == y
+            ));
+
+    private static final Map<String, Object> CodeToNames=locales()
+            .collect(toMap(
+                    Locale::getLanguage,
+                    locale -> Resources.Languages.stream()
+                            .map(Locale::forLanguageTag)
+                            .collect(toMap(
+                                    Locale::getLanguage,
+                                    locale::getDisplayLanguage
+                            ))
             ));
 
 
@@ -44,6 +62,17 @@ public final class Languages {
                 .map(Strings::normalize)
                 .map((Strings::lower))
                 .map(NameToCode::get);
+    }
+
+
+    private static Stream<Locale> locales() {
+        return Arrays.stream(Locale.getAvailableLocales())
+                .filter(locale -> TagPattern.matcher(locale.toLanguageTag()).matches());
+    }
+
+
+    public static void main(final String... args) {
+        System.out.println(Json.createObjectBuilder(CodeToNames).build());
     }
 
 

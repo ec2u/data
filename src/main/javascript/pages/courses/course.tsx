@@ -15,6 +15,7 @@
  */
 
 import { Courses, CoursesIcon } from "@ec2u/data/pages/courses/courses";
+import { Languages } from "@ec2u/data/pages/courses/languages";
 import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
@@ -31,42 +32,6 @@ import * as React from "react";
 import { Fragment, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-
-
-const Languages: { [language: string]: { [language: string]: string } }={ // !!! complete translations
-    "en": {
-        "en": "English",
-        "it": "Inglese"
-    },
-    "pt": {
-        "en": "Portuguese",
-        "it": "Portoghese"
-    },
-    "ro": {
-        "en": "Romanian",
-        "it": "Rumeno"
-    },
-    "de": {
-        "en": "German",
-        "it": "Tedesco"
-    },
-    "it": {
-        "en": "Italian",
-        "it": "Italiano"
-    },
-    "fr": {
-        "en": "French",
-        "it": "Francese"
-    },
-    "es": {
-        "en": "Spanish",
-        "it": "Spagnolo"
-    },
-    "fi": {
-        "en": "Finnish",
-        "it": "Finlandese"
-    }
-};
 
 
 export const Course=immutable({
