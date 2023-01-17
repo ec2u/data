@@ -35,38 +35,6 @@ The following properties are strongly suggested as a minimal description for eve
 
 > ❗️source-level license / copyright holder
 
-# Sources
-
-Events are crawled from different local academic, public and commercial sources and mapped as far as possible to the
-shared data model: source analysis and integration status are detailed in the linked source sheets.
-
-| status | city      | coverage    | publisher                                                    |
-| ------ | --------- | ----------- | ------------------------------------------------------------ |
-| ✗      | Coimbra   | Association | [Academic Association of Coimbra (AAC) / Calendar of Events](../../src/main/java/eu/ec2u/data/_tasks/events/EventsCoimbraAcademica.md) |
-| ✓      | Coimbra   | City        | [Câmara Municipal de Coimbra / CoimbrAgenda](../../src/main/java/eu/ec2u/data/_tasks/events/EventsCoimbraCity.md) |
-| ✗      | Coimbra   | Other       | [Convento São Francisco / Agenda Cultural](../../src/main/java/eu/ec2u/data/_tasks/events/EventsCoimbraSaoFrancisco.md) |
-| ✓      | Coimbra   | University  | [University of Coimbra / Agenda UC](../../src/main/java/eu/ec2u/data/_tasks/events/EventsCoimbraUniversity.md) |
-| ✓      | Iasi      | City        | [Iaşul Cultural](../../src/main/java/eu/ec2u/data/_tasks/events/EventsIasiCityCultura.md) |
-| ✓      | Iasi      | City        | [InOras / Evenimente in Iași](../../src/main/java/eu/ec2u/data/_tasks/events/EventsIasiCityInOras.md) |
-| ✓      | Iasi      | University  | [University of Iasi / Events](../../src/main/java/eu/ec2u/data/_tasks/events/EventsIasiUniversity.md) |
-| ✓      | Iasi      | University  | [University of Iasi / 360 Events](../../src/main/java/eu/ec2u/data/_tasks/events/EventsIasiUniversity360.md) |
-| ✓      | Jena      | City        | [Stadt Jena / Veranstaltungskalender](../../src/main/java/eu/ec2u/data/_tasks/events/EventsJenaCity.md) |
-| ✓      | Jena      | University  | [Friedrich-Schiller-Universität Jena / Events](../../src/main/java/eu/ec2u/data/_tasks/events/EventsJenaUniversity.md) |
-| ✓      | Pavia     | City        | [Comune di Pavia / ViviPavia](../../src/main/java/eu/ec2u/data/_tasks/events/EventsPaviaCity.md) |
-| ✓      | Pavia     | College     | [Almo Collegio Borromeo / Calendario](../../src/main/java/eu/ec2u/data/_tasks/events/EventsPaviaBorromeo.md) |
-| ✗      | Pavia     | College     | [Fondazione Ghislieri / Calendario Eventi](../../src/main/java/eu/ec2u/data/_tasks/events/EventsPaviaGhislieri.md) |
-| ✓      | Pavia     | University  | [University of Pavia / News](../../src/main/java/eu/ec2u/data/_tasks/events/EventsPaviaUniversity.md) |
-| ✗      | Poitiers  | City        | [Ville de Poitiers / Evenements](../../src/main/java/eu/ec2u/data/_tasks/events/EventsPoitiersCity.md) |
-| ✓      | Poitiers  | City        | [Grand Poitiers / Sortir](../../src/main/java/eu/ec2u/data/_tasks/events/EventsPoitiersCityGrand.md) |
-| ✓      | Poitiers  | University  | [Université de Poitiers / Actualités et événements](../../src/main/java/eu/ec2u/data/_tasks/events/EventsPoitiersUniversity.md) |
-| ✗      | Salamanca | City        | [Fundación Salamanca Ciudad de Cultura y Saberes](../../src/main/java/eu/ec2u/data/_tasks/events/EventsSalamancaCity.md) |
-| ✓      | Salamanca | City        | [SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social](../../src/main/java/eu/ec2u/data/_tasks/events/EventsSalamancaCitySACIS.md) |
-| ✓      | Salamanca | City        | [Oficina de Turismo de Salamanca](../../src/main/java/eu/ec2u/data/_tasks/events/EventsSalamancaCityTO.md) |
-| ✓      | Salamanca | University  | [Universidad de Salamanca / Servicio de Actividades Culturales](.././/src/main/java/eu/ec2u/data/tasks/events/EventsSalamancaUniversity.md) |
-| ✗      | Turku     | City        | [Turun kaupunki / Tapahtumakalenteri](../../src/main/java/eu/ec2u/data/_tasks/events/EventsTurkuCity.md) |
-| ✓      | Turku     | Association | [The Student Union of the University of Turku (TYY) / Calendar of Events](../../src/main/java/eu/ec2u/data/_tasks/events/EventsTurkuTYY.md) |
-| ✓      | Turku     | University  | [University of Turku / News](../../src/main/java/eu/ec2u/data/_tasks/events/EventsTurkuUniversity.md) |
-
 # Updating
 
 * Data sources are crawled nightly using custom data integration scripts that extract structured data from dedicated

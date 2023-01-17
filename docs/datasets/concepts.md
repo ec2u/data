@@ -40,11 +40,3 @@ EC2U concepts are described using a controlled subset of the [SKOS](https://www.
 > ❗️source-level license / copyright holder
 
 > ❗️ Handle licensing for third-party embedded schemes
-
-# Sources
-
-> ❗️TBC
-
-# Updating
-
-> ❗️TBC

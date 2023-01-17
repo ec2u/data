@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-61 44 404 442"
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-61 44 404 442"
      width="404" height="442">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
@@ -39,8 +39,8 @@
                 <path d="M -24 0 L 0 0 M 0 9 L -24 0 L 0 -9" fill="none" stroke="currentColor" stroke-width="1"/>
             </g>
         </marker>
-  </defs>
-    <g id="universities" stroke-dasharray="none" stroke-opacity="1" stroke="none" fill-opacity="1" fill="none">
+    </defs>
+    <g id="universities" stroke="none" fill="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
         <title>universities</title>
         <rect fill="white" x="-61" y="44" width="404" height="442"/>
         <g id="universities_Layer_1">
@@ -52,18 +52,21 @@
                           stroke-linejoin="round" stroke-width=".25"/>
                 </g>
                 <g id="Graphic_4">
-          <rect x="-32.09875" y="174.5839" width="84.531" height="28.522125" fill="white"/>
+                    <rect x="-32.09875" y="174.5839" width="84.531" height="28.522125" fill="white"/>
                     <rect x="-32.09875" y="174.5839" width="84.531" height="28.522125" stroke="black"
                           stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(-26.098748 177.5839)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">ec2u:schac: String</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">ec2u:image: URL</tspan>
-          </text>
-        </g>
-        <g id="Graphic_3">
-          <rect x="-32.09875" y="157.32284" width="84.531" height="17.261063" fill="white"/>
-            <rect x="-32.09875" y="157.32284" width="84.531" height="17.261063" stroke="black" stroke-linecap="round"
-                  stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-26.098748 177.5839)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">ec2u:schac: String
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">ec2u:image:
+                            URL
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_3">
+                    <rect x="-32.09875" y="157.32284" width="84.531" height="17.261063" fill="white"/>
+                    <rect x="-32.09875" y="157.32284" width="84.531" height="17.261063" stroke="black"
+                          stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
           <text transform="translate(-22.75525 160.32284)" fill="black">
               <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="48316906e-20" y="9">
                   ec2u:University
@@ -229,13 +232,13 @@
           </a>
         </g>
       </g>
-      <g id="Graphic_134">
-        <a xl:href="https://www.w3.org/TR/void/">
-          <text transform="translate(106.29921 98.89342)" fill="black">
-              <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix void: &lt;http://rdfs.org/ns/void#&gt;</tspan>
-          </text>
-        </a>
-      </g>
+            <g id="Graphic_134">
+                <a xl:href="https://www.w3.org/TR/void/">
+                    <text transform="translate(106.29921 98.89342)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix void: &lt;http://rdfs.org/ns/void#&gt;</tspan>
+                    </text>
+                </a>
+            </g>
             <g id="Graphic_136">
                 <path d="M 261.67373 326.83715 C 261.67373 325.20287 259.95248 325.00068 247.37917 323.3833 L 247.24635 323.36657 C 234.60664 321.7323 234.47517 321.7323 221.5034 321.7323 C 204.2312 321.7323 126.14173 321.7323 126.14173 321.7323 L 126.14173 338.9843 L 261.67373 338.9843 L 261.67373 326.83715 Z"
                       fill="white"/>
@@ -247,10 +250,10 @@
                     </tspan>
                 </text>
             </g>
-      <g id="Line_137">
-          <line x1="126.01677" y1="332.4729" x2="67.09775" y2="333.82012" stroke="black" stroke-linecap="round"
-                stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
-      </g>
-    </g>
+            <g id="Line_137">
+                <line x1="126.01677" y1="332.4729" x2="67.09775" y2="333.82012" stroke="black" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
+            </g>
+        </g>
   </g>
 </svg>

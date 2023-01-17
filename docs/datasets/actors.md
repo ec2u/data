@@ -4,7 +4,8 @@ title: Datasets › Actors
 
 > ❗️Work in progress
 
-The [EC2U Actors Dataset](http://data.ec2u.eu/persons/) provides anonymized information about knowledge ecosystem actors at EC2U partner universities and associated local communities.
+The [EC2U Actors Dataset](http://data.ec2u.eu/persons/) provides anonymized information about knowledge ecosystem 
+actors at EC2U allied universities and associated local communities.
 
 # Model
 
