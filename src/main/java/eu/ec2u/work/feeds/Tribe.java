@@ -293,12 +293,12 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                             .value(RDF.TYPE, Schema.PostalAddress)
 
                             .value(Schema.addressCountry, addressCountry)
-                                    .value(Schema.addressLocality, addressLocality)
-                                    .value(Schema.streetAddress, streetAddress)
+                            .value(Schema.addressLocality, addressLocality)
+                            .value(Schema.streetAddress, streetAddress)
 
-                                    .value(Schema.url, location.string("website").flatMap(Work::url).map(Values::iri))
-                                    .value(Schema.email, location.string("email").map(Values::literal))
-                                    .value(Schema.telephone, location.string("phone").map(Values::literal))
+                            .value(Schema.url, location.string("website").flatMap(Work::url).map(Values::iri))
+                            .value(Schema.email, location.string("email").map(Values::literal))
+                            .value(Schema.telephone, location.string("phone").map(Values::literal))
                     );
 
         });

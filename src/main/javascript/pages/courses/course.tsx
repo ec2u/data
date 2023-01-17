@@ -50,7 +50,7 @@ export const Course=immutable({
     url: multiple(""),
 
     courseCode: optional(""),
-    inLanguage: optional(""),
+    inLanguage: multiple(""),
     learningResourceType: { "en": "" },
     numberOfCredits: optional(0.0),
     timeRequired: optional(""),
@@ -164,7 +164,12 @@ function DataCourseInfo({
             </>,
 
             "Level": educationalLevel && <span>{string(educationalLevel)}</span>,
-            "Language": inLanguage && <span>{string(Languages[inLanguage]) || inLanguage}</span>,
+            "Language": inLanguage?.length && <ul>{inLanguage
+                .map(tag => string(Languages[tag]))
+                .filter(language => language)
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(language => <li key={language}>{language}</li>)
+            }</ul>,
             "Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
             "Duration": timeRequired && <span>{timeRequired}</span>  // !!! map to localized description
 

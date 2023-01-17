@@ -63,7 +63,7 @@ public final class Courses extends Delegator {
                 field(Schema.provider, optional(), Reference()),
                 field(Schema.courseCode, optional(), datatype(XSD.STRING)),
                 field(Schema.educationalLevel, optional(), Reference()),
-                field(Schema.inLanguage, optional(), datatype(XSD.STRING), pattern("[a-z]{2}")),
+                field(Schema.inLanguage, multiple(), datatype(XSD.STRING), pattern("[a-z]{2}")),
                 field(Schema.learningResourceType, multilingual()),
                 field(Schema.numberOfCredits, optional(), datatype(XSD.DECIMAL), minInclusive(literal(0))),
                 field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
