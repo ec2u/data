@@ -6,12 +6,15 @@
 
 * data extracted from dedicated REST/JSON API
 
+## 2023-01-17
+
+* Integrate `schema:inLanguage`
+
 ## 2023-01-12
 
 * Add additional parameters to exclude non-current courses (`obterInformacaoFichaCurso`/`devolverSoCursosComFichaCurso`)
 * Select academic year dynamically on the current date
 * Integrate additional data
-  * `schema:inLanguage`
   * `schema:learningResourceType`
   * `schema:numberOfCredits`
   * ``schema:timeRequired`

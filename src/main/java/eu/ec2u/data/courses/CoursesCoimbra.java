@@ -28,6 +28,7 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.concepts.ISCED2011;
+import eu.ec2u.data.concepts.Languages;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -146,6 +147,13 @@ public final class CoursesCoimbra implements Runnable {
     }
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final Pattern NotLettersPattern=Pattern.compile("[^\\p{L}]+");
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static void main(final String... args) {
         exec(() -> new CoursesCoimbra().run());
     }
@@ -261,12 +269,14 @@ public final class CoursesCoimbra implements Runnable {
                         json.string("categoriaCursoTipo").orElse("*")
                 ))))
 
-                //.value(Schema.inLanguage, json.paths("linguasAprendizagem.*")
-                //        .filter(path -> path.string("locSigla").filter("EN"::equals).isPresent())
-                //        .optMap(v -> v.string("designacao"))
-                //        .findFirst()
-                //        .map(Values::literal)
-                //)
+                .values(Schema.inLanguage, json.paths("linguasAprendizagem.*")
+                        .filter(path -> path.string("locSigla").filter("EN"::equals).isPresent())
+                        .optMap(v -> v.string("designacao"))
+                        .map(NotLettersPattern::split)
+                        .flatMap(Arrays::stream)
+                        .map(name -> Languages.languageCode(name).orElse(Coimbra.Language))
+                        .map(Values::literal)
+                )
 
                 .values(Schema.learningResourceType, json.paths("regimesEstudo.*")
                         .optMap(this::localized)
