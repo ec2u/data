@@ -192,7 +192,8 @@ function DataCourseInfo({
         }}</DataInfo>
 
         <DataInfo>{{
-            "Awards": <>
+
+            "Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
                 {educationalCredentialAwarded && <span>{string(educationalCredentialAwarded)}</span>}
                 {occupationalCredentialAwarded && <span>{string(occupationalCredentialAwarded)}</span>}
             </>,
