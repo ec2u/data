@@ -32,8 +32,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
-import java.util.Optional;
-import java.util.Set;
+import java.time.Period;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
@@ -49,12 +49,21 @@ import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
+import static java.util.Map.entry;
 
 public final class CoursesSalamanca implements Runnable {
 
     private static final IRI Context=iri(Courses.Context, "/salamanca");
 
     private static final String APIUrl="courses-salamanca-url";
+
+
+    private static final Map<String, Period> Durations=Map.ofEntries(
+            entry("A", Period.ofYears(1)),
+            entry("S", Period.ofMonths(6)),
+            entry("Q", Period.ofMonths(4)),
+            entry("T", Period.ofMonths(3))
+    );
 
 
     public static void main(final String... args) {
@@ -123,6 +132,11 @@ public final class CoursesSalamanca implements Runnable {
 
                 .value(Schema.numberOfCredits, json.string("ects")
                         .map(Courses::ects)
+                        .map(Values::literal)
+                )
+
+                .value(Schema.timeRequired, json.string("field_guias_asig_tdu_value")
+                        .map(Durations::get)
                         .map(Values::literal)
                 )
 

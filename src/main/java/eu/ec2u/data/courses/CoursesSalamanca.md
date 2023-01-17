@@ -6,6 +6,10 @@
 
 * data extracted from dedicated REST/JSON API
 
+## 2023-01-17
+
+* Integrate `schema:timeRequired`
+
 ## 2023-01-12
 
 * Initial integration
