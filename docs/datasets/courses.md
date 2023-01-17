@@ -25,7 +25,7 @@ A program offered by an institution which determines the learning progress to ac
 | [schema:hasCourse](https://schema.org/hasCourse)             | link to course that is one of the learning opportunities that are part of the program |
 | [schema:numberOfCredits](https://schema.org/numberOfCredits) | number of [European Credit Transfer and Accumulation System (ECTS)](https://education.ec.europa.eu/education-levels/higher-education/inclusive-and-connected-higher-education/european-credit-transfer-and-accumulation-system) credits required to complete the program |
 | [schema:programPrerequisites](https://schema.org/programPrerequisites) | human-readable, localized description of enrolment requirements |
-| [schema:timeToComplete](https://schema.org/timeToComplete)   | the expected length of time to complete the program if attending full-time |
+| [schema:timeToComplete](https://schema.org/timeToComplete)   | the expected length of time to complete the program if attending full-time, as a [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) value (e.g. `P6M` for 6 months or `PT120H` for 120 hours) |
 | [schema:educationalCredentialAwarded](https://schema.org/educationalCredentialAwarded) | human-readable, localized description of the qualification, award, certificate, diploma or other educational credential awarded as a consequence of successful completion |
 | [schema:occupationalCredentialAwarded](https://schema.org/occupationalCredentialAwarded) | human-readable, localized description of the qualification, award, certificate, diploma or other occupational credential awarded as a consequence of successful completion |
 
