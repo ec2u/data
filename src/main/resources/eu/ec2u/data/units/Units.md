@@ -1,13 +1,7 @@
----
-title: Datasets › Research Units
----
-
-The [EC2U Research Units Dataset](http://data.ec2u.eu/units/) provides identifying and background information about
+Provides identifying and background information about
 research and innovation units and supporting structures at EC2U partner universities.
 
 # Model
-
-![research unit data model](index/units.svg)
 
 EC2U research units and facilities are described using a controlled subset of
 the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with:
@@ -45,10 +39,3 @@ the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extend
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [org:headOf](https://www.w3.org/TR/vocab-org/#property-headof) | a link to a [research unit](units.md) the person is leading  |
 | [org:memberOf](https://www.w3.org/TR/vocab-org/#property-memberof) | a link to a [research unit](units.md) the person is affiliated with |
-
-# Licensing
-
-> ❗️ To be confirmed.
-
-[EC2U Research Units Dataset](https://data.ec2u.eu/units/) © 2022-2023 by [EC2U Alliance](https://www.ec2u.eu/) is licensed
-under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)

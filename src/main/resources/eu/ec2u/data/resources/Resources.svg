@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2023 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-16 -37 589 428"
+     width="589" height="428">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
+            stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
+      <g>
+        <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter"
+            stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20" color="black">
+      <g>
+        <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="model" fill="none" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
+    <title>model</title>
+    <rect fill="white" x="-16" y="-37" width="589" height="428"/>
+    <g id="model_Layer_1">
+      <title>Layer 1</title>
+      <g id="Group_236">
+        <g id="Graphic_239">
+          <rect x="94.41868" y="358.41067" width="77.844" height="18" fill="white"/>
+          <rect x="94.41868" y="358.41067" width="77.844" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_238">
+          <rect x="94.41868" y="340.41067" width="77.844" height="18" fill="white"/>
+          <rect x="94.41868" y="340.41067" width="77.844" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_237">
+          <rect x="94.41868" y="323.1496" width="77.844" height="17.261063" fill="white"/>
+          <rect x="94.41868" y="323.1496" width="77.844" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(100.41868 326.1496)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="48316906e-20" y="9">
+              ec2u:University
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Graphic_235">
+        <text transform="translate(321.02338 -21.677166)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.261063">prefix dct: &lt;http://purl.org/dc/terms/&gt;</tspan>
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="42.522125">prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</tspan>
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="64.78319">prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</tspan>
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="76.04425">prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt;</tspan>
+        </text>
+      </g>
+      <g id="Group_231">
+        <g id="Graphic_234">
+          <rect x="64.88518" y="235.123" width="136.911" height="18" fill="white"/>
+          <rect x="64.88518" y="235.123" width="136.911" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_233">
+          <rect x="64.88518" y="127.77345" width="136.911" height="107.34956" fill="white"/>
+          <rect x="64.88518" y="127.77345" width="136.911" height="107.34956" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(70.88518 130.77345)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">rdf:type :URI</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">/rdfs:label = dct:title
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">/rdfs:comment =
+              dct:description
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="42.78319">dct:title : Dictionary
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="54.04425">dct:description :
+              Dictionary
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="65.30531">dct:source : URI [0..1]
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="76.56638">dct:issued :Instant
+              [0..1]
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="87.82744">dct:created :Instant
+              [0..1]
+            </tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="99.0885">dct:modified :Instant
+              [0..1]
+            </tspan>
+          </text>
+        </g>
+        <g id="Graphic_232">
+          <rect x="64.88518" y="110.51238" width="136.911" height="17.261063" fill="white"/>
+          <rect x="64.88518" y="110.51238" width="136.911" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(101.41318 113.51238)" fill="black">
+            <tspan font-family="Helvetica Neue" font-style="italic" font-weight="bold" font-size="9" fill="black" x="0"
+                   y="9">ec2u:Resource
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_230">
+        <line x1="133.34068" y1="323.1496" x2="133.34068" y2="262.873" marker-end="url(#UMLInheritance_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Line_229">
+        <path d="M 64.88518 205.58613 L 56.78518 205.58613 L 56.78518 349.7801 L 87.56868 349.7801"
+              marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width=".25"/>
+      </g>
+      <g id="Group_225">
+        <g id="Graphic_228">
+          <rect x="301.30303" y="358.41067" width="52.671" height="18" fill="white"/>
+          <rect x="301.30303" y="358.41067" width="52.671" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_227">
+          <rect x="301.30303" y="340.41067" width="52.671" height="18" fill="white"/>
+          <rect x="301.30303" y="340.41067" width="52.671" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_226">
+          <rect x="301.30303" y="323.1496" width="52.671" height="17.261063" fill="white"/>
+          <rect x="301.30303" y="323.1496" width="52.671" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(307.30303 326.1496)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">ec2u:Unit
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_221">
+        <g id="Graphic_224">
+          <rect x="384.2387" y="358.41067" width="66.18" height="18" fill="white"/>
+          <rect x="384.2387" y="358.41067" width="66.18" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_223">
+          <rect x="384.2387" y="340.41067" width="66.18" height="18" fill="white"/>
+          <rect x="384.2387" y="340.41067" width="66.18" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_222">
+          <rect x="384.2387" y="323.1496" width="66.18" height="17.261063" fill="white"/>
+          <rect x="384.2387" y="323.1496" width="66.18" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(390.2387 326.1496)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="14921397e-20" y="9">
+              ec2u:Course
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_220">
+        <path d="M 327.63853 323.1496 L 327.63853 288.1496 L 133.34068 288.1496 L 133.34068 262.873"
+              marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width=".25"/>
+      </g>
+      <g id="Line_219">
+        <path d="M 417.3287 323.1496 L 417.3287 288.1496 L 133.34068 288.1496 L 133.34068 262.873"
+              marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width=".25"/>
+      </g>
+      <g id="Group_215">
+        <g id="Graphic_218">
+          <rect x="480.6834" y="358.41067" width="59.358" height="18" fill="white"/>
+          <rect x="480.6834" y="358.41067" width="59.358" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_217">
+          <rect x="480.6834" y="340.41067" width="59.358" height="18" fill="white"/>
+          <rect x="480.6834" y="340.41067" width="59.358" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_216">
+          <rect x="480.6834" y="323.1496" width="59.358" height="17.261063" fill="white"/>
+          <rect x="480.6834" y="323.1496" width="59.358" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(486.6834 326.1496)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="8881784e-20" y="9">
+              ec2u:Event
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_214">
+        <path d="M 510.3624 323.1496 L 510.3624 288.1496 L 133.34068 288.1496 L 133.34068 262.873"
+              marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width=".25"/>
+      </g>
+      <g id="Group_210">
+        <g id="Graphic_213">
+          <rect x="480.6834" y="218.22687" width="78.186" height="18" fill="white"/>
+          <rect x="480.6834" y="218.22687" width="78.186" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_212">
+          <rect x="480.6834" y="155.92156" width="78.186" height="62.30531" fill="white"/>
+          <rect x="480.6834" y="155.92156" width="78.186" height="62.30531" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(486.6834 158.92156)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">ec2u:University</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">ec2u:College</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">ec2u:Association</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="42.78319">ec2u:City</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="54.04425">ec2u:Other</tspan>
+          </text>
+        </g>
+        <g id="Graphic_211">
+          <rect x="480.6834" y="127.4085" width="78.186" height="28.51306" fill="white"/>
+          <rect x="480.6834" y="127.4085" width="78.186" height="28.51306" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(487.5159 130.4085)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="3.0015" y="9">«enumeration»</tspan>
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="31974423e-20"
+                   y="20.252">ec2u:Coverage
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_206">
+        <g id="Graphic_209">
+          <rect x="301.30303" y="190.44823" width="75.495" height="18" fill="white"/>
+          <rect x="301.30303" y="190.44823" width="75.495" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_208">
+          <rect x="301.30303" y="172.44823" width="75.495" height="18" fill="white"/>
+          <rect x="301.30303" y="172.44823" width="75.495" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_207">
+          <rect x="301.30303" y="155.18717" width="75.495" height="17.261063" fill="white"/>
+          <rect x="301.30303" y="155.18717" width="75.495" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(307.30303 158.18717)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+              ec2u:Publisher
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_205">
+        <line x1="201.79618" y1="181.8177" x2="294.45303" y2="181.81767" marker-end="url(#StickArrow_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_204">
+        <rect x="211.49852" y="173.18715" width="79.68" height="17.261063" fill="white"/>
+        <text transform="translate(217.49852 176.18715)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="14921397e-20" y="9">dct:publisher 0..1
+          </tspan>
+        </text>
+      </g>
+      <g id="Line_203">
+        <line x1="376.79803" y1="181.8177" x2="473.8334" y2="181.81764" marker-end="url(#StickArrow_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_202">
+        <rect x="390.8748" y="173.18713" width="80.211" height="17.261063" fill="white"/>
+        <text transform="translate(396.8748 176.18713)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">dct:coverage 0..1</tspan>
+        </text>
+      </g>
+      <g id="Group_198">
+        <g id="Graphic_201">
+          <rect x="97.67218" y="12.583897" width="71.337" height="18" fill="white"/>
+          <rect x="97.67218" y="12.583897" width="71.337" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_200">
+          <rect x="97.67218" y="-5.416103" width="71.337" height="18" fill="white"/>
+          <rect x="97.67218" y="-5.416103" width="71.337" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_199">
+          <rect x="97.67218" y="-22.677166" width="71.337" height="17.261063" fill="white"/>
+          <rect x="97.67218" y="-22.677166" width="71.337" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(103.67218 -19.677166)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">skos:Concept
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_197">
+        <line x1="133.34068" y1="110.51238" x2="133.34068" y2="37.433897" marker-end="url(#StickArrow_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_196">
+        <rect x="98.00068" y="40.48606" width="70.68" height="28.522125" fill="white"/>
+        <text transform="translate(104.00068 43.48606)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="5.6655" y="9">dct:type 0..*</tspan>
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="14921397e-20" y="20.261063">dct:subject
+            0..*
+          </tspan>
+        </text>
+      </g>
+      <g id="Graphic_195">
+        <rect x="-1.4173228" y="339.1496" width="85.024" height="21.261063" fill="white"/>
+        <text transform="translate(3.582678 344.1496)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="632383e-18" y="9">ec2u:university 0..1
+          </tspan>
+        </text>
+      </g>
+      <g id="Group_191">
+        <g id="Graphic_194">
+          <rect x="202.52735" y="358.41067" width="68.511" height="18" fill="white"/>
+          <rect x="202.52735" y="358.41067" width="68.511" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_193">
+          <rect x="202.52735" y="340.41067" width="68.511" height="18" fill="white"/>
+          <rect x="202.52735" y="340.41067" width="68.511" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_192">
+          <rect x="202.52735" y="323.1496" width="68.511" height="17.261063" fill="white"/>
+          <rect x="202.52735" y="323.1496" width="68.511" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(208.52735 326.1496)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">ec2u:Dataset
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_190">
+        <path d="M 236.78285 323.1496 L 236.78285 288.1496 L 133.34068 288.1496 L 133.34068 262.873"
+              marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width=".25"/>
+      </g>
+      <g id="Group_186">
+        <g id="Graphic_189">
+          <rect x="29.963677" y="12.583897" width="53.643" height="18" fill="white"/>
+          <rect x="29.963677" y="12.583897" width="53.643" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_188">
+          <rect x="29.963677" y="-5.416103" width="53.643" height="18" fill="white"/>
+          <rect x="29.963677" y="-5.416103" width="53.643" height="18" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+        </g>
+        <g id="Graphic_187">
+          <rect x="29.963677" y="-22.677166" width="53.643" height="17.261063" fill="white"/>
+          <rect x="29.963677" y="-22.677166" width="53.643" height="17.261063" stroke="black" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(35.96368 -19.677166)" fill="black">
+            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="14210855e-21" y="9">
+              owl:Thing
+            </tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_185">
+        <path d="M 64.88518 158.04926 L 56.78518 158.04926 L 56.78518 37.433897" marker-end="url(#StickArrow_Marker)"
+              stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_184">
+        <rect x="18.191677" y="41.198576" width="77.187" height="17.261063" fill="white"/>
+        <text transform="translate(24.191675 44.198576)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="8668621e-19" y="9">owl:sameAs 0..*</tspan>
+        </text>
+      </g>
+      <g id="Group_182">
+        <g id="Graphic_183">
+          <a xl:href="https://www.w3.org/TR/xmlschema-2/#built-in-datatypes">
+            <text transform="translate(321.02338 58.62815)" fill="black">
+              <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;</tspan>
+            </text>
+          </a>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

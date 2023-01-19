@@ -5,6 +5,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
+</resources/> a ec2u:Dataset ;
+	dct:title "EC2U Resources"@en ;
+	dct:description "EC2U resource catalog."@en ;
+	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	void:rootResource ec2u:Resource .
+
+
+########################################################################################################################
 
 ec2u:Resource a owl:Class .
 

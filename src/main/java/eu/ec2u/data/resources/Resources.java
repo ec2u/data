@@ -46,6 +46,7 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.datasets.Datasets.documentation;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
@@ -53,7 +54,7 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public final class Resources extends Delegator {
 
-    private static final IRI Context=item("/");
+    private static final IRI Context=item("/resources/");
 
 
     public static final IRI Resource=EC2U.term("Resource");
@@ -155,7 +156,10 @@ public final class Resources extends Delegator {
             Stream
 
                     .of(
-                            rdf(Resources.class, ".ttl")
+                            rdf(Resources.class, ".ttl"),
+
+                            documentation(Resources.class, Context)
+
                     )
 
                     .forEach(new Upload()

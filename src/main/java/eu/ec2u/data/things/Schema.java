@@ -39,6 +39,7 @@ import static com.metreeca.link.shapes.Or.or;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.datasets.Datasets.documentation;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.multilingual;
 
@@ -317,7 +318,11 @@ public final class Schema {
             Stream
 
                     .of(
-                            rdf(Schema.class, ".ttl")
+
+                            rdf(Schema.class, ".ttl"),
+
+                            documentation(Schema.class, Context)
+
                     )
 
                     .forEach(new Upload()

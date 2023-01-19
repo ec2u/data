@@ -1,10 +1,4 @@
----
-title: Educational Offers
----
-
 The [EC2U Programs Dataset](http://data.ec2u.eu/programs/) and the [EC2U Courses Dataset](http://data.ec2u.eu/courses/) provides identifying and background information about degree and occupational programs, constituent and standalone courses and other educational opportunities offered at EC2U allied universities.
-
-![offer data model](index/offers.svg)
 
 # Model
 
@@ -49,11 +43,3 @@ A program offered by an institution which determines the learning progress to ac
 | [schema:assesses](https://schema.org/assesses)               | human-readable, localized description of expected competency or learning outcome |
 | [schema:coursePrerequisites](https://schema.org/coursePrerequisites) | human-readable, localized description of admission requirements |
 | [schema:competencyRequired](https://schema.org/competencyRequired) | human-readable, localized description of knowledge, skill, ability or personal attribute that must be demonstrated in order to earn related educational or occupational credentials (see below) |
-
-# Licensing
-
-> ❗️ To be confirmed.
-
-[EC2U Programs Dataset](https://data.ec2u.eu/programs/) © 2022-2023 by [EC2U Alliance](https://www.ec2u.eu/) is licensed under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
-
-[EC2U Courses Dataset](https://data.ec2u.eu/courses/) © 2022-2023 by [EC2U Alliance](https://www.ec2u.eu/) is licensed under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)

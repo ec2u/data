@@ -36,8 +36,7 @@ import java.util.stream.Stream;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Shape.required;
-import static com.metreeca.link.Values.IRIType;
-import static com.metreeca.link.Values.inverse;
+import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
@@ -46,6 +45,7 @@ import static com.metreeca.link.shapes.Link.link;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.datasets.Datasets.documentation;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 
@@ -141,7 +141,11 @@ public final class Universities extends Delegator {
             Stream
 
                     .of(
-                            rdf(Universities.class, ".ttl", EC2U.Base)
+
+                            rdf(Universities.class, ".ttl", EC2U.Base),
+
+                            documentation(Universities.class, Context)
+
                     )
 
                     .forEach(new Upload()
@@ -177,7 +181,7 @@ public final class Universities extends Delegator {
                     )
 
                     .sink(new WikidataMirror()
-                            .contexts(Context)
+                            .contexts(iri(Context, "/wikidata"))
                             .languages(Resources.Languages)
                     );
         }

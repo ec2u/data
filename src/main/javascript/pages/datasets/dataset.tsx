@@ -29,6 +29,8 @@ import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 
 export const Dataset=immutable({
@@ -46,7 +48,10 @@ export const Dataset=immutable({
     rights: optional(""),
     accessRights: optional({ "en": "" }),
 
-    entities: 0
+    entities: 0,
+
+    abstract: optional({ "en": "" }),
+    references: optional("")
 
 });
 
@@ -120,13 +125,19 @@ function DataDatasetInfo({
 
 function DataDatasetBody({
 
-    comment
+    label,
+    comment,
+    abstract,
+    references
 
 }: typeof Dataset) {
 
     return <DataCard>
 
         <p>{string(comment)}</p>
+
+        {references && <img alt={`${string(label)} Data Model`} src={references} style={{ maxWidth: "80%" }}/>}
+        {abstract && <ReactMarkdown remarkPlugins={[remarkGfm]}>{string(abstract)}</ReactMarkdown>} {/* !!! factor */}
 
     </DataCard>;
 

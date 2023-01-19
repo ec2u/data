@@ -1,17 +1,10 @@
----
-title: Datasets › Events
----
-
-The [EC2U Events Dataset](http://data.ec2u.eu/events/) dynamically collects information about local events at partner
-cities from local academic, public and commercial sources.
+Dynamically collects information about local events at partner cities from local academic, public and commercial sources.
 
 It is mainly intended to support event search on the [My Mobile Tutor](https://mmt.ec2u.eu) mobile app developed by WP2
 of the EC2U project under the cordination of the University of Turku, but can be searched and integrated by third-party
 tools as any other EC2U dataset.
 
 # Model
-
-![event data model](index/events.svg)
 
 EC2U events are described using a controlled subset of the [schema:Event](https://schema.org/Event) data model, with the
 following major deviations:

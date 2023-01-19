@@ -46,6 +46,7 @@ import static com.metreeca.link.shapes.Pattern.pattern;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.datasets.Datasets.documentation;
 import static eu.ec2u.data.resources.Resources.*;
 
 
@@ -222,7 +223,10 @@ public final class Offers extends Delegator {
             Stream
 
                     .of(
-                            rdf(Offers.class, ".ttl", EC2U.Base)
+
+                            rdf(Offers.class, ".ttl", EC2U.Base),
+
+                            documentation(Offers.class, Context)
 
                     )
 

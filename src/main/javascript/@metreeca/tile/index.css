@@ -140,7 +140,37 @@ dl {
 }
 
 
-/**** Tables *********************************************************************************************************/
+/**** Tables **********************************************************************************************************/
+
+table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 1.5em;
+    font-size: 90%;
+}
+
+tr:nth-child(odd) > td {
+    background-color: #FAFAFA;
+}
+
+tr > :last-child {
+    width: 100%;
+}
+
+th {
+    white-space: nowrap;
+    font-weight: 700;
+}
+
+th,
+td {
+    padding: 0.25em 0.5em;
+    text-align: start;
+    vertical-align: top;
+    border-bottom-style: solid;
+}
 
 
 /**** Forms **********************************************************************************************************/
@@ -223,9 +253,30 @@ p {
     margin-bottom: 1em;
 }
 
+blockquote {
+
+    padding: 0.5em;
+    margin-bottom: 1em;
+    background-color: #EEE;
+
+    & > p:only-child {
+        margin: 0;
+    }
+
+}
+
 hr {
     margin: 0.75em 0;
     border-bottom: solid 1px #CCC;
+}
+
+
+/**** Images **********************************************************************************************************/
+
+img {
+    display: block;
+    width: 100%;
+    margin: 0 auto 1em;
 }
 
 

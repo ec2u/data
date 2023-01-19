@@ -1,13 +1,4 @@
----
-title: Datasets › Universities
----
-
-The [EC2U Universities Dataset](http://data.ec2u.eu/universities/) provides identifying and background information about
-EC2U allied universities.
-
 # Model
-
-![university data model](index/universities.svg)
 
 EC2U allied universities are described using a controlled subset of
 the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with:
@@ -25,13 +16,6 @@ the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extend
 | ec2u:schac                                                   | the [SCHAC code](https://wiki.uni-foundation.eu/pages/viewpage.action?pageId=12746935) of the institution |
 | ec2u:image                                                   | the URL of a generic outdoor image                           |
 
-# Licensing
-
-> ❗️ To be confirmed.
-
-[EC2U Universities Dataset ](https://data.ec2u.eu/universities/)© 2022-2023 by [EC2U Alliance](https://www.ec2u.eu/) is
-licensed
-under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
 
 # Sources
 
