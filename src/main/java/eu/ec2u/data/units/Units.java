@@ -79,7 +79,7 @@ import static java.util.stream.Collectors.toList;
 public final class Units extends Delegator {
 
     public static final IRI Context=EC2U.item("/units/");
-    public static final IRI Scheme=iri(Concepts.Context, "/units-topics");
+    public static final IRI Scheme=iri(Concepts.Context, "/unit-topics");
 
     public static final IRI Unit=EC2U.term("Unit");
 
@@ -169,10 +169,6 @@ public final class Units extends Delegator {
         private static final Pattern URLPattern=Pattern.compile("^https?://\\S+$");
         private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
         private static final Pattern HeadPattern=Pattern.compile("([^,]?+)\\s*,\\s*([^(]?+)(?:\\s*\\(([^)]+)\\))?");
-
-        private static final Frame TopicsScheme=frame(Scheme)
-                .value(RDF.TYPE, SKOS.CONCEPT_SCHEME)
-                .value(RDFS.LABEL, literal("Research Unit Topics", "en"));
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -525,8 +521,7 @@ public final class Units extends Delegator {
 
                     .map(label -> frame(EC2U.item(Scheme, label.stringValue()))
                             .value(RDF.TYPE, SKOS.CONCEPT)
-                            .frame(SKOS.IN_SCHEME, TopicsScheme)
-                            .frame(SKOS.TOP_CONCEPT_OF, TopicsScheme)
+                            .value(SKOS.TOP_CONCEPT_OF, Scheme)
                             .value(SKOS.PREF_LABEL, label)
                     );
         }

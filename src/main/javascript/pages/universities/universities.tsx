@@ -15,6 +15,7 @@
  */
 
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
@@ -23,7 +24,7 @@ import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeRange } from "@metreeca/tile/lenses/range";
-import { Info, Landmark } from "@metreeca/tile/widgets/icon";
+import { Landmark } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
@@ -60,7 +61,7 @@ export const Universities=immutable({
 
 export function DataUniversities() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ /*".order": "label"*/ }, sessionStorage); // !!! broken multilingual sorting
 
 
@@ -69,7 +70,7 @@ export function DataUniversities() {
 
     return <DataPage item={string(Universities)}
 
-        menu={<a href={"/datasets/universities"}><Info/></a>}
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 

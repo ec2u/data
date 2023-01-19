@@ -167,6 +167,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             return frame(EC2U.item(Events.Scheme, category))
                     .value(RDF.TYPE, SKOS.CONCEPT)
+                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);
 

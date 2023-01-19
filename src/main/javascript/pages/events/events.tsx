@@ -16,6 +16,7 @@
 
 import { University } from "@ec2u/data/pages/universities/university";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
@@ -25,7 +26,7 @@ import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
 import { NodeRange } from "@metreeca/tile/lenses/range";
-import { Calendar, Info } from "@metreeca/tile/widgets/icon";
+import { Calendar } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
@@ -61,7 +62,7 @@ export const Events=immutable({
 
 export function DataEvents() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ ".order": ["startDate", "label"] }, sessionStorage);
 
 
@@ -70,7 +71,7 @@ export function DataEvents() {
 
     return <DataPage item={string(Events)}
 
-        menu={<a href={"/datasets/events"}><Info/></a>}
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 

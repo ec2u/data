@@ -15,6 +15,7 @@
  */
 
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage, ec2u } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
@@ -23,7 +24,7 @@ import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
-import { Info, Package } from "@metreeca/tile/widgets/icon";
+import { Package } from "@metreeca/tile/widgets/icon";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
@@ -58,7 +59,7 @@ export const Datasets=immutable({
 
 export function DataDatasets() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
 
     const [query, setQuery]=useQuery({
 
@@ -75,7 +76,7 @@ export function DataDatasets() {
 
         <DataPage item={string(Datasets)}
 
-            menu={<a href={"/datasets"}><Info/></a>}
+            menu={<DataMeta>{route}</DataMeta>}
 
             pane={<DataPane
 

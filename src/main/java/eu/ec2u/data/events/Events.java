@@ -63,7 +63,7 @@ import static java.util.stream.Collectors.toSet;
 public final class Events extends Delegator {
 
     public static final IRI Context=EC2U.item("/events/");
-    public static final IRI Scheme=iri(Concepts.Context, "/events-topics");
+    public static final IRI Scheme=iri(Concepts.Context, "/event-topics");
 
     public static final IRI Event=EC2U.term("Event");
 

@@ -11,6 +11,9 @@
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	void:rootResource ec2u:Event .
 
+</concepts/event-topics> a skos:ConceptScheme ;
+	dct:title "EC2U Local Event Topics"@en .
+
 
 ########################################################################################################################
 

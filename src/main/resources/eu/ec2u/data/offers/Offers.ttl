@@ -19,6 +19,10 @@
 	void:rootResource ec2u:Course.
 
 
+</concepts/offer-topics> a skos:ConceptScheme ;
+	dct:title "EC2U Educational Offer Topics"@en .
+
+
 ########################################################################################################################
 
 ec2u:Offer a owl:Class ;

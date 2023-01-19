@@ -177,6 +177,14 @@ data-page {
             max-width: 66rem;
         }
 
+        & > header {
+
+            & > nav {
+                transform: scale(0.75);
+            }
+
+        }
+
     }
 
 

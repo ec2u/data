@@ -36,9 +36,9 @@ insert {
 	{ select ?dataset (count(distinct ?entity) as ?entities) {
 
 		?dataset a ec2u:Dataset;
-			void:rootResource ?class.
+			void:rootResource ?class .
 
-		?entity a ec2u:Resource, ?class.
+		optional { ?entity a ?class }
 
 	} group by ?dataset }
 

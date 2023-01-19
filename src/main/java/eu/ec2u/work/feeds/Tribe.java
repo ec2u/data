@@ -243,6 +243,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             return frame(EC2U.item(Events.Scheme, self))
                     .value(RDF.TYPE, SKOS.CONCEPT)
+                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                     .value(RDFS.LABEL, name)
                     .value(SKOS.PREF_LABEL, name);
 

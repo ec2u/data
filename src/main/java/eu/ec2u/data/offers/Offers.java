@@ -52,7 +52,7 @@ import static eu.ec2u.data.resources.Resources.*;
 public final class Offers extends Delegator {
 
     public static final IRI Context=EC2U.item("/offers/");
-    public static final IRI Scheme=iri(Concepts.Context, "/offers-topics");
+    public static final IRI Scheme=iri(Concepts.Context, "/offer-topics");
 
     public static final IRI Programs=EC2U.item("/programs/");
     public static final IRI Courses=EC2U.item("/courses/");

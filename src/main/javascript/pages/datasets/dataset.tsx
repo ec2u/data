@@ -23,6 +23,7 @@ import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
+import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
@@ -90,13 +91,27 @@ export function DataDataset() {
 
 function DataDatasetInfo({
 
-    id
+    entities,
+
+    license,
+    rights
 
 }: typeof Dataset) {
 
     return <>
 
-        <DataInfo>{{}}</DataInfo>
+        <DataInfo>{{
+
+            "Entities": <span>{string(entities)}</span>
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
+            "License": <NodeLink>{license}</NodeLink>,
+            "Rights": <span>{rights}</span>
+
+        }}</DataInfo>
 
     </>;
 
@@ -104,23 +119,13 @@ function DataDatasetInfo({
 
 function DataDatasetBody({
 
-    id,
-    label,
-    comment,
-
-    license,
-    rights
+    comment
 
 }: typeof Dataset) {
 
     return <DataCard>
 
-        {string(comment)}
-
-        <h1>Licensing</h1>
-
-        <a href={id}>{string(label)} Dataset</a> {rights.replace(/^Copyright\s+/, "")}
-        is licensed under <a href={license.id}>{string(license)}</a>.
+        <p>{string(comment)}</p>
 
     </DataCard>;
 

@@ -19,6 +19,9 @@
 
     org:identifier "EC2U" .
 
+</concepts/unit-topics> a skos:ConceptScheme ;
+	dct:title "EC2U Research Unit Topics"@en .
+
 
 ########################################################################################################################
 
