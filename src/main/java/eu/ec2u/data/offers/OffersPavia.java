@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.courses;
+package eu.ec2u.data.offers;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -45,17 +45,17 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.courses.Courses.Course;
+import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.work.Work.localized;
 import static eu.ec2u.work.validation.Validators.validate;
 
-public final class CoursesPavia implements Runnable {
+public final class OffersPavia implements Runnable {
 
-    private static final IRI Context=iri(Courses.Context, "/pavia");
+    private static final IRI Context=iri(Offers.Courses, "/pavia");
 
 
     public static void main(final String... args) {
-        exec(() -> new CoursesPavia().run());
+        exec(() -> new OffersPavia().run());
     }
 
 
@@ -101,15 +101,14 @@ public final class CoursesPavia implements Runnable {
                 .batch(0)
 
                 .flatMap(model -> time(() -> frame(VIVO.Course, model)
-                                .frames(inverse(RDF.TYPE))
-                        ).apply((elapsed, stream) ->
-                                service(logger()).info(this, String.format("split in <%,d> ms", elapsed))
-                        )
-                );
+                        .frames(inverse(RDF.TYPE))
+                ).apply((elapsed, stream) ->
+                        service(logger()).info(this, String.format("split in <%,d> ms", elapsed))
+                ));
     }
 
     private Frame course(final Frame frame) {
-        return frame(item(Courses.Context, Pavia, frame.focus().stringValue()))
+        return frame(item(Offers.Courses, Pavia, frame.focus().stringValue()))
 
                 .values(RDF.TYPE, Course)
                 .value(Resources.university, Pavia.Id)
@@ -132,7 +131,7 @@ public final class CoursesPavia implements Runnable {
 
                 .integer(Schema.numberOfCredits, frame.value(VIVO.hasValue)
                         .flatMap(Values::integer)
-                        .map(Courses::ects)
+                        .map(Offers::ects)
                 )
 
                 .value(Schema.timeRequired, frame.value(seq(VIVO.dateTimeValue, RDFS.LABEL))

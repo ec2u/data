@@ -45,7 +45,7 @@
       </g>
     </marker>
   </defs>
-  <g id="units" stroke="none" fill="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
+  <g id="units" fill="none" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
     <title>units</title>
     <rect fill="white" x="281" y="75" width="764" height="448"/>
     <g id="units_Layer_1">

@@ -21,7 +21,7 @@ The following dataset are currently available:
 | [catalog](datasets/index.md)             | https://data.ec2u.eu/              | Dataset catalog                    |
 | [universities](datasets/universities.md) | https://data.ec2u.eu/universities/ | EC2U Alliance partner universities |
 | [units](datasets/units.md)               | https://data.ec2u.eu/units/        | Research units and facilities      |
-| [courses](datasets/courses.md)           | https://data.ec2u.eu/courses/      | Academic courses                   |
+| [courses](datasets/offers.md)           | https://data.ec2u.eu/courses/      | Academic courses                   |
 | [events](datasets/events.md)             | https://data.ec2u.eu/events/       | Academic and public local events   |
 | [actors](datasets/actors.md)             | https://data.ec2u.eu/actors/       | Knowledge ecosystem actors         |
 

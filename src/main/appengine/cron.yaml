@@ -34,12 +34,12 @@ cron:
     schedule: every day 00:00
 
 
-  - description: "courses › coimbra - nightly crawling"
-    url: /cron/courses/coimbra
+  - description: "offers › coimbra - nightly crawling"
+    url: /cron/offers/coimbra
     schedule: every day 00:00
 
-  - description: "courses › pavia - nightly crawling"
-    url: /cron/courses/pavia
+  - description: "offers › pavia - nightly crawling"
+    url: /cron/offers/pavia
     schedule: every day 00:00
 
 

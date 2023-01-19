@@ -26,7 +26,7 @@
       </g>
     </marker>
   </defs>
-  <g id="datasets" stroke="none" fill="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
+  <g id="datasets" fill="none" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
     <title>datasets</title>
     <rect fill="white" x="130" y="76" width="361" height="258"/>
     <g id="datasets_Layer_1">
@@ -138,28 +138,28 @@
       </g>
       <g id="Group_129">
         <g id="Graphic_132">
-          <rect x="292.54624" y="220.48337" width="144.039" height="18" fill="white"/>
-          <rect x="292.54624" y="220.48337" width="144.039" height="18" stroke="black" stroke-linecap="round"
+          <rect x="292.54624" y="220.48337" width="120.027" height="18" fill="white"/>
+          <rect x="292.54624" y="220.48337" width="120.027" height="18" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_131">
-          <rect x="292.54624" y="180.70018" width="144.039" height="39.78319" fill="white"/>
-          <rect x="292.54624" y="180.70018" width="144.039" height="39.78319" stroke="black" stroke-linecap="round"
+          <rect x="292.54624" y="180.70018" width="120.027" height="39.78319" fill="white"/>
+          <rect x="292.54624" y="180.70018" width="120.027" height="39.78319" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
           <text transform="translate(298.54624 183.70018)" fill="black">
             <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">dct:license :URI</tspan>
             <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">dct:rights :String</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">dct:accessRights
-              :Dictionary [0..1]
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">dct:accessRights :text
+              [0..1]
             </tspan>
           </text>
         </g>
         <g id="Graphic_130">
           <a xl:href="https://www.w3.org/TR/vocab-dcat-2/#Class:Dataset">
-            <rect x="292.54624" y="163.43912" width="144.039" height="17.261063" fill="white"/>
-            <rect x="292.54624" y="163.43912" width="144.039" height="17.261063" stroke="black" stroke-linecap="round"
+            <rect x="292.54624" y="163.43912" width="120.027" height="17.261063" fill="white"/>
+            <rect x="292.54624" y="163.43912" width="120.027" height="17.261063" stroke="black" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(337.14724 166.43912)" fill="black">
+            <text transform="translate(325.14124 166.43912)" fill="black">
               <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                 dcat:Dataset
               </tspan>

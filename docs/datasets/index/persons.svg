@@ -26,7 +26,7 @@
       </g>
     </marker>
   </defs>
-  <g id="persons" stroke="none" fill="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
+  <g id="persons" fill="none" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
     <title>persons</title>
     <rect fill="white" x="-49" y="45" width="320" height="191"/>
     <g id="persons_Layer_1">

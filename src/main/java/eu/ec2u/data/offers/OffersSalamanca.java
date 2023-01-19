@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.courses;
+package eu.ec2u.data.offers;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -45,17 +45,17 @@ import static com.metreeca.link.Values.literal;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Salamanca;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.courses.Courses.Course;
+import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
 
-public final class CoursesSalamanca implements Runnable {
+public final class OffersSalamanca implements Runnable {
 
-    private static final IRI Context=iri(Courses.Context, "/salamanca");
+    private static final IRI Context=iri(Offers.Courses, "/salamanca");
 
-    private static final String APIUrl="courses-salamanca-url";
+    private static final String APIUrl="offers-salamanca-url";
 
 
     private static final Map<String, Period> Durations=Map.ofEntries(
@@ -67,7 +67,7 @@ public final class CoursesSalamanca implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new CoursesSalamanca().run());
+        exec(() -> new OffersSalamanca().run());
     }
 
 
@@ -116,7 +116,7 @@ public final class CoursesSalamanca implements Runnable {
     }
 
     private Optional<Frame> course(final JSONPath json) {
-        return json.string("code").map(id -> frame(item(Courses.Context, Salamanca, id))
+        return json.string("code").map(id -> frame(item(Offers.Courses, Salamanca, id))
 
                 .values(RDF.TYPE, Course)
                 .value(Resources.university, Salamanca.Id)
@@ -131,7 +131,7 @@ public final class CoursesSalamanca implements Runnable {
                 .values(Schema.courseCode, literal(id))
 
                 .value(Schema.numberOfCredits, json.string("ects")
-                        .map(Courses::ects)
+                        .map(Offers::ects)
                         .map(Values::literal)
                 )
 

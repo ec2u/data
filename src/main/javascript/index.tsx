@@ -24,6 +24,8 @@ import { DataSets, Datasets } from "@ec2u/data/pages/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
 import DataNone from "@ec2u/data/pages/none";
+import { DataProgram, Program } from "@ec2u/data/pages/programs/program";
+import { DataPrograms, Programs } from "@ec2u/data/pages/programs/programs";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
@@ -73,6 +75,9 @@ render((
 
                     [Units.id]: DataUnits,
                     [Unit.id]: DataUnit,
+
+                    [Programs.id]: DataPrograms,
+                    [Program.id]: DataProgram,
 
                     [Courses.id]: DataCourses,
                     [Course.id]: DataCourse,

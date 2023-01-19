@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U academic programs and courses.
+ * EC2U educational offers.
  */
-package eu.ec2u.data.courses;
+package eu.ec2u.data.offers;

@@ -45,7 +45,7 @@
       </g>
     </marker>
   </defs>
-  <g id="concepts" stroke="none" fill="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
+  <g id="concepts" fill="none" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
     <title>concepts</title>
     <rect fill="white" x="425" y="313" width="466" height="445"/>
     <g id="concepts_Layer_1">
@@ -61,8 +61,8 @@
           <rect x="628.0124" y="612.5987" width="134.859" height="39.78319" stroke="black" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width=".25"/>
           <text transform="translate(634.0124 615.5987)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">skos:prefLabel :Dictionary</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">skos:altLabel :Dictionary
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">skos:prefLabel :text</tspan>
+            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">skos:altLabel :text
               [0..*]
             </tspan>
             <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">skos:definition :

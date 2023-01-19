@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Languages } from "@ec2u/data/languages";
-import { Courses, CoursesIcon } from "@ec2u/data/pages/courses/courses";
+import { CoursesIcon } from "@ec2u/data/pages/courses/courses";
+import { Programs } from "@ec2u/data/pages/programs/programs";
 import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
@@ -34,12 +34,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 
-export const Course=immutable({
+export const Program=immutable({
 
-    id: "/courses/{code}",
+    id: "/programs/{code}",
 
     image: "",
-    label: { "en": "Course" },
+    label: { "en": "Program" },
     comment: { "en": "" },
 
     university: {
@@ -47,13 +47,11 @@ export const Course=immutable({
         label: { "en": "" }
     },
 
+    identifier: optional(""),
     url: multiple(""),
 
-    courseCode: optional(""),
-    inLanguage: multiple(""),
-    learningResourceType: { "en": "" },
     numberOfCredits: optional(0.0),
-    timeRequired: optional(""),
+    timeToComplete: optional(""),
 
     educationalLevel: optional({
         id: "",
@@ -65,21 +63,17 @@ export const Course=immutable({
         label: { "en": "" }
     }),
 
-    teaches: { "en": "" },
-    assesses: { "en": "" },
-    coursePrerequisites: { "en": "" },
-    competencyRequired: { "en": "" },
     educationalCredentialAwarded: { "en": "" },
     occupationalCredentialAwarded: { "en": "" }
 
 });
 
 
-export function DataCourse() {
+export function DataProgram() {
 
     const [route, setRoute]=useRoute();
 
-    const entry=useEntry(route, Course);
+    const entry=useEntry(route, Program);
 
 
     useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
@@ -91,11 +85,11 @@ export function DataCourse() {
 
         pane={<DataPane
 
-            header={<DataBack>{Courses}</DataBack>}
+            header={<DataBack>{Programs}</DataBack>}
 
         >{entry({
 
-            value: event => <DataCourseInfo>{event}</DataCourseInfo>
+            value: event => <DataProgramInfo>{event}</DataProgramInfo>
 
         })}</DataPane>}
 
@@ -103,7 +97,7 @@ export function DataCourse() {
 
         fetch: <NodeHint>{CoursesIcon}</NodeHint>,
 
-        value: course => <DataCourseBody>{course}</DataCourseBody>,
+        value: course => <DataProgramBody>{course}</DataProgramBody>,
 
         error: error => <span>{error.status}</span> // !!! report
 
@@ -114,19 +108,18 @@ export function DataCourse() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function DataCourseInfo({
+function DataProgramInfo({
 
     children: {
 
         label,
         university,
 
+        identifier,
         url,
-        courseCode,
         educationalLevel,
-        inLanguage,
         numberOfCredits,
-        timeRequired,
+        timeToComplete,
         about,
 
         educationalCredentialAwarded,
@@ -136,7 +129,7 @@ function DataCourseInfo({
 
 }: {
 
-    children: typeof Course
+    children: typeof Program
 
 }) {
 
@@ -150,7 +143,7 @@ function DataCourseInfo({
 
         <DataInfo>{{
 
-            "Code": courseCode && <span>{courseCode}</span>,
+            "Code": identifier && <span>{identifier}</span>,
             "Name": <span>{string(label)}</span>
 
 
@@ -164,14 +157,8 @@ function DataCourseInfo({
             </>,
 
             "Level": educationalLevel && <span>{string(educationalLevel)}</span>,
-            "Language": inLanguage?.length && <ul>{inLanguage
-                .map(tag => string(Languages[tag]))
-                .filter(language => language)
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(language => <li key={language}>{language}</li>)
-            }</ul>,
             "Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-            "Duration": timeRequired && <span>{timeRequired}</span>  // !!! map to localized description
+            "Duration": timeToComplete && <span>{timeToComplete}</span>  // !!! map to localized description
 
         }}</DataInfo>
 
@@ -199,17 +186,12 @@ function DataCourseInfo({
     </>;
 }
 
-function DataCourseBody({
+function DataProgramBody({
 
     children: {
 
         comment,
 
-        teaches,
-        assesses,
-        coursePrerequisites,
-        learningResourceType,
-        competencyRequired,
         educationalCredentialAwarded,
         occupationalCredentialAwarded
 
@@ -217,18 +199,13 @@ function DataCourseBody({
 
 }: {
 
-    children: typeof Course
+    children: typeof Program
 
 }) {
 
     const description=string(comment);
 
     const details={
-        "General Objectives": string(teaches),
-        "Learning Objectives and Intended Skills": string(assesses),
-        "Admission Requirements": string(coursePrerequisites),
-        "Teaching Methods and Mode of Study": string(learningResourceType),
-        "Graduation Requirements": string(competencyRequired),
         "Educational Credential Awarded": string(educationalCredentialAwarded),
         "Occupational Credential Awarded": string(occupationalCredentialAwarded)
     };

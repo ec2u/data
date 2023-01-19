@@ -32,7 +32,7 @@
       </g>
     </marker>
   </defs>
-  <g id="resources" stroke="none" fill="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
+  <g id="resources" fill="none" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
     <title>resources</title>
     <rect fill="white" x="129" y="27" width="617" height="456"/>
     <g id="resources_Layer_1">
@@ -160,7 +160,7 @@
                 stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_21">
-          <a xl:href="courses.svg">
+          <a xl:href="offers.svg">
             <rect x="543.02036" y="401.10237" width="66.18" height="17.261063" fill="white"/>
             <rect x="543.02036" y="401.10237" width="66.18" height="17.261063" stroke="black" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width=".25"/>

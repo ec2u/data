@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.courses;
+package eu.ec2u.data.offers;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
@@ -48,27 +48,55 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Resources.*;
 
 
-public final class Courses extends Delegator {
+public final class Offers extends Delegator {
 
-    public static final IRI Context=EC2U.item("/courses/");
+    public static final IRI Context=EC2U.item("/offers/");
 
+    public static final IRI Programs=EC2U.item("/programs/");
+    public static final IRI Courses=EC2U.item("/courses/");
+
+    public static final IRI Offer=EC2U.term("Offer");
+    public static final IRI Program=EC2U.term("Program");
     public static final IRI Course=EC2U.term("Course");
 
 
-    public static Shape Course() {
+    public static Shape Offer() {
         return relate(Resource(), Schema.Thing(),
+
+                field(Schema.provider, optional(), Reference()),
+                field(Schema.educationalLevel, optional(), Reference()),
+                field(Schema.numberOfCredits, optional(), datatype(XSD.DECIMAL), minInclusive(literal(0))),
+
+                field(Schema.educationalCredentialAwarded, multilingual()),
+                field(Schema.occupationalCredentialAwarded, multilingual())
+
+        );
+    }
+
+    public static Shape Program() {
+        return relate(Offer(),
+
+                hidden(field(RDF.TYPE, all(Program))),
+
+                field(Schema.programType, optional(), Reference()),
+                field(Schema.occupationalCategory, optional(), Reference()),
+                field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
+
+                detail(
+                        field(Schema.programPrerequisites, multilingual())
+                )
+        );
+    }
+
+    public static Shape Course() {
+        return relate(Offer(),
 
                 hidden(field(RDF.TYPE, all(Course))),
 
-                field(Schema.provider, optional(), Reference()),
                 field(Schema.courseCode, optional(), datatype(XSD.STRING)),
-                field(Schema.educationalLevel, optional(), Reference()),
                 field(Schema.inLanguage, multiple(), datatype(XSD.STRING), pattern("[a-z]{2}")),
                 field(Schema.learningResourceType, multilingual()),
-                field(Schema.numberOfCredits, optional(), datatype(XSD.DECIMAL), minInclusive(literal(0))),
                 field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
-
-                field(Schema.about, optional(), Reference()),
 
                 detail(
 
@@ -76,10 +104,7 @@ public final class Courses extends Delegator {
                         field(Schema.assesses, multilingual()),
                         field(Schema.coursePrerequisites, multilingual()),
                         field(Schema.competencyRequired, multilingual())
-                ),
-
-                field(Schema.educationalCredentialAwarded, multilingual()),
-                field(Schema.occupationalCredentialAwarded, multilingual())
+                )
 
         );
     }
@@ -98,12 +123,12 @@ public final class Courses extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Courses() {
+    public Offers() {
         delegate(handler(
 
-                new Driver(Course(),
+                new Driver(Offer(),
 
-                        filter(clazz(Course))
+                        filter(clazz(Offer))
 
                 ),
 
@@ -123,6 +148,61 @@ public final class Courses extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static final class Programs extends Delegator {
+
+        public Programs() {
+            delegate(handler(
+
+                    new Driver(Program(),
+
+                            filter(clazz(Program))
+
+                    ),
+
+                    new Router()
+
+                            .path("/", new Router()
+                                    .get(new Relator())
+                            )
+
+                            .path("/{id}", new Router()
+                                    .get(new Relator())
+                            )
+
+            ));
+        }
+
+    }
+
+    public static final class Courses extends Delegator {
+
+        public Courses() {
+            delegate(handler(
+
+                    new Driver(Course(),
+
+                            filter(clazz(Course))
+
+                    ),
+
+                    new Router()
+
+                            .path("/", new Router()
+                                    .get(new Relator())
+                            )
+
+                            .path("/{id}", new Router()
+                                    .get(new Relator())
+                            )
+
+            ));
+        }
+
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static final class Loader implements Runnable {
 
         public static void main(final String... args) {
@@ -133,7 +213,7 @@ public final class Courses extends Delegator {
             Stream
 
                     .of(
-                            rdf(Courses.class, ".ttl", EC2U.Base)
+                            rdf(Offers.class, ".ttl", EC2U.Base)
 
                     )
 

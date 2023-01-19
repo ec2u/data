@@ -25,19 +25,19 @@ import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
 import { NodeRange } from "@metreeca/tile/lenses/range";
-import { BookOpen } from "@metreeca/tile/widgets/icon";
+import { GraduationCap } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
 
 
-export const CoursesIcon=<BookOpen/>;
+export const ProgramIcon=<GraduationCap/>;
 
-export const Courses=immutable({
+export const Programs=immutable({
 
-    id: "/courses/",
-    label: { "en": "Courses" },
+    id: "/programs/",
+    label: { "en": "Programs" },
 
     contains: multiple({
 
@@ -55,16 +55,16 @@ export const Courses=immutable({
 });
 
 
-export function DataCourses() {
+export function DataPrograms() {
 
     const [, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Courses) }); }, []);
+    useEffect(() => { setRoute({ label: string(Programs) }); }, []);
 
 
-    return <DataPage item={string(Courses)}
+    return <DataPage item={string(Programs)}
 
         pane={<DataPane
 
@@ -75,8 +75,7 @@ export function DataCourses() {
 
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
             <NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
-            <NodeOptions path={"inLanguage"} type={"string"} placeholder={"Language"} state={[query, setQuery]}/> {/* !!! labels */}
-            <NodeOptions path={"timeRequired"} type={"string"} placeholder={"Time Required"} state={[query, setQuery]}/>
+            <NodeOptions path={"timeToComplete"} type={"string"} placeholder={"Time to Complete"} state={[query, setQuery]}/>
             <NodeRange path={"numberOfCredits"} type={"decimal"} placeholder={"Credits"} state={[query, setQuery]}/>
             {/*<NodeOptions path={"educationalCredentialAwarded"} type={"anyURI"} placeholder={"Title Awarded"} state={[query, setQuery]}/>*/}
 
@@ -86,7 +85,7 @@ export function DataCourses() {
 
     >
 
-        <NodeItems model={Courses} placeholder={CoursesIcon} state={[query, setQuery]}>{({
+        <NodeItems model={Programs} placeholder={ProgramIcon} state={[query, setQuery]}>{({
 
             id,
 

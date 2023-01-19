@@ -30,9 +30,9 @@ import com.metreeca.rdf4j.services.Graph;
 import com.metreeca.rdf4j.services.GraphEngine;
 
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.events.Events;
+import eu.ec2u.data.offers.Offers;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
@@ -158,7 +158,9 @@ public final class Data implements Runnable {
                                         .path("/", new Datasets())
                                         .path("/universities/*", new Universities())
                                         .path("/units/*", new Units())
-                                        .path("/courses/*", new Courses())
+                                        .path("/offers/*", new Offers())
+                                        .path("/programs/*", new Offers.Programs())
+                                        .path("/courses/*", new Offers.Courses())
                                         .path("/persons/*", new Persons())
                                         .path("/events/*", new Events())
                                         .path("/concepts/*", new Concepts())

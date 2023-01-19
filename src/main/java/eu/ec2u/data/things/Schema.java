@@ -102,7 +102,8 @@ public final class Schema {
                 field(name, multilingual()),
                 field(image, multiple(), datatype(IRIType)),
                 field("fullDescription", Schema.description), // ;( prevent clashes with dct:description
-                field(disambiguatingDescription, multilingual())
+                field(disambiguatingDescription, multilingual()),
+                field(about, multiple(), Reference())
 
         );
     }
@@ -130,6 +131,20 @@ public final class Schema {
     //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI inLanguage=term("inLanguage");
+    public static final IRI numberOfCredits=term("numberOfCredits");
+    public static final IRI educationalCredentialAwarded=term("educationalCredentialAwarded");
+    public static final IRI occupationalCredentialAwarded=term("occupationalCredentialAwarded");
+    public static final IRI educationalLevel=term("educationalLevel");
+
+
+    //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI EducationalOccupationalProgram=term("EducationalOccupationalProgram");
+
+    public static final IRI programType=term("programType");
+    public static final IRI occupationalCategory=term("occupationalCategory");
+    public static final IRI timeToComplete=term("timeToComplete");
+    public static final IRI programPrerequisites=term("programPrerequisites");
 
 
     //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,9 +153,6 @@ public final class Schema {
 
     public static final IRI courseCode=term("courseCode");
     public static final IRI coursePrerequisites=term("coursePrerequisites");
-    public static final IRI educationalCredentialAwarded=term("educationalCredentialAwarded");
-    public static final IRI occupationalCredentialAwarded=term("occupationalCredentialAwarded");
-    public static final IRI numberOfCredits=term("numberOfCredits");
 
 
     //// Learning Resource /////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +161,6 @@ public final class Schema {
 
     public static final IRI assesses=term("assesses");
     public static final IRI competencyRequired=term("competencyRequired");
-    public static final IRI educationalLevel=term("educationalLevel");
     public static final IRI learningResourceType=term("learningResourceType");
     public static final IRI teaches=term("teaches");
 

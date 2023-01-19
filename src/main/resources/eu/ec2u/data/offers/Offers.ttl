@@ -4,9 +4,16 @@
 @prefix schema: <https://schema.org/> .
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
+</programs/> a ec2u:Dataset ;
+	dct:title "Programs"@en  ;
+	dct:description "EC2U degree and occupational programs."@en ;
+	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	void:rootResource ec2u:Program.
+
 </courses/> a ec2u:Dataset ;
 	dct:title "Courses"@en  ;
-	dct:description "EC2U academic programs and courses."@en ;
+	dct:description "EC2U academic and occupational courses."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	void:rootResource ec2u:Course.
@@ -14,17 +21,23 @@
 
 ########################################################################################################################
 
+ec2u:Offer a owl:Class ;
+	rdfs:subClassOf ec2u:Resource .
+
 ec2u:Program a owl:Class ;
-	rdfs:subClassOf ec2u:Resource, schema:EducationalOccupationalProgram.
+	rdfs:subClassOf ec2u:Offer, schema:EducationalOccupationalProgram .
 
 ec2u:Course a owl:Class ;
-	rdfs:subClassOf ec2u:Resource, schema:Course.
+	rdfs:subClassOf ec2u:Offer, schema:Course .
 
 schema:EducationalOccupationalProgram a owl:Class ;
 	rdfs:subClassOf schema:Thing .
 	
 schema:Course a owl:Class ;
 	rdfs:subClassOf schema:LearningResource .
+
+schema:CourseInstance a owl:Class ;
+	rdfs:subClassOf schema:Event .
 
 schema:LearningResource a owl:Class ;
 	rdfs:subClassOf schema:CreativeWork .

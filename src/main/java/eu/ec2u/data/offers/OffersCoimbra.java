@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.courses;
+package eu.ec2u.data.offers;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
@@ -57,19 +57,19 @@ import static com.metreeca.link.Values.literal;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Coimbra;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.courses.Courses.Course;
+import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
 
-public final class CoursesCoimbra implements Runnable {
+public final class OffersCoimbra implements Runnable {
 
-    private static final IRI Context=iri(Courses.Context, "/coimbra");
+    private static final IRI Context=iri(Offers.Courses, "/coimbra");
 
-    private static final String APIUrl="courses-coimbra-url";
-    private static final String APIId="courses-coimbra-id";
-    private static final String APIToken="courses-coimbra-token";
+    private static final String APIUrl="offers-coimbra-url";
+    private static final String APIId="offers-coimbra-id";
+    private static final String APIToken="offers-coimbra-token";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,20 +101,20 @@ public final class CoursesCoimbra implements Runnable {
     // ;( Java Duration natively supports only seconds
 
     private static final Map<String, Function<Integer, String>> ValueToDuration=Map.ofEntries(
-            entry("year", CoursesCoimbra::years),
-            entry("years", CoursesCoimbra::years),
-            entry("semester", CoursesCoimbra::semesters),
-            entry("semesters", CoursesCoimbra::semesters),
-            entry("trimester", CoursesCoimbra::trimesters),
-            entry("trimesters", CoursesCoimbra::trimesters),
-            entry("month", CoursesCoimbra::months),
-            entry("months", CoursesCoimbra::months),
-            entry("week", CoursesCoimbra::weeks),
-            entry("weeks", CoursesCoimbra::weeks),
-            entry("day", CoursesCoimbra::days),
-            entry("days", CoursesCoimbra::days),
-            entry("hour", CoursesCoimbra::hours),
-            entry("hours", CoursesCoimbra::hours)
+            entry("year", OffersCoimbra::years),
+            entry("years", OffersCoimbra::years),
+            entry("semester", OffersCoimbra::semesters),
+            entry("semesters", OffersCoimbra::semesters),
+            entry("trimester", OffersCoimbra::trimesters),
+            entry("trimesters", OffersCoimbra::trimesters),
+            entry("month", OffersCoimbra::months),
+            entry("months", OffersCoimbra::months),
+            entry("week", OffersCoimbra::weeks),
+            entry("weeks", OffersCoimbra::weeks),
+            entry("day", OffersCoimbra::days),
+            entry("days", OffersCoimbra::days),
+            entry("hour", OffersCoimbra::hours),
+            entry("hours", OffersCoimbra::hours)
     );
 
 
@@ -155,7 +155,7 @@ public final class CoursesCoimbra implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(final String... args) {
-        exec(() -> new CoursesCoimbra().run());
+        exec(() -> new OffersCoimbra().run());
     }
 
 
@@ -250,7 +250,7 @@ public final class CoursesCoimbra implements Runnable {
     }
 
     private Optional<Frame> course(final JSONPath json) {
-        return json.integer("cursoId").map(id -> frame(item(Courses.Context, Coimbra, String.valueOf(id)))
+        return json.integer("cursoId").map(id -> frame(item(Offers.Courses, Coimbra, String.valueOf(id)))
 
                 .values(RDF.TYPE, Course)
                 .value(Resources.university, Coimbra.Id)
@@ -283,7 +283,7 @@ public final class CoursesCoimbra implements Runnable {
                 )
 
                 .value(Schema.numberOfCredits, json.string("ects")
-                        .map(Courses::ects)
+                        .map(Offers::ects)
                         .map(Values::literal)
                 )
 
