@@ -31,7 +31,7 @@ and  [VoID](https://www.w3.org/TR/void/) data models.
 
 > ❗️ To be confirmed.
 
-[EC2U Catalog Dataset ](https://data.ec2u.eu/)© 2022 by [EC2U Alliance](https://www.ec2u.eu/) is licensed
+[EC2U Catalog Dataset ](https://data.ec2u.eu/)© 2022-2023 by [EC2U Alliance](https://www.ec2u.eu/) is licensed
 under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
 
 Individual datasets included in the catalog are licensed by their respective owners under the licensing terms specified
