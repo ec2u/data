@@ -47,10 +47,10 @@ export const Program=immutable({
         label: { "en": "" }
     },
 
-    provider: {
+    provider: optional({
         id: "",
         label: { "en": "" }
-    },
+    }),
 
     identifier: optional(""),
     url: multiple(""),
@@ -69,7 +69,12 @@ export const Program=immutable({
     }),
 
     educationalCredentialAwarded: { "en": "" },
-    occupationalCredentialAwarded: { "en": "" }
+    occupationalCredentialAwarded: { "en": "" },
+
+    hasCourse: multiple({
+        id: "",
+        label: { "en": "" }
+    })
 
 });
 
@@ -200,7 +205,9 @@ function DataProgramBody({
         comment,
 
         educationalCredentialAwarded,
-        occupationalCredentialAwarded
+        occupationalCredentialAwarded,
+
+        hasCourse
 
     }
 
@@ -238,6 +245,17 @@ function DataProgramBody({
             </Fragment>)
 
         }</dl>}
+
+        {hasCourse?.length && <>
+
+            <h1>Courses</h1>
+
+            <ul>{[...hasCourse]
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(course => <li key={course.id}><NodeLink>{course}</NodeLink></li>)
+            }</ul>
+
+        </>}
 
     </DataCard>;
 

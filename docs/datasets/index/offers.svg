@@ -396,8 +396,8 @@
               stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_338">
-        <rect x="-167.48745" y="912.7559" width="90.685" height="21.261063" fill="white"/>
-        <text transform="translate(-162.48745 917.7559)" fill="black">
+        <rect x="-167.82462" y="890.7671" width="90.685" height="21.261063" fill="white"/>
+        <text transform="translate(-162.82462 895.7671)" fill="black">
           <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="66080474e-20" y="9">schema:hasCourse *
           </tspan>
         </text>
@@ -508,7 +508,7 @@
         </g>
       </g>
       <g id="Line_412">
-        <path d="M -169.0615 782.4778 L -116.9615 782.4778 L -116.9615 862.5767 L 121.06119 862.5767"
+        <path d="M -169.0615 782.4778 L -81.96151 782.4778 L -81.96151 862.5767 L 121.06119 862.5767"
               marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
               stroke-width=".25"/>
       </g>
@@ -658,6 +658,12 @@
       <g id="Line_439">
         <line x1="-457.5564" y1="515.40944" x2="-457.5564" y2="481.18444" marker-end="url(#UMLInheritance_Marker)"
               stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_440">
+        <rect x="-161.6762" y="803.4564" width="55.522" height="21.261063" fill="white"/>
+        <text transform="translate(-156.6762 808.4564)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="42277293e-20" y="9">inProgram *</tspan>
+        </text>
       </g>
     </g>
   </g>

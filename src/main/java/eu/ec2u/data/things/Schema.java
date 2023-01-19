@@ -137,7 +137,7 @@ public final class Schema {
     public static final IRI educationalLevel=term("educationalLevel");
 
 
-    //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    //// Programs //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI EducationalOccupationalProgram=term("EducationalOccupationalProgram");
 
@@ -145,6 +145,7 @@ public final class Schema {
     public static final IRI occupationalCategory=term("occupationalCategory");
     public static final IRI timeToComplete=term("timeToComplete");
     public static final IRI programPrerequisites=term("programPrerequisites");
+    public static final IRI hasCourse=term("hasCourse");
 
 
     //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////

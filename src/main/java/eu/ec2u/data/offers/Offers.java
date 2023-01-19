@@ -35,8 +35,7 @@ import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.link.Values.*;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
 import static com.metreeca.link.shapes.Datatype.datatype;
@@ -83,10 +82,14 @@ public final class Offers extends Delegator {
 
                 field(Schema.programType, optional(), Reference()),
                 field(Schema.occupationalCategory, optional(), Reference()),
-                field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
+                field(Schema.timeToComplete, optional(), datatype(XSD.DURATION)),
 
                 detail(
-                        field(Schema.programPrerequisites, multilingual())
+
+                        field(Schema.programPrerequisites, multilingual()),
+
+                        field(Schema.hasCourse, multiple(), Reference())
+
                 )
         );
     }
@@ -106,7 +109,10 @@ public final class Offers extends Delegator {
                         field(Schema.teaches, multilingual()),
                         field(Schema.assesses, multilingual()),
                         field(Schema.coursePrerequisites, multilingual()),
-                        field(Schema.competencyRequired, multilingual())
+                        field(Schema.competencyRequired, multilingual()),
+
+                        field("inProgram", inverse(Schema.hasCourse), multiple(), Reference())
+
                 )
 
         );

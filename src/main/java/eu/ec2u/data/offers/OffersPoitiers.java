@@ -102,8 +102,8 @@ public final class OffersPoitiers implements Runnable {
 
                         Xtream.of(instant)
 
+                                .flatMap(this::programs)
                                 .flatMap(this::courses)
-                                .optMap(this::course)
 
                                 .pipe(courses -> validate(Course(), Set.of(Course), courses))
 
@@ -193,8 +193,8 @@ public final class OffersPoitiers implements Runnable {
                 .values(RDF.TYPE, Program)
                 .value(university, Poitiers.Id)
 
-                .value(Schema.name, json.string("name")
-                        .map(v -> literal(v, Poitiers.Language))
+                .value(Schema.name, json.string("name") // !!! code to rdfs:label
+                        .map(name -> literal(String.format("%s - %s", code, name), Poitiers.Language))
                 )
 
                 .values(Schema.identifier, literal(code))
@@ -225,104 +225,55 @@ public final class OffersPoitiers implements Runnable {
                         )
                 )
 
+                .values(Schema.hasCourse, json.entries("options.*.elemPedago.*")
+                        .map(entry -> item(Offers.Courses, Poitiers, entry.getKey()))
+                )
+
         );
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Xtream<Frame> courses(final JSONPath program) {
 
-    private Xtream<JSONPath> courses(final Instant synced) {
+        final Optional<IRI> provider=program.string("composante")
+                .map(name -> item(Organizations.Context, Poitiers, name));
 
-        //final String url=vault
-        //        .get(APIUrl)
-        //        .orElseThrow(() -> new IllegalStateException(format(
-        //                "undefined API URL <%s>", APIUrl
-        //        )));
-        //
-        //final String id=vault
-        //        .get(APIId)
-        //        .orElseThrow(() -> new IllegalStateException(format(
-        //                "undefined API ID <%s>", APIId
-        //        )));
-        //
-        //final String token=service(vault())
-        //        .get(APIToken)
-        //        .orElseThrow(() -> new IllegalStateException(format(
-        //                "undefined API key <%s>", APIToken
-        //        )));
+        final Optional<IRI> subject=program.string("discipline")
+                .map(name -> item(Offers.Scheme, Poitiers, name));
 
-        try ( final Reader reader=Resources.reader(this, ".json") ) {
+        final Optional<IRI> level=program.integer("levelISCED")
+                .map(BigInteger::intValue)
+                .map(ISCEDLevels::get);
 
-            return new JSONPath(JSON.json(reader)).paths("*");
 
-        } catch ( final IOException e ) {
+        return program.entries("options.*.elemPedago.*")
 
-            throw new UncheckedIOException(e);
+                .map(entry -> {
 
-        }
+                    final String code=entry.getKey();
+                    final JSONPath json=entry.getValue();
 
-        //return Xtream.of(synced)
-        //
-        //        .flatMap(new Fill<>()
-        //                .model(url+"/obtemCursosBloco")
-        //        )
-        //
-        //        .optMap(new Query(request -> request
-        //                .method(POST)
-        //                .header("Content-Type", "application/x-www-form-urlencoded")
-        //                .header("Accept", JSON.MIME)
-        //                .input(() -> new ByteArrayInputStream(query(Map.ofEntries(
-        //                        entry("applicationId", List.of(id)),
-        //                        entry("accessToken", List.of(token)),
-        //                        entry("anoLectivo", List.of("2022/2023")) // !!! dynamic
-        //                )).getBytes(StandardCharsets.UTF_8)))
-        //        ))
-        //
-        //        .optMap(new Fetch())
-        //        .optMap(new Parse<>(new JSON()))
-        //
-        //        .optMap(json -> {
-        //
-        //            if ( "SUCCESS".equals(json.asJsonObject().getString("status")) ) {
-        //
-        //                return Optional.of(json);
-        //
-        //            } else {
-        //
-        //                service(logger()).warning(this, json.toString());
-        //
-        //                return Optional.empty();
-        //
-        //            }
-        //        })
-        //
-        //        .map(JSONPath::new)
-        //        .flatMap(json -> json.paths("listaResultados.*"));
-    }
+                    return frame(item(Offers.Courses, Poitiers, code))
 
-    private Optional<Frame> course(final JSONPath json) {
+                            .values(RDF.TYPE, Course)
+                            .value(university, Poitiers.Id)
 
-        return Optional.empty();
+                            .value(Schema.name, json.string("name") // !!! code to rdfs:label
+                                    .map(name -> literal(String.format("%s - %s", code, name), Poitiers.Language))
+                            )
 
-        //return json.string("code").map(code -> frame(item(Offers.Courses, Poitiers, code))
-        //
-        //        .values(RDF.TYPE, Course)
-        //        .value(eu.ec2u.data.resources.Resources.university, Poitiers.Id)
-        //
-        //        .value(Schema.name, json.string("name")
-        //                .map(v -> literal(v, Poitiers.Language)))
-        //
-        //        .values(Schema.courseCode, literal(code))
-        //
-        //        .value(Schema.educationalLevel, json.string("levelISCED")
-        //                .map(ISCEDLevels::get)
-        //        )
-        //
-        //        .value(Schema.numberOfCredits, json.string("credits")
-        //                .map(Offers::ects)
-        //                .map(Values::literal)
-        //        )
-        //
-        //);
+                            .values(Schema.courseCode, literal(code))
+
+                            .value(Schema.educationalLevel, level)
+
+                            .value(Schema.numberOfCredits, json.string("credits")
+                                    .map(Offers::ects)
+                                    .map(Values::literal)
+                            )
+
+                            .value(Schema.provider, provider)
+                            .value(Schema.about, subject);
+
+                });
     }
 
 }

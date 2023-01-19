@@ -47,10 +47,10 @@ export const Course=immutable({
         label: { "en": "" }
     },
 
-    provider: {
+    provider: optional({
         id: "",
         label: { "en": "" }
-    },
+    }),
 
     url: multiple(""),
 
@@ -75,7 +75,12 @@ export const Course=immutable({
     coursePrerequisites: { "en": "" },
     competencyRequired: { "en": "" },
     educationalCredentialAwarded: { "en": "" },
-    occupationalCredentialAwarded: { "en": "" }
+    occupationalCredentialAwarded: { "en": "" },
+
+    inProgram: multiple({
+        id: "",
+        label: { "en": "" }
+    })
 
 });
 
@@ -136,7 +141,9 @@ function DataCourseInfo({
         about,
 
         educationalCredentialAwarded,
-        occupationalCredentialAwarded
+        occupationalCredentialAwarded,
+
+        inProgram
 
     }
 
@@ -151,7 +158,13 @@ function DataCourseInfo({
         <DataInfo>{{
 
             "University": <NodeLink>{university}</NodeLink>,
-            "Provider": <span>{string(provider)}</span>
+            "Provider": <span>{string(provider)}</span>,
+
+            "Programs": inProgram?.length && <ul>{[...inProgram]
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(program => <li key={program.id}><NodeLink>{program}</NodeLink></li>)
+            }</ul>
+
 
         }}</DataInfo>
 
@@ -219,7 +232,6 @@ function DataCourseBody({
         competencyRequired,
         educationalCredentialAwarded,
         occupationalCredentialAwarded
-
     }
 
 }: {
