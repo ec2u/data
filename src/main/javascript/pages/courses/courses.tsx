@@ -74,6 +74,7 @@ export function DataCourses() {
         >
 
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
+            <NodeOptions path={"provider"} type={"anyURI"} placeholder={"Provider"} state={[query, setQuery]}/>
             <NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
             <NodeOptions path={"inLanguage"} type={"string"} placeholder={"Language"} state={[query, setQuery]}/> {/* !!! labels */}
             <NodeOptions path={"timeRequired"} type={"string"} placeholder={"Time Required"} state={[query, setQuery]}/>

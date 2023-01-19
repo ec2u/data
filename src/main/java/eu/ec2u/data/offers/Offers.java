@@ -24,6 +24,7 @@ import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -34,6 +35,7 @@ import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.Values.literal;
 import static com.metreeca.link.shapes.All.all;
 import static com.metreeca.link.shapes.Clazz.clazz;
@@ -51,6 +53,7 @@ import static eu.ec2u.data.resources.Resources.*;
 public final class Offers extends Delegator {
 
     public static final IRI Context=EC2U.item("/offers/");
+    public static final IRI Scheme=iri(Concepts.Context, "/offers-topics");
 
     public static final IRI Programs=EC2U.item("/programs/");
     public static final IRI Courses=EC2U.item("/courses/");

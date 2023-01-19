@@ -47,6 +47,11 @@ export const Course=immutable({
         label: { "en": "" }
     },
 
+    provider: {
+        id: "",
+        label: { "en": "" }
+    },
+
     url: multiple(""),
 
     courseCode: optional(""),
@@ -120,6 +125,7 @@ function DataCourseInfo({
 
         label,
         university,
+        provider,
 
         url,
         courseCode,
@@ -144,7 +150,8 @@ function DataCourseInfo({
 
         <DataInfo>{{
 
-            "University": <NodeLink>{university}</NodeLink>
+            "University": <NodeLink>{university}</NodeLink>,
+            "Provider": <span>{string(provider)}</span>
 
         }}</DataInfo>
 

@@ -47,6 +47,11 @@ export const Program=immutable({
         label: { "en": "" }
     },
 
+    provider: {
+        id: "",
+        label: { "en": "" }
+    },
+
     identifier: optional(""),
     url: multiple(""),
 
@@ -114,6 +119,7 @@ function DataProgramInfo({
 
         label,
         university,
+        provider,
 
         identifier,
         url,
@@ -137,7 +143,8 @@ function DataProgramInfo({
 
         <DataInfo>{{
 
-            "University": <NodeLink>{university}</NodeLink>
+            "University": <NodeLink>{university}</NodeLink>,
+            "Provider": <span>{string(provider)}</span>
 
         }}</DataInfo>
 

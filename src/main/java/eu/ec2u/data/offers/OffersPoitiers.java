@@ -26,9 +26,10 @@ import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.concepts.ISCED2011;
+import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -47,6 +48,8 @@ import static eu.ec2u.data.EC2U.University.Poitiers;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.data.offers.Offers.Program;
+import static eu.ec2u.data.organizations.Organizations.Organization;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.util.Map.entry;
@@ -187,27 +190,40 @@ public final class OffersPoitiers implements Runnable {
     private Optional<Frame> program(final JSONPath json) {
         return json.string("code").map(code -> frame(item(Offers.Programs, Poitiers, code))
 
-                        .values(RDF.TYPE, Program)
-                        .value(eu.ec2u.data.resources.Resources.university, Poitiers.Id)
+                .values(RDF.TYPE, Program)
+                .value(university, Poitiers.Id)
 
-                        .value(Schema.name, json.string("name")
-                                .map(v -> literal(v, Poitiers.Language))
+                .value(Schema.name, json.string("name")
+                        .map(v -> literal(v, Poitiers.Language))
+                )
+
+                .values(Schema.identifier, literal(code))
+
+                .value(Schema.educationalLevel, json.integer("levelISCED")
+                        .map(BigInteger::intValue)
+                        .map(ISCEDLevels::get)
+                )
+
+                .value(Schema.numberOfCredits, json.decimal("credits")
+                        .map(Offers::ects)
+                        .map(Values::literal)
+                )
+
+                .frame(Schema.provider, json.string("composante")
+                        .map(name -> frame(item(Organizations.Context, Poitiers, name))
+                                .value(RDF.TYPE, Organization)
+                                .value(university, Poitiers.Id)
+                                .value(DCTERMS.TITLE, literal(name, Poitiers.Language))
                         )
+                )
 
-                        .values(Schema.identifier, literal(code))
-
-                        .value(Schema.educationalLevel, json.integer("levelISCED")
-                                .map(BigInteger::intValue)
-                                .map(ISCEDLevels::get)
+                .frame(Schema.about, json.string("discipline")
+                        .map(name -> frame(item(Offers.Scheme, Poitiers, name))
+                                .value(RDF.TYPE, SKOS.CONCEPT)
+                                .value(SKOS.TOP_CONCEPT_OF, Offers.Scheme)
+                                .value(SKOS.PREF_LABEL, literal(name, Poitiers.Language))
                         )
-
-                        .value(Schema.numberOfCredits, json.decimal("credits")
-                                .map(Offers::ects)
-                                .map(Values::literal)
-                        )
-
-                // !!! provider
-                // !!! subject
+                )
 
         );
     }

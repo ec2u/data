@@ -74,6 +74,7 @@ export function DataPrograms() {
         >
 
             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
+            <NodeOptions path={"provider"} type={"anyURI"} placeholder={"Provider"} state={[query, setQuery]}/>
             <NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
             <NodeOptions path={"timeToComplete"} type={"string"} placeholder={"Time to Complete"} state={[query, setQuery]}/>
             <NodeRange path={"numberOfCredits"} type={"decimal"} placeholder={"Credits"} state={[query, setQuery]}/>
