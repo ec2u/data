@@ -33,7 +33,7 @@ import * as React from "react";
 import { useEffect } from "react";
 
 
-export const SetsIcon=<Package/>;
+export const DatasetsIcon=<Package/>;
 
 export const Datasets=immutable({
 
@@ -58,7 +58,7 @@ export const Datasets=immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function DataSets() {
+export function DataDatasets() {
 
     const [route, setRoute]=useRoute();
 
@@ -96,7 +96,7 @@ export function DataSets() {
 
         >
 
-            <NodeItems model={Datasets} placeholder={SetsIcon} state={[query, setQuery]}>{({
+            <NodeItems model={Datasets} placeholder={DatasetsIcon} state={[query, setQuery]}>{({
 
                 id,
                 label,

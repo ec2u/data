@@ -20,7 +20,7 @@ import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
 import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { Course, DataCourse } from "@ec2u/data/pages/courses/course";
 import { Courses, DataCourses } from "@ec2u/data/pages/courses/courses";
-import { DataSets, Datasets } from "@ec2u/data/pages/datasets";
+import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
 import DataNone from "@ec2u/data/pages/none";
@@ -68,7 +68,7 @@ render((
 
                 <NodeRouter routes={{
 
-                    [Datasets.id]: DataSets,
+                    [Datasets.id]: DataDatasets,
 
                     [Universities.id]: DataUniversities,
                     [University.id]: DataUniversity,
