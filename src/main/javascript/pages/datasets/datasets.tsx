@@ -23,11 +23,9 @@ import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
-import { Package } from "@metreeca/tile/widgets/icon";
+import { Info, Package } from "@metreeca/tile/widgets/icon";
 import { NodeLink } from "@metreeca/tile/widgets/link";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useQuery } from "@metreeca/tool/hooks/query";
-import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
@@ -60,7 +58,7 @@ export const Datasets=immutable({
 
 export function DataDatasets() {
 
-    const [route, setRoute]=useRoute();
+    const [, setRoute]=useRoute();
 
     const [query, setQuery]=useQuery({
 
@@ -68,8 +66,6 @@ export function DataDatasets() {
         ".limit": 100
 
     }, sessionStorage);
-
-    const entry=useEntry(route, Datasets, query);
 
 
     useEffect(() => { setRoute({ label: string(Datasets) }); }, []);
@@ -79,7 +75,7 @@ export function DataDatasets() {
 
         <DataPage item={string(Datasets)}
 
-            menu={entry({ fetch: <NodeSpin/> })}
+            menu={<a href={"/datasets"}><Info/></a>}
 
             pane={<DataPane
 

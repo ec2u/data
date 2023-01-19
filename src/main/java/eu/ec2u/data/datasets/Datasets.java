@@ -70,7 +70,6 @@ public final class Datasets extends Delegator {
                 field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
                 field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
 
-                field(VOID.URI_SPACE, optional(), datatype(XSD.STRING)),
                 field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER))
 
         );

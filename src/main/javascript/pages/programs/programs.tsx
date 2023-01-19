@@ -25,7 +25,7 @@ import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
 import { NodeRange } from "@metreeca/tile/lenses/range";
-import { GraduationCap } from "@metreeca/tile/widgets/icon";
+import { GraduationCap, Info } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
@@ -65,6 +65,8 @@ export function DataPrograms() {
 
 
     return <DataPage item={string(Programs)}
+
+        menu={<a href={"/datasets/programs"}><Info/></a>}
 
         pane={<DataPane
 

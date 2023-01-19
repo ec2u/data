@@ -167,7 +167,9 @@ function DataUniversityInfo({
 
 function DataUniversityBody({
 
-    image, label, comment
+    image,
+    label,
+    comment
 
 }: typeof University) {
 

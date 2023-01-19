@@ -25,7 +25,7 @@ import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeOptions } from "@metreeca/tile/lenses/options";
 import { NodeRange } from "@metreeca/tile/lenses/range";
-import { Calendar } from "@metreeca/tile/widgets/icon";
+import { Calendar, Info } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
@@ -69,6 +69,8 @@ export function DataEvents() {
 
 
     return <DataPage item={string(Events)}
+
+        menu={<a href={"/datasets/events"}><Info/></a>}
 
         pane={<DataPane
 

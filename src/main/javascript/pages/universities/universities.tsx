@@ -23,7 +23,7 @@ import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
 import { NodeRange } from "@metreeca/tile/lenses/range";
-import { Landmark } from "@metreeca/tile/widgets/icon";
+import { Info, Landmark } from "@metreeca/tile/widgets/icon";
 import { useQuery } from "@metreeca/tool/hooks/query";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
@@ -68,6 +68,8 @@ export function DataUniversities() {
 
 
     return <DataPage item={string(Universities)}
+
+        menu={<a href={"/datasets/universities"}><Info/></a>}
 
         pane={<DataPane
 

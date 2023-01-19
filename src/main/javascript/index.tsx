@@ -20,6 +20,7 @@ import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
 import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { Course, DataCourse } from "@ec2u/data/pages/courses/course";
 import { Courses, DataCourses } from "@ec2u/data/pages/courses/courses";
+import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
@@ -69,6 +70,11 @@ render((
                 <NodeRouter routes={{
 
                     [Datasets.id]: DataDatasets,
+
+                    // !!! to be reviewed after metreeca/java supports resource access to collections
+
+                    [Dataset.id.replace(/\/[^/]*$/, "")]: DataDataset,
+                    [Dataset.id]: DataDataset,
 
                     [Universities.id]: DataUniversities,
                     [University.id]: DataUniversity,
