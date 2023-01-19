@@ -149,7 +149,7 @@ function DataProgramInfo({
         <DataInfo>{{
 
             "University": <NodeLink>{university}</NodeLink>,
-            "Provider": <span>{string(provider)}</span>
+            "Provider": provider && <span>{string(provider)}</span>
 
         }}</DataInfo>
 

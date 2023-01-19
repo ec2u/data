@@ -5,14 +5,14 @@
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
 </programs/> a ec2u:Dataset ;
-	dct:title "Programs"@en  ;
+	dct:title "EC2U Programs"@en  ;
 	dct:description "EC2U degree and occupational programs."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	void:rootResource ec2u:Program.
 
 </courses/> a ec2u:Dataset ;
-	dct:title "Courses"@en  ;
+	dct:title "EC2U Courses"@en  ;
 	dct:description "EC2U academic and occupational courses."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;

@@ -158,7 +158,7 @@ function DataCourseInfo({
         <DataInfo>{{
 
             "University": <NodeLink>{university}</NodeLink>,
-            "Provider": <span>{string(provider)}</span>,
+            "Provider": provider && <span>{string(provider)}</span>,
 
             "Programs": inProgram?.length && <ul>{[...inProgram]
                 .sort((x, y) => string(x).localeCompare(string(y)))

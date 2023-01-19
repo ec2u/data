@@ -41,11 +41,14 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
 import static com.metreeca.link.shapes.Guard.relate;
+import static com.metreeca.link.shapes.Pattern.pattern;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.multilingual;
+
+import static java.lang.String.format;
 
 public final class Datasets extends Delegator {
 
@@ -56,8 +59,6 @@ public final class Datasets extends Delegator {
 
     private static Shape Dataset() {
         return relate(Resource(),
-
-                filter(clazz(Dataset)),
 
                 field(RDFS.LABEL, multilingual()),
                 field(RDFS.COMMENT, multilingual()),
@@ -81,7 +82,14 @@ public final class Datasets extends Delegator {
     public Datasets() {
         delegate(handler(
 
-                new Driver(Dataset()),
+                new Driver(Dataset(),
+
+                        filter(
+                                clazz(Dataset),
+                                pattern(format("^%s\\w+/$", EC2U.Base)) // prevent self-inclusion
+                        )
+
+                ),
 
                 new Router()
 

@@ -5,8 +5,8 @@
 @prefix owl:	<http://www.w3.org/2002/07/owl#> .
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
-</datasets/> a ec2u:Dataset ;
-	dct:title "Datasets"@en ;
+</> a ec2u:Dataset ;
+	dct:title "EC2U Datasets"@en ;
 	dct:description "EC2U dataset catalog."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;

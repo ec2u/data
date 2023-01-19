@@ -9,7 +9,7 @@
 @prefix wdt:	<http://www.wikidata.org/prop/direct/> .
 
 </universities/> a ec2u:Dataset ;
-	dct:title "Universities"@en  ;
+	dct:title "EC2U Universities"@en  ;
 	dct:description "EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;

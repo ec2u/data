@@ -15,10 +15,10 @@
  */
 
 import { DataCard } from "@ec2u/data/tiles/card";
-import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPage, ec2u } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/link";
+import { optional, string } from "@metreeca/link";
 import { NodeCount } from "@metreeca/tile/lenses/count";
 import { NodeItems } from "@metreeca/tile/lenses/items";
 import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
@@ -38,14 +38,16 @@ export const SetsIcon=<Package/>;
 export const Datasets=immutable({
 
     id: "/",
-    label: "Knowledge Hub",
 
+    label: {
+        "en": "Knowledge Hub"
+    },
 
     contains: [{
 
         id: "",
-        label: "",
-        comment: "",
+        label: { en: "" },
+        comment: optional({ en: "" }),
 
         entities: ""
 
@@ -105,7 +107,7 @@ export function DataSets() {
 
                 <DataCard key={id} compact
 
-                    name={<NodeLink>{{ id, label }}</NodeLink>}
+                    name={<NodeLink>{{ id, label: ec2u(label) }}</NodeLink>}
 
                     tags={`${string(entities)} entities`}
 
