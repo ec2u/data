@@ -7,7 +7,6 @@
 </concepts/> a ec2u:Dataset ;
 	dct:title "EC2U Taxonomies"@en  ;
 	dct:description "EC2U shared classification taxonomies."@en ;
-	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	void:rootResource skos:ConceptScheme .
 

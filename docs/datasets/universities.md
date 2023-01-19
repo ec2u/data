@@ -3,13 +3,13 @@ title: Datasets › Universities
 ---
 
 The [EC2U Universities Dataset](http://data.ec2u.eu/universities/) provides identifying and background information about
-EC2U partner universities.
+EC2U allied universities.
 
 # Model
 
 ![university data model](index/universities.svg)
 
-EC2U partner universities are described using a controlled subset of
+EC2U allied universities are described using a controlled subset of
 the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with:
 
 * [SKOS](https://www.w3.org/TR/skos-primer/#seclabel) labels, as per *Organization Ontology* recommendations

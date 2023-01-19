@@ -8,7 +8,7 @@
 	dct:title "EC2U Actors"@en ;
 	dct:description "EC2U knowledge ecosystem actors."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-	dct:rights "Copyright © 2022-2023 EC2U Alliance";
+	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	void:rootResource ec2u:Actor .
 
 

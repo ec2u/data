@@ -41,6 +41,7 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
 import static com.metreeca.link.shapes.Guard.relate;
+import static com.metreeca.link.shapes.MinCount.minCount;
 import static com.metreeca.link.shapes.Pattern.pattern;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
@@ -63,7 +64,7 @@ public final class Datasets extends Delegator {
                 field(RDFS.LABEL, multilingual()),
                 field(RDFS.COMMENT, multilingual()),
 
-                field(DCTERMS.LICENSE, required(), datatype(IRIType),
+                field(DCTERMS.LICENSE, optional(), datatype(IRIType),
                         field(RDFS.LABEL, multilingual())
                 ),
 
@@ -85,7 +86,8 @@ public final class Datasets extends Delegator {
 
                         filter(
                                 clazz(Dataset),
-                                pattern(format("^%s\\w+/$", EC2U.Base)) // prevent self-inclusion
+                                pattern(format("^%s\\w+/$", EC2U.Base)), // prevent self-inclusion
+                                field(DCTERMS.LICENSE, minCount(1)) // only licensed datasets
                         )
 
                 ),

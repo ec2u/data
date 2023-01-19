@@ -20,6 +20,13 @@ import React, { createElement } from "react";
 import "./meta.css";
 
 
+// !!! to be reviewed after metreeca/java supports resource access to collections
+
+export function metadata(dataset: string) {
+    return dataset.replace(/^(\/\w+)?\/?/, "/datasets$1");
+}
+
+
 /**
  * Dataset metadata button.
  *
@@ -40,7 +47,7 @@ export function DataMeta({
 
 
     function doOpen() {
-        setRoute(children.replace(/^(\/\w+)?\/?/, "/datasets$1"));
+        setRoute(metadata(children));
     }
 
     return createElement("data-meta", {},

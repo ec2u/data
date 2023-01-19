@@ -21,7 +21,7 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/link";
+import { optional, string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
@@ -38,12 +38,13 @@ export const Dataset=immutable({
     label: { "en": "Dataset" },
     comment: { "en": "" },
 
-    license: {
+    license: optional({
         id: "",
         label: { "en": "" }
-    },
+    }),
 
-    rights: "",
+    rights: optional(""),
+    accessRights: optional({ "en": "" }),
 
     entities: 0
 
@@ -108,8 +109,8 @@ function DataDatasetInfo({
 
         <DataInfo>{{
 
-            "License": <NodeLink>{license}</NodeLink>,
-            "Rights": <span>{rights}</span>
+            "License": license && <NodeLink>{license}</NodeLink>,
+            "Rights": rights && <span>{rights}</span>
 
         }}</DataInfo>
 
