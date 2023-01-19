@@ -24,6 +24,8 @@ import com.metreeca.http.Request;
 import com.metreeca.http.handlers.*;
 import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
+import com.metreeca.jsonld.handlers.Driver;
+import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.rdf4j.handlers.Graphs;
 import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
@@ -37,6 +39,7 @@ import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -54,7 +57,10 @@ import static com.metreeca.http.Response.SeeOther;
 import static com.metreeca.http.services.Fetcher.fetcher;
 import static com.metreeca.jsonld.codecs.JSONLD.keywords;
 import static com.metreeca.jsonld.services.Engine.engine;
+import static com.metreeca.link.shapes.Link.link;
 import static com.metreeca.rdf4j.services.Graph.graph;
+
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
@@ -156,6 +162,19 @@ public final class Data implements Runnable {
                                 .path("/*", new Router()
 
                                         .path("/", new Datasets())
+
+                                        // !!! to be removed after metreeca/java supports resource access to collections
+
+                                        .path("/datasets", handler(
+                                                new Driver(link(OWL.SAMEAS, Dataset())),
+                                                new Router().get(new Relator())
+                                        ))
+
+                                        .path("/datasets/{id}", handler(
+                                                new Driver(link(OWL.SAMEAS, Dataset())),
+                                                new Router().get(new Relator())
+                                        ))
+
                                         .path("/universities/*", new Universities())
                                         .path("/units/*", new Units())
                                         .path("/offers/*", new Offers())

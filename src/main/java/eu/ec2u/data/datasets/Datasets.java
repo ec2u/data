@@ -57,7 +57,7 @@ public final class Datasets extends Delegator {
     public static final IRI Dataset=EC2U.term("Dataset");
 
 
-    private static Shape Dataset() {
+    public static Shape Dataset() { // !!! private
         return relate(Resource(),
 
                 field(RDFS.LABEL, multilingual()),

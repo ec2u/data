@@ -8,6 +8,23 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
 
+#### Compute Datasets Aliases ##########################################################################################
+
+# !!! to be removed after metreeca/java supports resource access to collections
+
+insert {
+
+	?alias owl:sameAs ?dataset
+
+} where {
+
+	?dataset a ec2u:Dataset .
+
+	bind(iri(replace(str(?dataset), "^https://data.ec2u.eu(/\\w+)?/$", "https://data.ec2u.eu/datasets$1" )) as ?alias)
+
+};
+
+
 #### Compute Datasets Size #############################################################################################
 
 insert {
