@@ -15,7 +15,7 @@
  */
 
 @import url("../index.css");
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&family=Roboto+Mono&family=Roboto:wght@300;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400&family=Roboto+Mono&family=Roboto:wght@300;500;700&display=swap");
 
 
 body {
@@ -26,7 +26,12 @@ body {
 
 h1, h2, h3,
 a, strong {
+    font-weight: 400;
     font-family: "Roboto Condensed", Helvetica, Arial, sans-serif;
+}
+
+dt {
+    font-weight: 400;
 }
 
 strong {
@@ -34,5 +39,6 @@ strong {
 }
 
 code {
+    font-size: 90%;
     font-family: "Roboto Mono", Courier, monospace;
 }

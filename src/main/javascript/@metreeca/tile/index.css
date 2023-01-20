@@ -113,6 +113,10 @@ ul, ol {
 
     }
 
+    & > li + li {
+        margin-top: 0.25em;
+    }
+
 }
 
 dl {
@@ -166,7 +170,7 @@ th {
 
 th,
 td {
-    padding: 0.25em 0.5em;
+    padding: 0.5em 0.5em;
     text-align: start;
     vertical-align: top;
     border-bottom-style: solid;
