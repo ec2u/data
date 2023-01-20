@@ -5,9 +5,11 @@
 
 </units/> a ec2u:Dataset ;
 	dct:title "EC2U Units"@en  ;
-	dct:description "EC2U research units and facilities."@en ;
+	dct:alternative "EC2U Research Units and Facilities"@en ;
+	dct:description "Identifying and background information about research and innovation units and supporting structures at EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	rdfs:isDefinedBy </datasets/units> ;
 	void:rootResource ec2u:Unit .
 
 <https://ec2u.eu/> a org:FormalOrganization ;

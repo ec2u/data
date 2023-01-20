@@ -1,18 +1,11 @@
----
-title: Datasets › Topics
----
-
 > ❗️Work in progress
-
-The [EC2U Concepts Dataset](http://data.ec2u.eu/concepts/) defines topic taxonomies and other schemes available for
-classifying [datasets](src/main/static/datasets/index.md) and [resources](rresources.md).
 
 [Concept schemes](https://www.w3.org/TR/skos-primer/) provides tree-like subject definitions supporting interactive
 resource searches and selective publishing use cases.
 
-# Model
+# Data Model
 
-![concept data model](src/main/static/datasets/index/concepts.svg)
+![concept data model](index/concepts.svg)
 
 EC2U concepts are described using a controlled subset of the [SKOS](https://www.w3.org/TR/skos-reference/) data model.
 

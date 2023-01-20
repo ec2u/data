@@ -1,19 +1,10 @@
----
-title: Schema.org Things
----
+The resource data model is *abstract*, that is is not intended to be used in isolation but only to provide a base definition factoring generic properties shared by the specialized models defined by each [dataset](./index.md).
 
-*Things* describe generic items of interest made available on the *EC2U Knowledge Hub* and described according to [schema.org](https://schema.org) vocabularies.
+# Data Model
 
-The resource data model is *abstract*, that is is not intended to be used in isolation but only to provide a base
-definition factoring generic properties shared by the specialized models defined by each [dataset](src/main/static/datasets/index.md).
+![thing data model](index/things.svg)
 
-# Model
-
-![thing data model](src/main/static/datasets/index/things.svg)
-
-EC2U things are described using a controlled subset of
-the  [schema.org](https://schema.org) data model, with the
-following major deviations:
+EC2U things are described using a controlled subset of the  [schema.org](https://schema.org) data model, with the following major deviations:
 
 * property types and cardinality are tightly specified and constrained
 

@@ -22,7 +22,7 @@ import "./path.css";
 
 
 /**
- * Breadcrumbs path.
+ * Creatse a breadcrumbs path component.
  */
 export function NodePath({
 

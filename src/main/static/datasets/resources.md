@@ -1,15 +1,8 @@
----
-title: Resources
----
+The resource data model is *abstract*, that is is not intended to be used in isolation but only to provide a base definition factoring generic properties shared by the specialized models defined by each [dataset](./index.md).
 
-*Resources* describe generic items of interest made available on the *EC2U Knowledge Hub*.
+# Data Model
 
-The resource data model is *abstract*, that is is not intended to be used in isolation but only to provide a base
-definition factoring generic properties shared by the specialized models defined by each [dataset](src/main/static/datasets/index.md).
-
-# Model
-
-![resource data model](src/main/static/datasets/index/resources.svg)
+![resource data model](index/resources.svg)
 
 EC2U resources are described using a controlled subset of
 the [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) data model.
@@ -31,7 +24,7 @@ languages.
 | [dct:modified](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/modified/) | the latest date on which the resource was changed            |
 | [dct:type](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/type/) | a link to a classification for the resource; must reference one the SKOS concepts managed by the *Knowledge Hub* |
 | [dct:subject](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/subject/) | a link to a topic for the resource; must reference one the SKOS [concepts](https://data.ec2u.eu/concepts/) managed by the *Knowledge Hub* |
-| ec2u:university                                              | a link to an EC2U partner [university](src/main/static/datasets/universities.md) associated with the resource |
+| ec2u:university                                              | a link to an EC2U partner [university](universities.md) associated with the resource |
 
 > ❓Replace `ec2u:university` with `dct:coverage` ?
 >

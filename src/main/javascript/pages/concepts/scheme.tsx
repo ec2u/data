@@ -35,7 +35,7 @@ export const Scheme=immutable({
 
     id: "/concepts/{scheme}",
 
-    label: { "en": "Concept Scheme" },
+    label: { "en": "Taxonomy" },
     comment: { "en": "" },
 
     hasTopConcept: multiple({

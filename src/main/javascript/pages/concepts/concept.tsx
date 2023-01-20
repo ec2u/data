@@ -35,7 +35,7 @@ import { useEffect } from "react";
 export const Concept=immutable({
 
     id: "/concepts/{scheme}/*",
-    label: { "en": "Concept Scheme" },
+    label: { "en": "COncept" },
     comment: { "en": "" },
 
     inScheme: {

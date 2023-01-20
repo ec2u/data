@@ -18,19 +18,18 @@ import { DatasetsIcon } from "@ec2u/data/pages/datasets/datasets";
 import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPage, ec2u } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
 import { optional, string } from "@metreeca/link";
 import { NodeHint } from "@metreeca/tile/widgets/hint";
 import { NodeLink } from "@metreeca/tile/widgets/link";
+import { NodeMark } from "@metreeca/tile/widgets/mark";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 
 export const Dataset=immutable({
@@ -38,7 +37,11 @@ export const Dataset=immutable({
     id: "/datasets/{code}",
 
     label: { "en": "Dataset" },
-    comment: { "en": "" },
+    comment: optional({ "en": "" }),
+
+    title: { "en": "Dataset" },
+    alternative: optional({ "en": "" }),
+    description: optional({ "en": "" }),
 
     license: optional({
         id: "",
@@ -48,10 +51,9 @@ export const Dataset=immutable({
     rights: optional(""),
     accessRights: optional({ "en": "" }),
 
-    entities: 0,
+    isDefinedBy: optional(""),
 
-    abstract: optional({ "en": "" }),
-    references: optional("")
+    entities: 0
 
 });
 
@@ -63,16 +65,16 @@ export function DataDataset() {
     const entry=useEntry(route, Dataset);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
+    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(ec2u(label)) }) }));
 
 
-    return <DataPage item={entry({ value: string })}
+    return <DataPage item={entry({ value: ({ title, alternative }) => string(alternative || title) })}
 
         menu={entry({ fetch: <NodeSpin/> })}
 
         pane={<DataPane
 
-            header={<DataBack>{{ id: "/datasets", label: "Datasets" }}</DataBack>}
+            header={entry({ value: ({ id, label }) => <DataBack>{{ id, label: ec2u(label) }}</DataBack> })}
 
         >{entry({
 
@@ -125,19 +127,15 @@ function DataDatasetInfo({
 
 function DataDatasetBody({
 
-    label,
-    comment,
-    abstract,
-    references
+    description,
+    isDefinedBy
 
 }: typeof Dataset) {
 
     return <DataCard>
 
-        <p>{string(comment)}</p>
-
-        {references && <img alt={`${string(label)} Data Model`} src={references} style={{ maxWidth: "80%" }}/>}
-        {abstract && <ReactMarkdown remarkPlugins={[remarkGfm]}>{string(abstract)}</ReactMarkdown>} {/* !!! factor */}
+        {description && <NodeMark>{string(description)}</NodeMark>}
+        {isDefinedBy && <NodeMark>{isDefinedBy}</NodeMark>}
 
     </DataCard>;
 

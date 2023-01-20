@@ -7,9 +7,9 @@ title: Datasets › Persons
 The [EC2U Persons Dataset](http://data.ec2u.eu/persons/) provides identifying and background information about academic
 and research staff at EC2U partner universities.
 
-# Model
+# Data Model
 
-![person data model](src/main/static/datasets/index/persons.svg)
+![person data model](index/persons.svg)
 
 EC2U staff are described using a controlled subset of the [FOAF](http://xmlns.com/foaf/spec/) data model, extended with:
 

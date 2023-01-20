@@ -6,9 +6,11 @@
 
 </events/> a ec2u:Dataset ;
 	dct:title "EC2U Events"@en ;
-	dct:description "EC2U academic and public local events."@en ;
+	dct:alternative "EC2U Academic and Public Local Events"@en ;
+	dct:description "Information about events at EC2U allied universities and associated local communities, dynamically collected from academic, public and commercial sources."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	rdfs:isDefinedBy </datasets/events> ;
 	void:rootResource ec2u:Event .
 
 </concepts/event-topics> a skos:ConceptScheme ;

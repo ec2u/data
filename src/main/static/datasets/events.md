@@ -1,17 +1,8 @@
----
-title: Datasets › Events
----
+This dataset is mainly intended to support event search on the [My Mobile Tutor](https://mmt.ec2u.eu) mobile app developed by WP2 of the EC2U project under the coordination of the University of Turku, but can be searched and integrated by third-party tools as any other EC2U dataset.
 
-The [EC2U Events Dataset](http://data.ec2u.eu/events/) dynamically collects information about local events at partner
-cities from local academic, public and commercial sources.
+# Data Model
 
-It is mainly intended to support event search on the [My Mobile Tutor](https://mmt.ec2u.eu) mobile app developed by WP2
-of the EC2U project under the cordination of the University of Turku, but can be searched and integrated by third-party
-tools as any other EC2U dataset.
-
-# Model
-
-![event data model](src/main/static/datasets/index/events.svg)
+![event data model](index/events.svg)
 
 EC2U events are described using a controlled subset of the [schema:Event](https://schema.org/Event) data model, with the
 following major deviations:
@@ -26,7 +17,7 @@ The following properties are strongly suggested as a minimal description for eve
 | property                                     | description          | notes                                                        |
 | -------------------------------------------- | -------------------- | ------------------------------------------------------------ |
 | all [ec2u:Resource](/datasets/resources) properties | inherited properties |                                                              |
-| all [schema:Thing](src/main/static/datasets/things.md) properties     | inherited properties |                                                              |
+| all [schema:Thing](things.md) properties     | inherited properties |                                                              |
 | `schema:startDate`                           | start date/time      | ISO 8601 offset format (`yyyy-MM-ddThh:mm:ss+hh:mm`) strongly suggested; other formats will be automatically converted assuming the local time zone of  the publishing university; missing time is normalized to `00:00:00` |
 | `schema:endDate`                             | end date/time        | ISO 8601 offset format (`yyyy-MM-ddThh:mm:ss+hh:mm`) strongly suggested; other formats will be automatically converted assuming the local time zone of  the publishing university; missing time is normalized to `00:00:00` |
 | `schema:location`                            | location             | reference to a location described with a least a name        |

@@ -45,7 +45,6 @@ import static com.metreeca.link.shapes.Link.link;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.Datasets.documentation;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 
@@ -140,13 +139,7 @@ public final class Universities extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(
-
-                            rdf(Universities.class, ".ttl", EC2U.Base),
-
-                            documentation(Universities.class, Context)
-
-                    )
+                    .of(rdf(Universities.class, ".ttl", EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

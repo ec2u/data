@@ -67,7 +67,6 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
-import static eu.ec2u.data.datasets.Datasets.documentation;
 import static eu.ec2u.data.resources.Resources.*;
 
 import static java.lang.String.format;
@@ -143,13 +142,7 @@ public final class Units extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(
-
-                            rdf(Units.class, ".ttl", Base),
-
-                            documentation(Units.class, Context)
-
-                    )
+                    .of(rdf(Units.class, ".ttl", Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

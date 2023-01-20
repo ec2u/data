@@ -39,7 +39,6 @@ import static com.metreeca.link.shapes.Or.or;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.Datasets.documentation;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.multilingual;
 
@@ -305,7 +304,6 @@ public final class Schema {
     private Schema() { }
 
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
@@ -317,13 +315,7 @@ public final class Schema {
         @Override public void run() {
             Stream
 
-                    .of(
-
-                            rdf(Schema.class, ".ttl"),
-
-                            documentation(Schema.class, Context)
-
-                    )
+                    .of(rdf(Schema.class, ".ttl", EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

@@ -55,7 +55,6 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.Datasets.documentation;
 import static eu.ec2u.data.resources.Resources.Resource;
 
 import static java.lang.String.format;
@@ -152,13 +151,7 @@ public final class Events extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(
-
-                            rdf(Events.class, ".ttl", EC2U.Base),
-
-                            documentation(Events.class, Context)
-
-                    )
+                    .of(rdf(Events.class, ".ttl", EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

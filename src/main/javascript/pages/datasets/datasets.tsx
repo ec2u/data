@@ -48,6 +48,9 @@ export const Datasets=immutable({
         label: { en: "" },
         comment: optional({ en: "" }),
 
+        alternative: optional({ en: "" }),
+        description: optional({ en: "" }),
+
         entities: ""
 
     }]
@@ -98,6 +101,9 @@ export function DataDatasets() {
                 id,
                 label,
                 comment,
+
+                alternative,
+
                 entities
 
             }) =>
@@ -110,7 +116,7 @@ export function DataDatasets() {
 
                 >{
 
-                    string(comment)
+                    string(alternative || comment)
 
                 }</DataCard>
 

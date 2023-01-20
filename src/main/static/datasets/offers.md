@@ -1,12 +1,6 @@
----
-title: Educational Offers
----
+# Data Model
 
-The [EC2U Programs Dataset](http://data.ec2u.eu/programs/) and the [EC2U Courses Dataset](http://data.ec2u.eu/courses/) provides identifying and background information about degree and occupational programs, constituent and standalone courses and other educational opportunities offered at EC2U allied universities.
-
-![offer data model](src/main/static/datasets/index/offers.svg)
-
-# Model
+![offer data model](index/offers.svg)
 
 EC2U courses are described using a controlled subset of the [schema:EducationalOccupationalProgram](https://schema.org/EducationalOccupationalProgram) and  [schema:Course](https://schema.org/Course) data models.
 
@@ -17,9 +11,9 @@ An educational offer.
 | property                                                     | description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | all [ec2u:Resource](/datasets/resources) properties                 | inherited properties                                         |
-| all [schema:Thing](src/main/static/datasets/things.md) properties                     | inherited properties                                         |
+| all [schema:Thing](things.md) properties                     | inherited properties                                         |
 | [schema:provider](https://schema.org/provider)               | link to the provider                                         |
-| [schema:educationalLevel](https://schema.org/educationalLevel) | link to a 1-digit [ISCED 2011](http://uis.unesco.org/en/topic/international-standard-classification-education-isced) education level in the `https://data.ec2u.eu/concepts/isced-2011/` [concept](src/main/static/datasets/concepts.md) scheme |
+| [schema:educationalLevel](https://schema.org/educationalLevel) | link to a 1-digit [ISCED 2011](http://uis.unesco.org/en/topic/international-standard-classification-education-isced) education level in the `https://data.ec2u.eu/concepts/isced-2011/` [concept](concepts.md) scheme |
 | [schema:numberOfCredits](https://schema.org/numberOfCredits) | number of [European Credit Transfer and Accumulation System (ECTS)](https://education.ec.europa.eu/education-levels/higher-education/inclusive-and-connected-higher-education/european-credit-transfer-and-accumulation-system) credits required to complete the program |
 | [schema:educationalCredentialAwarded](https://schema.org/educationalCredentialAwarded) | human-readable, localized description of the qualification, award, certificate, diploma or other educational credential awarded as a consequence of successful completion |
 
@@ -30,8 +24,8 @@ A program offered by an institution which determines the learning progress to ac
 | property                                                     | description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | all [ec2u:Offer](#ec2u-offer) properties                     | inherited properties                                         |
-| [schema:programType](https://schema.org/programType)         | link to a [TBD] program type in the `https://data.ec2u.eu/concepts/???/` [concept](src/main/static/datasets/concepts.md) scheme |
-| [schema:occupationalCategory](https://schema.org/occupationalCategory) | link to an ESCO occupation category in the `https://data.ec2u.eu/concepts/esco/` [concept](src/main/static/datasets/concepts.md) scheme |
+| [schema:programType](https://schema.org/programType)         | link to a [TBD] program type in the `https://data.ec2u.eu/concepts/???/` [concept](concepts.md) scheme |
+| [schema:occupationalCategory](https://schema.org/occupationalCategory) | link to an ESCO occupation category in the `https://data.ec2u.eu/concepts/esco/` [concept](concepts.md) scheme |
 | [schema:timeToComplete](https://schema.org/timeToComplete)   | the expected length of time to complete the program if attending full-time, as a [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) value (e.g. `P6M` for 6 months or `PT120H` for 120 hours) |
 | [schema:programPrerequisites](https://schema.org/programPrerequisites) | human-readable, localized description of enrolment requirements |
 | [schema:hasCourse](https://schema.org/hasCourse)             | link to the courses that are part of the program             |
@@ -49,11 +43,3 @@ A program offered by an institution which determines the learning progress to ac
 | [schema:assesses](https://schema.org/assesses)               | human-readable, localized description of expected competency or learning outcome |
 | [schema:coursePrerequisites](https://schema.org/coursePrerequisites) | human-readable, localized description of admission requirements |
 | [schema:competencyRequired](https://schema.org/competencyRequired) | human-readable, localized description of knowledge, skill, ability or personal attribute that must be demonstrated in order to earn related educational or occupational credentials (see below) |
-
-# Licensing
-
-> ❗️ To be confirmed.
-
-[EC2U Programs Dataset](https://data.ec2u.eu/programs/) © 2022-2023 by [EC2U Alliance](https://www.ec2u.eu/) is licensed under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
-
-[EC2U Courses Dataset](https://data.ec2u.eu/courses/) © 2022-2023 by [EC2U Alliance](https://www.ec2u.eu/) is licensed under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)

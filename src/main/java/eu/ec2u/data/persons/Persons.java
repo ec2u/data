@@ -98,9 +98,7 @@ public final class Persons extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(
-                            rdf(Persons.class, ".ttl", EC2U.Base)
-                    )
+                    .of(rdf(Persons.class, ".ttl", EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

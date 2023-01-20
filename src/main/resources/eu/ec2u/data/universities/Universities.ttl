@@ -10,9 +10,11 @@
 
 </universities/> a ec2u:Dataset ;
 	dct:title "EC2U Universities"@en  ;
+	dct:alternative "EC2U Allied Universities"@en ;
 	dct:description "Identifying and background information about EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	rdfs:isDefinedBy </datasets/universities> ;
 	void:rootResource ec2u:University .
 
 

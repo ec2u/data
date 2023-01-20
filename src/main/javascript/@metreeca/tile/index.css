@@ -307,6 +307,10 @@ a, a:visited {
 
 }
 
+em {
+    font-style: italic;
+}
+
 small {
     font-size: 90%;
     color: var(--node--color-light);

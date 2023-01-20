@@ -44,7 +44,6 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.*;
-import static eu.ec2u.data.datasets.Datasets.documentation;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -102,11 +101,7 @@ public final class Actors implements Runnable {
         return Stream
 
                 .of(
-
-                        rdf(Actors.class, ".ttl", EC2U.Base),
-
-                        documentation(Actors.class, Context)
-
+                        rdf(Actors.class, ".ttl", EC2U.Base)
                 )
 
                 .flatMap(Collection::stream);

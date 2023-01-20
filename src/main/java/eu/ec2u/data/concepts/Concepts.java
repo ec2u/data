@@ -46,7 +46,6 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.datasets.Datasets.documentation;
 import static eu.ec2u.data.resources.Resources.Languages;
 import static eu.ec2u.data.resources.Resources.*;
 
@@ -144,9 +143,7 @@ public final class Concepts extends Delegator {
 
                             rdf(Concepts.class, ".ttl", EC2U.Base),
 
-                            skos(rdf("https://www.w3.org/2009/08/skos-reference/skos.rdf")),
-
-                            documentation(Concepts.class, Context)
+                            skos(rdf("https://www.w3.org/2009/08/skos-reference/skos.rdf"))
 
                     )
 

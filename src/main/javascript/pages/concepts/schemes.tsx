@@ -35,7 +35,7 @@ export const SchemesIcon=<GraduationCap/>;
 export const Schemes=immutable({
 
     id: "/concepts/",
-    label: { "en": "Concept Schemes" },
+    label: { "en": "Taxonomies" },
 
     contains: multiple({
 

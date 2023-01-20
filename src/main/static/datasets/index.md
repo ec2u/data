@@ -1,20 +1,13 @@
----
-title: Datasets › Catalog
----
-
-The [EC2U Dataset Catalog](https://data.ec2u.eu/) provides a searchable catalog of datasets made available on the *EC2U
-Knowledge Hub*. Catalog entries include human and machine-readable dataset descriptions and basic information about
+Catalog entries include human and machine-readable dataset descriptions and basic information about
 license and access rights for partners and other stakeholders.
 
 External supporting datasets may also be listed in the catalog for reference and ease of access.
 
-# Model
+# Data Model
 
-![dataset data model](src/main/static/datasets/index/datasets.svg)
+![dataset data model](../datasets/index/datasets.svg)
 
-EC2U datasets are described using a controlled subset
-of [Data Catalog Vocabulary (DCAT) - Version 2](https://www.w3.org/TR/vocab-dcat-2/)
-and  [VoID](https://www.w3.org/TR/void/) data models.
+EC2U datasets are described using a controlled subset of [Data Catalog Vocabulary (DCAT) - Version 2](https://www.w3.org/TR/vocab-dcat-2/) and  [VoID](https://www.w3.org/TR/void/) data models.
 
 ## ec2u:Dataset
 
@@ -29,16 +22,7 @@ and  [VoID](https://www.w3.org/TR/void/) data models.
 
 # Licensing
 
-> ❗️ To be confirmed.
-
-[EC2U Catalog Dataset ](https://data.ec2u.eu/)© 2022-2023 by [EC2U Alliance](https://www.ec2u.eu/) is licensed
-under [Attribution-NonCommercial-NoDerivatives 4.0 International](http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1)
-
-Individual datasets included in the catalog are licensed by their respective owners under the licensing terms specified
-by the [`dct:rights`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_rights)
-, [`dct:license`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_license)
-and  [`dct:accessRights`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_access_rights) properties as described
-above.
+Individual datasets included in the catalog are licensed by their respective owners under the licensing terms specified by the [`dct:rights`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_rights), [`dct:license `](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_license) and  [`dct:accessRights`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_access_rights) properties as described above.
 
 # Sources
 
