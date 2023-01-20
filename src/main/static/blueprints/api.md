@@ -16,8 +16,7 @@ title: REST/JSON-LD API
 
 # Datatypes
 
-All resources properties are described using a limited set of standard [XSD](https://www.w3.org/TR/xmlschema-2/#built-in-datatypes)
-/ [RDF](https://www.w3.org/TR/rdf-schema/#ch_langstring) datatypes, which are internally mapped to implementation datatypes according to the following table.
+All resources properties are described using a limited set of standard [XSD](https://www.w3.org/TR/xmlschema-2/#built-in-datatypes) / [RDF](https://www.w3.org/TR/rdf-schema/#ch_langstring) datatypes, which are internally mapped to implementation datatypes according to the following table.
 
 | Datatype | RDF                                                          | Java                         | TypeScript/JSON               |
 | -------- | :----------------------------------------------------------- | ---------------------------- | :---------------------------- |
@@ -29,7 +28,7 @@ All resources properties are described using a limited set of standard [XSD](htt
 | date     | [xsd:date](https://www.w3.org/TR/xmlschema-2/#date)          | `LocalDate`                  | `"yyyy-MM-dd"`                |
 | time     | [xsd:time](https://www.w3.org/TR/xmlschema-2/#time)          | `LocalTime`                  | `"hh:mm:ss"`                  |
 |          |                                                              | `OffsetTime`                 | `"hh:mm:ss+hh:mm"`            |
-| datetime | [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime)  | `LocalDateTime`              | `"yyyy-MM-ddThh:mm:ss"`       |
+| dateTime | [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime)  | `LocalDateTime`              | `"yyyy-MM-ddThh:mm:ss"`       |
 |          |                                                              | `OffsetDateTime`             | `"yyyy-MM-ddThh:mm:ss+hh:mm"` |
 |          |                                                              | `Instant`                    | `"yyyy-MM-ddThh:mm:ssZ"`      |
 | duration | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration)  | `Period`                     | `PyYMMdD`                     |
