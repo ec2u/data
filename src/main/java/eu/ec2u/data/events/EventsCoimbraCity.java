@@ -128,7 +128,7 @@ public final class EventsCoimbraCity implements Runnable {
                     final Optional<Literal> disambiguatingDescription=description
                             .map(literal -> literal(clip(literal.stringValue()), Coimbra.Language));
 
-                    return frame(item(Context, url))
+                    return frame(item(Events.Context, url))
 
                             .values(RDF.TYPE, Event)
 
