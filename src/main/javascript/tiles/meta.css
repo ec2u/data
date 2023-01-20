@@ -16,4 +16,9 @@
 
 data-meta {
 
+    & svg {
+        stroke-width: 1.5;
+        color: #333;
+    }
+
 }

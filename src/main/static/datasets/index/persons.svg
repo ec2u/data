@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2023 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-49 45 320 191"
+     width="320" height="191">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter"
+                stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="persons" fill="none" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none">
+        <title>persons</title>
+        <rect fill="white" x="-49" y="45" width="320" height="191"/>
+        <g id="persons_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_2">
+                <g id="Graphic_5">
+                    <rect x="-28.68325" y="192.74846" width="65.514" height="18" fill="white"/>
+                    <rect x="-28.68325" y="192.74846" width="65.514" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_4">
+                    <rect x="-28.68325" y="174.74846" width="65.514" height="18" fill="white"/>
+                    <rect x="-28.68325" y="174.74846" width="65.514" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_3">
+                    <rect x="-28.68325" y="157.4874" width="65.514" height="17.261063" fill="white"/>
+                    <rect x="-28.68325" y="157.4874" width="65.514" height="17.261063" stroke="black"
+                          stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-22.683248 160.4874)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Person
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_111">
+                <g id="Graphic_31">
+                    <text transform="translate(82.20473 60.52756)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_56">
+                <g id="Graphic_59">
+                    <rect x="-34.01575" y="94.78862" width="76.179" height="18" fill="white"/>
+                    <rect x="-34.01575" y="94.78862" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_58">
+                    <rect x="-34.01575" y="76.78862" width="76.179" height="18" fill="white"/>
+                    <rect x="-34.01575" y="76.78862" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_57">
+                    <a xl:href="resources.svg">
+                        <rect x="-34.01575" y="59.52756" width="76.179" height="17.261063" fill="white"/>
+                        <rect x="-34.01575" y="59.52756" width="76.179" height="17.261063" stroke="black"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-28.015748 62.52756)" fill="black">
+                            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black"
+                                   x="4973799e-20" y="9">
+                                ec2u:Resource
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_114">
+                <line x1="4.0737517" y1="157.4874" x2="4.0737517" y2="122.53862" marker-end="url(#UMLInheritance_Marker)"
+                      stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_116">
+                <a xl:href="http://xmlns.com/foaf/spec/">
+                    <text transform="translate(82.20473 73.78862)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;</tspan>
+                    </text>
+                </a>
+            </g>
+            <g id="Group_120">
+                <g id="Graphic_123">
+                    <rect x="83.33858" y="203.8046" width="101.685" height="18" fill="white"/>
+                    <rect x="83.33858" y="203.8046" width="101.685" height="18" stroke="black" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_122">
+                    <rect x="83.33858" y="164.02142" width="101.685" height="39.78319" fill="white"/>
+                    <rect x="83.33858" y="164.02142" width="101.685" height="39.78319" stroke="black"
+                          stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(89.33858 167.02142)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">foaf:title : String
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">
+                            foaf:givenName: String
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="31.522125">
+                            foaf:familyName: String
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_121">
+                    <a xl:href="http://xmlns.com/foaf/spec/#term_Person">
+                        <rect x="83.33858" y="146.43124" width="101.685" height="17.59018" fill="white"/>
+                        <rect x="83.33858" y="146.43124" width="101.685" height="17.59018" stroke="black"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(109.43108 149.5958)" fill="black">
+                            <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0"
+                                   y="9">foaf:Person
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_124">
+                <line x1="36.83075" y1="184.11793" x2="73.58858" y2="184.1179" marker-end="url(#UMLInheritance_Marker)"
+                      stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+        </g>
+    </g>
+</svg>
