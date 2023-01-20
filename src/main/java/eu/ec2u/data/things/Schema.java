@@ -26,7 +26,8 @@ import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.util.stream.Stream;
 
-import static com.metreeca.link.Shape.*;
+import static com.metreeca.link.Shape.multiple;
+import static com.metreeca.link.Shape.optional;
 import static com.metreeca.link.Values.IRIType;
 import static com.metreeca.link.Values.iri;
 import static com.metreeca.link.shapes.All.all;
@@ -99,10 +100,10 @@ public final class Schema {
 
                 field(identifier, optional(), datatype(XSD.STRING)),
                 field(url, multiple(), datatype(IRIType)),
-                field(name, required(), multilingual()),
+                field(name, multilingual()),
                 field(image, multiple(), datatype(IRIType)),
-                field("fullDescription", Schema.description, optional(), multilingual()), // ;( dct:description
-                field(disambiguatingDescription, optional(), multilingual()),
+                field("fullDescription", description, multilingual()), // ;( dct:description
+                field(disambiguatingDescription, multilingual()),
                 field(about, multiple(), Reference())
 
         );
@@ -121,7 +122,7 @@ public final class Schema {
 
                 hidden(field(RDF.TYPE, all(Organization))),
 
-                field(Schema.legalName, multilingual()),
+                field(legalName, multilingual()),
                 field(Schema.email, datatype(XSD.STRING)),
                 field(Schema.telephone, datatype(XSD.STRING))
         );
