@@ -28,8 +28,8 @@ import { NodeMark } from "@metreeca/tile/widgets/mark";
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
 import { useEntry } from "@metreeca/tool/nests/graph";
 import { useRoute } from "@metreeca/tool/nests/router";
-import * as React from "react";
-import { useEffect } from "react";
+import "highlight.js/styles/github.css";
+import React, { useEffect } from "react";
 
 
 export const Dataset=immutable({
@@ -102,7 +102,10 @@ function DataDatasetInfo({
     entities,
 
     license,
-    rights
+    rights,
+
+    isDefinedBy
+
 
 }: typeof Dataset) {
 
@@ -120,6 +123,14 @@ function DataDatasetInfo({
             "Rights": rights && <span>{rights}</span>
 
         }}</DataInfo>
+
+        {isDefinedBy && <>
+
+            <hr/>
+
+            <nav><NodeMark toc>{isDefinedBy}</NodeMark></nav>
+
+        </>}
 
     </>;
 

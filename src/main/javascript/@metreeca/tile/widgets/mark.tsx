@@ -15,6 +15,10 @@
  */
 
 import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import Slugger from "github-slugger";
+import { Root } from "hast";
+import { headingRank } from "hast-util-heading-rank";
+import { toString } from "hast-util-to-string";
 import "highlight.js/styles/github.css";
 import React, { useEffect, useState } from "react";
 import ReactMarkdown, { uriTransformer } from "react-markdown";
@@ -33,9 +37,13 @@ import remarkGfm from "remark-gfm";
  */
 export function NodeMark({
 
+    toc=false,
+
     children
 
 }: {
+
+    toc?: boolean
 
     children: string
 
@@ -49,9 +57,6 @@ export function NodeMark({
         const match=children.match(/^((?:\w+:|\/)[^#\s]+)(?:#([^\s]*))?$/); // absolute or root-relative URL
 
         if ( match ) {
-
-            setStatus(undefined);
-            setContent(undefined);
 
             const path=match[1];
             const hash=match[2];
@@ -94,22 +99,36 @@ export function NodeMark({
 
     }, [children]);
 
-    return content ? <ReactMarkdown
+    return content ? toc
 
-            remarkPlugins={[remarkFrontmatter, remarkGfm, remarkGemoji, deflist]}
-            rehypePlugins={[rehypeSlug, rehypeHighlight]}
+            ? <ReactMarkdown
 
-            transformLinkUri={href => [uriTransformer(href)]
-                .map(value => value.endsWith("/index.md") ? value.substring(0, value.length-"/index.md".length) : value)
-                .map(value => value.endsWith(".md") ? value.substring(0, value.length-".md".length) : value)
-                [0]
-            }
+                remarkPlugins={[remarkFrontmatter]}
+                rehypePlugins={[rehypeTOC]}
 
-        >{
+            >{
 
-            content
+                content
 
-        }</ReactMarkdown>
+            }</ReactMarkdown>
+
+
+            : <ReactMarkdown
+
+                remarkPlugins={[remarkFrontmatter, remarkGfm, remarkGemoji, deflist]}
+                rehypePlugins={[rehypeSlug, rehypeHighlight]}
+
+                transformLinkUri={href => [uriTransformer(href)]
+                    .map(value => value.endsWith("/index.md") ? value.substring(0, value.length-"/index.md".length) : value)
+                    .map(value => value.endsWith(".md") ? value.substring(0, value.length-".md".length) : value)
+                    [0]
+                }
+
+            >{
+
+                content
+
+            }</ReactMarkdown>
 
         : status === 404 ? <span>:-( Page Not Found</span>
             : status !== undefined ? <span>{`:-( The Server Says ${status}…`}</span>
@@ -121,43 +140,25 @@ export function NodeMark({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// function toc() {
-//
-//     function rehypeTOC() {
-//         return (root: Root) => {
-//
-//             const slugs=new Slugger();
-//
-//             slugs.reset();
-//
-//             return {
-//
-//                 ...root, children: (root.children).filter((node) => headingRank(node)).map(node => ({
-//                     ...node, children: [{
-//                         ...node,
-//                         type: "element",
-//                         tagName: "a",
-//                         properties: { href: `#${slugs.slug(toString(node))}` }
-//                     }]
-//                 }))
-//
-//             };
-//
-//         };
-//     }
-//
-//
-//     <ReactMarkdown
-//
-//         remarkPlugins={[remarkFrontmatter]}
-//         rehypePlugins={[rehypeTOC]}
-//
-//     >{
-//
-//         content
-//
-//     }</ReactMarkdown>;
-//
-// }
+function rehypeTOC() {
+    return (root: Root) => {
 
+        const slugs=new Slugger();
 
+        slugs.reset();
+
+        return {
+
+            ...root, children: (root.children).filter((node) => headingRank(node)).map(node => ({
+                ...node, children: [{
+                    ...node,
+                    type: "element",
+                    tagName: "a",
+                    properties: { href: `#${slugs.slug(toString(node))}` }
+                }]
+            }))
+
+        };
+
+    };
+}
