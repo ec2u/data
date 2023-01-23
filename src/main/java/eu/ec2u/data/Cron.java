@@ -18,8 +18,7 @@ package eu.ec2u.data;
 
 import com.metreeca.core.services.Logger;
 import com.metreeca.http.Handler;
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.*;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
@@ -89,7 +88,7 @@ public final class Cron extends Delegator {
 
 
     private Handler execute(final Runnable task) {
-        return new Router()
+        return new Worker()
 
                 .get((request, forward) -> {
 

@@ -167,12 +167,12 @@ public final class Data implements Runnable {
 
                                         .path("/datasets", handler(
                                                 new Driver(link(OWL.SAMEAS, Dataset())),
-                                                new Router().get(new Relator())
+                                                new Worker().get(new Relator())
                                         ))
 
                                         .path("/datasets/{id}", handler(
                                                 new Driver(link(OWL.SAMEAS, Dataset())),
-                                                new Router().get(new Relator())
+                                                new Worker().get(new Relator())
                                         ))
 
                                         .path("/universities/*", new Universities())

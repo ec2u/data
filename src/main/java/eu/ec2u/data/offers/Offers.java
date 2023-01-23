@@ -16,8 +16,7 @@
 
 package eu.ec2u.data.offers;
 
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.*;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
@@ -143,11 +142,11 @@ public final class Offers extends Delegator {
 
                 new Router()
 
-                        .path("/", new Router()
+                        .path("/", new Worker()
                                 .get(new Relator())
                         )
 
-                        .path("/{id}", new Router()
+                        .path("/{id}", new Worker()
                                 .get(new Relator())
                         )
 
@@ -170,11 +169,11 @@ public final class Offers extends Delegator {
 
                     new Router()
 
-                            .path("/", new Router()
+                            .path("/", new Worker()
                                     .get(new Relator())
                             )
 
-                            .path("/{id}", new Router()
+                            .path("/{id}", new Worker()
                                     .get(new Relator())
                             )
 
@@ -196,11 +195,11 @@ public final class Offers extends Delegator {
 
                     new Router()
 
-                            .path("/", new Router()
+                            .path("/", new Worker()
                                     .get(new Relator())
                             )
 
-                            .path("/{id}", new Router()
+                            .path("/{id}", new Worker()
                                     .get(new Relator())
                             )
 

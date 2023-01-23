@@ -17,7 +17,7 @@
 package eu.ec2u.data.resources;
 
 import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
@@ -136,7 +136,7 @@ public final class Resources extends Delegator {
 
                 ),
 
-                new Router()
+                new Worker()
                         .get(new Relator())
 
         ));

@@ -17,8 +17,7 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.*;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
@@ -128,11 +127,11 @@ public final class Events extends Delegator {
 
                 new Router()
 
-                        .path("/", new Router()
+                        .path("/", new Worker()
                                 .get(new Relator())
                         )
 
-                        .path("/{id}", new Router()
+                        .path("/{id}", new Worker()
                                 .get(new Relator())
                         )
 

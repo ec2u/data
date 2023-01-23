@@ -21,8 +21,7 @@ import com.metreeca.core.services.Logger;
 import com.metreeca.core.toolkits.Strings;
 import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.actions.GET;
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.*;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.*;
@@ -119,11 +118,11 @@ public final class Units extends Delegator {
 
                 new Router()
 
-                        .path("/", new Router()
+                        .path("/", new Worker()
                                 .get(new Relator())
                         )
 
-                        .path("/{id}", new Router()
+                        .path("/{id}", new Worker()
                                 .get(new Relator())
                         )
 

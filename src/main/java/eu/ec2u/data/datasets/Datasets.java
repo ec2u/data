@@ -17,7 +17,7 @@
 package eu.ec2u.data.datasets;
 
 import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
@@ -98,7 +98,7 @@ public final class Datasets extends Delegator {
 
                 ),
 
-                new Router()
+                new Worker()
 
                         .get(new Relator())
 
