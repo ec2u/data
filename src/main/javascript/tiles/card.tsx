@@ -17,7 +17,7 @@
 import { isString } from "@metreeca/core";
 import { classes } from "@metreeca/tool";
 import * as React from "react";
-import { createElement, ReactNode } from "react";
+import { createElement, ReactNode, useState } from "react";
 import "./card.css";
 
 
@@ -54,6 +54,8 @@ export function DataCard({
 
 }) {
 
+	const [loaded, setLoaded]=useState(false);
+
 	return createElement("data-card", {
 
 		class: classes({ compact })
@@ -70,7 +72,11 @@ export function DataCard({
 
 		<section>
 
-			<figure>{isString(icon) ? <img src={icon}/> : icon}</figure>
+			<figure>{isString(icon) ? <img hidden={!loaded} src={icon}
+
+				onLoad={() => setLoaded(true)}
+
+			/> : icon}</figure>
 
 			{children}
 
