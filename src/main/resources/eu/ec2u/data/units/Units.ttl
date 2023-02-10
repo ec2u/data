@@ -2,6 +2,7 @@
 @prefix void:	<http://rdfs.org/ns/void#> .
 @prefix dct:	<http://purl.org/dc/terms/> .
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
 
 </units/> a ec2u:Dataset ;
 	dct:title "EC2U Units"@en  ;
@@ -9,6 +10,7 @@
 	dct:description "Identifying and background information about research and innovation units and supporting structures at EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	dct:available "2022-01-01"^^xsd:date ;
 	rdfs:isDefinedBy </datasets/units> ;
 	void:rootResource ec2u:Unit .
 
