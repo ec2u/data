@@ -48,7 +48,6 @@ import static com.metreeca.rdf.schemas.Schema.normalize;
 import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.Work.location;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -257,12 +256,16 @@ public final class EventsJenaUniversity implements Runnable {
                         .map(organizer -> Work.organizer(organizer, "de"))
                 )
 
-                .frame(Schema.location, frame.frame(Schema.location)
-                        .map(location -> location(location, frame(bnode())
-                                .value(Schema.addressCountry, Jena.Country)
-                                .value(Schema.addressLocality, Jena.City)
-                        ))
-                );
+                // !!! restore after https://github.com/ec2u/data/issues/41 is resolved
+
+                //.frame(Schema.location, frame.frame(Schema.location)
+                //        .map(location -> location(location, frame(bnode())
+                //                .value(Schema.addressCountry, Jena.Country)
+                //                .value(Schema.addressLocality, Jena.City)
+                //        ))
+                //)
+
+                ;
 
     }
 
