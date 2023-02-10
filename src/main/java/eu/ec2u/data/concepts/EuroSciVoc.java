@@ -43,8 +43,10 @@ import static java.util.stream.Collectors.toList;
  * taxonomy. It was extended with fields of science categories extracted from CORDIS content through a semi-automatic
  * process developed with Natural Language Processing (NLP) techniques</p>
  *
- * @see <a href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa
- * .eu/resource/dataset/euroscivoc">European Science Vocabulary (EuroSciVoc)</a> .eu/resource/dataset/euroscivoc
+ * @see <a
+ * href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa
+ * .eu/resource/dataset/euroscivoc">European
+ * Science Vocabulary (EuroSciVoc)</a> .eu/resource/dataset/euroscivoc
  */
 public final class EuroSciVoc implements Runnable {
 

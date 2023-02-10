@@ -65,7 +65,7 @@ import static java.util.Map.entry;
 
 public final class OffersCoimbra implements Runnable {
 
-    private static final IRI Context=iri(Offers.Courses, "/coimbra");
+    private static final IRI Context=iri(Offers.Context, "/coimbra");
 
     private static final String APIUrl="offers-coimbra-url";
     private static final String APIId="offers-coimbra-id";
