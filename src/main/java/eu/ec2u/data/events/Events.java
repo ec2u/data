@@ -179,21 +179,27 @@ public final class Events extends Delegator {
                             connection.remove(subject, null, null, context)
                     );
 
-                    Stream.of(text(Concepts.class, ".ul"))
-
-                            .forEach(new Update()
-                                    .base(EC2U.Base)
-                                    .dflt(context)
-                                    .insert(context)
-                                    .remove(context)
-                            );
-
                     connection.add(model, context);
 
                 }));
 
             }).apply(elapsed -> service(logger()).info(Events.class, format(
                     "updated <%d> resources in <%s> in <%d> ms", resources.size(), context, elapsed
+            )));
+
+            // ;( SPARQL update won't take effect if executed inside the previous txn
+
+            time(() -> Stream.of(text(Events.class, ".ul"))
+
+                    .forEach(new Update()
+                            .base(EC2U.Base)
+                            .dflt(context)
+                            .insert(context)
+                            .remove(context)
+                    )
+
+            ).apply(elapsed -> service(logger()).info(Events.class, format(
+                    "purged stale events  from <%s> in <%d> ms", context, elapsed
             )));
 
         }
