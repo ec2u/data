@@ -1,0 +1,3214 @@
+{
+    "DDV10": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Diplôme d'Etude Supérieur Notariat DSN",
+        "code": "DDV10",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 0,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "Diplôme d'Etude Supérieur Notariat DSN",
+                "code": "DDV101",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "88DC1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Doctorat en Droit Privé et Sciences Criminelles",
+        "code": "88DC1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Droit Privé et Sciences Criminelles",
+                "code": "88DC11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "88DB1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Doctorat en Droit Public",
+        "code": "88DB1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Droit Public",
+                "code": "88DB11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "88DJ1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Doctorat en Histoire du Droit et des Institutions",
+        "code": "88DJ1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Histoire du Droit et des Institutions",
+                "code": "88DJ11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "88DO1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Doctorat en Science Politique",
+        "code": "88DO1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Science Politique",
+                "code": "88DO11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "DDH10": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "HDR Droit",
+        "code": "DDH10",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Droit",
+                "code": "DDH101",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D3AD1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Licence Administration Economique et Sociale",
+        "code": "D3AD1",
+        "discipline": "Administration Economie et Social (AES)",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Administration Economique et Sociale",
+                "code": "D1AD12",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "1AD0206U": {
+                            "credits": 3,
+                            "name": "UE6 Outils et Compétences Transversales"
+                        },
+                        "1AD0201U": {
+                            "credits": 6,
+                            "name": "UE1 Sciences Économiques"
+                        },
+                        "1AD0205U": {
+                            "credits": 3,
+                            "name": "UE5 Anglais"
+                        },
+                        "1AD0204U": {
+                            "credits": 6,
+                            "name": "UE4 Introduction aux droits administratif, euopéen et inter"
+                        },
+                        "1AD0203U": {
+                            "credits": 6,
+                            "name": "UE3 Introduction à la gestion"
+                        },
+                        "1AD0202U": {
+                            "credits": 6,
+                            "name": "UE2 Outils mathématiques pour la gestion et la science éco"
+                        }
+                    },
+                    "S1": {
+                        "1AD0103U": {
+                            "credits": 6,
+                            "name": "UE3 Découvrir le droit"
+                        },
+                        "1AD0104U": {
+                            "credits": 6,
+                            "name": "UE4 Découvir le droit public et le droit privé"
+                        },
+                        "1AD0105U": {
+                            "credits": 3,
+                            "name": "UE5 Anglais"
+                        },
+                        "1AD0106U": {
+                            "credits": 3,
+                            "name": "UE6 Outils et Compétences Transversales"
+                        },
+                        "1AD0101U": {
+                            "credits": 6,
+                            "name": "UE1 Découvrir les sciences économiques"
+                        },
+                        "1AD0102U": {
+                            "credits": 6,
+                            "name": "UE2 Découvrir les sciences sociales"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Administration Economique et Sociale",
+                "code": "D2AD11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Administration Economique et Sociale",
+                "code": "D3AD11",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": [ ]
+                },
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D3DD7": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Licence Droit",
+        "code": "D3DD7",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 DROIT",
+                "code": "D1DD71",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "1DDP205U": {
+                            "credits": 3,
+                            "name": "UE5 ANGLAIS"
+                        },
+                        "1DDP206U": {
+                            "credits": 3,
+                            "name": "UE6 OUTILS ET COMPETENCES TRANSVERSALES"
+                        },
+                        "1DDP203U": {
+                            "credits": 6,
+                            "name": "UE3 COMPETENCES  COMPLEMENTAIRES  I"
+                        },
+                        "1DDP204U": {
+                            "credits": 6,
+                            "name": "UE4 COMPETENCES COMPLEMENTAIRES  II"
+                        },
+                        "1DDP201U": {
+                            "credits": 6,
+                            "name": "UE1 DECOUVRIR LE DROIT PRIVE S2"
+                        },
+                        "1DDP202U": {
+                            "credits": 6,
+                            "name": "UE2 DECOUVRIR LE DROIT PUBLIC S2"
+                        }
+                    },
+                    "S1": {
+                        "1DDP106U": {
+                            "credits": 3,
+                            "name": "UE6 OUTILS ET COMPETENCES TRANSVERSALES"
+                        },
+                        "1DDP104U": {
+                            "credits": 6,
+                            "name": "UE4 DECOUVRIR LES SCIENCES SOCIALES"
+                        },
+                        "1DDP105U": {
+                            "credits": 3,
+                            "name": "UE5 ANGLAIS"
+                        },
+                        "1DDP102U": {
+                            "credits": 6,
+                            "name": "UE2 DECOUVRIR LE DROIT PRIVE"
+                        },
+                        "1DDP103U": {
+                            "credits": 6,
+                            "name": "UE3 DECOUVRIR LE DROIT PUBLIC"
+                        },
+                        "1DDP101U": {
+                            "credits": 6,
+                            "name": "UE1 DECOUVRIR LE DROIT"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L1 Droit, double mention Droit\/LEA",
+                "code": "D1DD76",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L1 Droit, double mention Droit\/Philosophie",
+                "code": "D1DD75",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 DROIT  - Poitiers",
+                "code": "D2DD71",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Droit, double mention Droit\/LEA",
+                "code": "D2DD76",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Droit, double mention Droit\/Philosophie",
+                "code": "D2DD75",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit, double mention LEA",
+                "code": "D3DD76",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit, double mention Philosophie",
+                "code": "D3DD75",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit, parcours Carrières Judiciaires",
+                "code": "D3DD74",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit des Techniques de l'Information et Communication",
+                "code": "D3DD73",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit, parcours Droit Privé (Poitiers)",
+                "code": "D3DD71",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit, parcours Droit Public",
+                "code": "D3DD72",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D3DDS": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Licence Droit LAS",
+        "code": "D3DDS",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Droit Accès Santé",
+                "code": "D1DDS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Droit Accès Santé",
+                "code": "D2DDS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit, parcours Carrières Judiciaires LAS",
+                "code": "D3DDS3",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit, parcours Droit Privé LAS",
+                "code": "D3DDS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Droit, parcours Droit Public LAS",
+                "code": "D3DDS2",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "DWDM1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Licence Pro Métiers du Notariat",
+        "code": "DWDM1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "Lic Pro Métiers du Notariat",
+                "code": "DWDM11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DT1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit des Collectivités Territoriales",
+        "code": "D5DT1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Droit de l'action et responsabilités locales",
+                "code": "D4DT14",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "4DTR102U": {
+                            "credits": 6,
+                            "name": "UE2 S1 Comprendre les principes de l'action publique locale"
+                        },
+                        "4DTR101U": {
+                            "credits": 15,
+                            "name": "UE1 S1 Comprendre le cadre juridique des collécti territor."
+                        },
+                        "4DTR104U": {
+                            "credits": 3,
+                            "name": "UE4 S1 Maitriser une langue étrangère"
+                        },
+                        "4DTR103U": {
+                            "credits": 6,
+                            "name": "UE3 S1 Approf le cadre juridique des collect territoriales"
+                        }
+                    },
+                    "S2": {
+                        "4DTR201U": {
+                            "credits": 9,
+                            "name": "UE1 S2 Piloter les services publics des collectivités terri."
+                        },
+                        "4DTR203U": {
+                            "credits": 9,
+                            "name": "UE3 S2 Préparer sa spécialisation"
+                        },
+                        "4DTR202U": {
+                            "credits": 9,
+                            "name": "UE2 S2 Appréh les moyens humains et financiers des colle ter"
+                        },
+                        "4DTR204U": {
+                            "credits": 3,
+                            "name": "UE4 S2 Maitriser une langue étrangère"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Droit des Collectivités Territoriales, parcours DAASCT",
+                "code": "D4DT13",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "4DTA201U": {
+                            "credits": 9,
+                            "name": "UE1 S2 Piloter les services publics des collectivités terri."
+                        },
+                        "4DTA202U": {
+                            "credits": 9,
+                            "name": "UE2 S2 Appréhender ls moyens humains et financiers des CT"
+                        },
+                        "4DTA203U": {
+                            "credits": 9,
+                            "name": "UE3 S2 Préparer sa spécialisation"
+                        },
+                        "4DTA204U": {
+                            "credits": 3,
+                            "name": "UE4 S2 Maitriser une langue étrangère"
+                        }
+                    },
+                    "S1": {
+                        "4DTA101U": {
+                            "credits": 15,
+                            "name": "UE1 S1 Comprendre le cadre juridique ds collectivités terri."
+                        },
+                        "4DTA103U": {
+                            "credits": 6,
+                            "name": "UE3 S1 Approfondir le cadre juridique des collectivités terr"
+                        },
+                        "4DTA102U": {
+                            "credits": 6,
+                            "name": "UE2 S1 Comprendre les principes de l'action publique locale"
+                        },
+                        "4DTA104U": {
+                            "credits": 3,
+                            "name": "UE4 S1 Maitriser une langue étrangère"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit de l'action et responsabilités locales",
+                "code": "D5DT14",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit des Collectivités Territoriales, parcours DAASCT",
+                "code": "D5DT11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5PU1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit Public",
+        "code": "D5PU1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Droit de l'Action Publique",
+                "code": "D4PU12",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "4PUA203U": {
+                            "credits": 3,
+                            "name": "UE 3 COMPETENCES TRANSVERSALES S2 MI DAP"
+                        },
+                        "4PUA202U": {
+                            "credits": 12,
+                            "name": "UE 2 ENSEIGNEMENTS COMPLEMENTAIRS S2 MI DAP"
+                        },
+                        "4PUA201U": {
+                            "credits": 15,
+                            "name": "UE1 ENSEIGNEMENTS FONDAMENTAUX  S2"
+                        }
+                    },
+                    "S1": {
+                        "4PUA103U": {
+                            "credits": 3,
+                            "name": "UE 3 COMPETENCES TRANSVERSALES S1"
+                        },
+                        "4PUA102U": {
+                            "credits": 12,
+                            "name": "UE 2 ENSEIGNEMENTS  COMPLEMENTAIRES  S1"
+                        },
+                        "4PUA101U": {
+                            "credits": 15,
+                            "name": "UE 1 S1 ENSEIGNEMENTS FONDAMENTAUX"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Droit de l'Urbanisme et de la Construction",
+                "code": "D4PU13",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "4PUU103U": {
+                            "credits": 3,
+                            "name": "UE 3 COMPETENCES TRANSVERSALES S1"
+                        },
+                        "4PUU102U": {
+                            "credits": 12,
+                            "name": "UE 2 ENSEIGNEMENTS COMPLEMENTAIRES S1"
+                        },
+                        "4PUU101U": {
+                            "credits": 15,
+                            "name": "UE 1 ENSEIGNEMENTS FONDAMENTAUX S1"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Droit de la Commande Publique",
+                "code": "D4PU11",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": [ ],
+                    "S2": [ ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit de l'Action Publique",
+                "code": "D5PU12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit de l'Urbanisme et de la Construction",
+                "code": "D5PU13",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit de la Commande Publique",
+                "code": "D5PU11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DL1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit de la Propriété Intellectuelle",
+        "code": "D5DL1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Droit de la Propriété Intellectuelle",
+                "code": "D4DL14",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": [ ],
+                    "S2": [ ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Droit de la Propriété Intellectuelle et du Numérique",
+                "code": "D4DL13",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Recherche et Valorisation de l'Innovation",
+                "code": "D4DL12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit de la Propriété Intellectuelle",
+                "code": "D5DL14",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit de la Propriété Intellectuelle et du Numérique",
+                "code": "D5DL13",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Recherche et Valorisation de l'Innovation",
+                "code": "D5DL12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DU1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit du Numérique",
+        "code": "D5DU1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Droit du Numérique",
+                "code": "D4DU11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit du Numérique",
+                "code": "D5DU11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DP1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit du Patrimoine",
+        "code": "D5DP1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Dt patrimoine - Dt de l'Activité Agricole & Espace Rural",
+                "code": "D4DP16",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": [ ],
+                    "S2": {
+                        "4DPA201U": {
+                            "credits": 18,
+                            "name": "UE1 S2 Compétences fondamentales"
+                        },
+                        "4DPA202U": {
+                            "credits": 9,
+                            "name": "UE2 S2 Compétences complémentaires"
+                        },
+                        "4DPA203U": {
+                            "credits": 3,
+                            "name": "UE3 S2 Langue étrangère"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Droit du Patrimoine : Urbanisme et Construction",
+                "code": "D4DP12",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "4DPU201U": {
+                            "credits": 18,
+                            "name": "UE1 S2 Compétences fondamentales"
+                        },
+                        "4DPU202U": {
+                            "credits": 9,
+                            "name": "UE2 S2 Compétences complémentaires"
+                        },
+                        "4DPU203U": {
+                            "credits": 3,
+                            "name": "UE3 S2 Langue étrangère"
+                        }
+                    },
+                    "S1": {
+                        "4DPU102U": {
+                            "credits": 9,
+                            "name": "UE2 S1 Compétences complémentaires"
+                        },
+                        "4DPU103U": {
+                            "credits": 3,
+                            "name": "UE3 S1 Langue étrangère"
+                        },
+                        "4DPU101U": {
+                            "credits": 18,
+                            "name": "UE1 S1 Compétences fondamentales"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Dt patrimoine -Histoire du Droit et des Instit",
+                "code": "D4DP13",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "4DPH203U": {
+                            "credits": 3,
+                            "name": "UE3 S2 Langue étrangère"
+                        },
+                        "4DPH202U": {
+                            "credits": 9,
+                            "name": "UE2 S2 Compétences complémentaires"
+                        },
+                        "4DPH201U": {
+                            "credits": 18,
+                            "name": "UE1 S2 Compétences fondamentales"
+                        }
+                    },
+                    "S1": {
+                        "4DPH103U": {
+                            "credits": 3,
+                            "name": "UE3 S1 Langue étrangère"
+                        },
+                        "4DPH102U": {
+                            "credits": 9,
+                            "name": "UE2 S1 Compétences complémentaires"
+                        },
+                        "4DPH101U": {
+                            "credits": 18,
+                            "name": "UE1 S1 Compétences fondamentales"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit de l'Activité Agricole et de l'Espace Rural",
+                "code": "D5DP11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Histoire du Droit et des Institutions",
+                "code": "D5DP13",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit du Patrimoine : Urbanisme et Construction",
+                "code": "D5DP12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DR1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit International et Droit Européen",
+        "code": "D5DR1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Dt Intern & Europ parcours Dt Contentieux International",
+                "code": "D4DR12",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": [ ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 International Business Law - ICP",
+                "code": "D4DR14",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit du Contentieux International",
+                "code": "D5DR11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 International Business Law - ICP",
+                "code": "D5DR14",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DN1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit Notarial",
+        "code": "D5DN1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Droit Notarial",
+                "code": "D4DN11",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "4DN0201U": {
+                            "credits": 18,
+                            "name": "UE 1 S2 Enseignements fondamentaux"
+                        },
+                        "4DN0203U": {
+                            "credits": 3,
+                            "name": "UE 3 S2 Langue étrangère"
+                        },
+                        "4DN0202U": {
+                            "credits": 9,
+                            "name": "UE 2 S2 Enseignements spécifiques"
+                        }
+                    },
+                    "S1": {
+                        "4DN0102U": {
+                            "credits": 12,
+                            "name": "UE 2 S1 Enseignements spécifiques"
+                        },
+                        "4DN0101U": {
+                            "credits": 15,
+                            "name": "UE1 S1 Enseignements fondamentaux"
+                        },
+                        "4DN0103U": {
+                            "credits": 3,
+                            "name": "UE 3 S1 Langue étrangère"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit Notarial",
+                "code": "D5DN11",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "5DN0303U": {
+                            "credits": 6,
+                            "name": "UE 3 S3 Droit immobilier"
+                        },
+                        "5DN0302U": {
+                            "credits": 12,
+                            "name": "UE 2 S3 Droit de la famille"
+                        },
+                        "5DN0301U": {
+                            "credits": 12,
+                            "name": "UE1 S3 Actes courants"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DC1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit Pénal et Sciences Criminelles",
+        "code": "D5DC1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Dt pénal et sc criminelles -  Droit et Justice Pénale",
+                "code": "D4DC11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1  Dt pénal et sc criminelles, Criminologie et Victimologie",
+                "code": "D4DC12",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "4DCV101U": {
+                            "credits": 15,
+                            "name": "UE 1 Analyser modalités réaction étatique à l'infraction"
+                        },
+                        "4DCV103U": {
+                            "credits": 3,
+                            "name": "UE 3 Initier son projet profesionnelle"
+                        },
+                        "4DCV102U": {
+                            "credits": 12,
+                            "name": "UE2 Apprehender dimension criminologique phénomène criminel"
+                        }
+                    },
+                    "S2": {
+                        "4DCV206U": {
+                            "credits": 6,
+                            "name": "UE 6 Elaborer son projet profesionnel"
+                        },
+                        "4DCV205U": {
+                            "credits": 6,
+                            "name": "UE 5 Appreh dim crimonologique des protagonistes infraction"
+                        },
+                        "4DCV204U": {
+                            "credits": 3,
+                            "name": "UE 4 Analyser enjeux reaction étatique infraction 2"
+                        },
+                        "4DCV203U": {
+                            "credits": 6,
+                            "name": "UE 3 Analyser enjeux reaction étatique infraction 1"
+                        },
+                        "4DCV202U": {
+                            "credits": 3,
+                            "name": "UE 2 Approf asp europ et inter mat pénale 2"
+                        },
+                        "4DCV201U": {
+                            "credits": 6,
+                            "name": "UE 1 Approf asp europ et internat de la mat pénale"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Criminologie et Victimologie",
+                "code": "D5DC12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit et Justice Pénale",
+                "code": "D5DC11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DF6": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit des Affaires",
+        "code": "D5DF6",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Dt des Affaires - Contrats en Droit Français et Européen",
+                "code": "D4DF61",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": [ ],
+                    "S2": [ ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Dt des Affaires -Dt de l'Entreprise et  Affaires - DJCE",
+                "code": "D4DF62",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": [ ],
+                    "S2": [ ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Fra-Pol Droit Français et Européen Affaires (Poitiers)",
+                "code": "D4DF65",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": [ ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Franco-Italien Contrats en Droit Européen",
+                "code": "D4DF63",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Franco-Libanais Juriste d'Affaires",
+                "code": "D4DF66",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Fra-Pol Droit Français et Européen des Affaires (Pologne)",
+                "code": "D4DF64",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Contrats en Droit Français et Européen",
+                "code": "D5DF61",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Droit de l'Entreprise et des Affaires - DJCE",
+                "code": "D5DF62",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Franco-Italien Contrats en Droit Européen",
+                "code": "D5DF63",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Franco-Libanais Juriste d'Affaires",
+                "code": "D5DF66",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Franco-Polonais Droit Français et Européen des Affaires",
+                "code": "D5DF65",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DJ1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Justice, Procès et Procédures",
+        "code": "D5DJ1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Justice, procès procédures - Carrières Judiciaires",
+                "code": "D4DJ11",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "4DJ0102U": {
+                            "credits": 9,
+                            "name": "UE2 S1 Compétences complémentaires"
+                        },
+                        "4DJ0101U": {
+                            "credits": 18,
+                            "name": "UE1 S1 Compétences fondamentales"
+                        },
+                        "4DJ0103U": {
+                            "credits": 3,
+                            "name": "UE3 S1 Compétences transversales"
+                        }
+                    },
+                    "S2": {
+                        "4DJ0201U": {
+                            "credits": 18,
+                            "name": "UE1 S2 Compétences Fondamentales"
+                        },
+                        "4DJ0202U": {
+                            "credits": 9,
+                            "name": "UE2 S2 Compétences complémentaires"
+                        },
+                        "4DJ0203U": {
+                            "credits": 3,
+                            "name": "UE3 S2 Compétences transversales"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Carrières Judiciaires",
+                "code": "D5DJ11",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "5DJ0303U": {
+                            "credits": 6,
+                            "name": "UE3 S3 Se confontrer au milieu professionnel"
+                        },
+                        "5DJ0302U": {
+                            "credits": 12,
+                            "name": "UE2 S3 Préparer les matières extra-juridiques ds concours"
+                        },
+                        "5DJ0301U": {
+                            "credits": 12,
+                            "name": "UE1 S3 Préparer les matières juridiques des concours"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DO1": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Science Politique",
+        "code": "D5DO1",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Science Politique -  Action Publique Territoriale",
+                "code": "D4DO11",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "4DOT101U": {
+                            "credits": 12,
+                            "name": "UE1 S1 Gouverner par des règles"
+                        },
+                        "4DOT103U": {
+                            "credits": 12,
+                            "name": "UE3 S1 Penser localement dans un monde globalisé"
+                        },
+                        "4DOT102U": {
+                            "credits": 6,
+                            "name": "UE2 S1 Les langages du politique"
+                        }
+                    },
+                    "S2": [
+                        "4DOT201U",
+                        "30",
+                        "29\/06\/2022",
+                        "UE1 S2 Mobilité",
+                        "UE1 S2 Mobilité",
+                        "Unité d'enseignement",
+                        "O",
+                        "O",
+                        "N",
+                        "O",
+                        "N",
+                        "N"
+                    ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Science Politique, Politique Internationale",
+                "code": "D4DO12",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "4DOI101U": {
+                            "credits": 12,
+                            "name": "UE 1 S1 Le gouvernement et ses règles"
+                        },
+                        "4DOI102U": {
+                            "credits": 6,
+                            "name": "UE2 S1 Les langages du politique"
+                        },
+                        "4DOI103U": {
+                            "credits": 12,
+                            "name": "UE3 S1 Penser dans un monde multipolaire"
+                        }
+                    },
+                    "S2": [
+                        "4DOI201U",
+                        "30",
+                        "29\/06\/2022",
+                        "UE1 S2 Mobilité",
+                        "UE1 S2 Mobilité",
+                        "Unité d'enseignement",
+                        "O",
+                        "O",
+                        "N",
+                        "O",
+                        "N",
+                        "N"
+                    ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Action Publique Territoriale",
+                "code": "D5DO11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Science Politique, Parcours Politique Internationale",
+                "code": "D5DO12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "D5DF2": {
+        "composante": "Droit et Sciences Sociales Poitiers",
+        "name": "Master Droit des Affaires (Site Segonzac)",
+        "code": "D5DF2",
+        "discipline": "Droit - Sciences politiques",
+        "credits": 120,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M2 Droit, Gestion et Commerce des Spiritueux",
+                "code": "D5DF21",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "78ED2": {
+        "composante": "Sciences Economiques",
+        "name": "Doctorat en Aménagement de l'Espace, Urbanisme",
+        "code": "78ED2",
+        "discipline": "Sciences humaines et sociales",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Aménagement de l'Espace, Urbanisme",
+                "code": "78ED21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "78EG2": {
+        "composante": "Sciences Economiques",
+        "name": "Doctorat en Sciences de Gestion",
+        "code": "78EG2",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Sciences de Gestion",
+                "code": "78EG21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "78EG1": {
+        "composante": "Sciences Economiques",
+        "name": "Doctorat en Science Economique",
+        "code": "78EG1",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Science Economique",
+                "code": "78EG11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "EGH10": {
+        "composante": "Sciences Economiques",
+        "name": "HDR Sciences de Gestion (sciences economiques)",
+        "code": "EGH10",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Sciences de Gestion (Sc Eco)",
+                "code": "EGH101",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "EEH10": {
+        "composante": "Sciences Economiques",
+        "name": "HDR Sciences Economiques",
+        "code": "EEH10",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Sciences Economiques",
+                "code": "EEH101",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "E3EG1": {
+        "composante": "Sciences Economiques",
+        "name": "Licence Economie et Gestion",
+        "code": "E3EG1",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Economie et Gestion",
+                "code": "E1EG11",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "1EGE201U": {
+                            "credits": 6,
+                            "name": "UE1 S2 Economie"
+                        },
+                        "1EGE202U": {
+                            "credits": 6,
+                            "name": "UE2 S2 Analyse et mesure"
+                        },
+                        "1EGE203U": {
+                            "credits": 6,
+                            "name": "UE3 S2 Gestion"
+                        },
+                        "1EGE204U": {
+                            "credits": 6,
+                            "name": "UE4 S2 Outils"
+                        },
+                        "1EGE205U": {
+                            "credits": 3,
+                            "name": "UE5 S2 LV1 Anglais"
+                        },
+                        "1EGE206U": {
+                            "credits": 3,
+                            "name": "UE6 S2 Compétences transversales"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Economie et Gestion",
+                "code": "E2EG11",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "2EGEC04U": {
+                            "credits": 3,
+                            "name": "UE6 S4 Compétences transversales convention Chinois-Kirghize"
+                        },
+                        "2EGEC03U": {
+                            "credits": 6,
+                            "name": "UE4 S4 Options convention Chinois-Kirghize"
+                        },
+                        "2EGE202U": {
+                            "credits": 6,
+                            "name": "UE2 S4 Outils Economie-gestion"
+                        },
+                        "2EGE201U": {
+                            "credits": 6,
+                            "name": "UE1 S4 Economie"
+                        },
+                        "2EGE205U": {
+                            "credits": 3,
+                            "name": "UE5 S4 LV1 Anglais"
+                        },
+                        "2EGE203U": {
+                            "credits": 6,
+                            "name": "UE3 S4 Gestion"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Economie et Gestion, parcours ATS",
+                "code": "E3EG13",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Economie et Gestion, parcours Economie",
+                "code": "E3EG11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Economie et Gestion, parcours Economie - Convention SOFIA",
+                "code": "E3EG15",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Economie et Gestion, parcours Economie pour Slovaques",
+                "code": "E3EG14",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "E3EGS": {
+        "composante": "Sciences Economiques",
+        "name": "Licence Economie et Gestion LAS",
+        "code": "E3EGS",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Economie et Gestion Accès Santé",
+                "code": "E1EGS1",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "1EGE102U": {
+                            "credits": 6,
+                            "name": "UE2 S1 Analyse et mesure"
+                        },
+                        "1EGE101U": {
+                            "credits": 6,
+                            "name": "UE1 S1 Economie"
+                        },
+                        "SANG001U": {
+                            "credits": 3,
+                            "name": "UE5 S1 Anglais LAS"
+                        },
+                        "MLS0002U": {
+                            "credits": 6,
+                            "name": "UE4 Santé 2 LAS"
+                        },
+                        "SPPE001U": {
+                            "credits": 3,
+                            "name": "UE6 S1 PPPE LAS"
+                        },
+                        "MLS0001U": {
+                            "credits": 6,
+                            "name": "UE3 Santé 1 LAS"
+                        }
+                    },
+                    "S2": {
+                        "1EGE201U": {
+                            "credits": 6,
+                            "name": "UE1 S2 Economie"
+                        },
+                        "1EGE202U": {
+                            "credits": 6,
+                            "name": "UE2 S2 Analyse et mesure"
+                        },
+                        "SANG002U": {
+                            "credits": 3,
+                            "name": "UE5 S2 Anglais LAS"
+                        },
+                        "SPPE002U": {
+                            "credits": 3,
+                            "name": "UE6 S2 PPPE LAS"
+                        },
+                        "MLS0004U": {
+                            "credits": 6,
+                            "name": "UE4 Santé 4 LAS"
+                        },
+                        "MLS0003U": {
+                            "credits": 6,
+                            "name": "UE3 Santé 3 LAS"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Economie et Gestion Accès Santé",
+                "code": "E2EGS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Economie et Gestion, parcours Economie, Accès Santé",
+                "code": "E3EGS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "E3EGX": {
+        "composante": "Sciences Economiques",
+        "name": "Licence Economie et Gestion CPGE",
+        "code": "E3EGX",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Economie et Gestion CPGE",
+                "code": "E1EGX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Economie et Gestion CPGE",
+                "code": "E2EGX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Economie et Gestion CPGE",
+                "code": "E3EGX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "E5EP1": {
+        "composante": "Sciences Economiques",
+        "name": "Master Economie Appliquée",
+        "code": "E5EP1",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Economie appliquée, Evaluation des politiques publiques",
+                "code": "E4EP11",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "4EPA204U": {
+                            "credits": 3,
+                            "name": "UE4 S2 Professionnalisation"
+                        },
+                        "4EPA201U": {
+                            "credits": 9,
+                            "name": "UE1 S2 Fondamentaux thématiques"
+                        },
+                        "4EPA203U": {
+                            "credits": 9,
+                            "name": "UE3 S2 Outils techniques et méthodologiques"
+                        },
+                        "4EPA202U": {
+                            "credits": 9,
+                            "name": "UE2 S2 Outils analytiques"
+                        }
+                    },
+                    "S1": {
+                        "4EPA103U": {
+                            "credits": 9,
+                            "name": "UE3 S1 Outils techniques et méthodologiques"
+                        },
+                        "4EPA104U": {
+                            "credits": 3,
+                            "name": "UE4 S1 Professionnalisation"
+                        },
+                        "4EPA101U": {
+                            "credits": 9,
+                            "name": "UE1 S1 Fondamentaux thématiques"
+                        },
+                        "4EPA102U": {
+                            "credits": 9,
+                            "name": "UE2 S1 Outils analytiques"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Economie appliquée, Evaluation des politiques publiques",
+                "code": "E5EP11",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "5EPA201U": {
+                            "credits": 6,
+                            "name": "UE1 S4 Projet professionnel"
+                        },
+                        "5EPA202U": {
+                            "credits": 24,
+                            "name": "UE2 S4 Stage ou mémoire"
+                        }
+                    },
+                    "S1": {
+                        "5EPA104U": {
+                            "credits": 3,
+                            "name": "UE4 S3 Professionnalisation"
+                        },
+                        "5EPA101U": {
+                            "credits": 9,
+                            "name": "UE1 S3 Fondamentaux thématiques"
+                        },
+                        "5EPA103U": {
+                            "credits": 9,
+                            "name": "UE3 S3 Outils techniques et méthodologiques"
+                        },
+                        "5EPA102U": {
+                            "credits": 9,
+                            "name": "UE2 S3 Outils analytiques"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "E5EB1": {
+        "composante": "Sciences Economiques",
+        "name": "Master Monnaie, Banque, Finance, Assurance",
+        "code": "E5EB1",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Monnaie, Banque, Finance, Assurance",
+                "code": "E4EB11",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "4EBF103U": {
+                            "credits": 9,
+                            "name": "UE3 S1 Techniques et outils d'analyse"
+                        },
+                        "4EBF102U": {
+                            "credits": 9,
+                            "name": "UE2 S1 Environnement et mécanismes micro\/macroéconomiques"
+                        },
+                        "4EBF101U": {
+                            "credits": 9,
+                            "name": "UE1 Fondamentaux de la finance de marché"
+                        },
+                        "4EBF104U": {
+                            "credits": 3,
+                            "name": "UE4 S1 Projet professionnel"
+                        }
+                    },
+                    "S2": {
+                        "4EBF202U": {
+                            "credits": 9,
+                            "name": "UE2 S1 Environnement et mécanismes micro\/macroéconomiques"
+                        },
+                        "4EBF201U": {
+                            "credits": 9,
+                            "name": "UE1 S2 Fondamentaux de la finance de marché"
+                        },
+                        "4EBF204U": {
+                            "credits": 3,
+                            "name": "UE4 S2 Projet professionnel"
+                        },
+                        "4EBF203U": {
+                            "credits": 9,
+                            "name": "UE3 S2 Techniques et outils d'analyse"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Monnaie, Banque, Finance, Assurance",
+                "code": "E5EB11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "E5EE1": {
+        "composante": "Sciences Economiques",
+        "name": "Master Economie de l'Entreprise et des Marchés",
+        "code": "E5EE1",
+        "discipline": null,
+        "credits": 120,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M2 Economie de l'Entreprise et des Marchés",
+                "code": "E5EE11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "A3AP1": {
+        "composante": "Institut de Prép à l'Adminis Géné",
+        "name": "Licence Administration Publique",
+        "code": "A3AP1",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 180,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L3 Administration Publique",
+                "code": "A3AP11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Administration Publique FAD PARIS",
+                "code": "A3AP14",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Administration Publique FAD Poitiers",
+                "code": "A3AP15",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Administration Publique FAD SACEF",
+                "code": "A3AP16",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Administration Publique FAD TOULOUSE",
+                "code": "A3AP13",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L3 Administration Publique FAD AIX",
+                "code": "A3AP12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "A5AP3": {
+        "composante": "Institut de Prép à l'Adminis Géné",
+        "name": "Master Administration Publique",
+        "code": "A5AP3",
+        "discipline": "Sciences économiques- gestion (hors AES)",
+        "credits": 60,
+        "levelISCED": 7,
+        "options": [
+            {
+                "name": "M1 Administration Publique",
+                "code": "A4AP31",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Administration Publique FAD PARIS",
+                "code": "A4AP33",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Administration Publique FAD POITERS",
+                "code": "A4AP32",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M1 Administration Publique FAD SACEF",
+                "code": "A4AP34",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPCT",
+                "code": "A5AP32",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPCT FAD PARIS",
+                "code": "A5AP38",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPCT FAD POITIERS",
+                "code": "A5AP37",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPCT FAD SACEF",
+                "code": "A5AP39",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPEOP",
+                "code": "A5AP31",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": [
+                        "5APM002C",
+                        "19\/10\/2022",
+                        "Grands enjeux Eco. et Soc",
+                        "Grands enjeux Economiques et Sociaux",
+                        "Elément constitutif",
+                        "O",
+                        "O",
+                        "N",
+                        "O",
+                        "N",
+                        "N"
+                    ]
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPEOP FAD PARIS",
+                "code": "A5AP34",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPEOP FAD POIT.",
+                "code": "A5AP33",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPEOP FAD SACEF",
+                "code": "A5AP35",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "M2 Administration Publique - MPEOP IRA",
+                "code": "A5AP36",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "38IC4": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Electronique, Microélec, Nanoélec et Micro-Ondes",
+        "code": "38IC4",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doct en Electronique, Microélec, Nanoélec et M-Ondes",
+                "code": "38IC41",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "48SM3": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doct en Méca des Solides, Matériaux, Structures, Surfaces",
+        "code": "48SM3",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doct en Méca des Solides, Matériaux, Structures, Surfaces",
+                "code": "48SM31",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18TP2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doct en Struct et Evo de la Terre et autres Planètes",
+        "code": "18TP2",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doct en Struct et Evo de la Terre et autres Planètes",
+                "code": "18TP21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18TP1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doct en Terre Solide : Géodynamique enveloppes supérieures",
+        "code": "18TP1",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doct en Terre Solide : Géodynamique enveloppes supérieures",
+                "code": "18TP11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "38IC7": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Automatique, signal, robotique",
+        "code": "38IC7",
+        "discipline": "Pluri Sciences",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Automatique, signal, robotique",
+                "code": "38IC71",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "48IC1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Bio-Ingénierie Mécanique",
+        "code": "48IC1",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Bio-Ingénierie Mécanique",
+                "code": "48IC11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18BS2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Biochimie, Biologie Moléculaire",
+        "code": "18BS2",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Biochimie, Biologie Moléculaire",
+                "code": "18BS21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18BS1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Biochimie, Biologie Moléculaire",
+        "code": "18BS1",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Biochimie, Biologie Moléculaire",
+                "code": "18BS11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "28MB2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Biologie Cellulaire et Moléculaire",
+        "code": "28MB2",
+        "discipline": "Pluri Santé",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Biologie Cellulaire et Moléculaire",
+                "code": "28MB21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18BS4": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Biologie des Organismes",
+        "code": "18BS4",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Biologie des Organismes",
+                "code": "18BS41",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18BS3": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Biologie des populations et Ecologie",
+        "code": "18BS3",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Biologie des populations et Ecologie",
+                "code": "18BS31",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18CH3": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Chimie des Matériaux",
+        "code": "18CH3",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Chimie des Matériaux",
+                "code": "18CH31",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18CH2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Chimie Organique, Minérale, Industrielle",
+        "code": "18CH2",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Chimie Organique, Minérale, Industrielle",
+                "code": "18CH21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18CH1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Chimie Théorique, Physique, Analytique",
+        "code": "18CH1",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Chimie Théorique, Physique, Analytique",
+                "code": "18CH11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "48EN1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Energétique, Thermique, Combustion",
+        "code": "48EN1",
+        "discipline": "Pluri Sciences",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Energétique, Thermique, Combustion",
+                "code": "48EN11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "48IC4": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Génie Electrique",
+        "code": "48IC4",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Génie Electrique",
+                "code": "48IC41",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "48IC3": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Génie Mécanique",
+        "code": "48IC3",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Génie Mécanique",
+                "code": "48IC31",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "38IN1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Informatique et Applications",
+        "code": "38IN1",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Informatique et Applications",
+                "code": "38IN11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "38MP1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Mathématiques et leurs Interactions",
+        "code": "38MP1",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Mathématiques et leurs Interactions",
+                "code": "38MP11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "48SM1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Milieux Denses et Matériaux",
+        "code": "48SM1",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Milieux Denses et Matériaux",
+                "code": "48SM11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "48SM2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Mécanique des Milieux Fluides",
+        "code": "48SM2",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Mécanique des Milieux Fluides",
+                "code": "48SM21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "28NS1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Neurosciences",
+        "code": "28NS1",
+        "discipline": "Pluri Santé",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Neurosciences",
+                "code": "28NS11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "28SD2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Pharmacologie et Sciences du Médicament",
+        "code": "28SD2",
+        "discipline": "Pluri Santé",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Pharmacologie et Sciences du Médicament",
+                "code": "28SD21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "28PP1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Physiologie et Physiopathologie",
+        "code": "28PP1",
+        "discipline": "Pluri Santé",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Physiologie et Physiopathologie",
+                "code": "28PP11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "28PP2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Physiologie et Physiopathologie",
+        "code": "28PP2",
+        "discipline": "Pluri Santé",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Physiologie et Physiopathologie",
+                "code": "28PP21",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "18BI1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Physiologie Végétale",
+        "code": "18BI1",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Physiologie Végétale",
+                "code": "18BI11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "28BS1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Rech Clinique, Innovation Techno, Santé Publique",
+        "code": "28BS1",
+        "discipline": "Pluri Santé",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Rech Clinique, Innovation Techno, Santé Publique",
+                "code": "28BS11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "38TS1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Doctorat en Traitement du Signal et des Images",
+        "code": "38TS1",
+        "discipline": "Pluri Sciences",
+        "credits": 180,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "Doctorat en Traitement du Signal et des Images",
+                "code": "38TS11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAH30": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Chimie",
+        "code": "FAH30",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Chimie",
+                "code": "FAH301",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAH80": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Electronique",
+        "code": "FAH80",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Electronique",
+                "code": "FAH801",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAHA0": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Informatique",
+        "code": "FAHA0",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Informatique",
+                "code": "FAHA01",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "HDR Informatique - ENSMA",
+                "code": "FAHA11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAH10": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Mathématiques",
+        "code": "FAH10",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Mathématiques",
+                "code": "FAH101",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAH70": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Mécanique solides",
+        "code": "FAH70",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Mécanique des Solides",
+                "code": "FAH701",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "HDR Mécanique des Solides - ENSMA",
+                "code": "FAH711",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAH20": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Physique",
+        "code": "FAH20",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Physique",
+                "code": "FAH201",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "HDR Physique - ENSMA",
+                "code": "FAH211",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAH40": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Sciences de l'univers",
+        "code": "FAH40",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Sciences de l'univers",
+                "code": "FAH401",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAH50": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Sciences de la vie",
+        "code": "FAH50",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Sciences de la vie",
+                "code": "FAH501",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAHF0": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "HDR Automatique, Image et Signal",
+        "code": "FAHF0",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Automatique, Image et Signal",
+                "code": "FAHF01",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAHC0": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Bio mécanique, Bio Ingénierie",
+        "code": "FAHC0",
+        "discipline": "STAPS",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Bio mécanique, Bio Ingénierie",
+                "code": "FAHC01",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAHE0": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "HDR Energétique, Thermique, Combustion,",
+        "code": "FAHE0",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Energétique Thermique Combustion",
+                "code": "FAHE01",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "HDR Energétique, Thermique, Combustion -ENSMA",
+                "code": "FAHE11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAHG0": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "HDR Génie Civil",
+        "code": "FAHG0",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Génie Civil",
+                "code": "FAHG01",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAHD0": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "HDR Génie électrique",
+        "code": "FAHD0",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Génie Electrique",
+                "code": "FAHD01",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "FAHB0": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "H.D.R. Mécanique des Fluides",
+        "code": "FAHB0",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 0,
+        "levelISCED": 8,
+        "options": [
+            {
+                "name": "HDR Mécanique des Fluides",
+                "code": "FAHB01",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "HDR Mécanique des Fluides - ENSMA",
+                "code": "FAHB11",
+                "credits": null,
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3CH1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Chimie",
+        "code": "F3CH1",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Chimie",
+                "code": "F1CH12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Chimie",
+                "code": "F2CH11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Chimie option Physique - Chimie",
+                "code": "F2CH16",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3CHS": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Chimie LAS",
+        "code": "F3CHS",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Chimie Accès Santé",
+                "code": "F1CHS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Chimie Accès Santé",
+                "code": "F2CHS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3CHX": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Chimie CPGE",
+        "code": "F3CHX",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Chimie CPGE",
+                "code": "F1CHX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Chimie CPGE",
+                "code": "F2CHX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3IN2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Informatique",
+        "code": "F3IN2",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Informatique",
+                "code": "F1IN22",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Informatique",
+                "code": "F2IN21",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3INS": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Informatique LAS",
+        "code": "F3INS",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Informatique Accès Santé",
+                "code": "F1INS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Informatique Accès Santé",
+                "code": "F2INS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3INX": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Informatique CPGE",
+        "code": "F3INX",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Informatique CPGE",
+                "code": "F1INX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Informatique CPGE",
+                "code": "F2INX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3MA2": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Mathématiques",
+        "code": "F3MA2",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Mathématiques",
+                "code": "F1MA22",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Mathématiques",
+                "code": "F2MA21",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3MAS": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Mathématiques LAS",
+        "code": "F3MAS",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Mathématiques Accès Santé",
+                "code": "F1MAS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Mathématiques Accès Santé",
+                "code": "F2MAS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3MAX": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Mathématiques CPGE",
+        "code": "F3MAX",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Mathématiques CPGE",
+                "code": "F1MAX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Mathématiques CPGE",
+                "code": "F2MAX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3PY1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Physique",
+        "code": "F3PY1",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Physique",
+                "code": "F1PY12",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L1 Physique parcours renforcé",
+                "code": "F1PY13",
+                "credits": "60",
+                "elemPedago": {
+                    "S1": {
+                        "1PYI002U": {
+                            "credits": 6,
+                            "name": "Algèbre 1 PR"
+                        },
+                        "1PYI001U": {
+                            "credits": 6,
+                            "name": "Outils mathématiques PR"
+                        },
+                        "1PYI004U": {
+                            "credits": 3,
+                            "name": "Anglais S1 PR"
+                        },
+                        "1PYI003U": {
+                            "credits": 3,
+                            "name": "Communication scientifique S1 PR"
+                        },
+                        "1ZZF013U": {
+                            "credits": 6,
+                            "name": "Chimie générale 1"
+                        },
+                        "1ZZF015U": {
+                            "credits": 6,
+                            "name": "Physique générale 1"
+                        }
+                    },
+                    "S2": {
+                        "1PYP001U": {
+                            "credits": 6,
+                            "name": "Algèbre 2 PR"
+                        },
+                        "1PYP004U": {
+                            "credits": 3,
+                            "name": "Anglais S2 PR"
+                        },
+                        "1PYP002U": {
+                            "credits": 6,
+                            "name": "Analyse élémentaire 2 PR et TP constantes de la physique"
+                        },
+                        "1ZZF018U": {
+                            "credits": 6,
+                            "name": "Physique générale 2"
+                        },
+                        "1PYP003U": {
+                            "credits": 3,
+                            "name": "Communication scientifique 2 PR"
+                        },
+                        "1ZZF019U": {
+                            "credits": 6,
+                            "name": "Sciences pour l'ingénieur"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Physique",
+                "code": "F2PY11",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3PYS": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Physique LAS",
+        "code": "F3PYS",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Physique Accès Santé",
+                "code": "F1PYS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            },
+            {
+                "name": "L2 Physique Accès Santé",
+                "code": "F2PYS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3PYX": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Physique CPGE",
+        "code": "F3PYX",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Physique CPGE",
+                "code": "F1PYX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SR1": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences de la Terre",
+        "code": "F3SR1",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences de la Terre",
+                "code": "F1SR13",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SRS": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences de la Terre LAS",
+        "code": "F3SRS",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences de la Terre Accès Santé",
+                "code": "F1SRS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SRX": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences de la Terre CPGE",
+        "code": "F3SRX",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences de la Terre CPGE",
+                "code": "F1SRX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SV3": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences de la Vie",
+        "code": "F3SV3",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences de la Vie",
+                "code": "F1SV32",
+                "credits": "60",
+                "elemPedago": {
+                    "S2": {
+                        "1SVP001U": {
+                            "credits": 6,
+                            "name": "Métabolisme Cellulaire 1"
+                        },
+                        "1ZZF011U": {
+                            "credits": 3,
+                            "name": "UE5 Anglais (S2)"
+                        },
+                        "1ZZF012U": {
+                            "credits": 3,
+                            "name": "UE6 Outils et Compétences Transversales (S2)"
+                        },
+                        "1ZZF007U": {
+                            "credits": 6,
+                            "name": "Organismes et Milieux"
+                        }
+                    },
+                    "S1": {
+                        "1ZZF001U": {
+                            "credits": 6,
+                            "name": "UE Outils mathématiques (SVT)"
+                        },
+                        "1ZZF002U": {
+                            "credits": 6,
+                            "name": "UE Des biomolécules à l'organisme"
+                        },
+                        "1ZZF003U": {
+                            "credits": 6,
+                            "name": "UE Diversité du vivant 1"
+                        },
+                        "1ZZF004U": {
+                            "credits": 6,
+                            "name": "UE Planète terre"
+                        },
+                        "1ZZF005U": {
+                            "credits": 3,
+                            "name": "UE5 Anglais"
+                        },
+                        "1ZZF006U": {
+                            "credits": 3,
+                            "name": "UE6 Outils et compétences transversales"
+                        }
+                    }
+                },
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SVS": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences de la Vie LAS",
+        "code": "F3SVS",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences de la Vie Accès Santé",
+                "code": "F1SVS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SVX": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences de la Vie CPGE",
+        "code": "F3SVX",
+        "discipline": "Sciences de la nature et de la vie",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences de la Vie CPGE",
+                "code": "F1SVX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SI3": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences Pour l'Ingénieur",
+        "code": "F3SI3",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences Pour l'Ingénieur",
+                "code": "F1SI32",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SIS": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences Pour l'Ingénieur LAS",
+        "code": "F3SIS",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences Pour l'Ingénieur Accès Santé",
+                "code": "F1SIS1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    },
+    "F3SIX": {
+        "composante": "Sciences Fondamentales et Appliquées",
+        "name": "Licence Sciences Pour l'Ingénieur CPGE",
+        "code": "F3SIX",
+        "discipline": "Sciences Fondamentales et Applications",
+        "credits": 120,
+        "levelISCED": 6,
+        "options": [
+            {
+                "name": "L1 Sciences Pour l'Ingénieur CPGE",
+                "code": "F1SIX1",
+                "credits": "60",
+                "elemPedago": [ ],
+                "timeToComplete": "AN"
+            }
+        ]
+    }
+}

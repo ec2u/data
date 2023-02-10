@@ -15,6 +15,7 @@
  */
 
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
@@ -34,7 +35,7 @@ export const SchemesIcon=<GraduationCap/>;
 export const Schemes=immutable({
 
     id: "/concepts/",
-    label: { "en": "Concept Schemes" },
+    label: { "en": "Taxonomies" },
 
     contains: multiple({
 
@@ -56,7 +57,7 @@ export const Schemes=immutable({
 
 export function DataSchemes() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
 
 
@@ -64,6 +65,8 @@ export function DataSchemes() {
 
 
     return <DataPage item={string(Schemes)}
+
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 

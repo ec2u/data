@@ -4,10 +4,12 @@
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
 </units/> a ec2u:Dataset ;
-	dct:title "Units"@en  ;
-	dct:description "EC2U research units and facilities."@en ;
+	dct:title "EC2U Units"@en  ;
+	dct:alternative "EC2U Research Units and Facilities"@en ;
+	dct:description "Identifying and background information about research and innovation units and supporting structures at EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	rdfs:isDefinedBy </datasets/units> ;
 	void:rootResource ec2u:Unit .
 
 <https://ec2u.eu/> a org:FormalOrganization ;
@@ -18,6 +20,9 @@
 	foaf:homepage <https://www.ec2u.eu/> ;
 
     org:identifier "EC2U" .
+
+</concepts/unit-topics> a skos:ConceptScheme ;
+	dct:title "EC2U Research Unit Topics"@en .
 
 
 ########################################################################################################################

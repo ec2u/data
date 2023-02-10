@@ -12,7 +12,8 @@ insert {
 	{ select ?scheme (count(?concept) as ?extent) {
 
 		?scheme a skos:ConceptScheme .
-		?concept skos:inScheme ?scheme .
+
+		optional { ?concept skos:inScheme ?scheme }
 
     } group by ?scheme }
 

@@ -15,6 +15,7 @@
  */
 
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
@@ -60,7 +61,7 @@ export const Universities=immutable({
 
 export function DataUniversities() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ /*".order": "label"*/ }, sessionStorage); // !!! broken multilingual sorting
 
 
@@ -68,6 +69,8 @@ export function DataUniversities() {
 
 
     return <DataPage item={string(Universities)}
+
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 

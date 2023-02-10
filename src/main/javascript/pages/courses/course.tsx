@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Languages } from "@ec2u/data/languages";
 import { Courses, CoursesIcon } from "@ec2u/data/pages/courses/courses";
 import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
@@ -33,42 +34,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 
-const Languages: { [language: string]: { [language: string]: string } }={ // !!! complete translations
-    "en": {
-        "en": "English",
-        "it": "Inglese"
-    },
-    "pt": {
-        "en": "Portuguese",
-        "it": "Portoghese"
-    },
-    "ro": {
-        "en": "Romanian",
-        "it": "Rumeno"
-    },
-    "de": {
-        "en": "German",
-        "it": "Tedesco"
-    },
-    "it": {
-        "en": "Italian",
-        "it": "Italiano"
-    },
-    "fr": {
-        "en": "French",
-        "it": "Francese"
-    },
-    "es": {
-        "en": "Spanish",
-        "it": "Spagnolo"
-    },
-    "fi": {
-        "en": "Finnish",
-        "it": "Finlandese"
-    }
-};
-
-
 export const Course=immutable({
 
     id: "/courses/{code}",
@@ -82,11 +47,17 @@ export const Course=immutable({
         label: { "en": "" }
     },
 
+    provider: optional({
+        id: "",
+        label: { "en": "" }
+    }),
+
     url: multiple(""),
 
     courseCode: optional(""),
-    inLanguage: optional(""),
-    numberOfCredits: optional(0),
+    inLanguage: multiple(""),
+    learningResourceType: { "en": "" },
+    numberOfCredits: optional(0.0),
     timeRequired: optional(""),
 
     educationalLevel: optional({
@@ -102,10 +73,14 @@ export const Course=immutable({
     teaches: { "en": "" },
     assesses: { "en": "" },
     coursePrerequisites: { "en": "" },
-    learningResourceType: { "en": "" },
     competencyRequired: { "en": "" },
     educationalCredentialAwarded: { "en": "" },
-    occupationalCredentialAwarded: { "en": "" }
+    occupationalCredentialAwarded: { "en": "" },
+
+    inProgram: multiple({
+        id: "",
+        label: { "en": "" }
+    })
 
 });
 
@@ -155,6 +130,7 @@ function DataCourseInfo({
 
         label,
         university,
+        provider,
 
         url,
         courseCode,
@@ -162,7 +138,12 @@ function DataCourseInfo({
         inLanguage,
         numberOfCredits,
         timeRequired,
-        about
+        about,
+
+        educationalCredentialAwarded,
+        occupationalCredentialAwarded,
+
+        inProgram
 
     }
 
@@ -176,7 +157,14 @@ function DataCourseInfo({
 
         <DataInfo>{{
 
-            "University": <NodeLink>{university}</NodeLink>
+            "University": <NodeLink>{university}</NodeLink>,
+            "Provider": provider && <span>{string(provider)}</span>,
+
+            "Programs": inProgram?.length && <ul>{[...inProgram]
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(program => <li key={program.id}><NodeLink>{program}</NodeLink></li>)
+            }</ul>
+
 
         }}</DataInfo>
 
@@ -190,10 +178,25 @@ function DataCourseInfo({
 
         <DataInfo>{{
 
+            "Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
+                {educationalCredentialAwarded && <span>{string(educationalCredentialAwarded)}</span>}
+                {occupationalCredentialAwarded && <span>{string(occupationalCredentialAwarded)}</span>}
+            </>,
+
             "Level": educationalLevel && <span>{string(educationalLevel)}</span>,
-            "Language": inLanguage && <span>{string(Languages[inLanguage]) || inLanguage}</span>,
-            "Credits": numberOfCredits && <span>{numberOfCredits}</span>,
-            "Duration": timeRequired && <span>{timeRequired}</span>,  // !!! map to localized description
+            "Language": inLanguage?.length && <ul>{inLanguage
+                .map(tag => string(Languages[tag]))
+                .filter(language => language)
+                .sort((x, y) => string(x).localeCompare(string(y)))
+                .map(language => <li key={language}>{language}</li>)
+            }</ul>,
+            "Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
+            "Duration": timeRequired && <span>{timeRequired}</span>  // !!! map to localized description
+
+        }}</DataInfo>
+
+        <DataInfo>{{
+
             "Subjects": about && about.map(subject => <span key={subject.id}>{string(subject)}</span>) // !!! link
 
         }}</DataInfo>
@@ -229,7 +232,6 @@ function DataCourseBody({
         competencyRequired,
         educationalCredentialAwarded,
         occupationalCredentialAwarded
-
     }
 
 }: {

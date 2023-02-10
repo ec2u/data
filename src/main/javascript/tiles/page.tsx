@@ -21,6 +21,13 @@ import React, { createElement, DependencyList, ReactNode, useEffect, useRef, use
 import "./page.css";
 
 
+export function ec2u(label: { [lang: string]: string }): { [lang: string]: string } { // remove leading alliance name
+    return Object.entries(label).reduce((labels, [lang, text]) => ({
+        ...labels, [lang]: text.replace(/^EC2U\s+/, "")
+    }), {});
+}
+
+
 export function DataPage({
 
     item,

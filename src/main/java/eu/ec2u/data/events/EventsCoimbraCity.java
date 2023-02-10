@@ -128,7 +128,7 @@ public final class EventsCoimbraCity implements Runnable {
                     final Optional<Literal> disambiguatingDescription=description
                             .map(literal -> literal(clip(literal.stringValue()), Coimbra.Language));
 
-                    return frame(item(Context, url))
+                    return frame(item(Events.Context, url))
 
                             .values(RDF.TYPE, Event)
 
@@ -188,6 +188,7 @@ public final class EventsCoimbraCity implements Runnable {
 
             return frame(item(Events.Scheme, id))
                     .value(RDF.TYPE, SKOS.CONCEPT)
+                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);
 

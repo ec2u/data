@@ -5,10 +5,12 @@
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
 </actors/> a ec2u:Dataset ;
-	dct:title "Actors"@en ;
-	dct:description "EC2U knowledge ecosystem actors."@en ;
+	dct:title "EC2U Actors"@en ;
+	dct:alternative "EC2U Knowledge Ecosystem Actors"@en ;
+	dct:description "Anonymized information about knowledge ecosystem actors at EC2U allied universities and associated local communities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-	dct:rights "Copyright © 2022-2023 EC2U Alliance";
+	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	rdfs:isDefinedBy </datasets/actors> ;
 	void:rootResource ec2u:Actor .
 
 

@@ -17,8 +17,7 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.*;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
@@ -63,7 +62,7 @@ import static java.util.stream.Collectors.toSet;
 public final class Events extends Delegator {
 
     public static final IRI Context=EC2U.item("/events/");
-    public static final IRI Scheme=iri(Concepts.Context, "/events-topics");
+    public static final IRI Scheme=iri(Concepts.Context, "/event-topics");
 
     public static final IRI Event=EC2U.term("Event");
 
@@ -128,11 +127,11 @@ public final class Events extends Delegator {
 
                 new Router()
 
-                        .path("/", new Router()
+                        .path("/", new Worker()
                                 .get(new Relator())
                         )
 
-                        .path("/{id}", new Router()
+                        .path("/{id}", new Worker()
                                 .get(new Relator())
                         )
 
@@ -151,10 +150,7 @@ public final class Events extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(
-                            rdf(Events.class, ".ttl", EC2U.Base)
-
-                    )
+                    .of(rdf(Events.class, ".ttl", EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

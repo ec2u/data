@@ -17,7 +17,7 @@
 package eu.ec2u.data.datasets;
 
 import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
@@ -41,35 +41,42 @@ import static com.metreeca.link.shapes.Datatype.datatype;
 import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
 import static com.metreeca.link.shapes.Guard.relate;
+import static com.metreeca.link.shapes.MinCount.minCount;
+import static com.metreeca.link.shapes.Pattern.pattern;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.multilingual;
 
+import static java.lang.String.format;
+
 public final class Datasets extends Delegator {
 
-    private static final IRI Context=EC2U.item("/datasets/");
+    private static final IRI Context=EC2U.item("/");
 
     public static final IRI Dataset=EC2U.term("Dataset");
 
 
-    private static Shape Dataset() {
+    public static Shape Dataset() { // !!! private
         return relate(Resource(),
-
-                filter(clazz(Dataset)),
 
                 field(RDFS.LABEL, multilingual()),
                 field(RDFS.COMMENT, multilingual()),
 
-                field(DCTERMS.LICENSE, required(), datatype(IRIType),
+                field(DCTERMS.TITLE, multilingual()),
+                field(DCTERMS.ALTERNATIVE, multilingual()),
+                field(DCTERMS.DESCRIPTION, multilingual()),
+
+                field(DCTERMS.LICENSE, optional(), datatype(IRIType),
                         field(RDFS.LABEL, multilingual())
                 ),
 
                 field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
                 field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
 
-                field(VOID.URI_SPACE, optional(), datatype(XSD.STRING)),
+                field(RDFS.ISDEFINEDBY, optional(), datatype(IRIType)),
+
                 field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER))
 
         );
@@ -81,9 +88,17 @@ public final class Datasets extends Delegator {
     public Datasets() {
         delegate(handler(
 
-                new Driver(Dataset()),
+                new Driver(Dataset(),
 
-                new Router()
+                        filter(
+                                clazz(Dataset),
+                                pattern(format("^%s\\w+/$", EC2U.Base)), // prevent self-inclusion
+                                field(DCTERMS.LICENSE, minCount(1)) // only licensed datasets
+                        )
+
+                ),
+
+                new Worker()
 
                         .get(new Relator())
 

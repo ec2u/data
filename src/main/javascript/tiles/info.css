@@ -37,12 +37,9 @@ data-info {
         display: contents;
 
         & > dt {
-
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-
-            font-weight: 600;
             color: var(--node--color-label);
         }
 

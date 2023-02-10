@@ -16,6 +16,7 @@
 
 import { University } from "@ec2u/data/pages/universities/university";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
@@ -61,7 +62,7 @@ export const Events=immutable({
 
 export function DataEvents() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ ".order": ["startDate", "label"] }, sessionStorage);
 
 
@@ -69,6 +70,8 @@ export function DataEvents() {
 
 
     return <DataPage item={string(Events)}
+
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 

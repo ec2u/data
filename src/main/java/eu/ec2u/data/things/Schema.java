@@ -77,6 +77,7 @@ public final class Schema {
 
     public static final IRI Thing=term("Thing");
 
+    public static final IRI identifier=term("identifier");
     public static final IRI url=term("url");
     public static final IRI name=term("name");
     public static final IRI image=term("image");
@@ -96,11 +97,13 @@ public final class Schema {
 
                 hidden(field(RDF.TYPE, all(Thing))),
 
+                field(identifier, optional(), datatype(XSD.STRING)),
                 field(url, multiple(), datatype(IRIType)),
                 field(name, multilingual()),
                 field(image, multiple(), datatype(IRIType)),
-                field(description, multilingual()),
-                field(disambiguatingDescription, multilingual())
+                field("fullDescription", description, multilingual()), // ;( dct:description
+                field(disambiguatingDescription, multilingual()),
+                field(about, multiple(), Reference())
 
         );
     }
@@ -118,7 +121,7 @@ public final class Schema {
 
                 hidden(field(RDF.TYPE, all(Organization))),
 
-                field(Schema.legalName, multilingual()),
+                field(legalName, multilingual()),
                 field(Schema.email, datatype(XSD.STRING)),
                 field(Schema.telephone, datatype(XSD.STRING))
         );
@@ -128,6 +131,21 @@ public final class Schema {
     //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI inLanguage=term("inLanguage");
+    public static final IRI numberOfCredits=term("numberOfCredits");
+    public static final IRI educationalCredentialAwarded=term("educationalCredentialAwarded");
+    public static final IRI occupationalCredentialAwarded=term("occupationalCredentialAwarded");
+    public static final IRI educationalLevel=term("educationalLevel");
+
+
+    //// Programs //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI EducationalOccupationalProgram=term("EducationalOccupationalProgram");
+
+    public static final IRI programType=term("programType");
+    public static final IRI occupationalCategory=term("occupationalCategory");
+    public static final IRI timeToComplete=term("timeToComplete");
+    public static final IRI programPrerequisites=term("programPrerequisites");
+    public static final IRI hasCourse=term("hasCourse");
 
 
     //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,9 +154,6 @@ public final class Schema {
 
     public static final IRI courseCode=term("courseCode");
     public static final IRI coursePrerequisites=term("coursePrerequisites");
-    public static final IRI educationalCredentialAwarded=term("educationalCredentialAwarded");
-    public static final IRI occupationalCredentialAwarded=term("occupationalCredentialAwarded");
-    public static final IRI numberOfCredits=term("numberOfCredits");
 
 
     //// Learning Resource /////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +162,6 @@ public final class Schema {
 
     public static final IRI assesses=term("assesses");
     public static final IRI competencyRequired=term("competencyRequired");
-    public static final IRI educationalLevel=term("educationalLevel");
     public static final IRI learningResourceType=term("learningResourceType");
     public static final IRI teaches=term("teaches");
 
@@ -290,7 +304,6 @@ public final class Schema {
     private Schema() { }
 
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
@@ -302,9 +315,7 @@ public final class Schema {
         @Override public void run() {
             Stream
 
-                    .of(
-                            rdf(Schema.class, ".ttl")
-                    )
+                    .of(rdf(Schema.class, ".ttl", EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

@@ -16,6 +16,7 @@
 
 import { University } from "@ec2u/data/pages/universities/university";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
@@ -36,7 +37,7 @@ export const UnitsIcon=<FlaskConical/>;
 export const Units=immutable({
 
     id: "/units/",
-    label: { "en": "Research Units" },
+    label: { "en": "Units" },
 
     contains: multiple({
 
@@ -63,7 +64,7 @@ export const Units=immutable({
 
 export function DataUnits() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
 
 
@@ -71,6 +72,8 @@ export function DataUnits() {
 
 
     return <DataPage item={string(Units)}
+
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 

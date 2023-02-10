@@ -21,8 +21,7 @@ import com.metreeca.core.services.Logger;
 import com.metreeca.core.toolkits.Strings;
 import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.actions.GET;
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.*;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.*;
@@ -79,7 +78,7 @@ import static java.util.stream.Collectors.toList;
 public final class Units extends Delegator {
 
     public static final IRI Context=EC2U.item("/units/");
-    public static final IRI Scheme=iri(Concepts.Context, "/units-topics");
+    public static final IRI Scheme=iri(Concepts.Context, "/unit-topics");
 
     public static final IRI Unit=EC2U.term("Unit");
 
@@ -119,11 +118,11 @@ public final class Units extends Delegator {
 
                 new Router()
 
-                        .path("/", new Router()
+                        .path("/", new Worker()
                                 .get(new Relator())
                         )
 
-                        .path("/{id}", new Router()
+                        .path("/{id}", new Worker()
                                 .get(new Relator())
                         )
 
@@ -142,9 +141,7 @@ public final class Units extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(
-                            rdf(Units.class, ".ttl", Base)
-                    )
+                    .of(rdf(Units.class, ".ttl", Base))
 
                     .forEach(new Upload()
                             .contexts(Context)
@@ -169,10 +166,6 @@ public final class Units extends Delegator {
         private static final Pattern URLPattern=Pattern.compile("^https?://\\S+$");
         private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
         private static final Pattern HeadPattern=Pattern.compile("([^,]?+)\\s*,\\s*([^(]?+)(?:\\s*\\(([^)]+)\\))?");
-
-        private static final Frame TopicsScheme=frame(Scheme)
-                .value(RDF.TYPE, SKOS.CONCEPT_SCHEME)
-                .value(RDFS.LABEL, literal("Research Unit Topics", "en"));
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -525,8 +518,7 @@ public final class Units extends Delegator {
 
                     .map(label -> frame(EC2U.item(Scheme, label.stringValue()))
                             .value(RDF.TYPE, SKOS.CONCEPT)
-                            .frame(SKOS.IN_SCHEME, TopicsScheme)
-                            .frame(SKOS.TOP_CONCEPT_OF, TopicsScheme)
+                            .value(SKOS.TOP_CONCEPT_OF, Scheme)
                             .value(SKOS.PREF_LABEL, label)
                     );
         }
