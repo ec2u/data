@@ -51,7 +51,7 @@ import static eu.ec2u.work.validation.Validators.validate;
 
 public final class OffersPavia implements Runnable {
 
-    private static final IRI Context=iri(Offers.Courses, "/pavia");
+    private static final IRI Context=iri(Offers.Context, "/pavia");
 
 
     public static void main(final String... args) {

@@ -53,7 +53,7 @@ import static java.util.Map.entry;
 
 public final class OffersSalamanca implements Runnable {
 
-    private static final IRI Context=iri(Offers.Courses, "/salamanca");
+    private static final IRI Context=iri(Offers.Context, "/salamanca");
 
     private static final String APIUrl="offers-salamanca-url";
 
