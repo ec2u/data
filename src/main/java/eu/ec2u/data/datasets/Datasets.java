@@ -42,14 +42,11 @@ import static com.metreeca.link.shapes.Field.field;
 import static com.metreeca.link.shapes.Guard.filter;
 import static com.metreeca.link.shapes.Guard.relate;
 import static com.metreeca.link.shapes.MinCount.minCount;
-import static com.metreeca.link.shapes.Pattern.pattern;
 import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.multilingual;
-
-import static java.lang.String.format;
 
 public final class Datasets extends Delegator {
 
@@ -92,8 +89,7 @@ public final class Datasets extends Delegator {
 
                         filter(
                                 clazz(Dataset),
-                                pattern(format("^%s\\w+/$", EC2U.Base)), // prevent self-inclusion
-                                field(DCTERMS.LICENSE, minCount(1)) // only licensed datasets
+                                field(DCTERMS.AVAILABLE, minCount(1)) // only published datasets
                         )
 
                 ),
