@@ -47,8 +47,8 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.Map;
 
+import static com.metreeca.core.Locator.path;
 import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.Locator.storage;
 import static com.metreeca.core.services.Cache.cache;
 import static com.metreeca.core.services.Logger.Level.debug;
 import static com.metreeca.core.services.Vault.vault;
@@ -92,7 +92,7 @@ public final class Data implements Runnable {
 
                 .set(vault(), GCPVault::new)
 
-                .set(storage(), () -> Paths.get(Production ? "/tmp" : "data"))
+                .set(path(), () -> Paths.get(Production ? "/tmp" : "data"))
                 .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
 
