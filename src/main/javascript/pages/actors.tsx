@@ -15,7 +15,7 @@
  */
 
 import { immutable } from "@metreeca/core";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { useRoute } from "@metreeca/view/nests/router";
 import * as React from "react";
 import { useEffect } from "react";
 

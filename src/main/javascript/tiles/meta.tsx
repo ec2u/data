@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Info } from "@metreeca/tile/widgets/icon";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { useRoute } from "@metreeca/view/nests/router";
+import { Info } from "@metreeca/view/tiles/icon";
 import React, { createElement } from "react";
 import "./meta.css";
 

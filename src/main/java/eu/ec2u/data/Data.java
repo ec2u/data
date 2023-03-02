@@ -39,7 +39,7 @@ import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
-import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -166,12 +166,12 @@ public final class Data implements Runnable {
                                         // !!! to be removed after metreeca/java supports resource access to collections
 
                                         .path("/datasets", handler(
-                                                new Driver(link(OWL.SAMEAS, Dataset())),
+                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
                                                 new Worker().get(new Relator())
                                         ))
 
                                         .path("/datasets/{id}", handler(
-                                                new Driver(link(OWL.SAMEAS, Dataset())),
+                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
                                                 new Worker().get(new Relator())
                                         ))
 

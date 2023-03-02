@@ -16,18 +16,17 @@
 
 import { DatasetsIcon } from "@ec2u/data/pages/datasets/datasets";
 import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage, ec2u } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { optional, string } from "@metreeca/link";
-import { NodeHint } from "@metreeca/tile/widgets/hint";
-import { NodeLink } from "@metreeca/tile/widgets/link";
-import { NodeMark } from "@metreeca/tile/widgets/mark";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { useEntry } from "@metreeca/tool/nests/graph";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { Dictionary, optional, string } from "@metreeca/core/value";
+import { useEntry } from "@metreeca/view/nests/graph";
+import { useRoute } from "@metreeca/view/nests/router";
+import { NodeHint } from "@metreeca/view/tiles/hint";
+import { NodeLink } from "@metreeca/view/tiles/link";
+import { NodeMark } from "@metreeca/view/tiles/mark";
+import { NodeSpin } from "@metreeca/view/tiles/spin";
 import "highlight.js/styles/github.css";
 import React, { useEffect } from "react";
 
@@ -51,9 +50,9 @@ export const Dataset=immutable({
     rights: optional(""),
     accessRights: optional({ "en": "" }),
 
-    isDefinedBy: optional(""),
+    entities: 0,
 
-    entities: 0
+    isDefinedBy: ""
 
 });
 
@@ -65,7 +64,7 @@ export function DataDataset() {
     const entry=useEntry(route, Dataset);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(ec2u(label)) }) }));
+    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(ec2u(label)) }) }));
 
 
     return <DataPage item={entry({ value: ({ title, alternative }) => string(alternative || title) })}
@@ -74,7 +73,10 @@ export function DataDataset() {
 
         pane={<DataPane
 
-            header={entry({ value: ({ id, label }) => <DataBack>{{ id, label: ec2u(label) }}</DataBack> })}
+            header={entry({
+                value: ({ id, label, isDefinedBy }) =>
+                    <DataBack>{{ id: isDefinedBy, label: ec2u(label) }}</DataBack>
+            })}
 
         >{entry({
 
@@ -86,7 +88,10 @@ export function DataDataset() {
 
         fetch: <NodeHint>{DatasetsIcon}</NodeHint>,
 
-        value: DataDatasetBody,
+        value: ({ id, description }) => DataDatasetBody({
+            description, definition: `${id === "/datasets" ? "/datasets/" : id}${location.hash}`
+
+        }),
 
         error: error => <span>{error.status}</span> // !!! report
 
@@ -99,12 +104,12 @@ export function DataDataset() {
 
 function DataDatasetInfo({
 
+    id,
+
     entities,
 
     license,
-    rights,
-
-    isDefinedBy
+    rights
 
 
 }: typeof Dataset) {
@@ -124,11 +129,11 @@ function DataDatasetInfo({
 
         }}</DataInfo>
 
-        {isDefinedBy && <>
+        {<>
 
             <hr/>
 
-            <nav><NodeMark toc>{isDefinedBy}</NodeMark></nav>
+            <nav><NodeMark toc>{id === "/datasets" ? "/datasets/" : id}</NodeMark></nav>
 
         </>}
 
@@ -139,15 +144,21 @@ function DataDatasetInfo({
 function DataDatasetBody({
 
     description,
-    isDefinedBy
+    definition
 
-}: typeof Dataset) {
+}: {
 
-    return <DataCard>
+    description?: Dictionary
+    definition?: string
+
+}) {
+
+
+    return <>
 
         {description && <NodeMark>{string(description)}</NodeMark>}
-        {isDefinedBy && <NodeMark>{isDefinedBy}</NodeMark>}
+        {definition && <NodeMark>{definition}</NodeMark>}
 
-    </DataCard>;
+    </>;
 
 }

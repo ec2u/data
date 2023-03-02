@@ -20,13 +20,13 @@ import { DataCard } from "@ec2u/data/tiles/card";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/link";
-import { NodeLabel } from "@metreeca/tile/layouts/label";
-import { NodeHint } from "@metreeca/tile/widgets/hint";
-import { NodeLink } from "@metreeca/tile/widgets/link";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { useEntry } from "@metreeca/tool/nests/graph";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { multiple, string } from "@metreeca/core/value";
+import { useEntry } from "@metreeca/view/nests/graph";
+import { useRoute } from "@metreeca/view/nests/router";
+import { NodeHint } from "@metreeca/view/tiles/hint";
+import { NodeLabel } from "@metreeca/view/tiles/layouts/label";
+import { NodeLink } from "@metreeca/view/tiles/link";
+import { NodeSpin } from "@metreeca/view/tiles/spin";
 import * as React from "react";
 import { useEffect } from "react";
 
@@ -59,7 +59,7 @@ export function DataScheme() {
     const entry=useEntry(route, Scheme);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
+    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
 
 
     return <DataPage item={entry({ value: string })}

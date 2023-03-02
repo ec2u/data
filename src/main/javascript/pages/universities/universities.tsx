@@ -19,14 +19,14 @@ import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/link";
-import { NodeCount } from "@metreeca/tile/lenses/count";
-import { NodeItems } from "@metreeca/tile/lenses/items";
-import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
-import { NodeRange } from "@metreeca/tile/lenses/range";
-import { Landmark } from "@metreeca/tile/widgets/icon";
-import { useQuery } from "@metreeca/tool/hooks/query";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { string } from "@metreeca/core/value";
+import { useQuery } from "@metreeca/view/hooks/query";
+import { useRoute } from "@metreeca/view/nests/router";
+import { Landmark } from "@metreeca/view/tiles/icon";
+import { NodeCount } from "@metreeca/view/tiles/lenses/count";
+import { NodeItems } from "@metreeca/view/tiles/lenses/items";
+import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
+import { NodeRange } from "@metreeca/view/tiles/lenses/range";
 import * as React from "react";
 import { useEffect } from "react";
 
@@ -65,7 +65,7 @@ export function DataUniversities() {
     const [query, setQuery]=useQuery({ /*".order": "label"*/ }, sessionStorage); // !!! broken multilingual sorting
 
 
-    useEffect(() => { setRoute({ label: string(Universities) }); }, []);
+    useEffect(() => { setRoute({ title: string(Universities) }); }, []);
 
 
     return <DataPage item={string(Universities)}

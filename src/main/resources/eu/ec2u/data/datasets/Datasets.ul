@@ -14,7 +14,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 
 insert {
 
-	?alias owl:sameAs ?dataset
+	?alias rdfs:isDefinedBy ?dataset.
 
 } where {
 

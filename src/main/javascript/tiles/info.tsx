@@ -31,7 +31,7 @@ export function DataInfo({
 
 }: {
 
-    children: undefined | { [label: string]: ReactNode } | Array<{ label: ReactNode, value: ReactNode }>
+    children: undefined | { [label: string]: ReactNode } | Array<{ title: ReactNode, value: ReactNode }>
 
 }) {
 
