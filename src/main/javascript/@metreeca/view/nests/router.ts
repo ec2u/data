@@ -104,7 +104,7 @@ export interface Store {
      *
      * @param route the route to be converted
      *
-     * @returns a location-relative string representing `route`
+     * @returns a root-relative string representing `route`
      */
     (route: RouterValue): string;
 
@@ -117,11 +117,21 @@ export interface Store {
  * @return a function managing routes as relative-relative paths including search and hash
  */
 export function path(): Store {
-    return (route?: string) => route === undefined
+    return (route?: string) => {
 
-        ? location.href.startsWith(base) ? location.pathname : location.href
+        if ( route === undefined ) {
 
-        : route ? `${base}${route.startsWith("/") ? route.substr(1) : route}` : location.pathname;
+            return location.href.startsWith(base) ? location.pathname : location.href;
+
+        } else {
+
+            return route
+                ? `${base}${route.startsWith("/") ? route.substring(1) : route}${location.search}${location.hash}`
+                : `${location.pathname}${location.search}${location.hash}`;
+
+        }
+
+    };
 
 }
 
@@ -131,12 +141,21 @@ export function path(): Store {
  * @return a function managing routes as hashes
  */
 export function hash(): Store {
-    return (route?: string) => route === undefined
+    return (route?: string) => {
 
-        ? location.hash.substring(1)
+        if ( route === undefined ) {
 
-        : route ? route.startsWith("#") ? route : `#${route}` : location.hash;
+            return location.hash.substring(1);
 
+        } else {
+
+            return route
+                ? route.startsWith("#") ? route : `${location.search}#${route}`
+                : `${location.search}${location.hash}`;
+
+        }
+
+    };
 }
 
 
@@ -312,7 +331,7 @@ export function NodeRouter({
 
             } else { // ;( no useEffect() / history must be updated before component is rendered
 
-                history.replaceState(history.state, document.title, store(current)+location.search);
+                history.replaceState(history.state, document.title, store(current));
 
                 return component || null; // ;(react) undefined is not allowed
 
@@ -338,7 +357,7 @@ export function useRoute(): [RouterValue, RouterUpdater] {
         const _label=normalize((label === undefined) ? document.title : label && name ? `${label} | ${name}` : label || name);
         const _state=(state === undefined) ? history.state : (state === null) ? undefined : state;
 
-        const modified=_route !== location.href || _label !== document.title || _state !== history.state;
+        const modified=_route !== location.href || _state !== history.state;
 
         try {
 
