@@ -31,6 +31,15 @@ import "highlight.js/styles/github.css";
 import React, { useEffect } from "react";
 
 
+const aliases: { [alias: string]: string }=immutable({
+
+    "/datasets": "/datasets/",
+    "/datasets/programs": "/datasets/offers",
+    "/datasets/courses": "/datasets/offers"
+
+});
+
+
 export const Dataset=immutable({
 
     id: "/datasets/{code}",
@@ -89,7 +98,7 @@ export function DataDataset() {
         fetch: <NodeHint>{DatasetsIcon}</NodeHint>,
 
         value: ({ id, description }) => DataDatasetBody({
-            description, definition: `${id === "/datasets" ? "/datasets/" : id}${location.hash}`
+            description, definition: `${aliases[id] ?? id}${location.hash}`
 
         }),
 
@@ -133,7 +142,7 @@ function DataDatasetInfo({
 
             <hr/>
 
-            <nav><NodeMark toc>{id === "/datasets" ? "/datasets/" : id}</NodeMark></nav>
+            <nav><NodeMark toc>{aliases[id] ?? id}</NodeMark></nav>
 
         </>}
 
