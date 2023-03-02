@@ -93,7 +93,7 @@ export function DataEvent() {
     const entry=useEntry(route, Event);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
+    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
 
 
     return <DataPage item={entry({ value: string })}

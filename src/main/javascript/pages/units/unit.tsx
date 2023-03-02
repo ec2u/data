@@ -86,7 +86,7 @@ export function DataUnit() {
     const entry=useEntry(route, Unit);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
+    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
 
 
     return <DataPage item={entry({

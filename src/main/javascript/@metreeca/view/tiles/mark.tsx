@@ -54,9 +54,9 @@ export function NodeMark({
 
     useEffect(() => {
 
-        const match=children.match(/^((?:\w+:|\/)[^#\s]+)(?:#([^\s]*))?$/); // absolute or root-relative URL
+        const match=children.match(/^((?:\w+:|\/)[^#\s]+)(?:#([^\s]*))?$/);
 
-        if ( match ) {
+        if ( match ) { // absolute or root-relative URL
 
             const path=match[1];
             const hash=match[2];
@@ -88,7 +88,7 @@ export function NodeMark({
 
             return () => controller.abort(); // cancel pending fetch request on component unmount
 
-        } else {
+        } else { // markdwon content
 
             setStatus(200);
             setContent(children);

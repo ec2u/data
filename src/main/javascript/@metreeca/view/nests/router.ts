@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { normalize } from "@metreeca/core/strings";
-import { createContext, createElement, PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useReducer } from "react";
-import { base, name, root } from "../index";
+import { normalize } from "@metreeca/core/string";
+import { string } from "@metreeca/core/value";
+import { createContext, createElement, FunctionComponent, ReactNode, useCallback, useContext, useEffect, useMemo, useReducer } from "react";
+import { app } from "../index";
 
 
 /**
@@ -25,67 +26,6 @@ import { base, name, root } from "../index";
  * @module
  */
 
-const ActiveAttribute="active";
-const NativeAttribute="native";
-const TargetAttribute="target";
-
-const Context=createContext<{ store: Store, update: () => void }>({ store: path(), update: () => {} });
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * The value component of the router context state.
- */
-export type RouterValue=string
-
-/**
- * The updater component of the router context state.
- */
-export interface RouterUpdater {
-
-    (route: string | { route?: string, state?: any, label?: string }, replace?: boolean): void;
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Creates an attribute spread for active links.
- *
- * @param route the target link route; may include a trailing `*` to match nested routes
- *
- * @return an attribute spread including an `href` attribute for `route` and an optional `active` boolean
- * attribute if `route` matches the current route
- */
-export function active(route: string): { href: string, [ActiveAttribute]?: "" } {
-
-    const wild=route.endsWith("*");
-
-    const href=wild ? route.substr(0, route.length-1) : route;
-
-    function matches(target: string, current: string) {
-        return wild ? current.startsWith(target) : current === target;
-    }
-
-    return { href: href, [ActiveAttribute]: matches(href, useContext(Context).store()) ? "" : undefined };
-
-}
-
-/**
- * Creates an attribute spread for native links.
- *
- * @param route the target link route
- *
- * @return an attribute spread including an `href` attribute for `route` and an `native` boolean attribute
- */
-export function native(route: string): { href: string, [NativeAttribute]?: "" } {
-    return { href: route, [NativeAttribute]: "" };
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Route store.
@@ -97,7 +37,7 @@ export interface Store {
      *
      * @returns the current route as extracted from the current browser location
      */
-    (): RouterValue;
+    (): Route;
 
     /**
      * Converts a route to a browser location.
@@ -106,60 +46,9 @@ export interface Store {
      *
      * @returns a root-relative string representing `route`
      */
-    (route: RouterValue): string;
+    (route: Route): string;
 
 }
-
-
-/**
- * Creates a path {@link Store route store}
- *
- * @return a function managing routes as relative-relative paths including search and hash
- */
-export function path(): Store {
-    return (route?: string) => {
-
-        if ( route === undefined ) {
-
-            return location.href.startsWith(base) ? location.pathname : location.href;
-
-        } else {
-
-            return route
-                ? `${base}${route.startsWith("/") ? route.substring(1) : route}${location.search}${location.hash}`
-                : `${location.pathname}${location.search}${location.hash}`;
-
-        }
-
-    };
-
-}
-
-/**
- * Creates a hash {@link Store route store}
- *
- * @return a function managing routes as hashes
- */
-export function hash(): Store {
-    return (route?: string) => {
-
-        if ( route === undefined ) {
-
-            return location.hash.substring(1);
-
-        } else {
-
-            return route
-                ? route.startsWith("#") ? route : `${location.search}#${route}`
-                : `${location.search}${location.hash}`;
-
-        }
-
-    };
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Routing switch.
@@ -173,7 +62,7 @@ export interface Switch {
      *
      * @returns a a rendering of `route` or a new route if a redirection is required
      */
-    (route: string): undefined | null | string | ReactElement;
+    (route: string): undefined | string | ReactNode;
 
 }
 
@@ -202,17 +91,122 @@ export interface Table {
      * - `step` the matched non empty named path step
      * - `$` the matched trailing path
      */
-    readonly [pattern: string]: string | Entry;
+    readonly [pattern: string]: string | FunctionComponent;
+
+}
+
+
+/**
+ * The value component of the router context state.
+ */
+export type Route=string
+
+/**
+ * The updater component of the router context state.
+ */
+export interface SetRoute {
+
+    (route: string | { route?: string, title?: string, state?: any }, replace?: boolean): void;
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const ActiveAttribute="active";
+const NativeAttribute="native";
+const TargetAttribute="target";
+
+const Context=createContext<{
+
+    store: Store,
+    update: () => void,
+
+}>({
+
+    store: () => "",
+    update: () => {}
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The path {@link Store route store}.
+ *
+ * @return a function managing routes as relative-relative paths including search and hash
+ */
+export const path=(route?: string) => {
+
+    if ( route === undefined ) {
+
+        return location.pathname;
+
+    } else {
+
+        return route.startsWith("/") ? route : `${location.pathname}${location.search}${location.hash}`;
+
+    }
+
+};
+
+/**
+ * The hash {@link Store route store}.
+ *
+ * @return a function managing routes as hashes
+ */
+export const hash=(route?: string) => {
+
+    if ( route === undefined ) {
+
+        return location.hash.substring(1);
+
+    } else {
+
+        return route ? route : `${location.search}${location.hash}`;
+
+    }
+
+};
+
+
+/**
+ * Creates an attribute spread for active links.
+ *
+ * @param route the target link route; may include a trailing `*` to match nested routes
+ *
+ * @return an attribute spread including an `href` attribute for `route` and an optional `active` boolean
+ * attribute if `route` matches the current route
+ */
+export function active(route: string): { href: string, [ActiveAttribute]?: "" } {
+
+    const wild=route.endsWith("*");
+
+    const href=wild ? route.substring(0, route.length-1) : route;
+
+    function matches(target: string, current: string) {
+        return wild ? current.startsWith(target) : current === target;
+    }
+
+    return { href: href, [ActiveAttribute]: matches(href, useContext(Context).store()) ? "" : undefined };
 
 }
 
 /**
- * Routing table entry.
+ * Creates an attribute spread for native links.
+ *
+ * @param route the target link route
+ *
+ * @return an attribute spread including an `href` attribute for `route` and an `native` boolean attribute
  */
-export interface Entry {
+export function native(route: string): { href: string, [NativeAttribute]?: "" } {
+    return { href: route, [NativeAttribute]: "" };
+}
 
-    (props: PropsWithChildren<any>, context?: any): undefined | null | ReactElement;
 
+export function container(id: string) {
+    return /^(\S*\/)(?:[^/]*|[^/]+\/)$/.exec(id)?.[1] ?? "/";
 }
 
 
@@ -220,24 +214,28 @@ export interface Entry {
 
 export function NodeRouter({
 
-    store=path(),
+    store=path,
 
-    routes
+    children
 
 }: {
 
     /**
      * The route store
      *
-     * @default {@link path()}
+     * @default {@link path}
      */
     store?: Store
 
-    routes: Table | Switch
+    children: Table | Switch
 
 }) {
 
-    const table=routes instanceof Function ? routes : compile(routes);
+    const table=useMemo(() => {
+
+        return children instanceof Function ? children : compile(children);
+
+    }, [children]);
 
 
     const update=useReducer(v => v+1, 0)[1];
@@ -261,8 +259,8 @@ export function NodeRouter({
                 const href=anchor.href;
                 const file="file:///";
 
-                const route=href.startsWith(base) ? href.substring(base.length-1)
-                    : href.startsWith(root) ? href.substring(root.length-1)
+                const route=href.startsWith(app.base) ? href.substring(app.base.length-1)
+                    : href.startsWith(app.root) ? href.substring(app.root.length-1)
                         : href.startsWith(file) ? href.substring(file.length-1)
                             : "";
 
@@ -287,7 +285,7 @@ export function NodeRouter({
             }
         }
 
-    }, []);
+    }, [store]);
 
 
     useEffect(() => {
@@ -300,61 +298,30 @@ export function NodeRouter({
             window.removeEventListener("click", click);
         };
 
-    }, []);
+    }, [update, click]);
 
 
     return createElement(Context.Provider, {
 
         value: { store, update }
 
-    }, createElement(function () {
-
-        let current=store();
-
-        const redirects=new Set([current]);
-
-        while ( true ) {
-
-            const component=table(current);
-
-            if ( typeof component === "string" ) {
-
-                if ( redirects.has(component) ) {
-
-                    console.error(`redirection loop <${Array.from(redirects)}>`);
-
-                    return null;
-
-                }
-
-                redirects.add(current=component);
-
-            } else { // ;( no useEffect() / history must be updated before component is rendered
-
-                history.replaceState(history.state, document.title, store(current));
-
-                return component || null; // ;(react) undefined is not allowed
-
-            }
-
-        }
-
-    }));
+    }, lookup(store(), table));
 
 }
 
-export function useRoute(): [RouterValue, RouterUpdater] {
+
+export function useRoute(): [Route, SetRoute] {
 
     const { store, update }=useContext(Context);
 
     return [store(), (entry, replace) => {
 
-        const { route, label, state }=(typeof entry === "string")
-            ? { route: entry, label: undefined, state: undefined }
+        const { route, title, state }=(typeof entry === "string")
+            ? { route: entry, title: undefined, state: undefined }
             : entry;
 
         const _route=normalize(route === undefined ? location.href : route === null ? location.origin : store(route));
-        const _label=normalize((label === undefined) ? document.title : label && name ? `${label} | ${name}` : label || name);
+        const _title=normalize((title === undefined) ? document.title : title && app.name ? `${title} | ${(app.name)}` : title || app.name);
         const _state=(state === undefined) ? history.state : (state === null) ? undefined : state;
 
         const modified=_route !== location.href || _state !== history.state;
@@ -363,11 +330,11 @@ export function useRoute(): [RouterValue, RouterUpdater] {
 
             if ( replace || _route === location.href ) {
 
-                history.replaceState(_state, document.title=_label, _route);
+                history.replaceState(_state, document.title=_title, _route);
 
             } else {
 
-                history.pushState(state, document.title=_label, _route);
+                history.pushState(state, document.title=_title, _route);
 
             }
 
@@ -397,40 +364,74 @@ function compile(table: Table): Switch {
         }([?#].*)?$`; // ignore trailing query/hash
     }
 
-    const patterns: { [pattern: string]: string | Entry }={};
 
-    for (const glob of Object.keys(table)) {
-        patterns[pattern(glob)]=table[glob];
-    }
+    const entries: [string, string | FunctionComponent][]=Object
+        .entries(table)
+        .map(([glob, entry]) => [pattern(glob), entry]);
+
 
     return route => {
 
-        const entries: [string, string | Entry][]=Object
-            .entries(patterns);
+        for (const [pattern, entry] of entries) {
 
-        const matches: [RegExpExecArray | null, string | Entry][]=entries
-            .map(([pattern, component]) => [new RegExp(pattern).exec(route), component]);
+            const match=new RegExp(pattern).exec(route);
 
-        const [match, delegate]: [RegExpExecArray | null, string | Entry]=matches
-            .find(([match]) => match !== null) || [null, () => null];
+            if ( match ) {
+                if ( typeof entry === "string" ) {
 
-        if ( typeof delegate === "string" ) {
+                    return entry.replace(/{(\w*)}|\/\*$/g, ($0, $1) => // replace wildcard references
+                        $0 === "/*" ? match?.groups?.$ || ""
+                            : $1 ? match?.groups?.[$1] || ""
+                                : route
+                    );
 
-            return delegate.replace(/{(\w*)}|\/\*$/g, ($0, $1) => // replace wildcard references
-                $0 === "/*" ? match?.groups?.$ || ""
-                    : $1 ? match?.groups?.[$1] || ""
-                        : route
-            );
+                } else {
 
-        } else {
+                    return createElement(entry, { ...match?.groups });
 
-            return createElement(
-                (props, context) => delegate(props, context) || null, // guard against undefined results
-                { ...match?.groups }
-            );
+                }
+            }
 
         }
+
+        return undefined;
 
     };
 
 }
+
+function lookup(route: string, table: Switch) {
+
+    const redirects=new Set([route]);
+
+    var current=route;
+
+    while ( true ) {
+
+        const component=table(current);
+
+        if ( component === undefined ) {
+
+            throw new Error(`unhandled route ${route}`);
+
+
+        } else if ( typeof component === "string" ) {
+
+            if ( redirects.has(component) ) {
+
+                throw new Error(`redirection loop <${Array.from(redirects)}>`);
+
+            }
+
+            redirects.add(current=component);
+
+        } else {
+
+            return component;
+
+        }
+
+    }
+
+}
+

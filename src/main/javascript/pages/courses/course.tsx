@@ -92,7 +92,7 @@ export function DataCourse() {
     const entry=useEntry(route, Course);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
+    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
 
 
     return <DataPage item={entry({ value: string })}

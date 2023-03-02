@@ -59,7 +59,7 @@ export function DataScheme() {
     const entry=useEntry(route, Scheme);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
+    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
 
 
     return <DataPage item={entry({ value: string })}

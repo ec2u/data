@@ -66,7 +66,7 @@ export function DataEvents() {
     const [query, setQuery]=useQuery({ ".order": ["startDate", "label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Events) }); }, []);
+    useEffect(() => { setRoute({ title: string(Events) }); }, []);
 
 
     return <DataPage item={string(Events)}

@@ -68,7 +68,7 @@ export function DataUnits() {
     const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Units) }); }, []);
+    useEffect(() => { setRoute({ title: string(Units) }); }, []);
 
 
     return <DataPage item={string(Units)}

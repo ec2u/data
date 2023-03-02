@@ -16,12 +16,11 @@
 
 import { DatasetsIcon } from "@ec2u/data/pages/datasets/datasets";
 import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage, ec2u } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { optional, string } from "@metreeca/core/value";
+import { Dictionary, optional, string } from "@metreeca/core/value";
 import { useEntry } from "@metreeca/view/nests/graph";
 import { useRoute } from "@metreeca/view/nests/router";
 import { NodeHint } from "@metreeca/view/tiles/hint";
@@ -65,7 +64,7 @@ export function DataDataset() {
     const entry=useEntry(route, Dataset);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(ec2u(label)) }) }));
+    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(ec2u(label)) }) }));
 
 
     return <DataPage item={entry({ value: ({ title, alternative }) => string(alternative || title) })}
@@ -86,7 +85,10 @@ export function DataDataset() {
 
         fetch: <NodeHint>{DatasetsIcon}</NodeHint>,
 
-        value: DataDatasetBody,
+        value: ({ description, isDefinedBy }) => DataDatasetBody({
+            description, definition: isDefinedBy && `${isDefinedBy}${location.hash}`
+
+        }),
 
         error: error => <span>{error.status}</span> // !!! report
 
@@ -139,15 +141,21 @@ function DataDatasetInfo({
 function DataDatasetBody({
 
     description,
-    isDefinedBy
+    definition
 
-}: typeof Dataset) {
+}: {
 
-    return <DataCard>
+    description?: Dictionary
+    definition?: string
+
+}) {
+
+
+    return <>
 
         {description && <NodeMark>{string(description)}</NodeMark>}
-        {isDefinedBy && <NodeMark>{isDefinedBy}</NodeMark>}
+        {definition && <NodeMark>{definition}</NodeMark>}
 
-    </DataCard>;
+    </>;
 
 }

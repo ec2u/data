@@ -62,7 +62,7 @@ export function DataCourses() {
     const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Courses) }); }, []);
+    useEffect(() => { setRoute({ title: string(Courses) }); }, []);
 
 
     return <DataPage item={string(Courses)}

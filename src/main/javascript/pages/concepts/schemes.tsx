@@ -61,7 +61,7 @@ export function DataSchemes() {
     const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Schemes) }); }, []);
+    useEffect(() => { setRoute({ title: string(Schemes) }); }, []);
 
 
     return <DataPage item={string(Schemes)}

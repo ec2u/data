@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { icon } from "@metreeca/view";
+import { app, icon } from "@metreeca/view";
 import * as React from "react";
 import { createElement } from "react";
 import "./logo.css";
@@ -39,7 +39,7 @@ export function NodeLogo({
 
         onClick,
 
-        style: { backgroundImage: `url(${icon})` }
+        style: { backgroundImage: `url(${(app.icon)})` }
 
     }, <></>);
 

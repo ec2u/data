@@ -14,36 +14,46 @@
  * limitations under the License.
  */
 
+import { immutable } from "@metreeca/core";
 import { resolve } from "@metreeca/view/nests/fetcher";
 
 
-/**
- * The absolute root URL with trailing slash.
- */
-export const root: string=resolve("/");
+export const app=immutable({
 
-/**
- * The absolute base URL with trailing slash.
- */
-export const base: string=resolve((
-    document.querySelector("base")?.href || import.meta.env.BASE_URL || "/"
-).replace(/\/*$/, "/"), root);
+    /**
+     * The absolute root URL with trailing slash.
+     */
+    root: resolve("/"),
+
+    /**
+     * The absolute base URL with trailing slash.
+     */
+    base: resolve((
+        document.querySelector("base")?.href || import.meta.env.BASE_URL || "/"
+    ).replace(/\/*$/, "/"), resolve("/")),
 
 
-/**
- * The app name as read from the `<title>` HTM head tag.
- */
-export const name: string=document.title;
+    /**
+     * The app name as read from the `<title>` HTM head tag.
+     */
+    name: document.title,
 
-/**
- * The URL of the app icon as read from the `<link rel="icon">` HTML head tag.
- */
-export const icon: string=(document.querySelector("link[rel=icon]") as HTMLLinkElement)?.href || "";
+    /**
+     * The URL of the app icon as read from the `<link rel="icon">` HTML head tag.
+     */
+    icon: (document.querySelector("link[rel=icon]") as HTMLLinkElement)?.href || "",
 
-/**
- * The app copyright as read from the `<meta name="copyright">` HTML head tag.
- */
-export const copy=(document.querySelector("meta[name=copyright]") as HTMLMetaElement)?.content || "";
+    /**
+     * The app description as read from the `<meta name="description">` HTML head tag.
+     * */
+    info: (document.querySelector("meta[name=description]") as HTMLMetaElement)?.content || "",
+
+    /**
+     * The app copyright as read from the `<meta name="copyright">` HTML head tag.
+     */
+    copy: (document.querySelector("meta[name=copyright]") as HTMLMetaElement)?.content || ""
+
+});
 
 
 /**

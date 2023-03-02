@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { copy } from "@metreeca/view";
+import { app } from "@metreeca/view";
 import { Heart, Menu } from "@metreeca/view/tiles/icon";
 import { NodeLogo } from "@metreeca/view/tiles/logo";
 import React, { createElement, DependencyList, ReactNode, useEffect, useRef, useState } from "react";
@@ -116,7 +116,7 @@ export function DataPage({
 
             <section>{children}</section>
 
-            <footer>{copy}</footer>
+            <footer>{app.copy}</footer>
 
         </main>
 

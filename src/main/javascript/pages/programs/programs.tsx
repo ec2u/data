@@ -62,7 +62,7 @@ export function DataPrograms() {
     const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Programs) }); }, []);
+    useEffect(() => { setRoute({ title: string(Programs) }); }, []);
 
 
     return <DataPage item={string(Programs)}

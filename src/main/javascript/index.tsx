@@ -67,7 +67,7 @@ render((
 
             <NodeGraph>
 
-                <NodeRouter routes={{
+                <NodeRouter>{{
 
                     [Datasets.id]: DataDatasets,
 
@@ -99,7 +99,7 @@ render((
 
                     "*": DataNone
 
-                }}/>
+                }}</NodeRouter>
 
             </NodeGraph>
 

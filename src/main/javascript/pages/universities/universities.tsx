@@ -65,7 +65,7 @@ export function DataUniversities() {
     const [query, setQuery]=useQuery({ /*".order": "label"*/ }, sessionStorage); // !!! broken multilingual sorting
 
 
-    useEffect(() => { setRoute({ label: string(Universities) }); }, []);
+    useEffect(() => { setRoute({ title: string(Universities) }); }, []);
 
 
     return <DataPage item={string(Universities)}

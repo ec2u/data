@@ -30,7 +30,7 @@ export default function DataNone() {
     const [, setRoute]=useRoute();
 
 
-    useEffect(() => { setRoute({ label: "Not Found" }); }, []);
+    useEffect(() => { setRoute({ title: "Not Found" }); }, []);
 
 
     function doDismiss() {
