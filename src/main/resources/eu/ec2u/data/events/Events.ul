@@ -42,6 +42,9 @@ delete {
 
 } where {
 
-	?r ?p ?o filter not exists { ?s ?q ?r }
+	?r ?p ?o.
+
+	filter not exists { ?r a ec2u:Event }
+	filter not exists { ?s ?q ?r }
 
 };
