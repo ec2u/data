@@ -89,7 +89,7 @@ export function DataDataset() {
         fetch: <NodeHint>{DatasetsIcon}</NodeHint>,
 
         value: ({ id, description }) => DataDatasetBody({
-            description, definition: `${id}${location.hash}`
+            description, definition: `${id === "/datasets" ? "/datasets/" : id}${location.hash}`
 
         }),
 
@@ -133,7 +133,7 @@ function DataDatasetInfo({
 
             <hr/>
 
-            <nav><NodeMark toc>{id}</NodeMark></nav>
+            <nav><NodeMark toc>{id === "/datasets" ? "/datasets/" : id}</NodeMark></nav>
 
         </>}
 
