@@ -48,8 +48,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static com.metreeca.core.Locator.path;
 import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.Locator.storage;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.http.Handler.handler;
@@ -553,7 +553,7 @@ public final class Units extends Delegator {
         @Override public void run() {
 
             try (
-                    final Writer writer=Files.newBufferedWriter(service(storage()).resolve(Output));
+                    final Writer writer=Files.newBufferedWriter(service(path()).resolve(Output));
                     final CSVPrinter printer=new CSVPrinter(writer, Format);
             ) {
 

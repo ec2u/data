@@ -25,7 +25,7 @@ import "./logo.css";
  *
  * @constructor
  */
-export function NodeIcon({
+export function NodeLogo({
 
     onClick
 

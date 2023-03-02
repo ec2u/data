@@ -17,7 +17,7 @@
 /**
  * Env variables and modes.
  *
- * @see for instance, {@link https://vitejs.dev/guide/env-and-mode.html}
+ * @see {@link https://vitejs.dev/guide/env-and-mode.html}
  * @module
  */
 

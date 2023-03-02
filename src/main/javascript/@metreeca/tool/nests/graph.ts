@@ -363,7 +363,7 @@ export function useOptions(
 
 export function useItems<I extends Entry, D>(
     id: string,
-    { model, limit=10 }: { model: Collection<I>, limit?: number },
+    { model, limit=25 }: { model: Collection<I>, limit?: number },
     [query, setQuery]: [Query, Setter<Query>]
 ): [State<Exclude<typeof model.contains, undefined>, D>, () => void] {
 

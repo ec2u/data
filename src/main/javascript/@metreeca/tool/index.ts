@@ -40,7 +40,6 @@ export const name: string=document.title;
  */
 export const icon: string=(document.querySelector("link[rel=icon]") as HTMLLinkElement)?.href || "";
 
-
 /**
  * The app copyright as read from the `<meta name="copyright">` HTML head tag.
  */

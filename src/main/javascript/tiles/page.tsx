@@ -15,7 +15,7 @@
  */
 
 import { Heart, Menu } from "@metreeca/tile/widgets/icon";
-import { NodeIcon } from "@metreeca/tile/widgets/logo";
+import { NodeLogo } from "@metreeca/tile/widgets/logo";
 import { copy } from "@metreeca/tool";
 import React, { createElement, DependencyList, ReactNode, useEffect, useRef, useState } from "react";
 import "./page.css";
@@ -82,7 +82,7 @@ export function DataPage({
         <nav>
 
             <header>
-                <a href={"/"}><NodeIcon/></a>
+                <a href={"/"}><NodeLogo/></a>
             </header>
 
             <section/>
@@ -108,7 +108,7 @@ export function DataPage({
         <main ref={main}>
 
             <header>
-                <a href={"/"}><NodeIcon/></a>
+                <a href={"/"}><NodeLogo/></a>
                 <span>{item}</span>
                 <nav>{menu}</nav>
                 <button title={"Open menu"} onClick={doToggleTray}><Menu/></button>
