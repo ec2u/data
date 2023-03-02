@@ -7,12 +7,15 @@
 @prefix owl:	<http://www.w3.org/2002/07/owl#> .
 @prefix wd:		<http://www.wikidata.org/entity/> .
 @prefix wdt:	<http://www.wikidata.org/prop/direct/> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
 
 </universities/> a ec2u:Dataset ;
-	dct:title "Universities"@en  ;
-	dct:description "EC2U allied universities."@en ;
+	dct:title "EC2U Universities"@en  ;
+	dct:alternative "EC2U Allied Universities"@en ;
+	dct:description "Identifying and background information about EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	dct:available "2022-01-01"^^xsd:date ;
 	void:rootResource ec2u:University .
 
 

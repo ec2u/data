@@ -42,7 +42,7 @@ import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiUniversity implements Runnable {
 
-    private static final IRI Context=iri(Events.Context, "/iasi/uiversity");
+    private static final IRI Context=iri(Events.Context, "/iasi/university");
 
     private static final Frame Publisher=frame(iri("https://www.uaic.ro/"))
             .value(RDF.TYPE, Resources.Publisher)

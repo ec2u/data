@@ -15,16 +15,17 @@
  */
 
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/link";
-import { NodeCount } from "@metreeca/tile/lenses/count";
-import { NodeItems } from "@metreeca/tile/lenses/items";
-import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
-import { GraduationCap } from "@metreeca/tile/widgets/icon";
-import { useQuery } from "@metreeca/tool/hooks/query";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { multiple, string } from "@metreeca/core/value";
+import { useQuery } from "@metreeca/view/hooks/query";
+import { useRoute } from "@metreeca/view/nests/router";
+import { GraduationCap } from "@metreeca/view/tiles/icon";
+import { NodeCount } from "@metreeca/view/tiles/lenses/count";
+import { NodeItems } from "@metreeca/view/tiles/lenses/items";
+import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
 import * as React from "react";
 import { useEffect } from "react";
 
@@ -34,7 +35,7 @@ export const SchemesIcon=<GraduationCap/>;
 export const Schemes=immutable({
 
     id: "/concepts/",
-    label: { "en": "Concept Schemes" },
+    label: { "en": "Taxonomies" },
 
     contains: multiple({
 
@@ -56,14 +57,16 @@ export const Schemes=immutable({
 
 export function DataSchemes() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Schemes) }); }, []);
+    useEffect(() => { setRoute({ title: string(Schemes) }); }, []);
 
 
     return <DataPage item={string(Schemes)}
+
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 

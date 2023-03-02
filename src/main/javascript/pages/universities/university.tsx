@@ -18,15 +18,15 @@ import { Universities, UniversitiesIcon } from "@ec2u/data/pages/universities/un
 import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage } from "@ec2u/data/tiles/page";
+import { DataPage, ec2u } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/link";
-import { NodeHint } from "@metreeca/tile/widgets/hint";
-import { NodeLink } from "@metreeca/tile/widgets/link";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { useEntry } from "@metreeca/tool/nests/graph";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { Focus, multiple, string } from "@metreeca/core/value";
+import { useEntry } from "@metreeca/view/nests/graph";
+import { useRoute } from "@metreeca/view/nests/router";
+import { NodeHint } from "@metreeca/view/tiles/hint";
+import { NodeLink } from "@metreeca/view/tiles/link";
+import { NodeSpin } from "@metreeca/view/tiles/spin";
 import * as React from "react";
 import { useEffect } from "react";
 
@@ -83,7 +83,7 @@ export function DataUniversity() {
     const entry=useEntry(route, University);
 
 
-    useEffect(() => setRoute({ label: entry({ value: ({ label }) => string(label) }) }));
+    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
 
 
     return <DataPage item={entry({ value: string })}
@@ -146,12 +146,18 @@ function DataUniversityInfo({
         <DataInfo>{extent?.slice()
 
             ?.sort(({ entities: x }, { entities: y }) => x-y)
-            ?.map(({ dataset, entities }) => ({
+            ?.map(({ dataset, entities }) => {
 
-                label: <NodeLink search={[dataset, { university: id }]}>{dataset}</NodeLink>,
-                value: string(entities)
+                return ({
 
-            }))
+                    label: <NodeLink search={[(dataset), { university: id }]}>{{
+                        id: dataset.id,
+                        label: ec2u(dataset.label)
+                    } as Focus}</NodeLink>,
+                    value: string(entities)
+
+                });
+            })
 
         }</DataInfo>
 
@@ -161,7 +167,9 @@ function DataUniversityInfo({
 
 function DataUniversityBody({
 
-    image, label, comment
+    image,
+    label,
+    comment
 
 }: typeof University) {
 

@@ -2,7 +2,7 @@ runtime: java11
 
 handlers:
 
-  - url: /(.*\.(html|css|js|svg|png))$
+  - url: /(.*\.(html|css|js|md|svg|png))$
     static_files: static/\1
     upload: static/.*$
     secure: always

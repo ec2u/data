@@ -109,9 +109,11 @@ public final class EventsPoitiersCityGrand implements Runnable {
         return item.link("link").map(url -> {
 
             final Optional<Literal> name=item.string("title")
+                    .map(XPath::decode)
                     .map(text -> literal(text, Poitiers.Language));
 
             final Optional<Literal> description=item.string("description")
+                    .map(XPath::decode)
                     .map(Untag::untag)
                     .map(text -> literal(text, Poitiers.Language));
 
@@ -167,6 +169,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             return frame(EC2U.item(Events.Scheme, category))
                     .value(RDF.TYPE, SKOS.CONCEPT)
+                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);
 

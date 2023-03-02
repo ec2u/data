@@ -16,8 +16,7 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.*;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
@@ -46,6 +45,7 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.resources.Resources.Languages;
 import static eu.ec2u.data.resources.Resources.*;
 
 public final class Concepts extends Delegator {
@@ -106,11 +106,11 @@ public final class Concepts extends Delegator {
 
                 new Router()
 
-                        .path("/", new Router()
+                        .path("/", new Worker()
                                 .get(new Relator())
                         )
 
-                        .path("/{scheme}", new Router()
+                        .path("/{scheme}", new Worker()
                                 .get(new Relator())
                         )
 
@@ -118,7 +118,7 @@ public final class Concepts extends Delegator {
 
                                 new Driver(Concept()),
 
-                                new Router()
+                                new Worker()
                                         .get(new Relator())
 
                         ))

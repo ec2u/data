@@ -33,6 +33,8 @@ public final class Organizations {
 
     public static final IRI Context=EC2U.item("/organizations/");
 
+    public static final IRI Organization=EC2U.term("Organization");
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

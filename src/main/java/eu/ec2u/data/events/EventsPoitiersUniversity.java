@@ -170,6 +170,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                 .frames(DCTERMS.SUBJECT, item.strings("category")
                         .map(c -> frame(EC2U.item(Events.Scheme, c))
+                                .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(c, Poitiers.Language))
                                 .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))

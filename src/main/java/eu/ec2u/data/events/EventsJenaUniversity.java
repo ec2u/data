@@ -48,7 +48,6 @@ import static com.metreeca.rdf.schemas.Schema.normalize;
 import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.Work.location;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -173,28 +172,26 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .flatMap(json -> {
 
-                            try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
+                    try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
 
-                                final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
+                        final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
 
-                                return frame(Schema.Event, model)
-                                        .frames(inverse(RDF.TYPE));
+                        return frame(Schema.Event, model)
+                                .frames(inverse(RDF.TYPE));
 
-                            } catch ( final CodecException e ) {
+                    } catch ( final CodecException e ) {
 
-                                service(logger()).warning(this, e.getMessage());
+                        service(logger()).warning(this, e.getMessage());
 
-                                return Stream.empty();
+                        return Stream.empty();
 
-                            } catch ( final IOException unexpected ) {
+                    } catch ( final IOException unexpected ) {
 
-                                throw new UncheckedIOException(unexpected);
+                        throw new UncheckedIOException(unexpected);
 
-                            }
+                    }
 
-                        }
-
-                );
+                });
 
     }
 
@@ -257,12 +254,16 @@ public final class EventsJenaUniversity implements Runnable {
                         .map(organizer -> Work.organizer(organizer, "de"))
                 )
 
-                .frame(Schema.location, frame.frame(Schema.location)
-                        .map(location -> location(location, frame(bnode())
-                                .value(Schema.addressCountry, Jena.Country)
-                                .value(Schema.addressLocality, Jena.City)
-                        ))
-                );
+                // !!! restore after https://github.com/ec2u/data/issues/41 is resolved
+
+                //.frame(Schema.location, frame.frame(Schema.location)
+                //        .map(location -> location(location, frame(bnode())
+                //                .value(Schema.addressCountry, Jena.Country)
+                //                .value(Schema.addressLocality, Jena.City)
+                //        ))
+                //)
+
+                ;
 
     }
 

@@ -187,6 +187,7 @@ public final class EventsJenaCity implements Runnable {
                             .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
                             .map(keyword -> frame(item(Events.Scheme, keyword))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
+                                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                                     .value(RDFS.LABEL, literal(keyword, Jena.Language))
                                     .value(SKOS.PREF_LABEL, literal(keyword, Jena.Language))
 

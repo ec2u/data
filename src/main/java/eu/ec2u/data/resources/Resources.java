@@ -17,7 +17,7 @@
 package eu.ec2u.data.resources;
 
 import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
@@ -53,7 +53,7 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public final class Resources extends Delegator {
 
-    private static final IRI Context=item("/");
+    private static final IRI Context=item("/resources/");
 
 
     public static final IRI Resource=EC2U.term("Resource");
@@ -136,7 +136,7 @@ public final class Resources extends Delegator {
 
                 ),
 
-                new Router()
+                new Worker()
                         .get(new Relator())
 
         ));
@@ -154,9 +154,7 @@ public final class Resources extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(
-                            rdf(Resources.class, ".ttl")
-                    )
+                    .of(rdf(Resources.class, ".ttl", EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

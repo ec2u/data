@@ -20,13 +20,13 @@ import react from "@vitejs/plugin-react";
 import postcssNesting from "postcss-nesting";
 
 const src=resolve(process.env.src || "src/main/javascript");
+const etc=resolve(process.env.etc || "src/main/static");
 const out=resolve(process.env.out || "target/appengine-staging/static");
 
 export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
     root: resolve(src),
-
-    publicDir: resolve(src, "files"),
+    publicDir: resolve(etc),
 
     plugins: [react()],
 

@@ -16,17 +16,18 @@
 
 import { University } from "@ec2u/data/pages/universities/university";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, optional, string } from "@metreeca/link";
-import { NodeCount } from "@metreeca/tile/lenses/count";
-import { NodeItems } from "@metreeca/tile/lenses/items";
-import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
-import { NodeOptions } from "@metreeca/tile/lenses/options";
-import { FlaskConical } from "@metreeca/tile/widgets/icon";
-import { useQuery } from "@metreeca/tool/hooks/query";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { multiple, optional, string } from "@metreeca/core/value";
+import { useQuery } from "@metreeca/view/hooks/query";
+import { useRoute } from "@metreeca/view/nests/router";
+import { FlaskConical } from "@metreeca/view/tiles/icon";
+import { NodeCount } from "@metreeca/view/tiles/lenses/count";
+import { NodeItems } from "@metreeca/view/tiles/lenses/items";
+import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
+import { NodeOptions } from "@metreeca/view/tiles/lenses/options";
 import * as React from "react";
 import { useEffect } from "react";
 
@@ -36,7 +37,7 @@ export const UnitsIcon=<FlaskConical/>;
 export const Units=immutable({
 
     id: "/units/",
-    label: { "en": "Research Units" },
+    label: { "en": "Units" },
 
     contains: multiple({
 
@@ -63,14 +64,16 @@ export const Units=immutable({
 
 export function DataUnits() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Units) }); }, []);
+    useEffect(() => { setRoute({ title: string(Units) }); }, []);
 
 
     return <DataPage item={string(Units)}
+
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 

@@ -20,19 +20,22 @@ import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
 import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { Course, DataCourse } from "@ec2u/data/pages/courses/course";
 import { Courses, DataCourses } from "@ec2u/data/pages/courses/courses";
-import { DataSets, Datasets } from "@ec2u/data/pages/datasets";
+import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
+import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
 import DataNone from "@ec2u/data/pages/none";
+import { DataProgram, Program } from "@ec2u/data/pages/programs/program";
+import { DataPrograms, Programs } from "@ec2u/data/pages/programs/programs";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
 import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
-import "@metreeca/tile/index.css";
-import "@metreeca/tile/styles/quicksand.css";
-import { NodeFetcher } from "@metreeca/tool/nests/fetcher";
-import { NodeGraph } from "@metreeca/tool/nests/graph";
-import { NodeRouter } from "@metreeca/tool/nests/router";
+import "@metreeca/view/index.css";
+import { NodeFetcher } from "@metreeca/view/nests/fetcher";
+import { NodeGraph } from "@metreeca/view/nests/graph";
+import { NodeRouter } from "@metreeca/view/nests/router";
+import "@metreeca/view/skins/quicksand.css";
 import * as React from "react";
 import { render } from "react-dom";
 import "./index.css";
@@ -64,15 +67,23 @@ render((
 
             <NodeGraph>
 
-                <NodeRouter routes={{
+                <NodeRouter>{{
 
-                    [Datasets.id]: DataSets,
+                    [Datasets.id]: DataDatasets,
+
+                    // !!! to be reviewed after metreeca/java supports resource access to collections
+
+                    [Dataset.id.replace(/\/[^/]*$/, "")]: DataDataset,
+                    [Dataset.id]: DataDataset,
 
                     [Universities.id]: DataUniversities,
                     [University.id]: DataUniversity,
 
                     [Units.id]: DataUnits,
                     [Unit.id]: DataUnit,
+
+                    [Programs.id]: DataPrograms,
+                    [Program.id]: DataProgram,
 
                     [Courses.id]: DataCourses,
                     [Course.id]: DataCourse,
@@ -88,7 +99,7 @@ render((
 
                     "*": DataNone
 
-                }}/>
+                }}</NodeRouter>
 
             </NodeGraph>
 

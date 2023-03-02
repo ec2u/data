@@ -177,6 +177,23 @@ data-page {
             max-width: 66rem;
         }
 
+        & > header {
+
+            & > nav {
+                transform: scale(0.75);
+            }
+
+        }
+
+        & > section {
+
+            & h1, & h2, & h3 {
+
+                scroll-margin-top: 3em;
+
+            }
+        }
+
     }
 
 

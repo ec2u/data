@@ -16,18 +16,19 @@
 
 import { University } from "@ec2u/data/pages/universities/university";
 import { DataCard } from "@ec2u/data/tiles/card";
+import { DataMeta } from "@ec2u/data/tiles/meta";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
-import { multiple, optional, string } from "@metreeca/link";
-import { NodeCount } from "@metreeca/tile/lenses/count";
-import { NodeItems } from "@metreeca/tile/lenses/items";
-import { NodeKeywords } from "@metreeca/tile/lenses/keywords";
-import { NodeOptions } from "@metreeca/tile/lenses/options";
-import { NodeRange } from "@metreeca/tile/lenses/range";
-import { Calendar } from "@metreeca/tile/widgets/icon";
-import { useQuery } from "@metreeca/tool/hooks/query";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { multiple, optional, string } from "@metreeca/core/value";
+import { useQuery } from "@metreeca/view/hooks/query";
+import { useRoute } from "@metreeca/view/nests/router";
+import { Calendar } from "@metreeca/view/tiles/icon";
+import { NodeCount } from "@metreeca/view/tiles/lenses/count";
+import { NodeItems } from "@metreeca/view/tiles/lenses/items";
+import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
+import { NodeOptions } from "@metreeca/view/tiles/lenses/options";
+import { NodeRange } from "@metreeca/view/tiles/lenses/range";
 import * as React from "react";
 import { useEffect } from "react";
 
@@ -61,14 +62,16 @@ export const Events=immutable({
 
 export function DataEvents() {
 
-    const [, setRoute]=useRoute();
+    const [route, setRoute]=useRoute();
     const [query, setQuery]=useQuery({ ".order": ["startDate", "label"] }, sessionStorage);
 
 
-    useEffect(() => { setRoute({ label: string(Events) }); }, []);
+    useEffect(() => { setRoute({ title: string(Events) }); }, []);
 
 
     return <DataPage item={string(Events)}
+
+        menu={<DataMeta>{route}</DataMeta>}
 
         pane={<DataPane
 
