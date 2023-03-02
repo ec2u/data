@@ -172,28 +172,26 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .flatMap(json -> {
 
-                            try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
+                    try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
 
-                                final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
+                        final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
 
-                                return frame(Schema.Event, model)
-                                        .frames(inverse(RDF.TYPE));
+                        return frame(Schema.Event, model)
+                                .frames(inverse(RDF.TYPE));
 
-                            } catch ( final CodecException e ) {
+                    } catch ( final CodecException e ) {
 
-                                service(logger()).warning(this, e.getMessage());
+                        service(logger()).warning(this, e.getMessage());
 
-                                return Stream.empty();
+                        return Stream.empty();
 
-                            } catch ( final IOException unexpected ) {
+                    } catch ( final IOException unexpected ) {
 
-                                throw new UncheckedIOException(unexpected);
+                        throw new UncheckedIOException(unexpected);
 
-                            }
+                    }
 
-                        }
-
-                );
+                });
 
     }
 
