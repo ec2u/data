@@ -245,6 +245,7 @@ export function NodeRouter({
         if ( !(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || e.defaultPrevented) ) { // only plain events
 
             const anchor=(e.target as Element).closest("a");
+            const image=(e.target as Element).closest("img");
 
             const native=anchor?.getAttribute(NativeAttribute);
             const target=anchor?.getAttribute(TargetAttribute);
@@ -282,7 +283,20 @@ export function NodeRouter({
 
                 }
 
+            } else if ( image ) {
+
+                if ( image.getAttribute(ActiveAttribute) ) {
+
+                    image.removeAttribute(ActiveAttribute);
+
+                } else {
+
+                    image.setAttribute(ActiveAttribute, "true");
+
+                }
+
             }
+
         }
 
     }, [store]);
