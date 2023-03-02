@@ -15,7 +15,7 @@
  */
 
 import { isEmpty } from "@metreeca/core";
-import { Focus, isFocus, Literal, string } from "@metreeca/link";
+import { Focus, isFocus, Literal, string } from "@metreeca/core/value";
 import React from "react";
 
 

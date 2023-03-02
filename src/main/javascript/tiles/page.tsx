@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Heart, Menu } from "@metreeca/tile/widgets/icon";
-import { NodeLogo } from "@metreeca/tile/widgets/logo";
-import { copy } from "@metreeca/tool";
+import { copy } from "@metreeca/view";
+import { Heart, Menu } from "@metreeca/view/tiles/icon";
+import { NodeLogo } from "@metreeca/view/tiles/logo";
 import React, { createElement, DependencyList, ReactNode, useEffect, useRef, useState } from "react";
 import "./page.css";
 

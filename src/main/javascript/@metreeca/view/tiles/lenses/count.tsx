@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { Query, string } from "@metreeca/link";
-import { ResetIcon } from "@metreeca/tile/widgets/icon";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { Setter } from "@metreeca/tool/hooks";
-import { useCache } from "@metreeca/tool/hooks/cache";
-import { useStats } from "@metreeca/tool/nests/graph";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { Query, string } from "@metreeca/core/value";
+import { Setter } from "@metreeca/view/hooks";
+import { useCache } from "@metreeca/view/hooks/cache";
+import { useStats } from "@metreeca/view/nests/graph";
+import { useRoute } from "@metreeca/view/nests/router";
+import { ResetIcon } from "@metreeca/view/tiles/icon";
+import { NodeSpin } from "@metreeca/view/tiles/spin";
 import * as React from "react";
 import { createElement } from "react";
 import "./count.css";

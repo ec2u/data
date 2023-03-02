@@ -15,11 +15,12 @@
  */
 
 import { Immutable, isString } from "@metreeca/core";
-import { Collection, DataTypes, Entry, Error, Graph, isFocus, isLiteral, Literal, Query, State, Stats, string, Terms, Value } from "@metreeca/link";
-import { RESTGraph } from "@metreeca/link/rest";
-import { Setter } from "@metreeca/tool/hooks";
-import { useUpdate } from "@metreeca/tool/hooks/update";
-import { Fetcher, useFetcher } from "@metreeca/tool/nests/fetcher";
+import { Graph, RESTGraph } from "@metreeca/core/graph";
+import { State } from "@metreeca/core/state";
+import { Collection, DataTypes, Entry, Error, isFocus, isLiteral, Literal, Query, Stats, string, Terms, Value } from "@metreeca/core/value";
+import { Setter } from "@metreeca/view/hooks";
+import { useUpdate } from "@metreeca/view/hooks/update";
+import { Fetcher, useFetcher } from "@metreeca/view/nests/fetcher";
 import { createContext, createElement, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 

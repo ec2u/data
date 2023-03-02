@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Frame, isEntry, isValue, string, Value } from "@metreeca/link";
+import { Frame, isEntry, isValue, string, Value } from "@metreeca/core/value";
 import * as React from "react";
 import { createElement, ReactNode } from "react";
 import { Immutable, isArray } from "../../core";

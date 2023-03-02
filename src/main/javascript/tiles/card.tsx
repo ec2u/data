@@ -15,7 +15,7 @@
  */
 
 import { isString } from "@metreeca/core";
-import { classes } from "@metreeca/tool";
+import { classes } from "@metreeca/view";
 import * as React from "react";
 import { createElement, ReactNode, useState } from "react";
 import "./card.css";

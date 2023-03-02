@@ -16,8 +16,8 @@
 
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/tiles/page";
-import { CancelIcon } from "@metreeca/tile/widgets/icon";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { useRoute } from "@metreeca/view/nests/router";
+import { CancelIcon } from "@metreeca/view/tiles/icon";
 import * as React from "react";
 import { createElement, useEffect } from "react";
 import "./none.css";

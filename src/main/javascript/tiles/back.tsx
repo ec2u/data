@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Focus, string } from "@metreeca/link";
+import { Focus, string } from "@metreeca/core/value";
 import React, { createElement } from "react";
 import "./back.css";
 

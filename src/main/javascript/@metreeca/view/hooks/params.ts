@@ -15,8 +15,8 @@
  */
 
 import { equals, Immutable, Primitive } from "@metreeca/core";
-import { useStorage } from "@metreeca/tool/hooks/storage";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { useStorage } from "@metreeca/view/hooks/storage";
+import { useRoute } from "@metreeca/view/nests/router";
 import { useEffect, useState } from "react";
 
 

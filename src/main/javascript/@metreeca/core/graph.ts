@@ -15,9 +15,26 @@
  */
 
 
-import { immutable, isEmpty } from "@metreeca/core";
-import { Entry, Error, Focus, Frame, Graph, Probe, process, Query, State } from "@metreeca/link/index";
+import { immutable, isEmpty } from "@metreeca/core/index";
+import { Probe, State } from "@metreeca/core/state";
+import { Entry, Error, Focus, Frame, Query } from "@metreeca/core/value";
 
+
+export interface Graph {
+
+    get<V extends Entry, E>(id: string, model: V, query?: Query): State<V, E>;
+
+
+    post<V extends Frame, E>(id: string, frame: V, probe: Probe<Focus, E>): void;
+
+    put<V extends Entry, E>(id: string, frame: V, probe: Probe<Focus, E>): void;
+
+    del<E>(id: string, probe: Probe<Focus, E>): void;
+
+
+    observe(id: string, observer: () => void): () => void;
+
+}
 
 export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
@@ -286,6 +303,53 @@ export function RESTGraph(fetcher: typeof fetch=fetch): Graph {
 
     });
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function process<P, R>(processor: (response: Response, payload: string | P) => R): (response: Response) => Promise<R> {
+    return response => {
+
+        const mime=response.headers.get("Content-Type");
+
+        if ( mime?.match(/^text\/plain\b/i) ) {
+
+            return response.text()
+
+                .catch(reason => {
+
+                    console.error(`unreadable text payload <${reason}>`);
+
+                    return "";
+
+                })
+
+                .then(text => processor(response, text));
+
+        } else if ( mime?.match(/^application\/(ld\+)?json\b/i) ) {
+
+            return response.json()
+
+                .catch(reason => {
+
+                    console.error(`unreadable JSON payload <${reason}>`);
+
+                    return {};
+
+                })
+
+                .then(json => processor(response, immutable(json)));
+
+        } else {
+
+            return Promise
+
+                .resolve(processor(response, <P>immutable({})));
+
+        }
+
+    };
 }
 
 

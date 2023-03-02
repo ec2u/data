@@ -15,7 +15,7 @@
  */
 
 import { isNumber } from "@metreeca/core";
-import { Setter } from "@metreeca/tool/hooks/index";
+import { Setter } from "@metreeca/view/hooks/index";
 import { RefObject, useEffect, useRef } from "react";
 
 

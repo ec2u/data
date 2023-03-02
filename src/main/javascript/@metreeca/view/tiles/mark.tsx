@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
+import { NodeSpin } from "@metreeca/view/tiles/spin";
 import Slugger from "github-slugger";
 import { Root } from "hast";
 import { headingRank } from "hast-util-heading-rank";

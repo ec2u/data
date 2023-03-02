@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { resolve } from "@metreeca/tool/nests/fetcher";
+import { resolve } from "@metreeca/view/nests/fetcher";
 
 
 /**

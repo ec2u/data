@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Query } from "@metreeca/link";
-import { NodeSearch } from "@metreeca/tile/inputs/search";
-import { Setter } from "@metreeca/tool/hooks";
-import { useKeywords } from "@metreeca/tool/nests/graph";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { Query } from "@metreeca/core/value";
+import { Setter } from "@metreeca/view/hooks";
+import { useKeywords } from "@metreeca/view/nests/graph";
+import { useRoute } from "@metreeca/view/nests/router";
+import { NodeSearch } from "@metreeca/view/tiles/inputs/search";
 import * as React from "react";
 import { createElement } from "react";
 import "./keywords.css";

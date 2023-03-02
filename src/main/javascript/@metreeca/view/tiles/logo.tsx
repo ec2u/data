@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { icon } from "@metreeca/tool";
+import { icon } from "@metreeca/view";
 import * as React from "react";
 import { createElement } from "react";
 import "./logo.css";

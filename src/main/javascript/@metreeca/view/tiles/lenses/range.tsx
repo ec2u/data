@@ -16,15 +16,15 @@
 
 import { isDate, isDateTime, isNumber, isString } from "@metreeca/core";
 import { trailing } from "@metreeca/core/callbacks";
-import { DataTypes, Literal, Query } from "@metreeca/link";
-import { toLocaleDateString } from "@metreeca/tile/inputs/date";
-import { AlertIcon, Calendar, CheckSquare, Clock, Hash, Type, X } from "@metreeca/tile/widgets/icon";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { classes } from "@metreeca/tool";
-import { Setter } from "@metreeca/tool/hooks";
-import { useCache } from "@metreeca/tool/hooks/cache";
-import { useRange } from "@metreeca/tool/nests/graph";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { DataTypes, Literal, Query } from "@metreeca/core/value";
+import { classes } from "@metreeca/view";
+import { Setter } from "@metreeca/view/hooks";
+import { useCache } from "@metreeca/view/hooks/cache";
+import { useRange } from "@metreeca/view/nests/graph";
+import { useRoute } from "@metreeca/view/nests/router";
+import { AlertIcon, Calendar, CheckSquare, Clock, Hash, Type, X } from "@metreeca/view/tiles/icon";
+import { toLocaleDateString } from "@metreeca/view/tiles/inputs/date";
+import { NodeSpin } from "@metreeca/view/tiles/spin";
 import * as React from "react";
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import "./range.css";

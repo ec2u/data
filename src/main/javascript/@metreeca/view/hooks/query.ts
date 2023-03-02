@@ -15,9 +15,9 @@
  */
 
 import { equals, isEmpty } from "@metreeca/core";
-import { Query } from "@metreeca/link";
-import { useStorage } from "@metreeca/tool/hooks/storage";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { Query } from "@metreeca/core/value";
+import { useStorage } from "@metreeca/view/hooks/storage";
+import { useRoute } from "@metreeca/view/nests/router";
 import { useEffect, useState } from "react";
 
 

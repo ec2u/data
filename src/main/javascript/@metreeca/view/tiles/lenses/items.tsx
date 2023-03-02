@@ -15,13 +15,13 @@
  */
 
 import { Immutable } from "@metreeca/core";
-import { Collection, Entry, Query } from "@metreeca/link";
-import { NodeHint } from "@metreeca/tile/widgets/hint";
-import { NodeSpin } from "@metreeca/tile/widgets/spin";
-import { Setter } from "@metreeca/tool/hooks";
-import { useCache } from "@metreeca/tool/hooks/cache";
-import { useItems, useStats } from "@metreeca/tool/nests/graph";
-import { useRoute } from "@metreeca/tool/nests/router";
+import { Collection, Entry, Query } from "@metreeca/core/value";
+import { Setter } from "@metreeca/view/hooks";
+import { useCache } from "@metreeca/view/hooks/cache";
+import { useItems, useStats } from "@metreeca/view/nests/graph";
+import { useRoute } from "@metreeca/view/nests/router";
+import { NodeHint } from "@metreeca/view/tiles/hint";
+import { NodeSpin } from "@metreeca/view/tiles/spin";
 import { Folder } from "lucide-react";
 import * as React from "react";
 import { createElement, ReactNode, useEffect, useRef } from "react";

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Initial, Updater } from "@metreeca/tool/hooks/index";
+import { Initial, Updater } from "@metreeca/view/hooks/index";
 import { useCallback, useEffect, useState } from "react";
 import { isFunction } from "../../core";
 

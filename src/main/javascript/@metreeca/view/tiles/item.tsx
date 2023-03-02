@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ChevronDown, ChevronRight } from "@metreeca/tile/widgets/icon";
-import { Setter } from "@metreeca/tool/hooks";
+import { Setter } from "@metreeca/view/hooks";
+import { ChevronDown, ChevronRight } from "@metreeca/view/tiles/icon";
 import * as React from "react";
 import { createElement, ReactNode, useEffect, useState } from "react";
 import "./item.css";

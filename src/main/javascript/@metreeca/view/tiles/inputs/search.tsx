@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { ClearIcon, Search } from "@metreeca/tile/widgets/icon";
-import { classes } from "@metreeca/tool";
-import { Setter } from "@metreeca/tool/hooks";
-import { useDelay } from "@metreeca/tool/hooks/delay";
+import { classes } from "@metreeca/view";
+import { Setter } from "@metreeca/view/hooks";
+import { useDelay } from "@metreeca/view/hooks/delay";
+import { ClearIcon, Search } from "@metreeca/view/tiles/icon";
 import * as React from "react";
 import { createElement, ReactNode } from "react";
 import "./search.css";
