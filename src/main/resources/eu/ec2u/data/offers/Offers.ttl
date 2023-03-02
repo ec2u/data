@@ -10,7 +10,6 @@
 	dct:description "Identifying and background information about degree and occupational programs offered by EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-	dct:available "2023-03-01"^^xsd:date ;
 	void:rootResource ec2u:Program.
 
 </courses/> a ec2u:Dataset ;
@@ -19,7 +18,6 @@
 	dct:description "Identifying and background information about degree and standalone courses and other educational opportunities offered by EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-	dct:available "2023-03-01"^^xsd:date ;
 	void:rootResource ec2u:Course.
 
 
