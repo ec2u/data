@@ -72,9 +72,9 @@ public final class Datasets extends Delegator {
                 field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
                 field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
 
-                field(RDFS.ISDEFINEDBY, optional(), datatype(IRIType)),
+                field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER)),
 
-                field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER))
+                field(RDFS.ISDEFINEDBY, optional(), datatype(IRIType))
 
         );
     }

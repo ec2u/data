@@ -10,7 +10,6 @@
 	dct:alternative "EC2U Knowledge Hub Resources"@en ;
 	dct:description "Items of interest made available on the EC2U Knowledge Hub."@en ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-	rdfs:isDefinedBy </datasets/resources> ;
 	void:rootResource ec2u:Resource .
 
 

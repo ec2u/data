@@ -50,9 +50,9 @@ export const Dataset=immutable({
     rights: optional(""),
     accessRights: optional({ "en": "" }),
 
-    isDefinedBy: optional(""),
+    entities: 0,
 
-    entities: 0
+    isDefinedBy: ""
 
 });
 
@@ -73,7 +73,10 @@ export function DataDataset() {
 
         pane={<DataPane
 
-            header={entry({ value: ({ id, label }) => <DataBack>{{ id, label: ec2u(label) }}</DataBack> })}
+            header={entry({
+                value: ({ id, label, isDefinedBy }) =>
+                    <DataBack>{{ id: isDefinedBy, label: ec2u(label) }}</DataBack>
+            })}
 
         >{entry({
 
@@ -85,8 +88,8 @@ export function DataDataset() {
 
         fetch: <NodeHint>{DatasetsIcon}</NodeHint>,
 
-        value: ({ description, isDefinedBy }) => DataDatasetBody({
-            description, definition: isDefinedBy && `${isDefinedBy}${location.hash}`
+        value: ({ id, description }) => DataDatasetBody({
+            description, definition: `${id}${location.hash}`
 
         }),
 
@@ -101,12 +104,12 @@ export function DataDataset() {
 
 function DataDatasetInfo({
 
+    id,
+
     entities,
 
     license,
-    rights,
-
-    isDefinedBy
+    rights
 
 
 }: typeof Dataset) {
@@ -126,11 +129,11 @@ function DataDatasetInfo({
 
         }}</DataInfo>
 
-        {isDefinedBy && <>
+        {<>
 
             <hr/>
 
-            <nav><NodeMark toc>{isDefinedBy}</NodeMark></nav>
+            <nav><NodeMark toc>{id}</NodeMark></nav>
 
         </>}
 
