@@ -1,10 +1,16 @@
 # Sites
 
-*  https://apps.uc.pt/courses/
+* https://apps.uc.pt/courses/
 
 # Integration
 
 * data extracted from dedicated REST/JSON API
+
+## 2023-03-07
+
+* Classify entries as programs/courses according to the `cicloTipo` field:
+  * `PRIMEIRO/SEGUNDO/TERCEIRO` ›› degree programs
+  * `NAO_CONFERENTE_GRAU` ›› courses
 
 ## 2023-01-17
 
