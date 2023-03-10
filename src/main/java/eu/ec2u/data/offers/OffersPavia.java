@@ -122,11 +122,12 @@ public final class OffersPavia implements Runnable {
     private Stream<Focus> programs(final RepositoryConnection connection, final Instant synced) {
         return focus(Set.of(VIVO.AcademicDegree), connection)
                 .inv(RDF.TYPE)
+                .cache()
                 .split();
     }
 
     private Optional<Frame> program(final Focus focus) {
-        return focus.cache().value().map(program -> frame(item(Programs, Pavia, program.stringValue()))
+        return focus.value().map(program -> frame(item(Programs, Pavia, program.stringValue()))
 
                 .value(RDF.TYPE, Program)
                 .value(Resources.university, Pavia.Id)
@@ -171,11 +172,12 @@ public final class OffersPavia implements Runnable {
     private Stream<Focus> courses(final RepositoryConnection connection, final Instant synced) {
         return focus(Set.of(VIVO.Course), connection)
                 .inv(RDF.TYPE)
+                .cache()
                 .split();
     }
 
     private Optional<Frame> course(final Focus focus) {
-        return focus.cache().value().map(course -> frame(item(Courses, Pavia, course.stringValue()))
+        return focus.value().map(course -> frame(item(Courses, Pavia, course.stringValue()))
 
                 .values(RDF.TYPE, Course)
                 .value(Resources.university, Pavia.Id)

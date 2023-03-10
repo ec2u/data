@@ -38,28 +38,26 @@ final class FocusConnection implements Focus {
     private final Set<Value> values;
     private final RepositoryConnection connection;
 
-    private final Set<Value> cached;
-    private final Set<Statement> cache;
+    private final Map<Value, Set<Statement>> cache;
 
 
     FocusConnection(final Set<Value> values, final RepositoryConnection connection) {
-        this(values, connection, new HashSet<>(), new HashSet<>());
+        this(values, connection, new HashMap<>());
     }
 
     private FocusConnection(
             final Set<Value> values, final RepositoryConnection connection,
-            final Set<Value> cached, final Set<Statement> cache
+            final Map<Value, Set<Statement>> cache
     ) {
         this.values=values;
         this.connection=connection;
-        this.cached=cached;
         this.cache=cache;
     }
 
 
     @Override public Focus cache() {
 
-        final int before=cached.size();
+        final int before=cache.size();
 
         Logger.time(() -> {
 
@@ -72,7 +70,7 @@ final class FocusConnection implements Focus {
                                     +"}",
 
                             values.stream()
-                                    .filter(not(cached::contains))
+                                    .filter(not(cache::containsKey))
                                     .map(Values::format)
                                     .collect(joining(" "))
 
@@ -80,19 +78,46 @@ final class FocusConnection implements Focus {
 
                     .evaluate()
                     .stream()
-                    .forEach(cache::add);
 
-            cached.addAll(values);
+                    .collect(toSet())
+
+                    .forEach(statement -> {
+
+                        if ( values.contains(statement.getSubject()) ) {
+                            cache.compute(statement.getSubject(), (value, statements) -> {
+
+                                final Set<Statement> set=statements != null ? statements : new HashSet<>();
+
+                                set.add(statement);
+
+                                return set;
+
+                            });
+                        }
+
+                        if ( values.contains(statement.getObject()) ) {
+                            cache.compute(statement.getObject(), (value, statements) -> {
+
+                                final Set<Statement> set=statements != null ? statements : new HashSet<>();
+
+                                set.add(statement);
+
+                                return set;
+
+                            });
+                        }
+
+                    });
 
         }).apply(elapsed -> service(logger()).info(
-                this, format("cached ‹%,d› statements in ‹%,d› ms", cache.size()-before, elapsed)
+                this, format("cached ‹%,d› resources in ‹%,d› ms", cache.size()-before, elapsed)
         ));
 
         return this;
     }
 
     @Override public Stream<Focus> split() {
-        return values.stream().map(value -> new FocusConnection(Set.of(value), connection));
+        return values.stream().map(value -> new FocusConnection(Set.of(value), connection, cache));
     }
 
 
@@ -107,7 +132,7 @@ final class FocusConnection implements Focus {
             throw new NullPointerException("null step");
         }
 
-        return new FocusConnection(recto(step).collect(toSet()), connection, cached, cache);
+        return new FocusConnection(recto(step).collect(toSet()), connection, cache);
     }
 
     @Override public Focus seq(final IRI... steps) {
@@ -120,7 +145,7 @@ final class FocusConnection implements Focus {
 
         for (final IRI step : steps) { next=recto(step); }
 
-        return new FocusConnection(next.collect(toSet()), connection, cached, cache);
+        return new FocusConnection(next.collect(toSet()), connection, cache);
     }
 
 
@@ -130,7 +155,7 @@ final class FocusConnection implements Focus {
             throw new NullPointerException("null step");
         }
 
-        return new FocusConnection(verso(step).collect(toSet()), connection, cached, cache);
+        return new FocusConnection(verso(step).collect(toSet()), connection, cache);
     }
 
 
@@ -142,33 +167,38 @@ final class FocusConnection implements Focus {
                 .filter(Value::isResource)
                 .map(Resource.class::cast)
 
-                .flatMap(value -> recto(value, step))
+                .flatMap(value -> Optional.ofNullable(cache.get(value))
+
+                        .map(statements -> statements.stream()
+                                .filter(statement -> statement.getSubject().equals(value))
+                                .filter(statement -> statement.getPredicate().equals(step))
+                        )
+
+                        .orElseGet(() -> connection
+                                .getStatements(value, step, null)
+                                .stream()
+                        )
+
+                )
 
                 .map(Statement::getObject);
-    }
-
-    private Stream<Statement> recto(final Resource value, final IRI step) {
-        return cached.contains(value)
-
-                ? cache.stream()
-                .filter(statement -> statement.getSubject().equals(value))
-                .filter(statement -> statement.getPredicate().equals(step))
-
-                : connection
-                .getStatements(value, step, null)
-                .stream();
     }
 
     private Stream<Resource> verso(final IRI step) {
         return values.stream()
 
-                .flatMap(value -> cached.contains(value)
-                        ? cache.stream()
-                        .filter(statement -> statement.getObject().equals(value))
-                        .filter(statement -> statement.getPredicate().equals(step))
-                        : connection
-                        .getStatements(null, step, value)
-                        .stream()
+                .flatMap(value -> Optional.ofNullable(cache.get(value))
+
+                        .map(statements -> statements.stream()
+                                .filter(statement -> statement.getObject().equals(value))
+                                .filter(statement -> statement.getPredicate().equals(step))
+                        )
+
+                        .orElseGet(() -> connection
+                                .getStatements(null, step, value)
+                                .stream()
+                        )
+
                 )
 
                 .map(Statement::getSubject);
