@@ -23,8 +23,7 @@ import com.metreeca.http.handlers.*;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.events.*;
-import eu.ec2u.data.offers.OffersCoimbra;
-import eu.ec2u.data.offers.OffersPavia;
+import eu.ec2u.data.offers.*;
 import eu.ec2u.data.units.*;
 import eu.ec2u.data.universities.Universities;
 
@@ -57,7 +56,10 @@ public final class Cron extends Delegator {
                 .path("/units/turku", execute(new UnitsTurku()))
 
                 .path("/offers/coimbra", execute(new OffersCoimbra()))
+                .path("/offers/jena", execute(new OffersJena()))
                 .path("/offers/pavia", execute(new OffersPavia()))
+                .path("/offers/poitiers", execute(new OffersPoitiers()))
+                .path("/offers/salamanca", execute(new OffersSalamanca()))
 
                 .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
                 .path("/events/coimbra/city", execute(new EventsCoimbraCity()))
@@ -71,14 +73,14 @@ public final class Cron extends Delegator {
                 .path("/events/pavia/borromeo", execute(new EventsPaviaBorromeo()))
                 .path("/events/pavia/city", execute(new EventsPaviaCity()))
                 .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
-                // !!! .path("/events/poitiers/city", execute(new EventsPoitiersCity()))
+                .path("/events/poitiers/city", execute(new EventsPoitiersCity()))
                 .path("/events/poitiers/city/grand", execute(new EventsPoitiersCityGrand()))
                 .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
                 .path("/events/salamanca/city/sacis", execute(new EventsSalamancaCitySACIS()))
                 .path("/events/salamanca/city/to", execute(new EventsSalamancaCityTO()))
                 .path("/events/turku/university", execute(new EventsTurkuUniversity()))
-                // !!! .path("/events/turku/city", execute(new EventsTurkuCity()))
-                // !!! .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
+                .path("/events/turku/city", execute(new EventsTurkuCity()))
+                .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
 
                 .path("/concepts/", execute(new Concepts.Updater()))
                 .path("/datasets/", execute(new Datasets.Updater()))
