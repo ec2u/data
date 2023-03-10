@@ -1,10 +1,14 @@
 # Sites
 
-*  https://guias.usal.es/
+* https://guias.usal.es/
 
 # Integration
 
-* data extracted from dedicated REST/JSON API
+* data extracted from a set of dedicated REST/JSON APIs
+
+## 2023-03-02
+
+* integrate programs and programs-courses APIs
 
 ## 2023-01-17
 
@@ -18,8 +22,38 @@
 
 ## REST/JSON API
 
+### Programs
+
 ```http
-GET {{courses-salamanca-url}}
+GET {{courses-salamanca-programs-url}}
+Accept: application/json
+```
+
+```json
+[
+    {
+        "programCode": "200",
+        "programName": "GRADO EN INFORMACIÓN Y DOCUMENTACIÓN",
+        "programUrl": "https://www.usal.es/node/474"
+    },
+    {
+        "programCode": "201",
+        "programName": "GRADO EN FARMACIA",
+        "programUrl": "https://www.usal.es/node/473"
+    },
+    {
+        "programCode": "202",
+        "programName": "GRADO EN MATEMÁTICAS",
+        "programUrl": "https://www.usal.es/node/467"
+    }
+    …
+]
+```
+
+### Courses
+
+```http
+GET {{courses-salamanca-courses-url}}
 Accept: application/json
 ```
 
@@ -58,6 +92,33 @@ Accept: application/json
         "field_guias_asig_cred_teor_value": null,
         "field_guias_asig_cred_prac_value": null
     },
-  	…
- ]
+    …
+]
 ```
+
+### Program/Course
+
+```http
+GET {{courses-salamanca-programs-courses-url}}
+Accept: application/json
+```
+
+```json
+[
+    {
+        "code": "100103",
+        "programCode": "201"
+    },
+    {
+        "code": "100107",
+        "programCode": "201"
+    },
+    {
+        "code": "100106",
+        "programCode": "201"
+    }
+    …
+]
+```
+
+###  

@@ -17,7 +17,6 @@
 import { CoursesIcon } from "@ec2u/data/pages/courses/courses";
 import { Programs } from "@ec2u/data/pages/programs/programs";
 import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
@@ -54,6 +53,8 @@ export const Program=immutable({
 
     identifier: optional(""),
     url: multiple(""),
+
+    fullDescription: { "en": "" },
 
     numberOfCredits: optional(0.0),
     timeToComplete: optional(""),
@@ -202,7 +203,7 @@ function DataProgramBody({
 
     children: {
 
-        comment,
+        fullDescription,
 
         educationalCredentialAwarded,
         occupationalCredentialAwarded,
@@ -217,7 +218,7 @@ function DataProgramBody({
 
 }) {
 
-    const description=string(comment);
+    const description=string(fullDescription);
 
     const details={
         "Educational Credential Awarded": string(educationalCredentialAwarded),
@@ -227,7 +228,7 @@ function DataProgramBody({
     const detailed=Object.values(details).some(v => v);
 
 
-    return <DataCard>
+    return <>
 
         {description && <ReactMarkdown remarkPlugins={[remarkGfm]}>{description}</ReactMarkdown>}
 
@@ -257,6 +258,6 @@ function DataProgramBody({
 
         </>}
 
-    </DataCard>;
+    </>;
 
 }

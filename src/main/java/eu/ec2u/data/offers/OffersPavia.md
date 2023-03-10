@@ -9,8 +9,11 @@
 ## Pending
 
 * performance improvements
-* `schema:educationalLevel`
 * `schema:about`
+
+## 2023-03-07
+
+* Integrate programs/courses
 
 ## 2022-09-27
 

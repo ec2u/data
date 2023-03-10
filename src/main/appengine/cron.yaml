@@ -38,8 +38,20 @@ cron:
     url: /cron/offers/coimbra
     schedule: every day 00:00
 
-  - description: "offers › pavia - nightly crawling"
-    url: /cron/offers/pavia
+  - description: "offers › jena - nightly crawling"
+    url: /cron/offers/jena
+    schedule: every day 00:00
+
+  #  - description: "offers › pavia - nightly crawling"
+  #    url: /cron/offers/pavia
+  #    schedule: every day 00:00
+
+  #  - description: "offers › poitiers - nightly crawling"
+  #    url: /cron/offers/poitiers
+  #    schedule: every day 00:00
+
+  - description: "offers › salamanca - nightly crawling"
+    url: /cron/offers/salamanca
     schedule: every day 00:00
 
 

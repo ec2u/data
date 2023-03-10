@@ -45,17 +45,20 @@ import static com.metreeca.link.Values.literal;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Salamanca;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.offers.Offers.Course;
+import static eu.ec2u.data.offers.Offers.*;
 import static eu.ec2u.work.validation.Validators.validate;
 
 import static java.lang.String.format;
 import static java.util.Map.entry;
+import static java.util.stream.Collectors.toSet;
 
 public final class OffersSalamanca implements Runnable {
 
     private static final IRI Context=iri(Offers.Context, "/salamanca");
 
-    private static final String APIUrl="offers-salamanca-url";
+    private static final String ProgramsURL="offers-salamanca-programs-url";
+    private static final String CoursesURL="offers-salamanca-courses-url";
+    private static final String ProgramsCoursesURL="courses-salamanca-programs-courses-url";
 
 
     private static final Map<String, Period> Durations=Map.ofEntries(
@@ -77,13 +80,39 @@ public final class OffersSalamanca implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(Instant.EPOCH)
+        Xtream
 
-                .flatMap(this::courses)
-                .optMap(this::course)
+                .from(
 
-                .batch(1000).flatMap(courses -> // !!! optimize validation
-                        validate(Course(), Set.of(Course), courses.stream())
+                        Xtream.of(Instant.EPOCH)
+
+                                .flatMap(this::programs)
+                                .optMap(this::program)
+
+                                .batch(1000).flatMap(programs -> // !!! optimize validation
+                                        validate(Program(), Set.of(Program), programs.stream())
+                                ),
+
+                        Xtream.of(Instant.EPOCH)
+
+                                .flatMap(this::courses)
+                                .optMap(this::course)
+
+                                .batch(1000).flatMap(courses -> // !!! optimize validation
+                                        validate(Course(), Set.of(Course), courses.stream())
+                                ),
+
+
+                        Xtream.of(Instant.EPOCH)
+
+                                .flatMap(this::programsCourses)
+                                .optMap(this::programCourses)
+
+                                .pipe(frames -> Xtream.of(frames
+                                        .flatMap(Frame::stream)
+                                        .collect(toSet())
+                                ))
+
                 )
 
                 .forEach(new Upload()
@@ -95,12 +124,53 @@ public final class OffersSalamanca implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private Xtream<JSONPath> programs(final Instant synced) {
+
+        final String url=vault
+                .get(ProgramsURL)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined API URL <%s>", ProgramsURL
+                )));
+
+        return Xtream.of(synced)
+
+                .flatMap(new Fill<>()
+                        .model(url)
+                )
+
+                .optMap(new GET<>(new JSON()))
+
+                .map(JSONPath::new)
+                .flatMap(json -> json.paths("*"));
+    }
+
+    private Optional<Frame> program(final JSONPath json) {
+        return json.string("programCode")
+
+                .filter(code -> !code.equals("293")) // !!!
+
+                .map(code -> frame(item(Programs, Salamanca, code))
+
+                        .values(RDF.TYPE, Program)
+                        .value(Resources.university, Salamanca.Id)
+
+                        .value(Schema.url, json.string("programUrl").map(Values::iri))
+                        .value(Schema.identifier, literal(code))
+
+                        .values(Schema.name, json.strings("programName").map(v -> literal(v, Salamanca.Language)))
+
+                );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private Xtream<JSONPath> courses(final Instant synced) {
 
         final String url=vault
-                .get(APIUrl)
+                .get(CoursesURL)
                 .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API URL <%s>", APIUrl
+                        "undefined API URL <%s>", CoursesURL
                 )));
 
         return Xtream.of(synced)
@@ -116,19 +186,20 @@ public final class OffersSalamanca implements Runnable {
     }
 
     private Optional<Frame> course(final JSONPath json) {
-        return json.string("code").map(id -> frame(item(Offers.Courses, Salamanca, id))
+        return json.string("code").map(code -> frame(item(Courses, Salamanca, code))
 
                 .values(RDF.TYPE, Course)
                 .value(Resources.university, Salamanca.Id)
 
                 .value(Schema.url, json.string("urlEN").map(Values::iri))
+                .value(Schema.identifier, literal(code))
 
                 .values(Schema.name, Stream.concat(
                         json.strings("nameInEnglish").map(v -> literal(v, "en")),
                         json.strings("nameInSpanish").map(v -> literal(v, Salamanca.Language))
                 ))
 
-                .values(Schema.courseCode, literal(id))
+                .values(Schema.courseCode, literal(code))
 
                 .value(Schema.numberOfCredits, json.string("ects")
                         .map(Offers::ects)
@@ -140,6 +211,35 @@ public final class OffersSalamanca implements Runnable {
                         .map(Values::literal)
                 )
 
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Xtream<JSONPath> programsCourses(final Instant synced) {
+
+        final String url=vault
+                .get(ProgramsCoursesURL)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined API URL <%s>", ProgramsCoursesURL
+                )));
+
+        return Xtream.of(synced)
+
+                .flatMap(new Fill<>()
+                        .model(url)
+                )
+
+                .optMap(new GET<>(new JSON()))
+
+                .map(JSONPath::new)
+                .flatMap(json -> json.paths("*"));
+    }
+
+    private Optional<Frame> programCourses(final JSONPath json) {
+        return json.string("programCode").map(program -> frame(item(Programs, Salamanca, program))
+                .value(Schema.hasCourse, json.string("code").map(course -> item(Courses, Salamanca, course)))
         );
     }
 
