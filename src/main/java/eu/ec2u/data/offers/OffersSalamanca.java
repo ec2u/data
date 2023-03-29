@@ -147,8 +147,6 @@ public final class OffersSalamanca implements Runnable {
     private Optional<Frame> program(final JSONPath json) {
         return json.string("programCode")
 
-                .filter(code -> !code.equals("293")) // !!!
-
                 .map(code -> frame(item(Programs, Salamanca, code))
 
                         .values(RDF.TYPE, Program)

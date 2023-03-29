@@ -6,6 +6,10 @@
 
 * data extracted from a set of dedicated REST/JSON APIs
 
+## 2023-03-29
+
+* remove patches for clashing offer names
+
 ## 2023-03-02
 
 * integrate programs and programs-courses APIs
