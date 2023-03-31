@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-524 390 885 666"
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-524 390 885 666"
      width="885" height="666">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter"
@@ -51,7 +51,7 @@
       </g>
     </marker>
   </defs>
-  <g id="offers" stroke-opacity="1" stroke="none" fill="none" stroke-dasharray="none" fill-opacity="1">
+  <g id="offers" stroke-opacity="1" stroke-dasharray="none" stroke="none" fill-opacity="1" fill="none">
     <title>offers</title>
     <rect fill="white" x="-524" y="390" width="885" height="666"/>
     <g id="offers_Layer_1">

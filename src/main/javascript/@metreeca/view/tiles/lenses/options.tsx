@@ -1,20 +1,25 @@
-/*
- *   Copyright © 2021 Luxottica. All rights reserved.
- */
-
-import { isBoolean } from "@metreeca/core";
-import { DataTypes, isFocus, isLiteral, Literal, Query, string } from "@metreeca/core/value";
-import { Setter } from "@metreeca/view/hooks";
-import { useCache } from "@metreeca/view/hooks/cache";
-import { useDelay } from "@metreeca/view/hooks/delay";
-import { Options, useOptions } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { AlertIcon, Check, CheckSquare, ChevronLeft, ChevronRight, ChevronsLeft, ClearIcon, X } from "@metreeca/view/tiles/icon";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
+import {isBoolean} from "@metreeca/core";
+import {DataTypes, isFocus, isLiteral, Literal, Query, string} from "@metreeca/core/value";
+import {Setter} from "@metreeca/view/hooks";
+import {useCache} from "@metreeca/view/hooks/cache";
+import {useDelay} from "@metreeca/view/hooks/delay";
+import {Options, useOptions} from "@metreeca/view/nests/graph";
+import {useRoute} from "@metreeca/view/nests/router";
+import {
+    AlertIcon,
+    Check,
+    CheckSquare,
+    ChevronLeft,
+    ChevronRight,
+    ChevronsLeft,
+    ClearIcon,
+    X
+} from "@metreeca/view/tiles/icon";
+import {NodeLink} from "@metreeca/view/tiles/link";
+import {NodeSpin} from "@metreeca/view/tiles/spin";
 import * as React from "react";
-import { createElement, useEffect, useRef, useState } from "react";
-import { classes } from "../../index";
+import {createElement, useEffect, useRef, useState} from "react";
+import {classes} from "../../index";
 import "./options.css";
 
 
