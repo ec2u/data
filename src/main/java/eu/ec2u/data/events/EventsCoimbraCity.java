@@ -25,6 +25,7 @@ import com.metreeca.rdf.Frame;
 import com.metreeca.rdf.Values;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -62,7 +63,7 @@ public final class EventsCoimbraCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.coimbragenda.pt/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
                     literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.Language)

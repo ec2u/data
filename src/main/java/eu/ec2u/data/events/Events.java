@@ -59,10 +59,6 @@ public final class Events extends Delegator {
 
     public static final IRI Event=EC2U.term("Event");
 
-    static final IRI College=EC2U.term("College");
-    static final IRI Association=EC2U.term("Association");
-    static final IRI City=EC2U.term("City");
-
 
     static Instant synced(final IRI context, final Value publisher) {
         return Xtream

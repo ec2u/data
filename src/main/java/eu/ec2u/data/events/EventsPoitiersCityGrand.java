@@ -61,7 +61,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
                     literal("Grand Poitiers / Events", "en"),
                     literal("Grand Poitiers / Sortir", Poitiers.Language)

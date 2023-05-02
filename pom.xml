@@ -63,6 +63,7 @@
 
         <java.version>11</java.version>
         <maven.version>3.6</maven.version>
+        <lombok.version>1.18.24</lombok.version>
 
         <node.version>16.13.0</node.version>
         <npm.version>8.6.0</npm.version>
@@ -146,6 +147,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -270,6 +278,14 @@
 
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
 
                 </configuration>
 

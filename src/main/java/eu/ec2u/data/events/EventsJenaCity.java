@@ -30,6 +30,7 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources;
@@ -71,7 +72,7 @@ public final class EventsJenaCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.jena-veranstaltungen.de/veranstaltungen"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
                     literal("City of Jena / Event Calendar", "en"),
                     literal("Stadt Jena / Veranstaltungskalender", Jena.Language)

@@ -18,17 +18,22 @@ package eu.ec2u.data.universities;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.jsonld.Virtual;
 import com.metreeca.open.actions.WikidataMirror;
 import com.metreeca.rdf.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.resources.Container;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Frame.with;
 import static com.metreeca.rdf.Values.iri;
 import static com.metreeca.rdf.formats.RDF.rdf;
 
@@ -37,89 +42,36 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
 
-public final class Universities extends Delegator {
+@Virtual
+public final class Universities extends Container<University> {
 
     private static final IRI Context=EC2U.item("/universities/");
 
     public static final IRI University=EC2U.term("University");
 
-    public static final IRI schac=EC2U.term("schac");
-    public static final IRI country=EC2U.term("country");
-    public static final IRI location=EC2U.term("location");
-    public static final IRI image=EC2U.term("image");
-    public static final IRI inception=EC2U.term("inception");
-    public static final IRI students=EC2U.term("students");
 
+    public static final class Handler extends Delegator {
 
-    //    private static Shape University() {
-    //        return relate(Resource(),
-    //
-    //                filter(clazz(University)),
-    //
-    //                field(RDFS.LABEL, Resources.multilingual()),
-    //                field(RDFS.COMMENT, Resources.multilingual()),
-    //
-    //                field(schac, required(), datatype(XSD.STRING)),
-    //                field(image, optional(), datatype(IRIType)),
-    //
-    //                link(RDFS.SEEALSO,
-    //
-    //                        field(country, optional(),
-    //                                field(RDFS.LABEL, Resources.multilingual())
-    //                        ),
-    //
-    //                        field(inception, optional(), datatype(XSD.DATETIME)),
-    //                        field(students, optional(), datatype(XSD.DECIMAL)),
-    //
-    //                        detail(
-    //
-    //                                field(location, optional(),
-    //                                        field(RDFS.LABEL, Resources.multilingual())
-    //                                ),
-    //
-    //                                field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
-    //                                field(WGS84.LONG, optional(), datatype(XSD.DECIMAL))
-    //                        )
-    //
-    //                ),
-    //
-    //                detail(
-    //
-    //                        field(DCTERMS.EXTENT, multiple(),
-    //
-    //                                field("dataset", inverse(VOID.SUBSET), required(), Reference()),
-    //                                field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
-    //
-    //                        )
-    //
-    //                )
-    //
-    //        );
-    //    }
+        public Handler() {
+            delegate(new Worker()
 
+                    .get(new Relator(with(new Universities(), offices -> {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        offices.setLabel("Universities");
 
-    public Universities() {
-        delegate(handler(
+                        offices.setMembers(Set.of(with(new University(), university -> {
 
-                //                new Driver(University()),
-                //
-                //                new Router()
-                //
-                //                        .path("/", new Worker()
-                //                                .get(new Relator())
-                //                        )
-                //
-                //                        .path("/{id}", new Worker()
-                //                                .get(new Relator())
-                //                        )
+                            university.setId("");
+                            university.setLabel("");
 
-        ));
+                        })));
+
+                    })))
+
+            );
+        }
+
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
 

@@ -40,6 +40,7 @@ import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
+import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -54,6 +55,10 @@ import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Response.SeeOther;
 import static com.metreeca.http.services.Fetcher.fetcher;
+import static com.metreeca.jsonld.formats.Bean.codec;
+import static com.metreeca.jsonld.formats.Bean.engine;
+import static com.metreeca.link.json.JSON.json;
+import static com.metreeca.link.rdf4j.RDF4J.rdf4j;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.datasets.Datasets.Dataset;
@@ -90,7 +95,14 @@ public final class Data implements Runnable {
                 .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
 
-                .set(graph(), () -> new Graph(repository(GraphDBRepository)));
+                .set(graph(), () -> new Graph(service(Data::repository)))
+                .set(engine(), () -> rdf4j(service(Data::repository)))
+                .set(codec(), () -> json().pretty(true));
+    }
+
+
+    private static Repository repository() {
+        return repository(GraphDBRepository);
     }
 
     public static Repository repository(final String name) {
@@ -146,33 +158,35 @@ public final class Data implements Runnable {
                                 ))
 
                                 .path("/cron/*", new Cron())
-                                .path("/resources/", new Resources())
+                                // .path("/resources/", new Resources())
 
                                 .path("/*", new Router()
 
-                                        .path("/", new Datasets())
+                                                //.path("/", new Datasets())
 
-                                        // !!! to be removed after metreeca/java supports resource access to collections
+                                                // !!! to be removed after metreeca/java supports resource access to collections
 
-                                        //                                        .path("/datasets", handler(
-                                        //                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
-                                        //                                                new Worker().get(new Relator())
-                                        //                                        ))
+                                                // .path("/datasets", handler(
+                                                //         new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
+                                                //         new Worker().get(new Relator())
+                                                // ))
 
-                                        //                                        .path("/datasets/{id}", handler(
-                                        //                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
-                                        //                                                new Worker().get(new Relator())
-                                        //                                        ))
+                                                // .path("/datasets/{id}", handler(
+                                                //         new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
+                                                //         new Worker().get(new Relator())
+                                                // ))
 
-                                        .path("/universities/*", new Universities())
-                                        .path("/units/*", new Units())
-                                        .path("/offers/*", new Offers())
-                                        .path("/programs/*", new Offers.Programs())
-                                        .path("/courses/*", new Offers.Courses())
-                                        .path("/documents/*", new Documents())
+                                                .path("/universities/", new Universities.Handler())
+                                                .path("/universities/{code}", new University.Handler())
+
+                                        //.path("/units/*", new Units())
+                                        //.path("/offers/*", new Offers())
+                                        //.path("/programs/*", new Offers.Programs())
+                                        //.path("/courses/*", new Offers.Courses())
+                                        //.path("/documents/*", new Documents())
                                         .path("/persons/*", new Persons())
-                                        .path("/events/*", new Events())
-                                        .path("/concepts/*", new Concepts())
+                                        //.path("/events/*", new Events())
+                                        //.path("/concepts/*", new Concepts())
 
                                 )
 

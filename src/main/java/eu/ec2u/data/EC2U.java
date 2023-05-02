@@ -28,6 +28,10 @@ import static com.metreeca.rdf.Values.iri;
 public final class EC2U {
 
     public static final String Base="https://data.ec2u.eu/";
+    public static final String Terms=Base + "terms/";
+    public static final IRI College=term("College");
+    public static final IRI Association=term("Association");
+    public static final IRI City=term("City");
 
     private static final Pattern MD5Pattern=Pattern.compile("[a-f0-9]{32}");
 
@@ -37,7 +41,7 @@ public final class EC2U {
     }
 
     public static IRI item(final IRI dataset, final String name) {
-        return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(name)));
+        return iri(dataset, "/" + (MD5Pattern.matcher(name).matches() ? name : md5(name)));
     }
 
     public static IRI item(final IRI dataset, final University university, final String name) {
@@ -45,7 +49,7 @@ public final class EC2U {
     }
 
     public static IRI term(final String name) {
-        return iri(item("/terms/"), name);
+        return iri(Terms, name);
     }
 
 

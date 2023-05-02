@@ -23,6 +23,7 @@ import com.metreeca.rdf.Frame;
 import com.metreeca.xml.formats.XML;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
@@ -51,7 +52,7 @@ public final class EventsIasiCityCultura implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
                     literal("Iaşul Cultural / Evenimente in Iași", "ro"),
                     literal("Culture in Iasi / Events in Iasi", "en")

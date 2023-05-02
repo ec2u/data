@@ -27,6 +27,7 @@ import com.metreeca.rdf.Values;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -75,7 +76,7 @@ public final class EventsTurkuCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
                     literal("City of Turku / Event's Calendar", "en"),
                     literal("Turun kaupunki / Tapahtumakalenteri", Turku.Language)

@@ -27,6 +27,7 @@ import com.metreeca.xml.actions.Untag;
 import com.metreeca.xml.formats.XML;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
@@ -57,9 +58,9 @@ public final class EventsSalamancaCitySACIS implements Runnable {
     private static final IRI Context=iri(Events.Context, "/salamanca/city/sacis");
 
     private static final Frame Publisher=frame(iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda"
-            +"-salamanca/"))
+            + "-salamanca/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
+            .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
                     literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en"),
                     literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.Language)
