@@ -19,6 +19,12 @@ package eu.ec2u.data.units;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.toolkits.Strings;
+import com.metreeca.csv.formats.CSV;
+import com.metreeca.http.actions.GET;
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.link.Shape;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
@@ -31,12 +37,22 @@ import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.concepts.EuroSciVoc;
+import eu.ec2u.data.concepts.UnitTypes;
+import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.EC2U.University;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.Cursor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVFormat;
@@ -61,15 +77,10 @@ import static com.metreeca.core.Locator.path;
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.link.shifts.Seq.seq;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Shift.Seq.seq;
+import static com.metreeca.rdf.Values.*;
+import static com.metreeca.rdf.formats.RDF.rdf;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
@@ -92,24 +103,26 @@ public final class Units extends Delegator {
 
 
     public static Shape Unit() {
-        return relate(Resource(),
+        throw new UnsupportedOperationException(";( be implemented"); // !!!
 
-                hidden(field(RDF.TYPE, all(Unit))),
-
-                field(FOAF.HOMEPAGE, multiple(), datatype(IRIType)),
-
-                field(SKOS.PREF_LABEL, multilingual()),
-                field(SKOS.ALT_LABEL, multilingual()),
-
-                field(ORG.IDENTIFIER, optional(), datatype(XSD.STRING)),
-                field(ORG.CLASSIFICATION, optional(), Reference()),
-
-                field(ORG.UNIT_OF, repeatable(), Reference()),
-                field(ORG.HAS_UNIT, multiple(), Reference()),
-
-                field("head", inverse(ORG.HEAD_OF), multiple(), Reference())
-
-        );
+        //            return relate(Resource(),
+        //
+        //                    hidden(field(RDF.TYPE, all(Unit))),
+        //
+        //                    field(FOAF.HOMEPAGE, multiple(), datatype(IRIType)),
+        //
+        //                    field(SKOS.PREF_LABEL, multilingual()),
+        //                    field(SKOS.ALT_LABEL, multilingual()),
+        //
+        //                    field(ORG.IDENTIFIER, optional(), datatype(XSD.STRING)),
+        //                    field(ORG.CLASSIFICATION, optional(), Reference()),
+        //
+        //                    field(ORG.UNIT_OF, repeatable(), Reference()),
+        //                    field(ORG.HAS_UNIT, multiple(), Reference()),
+        //
+        //                    field("head", inverse(ORG.HEAD_OF), multiple(), Reference())
+        //
+        //            );
     }
 
 
@@ -118,21 +131,21 @@ public final class Units extends Delegator {
     public Units() {
         delegate(handler(
 
-                new Driver(Unit(),
-
-                        filter(clazz(Unit))
-
-                ),
-
-                new Router()
-
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
-
-                        .path("/{id}", new Worker()
-                                .get(new Relator())
-                        )
+                //                new Driver(Unit(),
+                //
+                //                        filter(clazz(Unit))
+                //
+                //                ),
+                //
+                //                new Router()
+                //
+                //                        .path("/", new Worker()
+                //                                .get(new Relator())
+                //                        )
+                //
+                //                        .path("/{id}", new Worker()
+                //                                .get(new Relator())
+                //                        )
 
         ));
     }
@@ -285,15 +298,15 @@ public final class Units extends Delegator {
                     .of(sectors.computeIfAbsent(sector, key -> graph.query(connection -> {
 
                         final TupleQuery query=connection.prepareTupleQuery(""
-                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-                                +"\n"
-                                +"select ?concept {\n"
-                                +"\n"
-                                +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
-                                +"\n"
-                                +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
-                                +"\n"
-                                +"}\n"
+                                + "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                + "\n"
+                                + "select ?concept {\n"
+                                + "\n"
+                                + "\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
+                                + "\n"
+                                + "\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
+                                + "\n"
+                                + "}\n"
                         );
 
                         query.setBinding("scheme", EuroSciVoc.Scheme);
@@ -324,15 +337,15 @@ public final class Units extends Delegator {
                     .of(types.computeIfAbsent(type, key -> graph.query(connection -> {
 
                         final TupleQuery query=connection.prepareTupleQuery(""
-                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-                                +"\n"
-                                +"select ?concept {\n"
-                                +"\n"
-                                +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
-                                +"\n"
-                                +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
-                                +"\n"
-                                +"}\n"
+                                + "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                + "\n"
+                                + "select ?concept {\n"
+                                + "\n"
+                                + "\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
+                                + "\n"
+                                + "\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
+                                + "\n"
+                                + "}\n"
                         );
 
                         query.setBinding("scheme", UnitTypes.Scheme);
@@ -400,17 +413,17 @@ public final class Units extends Delegator {
                     .of(vis.computeIfAbsent(code, key -> graph.query(connection -> {
 
                         final TupleQuery query=connection.prepareTupleQuery(""
-                                +"prefix ec2u: <https://data.ec2u.eu/terms/>\n"
-                                +"prefix org: <http://www.w3.org/ns/org#>\n"
-                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-                                +"\n"
-                                +"select ?vi {\n"
-                                +"\n"
-                                +"\t?vi a ec2u:Unit;\n"
-                                +"\t\torg:classification $type;\n"
-                                +"\t\tskos:altLabel $code.\n"
-                                +"\n"
-                                +"}"
+                                + "prefix ec2u: <https://data.ec2u.eu/terms/>\n"
+                                + "prefix org: <http://www.w3.org/ns/org#>\n"
+                                + "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                + "\n"
+                                + "select ?vi {\n"
+                                + "\n"
+                                + "\t?vi a ec2u:Unit;\n"
+                                + "\t\torg:classification $type;\n"
+                                + "\t\tskos:altLabel $code.\n"
+                                + "\n"
+                                + "}"
                         );
 
                         query.setBinding("type", UnitTypes.InstituteVirtual);
@@ -499,7 +512,7 @@ public final class Units extends Delegator {
                                             .orElse(""),
 
                                     unit.cursors(DCTERMS.SUBJECT)
-                                            .filter(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/"))
+                                            .filter(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme + "/"))
                                             .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
                                             .filter(value -> lang(value).equals("en"))
                                             .findFirst()
@@ -551,7 +564,7 @@ public final class Units extends Delegator {
                                             .orElse(""),
 
                                     unit.cursors(DCTERMS.SUBJECT)
-                                            .filter(not(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/")))
+                                            .filter(not(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme + "/")))
                                             .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
                                             // !!! .filter(value -> lang(value).equals("en"))
                                             .map(Value::stringValue)

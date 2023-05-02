@@ -17,36 +17,20 @@
 package eu.ec2u.data.datasets;
 
 import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Shape.optional;
-import static com.metreeca.link.Shape.required;
-import static com.metreeca.link.Values.IRIType;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.filter;
-import static com.metreeca.link.shapes.Guard.relate;
-import static com.metreeca.link.shapes.MinCount.minCount;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.multilingual;
 
 public final class Datasets extends Delegator {
 
@@ -55,29 +39,29 @@ public final class Datasets extends Delegator {
     public static final IRI Dataset=EC2U.term("Dataset");
 
 
-    public static Shape Dataset() { // !!! private
-        return relate(Resource(),
-
-                field(RDFS.LABEL, multilingual()),
-                field(RDFS.COMMENT, multilingual()),
-
-                field(DCTERMS.TITLE, multilingual()),
-                field(DCTERMS.ALTERNATIVE, multilingual()),
-                field(DCTERMS.DESCRIPTION, multilingual()),
-
-                field(DCTERMS.LICENSE, optional(), datatype(IRIType),
-                        field(RDFS.LABEL, multilingual())
-                ),
-
-                field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
-                field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
-
-                field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER)),
-
-                field(RDFS.ISDEFINEDBY, optional(), datatype(IRIType))
-
-        );
-    }
+    //    public static Shape Dataset() { // !!! private
+    //        return relate(Resource(),
+    //
+    //                field(RDFS.LABEL, multilingual()),
+    //                field(RDFS.COMMENT, multilingual()),
+    //
+    //                field(DCTERMS.TITLE, multilingual()),
+    //                field(DCTERMS.ALTERNATIVE, multilingual()),
+    //                field(DCTERMS.DESCRIPTION, multilingual()),
+    //
+    //                field(DCTERMS.LICENSE, optional(), datatype(IRIType),
+    //                        field(RDFS.LABEL, multilingual())
+    //                ),
+    //
+    //                field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
+    //                field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
+    //
+    //                field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER)),
+    //
+    //                field(RDFS.ISDEFINEDBY, optional(), datatype(IRIType))
+    //
+    //        );
+    //    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,18 +69,18 @@ public final class Datasets extends Delegator {
     public Datasets() {
         delegate(handler(
 
-                new Driver(Dataset(),
-
-                        filter(
-                                clazz(Dataset),
-                                field(DCTERMS.AVAILABLE, minCount(1)) // only published datasets
-                        )
-
-                ),
-
-                new Worker()
-
-                        .get(new Relator())
+                //                new Driver(Dataset(),
+                //
+                //                        filter(
+                //                                clazz(Dataset),
+                //                                field(DCTERMS.AVAILABLE, minCount(1)) // only published datasets
+                //                        )
+                //
+                //                ),
+                //
+                //                new Worker()
+                //
+                //                        .get(new Relator())
 
         ));
     }

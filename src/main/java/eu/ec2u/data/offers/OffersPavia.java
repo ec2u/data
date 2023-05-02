@@ -17,8 +17,8 @@
 package eu.ec2u.data.offers;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
@@ -29,17 +29,22 @@ import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.VCARD4;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.toolkits.Identifiers.AbsoluteIRIPattern;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.repository;
@@ -49,7 +54,6 @@ import static eu.ec2u.data.offers.Offers.*;
 import static eu.ec2u.work.Work.localized;
 import static eu.ec2u.work.focus.Focus.focus;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.toSet;
 

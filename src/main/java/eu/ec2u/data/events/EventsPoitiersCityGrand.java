@@ -20,19 +20,24 @@ import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
 import com.metreeca.core.toolkits.Strings;
 import com.metreeca.http.actions.GET;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.codecs.XML;
+import com.metreeca.xml.formats.XML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -40,15 +45,14 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Poitiers;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCityGrand implements Runnable {

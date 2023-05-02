@@ -16,10 +16,7 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.http.handlers.*;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.Shape;
+import com.metreeca.http.handlers.Delegator;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 
@@ -27,74 +24,65 @@ import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Shape.required;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.link.shapes.Lang.lang;
-import static com.metreeca.link.shapes.Link.link;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.resources.Resources.Languages;
-import static eu.ec2u.data.resources.Resources.*;
 
 public final class Concepts extends Delegator {
 
     public static final IRI Context=item("/concepts/");
 
 
-    private static Shape ConceptScheme() {
-        return relate(link(RDFS.ISDEFINEDBY, Resource(),
+    //    private static Shape ConceptScheme() {
+    //        return relate(link(RDFS.ISDEFINEDBY, Resource(),
+    //
+    //                filter(clazz(SKOS.CONCEPT_SCHEME)),
+    //
+    //                field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
+    //
+    //                detail(
+    //
+    //                        field(SKOS.HAS_TOP_CONCEPT, Reference())
+    //
+    //                )
+    //
+    //        ));
+    //    }
 
-                filter(clazz(SKOS.CONCEPT_SCHEME)),
-
-                field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
-
-                detail(
-
-                        field(SKOS.HAS_TOP_CONCEPT, Reference())
-
-                )
-
-        ));
-    }
-
-    private static Shape Concept() {
-        return relate(link(RDFS.ISDEFINEDBY, Resource(),
-
-                filter(clazz(SKOS.CONCEPT)),
-
-                field(SKOS.PREF_LABEL, multilingual()),
-                field(SKOS.ALT_LABEL, lang(Languages)),
-                field(SKOS.DEFINITION, multilingual()),
-
-                field(SKOS.IN_SCHEME, required(), Reference()),
-                field(SKOS.TOP_CONCEPT_OF, optional(), Reference()),
-
-                detail(
-
-                        field(SKOS.BROADER_TRANSITIVE, Reference(),
-                                field(SKOS.BROADER, Reference())
-                        ),
-
-                        field(SKOS.BROADER, Reference()),
-                        field(SKOS.NARROWER, Reference()),
-                        field(SKOS.RELATED, Reference())
-
-                )
-
-        ));
-    }
+    //    private static Shape Concept() {
+    //        return relate(link(RDFS.ISDEFINEDBY, Resource(),
+    //
+    //                filter(clazz(SKOS.CONCEPT)),
+    //
+    //                field(SKOS.PREF_LABEL, multilingual()),
+    //                field(SKOS.ALT_LABEL, lang(Languages)),
+    //                field(SKOS.DEFINITION, multilingual()),
+    //
+    //                field(SKOS.IN_SCHEME, required(), Reference()),
+    //                field(SKOS.TOP_CONCEPT_OF, optional(), Reference()),
+    //
+    //                detail(
+    //
+    //                        field(SKOS.BROADER_TRANSITIVE, Reference(),
+    //                                field(SKOS.BROADER, Reference())
+    //                        ),
+    //
+    //                        field(SKOS.BROADER, Reference()),
+    //                        field(SKOS.NARROWER, Reference()),
+    //                        field(SKOS.RELATED, Reference())
+    //
+    //                )
+    //
+    //        ));
+    //    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,26 +90,26 @@ public final class Concepts extends Delegator {
     public Concepts() {
         delegate(handler(
 
-                new Driver(ConceptScheme()),
-
-                new Router()
-
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
-
-                        .path("/{scheme}", new Worker()
-                                .get(new Relator())
-                        )
-
-                        .path("/{scheme}/*", handler(
-
-                                new Driver(Concept()),
-
-                                new Worker()
-                                        .get(new Relator())
-
-                        ))
+                //                new Driver(ConceptScheme()),
+                //
+                //                new Router()
+                //
+                //                        .path("/", new Worker()
+                //                                .get(new Relator())
+                //                        )
+                //
+                //                        .path("/{scheme}", new Worker()
+                //                                .get(new Relator())
+                //                        )
+                //
+                //                        .path("/{scheme}/*", handler(
+                //
+                //                                new Driver(Concept()),
+                //
+                //                                new Worker()
+                //                                        .get(new Relator())
+                //
+                //                        ))
 
         ));
     }

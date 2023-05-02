@@ -17,17 +17,19 @@
 package eu.ec2u.data.actors;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.csv.codecs.CSV;
+import com.metreeca.csv.formats.CSV;
 import com.metreeca.http.actions.GET;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
@@ -38,13 +40,12 @@ import java.util.stream.Stream;
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.*;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.*;
-
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;

@@ -20,28 +20,34 @@ import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Vault;
 import com.metreeca.core.toolkits.Resources;
 import com.metreeca.json.JSONPath;
-import com.metreeca.json.codecs.JSON;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.json.formats.JSON;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.time.Instant;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Poitiers;
@@ -51,7 +57,6 @@ import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.util.Map.entry;
 
 public final class OffersPoitiers implements Runnable {

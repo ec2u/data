@@ -17,19 +17,18 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.http.handlers.*;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.handlers.Delegator;
 import com.metreeca.link.Shape;
+import com.metreeca.rdf4j.actions.TupleQuery;
 import com.metreeca.rdf4j.actions.Update;
-import com.metreeca.rdf4j.actions.*;
+import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.things.Schema;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -44,18 +43,12 @@ import static com.metreeca.core.services.Logger.time;
 import static com.metreeca.core.toolkits.Lambdas.task;
 import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.rdf.formats.RDF.rdf;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Resource;
-
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 
@@ -75,14 +68,14 @@ public final class Events extends Delegator {
         return Xtream
 
                 .of("prefix ec2u: </terms/>\n"
-                        +"prefix dct: <http://purl.org/dc/terms/>\n\n"
-                        +"select (max(?modified) as ?synced) where {\n"
-                        +"\n"
-                        +"\t?event a ec2u:Event;\n"
-                        +"\t\tdct:publisher ?publisher;\n"
-                        +"\t\tdct:modified ?modified.\n"
-                        +"\n"
-                        +"}"
+                        + "prefix dct: <http://purl.org/dc/terms/>\n\n"
+                        + "select (max(?modified) as ?synced) where {\n"
+                        + "\n"
+                        + "\t?event a ec2u:Event;\n"
+                        + "\t\tdct:publisher ?publisher;\n"
+                        + "\t\tdct:modified ?modified.\n"
+                        + "\n"
+                        + "}"
                 )
 
                 .flatMap(new TupleQuery()
@@ -103,14 +96,16 @@ public final class Events extends Delegator {
 
 
     static Shape Event() {
-        return relate(Resource(), Schema.Event(),
+        throw new UnsupportedOperationException(";( be implemented"); // !!!
 
-                hidden(field(RDF.TYPE, all(Event))),
-
-                field(DCTERMS.MODIFIED, required()), // housekeeping timestamp
-                field("fullDescription", Schema.description) // prevent clashes with dct:description
-
-        );
+        //        return relate(Resource(), Schema.Event(),
+        //
+        //                hidden(field(RDF.TYPE, all(Event))),
+        //
+        //                field(DCTERMS.MODIFIED, required()), // housekeeping timestamp
+        //                field("fullDescription", Schema.description) // prevent clashes with dct:description
+        //
+        //        );
     }
 
 
@@ -119,21 +114,21 @@ public final class Events extends Delegator {
     public Events() {
         delegate(handler(
 
-                new Driver(Event(),
-
-                        filter(clazz(Event))
-
-                ),
-
-                new Router()
-
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
-
-                        .path("/{id}", new Worker()
-                                .get(new Relator())
-                        )
+                //                new Driver(Event(),
+                //
+                //                        filter(clazz(Event))
+                //
+                //                ),
+                //
+                //                new Router()
+                //
+                //                        .path("/", new Worker()
+                //                                .get(new Relator())
+                //                        )
+                //
+                //                        .path("/{id}", new Worker()
+                //                                .get(new Relator())
+                //                        )
 
         ));
     }

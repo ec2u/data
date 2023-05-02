@@ -17,36 +17,22 @@
 package eu.ec2u.data.universities;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.http.handlers.*;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.Shape;
-import com.metreeca.link.Values;
+import com.metreeca.http.handlers.Delegator;
 import com.metreeca.open.actions.WikidataMirror;
+import com.metreeca.rdf.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Shape.optional;
-import static com.metreeca.link.Shape.required;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.link.shapes.Link.link;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Reference;
-import static eu.ec2u.data.resources.Resources.Resource;
-
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
@@ -65,65 +51,71 @@ public final class Universities extends Delegator {
     public static final IRI students=EC2U.term("students");
 
 
-    private static Shape University() {
-        return relate(Resource(),
-
-                filter(clazz(University)),
-
-                field(RDFS.LABEL, Resources.multilingual()),
-                field(RDFS.COMMENT, Resources.multilingual()),
-
-                field(schac, required(), datatype(XSD.STRING)),
-                field(image, optional(), datatype(IRIType)),
-
-                link(RDFS.SEEALSO,
-
-                        field(country, optional(),
-                                field(RDFS.LABEL, Resources.multilingual())
-                        ),
-
-                        field(inception, optional(), datatype(XSD.DATETIME)),
-                        field(students, optional(), datatype(XSD.DECIMAL)),
-
-                        detail(
-
-                                field(location, optional(),
-                                        field(RDFS.LABEL, Resources.multilingual())
-                                ),
-
-                                field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
-                                field(WGS84.LONG, optional(), datatype(XSD.DECIMAL))
-                        )
-
-                ),
-
-                detail(
-
-                        field(DCTERMS.EXTENT, multiple(),
-
-                                field("dataset", inverse(VOID.SUBSET), required(), Reference()),
-                                field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
-
-                        )
-
-                )
-
-        );
-    }
+    //    private static Shape University() {
+    //        return relate(Resource(),
+    //
+    //                filter(clazz(University)),
+    //
+    //                field(RDFS.LABEL, Resources.multilingual()),
+    //                field(RDFS.COMMENT, Resources.multilingual()),
+    //
+    //                field(schac, required(), datatype(XSD.STRING)),
+    //                field(image, optional(), datatype(IRIType)),
+    //
+    //                link(RDFS.SEEALSO,
+    //
+    //                        field(country, optional(),
+    //                                field(RDFS.LABEL, Resources.multilingual())
+    //                        ),
+    //
+    //                        field(inception, optional(), datatype(XSD.DATETIME)),
+    //                        field(students, optional(), datatype(XSD.DECIMAL)),
+    //
+    //                        detail(
+    //
+    //                                field(location, optional(),
+    //                                        field(RDFS.LABEL, Resources.multilingual())
+    //                                ),
+    //
+    //                                field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
+    //                                field(WGS84.LONG, optional(), datatype(XSD.DECIMAL))
+    //                        )
+    //
+    //                ),
+    //
+    //                detail(
+    //
+    //                        field(DCTERMS.EXTENT, multiple(),
+    //
+    //                                field("dataset", inverse(VOID.SUBSET), required(), Reference()),
+    //                                field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
+    //
+    //                        )
+    //
+    //                )
+    //
+    //        );
+    //    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Universities() {
-        delegate(handler(new Driver(University()), new Router()
+        delegate(handler(
 
-                .path("/", new Worker()
-                        .get(new Relator())
-                )
+                //                new Driver(University()),
+                //
+                //                new Router()
+                //
+                //                        .path("/", new Worker()
+                //                                .get(new Relator())
+                //                        )
+                //
+                //                        .path("/{id}", new Worker()
+                //                                .get(new Relator())
+                //                        )
 
-                .path("/{id}", new Worker()
-                        .get(new Relator())
-                )));
+        ));
     }
 
 
@@ -160,7 +152,7 @@ public final class Universities extends Delegator {
 
                             "?item wdt:P463 wd:Q105627243", // <member of> <EC2U>
 
-                            "values ?item "+Stream
+                            "values ?item " + Stream
 
                                     .concat(
                                             stream(EC2U.University.values()).map(university -> university.City),

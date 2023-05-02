@@ -17,49 +17,52 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.http.CodecException;
+import com.metreeca.http.FormatException;
 import com.metreeca.http.Request;
 import com.metreeca.http.actions.Fetch;
 import com.metreeca.http.actions.GET;
 import com.metreeca.json.JSONPath;
-import com.metreeca.json.codecs.JSON;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.json.formats.JSON;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.codecs.HTML;
+import com.metreeca.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
+import javax.json.Json;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
-
-import javax.json.Json;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.toolkits.Strings.clip;
 import static com.metreeca.http.Request.POST;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
-import static com.metreeca.link.shifts.Seq.seq;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Shift.Seq.seq;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.work.JSONLD.jsonld;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.util.function.Predicate.not;
 
 public final class EventsJenaCity implements Runnable {
@@ -131,7 +134,7 @@ public final class EventsJenaCity implements Runnable {
 
                                 return Optional.of(response.body(new JSON()));
 
-                            } catch ( final CodecException e ) {
+                            } catch ( final FormatException e ) {
 
                                 service(logger()).error(this, "unable to parse message body", e);
 

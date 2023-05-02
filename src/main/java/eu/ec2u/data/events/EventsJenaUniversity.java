@@ -17,39 +17,47 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.http.CodecException;
+import com.metreeca.http.FormatException;
 import com.metreeca.http.actions.GET;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.xml.XPath;
-import com.metreeca.xml.codecs.HTML;
+import com.metreeca.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.Work;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.*;
-import java.time.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.*;
+import static com.metreeca.rdf.formats.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
 import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
@@ -179,7 +187,7 @@ public final class EventsJenaUniversity implements Runnable {
                         return frame(Schema.Event, model)
                                 .frames(inverse(RDF.TYPE));
 
-                    } catch ( final CodecException e ) {
+                    } catch ( final FormatException e ) {
 
                         service(logger()).warning(this, e.getMessage());
 

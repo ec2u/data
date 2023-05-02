@@ -21,15 +21,15 @@ import com.metreeca.core.services.Cache.FileCache;
 import com.metreeca.gcp.GCPServer;
 import com.metreeca.gcp.services.GCPVault;
 import com.metreeca.http.Request;
-import com.metreeca.http.handlers.*;
+import com.metreeca.http.handlers.CORS;
+import com.metreeca.http.handlers.Publisher;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Wrapper;
 import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.rdf4j.handlers.Graphs;
 import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
-import com.metreeca.rdf4j.services.GraphEngine;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
@@ -40,13 +40,11 @@ import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
-import java.util.Map;
 
 import static com.metreeca.core.Locator.path;
 import static com.metreeca.core.Locator.service;
@@ -56,15 +54,11 @@ import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Response.SeeOther;
 import static com.metreeca.http.services.Fetcher.fetcher;
-import static com.metreeca.jsonld.codecs.JSONLD.keywords;
-import static com.metreeca.jsonld.services.Engine.engine;
-import static com.metreeca.link.shapes.Link.link;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
-import static java.util.Map.entry;
 
 public final class Data implements Runnable {
 
@@ -96,12 +90,7 @@ public final class Data implements Runnable {
                 .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
 
-                .set(graph(), () -> new Graph(repository(GraphDBRepository)))
-                .set(engine(), GraphEngine::new)
-
-                .set(keywords(), () -> Map.ofEntries(
-                        entry("@id", "id")
-                ));
+                .set(graph(), () -> new Graph(repository(GraphDBRepository)));
     }
 
     public static Repository repository(final String name) {
@@ -165,15 +154,15 @@ public final class Data implements Runnable {
 
                                         // !!! to be removed after metreeca/java supports resource access to collections
 
-                                        .path("/datasets", handler(
-                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
-                                                new Worker().get(new Relator())
-                                        ))
+                                        //                                        .path("/datasets", handler(
+                                        //                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
+                                        //                                                new Worker().get(new Relator())
+                                        //                                        ))
 
-                                        .path("/datasets/{id}", handler(
-                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
-                                                new Worker().get(new Relator())
-                                        ))
+                                        //                                        .path("/datasets/{id}", handler(
+                                        //                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
+                                        //                                                new Worker().get(new Relator())
+                                        //                                        ))
 
                                         .path("/universities/*", new Universities())
                                         .path("/units/*", new Units())

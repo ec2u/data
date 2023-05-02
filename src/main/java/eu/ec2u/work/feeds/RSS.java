@@ -17,8 +17,8 @@
 package eu.ec2u.work.feeds;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.xml.XPath;
 import com.metreeca.xml.actions.Untag;
 
@@ -31,9 +31,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.bnode;
+import static com.metreeca.rdf.Values.iri;
 
+import static eu.ec2u.data.EC2U.term;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 

@@ -27,12 +27,11 @@ import java.util.Set;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.link.Values.iri;
+import static com.metreeca.rdf.Values.iri;
 
 import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.lang.String.format;
 
 public final class UnitsJena implements Runnable {

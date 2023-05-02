@@ -23,8 +23,8 @@ import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
 
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 

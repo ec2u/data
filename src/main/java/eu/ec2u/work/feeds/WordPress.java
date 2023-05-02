@@ -17,21 +17,24 @@
 package eu.ec2u.work.feeds;
 
 import com.metreeca.core.toolkits.Strings;
-import com.metreeca.link.Frame;
+import com.metreeca.rdf.Frame;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Optional;
 
 import static com.metreeca.core.toolkits.Strings.TextLength;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
 
 import static eu.ec2u.work.feeds.RSS.*;
 

@@ -21,9 +21,9 @@ import com.metreeca.core.actions.Fill;
 import com.metreeca.core.services.Vault;
 import com.metreeca.http.actions.GET;
 import com.metreeca.json.JSONPath;
-import com.metreeca.json.codecs.JSON;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.json.formats.JSON;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.Data;
@@ -36,20 +36,21 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Base64;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.core.toolkits.Strings.split;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.*;
 
 import static eu.ec2u.data.EC2U.University.Salamanca;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.function.Predicate.not;

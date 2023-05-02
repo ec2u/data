@@ -18,20 +18,25 @@ package eu.ec2u.work.validation;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.jsonld.actions.Validate;
-import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
+import com.metreeca.rdf.Frame;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.inverse;
-import static com.metreeca.link.Values.pattern;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.inverse;
+import static com.metreeca.rdf.Values.pattern;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -99,7 +104,7 @@ public final class Validators {
 
         final long invalid=types.stream()
                 .flatMap(type -> frame(type, extended).frames(inverse(RDF.TYPE)))
-                .map(new Validate(shape))
+                .map(new Validate())
                 .filter(Optional::isEmpty)
                 .count();
 

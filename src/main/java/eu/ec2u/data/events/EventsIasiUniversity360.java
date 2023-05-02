@@ -19,30 +19,31 @@ package eu.ec2u.data.events;
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.link.Frame;
-import com.metreeca.xml.codecs.XML;
+import com.metreeca.rdf.Frame;
+import com.metreeca.xml.formats.XML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Iasi;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiUniversity360 implements Runnable {

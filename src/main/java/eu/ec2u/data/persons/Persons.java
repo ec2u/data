@@ -16,29 +16,18 @@
 
 package eu.ec2u.data.persons;
 
-import com.metreeca.http.handlers.*;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.Shape;
+import com.metreeca.http.handlers.Delegator;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Reference;
-import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Persons extends Delegator {
 
@@ -47,19 +36,19 @@ public final class Persons extends Delegator {
     public static final IRI Person=EC2U.term("Person");
 
 
-    public static Shape Person() {
-        return relate(Resource(),
-
-                hidden(field(RDF.TYPE, all(Person))),
-
-                field(FOAF.GIVEN_NAME, required(), datatype(XSD.STRING)),
-                field(FOAF.FAMILY_NAME, required(), datatype(XSD.STRING)),
-
-                field(ORG.HEAD_OF, multiple(), Reference()),
-                field(ORG.MEMBER_OF, multiple(), Reference())
-
-        );
-    }
+    //    public static Shape Person() {
+    //        return relate(Resource(),
+    //
+    //                hidden(field(RDF.TYPE, all(Person))),
+    //
+    //                field(FOAF.GIVEN_NAME, required(), datatype(XSD.STRING)),
+    //                field(FOAF.FAMILY_NAME, required(), datatype(XSD.STRING)),
+    //
+    //                field(ORG.HEAD_OF, multiple(), Reference()),
+    //                field(ORG.MEMBER_OF, multiple(), Reference())
+    //
+    //        );
+    //    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,21 +56,21 @@ public final class Persons extends Delegator {
     public Persons() {
         delegate(handler(
 
-                new Driver(Person(),
-
-                        filter(clazz(Person))
-
-                ),
-
-                new Router()
-
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
-
-                        .path("/{id}", new Worker()
-                                .get(new Relator())
-                        )
+                //                new Driver(Person(),
+                //
+                //                        filter(clazz(Person))
+                //
+                //                ),
+                //
+                //                new Router()
+                //
+                //                        .path("/", new Worker()
+                //                                .get(new Relator())
+                //                        )
+                //
+                //                        .path("/{id}", new Worker()
+                //                                .get(new Relator())
+                //                        )
 
         ));
     }

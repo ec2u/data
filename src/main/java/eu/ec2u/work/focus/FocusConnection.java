@@ -17,9 +17,12 @@
 package eu.ec2u.work.focus;
 
 import com.metreeca.core.services.Logger;
-import com.metreeca.link.Values;
+import com.metreeca.rdf.Values;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.util.*;

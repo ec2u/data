@@ -16,8 +16,8 @@
 
 package eu.ec2u.work;
 
-import com.metreeca.http.CodecException;
-import com.metreeca.link.Frame;
+import com.metreeca.http.FormatException;
+import com.metreeca.rdf.Frame;
 import com.metreeca.rdf.schemas.Schema;
 
 import org.eclipse.rdf4j.model.IRI;
@@ -25,15 +25,18 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.inverse;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.inverse;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -47,7 +50,7 @@ public final class JSONLD {
 
             return frame(type, model).frames(inverse(RDF.TYPE));
 
-        } catch ( final CodecException e ) {
+        } catch ( final FormatException e ) {
 
             service(logger()).warning(JSONLD.class, e.getMessage());
 

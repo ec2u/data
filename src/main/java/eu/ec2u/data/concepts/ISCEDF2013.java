@@ -22,20 +22,22 @@ import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.link.Values.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Values.*;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
-
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
+import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
 
 
 /**

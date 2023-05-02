@@ -19,35 +19,40 @@ package eu.ec2u.data.events;
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.link.Frame;
-import com.metreeca.rdf.actions.*;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.actions.Localize;
+import com.metreeca.rdf.actions.Microdata;
+import com.metreeca.rdf.actions.Normalize;
 import com.metreeca.rdf.actions.Normalize.DateToDateTime;
 import com.metreeca.rdf.actions.Normalize.StringToDate;
-import com.metreeca.xml.codecs.HTML;
+import com.metreeca.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.link.shifts.Alt.alt;
-import static com.metreeca.link.shifts.Seq.seq;
-import static com.metreeca.link.shifts.Step.step;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Shift.Alt.alt;
+import static com.metreeca.rdf.Shift.Seq.seq;
+import static com.metreeca.rdf.Shift.Step.step;
+import static com.metreeca.rdf.Values.*;
 
 import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {

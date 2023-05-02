@@ -18,7 +18,7 @@ package eu.ec2u.data.units;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.actions.Fill;
-import com.metreeca.link.Frame;
+import com.metreeca.rdf.Frame;
 import com.metreeca.rdf4j.actions.GraphQuery;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
@@ -32,16 +32,18 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.*;
 
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 

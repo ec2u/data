@@ -16,17 +16,24 @@
 
 package eu.ec2u.work.validation;
 
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
-import static com.metreeca.link.Values.pattern;
-import static com.metreeca.link.Values.statement;
+import static com.metreeca.rdf.Values.pattern;
+import static com.metreeca.rdf.Values.statement;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static java.util.stream.Collectors.toList;

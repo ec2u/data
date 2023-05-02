@@ -16,36 +16,23 @@
 
 package eu.ec2u.data.offers;
 
-import com.metreeca.http.handlers.*;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.handlers.Delegator;
 import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.link.shapes.MinInclusive.minInclusive;
-import static com.metreeca.link.shapes.Pattern.pattern;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.*;
 
 
 public final class Offers extends Delegator {
@@ -62,66 +49,71 @@ public final class Offers extends Delegator {
 
 
     public static Shape Offer() {
-        return relate(Resource(), Schema.Thing(),
-
-                field(Schema.provider, optional(), Reference()),
-                field(Schema.educationalLevel, optional(), Reference()),
-                field(Schema.numberOfCredits, optional(), datatype(XSD.DECIMAL), minInclusive(literal(0))),
-
-                field(Schema.educationalCredentialAwarded, multilingual()),
-                field(Schema.occupationalCredentialAwarded, multilingual())
-
-        );
+        throw new UnsupportedOperationException(";( be implemented"); // !!!
+        //            return relate(Resource(), Schema.Thing(),
+        //
+        //                    field(Schema.provider, optional(), Reference()),
+        //                    field(Schema.educationalLevel, optional(), Reference()),
+        //                    field(Schema.numberOfCredits, optional(), datatype(XSD.DECIMAL), minInclusive(literal(0))),
+        //
+        //                    field(Schema.educationalCredentialAwarded, multilingual()),
+        //                    field(Schema.occupationalCredentialAwarded, multilingual())
+        //
+        //            );
     }
 
     public static Shape Program() {
-        return relate(Offer(),
+        throw new UnsupportedOperationException(";( be implemented"); // !!!
 
-                hidden(field(RDF.TYPE, all(Program))),
-
-                field(Schema.programType, optional(), Reference()),
-                field(Schema.occupationalCategory, optional(), Reference()),
-                field(Schema.timeToComplete, optional(), datatype(XSD.DURATION)),
-
-                detail(
-
-                        field(Schema.programPrerequisites, multilingual()),
-
-                        field(Schema.hasCourse, multiple(), Reference())
-
-                )
-        );
+        //            return relate(Offer(),
+        //
+        //                    hidden(field(RDF.TYPE, all(Program))),
+        //
+        //                    field(Schema.programType, optional(), Reference()),
+        //                    field(Schema.occupationalCategory, optional(), Reference()),
+        //                    field(Schema.timeToComplete, optional(), datatype(XSD.DURATION)),
+        //
+        //                    detail(
+        //
+        //                            field(Schema.programPrerequisites, multilingual()),
+        //
+        //                            field(Schema.hasCourse, multiple(), Reference())
+        //
+        //                    )
+        //            );
     }
 
     public static Shape Course() {
-        return relate(Offer(),
+        throw new UnsupportedOperationException(";( be implemented"); // !!!
 
-                hidden(field(RDF.TYPE, all(Course))),
-
-                field(Schema.courseCode, optional(), datatype(XSD.STRING)),
-                field(Schema.inLanguage, multiple(), datatype(XSD.STRING), pattern("[a-z]{2}")),
-                field(Schema.learningResourceType, multilingual()),
-                field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
-
-                detail(
-
-                        field(Schema.teaches, multilingual()),
-                        field(Schema.assesses, multilingual()),
-                        field(Schema.coursePrerequisites, multilingual()),
-                        field(Schema.competencyRequired, multilingual()),
-
-                        field("inProgram", inverse(Schema.hasCourse), multiple(), Reference())
-
-                )
-
-        );
+        //            return relate(Offer(),
+        //
+        //                    hidden(field(RDF.TYPE, all(Course))),
+        //
+        //                    field(Schema.courseCode, optional(), datatype(XSD.STRING)),
+        //                    field(Schema.inLanguage, multiple(), datatype(XSD.STRING), pattern("[a-z]{2}")),
+        //                    field(Schema.learningResourceType, multilingual()),
+        //                    field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
+        //
+        //                    detail(
+        //
+        //                            field(Schema.teaches, multilingual()),
+        //                            field(Schema.assesses, multilingual()),
+        //                            field(Schema.coursePrerequisites, multilingual()),
+        //                            field(Schema.competencyRequired, multilingual()),
+        //
+        //                            field("inProgram", inverse(Schema.hasCourse), multiple(), Reference())
+        //
+        //                    )
+        //
+        //            );
     }
 
 
     static BigDecimal ects(final String ects) { return ects(new BigDecimal(ects)); }
 
     static BigDecimal ects(final Number ects) {
-        return ects(ects instanceof BigDecimal ? ((BigDecimal)ects) : BigDecimal.valueOf(ects.doubleValue()));
+        return ects(ects instanceof BigDecimal ? ((BigDecimal) ects) : BigDecimal.valueOf(ects.doubleValue()));
     }
 
     static BigDecimal ects(final BigDecimal ects) {
@@ -134,21 +126,21 @@ public final class Offers extends Delegator {
     public Offers() {
         delegate(handler(
 
-                new Driver(Offer(),
-
-                        filter(clazz(Offer))
-
-                ),
-
-                new Router()
-
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
-
-                        .path("/{id}", new Worker()
-                                .get(new Relator())
-                        )
+                //                new Driver(Offer(),
+                //
+                //                        filter(clazz(Offer))
+                //
+                //                ),
+                //
+                //                new Router()
+                //
+                //                        .path("/", new Worker()
+                //                                .get(new Relator())
+                //                        )
+                //
+                //                        .path("/{id}", new Worker()
+                //                                .get(new Relator())
+                //                        )
 
         ));
     }
@@ -161,21 +153,21 @@ public final class Offers extends Delegator {
         public Programs() {
             delegate(handler(
 
-                    new Driver(Program(),
-
-                            filter(clazz(Program))
-
-                    ),
-
-                    new Router()
-
-                            .path("/", new Worker()
-                                    .get(new Relator())
-                            )
-
-                            .path("/{id}", new Worker()
-                                    .get(new Relator())
-                            )
+                    //                    new Driver(Program(),
+                    //
+                    //                            filter(clazz(Program))
+                    //
+                    //                    ),
+                    //
+                    //                    new Router()
+                    //
+                    //                            .path("/", new Worker()
+                    //                                    .get(new Relator())
+                    //                            )
+                    //
+                    //                            .path("/{id}", new Worker()
+                    //                                    .get(new Relator())
+                    //                            )
 
             ));
         }
@@ -187,21 +179,21 @@ public final class Offers extends Delegator {
         public Courses() {
             delegate(handler(
 
-                    new Driver(Course(),
-
-                            filter(clazz(Course))
-
-                    ),
-
-                    new Router()
-
-                            .path("/", new Worker()
-                                    .get(new Relator())
-                            )
-
-                            .path("/{id}", new Worker()
-                                    .get(new Relator())
-                            )
+                    //                    new Driver(Course(),
+                    //
+                    //                            filter(clazz(Course))
+                    //
+                    //                    ),
+                    //
+                    //                    new Router()
+                    //
+                    //                            .path("/", new Worker()
+                    //                                    .get(new Relator())
+                    //                            )
+                    //
+                    //                            .path("/{id}", new Worker()
+                    //                                    .get(new Relator())
+                    //                            )
 
             ));
         }

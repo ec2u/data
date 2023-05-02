@@ -16,21 +16,22 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.link.Frame;
+import com.metreeca.rdf.Frame;
 
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
-
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCity implements Runnable {

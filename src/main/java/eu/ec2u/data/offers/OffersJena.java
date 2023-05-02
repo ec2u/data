@@ -18,12 +18,12 @@ package eu.ec2u.data.offers;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Vault;
-import com.metreeca.http.CodecException;
+import com.metreeca.http.FormatException;
 import com.metreeca.http.actions.GET;
-import com.metreeca.link.Frame;
+import com.metreeca.rdf.Frame;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.xml.XPath;
-import com.metreeca.xml.codecs.HTML;
+import com.metreeca.xml.formats.HTML;
 
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -32,17 +32,23 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.*;
+import static com.metreeca.rdf.formats.RDF.rdf;
 import static com.metreeca.rdf.schemas.Schema.normalize;
 
 import static eu.ec2u.data.Data.exec;
@@ -52,7 +58,6 @@ import static eu.ec2u.data.concepts.ISCED2011.*;
 import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.offers.Offers.Programs;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Map.entry;
 
@@ -137,7 +142,7 @@ public final class OffersJena implements Runnable {
                         return frame(Schema.term("AboutPage"), model)
                                 .frames(inverse(RDF.TYPE));
 
-                    } catch ( final CodecException e ) {
+                    } catch ( final FormatException e ) {
 
                         service(logger()).warning(this, e.getMessage());
 

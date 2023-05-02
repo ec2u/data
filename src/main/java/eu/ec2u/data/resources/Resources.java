@@ -17,32 +17,18 @@
 package eu.ec2u.data.resources;
 
 import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.Shape;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Shape.multiple;
-import static com.metreeca.link.Shape.optional;
-import static com.metreeca.link.Values.IRIType;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.And.and;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.filter;
-import static com.metreeca.link.shapes.Guard.hidden;
-import static com.metreeca.link.shapes.Localized.localized;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -71,58 +57,57 @@ public final class Resources extends Delegator {
             .collect(toUnmodifiableSet());
 
 
-    public static Shape Reference() {
-        return and(
+    //    public static Shape Reference() {
+    //        return and(
+    //
+    //                datatype(IRIType),
+    //
+    //                field(RDFS.LABEL, multilingual())
+    //
+    //        );
+    //    }
 
-                datatype(IRIType),
+    //    public static Shape Resource() {
+    //        return and(Reference(),
+    //
+    //                hidden(field(RDF.TYPE, all(Resource))),
+    //
+    //                field(RDFS.COMMENT, multilingual()),
+    //
+    //                field(university, optional(),
+    //                        field(RDFS.LABEL, multilingual())
+    //                ),
+    //
+    //                field(DCTERMS.TITLE, multilingual()),
+    //                field(DCTERMS.DESCRIPTION, multilingual()),
+    //
+    //                field(DCTERMS.PUBLISHER, optional(), Publisher()),
+    //                field(DCTERMS.SOURCE, optional(), datatype(IRIType)),
+    //
+    //                field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
+    //                field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
+    //                field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
+    //
+    //                field(DCTERMS.TYPE, multiple(), Reference()),
+    //                field(DCTERMS.SUBJECT, multiple(), Reference())
+    //
+    //        );
+    //    }
 
-                field(RDFS.LABEL, multilingual())
+    //    public static Shape Publisher() {
+    //        return and(Reference(),
+    //
+    //                field(DCTERMS.COVERAGE, optional(), datatype(IRIType))
+    //
+    //                 field(SKOS.PREF_LABEL, multilingual()),
+    //                 field(FOAF.HOMEPAGE, optional(), datatype(IRIType))
+    //
+    //        );
+    //    }
 
-        );
-    }
-
-    public static Shape Resource() {
-        return and(Reference(),
-
-                hidden(field(RDF.TYPE, all(Resource))),
-
-                field(RDFS.COMMENT, multilingual()),
-
-                field(university, optional(),
-                        field(RDFS.LABEL, multilingual())
-                ),
-
-                field(DCTERMS.TITLE, multilingual()),
-                field(DCTERMS.DESCRIPTION, multilingual()),
-
-                field(DCTERMS.PUBLISHER, optional(), Publisher()),
-                field(DCTERMS.SOURCE, optional(), datatype(IRIType)),
-
-                field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
-                field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
-                field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
-
-                field(DCTERMS.TYPE, multiple(), Reference()),
-                field(DCTERMS.SUBJECT, multiple(), Reference())
-
-        );
-    }
-
-    public static Shape Publisher() {
-        return and(Reference(),
-
-                field(DCTERMS.COVERAGE, optional(), datatype(IRIType)),
-
-                field(SKOS.PREF_LABEL, multilingual()),
-                field(FOAF.HOMEPAGE, optional(), datatype(IRIType))
-
-        );
-    }
-
-
-    public static Shape multilingual() {
-        return localized(Languages);
-    }
+    //    public static Shape multilingual() {
+    //        return localized(Languages);
+    //    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,17 +115,17 @@ public final class Resources extends Delegator {
     public Resources() {
         delegate(handler(
 
-                new Driver(Resource(),
-
-                        filter(clazz(Resource)),
-
-                        field(RDF.TYPE, Reference()),
-                        field(DCTERMS.SUBJECT, Reference())
-
-                ),
-
-                new Worker()
-                        .get(new Relator())
+                //                new Driver(Resource(),
+                //
+                //                        filter(clazz(Resource)),
+                //
+                //                        field(RDF.TYPE, Reference()),
+                //                        field(DCTERMS.SUBJECT, Reference())
+                //
+                //                ),
+                //
+                //                new Worker()
+                //                        .get(new Relator())
 
         ));
     }

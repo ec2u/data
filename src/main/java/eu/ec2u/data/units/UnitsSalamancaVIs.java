@@ -17,7 +17,7 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.core.Xtream;
-import com.metreeca.csv.codecs.CSV;
+import com.metreeca.csv.formats.CSV;
 import com.metreeca.http.actions.GET;
 import com.metreeca.rdf4j.actions.Upload;
 
@@ -26,16 +26,17 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.statement;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.statement;
 
 import static eu.ec2u.data.Data.exec;
-
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 

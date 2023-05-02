@@ -21,9 +21,9 @@ import com.metreeca.core.actions.Fill;
 import com.metreeca.core.toolkits.Strings;
 import com.metreeca.http.actions.GET;
 import com.metreeca.json.JSONPath;
-import com.metreeca.json.codecs.JSON;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.json.formats.JSON;
+import com.metreeca.rdf.Frame;
+import com.metreeca.rdf.Values;
 import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
@@ -33,9 +33,13 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
@@ -43,16 +47,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.rdf.Frame.frame;
+import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
 
