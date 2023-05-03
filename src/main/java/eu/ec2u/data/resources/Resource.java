@@ -38,8 +38,8 @@ import java.util.Set;
 @Getter
 @Type
 @Namespace(EC2U.Terms)
-@Namespace(prefix = "rdfs", value = "http://www.w3.org/2000/01/rdf-schema#")
-@Namespace(prefix = "dct", value = "http://purl.org/dc/terms")
+@Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
+@Namespace(prefix="dct", value="http://purl.org/dc/terms/")
 public abstract class Resource {
 
     @Id

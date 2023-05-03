@@ -20,17 +20,22 @@ package eu.ec2u.data.universities;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
 import com.metreeca.link.shacl.Required;
 
+import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.net.URI;
+import java.util.Set;
 
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
+
+import static java.math.BigInteger.ZERO;
 
 @Type
 @Getter
@@ -64,12 +69,8 @@ public final class University extends Resource {
     //
     // ),
 
-    // field(DCTERMS.EXTENT, multiple(),
-    //
-    //         field("dataset", inverse(VOID.SUBSET), required(), Reference()),
-    //         field(VOID.ENTITIES, required(), datatype(XSD.INTEGER))
-    //
-    // )
+    @Property("dct:extent")
+    private Set<Subset> subsets;
 
 
     public static final class Handler extends Delegator {
@@ -81,6 +82,13 @@ public final class University extends Resource {
 
                         university.setId("");
                         university.setLabel(local("*", ""));
+
+                        university.setSubsets(Set.of(with(new Subset(), extent -> {
+
+                            extent.setDataset(new Reference());
+                            extent.setEntities(ZERO);
+
+                        })));
 
                     })))
 

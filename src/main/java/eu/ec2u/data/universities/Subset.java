@@ -1,4 +1,3 @@
-
 /*
  * Copyright © 2020-2023 EC2U Alliance
  *
@@ -15,15 +14,30 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.resources;
+package eu.ec2u.data.universities;
 
-import com.metreeca.link.Local;
+import com.metreeca.link.jsonld.Namespace;
+import com.metreeca.link.jsonld.Property;
+import com.metreeca.link.jsonld.Reverse;
+import com.metreeca.link.shacl.Required;
 
-public final class Reference extends Resource {
+import eu.ec2u.data.resources.Reference;
+import lombok.Getter;
+import lombok.Setter;
 
-    public Reference() {
-        setId("");
-        setLabel(Local.local("*", ""));
-    }
+import java.math.BigInteger;
+
+@Getter
+@Setter
+@Namespace(prefix="", value="http://rdfs.org/ns/void#")
+public final class Subset {
+
+    @Required
+    @Reverse
+    @Property("subset")
+    private Reference dataset;
+
+    @Required
+    private BigInteger entities;
 
 }
