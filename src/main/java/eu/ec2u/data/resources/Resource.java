@@ -17,6 +17,7 @@
 
 package eu.ec2u.data.resources;
 
+import com.metreeca.link.Local;
 import com.metreeca.link.jsonld.Id;
 import com.metreeca.link.jsonld.Namespace;
 import com.metreeca.link.jsonld.Property;
@@ -46,11 +47,11 @@ public abstract class Resource {
 
     @Required
     @Property("rdfs:")
-    private String label; // !!! localized
+    private Local<String> label;
 
     @Optional
     @Property("rdfs:")
-    private String comment; // !!! localized
+    private Local<String> comment;
 
 
     @Optional
@@ -69,12 +70,12 @@ public abstract class Resource {
     @Required
     @MaxLength(100)
     @Property("dct:")
-    private String title; // !!! localized
+    private Local<String> title;
 
     @Optional
     @MaxLength(1000)
     @Property("dct:")
-    private String description; // !!! localized
+    private Local<String> description;
 
 
     @Optional

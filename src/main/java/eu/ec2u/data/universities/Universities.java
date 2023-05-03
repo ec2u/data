@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.link.Frame.with;
+import static com.metreeca.link.Local.local;
 import static com.metreeca.rdf.Values.iri;
 import static com.metreeca.rdf.formats.RDF.rdf;
 
@@ -57,12 +58,12 @@ public final class Universities extends Container<University> {
 
                     .get(new Relator(with(new Universities(), offices -> {
 
-                        offices.setLabel("Universities");
+                        offices.setLabel(local("en", "Universities"));
 
                         offices.setMembers(Set.of(with(new University(), university -> {
 
                             university.setId("");
-                            university.setLabel("");
+                            university.setLabel(local("*", ""));
 
                         })));
 

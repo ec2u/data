@@ -53,7 +53,7 @@ wdt:P571 rdfs:subPropertyOf ec2u:inception .
 	rdfs:seeAlso wd:Q1523902 .
 
 </universities/jena> a ec2u:University ;
-	dct:title "University of Jena"@en ;
+	dct:title "University of Jena"@en, "Universität Jena"@de ;
 	dct:description "Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities in Germany. Once the centre of German philosophical thought, it has become a broad-based, research-intensive institution with a global reach and a thriving international community of more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide."@en ;
 	ec2u:image </blobs/jena.png> ;
 	ec2u:schac "uni-jena.de" ;
@@ -81,7 +81,7 @@ wdt:P571 rdfs:subPropertyOf ec2u:inception .
 	rdfs:seeAlso wd:Q308963 .
 
 </universities/turku> a ec2u:University ;
-	dct:title "University of Turku"@en ;
+	dct:title "University of Turku"@en, "Turun yliopisto"@fi ;
 	dct:description "The University of Turku (UTU) is an international research university and an active academic community of 25,000 students and staff members from over 100 different countries.  The University’s main campus is located in the historical city centre of Turku – close to the unique nature and archipelago of Southwest Finland. As one of the leading universities in Finland, the University of Turku offers study and research opportunities in seven faculties and seven special units. Thanks to the outstanding services, compact campus and active academic society, international students and scholars feel at home from the very beginning of their stay at the University of Turku, Finland!"@en ;
 	ec2u:image </blobs/turku.png> ;
 	ec2u:schac "utu.fi" ;

@@ -30,6 +30,7 @@ import lombok.Setter;
 import java.net.URI;
 
 import static com.metreeca.link.Frame.with;
+import static com.metreeca.link.Local.local;
 
 @Type
 @Getter
@@ -79,7 +80,7 @@ public final class University extends Resource {
                     .get(new Relator(with(new University(), university -> {
 
                         university.setId("");
-                        university.setLabel("");
+                        university.setLabel(local("*", ""));
 
                     })))
 
