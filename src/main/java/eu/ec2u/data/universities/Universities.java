@@ -63,7 +63,7 @@ public final class Universities extends Container<University> {
                         offices.setMembers(Set.of(with(new University(), university -> {
 
                             university.setId("");
-                            university.setLabel(local("*", ""));
+                            university.setLabel(local("en", ""));
 
                         })));
 

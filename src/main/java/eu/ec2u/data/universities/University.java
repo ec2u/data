@@ -22,6 +22,8 @@ import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
+import com.metreeca.link.jsonld.Virtual;
+import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
 import eu.ec2u.data.resources.Reference;
@@ -29,13 +31,13 @@ import eu.ec2u.data.resources.Resource;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
-
-import static java.math.BigInteger.ZERO;
 
 @Type
 @Getter
@@ -48,29 +50,35 @@ public final class University extends Resource {
     @Required
     private URI image;
 
-    // link(RDFS.SEEALSO,
-    //
-    //         field(country, optional(),
-    //                 field(RDFS.LABEL, Resources.multilingual())
-    //         ),
-    //
-    //         field(inception, optional(), datatype(XSD.DATETIME)),
-    //         field(students, optional(), datatype(XSD.DECIMAL)),
-    //
-    //         detail(
-    //
-    //                 field(location, optional(),
-    //                         field(RDFS.LABEL, Resources.multilingual())
-    //                 ),
-    //
-    //                 field(WGS84.LAT, optional(), datatype(XSD.DECIMAL)),
-    //                 field(WGS84.LONG, optional(), datatype(XSD.DECIMAL))
-    //         )
-    //
-    // ),
+
+    @Optional
+    private LocalDateTime inception;
+
+    @Optional
+    private BigDecimal students; // !!! decimal?
+
+
+    @Optional
+    private Reference country;
+
+    @Optional
+    private Reference location;
+
+    @Optional
+    @Property("wgs84:lat")
+    private BigDecimal latitude;
+
+    @Optional
+    @Property("wgs84:long")
+    private BigDecimal longitude;
+
 
     @Property("dct:extent")
     private Set<Subset> subsets;
+
+    @Virtual
+    @Property("rdfs:")
+    private Reference seeAlso;
 
 
     public static final class Handler extends Delegator {
@@ -81,20 +89,13 @@ public final class University extends Resource {
                     .get(new Relator(with(new University(), university -> {
 
                         university.setId("");
-                        university.setLabel(local("*", ""));
-
-                        university.setSubsets(Set.of(with(new Subset(), extent -> {
-
-                            extent.setDataset(new Reference());
-                            extent.setEntities(ZERO);
-
-                        })));
+                        university.setLabel(local("en", ""));
 
                     })))
-
 
             );
         }
 
     }
+
 }

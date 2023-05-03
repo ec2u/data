@@ -34,12 +34,13 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Set;
 
-@Setter
-@Getter
 @Type
 @Namespace(EC2U.Terms)
 @Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
 @Namespace(prefix="dct", value="http://purl.org/dc/terms/")
+@Namespace(prefix="wgs84", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
+@Setter
+@Getter
 public abstract class Resource {
 
     @Id
