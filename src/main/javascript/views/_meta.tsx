@@ -14,21 +14,44 @@
  * limitations under the License.
  */
 
-import { Focus, string } from "@metreeca/core/value";
+import { useRoute } from "@metreeca/view/nests/router";
+import { Info } from "@metreeca/view/tiles/icon";
 import React, { createElement } from "react";
-import "./back.css";
+import "./_meta.css";
 
 
-export function DataBack({
+// !!! to be reviewed after metreeca/java supports resource access to collections
+
+export function metadata(dataset: string) {
+    return dataset.replace(/^(\/\w+)?\/?/, "/datasets$1");
+}
+
+
+/**
+ * Dataset metadata button.
+ *
+ * @param children
+ * @constructor
+ */
+export function DataMeta({
 
     children
 
 }: {
 
-    children: Focus
+    children: string
 
 }) {
 
-    return createElement("data-back", {}, <a href={children.id}>{string(children)}</a>);
+    const [, setRoute]=useRoute();
+
+
+    function doOpen() {
+        setRoute(metadata(children));
+    }
+
+    return createElement("data-meta", {},
+        <button title={"View dataset metadata"} onClick={doOpen}><Info/></button>
+    );
 
 }

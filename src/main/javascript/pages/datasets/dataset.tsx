@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { DatasetsIcon } from "@ec2u/data/pages/datasets/datasets";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage, ec2u } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
+import { Datasets } from "@ec2u/data/pages/datasets/datasets";
+import { ec2u } from "@ec2u/data/views";
+import { DataBack } from "@ec2u/data/views/_back";
+import { DataInfo } from "@ec2u/data/views/_info";
+import { DataPage } from "@ec2u/data/views/page";
+import { DataPane } from "@ec2u/data/views/pane";
 import { immutable } from "@metreeca/core";
 import { Dictionary, optional, string } from "@metreeca/core/value";
 import { useEntry } from "@metreeca/view/nests/graph";
@@ -29,6 +30,7 @@ import { NodeMark } from "@metreeca/view/tiles/mark";
 import { NodeSpin } from "@metreeca/view/tiles/spin";
 import "highlight.js/styles/github.css";
 import React, { useEffect } from "react";
+import { icon } from "../../../../../../../../Products/Tool/code/view";
 
 
 const aliases: { [alias: string]: string }=immutable({
@@ -95,16 +97,16 @@ export function DataDataset() {
 
     >{entry({
 
-        fetch: <NodeHint>{DatasetsIcon}</NodeHint>,
+		fetch: <NodeHint>{Datasets[icon]}</NodeHint>,
 
-        value: ({ id, description }) => DataDatasetBody({
-            description, definition: `${aliases[id] ?? id}${location.hash}`
+		value: ({ id, description }) => DataDatasetBody({
+			description, definition: `${aliases[id] ?? id}${location.hash}`
 
-        }),
+		}),
 
-        error: error => <span>{error.status}</span> // !!! report
+		error: error => <span>{error.status}</span> // !!! report
 
-    })}</DataPage>;
+	})}</DataPage>;
 
 }
 

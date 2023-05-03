@@ -38,6 +38,7 @@ import java.util.Set;
 @Namespace(EC2U.Terms)
 @Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
 @Namespace(prefix="dct", value="http://purl.org/dc/terms/")
+@Namespace(prefix="void", value="http://rdfs.org/ns/void#")
 @Namespace(prefix="wgs84", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
 @Setter
 @Getter
@@ -72,6 +73,11 @@ public abstract class Resource {
     @MaxLength(100)
     @Property("dct:")
     private Local<String> title;
+
+    @Optional
+    @MaxLength(100)
+    @Property("dct:")
+    private Local<String> alternative;
 
     @Optional
     @MaxLength(1000)

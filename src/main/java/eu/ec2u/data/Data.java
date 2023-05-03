@@ -31,6 +31,7 @@ import com.metreeca.rdf4j.handlers.Graphs;
 import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
 
+import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
@@ -162,7 +163,7 @@ public final class Data implements Runnable {
 
                                 .path("/*", new Router()
 
-                                                //.path("/", new Datasets())
+                                                .path("/", new Datasets.Handler())
 
                                                 // !!! to be removed after metreeca/java supports resource access to collections
 

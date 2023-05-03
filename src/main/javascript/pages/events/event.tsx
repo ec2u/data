@@ -15,11 +15,11 @@
  */
 
 import { Events, EventsIcon } from "@ec2u/data/pages/events/events";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
+import { DataBack } from "@ec2u/data/views/_back";
+import { DataCard } from "@ec2u/data/views/_card";
+import { DataInfo } from "@ec2u/data/views/_info";
+import { DataPage } from "@ec2u/data/views/page";
+import { DataPane } from "@ec2u/data/views/pane";
 import { immutable } from "@metreeca/core";
 import { toIRIString } from "@metreeca/core/_iri";
 import { multiple, optional, string } from "@metreeca/core/value";

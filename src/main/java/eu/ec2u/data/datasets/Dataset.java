@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.universities;
-
+package eu.ec2u.data.datasets;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.Local;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.jsonld.Virtual;
 import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
@@ -31,11 +30,9 @@ import eu.ec2u.data.resources.Resource;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.time.Instant;
 
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
@@ -43,43 +40,31 @@ import static com.metreeca.link.Local.local;
 @Type
 @Getter
 @Setter
-public final class University extends Resource {
+public final class Dataset extends Resource {
+
+    @Optional
+    @Property("dct:")
+    private Instant available;
 
     @Required
-    private String schac;
-
-    @Required
-    private URI image;
-
+    @Property("dct:")
+    private String rights;
 
     @Optional
-    private LocalDateTime inception;
+    @Property("dct:")
+    private Reference license;
 
     @Optional
-    private BigInteger students; // !!! decimal?
-
-
-    @Optional
-    private Reference country;
+    @Property("dct:")
+    private Local<String> accessRights;
 
     @Optional
-    private Reference location;
+    @Property("void:")
+    private BigInteger entities;
 
     @Optional
-    @Property("wgs84:lat")
-    private BigDecimal latitude;
-
-    @Optional
-    @Property("wgs84:long")
-    private BigDecimal longitude;
-
-
-    @Property("dct:extent")
-    private Set<Subset> subsets;
-
-    @Virtual
     @Property("rdfs:")
-    private Reference seeAlso;
+    private URI isDefinedBy;
 
 
     public static final class Handler extends Delegator {
@@ -87,10 +72,10 @@ public final class University extends Resource {
         public Handler() {
             delegate(new Worker()
 
-                    .get(new Relator(with(new University(), university -> {
+                    .get(new Relator(with(new Dataset(), dataset -> {
 
-                        university.setId("");
-                        university.setLabel(local("en", ""));
+                        dataset.setId("");
+                        dataset.setLabel(local("en", ""));
 
                     })))
 
@@ -98,5 +83,4 @@ public final class University extends Resource {
         }
 
     }
-
 }

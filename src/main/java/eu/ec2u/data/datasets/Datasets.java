@@ -17,76 +17,65 @@
 package eu.ec2u.data.datasets;
 
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.jsonld.Virtual;
 import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.resources.Container;
 import org.eclipse.rdf4j.model.IRI;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.toolkits.Resources.text;
-import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Frame.with;
+import static com.metreeca.link.Local.local;
+import static com.metreeca.link.Query.Constraint.any;
+import static com.metreeca.link.Query.*;
+import static com.metreeca.link.Stash.Expression.expression;
 import static com.metreeca.rdf.Values.iri;
 import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 
-public final class Datasets extends Delegator {
+@Virtual
+public final class Datasets extends Container<Dataset> {
 
     private static final IRI Context=EC2U.item("/");
 
-    public static final IRI Dataset=EC2U.term("Dataset");
 
+    public static final class Handler extends Delegator {
 
-    //    public static Shape Dataset() { // !!! private
-    //        return relate(Resource(),
-    //
-    //                field(RDFS.LABEL, multilingual()),
-    //                field(RDFS.COMMENT, multilingual()),
-    //
-    //                field(DCTERMS.TITLE, multilingual()),
-    //                field(DCTERMS.ALTERNATIVE, multilingual()),
-    //                field(DCTERMS.DESCRIPTION, multilingual()),
-    //
-    //                field(DCTERMS.LICENSE, optional(), datatype(IRIType),
-    //                        field(RDFS.LABEL, multilingual())
-    //                ),
-    //
-    //                field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
-    //                field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
-    //
-    //                field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER)),
-    //
-    //                field(RDFS.ISDEFINEDBY, optional(), datatype(IRIType))
-    //
-    //        );
-    //    }
+        public Handler() {
+            delegate(new Worker()
 
+                    .get(new Relator(with(new Datasets(), datasets -> {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        datasets.setLabel(local("en", "Datasets"));
 
-    public Datasets() {
-        delegate(handler(
+                        datasets.setMembers(query(
 
-                //                new Driver(Dataset(),
-                //
-                //                        filter(
-                //                                clazz(Dataset),
-                //                                field(DCTERMS.AVAILABLE, minCount(1)) // only published datasets
-                //                        )
-                //
-                //                ),
-                //
-                //                new Worker()
-                //
-                //                        .get(new Relator())
+                                filter(expression("available"), any(Set.of())),
 
-        ));
+                                model(with(new Dataset(), dataset -> {
+
+                                    dataset.setId("");
+                                    dataset.setLabel(local("en", ""));
+
+                                }))
+
+                        ));
+
+                    })))
+
+            );
+        }
+
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
 

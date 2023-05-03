@@ -15,10 +15,10 @@
  */
 
 import { University } from "@ec2u/data/pages/universities/university";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataMeta } from "@ec2u/data/tiles/meta";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
+import { DataCard } from "@ec2u/data/views/_card";
+import { DataMeta } from "@ec2u/data/views/_meta";
+import { DataPage } from "@ec2u/data/views/page";
+import { DataPane } from "@ec2u/data/views/pane";
 import { immutable } from "@metreeca/core";
 import { multiple, optional, string } from "@metreeca/core/value";
 import { useQuery } from "@metreeca/view/hooks/query";
@@ -40,17 +40,17 @@ export const Events=immutable({
     id: "/events/",
     label: { "en": "Events" },
 
-    contains: multiple({
+	members: multiple({
 
-        id: "",
-        image: optional(""),
-        label: {},
-        comment: {},
+		id: "",
+		image: optional(""),
+		label: {},
+		comment: {},
 
-        university: {
-            id: "",
-            label: {}
-        },
+		university: {
+			id: "",
+			label: {}
+		},
 
         startDate: optional(""),
         endDate: optional("")

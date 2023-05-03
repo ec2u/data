@@ -14,101 +14,73 @@
  * limitations under the License.
  */
 
-import { Universities, UniversitiesIcon } from "@ec2u/data/pages/universities/universities";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage, ec2u } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { Focus, multiple, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
+import { Universities } from "@ec2u/data/pages/universities/universities";
+import { ec2u } from "@ec2u/data/views";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional } from "@metreeca/core";
+import { integer, toIntegerString } from "@metreeca/core/integer";
+import { toLocalString } from "@metreeca/core/local";
+import { title } from "@metreeca/data/contexts/router";
+import { useResource } from "@metreeca/data/models/resource";
+import { ToolCard } from "@metreeca/view/widgets/card";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
 import { useEffect } from "react";
 
 
-function optional<T>(value: T): undefined | typeof value {
-    return value;
-}
-
 export const University=immutable({
 
-    id: "/universities/{code}",
+	id: "/universities/{code}",
 
-    image: "",
-    label: { "en": "University" },
-    comment: "",
+	image: "",
+	label: { "*": "" },
+	comment: { "*": "" },
 
-    schac: "",
-    lat: 0,
-    long: 0,
+	schac: "",
 
-    inception: optional(""),
-    students: optional(0),
+	// inception: optional(dateTime),
+	students: optional(integer),
 
-    country: optional({
-        id: "",
-        label: {}
-    }),
+	country: optional({
+		id: "",
+		label: { "*": "" }
+	}),
 
-    location: optional({
-        id: "",
-        label: {}
-    }),
+	location: optional({
+		id: "",
+		label: { "*": "" }
+	}),
 
-    extent: multiple({
+	subsets: multiple({
 
-        dataset: {
+		dataset: {
+			id: "",
+			label: { "*": "" }
+		},
 
-            id: "",
-            label: { "en": "" }
+		entities: 0
 
-        },
-
-        entities: 0
-
-    })
+	})
 
 });
 
 
 export function DataUniversity() {
 
-    const [route, setRoute]=useRoute();
+	const [university]=useResource({ ...University, id: "" });
 
-    const entry=useEntry(route, University);
-
-
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+	useEffect(() => { title(university); }, [university]);
 
 
-    return <DataPage item={entry({ value: string })}
+	return <DataPage name={[Universities, university]}
 
-        menu={entry({ fetch: <NodeSpin/> })}
+		tray={university && DataUniversityInfo(university)}
 
-        pane={<DataPane
+	>{
+		university && DataUniversityBody(university)
 
-            header={<DataBack>{Universities}</DataBack>}
-
-        >{entry({
-
-            value: DataUniversityInfo
-
-        })}</DataPane>}
-
-    >{entry({
-
-        fetch: <NodeHint>{UniversitiesIcon}</NodeHint>,
-
-        value: DataUniversityBody,
-
-        error: error => <span>{error.status}</span> // !!! report
-
-    })}</DataPage>;
+	}</DataPage>;
 
 }
 
@@ -117,70 +89,68 @@ export function DataUniversity() {
 
 function DataUniversityInfo({
 
-    id,
+	id,
 
-    inception,
-    students,
-    country,
-    location,
-    extent
+	// inception,
+	students,
+	country,
+	location,
+	subsets
 
 }: typeof University) {
 
-    return <>
+	return <>
 
-        <DataInfo>{{
+		<ToolInfo>{{
 
-            "Country": country && <NodeLink>{country}</NodeLink>,
-            "City": location && <NodeLink>{location}</NodeLink>
+			"Country": country && <ToolLink>{country}</ToolLink>,
+			"City": location && <ToolLink>{location}</ToolLink>
 
-        }}</DataInfo>
+		}}</ToolInfo>
 
-        <DataInfo>{{
+		<ToolInfo>{{
 
-            "Inception": inception && inception.substring(0, 4) || "-",
-            "Students": students && string(students)
+			// !!! "Inception": inception && inception.substring(0, 4) || "-",
+			"Students": students && toIntegerString(students)
 
-        }}</DataInfo>
+		}}</ToolInfo>
 
-        <DataInfo>{extent?.slice()
+		<ToolInfo>{subsets?.slice()
 
-            ?.sort(({ entities: x }, { entities: y }) => x-y)
-            ?.map(({ dataset, entities }) => {
+			?.sort(({ entities: x }, { entities: y }) => x - y)
+			?.map(({ dataset, entities }) => ({
 
-                return ({
+				label: <ToolLink filter={[dataset, { university: id }]}>{{
+					id: dataset.id,
+					label: ec2u(dataset.label)
+				}}</ToolLink>,
 
-                    label: <NodeLink search={[(dataset), { university: id }]}>{{
-                        id: dataset.id,
-                        label: ec2u(dataset.label)
-                    } as Focus}</NodeLink>,
-                    value: string(entities)
+				value: toIntegerString(entities)
 
-                });
-            })
+			}))
 
-        }</DataInfo>
+		}</ToolInfo>
 
-    </>;
+	</>;
 
 }
 
 function DataUniversityBody({
 
-    image,
-    label,
-    comment
+	image,
+	label,
+	comment
 
 }: typeof University) {
 
-    return <DataCard
+	return <ToolCard side={"end"} wrap
 
-        icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}
+		image={image && <img src={image} alt={`Image of ${toLocalString(label)}`}/>}
 
-    >
+	>
 
-        {string(comment)}
+		{toLocalString(comment)}
 
-    </DataCard>;
+	</ToolCard>;
 
 }

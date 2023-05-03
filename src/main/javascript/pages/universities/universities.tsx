@@ -14,104 +14,118 @@
  * limitations under the License.
  */
 
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataMeta } from "@ec2u/data/tiles/meta";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
+import { DataPage } from "@ec2u/data/views/page";
 import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/core/value";
-import { useQuery } from "@metreeca/view/hooks/query";
-import { useRoute } from "@metreeca/view/nests/router";
-import { Landmark } from "@metreeca/view/tiles/icon";
-import { NodeCount } from "@metreeca/view/tiles/lenses/count";
-import { NodeItems } from "@metreeca/view/tiles/lenses/items";
-import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
-import { NodeRange } from "@metreeca/view/tiles/lenses/range";
+import { integer } from "@metreeca/core/integer";
+import { toLocalString } from "@metreeca/core/local";
+import { title } from "@metreeca/data/contexts/router";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useQuery } from "@metreeca/data/models/query";
+import { useRange } from "@metreeca/data/models/range";
+import { useStats } from "@metreeca/data/models/stats";
+import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolKeywords } from "@metreeca/view/lenses/keywords";
+import { ToolRange } from "@metreeca/view/lenses/range";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
+import { Landmark } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
 import { useEffect } from "react";
 
 
-export const UniversitiesIcon=<Landmark/>;
-
 export const Universities=immutable({
 
-    id: "/universities/",
+	[icon]: <Landmark/>,
 
-    label: {
-        "en": "Universities"
-    },
+	id: "/universities/",
 
-    contains: [{
+	label: {
+		"en": "Universities"
+	},
 
-        id: "",
-        image: "",
+	members: [{
 
-        label: {},
-        comment: {},
+		id: "",
+		image: "",
 
-        country: {
-            id: "",
-            label: {}
-        }
+		label: {},
+		comment: {},
 
-    }]
+		country: {
+			id: "",
+			label: {}
+		}
+
+	}]
 
 });
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function DataUniversities() {
 
-    const [route, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ /*".order": "label"*/ }, sessionStorage); // !!! broken multilingual sorting
+	const universities=useCollection(Universities, "members", { store: useQuery() });
+
+	useEffect(() => { title(Universities); }, []);
 
 
-    useEffect(() => { setRoute({ title: string(Universities) }); }, []);
+	return <DataPage name={Universities}
 
+		tray={< >
 
-    return <DataPage item={string(Universities)}
+			<ToolKeywords placeholder={"Name"}>{
+				useKeywords(universities, "label")
+			}</ToolKeywords>
 
-        menu={<DataMeta>{route}</DataMeta>}
+			{/*<ToolRange placeholder={"Inception"}>{
+			 useRange(universities, "inception")
+			 }</ToolRange>*/}
 
-        pane={<DataPane
+			<ToolRange placeholder={"Students"}>{
+				useRange(universities, "students", { type: integer })
+			}</ToolRange>
 
-            header={<NodeKeywords state={[query, setQuery]}/>}
-            footer={<NodeCount state={[query, setQuery]}/>}
+		</>}
 
-        >
+		info={<>
 
-            <NodeRange path={"inception"} type={"dateTime"} as={"gYear"} placeholder={"Inception"} state={[query, setQuery]}/>
-            <NodeRange path={"students"} type={"decimal"} as={"integer"} placeholder={"Students"} state={[query, setQuery]}/>
+			<ToolCount>{useStats(universities)}</ToolCount>
+			<ToolClear>{universities}</ToolClear>
 
-        </DataPane>}
+		</>}
 
-        deps={[JSON.stringify(query)]}
+	>
 
-    >
+		<ToolSheet placeholder={Universities[icon]} as={({
 
-        <NodeItems model={Universities} placeholder={UniversitiesIcon} state={[query, setQuery]}>{({
+			id,
+			label,
+			comment,
+			image,
 
-            id,
-            label,
-            comment,
-            image,
+			country
 
-            country
+		}) =>
 
-        }) =>
+			<ToolCard key={id} side={"end"}
 
-            <DataCard key={id} compact
+				title={<ToolLink>{{ id, label }}</ToolLink>}
+				image={image}
 
-                name={<a href={id}>{string(label)}</a>}
-                icon={image}
-                tags={<span>{string(country.label)}</span>}
+				tags={<span>{toLocalString(country.label)}</span>}
 
-            >
-                {string(comment)}
+			>
+				{toLocalString(comment)}
 
-            </DataCard>
+			</ToolCard>
 
-        }</NodeItems>
+		}>{universities}</ToolSheet>
 
-    </DataPage>;
+	</DataPage>;
 
 }

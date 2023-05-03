@@ -38,7 +38,6 @@ export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
     resolve: {
         alias: {
-            "@metreeca": resolve(src, "@metreeca"),
             "@ec2u/data": resolve(src)
         }
     },

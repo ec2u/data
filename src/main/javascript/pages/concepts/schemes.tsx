@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataMeta } from "@ec2u/data/tiles/meta";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
+import { DataCard } from "@ec2u/data/views/_card";
+import { DataMeta } from "@ec2u/data/views/_meta";
+import { DataPage } from "@ec2u/data/views/page";
+import { DataPane } from "@ec2u/data/views/pane";
 import { immutable } from "@metreeca/core";
 import { multiple, string } from "@metreeca/core/value";
 import { useQuery } from "@metreeca/view/hooks/query";
@@ -37,20 +37,20 @@ export const Schemes=immutable({
     id: "/concepts/",
     label: { "en": "Taxonomies" },
 
-    contains: multiple({
+	members: multiple({
 
-        id: "",
-        label: {},
-        comment: {},
+		id: "",
+		label: {},
+		comment: {},
 
-        extent: 0,
+		subsets: 0,
 
-        university: {
-            id: "",
-            label: {}
-        }
+		university: {
+			id: "",
+			label: {}
+		}
 
-    })
+	})
 
 });
 

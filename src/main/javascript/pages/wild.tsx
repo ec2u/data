@@ -15,27 +15,37 @@
  */
 
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { useRoute } from "@metreeca/view/nests/router";
-import { CancelIcon } from "@metreeca/view/tiles/icon";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable } from "@metreeca/core";
+import { useRouter } from "@metreeca/data/contexts/router";
+import { CancelIcon } from "@metreeca/view/widgets/icon";
+
 import * as React from "react";
 import { createElement, useEffect } from "react";
-import "./none.css";
+import "./wild.css";
+
+
+export const Wild=immutable({
+
+	id: "*",
+	label: { "*": "" }
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function DataNone() {
+export default function DataWild() {
 
-    const [, setRoute]=useRoute();
-
-
-    useEffect(() => { setRoute({ title: "Not Found" }); }, []);
+	const [, setRoute]=useRouter();
 
 
-    function doDismiss() {
-        setRoute(Datasets.id, true);
-    }
+	useEffect(() => { setRoute({ title: "Not Found" }); }, []);
+
+
+	function doDismiss() {
+		setRoute(Datasets.id, true);
+	}
 
 
     return (

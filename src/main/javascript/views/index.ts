@@ -14,32 +14,16 @@
  * limitations under the License.
  */
 
-import * as React from "react";
-import { ReactNode } from "react";
+import { Local } from "@metreeca/core/local";
+import { isString } from "@metreeca/core/string";
 
+// remove leading alliance name
 
-export function DataPane({
+export function ec2u(label: Local): Local ;
+export function ec2u(label: string): string ;
 
-    header,
-    footer,
-
-    children
-
-}: {
-
-    header?: ReactNode
-    footer?: ReactNode
-
-    children?: ReactNode
-
-}) {
-    return <>
-
-        <header>{header}</header>
-
-        <section>{children}</section>
-
-        <footer>{footer}</footer>
-
-    </>;
+export function ec2u(label: string | Local) {
+	return isString(label)
+		? label.replace(/^EC2U\s+/, "")
+		: Object.entries(label).reduce((labels, [lang, text]) => ({ ...labels, [lang]: ec2u(text) }), {});
 }

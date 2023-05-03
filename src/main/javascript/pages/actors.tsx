@@ -15,15 +15,15 @@
  */
 
 import { immutable } from "@metreeca/core";
-import { useRoute } from "@metreeca/view/nests/router";
+import { useRouter } from "@metreeca/data/contexts/router";
 import * as React from "react";
 import { useEffect } from "react";
 
 
 export const Actors=immutable({
 
-    id: "/actors/",
-    label: "Knowledge Ecosystem Actors"
+	id: "/actors/",
+	label: "Knowledge Ecosystem Actors"
 
 });
 
@@ -32,11 +32,11 @@ export const Actors=immutable({
 
 export function DataActors() {
 
-    const [, setRoute]=useRoute();
+	const [, setRoute]=useRouter();
 
-    useEffect(() => { window.open("https://tinyurl.com/24f693ej", "_blank");}, []);
-    useEffect(() => { setRoute({ route: "/" }); }, []);
+	useEffect(() => { window.open("https://tinyurl.com/24f693ej", "_blank");}, []);
+	useEffect(() => { setRoute({ route: "/" }); }, []);
 
-    return null;
+	return null;
 
 }
