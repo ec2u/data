@@ -10,7 +10,8 @@
 	dct:alternative "EC2U Knowledge Hub Things"@en ;
 	dct:description "Items of interest made available on the EC2U Knowledge Hub as described according to schema.org vocabularies."@en ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-	void:rootResource schema:Thing .
+	void:rootResource schema:Thing ;
+	rdfs:isDefinedBy </datasets/things>  .
 
 
 ########################################################################################################################

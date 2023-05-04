@@ -9,7 +9,8 @@
 	dct:alternative "EC2U Classification Taxonomies"@en ;
 	dct:description "Topic taxonomies and other concept schemes for classifying resources."@en ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-	void:rootResource skos:ConceptScheme .
+	void:rootResource skos:ConceptScheme ;
+	rdfs:isDefinedBy </datasets/concepts>  .
 
 
 ########################################################################################################################

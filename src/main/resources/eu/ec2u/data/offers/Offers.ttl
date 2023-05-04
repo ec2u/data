@@ -11,7 +11,8 @@
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	dct:available "2022-03-10"^^xsd:date ;
-	void:rootResource ec2u:Program.
+	void:rootResource ec2u:Program ;
+	rdfs:isDefinedBy </datasets/offers> .
 
 </courses/> a ec2u:Dataset ;
 	dct:title "EC2U Courses"@en  ;
@@ -20,8 +21,8 @@
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	dct:available "2022-03-10"^^xsd:date ;
-	void:rootResource ec2u:Course.
-
+	void:rootResource ec2u:Course ;
+	rdfs:isDefinedBy </datasets/offers>  .
 
 </concepts/offer-topics> a skos:ConceptScheme ;
 	dct:title "EC2U Educational Offer Topics"@en .

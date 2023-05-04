@@ -11,7 +11,8 @@
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	dct:available "2022-01-01"^^xsd:date ;
-	void:rootResource ec2u:Unit .
+	void:rootResource ec2u:Unit ;
+	rdfs:isDefinedBy </datasets/units>  .
 
 <https://ec2u.eu/> a org:FormalOrganization ;
 

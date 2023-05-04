@@ -12,7 +12,8 @@
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
 	dct:available "2022-01-01"^^xsd:date ;
-	void:rootResource ec2u:Event .
+	void:rootResource ec2u:Event ;
+	rdfs:isDefinedBy </datasets/events>  .
 
 </concepts/event-topics> a skos:ConceptScheme ;
 	dct:title "EC2U Local Event Topics"@en .
