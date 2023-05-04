@@ -17,49 +17,50 @@
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, optional } from "@metreeca/core";
+import { immutable, multiple, optional, required } from "@metreeca/core";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { toLocalString } from "@metreeca/core/local";
-import { title } from "@metreeca/data/contexts/router";
+import { iri } from "@metreeca/core/iri";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
-import { ToolCard } from "@metreeca/view/widgets/card";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { useEffect } from "react";
 
 
 export const University=immutable({
 
-	id: "/universities/{code}",
+	id: required("/universities/{code}"),
 
-	image: "",
-	label: { "*": "" },
-	comment: { "*": "" },
+	image: required(iri),
+	label: required(local),
+	comment: required(local),
 
-	schac: "",
+	schac: required(string),
 
-	// inception: optional(dateTime),
+	// !!! inception: optional(dateTime),
 	students: optional(integer),
 
 	country: optional({
-		id: "",
-		label: { "*": "" }
+		id: required(iri),
+		label: required(local)
 	}),
 
 	location: optional({
-		id: "",
-		label: { "*": "" }
+		id: required(iri),
+		label: required(local)
 	}),
 
 	subsets: multiple({
 
 		dataset: {
-			id: "",
-			label: { "*": "" }
+			id: required(iri),
+			label: required(local)
 		},
 
-		entities: 0
+		entities: required(integer)
 
 	})
 
@@ -70,87 +71,68 @@ export function DataUniversity() {
 
 	const [university]=useResource({ ...University, id: "" });
 
-	useEffect(() => { title(university); }, [university]);
-
-
 	return <DataPage name={[Universities, university]}
 
-		tray={university && DataUniversityInfo(university)}
+		tray={<ToolFrame as={({
 
-	>{
-		university && DataUniversityBody(university)
+			id,
 
-	}</DataPage>;
+			// !!! inception,
+			students,
+			country,
+			location,
+			subsets
 
-}
+		}) => <>
 
+			<ToolInfo>{{
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				"Country": country && <ToolLink>{country}</ToolLink>,
+				"City": location && <ToolLink>{location}</ToolLink>
 
-function DataUniversityInfo({
+			}}</ToolInfo>
 
-	id,
+			<ToolInfo>{{
 
-	// inception,
-	students,
-	country,
-	location,
-	subsets
+				// !!! "Inception": inception && inception.substring(0, 4) || "-",
+				"Students": students && toIntegerString(students)
 
-}: typeof University) {
+			}}</ToolInfo>
 
-	return <>
+			<ToolInfo>{subsets?.slice()
 
-		<ToolInfo>{{
+				?.sort(({ entities: x }, { entities: y }) => x - y)
+				?.map(({ dataset, entities }) => ({
 
-			"Country": country && <ToolLink>{country}</ToolLink>,
-			"City": location && <ToolLink>{location}</ToolLink>
+					label: <ToolLink filter={[dataset, { university: id }]}>{{
+						id: dataset.id,
+						label: ec2u(dataset.label)
+					}}</ToolLink>,
 
-		}}</ToolInfo>
+					value: toIntegerString(entities)
 
-		<ToolInfo>{{
+				}))
 
-			// !!! "Inception": inception && inception.substring(0, 4) || "-",
-			"Students": students && toIntegerString(students)
+			}</ToolInfo>
 
-		}}</ToolInfo>
-
-		<ToolInfo>{subsets?.slice()
-
-			?.sort(({ entities: x }, { entities: y }) => x - y)
-			?.map(({ dataset, entities }) => ({
-
-				label: <ToolLink filter={[dataset, { university: id }]}>{{
-					id: dataset.id,
-					label: ec2u(dataset.label)
-				}}</ToolLink>,
-
-				value: toIntegerString(entities)
-
-			}))
-
-		}</ToolInfo>
-
-	</>;
-
-}
-
-function DataUniversityBody({
-
-	image,
-	label,
-	comment
-
-}: typeof University) {
-
-	return <ToolCard side={"end"} wrap
-
-		image={image && <img src={image} alt={`Image of ${toLocalString(label)}`}/>}
+		</>}>{university}</ToolFrame>}
 
 	>
 
-		{toLocalString(comment)}
+		<ToolFrame placeholder={Universities[icon]} as={({
 
-	</ToolCard>;
+			image,
+			label,
+			comment
+
+		}) => <>
+
+			<img className={"right"} src={image} alt={`Image of ${toLocalString(label)}`}/>
+
+			<p>{toLocalString(comment)}</p>
+
+		</>}>{university}</ToolFrame>
+
+	</DataPage>;
 
 }

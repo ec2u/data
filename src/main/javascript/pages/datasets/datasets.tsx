@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
+import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { toLocalString } from "@metreeca/core/local";
+import { iri } from "@metreeca/core/iri";
+import { local, toLocalString } from "@metreeca/core/local";
 import { toValueString } from "@metreeca/core/value";
-import { title } from "@metreeca/data/contexts/router";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
@@ -37,7 +38,6 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { Package } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { useEffect } from "react";
 
 
 export const Datasets=immutable({
@@ -47,17 +47,17 @@ export const Datasets=immutable({
 	id: "/",
 
 	label: {
-		"en": "Datasets"
+		"": "European Campus of City-Universities"
 	},
 
 	members: [{
 
-		id: "",
-		label: { en: "" },
-		comment: optional({ en: "" }),
+		id: required(iri),
+		label: required(local),
+		comment: optional(local),
 
-		alternative: optional({ en: "" }),
-		description: optional({ en: "" }),
+		alternative: optional(local),
+		description: optional(local),
 
 		entities: required(integer)
 
@@ -72,38 +72,31 @@ export function DataDatasets() {
 
 	const datasets=useCollection(Datasets, "members", { store: useQuery() });
 
+	return <DataPage name={Datasets} menu={<DataMeta/>}
 
-	useEffect(() => { title(Datasets); }, []);
+		tray={< >
 
+			<ToolKeywords placeholder={"Name"}>{
+				useKeywords(datasets, "label")
+			}</ToolKeywords>
 
-	return (
+			<ToolOptions placeholder={"License"} as={line => toValueString(line)}>{
+				useOptions(datasets, "license", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
 
-		<DataPage name={Datasets}
+		</>}
 
-			// menu={<DataMeta>{route}</DataMeta>}
+		info={<>
 
-			tray={< >
+			<ToolCount>{useStats(datasets)}</ToolCount>
+			<ToolClear>{datasets}</ToolClear>
 
-				<ToolKeywords placeholder={"Name"}>{
-					useKeywords(datasets, "label")
-				}</ToolKeywords>
+		</>}
 
-				<ToolOptions placeholder={"License"} as={line => toValueString(line)}>{
-					useOptions(datasets, "license", { type: entry })
-				}</ToolOptions>
+	>
 
-			</>}
-
-			info={<>
-
-				<ToolCount>{useStats(datasets)}</ToolCount>
-				<ToolClear>{datasets}</ToolClear>
-
-			</>}
-
-		>
-
-			<ToolSheet placeholder={Datasets[icon]} sorted={{ entities: "increasing" }} as={({
+		<ToolSheet placeholder={Datasets[icon]} sorted={{ entities: "increasing" }}
+			as={({
 
 				id,
 				label,
@@ -115,11 +108,11 @@ export function DataDatasets() {
 
 			}) =>
 
-				<ToolCard key={id} side={"end"}
+				<ToolCard key={id} size={3}
 
 					title={<ToolLink>{{ id, label: ec2u(label) }}</ToolLink>}
 
-					tags={`${toIntegerString(entities)} entities`}
+					tags={`${toIntegerString(entities)}`}
 
 				>{
 
@@ -129,7 +122,6 @@ export function DataDatasets() {
 
 			}>{datasets}</ToolSheet>
 
-		</DataPage>
 
-	);
+	</DataPage>;
 }

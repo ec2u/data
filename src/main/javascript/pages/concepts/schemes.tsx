@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataCard } from "@ec2u/data/views/_card";
-import { DataMeta } from "@ec2u/data/views/_meta";
 import { DataPage } from "@ec2u/data/views/page";
 import { DataPane } from "@ec2u/data/views/pane";
 import { immutable } from "@metreeca/core";

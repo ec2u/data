@@ -26,7 +26,7 @@ import com.metreeca.rdf.Values;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.resources.Container;
+import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 
@@ -44,7 +44,7 @@ import static java.util.stream.Collectors.joining;
 
 
 @Virtual
-public final class Universities extends Container<University> {
+public final class Universities extends Dataset<University> {
 
     private static final IRI Context=EC2U.item("/universities/");
 

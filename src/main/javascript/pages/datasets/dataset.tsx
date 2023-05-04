@@ -15,161 +15,143 @@
  */
 
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
-import { ec2u } from "@ec2u/data/views";
-import { DataBack } from "@ec2u/data/views/_back";
-import { DataInfo } from "@ec2u/data/views/_info";
 import { DataPage } from "@ec2u/data/views/page";
-import { DataPane } from "@ec2u/data/views/pane";
-import { immutable } from "@metreeca/core";
-import { Dictionary, optional, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeMark } from "@metreeca/view/tiles/mark";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import "highlight.js/styles/github.css";
-import React, { useEffect } from "react";
-import { icon } from "../../../../../../../../Products/Tool/code/view";
+import { immutable, optional, required } from "@metreeca/core";
+import { integer, toIntegerString } from "@metreeca/core/integer";
+import { iri } from "@metreeca/core/iri";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
+import { useRouter } from "@metreeca/data/contexts/router";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { DoneIcon, InfoIcon } from "@metreeca/view/widgets/icon";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React from "react";
 
 
-const aliases: { [alias: string]: string }=immutable({
+function isMeta(route: string) {
+	return route.startsWith("/datasets/");
+}
 
-    "/datasets": "/datasets/",
-    "/datasets/programs": "/datasets/offers",
-    "/datasets/courses": "/datasets/offers"
+function toMeta(route: string) {
+	return route.replace(/^\/(?<name>\w*)\/?$/, "/datasets/$<name>");
+}
 
-});
-
-
-export const Dataset=immutable({
-
-    id: "/datasets/{code}",
-
-    label: { "en": "Dataset" },
-    comment: optional({ "en": "" }),
-
-    title: { "en": "Dataset" },
-    alternative: optional({ "en": "" }),
-    description: optional({ "en": "" }),
-
-    license: optional({
-        id: "",
-        label: { "en": "" }
-    }),
-
-    rights: optional(""),
-    accessRights: optional({ "en": "" }),
-
-    entities: 0,
-
-    isDefinedBy: ""
-
-});
-
-
-export function DataDataset() {
-
-    const [route, setRoute]=useRoute();
-
-    const entry=useEntry(route, Dataset);
-
-
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(ec2u(label)) }) }));
-
-
-    return <DataPage item={entry({ value: ({ title, alternative }) => string(alternative || title) })}
-
-        menu={entry({ fetch: <NodeSpin/> })}
-
-        pane={<DataPane
-
-            header={entry({
-                value: ({ id, label, isDefinedBy }) =>
-                    <DataBack>{{ id: isDefinedBy, label: ec2u(label) }}</DataBack>
-            })}
-
-        >{entry({
-
-            value: DataDatasetInfo
-
-        })}</DataPane>}
-
-    >{entry({
-
-		fetch: <NodeHint>{Datasets[icon]}</NodeHint>,
-
-		value: ({ id, description }) => DataDatasetBody({
-			description, definition: `${aliases[id] ?? id}${location.hash}`
-
-		}),
-
-		error: error => <span>{error.status}</span> // !!! report
-
-	})}</DataPage>;
-
+function toData(route: string) {
+	return route === "/datasets/" ? "/" : route.replace(/^\/datasets\/(?<name>\w*?)$/, "/$<name>/");
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function DataDatasetInfo({
+export const Dataset=immutable({
 
-    id,
+	id: "/datasets/*",
 
-    entities,
+	label: required(local),
+	comment: optional(local),
 
-    license,
-    rights
+	title: { "en": "Dataset" },
+	alternative: optional(local),
+	description: optional(local),
+
+	license: optional({
+		id: required(iri),
+		label: required(local)
+	}),
+
+	rights: optional(string),
+	accessRights: optional(local),
+
+	entities: required(integer),
+
+	isDefinedBy: optional(iri)
+
+});
 
 
-}: typeof Dataset) {
+export function DataMeta() {
 
-    return <>
+	const [route, setRoute]=useRouter();
 
-        <DataInfo>{{
+	const data=!isMeta(route);
 
-            "Entities": <span>{string(entities)}</span>
+	return <button title={data ? "View Dataset Metadata" : "View Dataset Content"}
 
-        }}</DataInfo>
+		onClick={() => setRoute(data ? toMeta(route) : toData(route))}
 
-        <DataInfo>{{
-
-            "License": license && <NodeLink>{license}</NodeLink>,
-            "Rights": rights && <span>{rights}</span>
-
-        }}</DataInfo>
-
-        {<>
-
-            <hr/>
-
-            <nav><NodeMark toc>{aliases[id] ?? id}</NodeMark></nav>
-
-        </>}
-
-    </>;
+	>{data ? <InfoIcon/> : <DoneIcon/>}</button>;
 
 }
 
-function DataDatasetBody({
+export function DataDataset() {
 
-    description,
-    definition
+	const [route]=useRouter();
 
-}: {
-
-    description?: Dictionary
-    definition?: string
-
-}) {
+	const [dataset]=useResource({ ...Dataset, id: toData(route) });
 
 
-    return <>
+	return <DataPage
 
-        {description && <NodeMark>{string(description)}</NodeMark>}
-        {definition && <NodeMark>{definition}</NodeMark>}
+		name={dataset && toLocalString(dataset.alternative || dataset.title)}
 
-    </>;
+		menu={<DataMeta/>}
+
+		tray={<ToolFrame as={({
+
+			id,
+
+			entities,
+
+			license,
+			rights,
+
+			isDefinedBy
+
+		}) => <>
+
+			<ToolInfo>{{
+
+				"Entities": <span>{toIntegerString(entities)}</span>
+
+			}}</ToolInfo>
+
+			<ToolInfo>{{
+
+				"License": license && <ToolLink>{license}</ToolLink>,
+				"Rights": rights && <span>{rights}</span>
+
+			}}</ToolInfo>
+
+			{isDefinedBy && <>
+
+                <hr/>
+
+                <nav><ToolMark toc>{isDefinedBy}</ToolMark></nav>
+
+            </>}
+
+		</>}>{dataset}</ToolFrame>}
+
+	>
+
+		<ToolFrame placeholder={Datasets[icon]} as={({
+
+			description,
+
+			isDefinedBy
+
+		}) => <>
+
+			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+			{isDefinedBy && <ToolMark>{isDefinedBy}</ToolMark>}
+
+
+		</>}>{dataset}</ToolFrame>
+
+	</DataPage>;
 
 }

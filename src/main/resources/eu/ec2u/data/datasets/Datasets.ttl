@@ -11,7 +11,8 @@
 	dct:description "Identifying and background information about datasets made available on the EC2U Knowledge Hub."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-	void:rootResource ec2u:Dataset .
+	void:rootResource ec2u:Dataset ;
+	rdfs:isDefinedBy </datasets/> .
 
 
 ########################################################################################################################

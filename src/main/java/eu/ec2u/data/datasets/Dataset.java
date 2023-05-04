@@ -16,15 +16,13 @@
 
 package eu.ec2u.data.datasets;
 
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Local;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
 import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
+import eu.ec2u.data.resources.Container;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import lombok.Getter;
@@ -34,13 +32,10 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.time.Instant;
 
-import static com.metreeca.link.Frame.with;
-import static com.metreeca.link.Local.local;
-
 @Type
 @Getter
 @Setter
-public final class Dataset extends Resource {
+public class Dataset<T extends Resource> extends Container<T> { // !!! abstract/final
 
     @Optional
     @Property("dct:")
@@ -66,21 +61,4 @@ public final class Dataset extends Resource {
     @Property("rdfs:")
     private URI isDefinedBy;
 
-
-    public static final class Handler extends Delegator {
-
-        public Handler() {
-            delegate(new Worker()
-
-                    .get(new Relator(with(new Dataset(), dataset -> {
-
-                        dataset.setId("");
-                        dataset.setLabel(local("en", ""));
-
-                    })))
-
-            );
-        }
-
-    }
 }

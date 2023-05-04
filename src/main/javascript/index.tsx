@@ -15,6 +15,7 @@
  */
 
 import { Actors, DataActors } from "@ec2u/data/pages/actors";
+import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataDocument, Document } from "@ec2u/data/pages/documents/document";
 import { DataDocuments, Documents } from "@ec2u/data/pages/documents/documents";
@@ -66,6 +67,7 @@ createRoot(document.body.firstElementChild!).render((
 			<ToolRouter>{{
 
 				[id(Datasets)]: DataDatasets,
+				[id(Dataset)]: DataDataset,
 
 				// !!! to be reviewed after metreeca/java supports resource access to collections
 

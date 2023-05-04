@@ -16,10 +16,13 @@
 
 
 import { DataLogo } from "@ec2u/data/views/logo";
-import { Value } from "@metreeca/core/value";
+import { asArray } from "@metreeca/core";
+import { title } from "@metreeca/data/contexts/router";
+import { app } from "@metreeca/view";
 import { ToolPage } from "@metreeca/view/layouts/page";
-import { ToolPath } from "@metreeca/view/widgets/path";
-import React, { ReactNode, useState } from "react";
+import { Github } from "@metreeca/view/widgets/icon";
+import { Path, ToolPath } from "@metreeca/view/widgets/path";
+import React, { ReactNode, useEffect } from "react";
 
 
 export function DataPage({
@@ -39,7 +42,7 @@ export function DataPage({
 
 	locked?: boolean
 
-	name?: undefined | Value | Array<undefined | Value>
+	name?: Path
 	menu?: ReactNode
 
 	done?: ReactNode
@@ -52,7 +55,7 @@ export function DataPage({
 
 }) {
 
-	useState();
+	useEffect(() => { title(name); }, asArray(name) ?? [name]);
 
 	return <ToolPage
 
@@ -66,6 +69,11 @@ export function DataPage({
 
 		tray={tray}
 		info={info}
+
+		copy={<>
+			<small>{app.copy}</small>
+			<a title={"GitHub Repository"} href={"https://github.com/ec2u/data"}><Github/></a>
+		</>}
 
 	>{
 

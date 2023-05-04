@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable } from "@metreeca/core";
+import { immutable, required } from "@metreeca/core";
+import { label as toEntryLabel } from "@metreeca/core/entry";
 import { integer } from "@metreeca/core/integer";
-import { toLocalString } from "@metreeca/core/local";
-import { title } from "@metreeca/data/contexts/router";
+import { iri } from "@metreeca/core/iri";
+import { local, toLocalString } from "@metreeca/core/local";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useQuery } from "@metreeca/data/models/query";
@@ -34,7 +36,6 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { Landmark } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { useEffect } from "react";
 
 
 export const Universities=immutable({
@@ -44,20 +45,21 @@ export const Universities=immutable({
 	id: "/universities/",
 
 	label: {
-		"en": "Universities"
+		en: "Universities",
+		it: "Università"
 	},
 
 	members: [{
 
-		id: "",
-		image: "",
+		id: required(iri),
+		image: required(iri),
 
-		label: {},
-		comment: {},
+		label: required(local),
+		comment: required(local),
 
 		country: {
-			id: "",
-			label: {}
+			id: required(iri),
+			label: required(local)
 		}
 
 	}]
@@ -71,10 +73,7 @@ export function DataUniversities() {
 
 	const universities=useCollection(Universities, "members", { store: useQuery() });
 
-	useEffect(() => { title(Universities); }, []);
-
-
-	return <DataPage name={Universities}
+	return <DataPage name={Universities} menu={<DataMeta/>}
 
 		tray={< >
 
@@ -82,9 +81,9 @@ export function DataUniversities() {
 				useKeywords(universities, "label")
 			}</ToolKeywords>
 
-			{/*<ToolRange placeholder={"Inception"}>{
-			 useRange(universities, "inception")
-			 }</ToolRange>*/}
+			{/* <ToolRange placeholder={"Inception"}>{
+			 useRange(universities, "inception", { type: dateTime })
+			 }</ToolRange> */}
 
 			<ToolRange placeholder={"Students"}>{
 				useRange(universities, "students", { type: integer })
@@ -117,7 +116,7 @@ export function DataUniversities() {
 				title={<ToolLink>{{ id, label }}</ToolLink>}
 				image={image}
 
-				tags={<span>{toLocalString(country.label)}</span>}
+				tags={<span>{toEntryLabel(country)}</span>}
 
 			>
 				{toLocalString(comment)}

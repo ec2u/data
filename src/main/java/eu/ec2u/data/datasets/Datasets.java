@@ -24,7 +24,6 @@ import com.metreeca.rdf4j.actions.Update;
 import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.resources.Container;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
@@ -42,7 +41,7 @@ import static com.metreeca.rdf.formats.RDF.rdf;
 import static eu.ec2u.data.Data.exec;
 
 @Virtual
-public final class Datasets extends Container<Dataset> {
+public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset<Dataset<?>> breaks query parsing
 
     private static final IRI Context=EC2U.item("/");
 
@@ -60,7 +59,7 @@ public final class Datasets extends Container<Dataset> {
 
                                 filter(expression("available"), any(Set.of())),
 
-                                model(with(new Dataset(), dataset -> {
+                                model(with(new Dataset<>(), dataset -> {
 
                                     dataset.setId("");
                                     dataset.setLabel(local("en", ""));

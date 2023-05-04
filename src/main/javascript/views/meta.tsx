@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2022 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,4 @@
  * limitations under the License.
  */
 
-data-meta {
-
-    & svg {
-        stroke-width: 1.5;
-        color: #333;
-    }
-
-}
+import React from "react";

@@ -165,18 +165,6 @@ public final class Data implements Runnable {
 
                                                 .path("/", new Datasets.Handler())
 
-                                                // !!! to be removed after metreeca/java supports resource access to collections
-
-                                                // .path("/datasets", handler(
-                                                //         new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
-                                                //         new Worker().get(new Relator())
-                                                // ))
-
-                                                // .path("/datasets/{id}", handler(
-                                                //         new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
-                                                //         new Worker().get(new Relator())
-                                                // ))
-
                                                 .path("/universities/", new Universities.Handler())
                                                 .path("/universities/{code}", new University.Handler())
 
