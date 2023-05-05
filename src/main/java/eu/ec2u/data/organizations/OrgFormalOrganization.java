@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2022 Metreeca srl
+ * Copyright © 2020-2023 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,11 @@
  * limitations under the License.
  */
 
-import React from "react";
+package eu.ec2u.data.organizations;
+
+import com.metreeca.link.jsonld.Type;
+
+@Type
+public interface OrgFormalOrganization extends OrgOrganization {
+
+}

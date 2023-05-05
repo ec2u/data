@@ -69,11 +69,6 @@ createRoot(document.body.firstElementChild!).render((
 				[id(Datasets)]: DataDatasets,
 				[id(Dataset)]: DataDataset,
 
-				// !!! to be reviewed after metreeca/java supports resource access to collections
-
-				// [Dataset.id.replace(/\/[^/]*$/, "")]: DataDataset,
-				// [Dataset.id]: DataDataset,
-
 				[id(Universities)]: DataUniversities,
 				[(id(University))]: DataUniversity,
 
@@ -103,7 +98,6 @@ createRoot(document.body.firstElementChild!).render((
 			}}</ToolRouter>
 
 		</ToolContext>
-
 
 	</React.StrictMode>
 

@@ -56,11 +56,11 @@ public final class Universities extends Dataset<University> {
         public Handler() {
             delegate(new Worker()
 
-                    .get(new Relator(with(new Universities(), offices -> {
+                    .get(new Relator(with(new Universities(), universities -> {
 
-                        offices.setLabel(local("en", "Universities"));
+                        universities.setLabel(local("en", "Universities"));
 
-                        offices.setMembers(Set.of(with(new University(), university -> {
+                        universities.setMembers(Set.of(with(new University(), university -> {
 
                             university.setId("");
                             university.setLabel(local("en", ""));

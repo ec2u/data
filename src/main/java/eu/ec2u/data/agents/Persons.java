@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.agents;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.rdf4j.actions.Upload;

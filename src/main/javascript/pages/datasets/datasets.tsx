@@ -95,33 +95,31 @@ export function DataDatasets() {
 
 	>
 
-		<ToolSheet placeholder={Datasets[icon]} sorted={{ entities: "increasing" }}
-			as={({
+		<ToolSheet placeholder={Datasets[icon]} sorted={{ entities: "increasing" }} as={({
 
-				id,
-				label,
-				comment,
+			id,
+			label,
+			comment,
 
-				alternative,
+			alternative,
 
-				entities
+			entities
 
-			}) =>
+		}) =>
 
-				<ToolCard key={id} size={3}
+			<ToolCard key={id} size={3}
 
-					title={<ToolLink>{{ id, label: ec2u(label) }}</ToolLink>}
+				title={<ToolLink>{{ id, label: ec2u(label) }}</ToolLink>}
 
-					tags={`${toIntegerString(entities)}`}
+				tags={`${toIntegerString(entities)}`}
 
-				>{
+			>{
 
-					toLocalString(ec2u(alternative || comment || {}))
+				toLocalString(ec2u(alternative || comment || {}))
 
-				}</ToolCard>
+			}</ToolCard>
 
-			}>{datasets}</ToolSheet>
-
+		}>{datasets}</ToolSheet>
 
 	</DataPage>;
 }

@@ -22,6 +22,8 @@ import com.metreeca.core.toolkits.Strings;
 import com.metreeca.csv.formats.CSV;
 import com.metreeca.http.actions.GET;
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 import com.metreeca.rdf.Frame;
 import com.metreeca.rdf.Values;
@@ -37,10 +39,11 @@ import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.agents.Persons;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.UnitTypes;
-import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.EC2U.University;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.EuroSciVoc;
@@ -76,7 +79,8 @@ import java.util.stream.Stream;
 import static com.metreeca.core.Locator.path;
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
-import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Frame.with;
+import static com.metreeca.link.Local.local;
 import static com.metreeca.rdf.Frame.frame;
 import static com.metreeca.rdf.Shift.Seq.seq;
 import static com.metreeca.rdf.Values.*;
@@ -94,7 +98,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 
-public final class Units extends Delegator {
+public final class Units extends Dataset<Unit> {
 
     public static final IRI Context=EC2U.item("/units/");
     public static final IRI Scheme=iri(Concepts.Context, "/unit-topics");
@@ -103,55 +107,26 @@ public final class Units extends Delegator {
 
 
     public static Shape Unit() {
-        throw new UnsupportedOperationException(";( be implemented"); // !!!
-
-        //            return relate(Resource(),
-        //
-        //                    hidden(field(RDF.TYPE, all(Unit))),
-        //
-        //                    field(FOAF.HOMEPAGE, multiple(), datatype(IRIType)),
-        //
-        //                    field(SKOS.PREF_LABEL, multilingual()),
-        //                    field(SKOS.ALT_LABEL, multilingual()),
-        //
-        //                    field(ORG.IDENTIFIER, optional(), datatype(XSD.STRING)),
-        //                    field(ORG.CLASSIFICATION, optional(), Reference()),
-        //
-        //                    field(ORG.UNIT_OF, repeatable(), Reference()),
-        //                    field(ORG.HAS_UNIT, multiple(), Reference()),
-        //
-        //                    field("head", inverse(ORG.HEAD_OF), multiple(), Reference())
-        //
-        //            );
+        throw new UnsupportedOperationException(";( be removed"); // !!!
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static final class Handler extends Delegator {
 
-    public Units() {
-        delegate(handler(
+        public Handler() {
+            delegate(new Worker()
 
-                //                new Driver(Unit(),
-                //
-                //                        filter(clazz(Unit))
-                //
-                //                ),
-                //
-                //                new Router()
-                //
-                //                        .path("/", new Worker()
-                //                                .get(new Relator())
-                //                        )
-                //
-                //                        .path("/{id}", new Worker()
-                //                                .get(new Relator())
-                //                        )
+                    .get(new Relator(with(new Units(), units -> {
 
-        ));
+                        units.setLabel(local("en", "Universities"));
+                        units.setMembers(Set.of(new Unit()));
+
+                    })))
+
+            );
+        }
+
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
 

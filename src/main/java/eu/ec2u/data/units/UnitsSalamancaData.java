@@ -28,8 +28,8 @@ import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.agents.Persons;
 import eu.ec2u.data.concepts.UnitTypes;
-import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;

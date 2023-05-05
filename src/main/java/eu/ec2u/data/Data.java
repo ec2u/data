@@ -32,6 +32,8 @@ import com.metreeca.rdf4j.handlers.SPARQL;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.units.Unit;
+import eu.ec2u.data.units.Units;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
@@ -168,7 +170,9 @@ public final class Data implements Runnable {
                                                 .path("/universities/", new Universities.Handler())
                                                 .path("/universities/{code}", new University.Handler())
 
-                                        //.path("/units/*", new Units())
+                                                .path("/units/", new Units.Handler())
+                                                .path("/units/{code}", new Unit.Handler())
+
                                         //.path("/offers/*", new Offers())
                                         //.path("/programs/*", new Offers.Programs())
                                         //.path("/courses/*", new Offers.Courses())

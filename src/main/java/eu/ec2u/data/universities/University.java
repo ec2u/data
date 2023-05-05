@@ -20,12 +20,15 @@ package eu.ec2u.data.universities;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.link.Local;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
 import com.metreeca.link.jsonld.Virtual;
 import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
+import eu.ec2u.data.organizations.OrgFormalOrganization;
+import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import lombok.Getter;
@@ -43,7 +46,26 @@ import static com.metreeca.link.Local.local;
 @Type
 @Getter
 @Setter
-public final class University extends Resource {
+public final class University extends Resource implements OrgFormalOrganization {
+
+    //// foaf:Agent ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Set<URI> homepages;
+    private Set<URI> mboxes;
+
+
+    //// org:Organization //////////////////////////////////////////////////////////////////////////////////////////////
+
+    private String identifier;
+
+    private Local<String> prefLabel;
+    private Local<String> altLabel;
+    private Local<String> definition;
+
+    private Set<OrgOrganizationalUnit> units;
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Required
     private String schac;
@@ -56,7 +78,7 @@ public final class University extends Resource {
     private LocalDateTime inception;
 
     @Optional
-    private BigInteger students; // !!! decimal?
+    private BigInteger students;
 
 
     @Optional
@@ -81,6 +103,8 @@ public final class University extends Resource {
     @Property("rdfs:")
     private Reference seeAlso;
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Handler extends Delegator {
 

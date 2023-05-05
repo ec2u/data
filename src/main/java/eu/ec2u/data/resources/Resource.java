@@ -34,10 +34,14 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Set;
 
+import static com.metreeca.link.Local.local;
+
 @Type
 @Namespace(EC2U.Terms)
-@Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
 @Namespace(prefix="dct", value="http://purl.org/dc/terms/")
+@Namespace(prefix="org", value="http://rdfs.org/ns/void#")
+@Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
+@Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
 @Namespace(prefix="void", value="http://rdfs.org/ns/void#")
 @Namespace(prefix="wgs84", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
 @Setter
@@ -98,6 +102,12 @@ public abstract class Resource {
 
     @Property("dct:")
     private Set<Reference> subject;
+
+
+    protected Resource() {
+        this.id="";
+        this.label=local("", "");
+    }
 
 
     private static final class Publisher extends Resource {

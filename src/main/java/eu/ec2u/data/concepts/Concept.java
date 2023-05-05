@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-/**
- * EC2U people.
- */
-package eu.ec2u.data.persons;
+package eu.ec2u.data.concepts;
+
+import eu.ec2u.data.resources.Resource;
+
+public final class Concept extends Resource {
+}
