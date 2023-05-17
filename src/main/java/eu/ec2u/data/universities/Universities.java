@@ -16,14 +16,15 @@
 
 package eu.ec2u.data.universities;
 
-import com.metreeca.core.Xtream;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.jsonld.handlers.Relator;
+import com.metreeca.http.open.actions.WikidataMirror;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.rdf4j.actions.Update;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.work.Xtream;
 import com.metreeca.link.jsonld.Virtual;
-import com.metreeca.open.actions.WikidataMirror;
-import com.metreeca.rdf.Values;
-import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.datasets.Dataset;
@@ -33,10 +34,11 @@ import org.eclipse.rdf4j.model.IRI;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static java.util.Arrays.stream;
@@ -58,6 +60,7 @@ public final class Universities extends Dataset<University> {
 
                     .get(new Relator(with(new Universities(), universities -> {
 
+                        universities.setId("");
                         universities.setLabel(local("en", "Universities"));
 
                         universities.setMembers(Set.of(with(new University(), university -> {
@@ -99,13 +102,19 @@ public final class Universities extends Dataset<University> {
         }
 
         @Override public void run() {
+            wikidata();
+            inferences();
+        }
+
+
+        private static void wikidata() {
             Xtream
 
                     .of(
 
                             "?item wdt:P463 wd:Q105627243", // <member of> <EC2U>
 
-                            "values ?item " + Stream
+                            "values ?item "+Stream
 
                                     .concat(
                                             stream(EC2U.University.values()).map(university -> university.City),
@@ -120,6 +129,18 @@ public final class Universities extends Dataset<University> {
                     .sink(new WikidataMirror()
                             .contexts(iri(Context, "/wikidata"))
                             .languages(Resources.Languages)
+                    );
+        }
+
+        private static void inferences() {
+            Stream
+
+                    .of(text(Universities.class, ".ul"))
+
+                    .forEach(new Update()
+                            .base(EC2U.Base)
+                            .insert(iri(Context, "/~"))
+                            .clear(true)
                     );
         }
 

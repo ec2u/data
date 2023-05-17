@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.rdf.Frame;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities.Universities;
@@ -30,9 +30,9 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Coimbra;

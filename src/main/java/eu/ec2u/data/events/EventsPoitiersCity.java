@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.rdf.Frame;
+import com.metreeca.http.rdf.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
@@ -28,9 +28,9 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static java.time.ZoneOffset.UTC;

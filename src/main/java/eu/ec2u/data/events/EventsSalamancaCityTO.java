@@ -16,15 +16,15 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.core.toolkits.Strings;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.Values;
-import com.metreeca.xml.XPath;
-import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.formats.XML;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.toolkits.Strings;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
+import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.http.xml.formats.XML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
@@ -47,10 +47,10 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.University.Salamanca;
 import static eu.ec2u.data.events.Events.Event;

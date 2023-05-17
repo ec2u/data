@@ -16,15 +16,15 @@
 
 package eu.ec2u.data.offers;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.core.services.Vault;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.json.JSONPath;
-import com.metreeca.json.formats.JSON;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.Values;
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.http.json.JSONPath;
+import com.metreeca.http.json.formats.JSON;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.services.Vault;
+import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -38,11 +38,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Salamanca;

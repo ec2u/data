@@ -16,15 +16,17 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.core.toolkits.Strings;
+import com.metreeca.http.toolkits.Strings;
 
 import eu.ec2u.data.resources.Resources;
 
-import java.util.*;
+import javax.json.Json;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
-import javax.json.Json;
 
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.toMap;

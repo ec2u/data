@@ -21,9 +21,9 @@ import org.eclipse.rdf4j.model.IRI;
 import java.time.ZoneId;
 import java.util.regex.Pattern;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.open.actions.Wikidata.wd;
-import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.http.open.actions.Wikidata.wd;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.toolkits.Identifiers.md5;
 
 public final class EC2U {
 

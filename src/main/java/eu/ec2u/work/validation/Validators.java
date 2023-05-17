@@ -16,10 +16,10 @@
 
 package eu.ec2u.work.validation;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.jsonld.actions.Validate;
+import com.metreeca.http.jsonld.actions.Validate;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf.Frame;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -32,11 +32,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.inverse;
-import static com.metreeca.rdf.Values.pattern;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.inverse;
+import static com.metreeca.http.rdf.Values.pattern;
+import static com.metreeca.http.services.Logger.logger;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;

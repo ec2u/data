@@ -34,8 +34,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Set;
 
-import static com.metreeca.link.Local.local;
-
 @Type
 @Namespace(EC2U.Terms)
 @Namespace(prefix="dct", value="http://purl.org/dc/terms/")
@@ -102,12 +100,6 @@ public abstract class Resource {
 
     @Property("dct:")
     private Set<Reference> subject;
-
-
-    protected Resource() {
-        this.id="";
-        this.label=local("", "");
-    }
 
 
     private static final class Publisher extends Resource {

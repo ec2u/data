@@ -16,13 +16,13 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
 import com.metreeca.http.FormatException;
 import com.metreeca.http.actions.GET;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.Values;
-import com.metreeca.xml.XPath;
-import com.metreeca.xml.formats.HTML;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
+import com.metreeca.http.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
@@ -47,12 +47,12 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.*;
-import static com.metreeca.rdf.formats.RDF.rdf;
-import static com.metreeca.rdf.schemas.Schema.normalize;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.*;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf.schemas.Schema.normalize;
+import static com.metreeca.http.services.Logger.logger;
 
 import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.events.Events.Event;

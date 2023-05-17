@@ -16,16 +16,16 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
 import com.metreeca.http.actions.Fetch;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.Query;
-import com.metreeca.json.JSONPath;
-import com.metreeca.json.formats.JSON;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.Values;
-import com.metreeca.xml.XPath;
-import com.metreeca.xml.actions.Untag;
+import com.metreeca.http.json.JSONPath;
+import com.metreeca.http.json.formats.JSON;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
+import com.metreeca.http.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.locations.Locations;
@@ -53,16 +53,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.core.toolkits.Formats.SQL_TIMESTAMP;
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Strings.TextLength;
-import static com.metreeca.core.toolkits.Strings.clip;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.http.toolkits.Formats.SQL_TIMESTAMP;
+import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.http.toolkits.Strings.TextLength;
+import static com.metreeca.http.toolkits.Strings.clip;
 
 import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.EC2U.item;

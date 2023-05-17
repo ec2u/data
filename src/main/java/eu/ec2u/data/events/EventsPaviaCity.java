@@ -16,16 +16,16 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.actions.Localize;
-import com.metreeca.rdf.actions.Microdata;
-import com.metreeca.rdf.actions.Normalize;
-import com.metreeca.rdf.actions.Normalize.DateToDateTime;
-import com.metreeca.rdf.actions.Normalize.StringToDate;
-import com.metreeca.xml.formats.HTML;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.actions.Localize;
+import com.metreeca.http.rdf.actions.Microdata;
+import com.metreeca.http.rdf.actions.Normalize;
+import com.metreeca.http.rdf.actions.Normalize.DateToDateTime;
+import com.metreeca.http.rdf.actions.Normalize.StringToDate;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
@@ -43,11 +43,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Shift.Alt.alt;
-import static com.metreeca.rdf.Shift.Seq.seq;
-import static com.metreeca.rdf.Shift.Step.step;
-import static com.metreeca.rdf.Values.*;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Shift.Alt.alt;
+import static com.metreeca.http.rdf.Shift.Seq.seq;
+import static com.metreeca.http.rdf.Shift.Step.step;
+import static com.metreeca.http.rdf.Values.*;
 
 import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.EC2U.item;

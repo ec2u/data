@@ -18,25 +18,24 @@ package eu.ec2u.data.datasets;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.jsonld.handlers.Relator;
+import com.metreeca.http.rdf4j.actions.Update;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.jsonld.Virtual;
-import com.metreeca.rdf4j.actions.Update;
-import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.toolkits.Resources.text;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
 import static com.metreeca.link.Query.Constraint.any;
 import static com.metreeca.link.Query.*;
 import static com.metreeca.link.Stash.Expression.expression;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 
@@ -53,11 +52,12 @@ public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset
 
                     .get(new Relator(with(new Datasets(), datasets -> {
 
+                        datasets.setId("");
                         datasets.setLabel(local("en", "Datasets"));
 
                         datasets.setMembers(query(
 
-                                filter(expression("available"), any(Set.of())),
+                                filter(expression("available"), any()),
 
                                 model(with(new Dataset<>(), dataset -> {
 

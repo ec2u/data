@@ -16,14 +16,14 @@
 
 package eu.ec2u.data.offers;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.services.Vault;
 import com.metreeca.http.FormatException;
 import com.metreeca.http.actions.GET;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf4j.actions.Upload;
-import com.metreeca.xml.XPath;
-import com.metreeca.xml.formats.HTML;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.services.Vault;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
+import com.metreeca.http.xml.formats.HTML;
 
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -43,13 +43,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.*;
-import static com.metreeca.rdf.formats.RDF.rdf;
-import static com.metreeca.rdf.schemas.Schema.normalize;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.*;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf.schemas.Schema.normalize;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Jena;

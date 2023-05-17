@@ -17,8 +17,8 @@
 package eu.ec2u.data.offers;
 
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
@@ -29,8 +29,8 @@ import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 

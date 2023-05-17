@@ -17,8 +17,8 @@
 package eu.ec2u.work;
 
 import com.metreeca.http.FormatException;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.schemas.Schema;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.schemas.Schema;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -32,11 +32,11 @@ import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.inverse;
-import static com.metreeca.rdf.formats.RDF.rdf;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.inverse;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.services.Logger.logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

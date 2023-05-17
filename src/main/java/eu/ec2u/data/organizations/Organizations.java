@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.organizations;
 
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.http.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
@@ -24,7 +24,7 @@ import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
 
-import static com.metreeca.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;

@@ -17,7 +17,7 @@
 package eu.ec2u.data.agents;
 
 import com.metreeca.http.handlers.Delegator;
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.http.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
@@ -25,7 +25,7 @@ import org.eclipse.rdf4j.model.IRI;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 

@@ -19,11 +19,10 @@ package eu.ec2u.data.universities;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Local;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.jsonld.Virtual;
 import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
@@ -34,10 +33,9 @@ import eu.ec2u.data.resources.Resource;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.Set;
 
 import static com.metreeca.link.Frame.with;
@@ -75,31 +73,22 @@ public final class University extends Resource implements OrgFormalOrganization 
 
 
     @Optional
-    private LocalDateTime inception;
+    private Year inception;
 
     @Optional
     private BigInteger students;
 
 
-    @Optional
+    @Required
     private Reference country;
 
-    @Optional
+    @Required
     private Reference location;
-
-    @Optional
-    @Property("wgs84:lat")
-    private BigDecimal latitude;
-
-    @Optional
-    @Property("wgs84:long")
-    private BigDecimal longitude;
 
 
     @Property("dct:extent")
     private Set<Subset> subsets;
 
-    @Virtual
     @Property("rdfs:")
     private Reference seeAlso;
 

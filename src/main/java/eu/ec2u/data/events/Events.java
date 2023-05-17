@@ -16,12 +16,12 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.rdf4j.actions.TupleQuery;
+import com.metreeca.http.rdf4j.actions.Update;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf4j.actions.TupleQuery;
-import com.metreeca.rdf4j.actions.Update;
-import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
@@ -37,16 +37,15 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.core.services.Logger.time;
-import static com.metreeca.core.toolkits.Lambdas.task;
-import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.Values.literal;
-import static com.metreeca.rdf.formats.RDF.rdf;
-import static com.metreeca.rdf4j.services.Graph.graph;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf4j.services.Graph.graph;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Logger.time;
+import static com.metreeca.http.toolkits.Resources.text;
 
 import static eu.ec2u.data.Data.exec;
 import static java.lang.String.format;
@@ -164,7 +163,7 @@ public final class Events extends Delegator {
 
             time(() -> {
 
-                service(graph()).update(task(connection -> {
+                service(graph()).update(connection -> {
 
                     resources.forEach(subject ->
                             connection.remove(subject, null, null, context)
@@ -172,7 +171,9 @@ public final class Events extends Delegator {
 
                     connection.add(model, context);
 
-                }));
+                    return this;
+
+                });
 
             }).apply(elapsed -> service(logger()).info(Events.class, format(
                     "updated <%d> resources in <%s> in <%d> ms", resources.size(), context, elapsed

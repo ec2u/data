@@ -16,15 +16,15 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.core.toolkits.Strings;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.json.JSONPath;
-import com.metreeca.json.formats.JSON;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.Values;
-import com.metreeca.xml.actions.Untag;
+import com.metreeca.http.json.JSONPath;
+import com.metreeca.http.json.formats.JSON;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.toolkits.Strings;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
@@ -47,10 +47,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.EC2U.item;

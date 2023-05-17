@@ -16,8 +16,8 @@
 
 package eu.ec2u.work;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.rdf.Frame;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
@@ -31,9 +31,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Shift.Seq.seq;
-import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Shift.Seq.seq;
+import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.EC2U.item;

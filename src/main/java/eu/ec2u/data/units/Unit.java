@@ -19,7 +19,7 @@ package eu.ec2u.data.units;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Local;
 import com.metreeca.link.jsonld.Type;
 

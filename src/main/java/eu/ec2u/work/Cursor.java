@@ -16,11 +16,11 @@
 
 package eu.ec2u.work;
 
-import com.metreeca.rdf.Shift;
-import com.metreeca.rdf.Shift.Path;
-import com.metreeca.rdf.Shift.Seq;
-import com.metreeca.rdf.Shift.Step;
-import com.metreeca.rdf.Values;
+import com.metreeca.http.rdf.Shift;
+import com.metreeca.http.rdf.Shift.Path;
+import com.metreeca.http.rdf.Shift.Seq;
+import com.metreeca.http.rdf.Shift.Step;
+import com.metreeca.http.rdf.Values;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
@@ -31,8 +31,8 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.rdf.Shift.Seq.seq;
-import static com.metreeca.rdf.Values.*;
+import static com.metreeca.http.rdf.Shift.Seq.seq;
+import static com.metreeca.http.rdf.Values.*;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;

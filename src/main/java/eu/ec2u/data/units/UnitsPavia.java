@@ -16,12 +16,12 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf4j.actions.GraphQuery;
-import com.metreeca.rdf4j.actions.Upload;
-import com.metreeca.rdf4j.services.Graph;
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf4j.actions.GraphQuery;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.rdf4j.services.Graph;
+import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
@@ -37,8 +37,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.*;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.*;
 
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.University.Pavia;

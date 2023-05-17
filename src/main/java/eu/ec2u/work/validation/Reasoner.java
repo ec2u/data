@@ -31,10 +31,10 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.rdf.Values.pattern;
-import static com.metreeca.rdf.Values.statement;
-import static com.metreeca.rdf4j.services.Graph.graph;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Values.pattern;
+import static com.metreeca.http.rdf.Values.statement;
+import static com.metreeca.http.rdf4j.services.Graph.graph;
 
 import static java.util.stream.Collectors.toList;
 

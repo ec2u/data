@@ -83,6 +83,12 @@ export function DataMeta() {
 
 		onClick={() => setRoute(data ? toMeta(route) : toData(route))}
 
+		style={{
+
+			transform: "scale(0.75)"
+
+		}}
+
 	>{data ? <InfoIcon/> : <DoneIcon/>}</button>;
 
 }

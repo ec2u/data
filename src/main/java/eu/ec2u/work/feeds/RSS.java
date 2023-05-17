@@ -16,11 +16,11 @@
 
 package eu.ec2u.work.feeds;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.Values;
-import com.metreeca.xml.XPath;
-import com.metreeca.xml.actions.Untag;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
+import com.metreeca.http.xml.actions.Untag;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.w3c.dom.Document;
@@ -31,9 +31,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.bnode;
-import static com.metreeca.rdf.Values.iri;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.bnode;
+import static com.metreeca.http.rdf.Values.iri;
 
 import static eu.ec2u.data.EC2U.term;
 import static java.time.ZoneOffset.UTC;

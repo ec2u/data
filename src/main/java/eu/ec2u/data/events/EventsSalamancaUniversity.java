@@ -16,15 +16,15 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.core.toolkits.Identifiers;
-import com.metreeca.core.toolkits.Strings;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.ical.formats.iCal;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.Values;
-import com.metreeca.xml.actions.Untag;
+import com.metreeca.http.ical.formats.iCal;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.toolkits.Identifiers;
+import com.metreeca.http.toolkits.Strings;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
@@ -46,11 +46,11 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.metreeca.core.toolkits.Identifiers.AbsoluteIRIPattern;
-import static com.metreeca.core.toolkits.Strings.TextLength;
-import static com.metreeca.rdf.Frame.frame;
-import static com.metreeca.rdf.Values.iri;
-import static com.metreeca.rdf.Values.literal;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
+import static com.metreeca.http.toolkits.Strings.TextLength;
 
 import static eu.ec2u.data.EC2U.University.Salamanca;
 import static eu.ec2u.data.events.Events.Event;
