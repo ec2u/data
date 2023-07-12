@@ -33,6 +33,7 @@ import com.metreeca.rdf4j.services.GraphEngine;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.douments.Documents;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.offers.Offers;
 import eu.ec2u.data.persons.Persons;
@@ -61,7 +62,6 @@ import static com.metreeca.link.shapes.Link.link;
 import static com.metreeca.rdf4j.services.Graph.graph;
 
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.Map.entry;
@@ -180,6 +180,7 @@ public final class Data implements Runnable {
                                         .path("/offers/*", new Offers())
                                         .path("/programs/*", new Offers.Programs())
                                         .path("/courses/*", new Offers.Courses())
+                                        .path("/documents/*", new Documents())
                                         .path("/persons/*", new Persons())
                                         .path("/events/*", new Events())
                                         .path("/concepts/*", new Concepts())

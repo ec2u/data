@@ -1,0 +1,32 @@
+@prefix ec2u:	</terms/> .
+@prefix void:	<http://rdfs.org/ns/void#> .
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+
+</documents/> a ec2u:Dataset ;
+	dct:title "EC2U Documents"@en  ;
+	dct:alternative "EC2U Official Documents"@en ;
+	dct:description "Identifying and access information about official documents published by Alliance partners."@en ;
+	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	dct:available "2023-07-15"^^xsd:date ;
+	void:rootResource ec2u:Document .
+
+</concepts/document-types> a skos:ConceptScheme ;
+	dct:title "EC2U Document Types"@en .
+
+</concepts/document-topics> a skos:ConceptScheme ;
+	dct:title "EC2U Document Topics"@en .
+
+</concepts/document-audiences> a skos:ConceptScheme ;
+	dct:title "EC2U Document Audiences"@en .
+
+
+########################################################################################################################
+
+ec2u:Document a owl:Class ;
+	rdfs:subClassOf ec2u:Resource .
+
+ec2u:Publisher a owl:Class ;
+	rdfs:subClassOf org:Organization .
