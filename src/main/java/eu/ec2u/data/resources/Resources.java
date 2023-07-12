@@ -46,7 +46,6 @@ import static com.metreeca.rdf.codecs.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
@@ -112,10 +111,14 @@ public final class Resources extends Delegator {
     public static Shape Publisher() {
         return and(Reference(),
 
-                field(DCTERMS.COVERAGE, optional(), datatype(IRIType))
+                field(DCTERMS.COVERAGE, optional(), datatype(IRIType)),
+
+                field(SKOS.PREF_LABEL, multilingual()),
+                field(FOAF.HOMEPAGE, optional(), datatype(IRIType))
 
         );
     }
+
 
     public static Shape multilingual() {
         return localized(Languages);

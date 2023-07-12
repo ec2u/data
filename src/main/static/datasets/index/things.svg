@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
-        viewBox="116 -129 443 316" width="443" height="316">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="116 -129 443 316" width="443" height="316">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -27,7 +27,7 @@
             </g>
         </marker>
     </defs>
-    <g id="things" stroke-opacity="1" fill="none" stroke-dasharray="none" stroke="none" fill-opacity="1">
+    <g id="things" stroke-dasharray="none" fill-opacity="1" fill="none" stroke="none" stroke-opacity="1">
         <title>things</title>
         <rect fill="white" x="116" y="-129" width="443" height="316"/>
         <g id="things_Layer_1">
@@ -106,34 +106,37 @@
                     <rect x="204.96874" y="-65.36886" width="71.337" height="18" fill="white"/>
                     <rect x="204.96874" y="-65.36886" width="71.337" height="18" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_83">
+                    <rect x="204.96874" y="-83.36886" width="71.337" height="18" fill="white"/>
+                    <rect x="204.96874" y="-83.36886" width="71.337" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_82">
+                    <a xl:href="concepts.svg">
+                        <rect x="204.96874" y="-100.62992" width="71.337" height="17.261063" fill="white"/>
+                        <rect x="204.96874" y="-100.62992" width="71.337" height="17.261063" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(212.98905 -97.49939)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                skos:Concept
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_80">
+                <line x1="240.63724" y1="51.02362" x2="240.63724" y2="-40.51886" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_79">
+                <rect x="178.11478" y="-31.62378" width="125.04492" height="28" fill="white"/>
+                <text transform="translate(184.11478 -28.62378)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="20.511475" y="9">schema:about 0..*</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">/dct:subject = schema:about
+                    </tspan>
+                </text>
+            </g>
         </g>
-        <g id="Graphic_83">
-          <rect x="204.96874" y="-83.36886" width="71.337" height="18" fill="white"/>
-            <rect x="204.96874" y="-83.36886" width="71.337" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_82">
-          <a xl:href="concepts.svg">
-            <rect x="204.96874" y="-100.62992" width="71.337" height="17.261063" fill="white"/>
-              <rect x="204.96874" y="-100.62992" width="71.337" height="17.261063" stroke="black" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(212.98905 -97.49939)" fill="black">
-              <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">skos:Concept</tspan>
-            </text>
-          </a>
-        </g>
-      </g>
-      <g id="Line_80">
-          <line x1="240.63724" y1="51.02362" x2="240.63724" y2="-40.51886" marker-end="url(#StickArrow_Marker)"
-                  stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-      </g>
-      <g id="Graphic_79">
-        <rect x="178.11478" y="-31.62378" width="125.04492" height="28" fill="white"/>
-        <text transform="translate(184.11478 -28.62378)" fill="black">
-          <tspan font-family="Roboto" font-size="9" fill="black" x="20.511475" y="9">schema:about 0..*</tspan>
-          <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">/dct:subject = schema:about</tspan>
-        </text>
-      </g>
     </g>
-  </g>
 </svg>

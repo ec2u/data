@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-        viewBox="21 157 710 212" width="710" height="212">
+<svg xmlns="http://www.w3.org/2000/svg"
+        version="1.1" viewBox="21 157 710 212" width="710" height="212">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -27,7 +27,7 @@
             </g>
         </marker>
     </defs>
-    <g id="events-mmt" stroke-opacity="1" fill="none" stroke-dasharray="none" stroke="none" fill-opacity="1">
+    <g id="events-mmt" stroke-dasharray="none" fill-opacity="1" fill="none" stroke="none" stroke-opacity="1">
         <title>events-mmt</title>
         <rect fill="white" x="21" y="157" width="710" height="212"/>
         <g id="events-mmt_Layer_1">
@@ -67,76 +67,86 @@
                 </g>
             </g>
             <g id="Group_35">
-        <g id="Graphic_37">
-          <text transform="translate(376.84103 242.11024)" fill="black">
-              <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0" y="16">
-              </tspan>
-          </text>
-        </g>
-        <g id="Graphic_36">
-          <text transform="translate(361.74804 268.11024)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="7602807e-19" y="9">REST/JSON</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="7.839" y="20.261063">LDP API</tspan>
-          </text>
-        </g>
-      </g>
-      <g id="Line_34">
-          <path d="M 292.49864 251.53777 L 306.57307 251.53777 C 306.5901 251.53777 306.60717 251.5377 306.62422 251.53755 L 356.71546 251.11046 C 356.7325 251.1103 356.74956 251.11024 356.7666 251.11024 L 363.99103 251.11024"
-                  marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
-      </g>
-      <g id="Group_31">
-        <g id="Graphic_33">
-          <text transform="translate(542.9189 302.1808)" fill="black">
-              <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0" y="16">
-              </tspan>
-          </text>
-        </g>
-        <g id="Graphic_32">
-          <text transform="translate(534.6614 328.1808)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="7.3665" y="9">MMT</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">Backend</tspan>
-          </text>
-        </g>
-      </g>
-      <g id="Group_28">
-        <g id="Graphic_30">
-          <text transform="translate(687.1794 175.49606)" fill="black">
-              <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0" y="16">
-              </tspan>
-          </text>
-        </g>
-        <g id="Graphic_29">
-          <text transform="translate(681.3834 201.49606)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="27711167e-20" y="9">EC2U</tspan>
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="5.337" y="20.261063">KH</tspan>
-          </text>
-        </g>
-      </g>
-      <g id="Group_25">
-        <g id="Graphic_27">
-          <text transform="translate(65.27407 204.52556)" fill="black">
-              <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0" y="16">
-              </tspan>
-          </text>
-        </g>
-        <g id="Graphic_26">
-          <text transform="translate(41.43307 231.11303)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="8.748" y="9">REST/JSON</tspan>
-              <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="34816594e-20" y="20.261063">Linked Event
-                  API
-              </tspan>
-          </text>
-        </g>
-      </g>
-      <g id="Group_22">
-        <g id="Graphic_24">
-          <text transform="translate(625.1804 302.38948)" fill="black">
-              <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0" y="16">
-              </tspan>
-          </text>
-        </g>
-        <g id="Graphic_23">
+                <g id="Graphic_37">
+                    <text transform="translate(376.84103 242.11024)" fill="black">
+                        <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0"
+                                y="16">
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_36">
+                    <text transform="translate(361.74804 268.11024)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="7602807e-19" y="9">REST/JSON
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="7.839" y="20.261063">LDP API
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_34">
+                <path d="M 292.49864 251.53777 L 306.57307 251.53777 C 306.5901 251.53777 306.60717 251.5377 306.62422 251.53755 L 356.71546 251.11046 C 356.7325 251.1103 356.74956 251.11024 356.7666 251.11024 L 363.99103 251.11024"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_31">
+                <g id="Graphic_33">
+                    <text transform="translate(542.9189 302.1808)" fill="black">
+                        <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0"
+                                y="16">
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_32">
+                    <text transform="translate(534.6614 328.1808)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="7.3665" y="9">MMT</tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="20.261063">Backend
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_28">
+                <g id="Graphic_30">
+                    <text transform="translate(687.1794 175.49606)" fill="black">
+                        <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0"
+                                y="16">
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_29">
+                    <text transform="translate(681.3834 201.49606)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="27711167e-20" y="9">EC2U
+                        </tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="5.337" y="20.261063">KH
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_25">
+                <g id="Graphic_27">
+                    <text transform="translate(65.27407 204.52556)" fill="black">
+                        <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0"
+                                y="16">
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_26">
+                    <text transform="translate(41.43307 231.11303)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="8.748" y="9">REST/JSON</tspan>
+                        <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="34816594e-20" y="20.261063">
+                            Linked Event API
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_22">
+                <g id="Graphic_24">
+                    <text transform="translate(625.1804 302.38948)" fill="black">
+                        <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0"
+                                y="16">
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_23">
           <text transform="translate(622.5074 328.38948)" fill="black">
               <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="1.251" y="9">Local</tspan>
             <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="7.839" y="20.261063">PI</tspan>
