@@ -55,6 +55,35 @@ cron:
     schedule: every day 00:00
 
 
+  - description: "documents › coimbra - nightly crawling"
+    url: /cron/documents/coimbra
+    schedule: every day 00:00
+
+  - description: "documents › jena - nightly crawling"
+    url: /cron/documents/jena
+    schedule: every day 00:00
+
+  - description: "documents › iasi - nightly crawling"
+    url: /cron/documents/iasi
+    schedule: every day 00:00
+
+  - description: "documents › pavia - nightly crawling"
+    url: /cron/documents/pavia
+    schedule: every day 00:00
+
+  - description: "documents › poitiers - nightly crawling"
+    url: /cron/documents/poitiers
+    schedule: every day 00:00
+
+  - description: "documents › salamanca - nightly crawling"
+    url: /cron/documents/salamanca
+    schedule: every day 00:00
+
+  - description: "documents › turku - nightly crawling"
+    url: /cron/documents/turku
+    schedule: every day 00:00
+
+
   - description: "events › coimbra › university - nightly crawling"
     url: /cron/events/coimbra/university
     schedule: every day 00:00

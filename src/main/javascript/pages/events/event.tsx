@@ -21,6 +21,7 @@ import { DataInfo } from "@ec2u/data/tiles/info";
 import { DataPage } from "@ec2u/data/tiles/page";
 import { DataPane } from "@ec2u/data/tiles/pane";
 import { immutable } from "@metreeca/core";
+import { toIRIString } from "@metreeca/core/_iri";
 import { multiple, optional, string } from "@metreeca/core/value";
 import { useEntry } from "@metreeca/view/nests/graph";
 import { useRoute } from "@metreeca/view/nests/router";
@@ -194,7 +195,6 @@ function DataEventInfo({
 
         }}</DataInfo>
 
-
         <DataInfo>{{
 
             "Entry": isAccessibleForFree === true ? "Free"
@@ -215,20 +215,12 @@ function DataEventInfo({
                     : <span key={id}>{string(label)}</span>
                 ),
 
-            "Info": url && url.map(item => {
-
-                const url=new URL(item);
-
-                const host=url.host;
-                const lang=url.pathname.match(/\b[a-z]{2}\b/i);
-
-                return <a key={item} href={item}>{lang ? `${host} (${lang[0].toLowerCase()})` : host}</a>;
-
-            })
+            "Info": url && url.map(item => <a key={item} href={item}>{toIRIString(item)}</a>)
 
         }}</DataInfo>
 
     </>;
+
 }
 
 function DataEventBody({

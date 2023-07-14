@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { EventsIcon } from "@ec2u/data/pages/events/events";
-import { Units } from "@ec2u/data/pages/units/units";
+import { Units, UnitsIcon } from "@ec2u/data/pages/units/units";
 import { DataBack } from "@ec2u/data/tiles/back";
 import { DataCard } from "@ec2u/data/tiles/card";
 import { DataInfo } from "@ec2u/data/tiles/info";
@@ -36,195 +35,195 @@ import remarkGfm from "remark-gfm";
 
 export const Unit=immutable({
 
-    id: "/units/{code}",
+	id: "/units/{code}",
 
-    label: { "en": "Unit" },
-    comment: { "en": "" },
+	label: { "en": "Unit" },
+	comment: { "en": "" },
 
-    university: {
-        id: "",
-        label: { "en": "" }
-    },
+	university: {
+		id: "",
+		label: { "en": "" }
+	},
 
-    subject: multiple({
-        id: "",
-        label: { "en": "" }
-    }),
+	subject: multiple({
+		id: "",
+		label: { "en": "" }
+	}),
 
-    homepage: multiple(""),
+	homepage: multiple(""),
 
-    prefLabel: { "en": "" },
-    altLabel: optional({ "en": "" }),
+	prefLabel: { "en": "" },
+	altLabel: optional({ "en": "" }),
 
-    classification: optional({
-        id: "",
-        label: { "en": "" }
-    }),
+	classification: optional({
+		id: "",
+		label: { "en": "" }
+	}),
 
-    head: multiple({
-        id: "",
-        label: { "en": "" }
-    }),
+	head: multiple({
+		id: "",
+		label: { "en": "" }
+	}),
 
-    unitOf: repeatable({
-        id: "",
-        label: { "en": "" }
-    }),
+	unitOf: repeatable({
+		id: "",
+		label: { "en": "" }
+	}),
 
-    hasUnit: multiple({
-        id: "",
-        label: { "en": "" }
-    })
+	hasUnit: multiple({
+		id: "",
+		label: { "en": "" }
+	})
 
 });
 
 
 export function DataUnit() {
 
-    const [route, setRoute]=useRoute();
+	const [route, setRoute]=useRoute();
 
-    const entry=useEntry(route, Unit);
-
-
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+	const entry=useEntry(route, Unit);
 
 
-    return <DataPage item={entry({
-        value: ({ altLabel, prefLabel }) =>
-            altLabel ? `${string(altLabel)} - ${string(prefLabel)}` : string(prefLabel)
-    })}
+	useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
 
-        menu={entry({ fetch: <NodeSpin/> })}
 
-        pane={<DataPane
+	return <DataPage item={entry({
+		value: ({ altLabel, prefLabel }) =>
+			altLabel ? `${string(altLabel)} - ${string(prefLabel)}` : string(prefLabel)
+	})}
 
-            header={<DataBack>{Units}</DataBack>}
+		menu={entry({ fetch: <NodeSpin/> })}
 
-        >{entry({
+		pane={<DataPane
 
-            value: event => <DataEventInfo>{event}</DataEventInfo>
+			header={<DataBack>{Units}</DataBack>}
 
-        })}</DataPane>}
+		>{entry({
 
-    >{entry({
+			value: unit => <DataUnitInfo>{unit}</DataUnitInfo>
 
-        fetch: <NodeHint>{EventsIcon}</NodeHint>,
+		})}</DataPane>}
 
-        value: event => <DataEventBody>{event}</DataEventBody>,
+	>{entry({
 
-        error: error => <span>{error.status}</span> // !!! report
+		fetch: <NodeHint>{UnitsIcon}</NodeHint>,
 
-    })}</DataPage>;
+		value: value => <DataUnitBody>{value}</DataUnitBody>,
+
+		error: error => <span>{error.status}</span> // !!! report
+
+	})}</DataPage>;
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function DataEventInfo({
+function DataUnitInfo({
 
-    children: {
+	children: {
 
-        university,
+		university,
 
-        subject,
+		subject,
 
-        label,
-        altLabel,
+		label,
+		altLabel,
 
-        homepage,
+		homepage,
 
-        classification,
-        head,
+		classification,
+		head,
 
-        unitOf
+		unitOf
 
-    }
+	}
 
 }: {
 
-    children: typeof Unit
+	children: typeof Unit
 
 }) {
 
-    return <>
+	return <>
 
-        <DataInfo>{{
+		<DataInfo>{{
 
-            "University": university && <NodeLink>{university}</NodeLink>,
+			"University": university && <NodeLink>{university}</NodeLink>,
 
-            "Parent": unitOf && unitOf.some(unit => !university || unit.id !== university.id) && <ul>{unitOf
-                .filter(unit => !university || unit.id !== university.id)
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
-            }</ul>,
+			"Parent": unitOf && unitOf.some(unit => !university || unit.id !== university.id) && <ul>{unitOf
+				.filter(unit => !university || unit.id !== university.id)
+				.sort((x, y) => string(x).localeCompare(string(y)))
+				.map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
+			}</ul>,
 
-            "Type": classification && <NodeLink>{classification}</NodeLink>
+			"Type": classification && <NodeLink>{classification}</NodeLink>
 
-        }}</DataInfo>
+		}}</DataInfo>
 
-        <DataInfo>{{
+		<DataInfo>{{
 
-            "Acronym": altLabel && <span>{string(altLabel)}</span>,
-            "Name": <span>{string(label)}</span>,
+			"Acronym": altLabel && <span>{string(altLabel)}</span>,
+			"Name": <span>{string(label)}</span>,
 
-            "Head": head?.length === 1 ? <span>{string(head[0])}</span> : head?.length && <ul>{[...head]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(head => <li key={head.id}>{string(head)}</li>)
-            }</ul>,
+			"Head": head?.length === 1 ? <span>{string(head[0])}</span> : head?.length && <ul>{[...head]
+				.sort((x, y) => string(x).localeCompare(string(y)))
+				.map(head => <li key={head.id}>{string(head)}</li>)
+			}</ul>,
 
-            "Topics": subject && subject.length && <ul>{[...subject]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(subject => <li key={subject.id}>
-                    <NodeLink search={[Units, { university, subject }]}>{subject}</NodeLink>
-                </li>)
-            }</ul>
+			"Topics": subject && subject.length && <ul>{[...subject]
+				.sort((x, y) => string(x).localeCompare(string(y)))
+				.map(subject => <li key={subject.id}>
+					<NodeLink search={[Units, { university, subject }]}>{subject}</NodeLink>
+				</li>)
+			}</ul>
 
-        }}</DataInfo>
+		}}</DataInfo>
 
-        <DataInfo>{{
+		<DataInfo>{{
 
-            "Info": homepage && homepage.length && homepage.map(url =>
-                <a key={url} href={url}>{new URL(url).host}</a>
-            )
+			"Info": homepage && homepage.length && homepage.map(url =>
+				<a key={url} href={url}>{new URL(url).host}</a>
+			)
 
-        }}</DataInfo>
+		}}</DataInfo>
 
-    </>;
+	</>;
 }
 
-function DataEventBody({
+function DataUnitBody({
 
-    children: {
+	children: {
 
-        comment,
+		comment,
 
-        hasUnit
+		hasUnit
 
-    }
+	}
 
 }: {
 
-    children: typeof Unit
+	children: typeof Unit
 
 }) {
 
-    return <DataCard>
+	return <DataCard>
 
-        <ReactMarkdown
+		<ReactMarkdown
 
-            remarkPlugins={[remarkGfm]}
+			remarkPlugins={[remarkGfm]}
 
-        >{
+		>{
 
-            string(comment)
+			string(comment)
 
-        }</ReactMarkdown>
+		}</ReactMarkdown>
 
 
-        {hasUnit && <>
+		{hasUnit && <>
 
-            {comment && <hr/>}
+			{comment && <hr/>}
 
             <dl>
 
@@ -232,14 +231,14 @@ function DataEventBody({
 
                 <dt>
                     <ul>{hasUnit.map(unit =>
-                        <li key={unit.id}><NodeLink>{unit}</NodeLink></li>
-                    )}</ul>
+						<li key={unit.id}><NodeLink>{unit}</NodeLink></li>
+					)}</ul>
                 </dt>
 
             </dl>
 
         </>}
 
-    </DataCard>;
+	</DataCard>;
 
 }

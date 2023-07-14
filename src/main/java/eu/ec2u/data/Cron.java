@@ -18,11 +18,14 @@ package eu.ec2u.data;
 
 import com.metreeca.core.services.Logger;
 import com.metreeca.http.Handler;
-import com.metreeca.http.handlers.*;
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.douments.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offers.*;
 import eu.ec2u.data.units.*;
@@ -61,6 +64,14 @@ public final class Cron extends Delegator {
                 .path("/offers/pavia", execute(new OffersPavia()))
                 .path("/offers/poitiers", execute(new OffersPoitiers()))
                 .path("/offers/salamanca", execute(new OffersSalamanca()))
+
+                .path("/documents/coimbra", execute(new DocumentsCoimbra()))
+                .path("/documents/iasi", execute(new DocumentsIasi()))
+                .path("/documents/jena", execute(new DocumentsJena()))
+                .path("/documents/pavia", execute(new DocumentsPavia()))
+                .path("/documents/poitiers", execute(new DocumentsPoitiers()))
+                .path("/documents/salamanca", execute(new DocumentsSalamanca()))
+                .path("/documents/turku", execute(new DocumentsTurku()))
 
                 .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
                 .path("/events/coimbra/city", execute(new EventsCoimbraCity()))
