@@ -17,4 +17,4 @@
 /**
  * EC2U official documents.
  */
-package eu.ec2u.data.douments;
+package eu.ec2u.data.documents;

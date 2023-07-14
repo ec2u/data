@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.douments;
+package eu.ec2u.data.documents;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Vault;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.douments.Documents.CSVLoader;
+import eu.ec2u.data.documents.Documents.CSVLoader;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
@@ -30,21 +30,20 @@ import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.link.Values.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Coimbra;
-import static eu.ec2u.data.EC2U.University.Iasi;
-import static eu.ec2u.data.douments.Documents.Document;
+import static eu.ec2u.data.EC2U.University.Poitiers;
+import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 
-public final class DocumentsIasi implements Runnable {
+public final class DocumentsPoitiers implements Runnable {
 
-    private static final IRI Context=iri(Documents.Context, "/iasi");
+    private static final IRI Context=iri(Documents.Context, "/poitiers");
 
-    private static final String DataUrl="documents-iasi-url"; // vault label
+    private static final String DataUrl="documents-poitiers-url"; // vault label
 
 
     public static void main(final String... args) {
-        exec(() -> new DocumentsIasi().run());
+        exec(() -> new DocumentsPoitiers().run());
     }
 
 
@@ -63,7 +62,9 @@ public final class DocumentsIasi implements Runnable {
 
         Xtream.of(url)
 
-                .flatMap(new CSVLoader(Iasi))
+                .flatMap(new CSVLoader(Poitiers))
+
+                // .forEach(frame -> System.out.println(Values.format(frame)));
 
                 .pipe(documents -> validate(Document(), Set.of(Document), documents))
 

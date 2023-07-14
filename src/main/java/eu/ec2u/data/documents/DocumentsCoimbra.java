@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.douments;
+package eu.ec2u.data.documents;
 
 import com.metreeca.core.Xtream;
 import com.metreeca.core.services.Vault;
 import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.douments.Documents.CSVLoader;
+import eu.ec2u.data.documents.Documents.CSVLoader;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
@@ -30,20 +30,20 @@ import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.link.Values.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Turku;
-import static eu.ec2u.data.douments.Documents.Document;
+import static eu.ec2u.data.EC2U.University.Coimbra;
+import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 
-public final class DocumentsTurku implements Runnable {
+public final class DocumentsCoimbra implements Runnable {
 
-    private static final IRI Context=iri(Documents.Context, "/turku");
+    private static final IRI Context=iri(Documents.Context, "/coimbra");
 
-    private static final String DataUrl="documents-turku-url"; // vault label
+    private static final String DataUrl="documents-coimbra-url"; // vault label
 
 
     public static void main(final String... args) {
-        exec(() -> new DocumentsTurku().run());
+        exec(() -> new DocumentsCoimbra().run());
     }
 
 
@@ -62,7 +62,7 @@ public final class DocumentsTurku implements Runnable {
 
         Xtream.of(url)
 
-                .flatMap(new CSVLoader(Turku))
+                .flatMap(new CSVLoader(Coimbra))
 
                 .pipe(documents -> validate(Document(), Set.of(Document), documents))
 

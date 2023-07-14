@@ -33,7 +33,7 @@ import com.metreeca.rdf4j.services.GraphEngine;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.douments.Documents;
+import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.offers.Offers;
 import eu.ec2u.data.persons.Persons;

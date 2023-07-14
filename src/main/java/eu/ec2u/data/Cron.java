@@ -24,7 +24,7 @@ import com.metreeca.http.handlers.Worker;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.douments.*;
+import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offers.*;
 import eu.ec2u.data.units.*;

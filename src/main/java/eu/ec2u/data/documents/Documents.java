@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.douments;
+package eu.ec2u.data.documents;
 
 import com.metreeca.core.toolkits.Strings;
 import com.metreeca.http.handlers.Delegator;
