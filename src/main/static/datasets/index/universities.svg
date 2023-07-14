@@ -154,32 +154,34 @@
                 <text transform="translate(109.12645 85.63236)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</tspan>
                 </text>
-      </g>
-      <g id="Group_126">
-        <g id="Graphic_129">
-            <rect x="-43.93701" y="342.298" width="115.24072" height="18" fill="white"/>
-            <rect x="-43.93701" y="342.298" width="115.24072" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-          <g id="Graphic_128">
-              <rect x="-43.93701" y="325.298" width="115.24072" height="17" fill="white"/>
-              <rect x="-43.93701" y="325.298" width="115.24072" height="17" stroke="black" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width=".25"/>
-              <text transform="translate(-37.93701 328.298)" fill="black">
-                  <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">void:entities :BigInteger [1]
-                  </tspan>
-              </text>
-          </g>
-          <g id="Graphic_127">
-              <rect x="-43.93701" y="308.298" width="115.24072" height="17" fill="white"/>
-              <rect x="-43.93701" y="308.298" width="115.24072" height="17" stroke="black" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width=".25"/>
-              <text transform="translate(-11.765377 311.298)" fill="black">
-                  <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">void:Dataset
-                  </tspan>
-              </text>
-          </g>
-      </g>
+            </g>
+            <g id="Group_126">
+                <g id="Graphic_129">
+                    <rect x="-43.93701" y="342.298" width="115.24072" height="18" fill="white"/>
+                    <rect x="-43.93701" y="342.298" width="115.24072" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_128">
+                    <rect x="-43.93701" y="325.298" width="115.24072" height="17" fill="white"/>
+                    <rect x="-43.93701" y="325.298" width="115.24072" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-37.93701 328.298)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">void:entities :BigInteger
+                            [1]
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_127">
+                    <rect x="-43.93701" y="308.298" width="115.24072" height="17" fill="white"/>
+                    <rect x="-43.93701" y="308.298" width="115.24072" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-11.765377 311.298)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            void:Dataset
+                        </tspan>
+                    </text>
+                </g>
+            </g>
             <g id="Line_125">
                 <path d="M 12.823992 418.11024 L 12.823992 389.01024 L 13.683353 389.01024 L 13.683353 367.148"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"

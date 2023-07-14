@@ -173,22 +173,22 @@
                         </text>
                     </a>
                 </g>
-      </g>
-      <g id="Line_24">
-          <path d="M 485.6008 401.10237 L 485.6008 365.10237 L 293.3238 365.10237 L 293.3238 338.21514"
-                  marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
-      </g>
-      <g id="Line_25">
-          <path d="M 574.3658 401.10237 L 574.3658 365.10237 L 293.3238 365.10237 L 293.3238 338.21514"
-                  marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
-      </g>
-      <g id="Group_26">
-        <g id="Graphic_29">
-          <rect x="639.465" y="436.10237" width="56.77588" height="18" fill="white"/>
-            <rect x="639.465" y="436.10237" width="56.77588" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_24">
+                <path d="M 485.6008 401.10237 L 485.6008 365.10237 L 293.3238 365.10237 L 293.3238 338.21514"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_25">
+                <path d="M 574.3658 401.10237 L 574.3658 365.10237 L 293.3238 365.10237 L 293.3238 338.21514"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_26">
+                <g id="Graphic_29">
+                    <rect x="639.465" y="436.10237" width="56.77588" height="18" fill="white"/>
+                    <rect x="639.465" y="436.10237" width="56.77588" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_28">
           <rect x="639.465" y="418.10237" width="56.77588" height="18" fill="white"/>
@@ -239,61 +239,62 @@
           </text>
         </g>
       </g>
-      <g id="Group_39">
-          <g id="Graphic_42">
-              <rect x="460.0847" y="268.13992" width="72.68848" height="18" fill="white"/>
-              <rect x="460.0847" y="268.13992" width="72.68848" height="18" stroke="black" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width=".25"/>
-          </g>
-          <g id="Graphic_41">
-              <rect x="460.0847" y="250.13992" width="72.68848" height="18" fill="white"/>
-              <rect x="460.0847" y="250.13992" width="72.68848" height="18" stroke="black" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width=".25"/>
-          </g>
-          <g id="Graphic_40">
-              <rect x="460.0847" y="233.13992" width="72.68848" height="17" fill="white"/>
-              <rect x="460.0847" y="233.13992" width="72.68848" height="17" stroke="black" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width=".25"/>
-              <text transform="translate(466.0847 236.13992)" fill="black">
-                  <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">ec2u:Publisher
-                  </tspan>
-              </text>
-          </g>
-      </g>
-      <g id="Line_43">
-          <path d="M 362.9808 258.46514 L 411.0808 258.46514 L 411.0808 259.6399 L 453.2347 259.6399"
-                  marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
-      </g>
+            <g id="Group_39">
+                <g id="Graphic_42">
+                    <rect x="460.0847" y="268.13992" width="72.68848" height="18" fill="white"/>
+                    <rect x="460.0847" y="268.13992" width="72.68848" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_41">
+                    <rect x="460.0847" y="250.13992" width="72.68848" height="18" fill="white"/>
+                    <rect x="460.0847" y="250.13992" width="72.68848" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_40">
+                    <rect x="460.0847" y="233.13992" width="72.68848" height="17" fill="white"/>
+                    <rect x="460.0847" y="233.13992" width="72.68848" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(466.0847 236.13992)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Publisher
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_43">
+                <path d="M 362.9808 258.46514 L 411.0808 258.46514 L 411.0808 259.6399 L 453.2347 259.6399"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
             <g id="Graphic_44">
                 <rect x="371.2319" y="250.79598" width="79.69775" height="17" fill="white"/>
                 <text transform="translate(377.2319 253.79598)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:publisher 0..1</tspan>
                 </text>
             </g>
-      <g id="Line_45">
-          <path d="M 532.77316 259.63992 L 585.87316 259.63992 L 585.87316 258.8612 L 632.615 258.8612"
-                  marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
-      </g>
+            <g id="Line_45">
+                <path d="M 532.77316 259.63992 L 585.87316 259.63992 L 585.87316 258.8612 L 632.615 258.8612"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
             <g id="Graphic_46">
                 <rect x="548.3318" y="250.3612" width="79.42969" height="17" fill="white"/>
                 <text transform="translate(554.3318 253.3612)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:coverage 0..1</tspan>
                 </text>
             </g>
-      <g id="Group_47">
-        <g id="Graphic_50">
-          <rect x="257.6553" y="90.53665" width="71.337" height="18" fill="white"/>
-            <rect x="257.6553" y="90.53665" width="71.337" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_49">
-          <rect x="257.6553" y="72.53665" width="71.337" height="18" fill="white"/>
-            <rect x="257.6553" y="72.53665" width="71.337" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_48">
+            <g id="Group_47">
+                <g id="Graphic_50">
+                    <rect x="257.6553" y="90.53665" width="71.337" height="18" fill="white"/>
+                    <rect x="257.6553" y="90.53665" width="71.337" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_49">
+                    <rect x="257.6553" y="72.53665" width="71.337" height="18" fill="white"/>
+                    <rect x="257.6553" y="72.53665" width="71.337" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_48">
           <a xl:href="concepts.svg">
             <rect x="257.6553" y="55.27559" width="71.337" height="17.261063" fill="white"/>
               <rect x="257.6553" y="55.27559" width="71.337" height="17.261063" stroke="black" stroke-linecap="round"

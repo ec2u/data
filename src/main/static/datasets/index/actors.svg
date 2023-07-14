@@ -38,21 +38,21 @@
                 </text>
             </g>
             <g id="Group_140">
-        <g id="Graphic_143">
-          <rect x="144.56693" y="125.70866" width="76.179" height="18" fill="white"/>
-            <rect x="144.56693" y="125.70866" width="76.179" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_142">
-          <rect x="144.56693" y="107.70866" width="76.179" height="18" fill="white"/>
-            <rect x="144.56693" y="107.70866" width="76.179" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_141">
-          <a xl:href="resources.svg">
+                <g id="Graphic_143">
+                    <rect x="144.56693" y="125.70866" width="76.179" height="18" fill="white"/>
+                    <rect x="144.56693" y="125.70866" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_142">
+                    <rect x="144.56693" y="107.70866" width="76.179" height="18" fill="white"/>
+                    <rect x="144.56693" y="107.70866" width="76.179" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_141">
+                    <a xl:href="resources.svg">
             <rect x="144.56693" y="90.70866" width="76.179" height="17" fill="white"/>
-              <rect x="144.56693" y="90.70866" width="76.179" height="17" stroke="black" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width=".25"/>
+                        <rect x="144.56693" y="90.70866" width="76.179" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             <text transform="translate(150.56693 93.70866)" fill="black">
                 <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="1.934227" y="9">
                     ec2u:Resource

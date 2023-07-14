@@ -167,18 +167,19 @@
                     <rect x="643.15765" y="442.41156" width="106.167" height="17.630531" fill="white"/>
                     <rect x="643.15765" y="442.41156" width="106.167" height="17.630531" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_151">
-          <rect x="643.15765" y="424.78103" width="106.167" height="17.630531" fill="white"/>
-            <rect x="643.15765" y="424.78103" width="106.167" height="17.630531" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(652.21234 428.0963)" fill="black">
-              <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">skos:ConceptScheme
-              </tspan>
-          </text>
-        </g>
-      </g>
-      <g id="Group_146">
+                </g>
+                <g id="Graphic_151">
+                    <rect x="643.15765" y="424.78103" width="106.167" height="17.630531" fill="white"/>
+                    <rect x="643.15765" y="424.78103" width="106.167" height="17.630531" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(652.21234 428.0963)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            skos:ConceptScheme
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_146">
         <g id="Graphic_149">
           <rect x="471.80166" y="459.80315" width="106.509" height="18" fill="white"/>
             <rect x="471.80166" y="459.80315" width="106.509" height="18" stroke="black" stroke-linecap="round"

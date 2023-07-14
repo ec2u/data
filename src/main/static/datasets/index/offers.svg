@@ -206,21 +206,22 @@
                 <line x1="-424.4664" y1="957.2441" x2="-363.10897" y2="957.2441"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
-      </g>
-      <g id="Line_374">
-          <line x1="-457.5564" y1="755.8472" x2="-457.5564" y2="578.15944" marker-end="url(#UMLInheritance_Marker)"
-                  stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-      </g>
-      <g id="Line_373">
-          <path d="M -157.48007 541.5224 L -115.38007 541.5224 L -115.38007 698.562 L 130.06119 698.562"
-                  marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
-      </g>
-      <g id="Group_369">
-        <g id="Graphic_372">
-          <rect x="34.05483" y="626.0236" width="67.779785" height="18" fill="white"/>
-            <rect x="34.05483" y="626.0236" width="67.779785" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_374">
+                <line x1="-457.5564" y1="755.8472" x2="-457.5564" y2="578.15944"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_373">
+                <path d="M -157.48007 541.5224 L -115.38007 541.5224 L -115.38007 698.562 L 130.06119 698.562"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_369">
+                <g id="Graphic_372">
+                    <rect x="34.05483" y="626.0236" width="67.779785" height="18" fill="white"/>
+                    <rect x="34.05483" y="626.0236" width="67.779785" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
         </g>
         <g id="Graphic_371">
           <rect x="34.05483" y="608.0236" width="67.779785" height="18" fill="white"/>
@@ -237,14 +238,14 @@
             </text>
           </a>
         </g>
-      </g>
-      <g id="Group_367">
-        <g id="Graphic_368">
-          <text transform="translate(66.6712 419.1734)" fill="black">
-              <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
-          </text>
-        </g>
-      </g>
+            </g>
+            <g id="Group_367">
+                <g id="Graphic_368">
+                    <text transform="translate(66.6712 419.1734)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
+                    </text>
+                </g>
+            </g>
             <g id="Graphic_366">
                 <a xl:href="https://schema.org/">
                     <text transform="translate(66.6712 445.6955)" fill="black">
@@ -650,20 +651,22 @@
                     <rect x="-484.91603" y="532.40944" width="54.71924" height="18" fill="white"/>
                     <rect x="-484.91603" y="532.40944" width="54.71924" height="18" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_435">
-          <rect x="-484.91603" y="515.40944" width="54.71924" height="17" fill="white"/>
-            <rect x="-484.91603" y="515.40944" width="54.71924" height="17" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(-478.91603 518.40944)" fill="black">
-            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">ec2u:Offer</tspan>
-          </text>
-        </g>
-      </g>
-      <g id="Line_438">
-          <path d="M -430.1968 541.90944 L -419.1968 541.90944 L -386.08407 541.52234 L -384.83407 541.52234"
-                  marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
+                </g>
+                <g id="Graphic_435">
+                    <rect x="-484.91603" y="515.40944" width="54.71924" height="17" fill="white"/>
+                    <rect x="-484.91603" y="515.40944" width="54.71924" height="17" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-478.91603 518.40944)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Offer
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_438">
+                <path d="M -430.1968 541.90944 L -419.1968 541.90944 L -386.08407 541.52234 L -384.83407 541.52234"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Line_439">
           <line x1="-457.5564" y1="515.40944" x2="-457.5564" y2="481.18444" marker-end="url(#UMLInheritance_Marker)"

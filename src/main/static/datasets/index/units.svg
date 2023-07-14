@@ -164,18 +164,20 @@
                     <rect x="414.2008" y="141.64173" width="75.11865" height="18" fill="white"/>
                     <rect x="414.2008" y="141.64173" width="75.11865" height="18" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_304">
-          <rect x="414.2008" y="123.64173" width="75.11865" height="18" fill="white"/>
-            <rect x="414.2008" y="123.64173" width="75.11865" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_303">
-          <rect x="414.2008" y="106.64173" width="75.11865" height="17" fill="white"/>
-            <rect x="414.2008" y="106.64173" width="75.11865" height="17" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(420.2008 109.64173)" fill="black">
-            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">ec2u:University</tspan>
+                </g>
+                <g id="Graphic_304">
+                    <rect x="414.2008" y="123.64173" width="75.11865" height="18" fill="white"/>
+                    <rect x="414.2008" y="123.64173" width="75.11865" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                </g>
+                <g id="Graphic_303">
+                    <rect x="414.2008" y="106.64173" width="75.11865" height="17" fill="white"/>
+                    <rect x="414.2008" y="106.64173" width="75.11865" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(420.2008 109.64173)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:University
+                        </tspan>
           </text>
         </g>
       </g>

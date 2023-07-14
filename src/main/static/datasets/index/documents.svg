@@ -17,7 +17,7 @@
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg"
-        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-92 20 728 593" width="728" height="593">
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-92 20 885 593" width="885" height="593">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -36,7 +36,7 @@
     </defs>
     <g id="documents" stroke-dasharray="none" fill-opacity="1" fill="none" stroke="none" stroke-opacity="1">
         <title>documents</title>
-        <rect fill="white" x="-92" y="20" width="728" height="593"/>
+        <rect fill="white" x="-92" y="20" width="885" height="593"/>
         <g id="documents_Layer_1">
             <title>Layer 1</title>
             <g id="Group_2">
@@ -134,28 +134,28 @@
             </g>
             <g id="Group_120">
                 <g id="Graphic_123">
-                    <rect x="361.79506" y="270.66735" width="100.80469" height="18" fill="white"/>
-                    <rect x="361.79506" y="270.66735" width="100.80469" height="18" stroke="black"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <rect x="361.79506" y="270.66735" width="99.97852" height="18" fill="white"/>
+                    <rect x="361.79506" y="270.66735" width="99.97852" height="18" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
                 </g>
                 <g id="Graphic_122">
-                    <rect x="361.79506" y="231.66735" width="100.80469" height="39" fill="white"/>
-                    <rect x="361.79506" y="231.66735" width="100.80469" height="39" stroke="black"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <rect x="361.79506" y="231.66735" width="99.97852" height="39" fill="white"/>
+                    <rect x="361.79506" y="231.66735" width="99.97852" height="39" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
                     <text transform="translate(367.79506 234.66735)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">foaf:title : String [0..1]
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">foaf:title : string [0..1]
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">foaf:givenname: String
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">foaf:givenname: string
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">foaf:surname: String</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">foaf:surname: string</tspan>
                     </text>
                 </g>
                 <g id="Graphic_121">
                     <a xl:href="http://xmlns.com/foaf/spec/#term_Person">
-                        <rect x="361.79506" y="214.07717" width="100.80469" height="17.59018" fill="white"/>
-                        <rect x="361.79506" y="214.07717" width="100.80469" height="17.59018" stroke="black"
+                        <rect x="361.79506" y="214.07717" width="99.97852" height="17.59018" fill="white"/>
+                        <rect x="361.79506" y="214.07717" width="99.97852" height="17.59018" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(388.4889 217.37226)" fill="black">
+                        <text transform="translate(388.0758 217.37226)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 foaf:Person
                             </tspan>
@@ -332,24 +332,25 @@
             </g>
             <g id="Group_175">
                 <g id="Graphic_178">
-                    <rect x="512.52734" y="259.37226" width="73.01367" height="18" fill="white"/>
-                    <rect x="512.52734" y="259.37226" width="73.01367" height="18" stroke="black" stroke-linecap="round"
+                    <rect x="512.52734" y="259.37226" width="97.9043" height="18" fill="white"/>
+                    <rect x="512.52734" y="259.37226" width="97.9043" height="18" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
                 </g>
                 <g id="Graphic_177">
-                    <rect x="512.52734" y="242.37226" width="73.01367" height="17" fill="white"/>
-                    <rect x="512.52734" y="242.37226" width="73.01367" height="17" stroke="black" stroke-linecap="round"
+                    <rect x="512.52734" y="242.37226" width="97.9043" height="17" fill="white"/>
+                    <rect x="512.52734" y="242.37226" width="97.9043" height="17" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
                     <text transform="translate(518.52734 245.37226)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">foaf:mbox [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">foaf:mbox string [0..1]
+                        </tspan>
                     </text>
                 </g>
                 <g id="Graphic_176">
                     <a xl:href="http://xmlns.com/foaf/0.1/#term_Agent">
-                        <rect x="512.52734" y="225.37226" width="73.01367" height="17" fill="white"/>
-                        <rect x="512.52734" y="225.37226" width="73.01367" height="17" stroke="black"
+                        <rect x="512.52734" y="225.37226" width="97.9043" height="17" fill="white"/>
+                        <rect x="512.52734" y="225.37226" width="97.9043" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(527.668 228.37226)" fill="black">
+                        <text transform="translate(540.1133 228.37226)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 foaf:Agent
                             </tspan>
@@ -358,7 +359,7 @@
                 </g>
             </g>
             <g id="Line_174">
-                <line x1="462.59975" y1="251.37226" x2="502.77734" y2="251.37224"
+                <line x1="461.7736" y1="251.37226" x2="502.77734" y2="251.37224"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>

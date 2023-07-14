@@ -141,18 +141,20 @@
             </g>
             <g id="Group_129">
                 <g id="Graphic_132">
-          <rect x="292.54624" y="219.43912" width="120.2461" height="18" fill="white"/>
+                    <rect x="292.54624" y="219.43912" width="120.2461" height="18" fill="white"/>
                     <rect x="292.54624" y="219.43912" width="120.2461" height="18" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_131">
-          <rect x="292.54624" y="180.43912" width="120.2461" height="39" fill="white"/>
-            <rect x="292.54624" y="180.43912" width="120.2461" height="39" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(298.54624 183.43912)" fill="black">
-            <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:license :URI</tspan>
-            <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">dct:rights :String</tspan>
-            <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">dct:accessRights :text [0..1]</tspan>
+                </g>
+                <g id="Graphic_131">
+                    <rect x="292.54624" y="180.43912" width="120.2461" height="39" fill="white"/>
+                    <rect x="292.54624" y="180.43912" width="120.2461" height="39" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(298.54624 183.43912)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:license :URI</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">dct:rights :String</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">dct:accessRights :text
+                            [0..1]
+                        </tspan>
           </text>
         </g>
         <g id="Graphic_130">

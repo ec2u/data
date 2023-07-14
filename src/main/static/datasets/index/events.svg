@@ -156,20 +156,20 @@
                         <rect x="415.76957" y="77.31496" width="108.32812" height="17" fill="white"/>
                         <rect x="415.76957" y="77.31496" width="108.32812" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(421.76957 80.31496)" fill="black">
-                <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
-                    schema:VirtualLocation
-                </tspan>
-            </text>
-          </a>
-        </g>
-      </g>
-      <g id="Line_160">
-          <path d="M 473.0497 211.6257 L 473.0497 266.7257 L 472.34057 266.7257 L 472.34057 315.45188"
-                  marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
-      </g>
-      <g id="Graphic_159">
+                        <text transform="translate(421.76957 80.31496)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                schema:VirtualLocation
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_160">
+                <path d="M 473.0497 211.6257 L 473.0497 266.7257 L 472.34057 266.7257 L 472.34057 315.45188"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_159">
         <rect x="423.19506" y="293.10662" width="98.29102" height="17" fill="white"/>
         <text transform="translate(429.19506 296.1066)" fill="black">
           <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:address [0..1]</tspan>
@@ -285,15 +285,15 @@
             <rect x="561.25985" y="383.03393" width="114.40576" height="18" stroke="black" stroke-linecap="round"
                     stroke-linejoin="round" stroke-width=".25"/>
         </g>
-        <g id="Graphic_140">
-          <rect x="561.25985" y="355.03393" width="114.40576" height="28" fill="white"/>
-            <rect x="561.25985" y="355.03393" width="114.40576" height="28" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(567.25985 358.03393)" fill="black">
-            <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:email : String</tspan>
-            <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:telephone : String</tspan>
-          </text>
-        </g>
+          <g id="Graphic_140">
+              <rect x="561.25985" y="355.03393" width="114.40576" height="28" fill="white"/>
+              <rect x="561.25985" y="355.03393" width="114.40576" height="28" stroke="black" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-width=".25"/>
+              <text transform="translate(567.25985 358.03393)" fill="black">
+                  <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:email : String</tspan>
+                  <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:telephone : String</tspan>
+              </text>
+          </g>
           <g id="Graphic_139">
               <a xl:href="https://schema.org/ContactPoint">
                   <rect x="561.25985" y="338.80188" width="114.40576" height="16.232056" fill="white"/>
