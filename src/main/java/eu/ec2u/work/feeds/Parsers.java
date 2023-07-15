@@ -16,13 +16,13 @@
 
 package eu.ec2u.work.feeds;
 
-import com.metreeca.core.toolkits.Strings;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.toolkits.Strings;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.EC2U.University;
-import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.agents.Persons;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
@@ -35,10 +35,10 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.core.toolkits.Lambdas.guarded;
-import static com.metreeca.core.toolkits.Strings.*;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.guarded;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.toolkits.Strings.*;
 
 import static java.lang.String.format;
 

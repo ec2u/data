@@ -21,39 +21,33 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
 import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.agents.Persons;
-import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.*;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Vault.vault;
-import static com.metreeca.http.toolkits.Strings.split;
 
 import static eu.ec2u.data.EC2U.University.Salamanca;
-import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.function.Predicate.not;
 
 public final class UnitsSalamancaData implements Runnable {
 
@@ -80,17 +74,17 @@ public final class UnitsSalamancaData implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(Instant.EPOCH)
-
-                .flatMap(this::units)
-                .optMap(this::unit)
-
-                .pipe(units -> validate(Unit(), Set.of(Unit), units))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                );
+        // Xtream.of(Instant.EPOCH)
+        //
+        //         .flatMap(this::units)
+        //         .optMap(this::unit)
+        //
+        //         .pipe(units -> validate(Unit(), Set.of(Unit), units))
+        //
+        //         .forEach(new Upload()
+        //                 .contexts(Context)
+        //                 .clear(true)
+        //         );
     }
 
 
@@ -126,73 +120,73 @@ public final class UnitsSalamancaData implements Runnable {
                 .flatMap(json -> json.paths("*"));
     }
 
-    private Optional<Frame> unit(final JSONPath json) {
-        return json.string("id").map(id -> {
-
-            final Optional<Literal> label=json.string("name")
-                    .filter(not(String::isEmpty))
-                    .map(name -> literal(name, Salamanca.Language));
-
-            final Optional<Frame> department=department(json);
-            final Optional<Frame> institute=institute(json);
-
-            return frame(EC2U.item(Units.Context, Salamanca, id))
-
-                    .values(RDF.TYPE, Unit)
-                    .value(Resources.university, Salamanca.Id)
-
-                    .value(DCTERMS.TITLE, label)
-                    .value(DCTERMS.DESCRIPTION, json.string("topics")
-                            .filter(not(String::isEmpty))
-                            .map(topics -> literal(topics, Salamanca.Language))
-                    )
-
-
-                    .frames(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
-                            .flatMap(v -> split(v, ','))
-                            .map(v -> frame(EC2U.item(BranchScheme, v))
-                                    .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
-
-                            )
-                    )
-
-                    .frames(DCTERMS.SUBJECT, json.string("RIS3").stream()
-                            .flatMap(v -> split(v, ','))
-                            .map(v -> frame(EC2U.item(RIS3Scheme, v))
-                                    .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
-
-                            )
-                    )
-
-                    .value(FOAF.HOMEPAGE, json.string("group_scientific_portal_url")
-                            .filter(not(String::isEmpty))
-                            .map(Values::iri)
-                    )
-
-                    .value(SKOS.PREF_LABEL, label)
-                    .value(SKOS.ALT_LABEL, json.string("acronym")
-                            .filter(not(String::isEmpty))
-                            .map(value -> literal(value, Salamanca.Language)))
-
-                    .value(ORG.CLASSIFICATION, UnitTypes.GroupRecognized)
-
-                    .frame(inverse(ORG.HEAD_OF), head(json))
-
-                    .frame(ORG.UNIT_OF, department.orElseGet(
-                            () -> frame(Salamanca.Id)
-                    ))
-
-                    .frame(ORG.UNIT_OF, department)
-                    .frame(ORG.UNIT_OF, institute)
-
-                    .frame(ORG.UNIT_OF, Optional.of(frame(Salamanca.Id))
-                            .filter(frame -> department.isEmpty() && institute.isEmpty())
-                    );
-
-        });
-    }
+    // private Optional<Frame> unit(final JSONPath json) {
+    //     return json.string("id").map(id -> {
+    //
+    //         final Optional<Literal> label=json.string("name")
+    //                 .filter(not(String::isEmpty))
+    //                 .map(name -> literal(name, Salamanca.Language));
+    //
+    //         final Optional<Frame> department=department(json);
+    //         final Optional<Frame> institute=institute(json);
+    //
+    //         return frame(EC2U.item(Units.Context, Salamanca, id))
+    //
+    //                 .values(RDF.TYPE, Unit)
+    //                 .value(Resources.university, Salamanca.Id)
+    //
+    //                 .value(DCTERMS.TITLE, label)
+    //                 .value(DCTERMS.DESCRIPTION, json.string("topics")
+    //                         .filter(not(String::isEmpty))
+    //                         .map(topics -> literal(topics, Salamanca.Language))
+    //                 )
+    //
+    //
+    //                 .frames(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
+    //                         .flatMap(v -> split(v, ','))
+    //                         .map(v -> frame(EC2U.item(BranchScheme, v))
+    //                                 .value(RDF.TYPE, SKOS.CONCEPT)
+    //                                 .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
+    //
+    //                         )
+    //                 )
+    //
+    //                 .frames(DCTERMS.SUBJECT, json.string("RIS3").stream()
+    //                         .flatMap(v -> split(v, ','))
+    //                         .map(v -> frame(EC2U.item(RIS3Scheme, v))
+    //                                 .value(RDF.TYPE, SKOS.CONCEPT)
+    //                                 .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
+    //
+    //                         )
+    //                 )
+    //
+    //                 .value(FOAF.HOMEPAGE, json.string("group_scientific_portal_url")
+    //                         .filter(not(String::isEmpty))
+    //                         .map(Values::iri)
+    //                 )
+    //
+    //                 .value(SKOS.PREF_LABEL, label)
+    //                 .value(SKOS.ALT_LABEL, json.string("acronym")
+    //                         .filter(not(String::isEmpty))
+    //                         .map(value -> literal(value, Salamanca.Language)))
+    //
+    //                 .value(ORG.CLASSIFICATION, UnitTypes.GroupRecognized)
+    //
+    //                 .frame(inverse(ORG.HEAD_OF), head(json))
+    //
+    //                 .frame(ORG.UNIT_OF, department.orElseGet(
+    //                         () -> frame(Salamanca.Id)
+    //                 ))
+    //
+    //                 .frame(ORG.UNIT_OF, department)
+    //                 .frame(ORG.UNIT_OF, institute)
+    //
+    //                 .frame(ORG.UNIT_OF, Optional.of(frame(Salamanca.Id))
+    //                         .filter(frame -> department.isEmpty() && institute.isEmpty())
+    //                 );
+    //
+    //     });
+    // }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,47 +216,47 @@ public final class UnitsSalamancaData implements Runnable {
                 });
     }
 
-    private Optional<Frame> department(final JSONPath json) {
-        return json.string("department").map(name -> {
+    // private Optional<Frame> department(final JSONPath json) {
+    //     return json.string("department").map(name -> {
+    //
+    //         final Literal title=literal(name, Salamanca.Language);
+    //
+    //         return frame(EC2U.item(Units.Context, Salamanca, name))
+    //
+    //                 .values(RDF.TYPE, Unit)
+    //                 .value(Resources.university, Salamanca.Id)
+    //
+    //                 .value(DCTERMS.TITLE, title)
+    //                 .value(SKOS.PREF_LABEL, title)
+    //
+    //                 .value(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Values::iri))
+    //                 .value(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Values::iri))
+    //
+    //                 .value(ORG.CLASSIFICATION, UnitTypes.Department)
+    //                 .frame(ORG.UNIT_OF, frame(Salamanca.Id));
+    //     });
+    // }
 
-            final Literal title=literal(name, Salamanca.Language);
-
-            return frame(EC2U.item(Units.Context, Salamanca, name))
-
-                    .values(RDF.TYPE, Unit)
-                    .value(Resources.university, Salamanca.Id)
-
-                    .value(DCTERMS.TITLE, title)
-                    .value(SKOS.PREF_LABEL, title)
-
-                    .value(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Values::iri))
-                    .value(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Values::iri))
-
-                    .value(ORG.CLASSIFICATION, UnitTypes.Department)
-                    .frame(ORG.UNIT_OF, frame(Salamanca.Id));
-        });
-    }
-
-    private Optional<Frame> institute(final JSONPath json) {
-        return json.string("institute").map(name -> {
-
-            final Literal title=literal(name, Salamanca.Language);
-
-            return frame(EC2U.item(Units.Context, Salamanca, name))
-
-                    .values(RDF.TYPE, Unit)
-                    .value(Resources.university, Salamanca.Id)
-
-                    .value(DCTERMS.TITLE, title)
-                    .value(SKOS.PREF_LABEL, title)
-
-                    .values(FOAF.HOMEPAGE, json.string("institute_webusal_url").stream()
-                            .flatMap(v -> split(v, ','))
-                            .map(Values::iri))
-
-                    .value(ORG.CLASSIFICATION, UnitTypes.Institute)
-                    .frame(ORG.UNIT_OF, frame(Salamanca.Id));
-        });
-    }
+    // private Optional<Frame> institute(final JSONPath json) {
+    //     return json.string("institute").map(name -> {
+    //
+    //         final Literal title=literal(name, Salamanca.Language);
+    //
+    //         return frame(EC2U.item(Units.Context, Salamanca, name))
+    //
+    //                 .values(RDF.TYPE, Unit)
+    //                 .value(Resources.university, Salamanca.Id)
+    //
+    //                 .value(DCTERMS.TITLE, title)
+    //                 .value(SKOS.PREF_LABEL, title)
+    //
+    //                 .values(FOAF.HOMEPAGE, json.string("institute_webusal_url").stream()
+    //                         .flatMap(v -> split(v, ','))
+    //                         .map(Values::iri))
+    //
+    //                 .value(ORG.CLASSIFICATION, UnitTypes.Institute)
+    //                 .frame(ORG.UNIT_OF, frame(Salamanca.Id));
+    //     });
+    // }
 
 }

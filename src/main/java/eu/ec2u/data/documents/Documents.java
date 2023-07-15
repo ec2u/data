@@ -16,16 +16,12 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.core.toolkits.Strings;
 import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
-import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.Frame;
+import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.toolkits.Strings;
 import com.metreeca.link.Shape;
-import com.metreeca.link.Values;
-import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.EC2U.University;
@@ -38,7 +34,10 @@ import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.ZoneId;
 import java.util.Collection;
@@ -46,20 +45,15 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.toolkits.Strings.lower;
-import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.http.rdf.Frame.frame;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Strings.lower;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
-import static eu.ec2u.data.resources.Resources.*;
+import static eu.ec2u.data.resources.Resources.Publisher;
 import static eu.ec2u.work.feeds.Parsers.concept;
 import static eu.ec2u.work.feeds.Parsers.person;
 import static java.lang.String.format;
@@ -79,52 +73,55 @@ public final class Documents extends Delegator {
 
 
     public static Shape Document() {
-        return relate(Resource(),
 
-                hidden(field(RDF.TYPE, all(Document))),
+        throw new UnsupportedOperationException(";( be implemented"); // !!!
 
-                field(Schema.url, multiple(), datatype(IRIType)),
-
-                field(DCTERMS.IDENTIFIER, optional(), datatype(XSD.STRING)),
-                field(DCTERMS.LANGUAGE, multiple(), datatype(XSD.STRING)),
-
-                field(DCTERMS.VALID, optional(), datatype(XSD.STRING)),
-
-                field(DCTERMS.CREATOR, multiple(), Reference()),
-                field(DCTERMS.CONTRIBUTOR, multiple(), Reference()),
-
-                field(DCTERMS.LICENSE, optional(), datatype(XSD.STRING)),
-                field(DCTERMS.RIGHTS, optional(), datatype(XSD.STRING)),
-
-                field(DCTERMS.AUDIENCE, multiple(), Reference()),
-                field(DCTERMS.RELATION, multiple(), Reference())
-
-        );
+        // return relate(Resource(),
+        //
+        //         hidden(field(RDF.TYPE, all(Document))),
+        //
+        //         field(Schema.url, multiple(), datatype(IRIType)),
+        //
+        //         field(DCTERMS.IDENTIFIER, optional(), datatype(XSD.STRING)),
+        //         field(DCTERMS.LANGUAGE, multiple(), datatype(XSD.STRING)),
+        //
+        //         field(DCTERMS.VALID, optional(), datatype(XSD.STRING)),
+        //
+        //         field(DCTERMS.CREATOR, multiple(), Reference()),
+        //         field(DCTERMS.CONTRIBUTOR, multiple(), Reference()),
+        //
+        //         field(DCTERMS.LICENSE, optional(), datatype(XSD.STRING)),
+        //         field(DCTERMS.RIGHTS, optional(), datatype(XSD.STRING)),
+        //
+        //         field(DCTERMS.AUDIENCE, multiple(), Reference()),
+        //         field(DCTERMS.RELATION, multiple(), Reference())
+        //
+        // );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Documents() {
-        delegate(handler(
-
-                new Driver(Document(),
-
-                        filter(clazz(Document))
-
-                ),
-
-                new Router()
-
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
-
-                        .path("/{id}", new Worker()
-                                .get(new Relator())
-                        )
-
-        ));
+        // delegate(handler(
+        //
+        //         new Driver(Document(),
+        //
+        //                 filter(clazz(Document))
+        //
+        //         ),
+        //
+        //         new Router()
+        //
+        //                 .path("/", new Worker()
+        //                         .get(new Relator())
+        //                 )
+        //
+        //                 .path("/{id}", new Worker()
+        //                         .get(new Relator())
+        //                 )
+        //
+        // ));
     }
 
 

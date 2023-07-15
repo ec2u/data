@@ -33,17 +33,13 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.Set;
 
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.University.Iasi;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiCityCultura implements Runnable {
@@ -70,14 +66,14 @@ public final class EventsIasiCityCultura implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
-
-                .flatMap(this::crawl)
-                .map(this::event)
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        // Xtream.of(synced(Context, Publisher.focus()))
+        //
+        //         .flatMap(this::crawl)
+        //         .map(this::event)
+        //
+        //         .pipe(events -> validate(Event(), Set.of(Event), events))
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 

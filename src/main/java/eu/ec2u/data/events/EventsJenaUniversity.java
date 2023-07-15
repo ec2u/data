@@ -44,7 +44,10 @@ import java.io.UncheckedIOException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
@@ -55,9 +58,6 @@ import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 
 import static eu.ec2u.data.EC2U.University.Jena;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
@@ -117,20 +117,20 @@ public final class EventsJenaUniversity implements Runnable {
 
 
     @Override public void run() {
-        Xtream.from(Publishers)
-
-                .flatMap(publisher -> Xtream.of(synced(Context, publisher.focus()))
-
-                        .flatMap(synced -> crawl(publisher, synced))
-                        .map(frame -> event(publisher, frame))
-
-                )
-
-                .distinct(Frame::focus) // events may be published multiple times by different publishers
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        // Xtream.from(Publishers)
+        //
+        //         .flatMap(publisher -> Xtream.of(synced(Context, publisher.focus()))
+        //
+        //                 .flatMap(synced -> crawl(publisher, synced))
+        //                 .map(frame -> event(publisher, frame))
+        //
+        //         )
+        //
+        //         .distinct(Frame::focus) // events may be published multiple times by different publishers
+        //
+        //         .pipe(events -> validate(Event(), Set.of(Event), events))
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 

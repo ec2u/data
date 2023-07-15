@@ -40,10 +40,8 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,11 +52,7 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
-import static java.time.ZoneOffset.UTC;
 
 public final class EventsTurkuTYY implements Runnable {
 
@@ -84,25 +78,25 @@ public final class EventsTurkuTYY implements Runnable {
 
     @Override public void run() {
 
-        final ZonedDateTime now=ZonedDateTime.now(UTC);
-
-        Xtream.of(synced(Context, Publisher.focus()))
-
-                .flatMap(this::events)
-                .optMap(this::event)
-
-                .map(event -> event
-
-                        .value(Resources.university, Turku.Id)
-
-                        .frame(DCTERMS.PUBLISHER, Publisher)
-                        .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
-
-                )
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        // final ZonedDateTime now=ZonedDateTime.now(UTC);
+        //
+        // Xtream.of(synced(Context, Publisher.focus()))
+        //
+        //         .flatMap(this::events)
+        //         .optMap(this::event)
+        //
+        //         .map(event -> event
+        //
+        //                 .value(Resources.university, Turku.Id)
+        //
+        //                 .frame(DCTERMS.PUBLISHER, Publisher)
+        //                 .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
+        //
+        //         )
+        //
+        //         .pipe(events -> validate(Event(), Set.of(Event), events))
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 

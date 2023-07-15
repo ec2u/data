@@ -19,33 +19,23 @@ package eu.ec2u.data.units;
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf4j.actions.GraphQuery;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.UnitTypes;
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 
 import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.*;
+import static com.metreeca.http.rdf.Values.inverse;
+import static com.metreeca.http.rdf.Values.iri;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data.EC2U.University.Pavia;
-import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.util.Map.entry;
-import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
 
@@ -66,17 +56,17 @@ public final class UnitsPavia implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(Instant.EPOCH)
-
-                .flatMap(this::units)
-                .map(this::unit)
-
-                .pipe(units -> validate(Unit(), Set.of(Unit), units))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                );
+        // Xtream.of(Instant.EPOCH)
+        //
+        //         .flatMap(this::units)
+        //         .map(this::unit)
+        //
+        //         .pipe(units -> validate(Unit(), Set.of(Unit), units))
+        //
+        //         .forEach(new Upload()
+        //                 .contexts(Context)
+        //                 .clear(true)
+        //         );
     }
 
 
@@ -113,29 +103,29 @@ public final class UnitsPavia implements Runnable {
                 );
     }
 
-    private Frame unit(final Frame frame) {
-
-        final Optional<Literal> label=frame.string(RDFS.LABEL)
-                .filter(not(String::isEmpty))
-                .map(name -> literal(name, Pavia.Language));
-
-        return frame(EC2U.item(Units.Context, frame.focus().stringValue()))
-
-                .values(RDF.TYPE, Unit)
-                .value(Resources.university, Pavia.Id)
-
-                .value(DCTERMS.TITLE, label)
-                .value(SKOS.PREF_LABEL, label)
-
-                .value(ORG.UNIT_OF, Pavia.Id)
-
-                .value(ORG.CLASSIFICATION, frame.values(RDF.TYPE)
-                        .map(Types::get)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                );
-
-    }
+    // private Frame unit(final Frame frame) {
+    //
+    //     final Optional<Literal> label=frame.string(RDFS.LABEL)
+    //             .filter(not(String::isEmpty))
+    //             .map(name -> literal(name, Pavia.Language));
+    //
+    //     return frame(EC2U.item(Units.Context, frame.focus().stringValue()))
+    //
+    //             .values(RDF.TYPE, Unit)
+    //             .value(Resources.university, Pavia.Id)
+    //
+    //             .value(DCTERMS.TITLE, label)
+    //             .value(SKOS.PREF_LABEL, label)
+    //
+    //             .value(ORG.UNIT_OF, Pavia.Id)
+    //
+    //             .value(ORG.CLASSIFICATION, frame.values(RDF.TYPE)
+    //                     .map(Types::get)
+    //                     .filter(Objects::nonNull)
+    //                     .findFirst()
+    //             );
+    //
+    // }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

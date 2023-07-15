@@ -51,7 +51,6 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
@@ -60,9 +59,6 @@ import static com.metreeca.http.toolkits.Strings.TextLength;
 
 import static eu.ec2u.data.EC2U.University.Poitiers;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 import static java.util.function.Predicate.not;
@@ -119,14 +115,14 @@ public final class EventsPoitiersUniversity implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
-
-                .flatMap(this::crawl)
-                .map(this::event)
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        // Xtream.of(synced(Context, Publisher.focus()))
+        //
+        //         .flatMap(this::crawl)
+        //         .map(this::event)
+        //
+        //         .pipe(events -> validate(Event(), Set.of(Event), events))
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 
@@ -188,7 +184,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                 .value(Schema.url, link)
                 .value(Schema.name, label)
-                    .value(Schema.image, item.link("image").map(Values::iri))
+                .value(Schema.image, item.link("image").map(Values::iri))
                 .value(Schema.disambiguatingDescription, brief)
                 .value(Schema.description, description.map(value -> literal(value, Poitiers.Language)))
 

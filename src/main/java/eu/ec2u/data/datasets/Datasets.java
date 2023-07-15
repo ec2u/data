@@ -33,9 +33,7 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
-import static com.metreeca.link.Query.Constraint.any;
 import static com.metreeca.link.Query.*;
-import static com.metreeca.link.Stash.Expression.expression;
 
 import static eu.ec2u.data.Data.exec;
 

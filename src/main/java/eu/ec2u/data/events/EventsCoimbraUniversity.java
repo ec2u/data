@@ -17,18 +17,13 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities.Universities;
-import eu.ec2u.work.feeds.Tribe;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
-
-import java.time.ZonedDateTime;
-import java.util.Set;
 
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
@@ -36,10 +31,6 @@ import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Coimbra;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
-import static java.time.ZoneOffset.UTC;
 
 public final class EventsCoimbraUniversity implements Runnable {
 
@@ -63,29 +54,29 @@ public final class EventsCoimbraUniversity implements Runnable {
 
     @Override public void run() {
 
-        final ZonedDateTime now=ZonedDateTime.now(UTC);
-
-        Xtream.of(synced(Context, Publisher.focus()))
-
-                .flatMap(new Tribe("https://agenda.uc.pt/")
-                        .country(Coimbra.Country)
-                        .locality(Coimbra.City)
-                        .language(Coimbra.Language)
-                        .zone(Coimbra.TimeZone)
-                )
-
-                .map(event -> event
-
-                        .value(Resources.university, Coimbra.Id)
-
-                        .frame(DCTERMS.PUBLISHER, Publisher)
-                        .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
-
-                )
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        // final ZonedDateTime now=ZonedDateTime.now(UTC);
+        //
+        // Xtream.of(synced(Context, Publisher.focus()))
+        //
+        //         .flatMap(new Tribe("https://agenda.uc.pt/")
+        //                 .country(Coimbra.Country)
+        //                 .locality(Coimbra.City)
+        //                 .language(Coimbra.Language)
+        //                 .zone(Coimbra.TimeZone)
+        //         )
+        //
+        //         .map(event -> event
+        //
+        //                 .value(Resources.university, Coimbra.Id)
+        //
+        //                 .frame(DCTERMS.PUBLISHER, Publisher)
+        //                 .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
+        //
+        //         )
+        //
+        //         .pipe(events -> validate(Event(), Set.of(Event), events))
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 }

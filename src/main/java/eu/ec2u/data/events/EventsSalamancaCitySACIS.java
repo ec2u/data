@@ -40,7 +40,6 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
@@ -48,9 +47,6 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.University.Salamanca;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsSalamancaCitySACIS implements Runnable {
@@ -58,7 +54,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
     private static final IRI Context=iri(Events.Context, "/salamanca/city/sacis");
 
     private static final Frame Publisher=frame(iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda"
-            + "-salamanca/"))
+            +"-salamanca/"))
             .value(RDF.TYPE, Resources.Publisher)
             .value(DCTERMS.COVERAGE, EC2U.City)
             .values(RDFS.LABEL,
@@ -78,14 +74,14 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
-
-                .flatMap(this::crawl)
-                .optMap(this::event)
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        // Xtream.of(synced(Context, Publisher.focus()))
+        //
+        //         .flatMap(this::crawl)
+        //         .optMap(this::event)
+        //
+        //         .pipe(events -> validate(Event(), Set.of(Event), events))
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 

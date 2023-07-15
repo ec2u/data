@@ -16,18 +16,18 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.services.Vault;
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.services.Vault;
+import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.documents.Documents.CSVLoader;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.link.Values.iri;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.University.Iasi;

@@ -45,7 +45,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
@@ -53,9 +52,6 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.University.Salamanca;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 
@@ -101,14 +97,14 @@ public final class EventsSalamancaCityTO implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
-
-                .flatMap(this::crawl)
-                .optMap(this::event)
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        // Xtream.of(synced(Context, Publisher.focus()))
+        //
+        //         .flatMap(this::crawl)
+        //         .optMap(this::event)
+        //
+        //         .pipe(events -> validate(Event(), Set.of(Event), events))
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 

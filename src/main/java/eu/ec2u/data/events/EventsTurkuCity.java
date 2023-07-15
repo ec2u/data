@@ -33,7 +33,6 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
@@ -43,30 +42,23 @@ import javax.json.JsonValue;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Shift.Seq.seq;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toList;
 
 public final class EventsTurkuCity implements Runnable {
 
@@ -95,47 +87,47 @@ public final class EventsTurkuCity implements Runnable {
 
     @Override public void run() {
 
-        final List<Frame> events=Xtream.of(synced(Context, Publisher.focus()))
-
-                .flatMap(this::crawl)
-                .flatMap(this::event)
-
-                .collect(toList());
-
-        final List<Frame> places=Xtream.from(events)
-
-                .filter(frame -> frame.focus().stringValue().startsWith("https://linkedevents-api.turku.fi/"))
-
-                .optMap(event -> event.value(seq(Schema.location, Schema.url)))
-                .optMap(Values::iri)
-                .map(Value::stringValue)
-                .distinct()
-
-                .optMap(new GET<>(new JSON()))
-
-                .map(JSONPath::new)
-                .map(this::place)
-
-                .collect(toList());
-
-        Xtream.from(
-
-                        validate(
-                                Event(),
-                                Set.of(Event),
-                                events.stream(),
-                                places.stream()
-                        ),
-
-                        validate(
-                                Schema.Location(),
-                                Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
-                                places.stream()
-                        )
-
-                )
-
-                .forEach(new Events.Updater(Context));
+        // final List<Frame> events=Xtream.of(synced(Context, Publisher.focus()))
+        //
+        //         .flatMap(this::crawl)
+        //         .flatMap(this::event)
+        //
+        //         .collect(toList());
+        //
+        // final List<Frame> places=Xtream.from(events)
+        //
+        //         .filter(frame -> frame.focus().stringValue().startsWith("https://linkedevents-api.turku.fi/"))
+        //
+        //         .optMap(event -> event.value(seq(Schema.location, Schema.url)))
+        //         .optMap(Values::iri)
+        //         .map(Value::stringValue)
+        //         .distinct()
+        //
+        //         .optMap(new GET<>(new JSON()))
+        //
+        //         .map(JSONPath::new)
+        //         .map(this::place)
+        //
+        //         .collect(toList());
+        //
+        // Xtream.from(
+        //
+        //                 validate(
+        //                         Event(),
+        //                         Set.of(Event),
+        //                         events.stream(),
+        //                         places.stream()
+        //                 ),
+        //
+        //                 validate(
+        //                         Schema.Location(),
+        //                         Set.of(Schema.VirtualLocation, Schema.Place, Schema.PostalAddress),
+        //                         places.stream()
+        //                 )
+        //
+        //         )
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 

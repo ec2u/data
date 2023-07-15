@@ -32,16 +32,6 @@ import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
 
 import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.units.Unit;
-import eu.ec2u.data.units.Units;
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.documents.Documents;
-import eu.ec2u.data.events.Events;
-import eu.ec2u.data.offers.Offers;
-import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.repository.Repository;
@@ -64,7 +54,6 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.json.JSON.json;
 import static com.metreeca.link.rdf4j.RDF4J.rdf4j;
 
-import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 
@@ -170,14 +159,14 @@ public final class Data implements Runnable {
                                                 .path("/universities/", new Universities.Handler())
                                                 .path("/universities/{code}", new University.Handler())
 
-                                                .path("/units/", new Units.Handler())
-                                                .path("/units/{code}", new Unit.Handler())
+                                        // .path("/units/", new Units.Handler())
+                                        // .path("/units/{code}", new Unit.Handler())
 
                                         //.path("/offers/*", new Offers())
                                         //.path("/programs/*", new Offers.Programs())
                                         //.path("/courses/*", new Offers.Courses())
                                         //.path("/documents/*", new Documents())
-                                        .path("/persons/*", new Persons())
+                                        // .path("/persons/*", new Persons())
                                         //.path("/events/*", new Events())
                                         //.path("/concepts/*", new Concepts())
 

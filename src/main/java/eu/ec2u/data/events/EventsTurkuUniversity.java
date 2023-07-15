@@ -47,11 +47,9 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Frame.frame;
@@ -66,9 +64,6 @@ import static com.metreeca.http.toolkits.Strings.clip;
 
 import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
@@ -115,24 +110,24 @@ public final class EventsTurkuUniversity implements Runnable {
 
     @Override public void run() {
 
-        final ZonedDateTime now=ZonedDateTime.now(UTC);
-
-        Xtream.of(synced(Context, Publisher.focus()))
-
-                .flatMap(this::crawl)
-                .optMap(this::event)
-
-                .map(event -> event
-
-                        .value(Resources.university, Turku.Id)
-
-                        .frame(DCTERMS.PUBLISHER, Publisher)
-                        .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
-                )
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        // final ZonedDateTime now=ZonedDateTime.now(UTC);
+        //
+        // Xtream.of(synced(Context, Publisher.focus()))
+        //
+        //         .flatMap(this::crawl)
+        //         .optMap(this::event)
+        //
+        //         .map(event -> event
+        //
+        //                 .value(Resources.university, Turku.Id)
+        //
+        //                 .frame(DCTERMS.PUBLISHER, Publisher)
+        //                 .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
+        //         )
+        //
+        //         .pipe(events -> validate(Event(), Set.of(Event), events))
+        //
+        //         .forEach(new Events.Updater(Context));
     }
 
 

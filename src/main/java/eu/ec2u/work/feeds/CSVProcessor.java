@@ -16,11 +16,12 @@
 
 package eu.ec2u.work.feeds;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.services.Logger;
-import com.metreeca.core.toolkits.Strings;
-import com.metreeca.csv.codecs.CSV;
+
 import com.metreeca.http.actions.GET;
+import com.metreeca.http.csv.formats.CSV;
+import com.metreeca.http.services.Logger;
+import com.metreeca.http.toolkits.Strings;
+import com.metreeca.http.work.Xtream;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -30,8 +31,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;

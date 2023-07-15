@@ -17,11 +17,6 @@
 package eu.ec2u.data.units;
 
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.toolkits.Strings;
-import com.metreeca.csv.formats.CSV;
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.csv.formats.CSV;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Relator;
@@ -29,41 +24,18 @@ import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.rdf4j.services.Graph;
-import com.metreeca.http.services.Logger;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf.Frame;
-import com.metreeca.rdf.Values;
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
-import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Shape;
-import com.metreeca.link.Values;
-import com.metreeca.rdf4j.actions.Upload;
-import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.agents.Persons;
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.concepts.EuroSciVoc;
-import eu.ec2u.data.concepts.UnitTypes;
-import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.EC2U.University;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.UnitTypes;
+import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.Cursor;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVFormat;
@@ -91,17 +63,12 @@ import static com.metreeca.http.rdf.Shift.Seq.seq;
 import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
-import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
-import static com.metreeca.core.Locator.path;
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
-import static eu.ec2u.data.resources.Resources.*;
 import static eu.ec2u.work.feeds.Parsers.person;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
@@ -285,15 +252,15 @@ public final class Units extends Dataset<Unit> {
                     .of(sectors.computeIfAbsent(sector, key -> graph.query(connection -> {
 
                         final TupleQuery query=connection.prepareTupleQuery(""
-                                + "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-                                + "\n"
-                                + "select ?concept {\n"
-                                + "\n"
-                                + "\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
-                                + "\n"
-                                + "\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
-                                + "\n"
-                                + "}\n"
+                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                +"\n"
+                                +"select ?concept {\n"
+                                +"\n"
+                                +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
+                                +"\n"
+                                +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
+                                +"\n"
+                                +"}\n"
                         );
 
                         query.setBinding("scheme", EuroSciVoc.Scheme);
@@ -324,15 +291,15 @@ public final class Units extends Dataset<Unit> {
                     .of(types.computeIfAbsent(type, key -> graph.query(connection -> {
 
                         final TupleQuery query=connection.prepareTupleQuery(""
-                                + "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-                                + "\n"
-                                + "select ?concept {\n"
-                                + "\n"
-                                + "\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
-                                + "\n"
-                                + "\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
-                                + "\n"
-                                + "}\n"
+                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                +"\n"
+                                +"select ?concept {\n"
+                                +"\n"
+                                +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
+                                +"\n"
+                                +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
+                                +"\n"
+                                +"}\n"
                         );
 
                         query.setBinding("scheme", UnitTypes.Scheme);
@@ -400,17 +367,17 @@ public final class Units extends Dataset<Unit> {
                     .of(vis.computeIfAbsent(code, key -> graph.query(connection -> {
 
                         final TupleQuery query=connection.prepareTupleQuery(""
-                                + "prefix ec2u: <https://data.ec2u.eu/terms/>\n"
-                                + "prefix org: <http://www.w3.org/ns/org#>\n"
-                                + "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-                                + "\n"
-                                + "select ?vi {\n"
-                                + "\n"
-                                + "\t?vi a ec2u:Unit;\n"
-                                + "\t\torg:classification $type;\n"
-                                + "\t\tskos:altLabel $code.\n"
-                                + "\n"
-                                + "}"
+                                +"prefix ec2u: <https://data.ec2u.eu/terms/>\n"
+                                +"prefix org: <http://www.w3.org/ns/org#>\n"
+                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                                +"\n"
+                                +"select ?vi {\n"
+                                +"\n"
+                                +"\t?vi a ec2u:Unit;\n"
+                                +"\t\torg:classification $type;\n"
+                                +"\t\tskos:altLabel $code.\n"
+                                +"\n"
+                                +"}"
                         );
 
                         query.setBinding("type", UnitTypes.InstituteVirtual);
@@ -499,7 +466,7 @@ public final class Units extends Dataset<Unit> {
                                             .orElse(""),
 
                                     unit.cursors(DCTERMS.SUBJECT)
-                                            .filter(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme + "/"))
+                                            .filter(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/"))
                                             .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
                                             .filter(value -> lang(value).equals("en"))
                                             .findFirst()
@@ -551,7 +518,7 @@ public final class Units extends Dataset<Unit> {
                                             .orElse(""),
 
                                     unit.cursors(DCTERMS.SUBJECT)
-                                            .filter(not(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme + "/")))
+                                            .filter(not(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/")))
                                             .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
                                             // !!! .filter(value -> lang(value).equals("en"))
                                             .map(Value::stringValue)
