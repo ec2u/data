@@ -6,4 +6,5 @@
 ec2u:Person a owl:Class ;
 	rdfs:subClassOf ec2u:Resource, foaf:Person .
 
-foaf:Person a owl:Class .
+foaf:Person a owl:Class ;
+    	rdfs:subClassOf foaf:Agent .

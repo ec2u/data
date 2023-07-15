@@ -16,41 +16,49 @@
 
 package eu.ec2u.data.units;
 
+
 import com.metreeca.core.Xtream;
-import com.metreeca.core.services.Logger;
 import com.metreeca.core.toolkits.Strings;
-import com.metreeca.csv.codecs.CSV;
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.handlers.*;
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
 import com.metreeca.jsonld.handlers.Driver;
 import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.*;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Shape;
+import com.metreeca.link.Values;
 import com.metreeca.rdf4j.actions.Upload;
 import com.metreeca.rdf4j.services.Graph;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.concepts.*;
-import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.EC2U.University;
+import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.concepts.EuroSciVoc;
+import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.Cursor;
-import org.apache.commons.csv.*;
-import org.eclipse.rdf4j.model.*;
+import eu.ec2u.work.feeds.CSVProcessor;
+import eu.ec2u.work.feeds.Parsers;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.core.Locator.path;
 import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
 import static com.metreeca.core.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.frame;
@@ -67,7 +75,7 @@ import static com.metreeca.rdf4j.services.Graph.graph;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
 import static eu.ec2u.data.resources.Resources.*;
-
+import static eu.ec2u.work.feeds.Parsers.person;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.function.Predicate.not;
@@ -154,33 +162,18 @@ public final class Units extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static final class CSVLoader implements Function<String, Xtream<Frame>> {
+    static final class CSVLoader extends CSVProcessor<Frame> {
 
-        private static final CSVFormat Format=CSVFormat.Builder.create()
-                .setHeader()
-                .setSkipHeaderRecord(true)
-                .setIgnoreHeaderCase(true)
-                .setNullString("")
-                .build();
-
-        private static final Pattern URLPattern=Pattern.compile("^https?://\\S+$");
-        private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
-        private static final Pattern HeadPattern=Pattern.compile("([^,]?+)\\s*,\\s*([^(]?+)(?:\\s*\\(([^)]+)\\))?");
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private final EC2U.University university;
+        private final University university;
 
         private final Map<String, Value> sectors=new HashMap<>();
         private final Map<String, Value> types=new HashMap<>();
         private final Map<String, Value> vis=new HashMap<>();
 
         private final Graph graph=service(graph());
-        private final Logger logger=service(logger());
 
 
-        CSVLoader(final EC2U.University university) {
+        CSVLoader(final University university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");
@@ -190,76 +183,54 @@ public final class Units extends Delegator {
         }
 
 
-        @Override public Xtream<Frame> apply(final String url) {
+        @Override protected Optional<Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
 
+            final Optional<String> acronym=value(record, "Acronym");
 
-            final Collection<CSVRecord> units=Xtream.of(url)
-                    .flatMap(this::units)
-                    .collect(toList());
-
-            return Xtream.from(units)
-
-                    .optMap(record -> unit(record, units));
-
-        }
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private Xtream<CSVRecord> units(final String url) {
-            return Xtream.of(url)
-                    .optMap(new GET<>(new CSV(Format)))
-                    .flatMap(Collection::stream);
-        }
-
-        private Optional<Frame> unit(final CSVRecord record, final Collection<CSVRecord> records) {
-
-            final Optional<String> acronym=field(record, "Acronym");
-
-            final Optional<Literal> nameEnglish=field(record, "Name (English)").map(v -> literal(v, "en"));
-            final Optional<Literal> nameLocal=field(record, "Name (Local)").map(v -> literal(v, university.Language));
+            final Optional<Literal> nameEnglish=value(record, "Name (English)").map(v -> literal(v, "en"));
+            final Optional<Literal> nameLocal=value(record, "Name (Local)").map(v -> literal(v, university.Language));
 
             return id(record).map(id -> frame(id)
 
                     .values(RDF.TYPE, Unit)
                     .value(Resources.university, university.Id)
 
-                    .value(DCTERMS.SUBJECT, field(record, "Sector")
+                    .value(DCTERMS.SUBJECT, value(record, "Sector")
                             .flatMap(this::sector)
                     )
 
-                    .value(ORG.CLASSIFICATION, field(record, "Type")
+                    .value(ORG.CLASSIFICATION, value(record, "Type")
                             .flatMap(this::type)
                     )
 
-                    .value(ORG.IDENTIFIER, field(record, "Code").map(Values::literal))
+                    .value(ORG.IDENTIFIER, value(record, "Code").map(Values::literal))
 
-                    .values(ORG.UNIT_OF, field(record, "Parent")
+                    .values(ORG.UNIT_OF, value(record, "Parent")
                             .map(parent -> parents(parent, records))
                             .orElseGet(() -> Stream.of(university.Id))
                     )
 
-                    .value(ORG.UNIT_OF, field(record, "VI")
+                    .value(ORG.UNIT_OF, value(record, "VI")
                             .flatMap(this::vi)
                     )
 
                     .value(DCTERMS.TITLE, nameEnglish)
                     .value(DCTERMS.TITLE, nameLocal)
 
-                    .value(DCTERMS.DESCRIPTION, field(record, "Description (English)")
+                    .value(DCTERMS.DESCRIPTION, value(record, "Description (English)")
                             .map(v -> literal(v, "en"))
                     )
 
-                    .value(DCTERMS.DESCRIPTION, field(record, "Description (Local)")
+                    .value(DCTERMS.DESCRIPTION, value(record, "Description (Local)")
                             .map(v -> literal(v, university.Language))
                     )
 
                     .frames(DCTERMS.SUBJECT, Stream.concat(
 
-                            field(record, "Topics (English)").stream()
+                            value(record, "Topics (English)").stream()
                                     .flatMap(topics -> topics(topics, "en")),
 
-                            field(record, "Topics (Local)").stream()
+                            value(record, "Topics (Local)").stream()
                                     .flatMap(topics -> topics(topics, university.Language))
 
                     ))
@@ -270,24 +241,14 @@ public final class Units extends Delegator {
                     .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, "en"))) // !!! no language
                     .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, university.Language))) // !!! no language
 
-                    .value(FOAF.HOMEPAGE, field(record, "Factsheet")
-                            .filter(URLPattern.asMatchPredicate())
-                            .map(Values::iri)
-                    )
+                    .value(FOAF.HOMEPAGE, value(record, "Factsheet", Parsers::url))
+                    .value(FOAF.HOMEPAGE, value(record, "Homepage", Parsers::url))
 
-                    .value(FOAF.HOMEPAGE, field(record, "Homepage")
-                            .filter(URLPattern.asMatchPredicate())
-                            .map(Values::iri)
-                    )
-
-                    .value(FOAF.MBOX, field(record, "Email")
-                            .filter(EmailPattern.asMatchPredicate())
+                    .value(FOAF.MBOX, value(record, "Email", Parsers::email)
                             .map(Values::literal)
                     )
 
-                    .frame(inverse(ORG.HEAD_OF), field(record, "Head")
-                            .flatMap(this::head)
-                    )
+                    .frame(inverse(ORG.HEAD_OF), value(record, "Head", person -> person(person, university)))
 
             );
         }
@@ -297,14 +258,13 @@ public final class Units extends Delegator {
 
         private Optional<IRI> id(final CSVRecord record) {
 
-            final Optional<String> code=field(record, "Code");
-            final Optional<String> nameEnglish=field(record, "Name (English)");
-            final Optional<String> nameLocal=field(record, "Name (Local)");
+            final Optional<String> code=value(record, "Code");
+            final Optional<String> nameEnglish=value(record, "Name (English)");
+            final Optional<String> nameLocal=value(record, "Name (Local)");
 
             if ( nameEnglish.isEmpty() && nameLocal.isEmpty() ) {
 
-                logger.warning(Units.class, format("line <%d> - no name provided",
-                        record.getRecordNumber()));
+                warning(record, "no name provided");
 
                 return Optional.empty();
 
@@ -317,12 +277,6 @@ public final class Units extends Delegator {
                 ));
 
             }
-        }
-
-        private Optional<String> field(final CSVRecord record, final String label) {
-            return record.getParser().getHeaderNames().contains(label)
-                    ? Optional.ofNullable(record.get(label)).map(Strings::normalize).filter(not(String::isEmpty))
-                    : Optional.empty();
         }
 
         private Optional<Value> sector(final String sector) {
@@ -351,9 +305,7 @@ public final class Units extends Delegator {
                                     .map(bindings -> bindings.getValue("concept"))
                                     .orElseGet(() -> {
 
-                                        logger.warning(Units.class, format(
-                                                "unknown sector <%s>", key
-                                        ));
+                                        warning(format("unknown sector <%s>", key));
 
                                         return RDF.NIL;
 
@@ -392,9 +344,7 @@ public final class Units extends Delegator {
                                     .map(bindings -> bindings.getValue("concept"))
                                     .orElseGet(() -> {
 
-                                        logger.warning(Units.class, format(
-                                                "unknown unit type <%s>", key
-                                        ));
+                                        warning(format("unknown unit type <%s>", key));
 
                                         return RDF.NIL;
 
@@ -415,10 +365,16 @@ public final class Units extends Delegator {
 
                         final Optional<IRI> id=records.stream()
 
-                                .filter(record -> field(record, "Code").filter(ref::equalsIgnoreCase)
-                                        .or(() -> field(record, "Acronym").filter(ref::equalsIgnoreCase))
-                                        .or(() -> field(record, "Name (English)").filter(ref::equalsIgnoreCase))
-                                        .or(() -> field(record, "Name (Local)").filter(ref::equalsIgnoreCase))
+                                .filter(record -> value(record, "Code").filter(ref::equalsIgnoreCase)
+                                        .or(() -> {
+                                            return value(record, "Acronym").filter(ref::equalsIgnoreCase);
+                                        })
+                                        .or(() -> {
+                                            return value(record, "Name (English)").filter(ref::equalsIgnoreCase);
+                                        })
+                                        .or(() -> {
+                                            return value(record, "Name (Local)").filter(ref::equalsIgnoreCase);
+                                        })
                                         .isPresent()
                                 )
 
@@ -427,7 +383,7 @@ public final class Units extends Delegator {
                                 .flatMap(this::id);
 
                         if ( id.isEmpty() ) {
-                            logger.warning(this, format("unknown parent <%s>", ref));
+                            warning(format("unknown parent <%s>", ref));
                         }
 
                         return id;
@@ -466,9 +422,7 @@ public final class Units extends Delegator {
                                     .map(bindings -> bindings.getValue("vi"))
                                     .orElseGet(() -> {
 
-                                        logger.warning(Units.class, format(
-                                                "unknown virtual institute <%s>", key
-                                        ));
+                                        warning(format("unknown virtual institute <%s>", key));
 
                                         return RDF.NIL;
 
@@ -479,35 +433,6 @@ public final class Units extends Delegator {
                     })))
 
                     .filter(not(RDF.NIL::equals));
-        }
-
-        private Optional<Frame> head(final String head) {
-
-            return Optional.of(head)
-
-                    .map(HeadPattern::matcher)
-                    .filter(Matcher::matches)
-                    .map(matcher -> {
-
-                        final String title=matcher.group(3);
-                        final String familyName=matcher.group(1);
-                        final String givenName=matcher.group(2);
-
-                        final String fullName=format("%s %s", givenName, familyName);
-
-                        return frame(EC2U.item(Persons.Context, university, fullName))
-
-                                .value(RDF.TYPE, Persons.Person)
-
-                                .value(RDFS.LABEL, literal(fullName, university.Language)) // !!! no language
-
-                                .value(Resources.university, university.Id)
-
-                                .value(FOAF.TITLE, Optional.ofNullable(title).map(Values::literal))
-                                .value(FOAF.GIVEN_NAME, literal(givenName))
-                                .value(FOAF.FAMILY_NAME, literal(familyName));
-
-                    });
         }
 
         private Stream<Frame> topics(final String topics, final String language) {

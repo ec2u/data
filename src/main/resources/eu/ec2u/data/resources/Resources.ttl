@@ -16,6 +16,7 @@
 ########################################################################################################################
 
 ec2u:Resource a owl:Class .
+ec2u:Publisher a owl:Class .
 
 dct:title a owl:DatatypeProperty ;
 	rdfs:subPropertyOf rdfs:label .
