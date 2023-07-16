@@ -20,9 +20,8 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.FOAF;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -51,7 +50,7 @@ public final class Resources extends Delegator {
 
             .concat(
                     Stream.of("en"),
-                    stream(EC2U.University.values()).map(u -> u.Language)
+                    stream(_Universities.values()).map(u -> u.Language)
             )
 
             .collect(toUnmodifiableSet());
@@ -149,6 +148,7 @@ public final class Resources extends Delegator {
                             .clear(true)
                     );
         }
+
     }
 
 }

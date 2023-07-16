@@ -35,8 +35,8 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Shift.Seq.seq;
 import static com.metreeca.http.rdf.Values.literal;
 
-import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.universities._Universities.Pavia;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 

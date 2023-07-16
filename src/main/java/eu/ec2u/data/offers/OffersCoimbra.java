@@ -60,10 +60,10 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.lenient;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Coimbra;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.data.offers.Offers.Program;
+import static eu.ec2u.data.universities._Universities.Coimbra;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 import static java.util.Map.entry;

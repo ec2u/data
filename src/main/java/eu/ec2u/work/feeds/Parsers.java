@@ -21,9 +21,9 @@ import com.metreeca.http.rdf.Values;
 import com.metreeca.http.toolkits.Strings;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.EC2U.University;
 import eu.ec2u.data.agents.Persons;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -69,7 +69,7 @@ public final class Parsers {
     }
 
 
-    public static Optional<Frame> person(final String person, final University university) {
+    public static Optional<Frame> person(final String person, final _Universities university) {
         return Optional.of(person)
 
                 .map(PersonPattern::matcher)

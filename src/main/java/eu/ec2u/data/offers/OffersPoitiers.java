@@ -50,12 +50,12 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Poitiers;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 import static eu.ec2u.data.resources.Resources.university;
+import static eu.ec2u.data.universities._Universities.Poitiers;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.util.Map.entry;
 

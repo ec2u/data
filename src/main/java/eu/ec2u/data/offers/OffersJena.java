@@ -52,11 +52,11 @@ import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.ISCED2011.*;
 import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.offers.Offers.Programs;
+import static eu.ec2u.data.universities._Universities.Jena;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Map.entry;

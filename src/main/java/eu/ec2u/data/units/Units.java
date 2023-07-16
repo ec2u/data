@@ -29,12 +29,12 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.EC2U.University;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.Cursor;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
@@ -131,7 +131,7 @@ public final class Units extends Dataset<Unit> {
 
     static final class CSVLoader extends CSVProcessor<Frame> {
 
-        private final University university;
+        private final _Universities university;
 
         private final Map<String, Value> sectors=new HashMap<>();
         private final Map<String, Value> types=new HashMap<>();
@@ -140,7 +140,7 @@ public final class Units extends Dataset<Unit> {
         private final Graph graph=service(graph());
 
 
-        CSVLoader(final University university) {
+        CSVLoader(final _Universities university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");

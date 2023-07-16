@@ -24,11 +24,11 @@ import com.metreeca.http.toolkits.Strings;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.EC2U.University;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVRecord;
@@ -154,9 +154,9 @@ public final class Documents extends Delegator {
         private static final Pattern ValidPattern=Pattern.compile("\\d{4}(?:/\\d{4})?");
 
 
-        private final University university;
+        private final _Universities university;
 
-        CSVLoader(final University university) {
+        CSVLoader(final _Universities university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");

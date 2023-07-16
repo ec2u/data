@@ -41,11 +41,10 @@ import java.util.regex.Pattern;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Vault.vault;
 
-import static eu.ec2u.data.EC2U.University.Salamanca;
+import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 

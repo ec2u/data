@@ -30,8 +30,8 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.documents.Documents.Document;
+import static eu.ec2u.data.universities._Universities.Turku;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 

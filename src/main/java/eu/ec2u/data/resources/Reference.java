@@ -17,13 +17,13 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.link.Local;
+import static com.metreeca.link.Local.local;
 
 public final class Reference extends Resource {
 
     public Reference() {
         setId("");
-        setLabel(Local.local("*", ""));
+        setLabel(local("*", ""));
     }
 
 }

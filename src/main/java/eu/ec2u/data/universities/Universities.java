@@ -93,6 +93,7 @@ public final class Universities extends Dataset<University> {
                             .clear(true)
                     );
         }
+
     }
 
     public static final class Updater implements Runnable {
@@ -117,8 +118,8 @@ public final class Universities extends Dataset<University> {
                             "values ?item "+Stream
 
                                     .concat(
-                                            stream(EC2U.University.values()).map(university -> university.City),
-                                            stream(EC2U.University.values()).map(university -> university.Country)
+                                            stream(_Universities.values()).map(university -> university.City),
+                                            stream(_Universities.values()).map(university -> university.Country)
                                     )
 
                                     .map(Values::format)

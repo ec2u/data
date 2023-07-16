@@ -45,9 +45,9 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Salamanca;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.offers.Offers.*;
+import static eu.ec2u.data.universities._Universities.Salamanca;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 import static java.util.Map.entry;

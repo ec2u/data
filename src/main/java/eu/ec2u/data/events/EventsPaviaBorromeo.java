@@ -30,7 +30,7 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
-import static eu.ec2u.data.EC2U.University.Pavia;
+import static eu.ec2u.data.universities._Universities.Pavia;
 
 public final class EventsPaviaBorromeo implements Runnable {
 

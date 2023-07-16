@@ -30,7 +30,7 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Coimbra;
+import static eu.ec2u.data.universities._Universities.Coimbra;
 
 public final class EventsCoimbraUniversity implements Runnable {
 

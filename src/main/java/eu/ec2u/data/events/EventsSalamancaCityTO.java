@@ -51,7 +51,7 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
-import static eu.ec2u.data.EC2U.University.Salamanca;
+import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 
