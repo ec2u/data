@@ -57,7 +57,6 @@ export const Datasets=immutable({
 		comment: optional(local),
 
 		alternative: optional(local),
-		description: optional(local),
 
 		entities: required(integer)
 

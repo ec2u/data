@@ -22,6 +22,7 @@ import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 
 public final class UnitsIasi implements Runnable {
