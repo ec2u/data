@@ -58,11 +58,12 @@ insert {
 
 } where {
 
-    bind (bnode() as ?subset)
+    bind (uuid() as ?subset)
 
 	{ select ?dataset ?university (count(distinct ?entity) as ?entities) {
 
 		?dataset a ec2u:Dataset ;
+		    dct:available [] ;
 			void:rootResource ?class .
 
 		?entity a ec2u:Resource, ?class ;

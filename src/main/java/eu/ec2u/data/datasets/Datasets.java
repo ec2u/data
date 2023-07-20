@@ -38,7 +38,7 @@ import static com.metreeca.link.Query.*;
 import static eu.ec2u.data.Data.exec;
 
 @Virtual
-public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset<Dataset<?>> breaks query parsing
+public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset<Dataset<?/Resource>> breaks query parsing
 
     private static final IRI Context=EC2U.item("/");
 
@@ -96,6 +96,7 @@ public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset
                             .clear(true)
                     );
         }
+
     }
 
     public static final class Updater implements Runnable {
