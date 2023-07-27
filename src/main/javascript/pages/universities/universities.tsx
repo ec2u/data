@@ -119,7 +119,8 @@ export function DataUniversities() {
 				tags={<span>{toEntryLabel(country)}</span>}
 
 			>
-				{toLocalString(comment)}
+
+			{toLocalString(comment)}
 
 			</ToolCard>
 

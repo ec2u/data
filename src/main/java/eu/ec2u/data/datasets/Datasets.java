@@ -33,7 +33,10 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
-import static com.metreeca.link.Query.*;
+import static com.metreeca.link.specs.Constraint.any;
+import static com.metreeca.link.specs.Expression.expression;
+import static com.metreeca.link.specs.Items.items;
+import static com.metreeca.link.specs.Specs.filter;
 
 import static eu.ec2u.data.Data.exec;
 
@@ -53,18 +56,18 @@ public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset
                         datasets.setId("");
                         datasets.setLabel(local("en", "Datasets"));
 
-                        datasets.setMembers(query(
+                        datasets.setMembers((items(
 
-                                filter(expression("available"), any()),
-
-                                model(with(new Dataset<>(), dataset -> {
+                                with(new Dataset<>(), dataset -> {
 
                                     dataset.setId("");
                                     dataset.setLabel(local("en", ""));
 
-                                }))
+                                }),
 
-                        ));
+                                filter(expression("available"), any())
+
+                        )));
 
                     })))
 

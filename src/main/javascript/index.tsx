@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-import { Actors, DataActors } from "@ec2u/data/pages/actors";
 import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
-import { DataDocument, Document } from "@ec2u/data/pages/documents/document";
-import { DataDocuments, Documents } from "@ec2u/data/pages/documents/documents";
-import { DataEvent, Event } from "@ec2u/data/pages/events/event";
-import { DataEvents, Events } from "@ec2u/data/pages/events/events";
-import DataNone from "@ec2u/data/pages/none";
-import { DataProgram, Program } from "@ec2u/data/pages/programs/program";
-import { DataPrograms, Programs } from "@ec2u/data/pages/programs/programs";
-import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
-import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
 import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
 import DataWild, { Wild } from "@ec2u/data/pages/wild";
@@ -81,8 +71,8 @@ createRoot(document.body.firstElementChild!).render((
 				// [Courses.id]: DataCourses,
 				// [Course.id]: DataCourse,
 
-                // [Documents.id]: DataDocuments,
-                // [Document.id]: DataDocument,
+				// [Documents.id]: DataDocuments,
+				// [Document.id]: DataDocument,
 
 				// [id(Actors)]: DataActors,
 
