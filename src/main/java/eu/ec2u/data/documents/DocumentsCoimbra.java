@@ -20,7 +20,7 @@ import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.documents.Documents.CSVLoader;
+import eu.ec2u.data.documents.Documents._CSVLoader;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
@@ -62,9 +62,9 @@ public final class DocumentsCoimbra implements Runnable {
 
         Xtream.of(url)
 
-                .flatMap(new CSVLoader(Coimbra))
+                .flatMap(new _CSVLoader(Coimbra))
 
-                .pipe(documents -> validate(Document(), Set.of(Document), documents))
+                .pipe(documents -> validate(Documents._Document(), Set.of(Document), documents))
 
                 .forEach(new Upload()
                         .contexts(Context)

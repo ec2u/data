@@ -16,23 +16,17 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.documents.Documents.CSVLoader;
 import org.eclipse.rdf4j.model.IRI;
-
-import java.util.Set;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.data.universities._Universities.Turku;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 
 public final class DocumentsTurku implements Runnable {
@@ -62,14 +56,16 @@ public final class DocumentsTurku implements Runnable {
 
         Xtream.of(url)
 
-                .flatMap(new CSVLoader(Turku))
+                .flatMap(new Documents.CSVLoader(Turku))
 
-                .pipe(documents -> validate(Document(), Set.of(Document), documents))
+                // !!! .pipe(documents -> validate(Document(), Set.of(Document), documents))
 
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                );
+                .forEach(document -> System.out.println(document));
+
+        // .forEach(new Upload()
+        //         .contexts(Context)
+        //         .clear(true)
+        // );
     }
 
 }

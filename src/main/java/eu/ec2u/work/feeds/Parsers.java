@@ -30,6 +30,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -44,18 +45,24 @@ import static java.lang.String.format;
 
 public final class Parsers {
 
-    private static final Pattern PersonPattern=Pattern.compile("([^,]+),([^(]+)(?:\\(([^)]+)\\))?");
-    private static final Pattern URLPattern=Pattern.compile("^https?://\\S+$");
+    private static final Pattern URIPattern=Pattern.compile("^https?://\\S+$");
     private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
+    private static final Pattern PersonPattern=Pattern.compile("([^,]+),([^(]+)(?:\\(([^)]+)\\))?");
 
 
     private Parsers() { }
 
 
-    public static Optional<IRI> url(final String url) {
-        return Optional.of(url)
-                .filter(URLPattern.asMatchPredicate())
+    public static Optional<IRI> iri(final String iri) {
+        return Optional.of(iri)
+                .filter(URIPattern.asMatchPredicate())
                 .map(Values::iri);
+    }
+
+    public static Optional<URI> uri(final String uri) {
+        return Optional.of(uri)
+                .filter(URIPattern.asMatchPredicate())
+                .map(URI::create);
     }
 
     public static Optional<String> email(final String email) {
@@ -69,7 +76,7 @@ public final class Parsers {
     }
 
 
-    public static Optional<Frame> person(final String person, final _Universities university) {
+    public static Optional<Frame> _person(final String person, final _Universities university) {
         return Optional.of(person)
 
                 .map(PersonPattern::matcher)
@@ -97,7 +104,7 @@ public final class Parsers {
                 });
     }
 
-    public static Optional<Frame> concept(final IRI scheme, final String label, final String language) {
+    public static Optional<Frame> _concept(final IRI scheme, final String label, final String language) {
         return Optional.of(frame(EC2U.item(scheme, lower(label)))
                 .value(RDF.TYPE, SKOS.CONCEPT)
                 .value(SKOS.TOP_CONCEPT_OF, scheme)

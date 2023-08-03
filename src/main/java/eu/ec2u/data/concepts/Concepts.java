@@ -57,32 +57,6 @@ public final class Concepts extends Delegator {
     //        ));
     //    }
 
-    //    private static Shape Concept() {
-    //        return relate(link(RDFS.ISDEFINEDBY, Resource(),
-    //
-    //                filter(clazz(SKOS.CONCEPT)),
-    //
-    //                field(SKOS.PREF_LABEL, multilingual()),
-    //                field(SKOS.ALT_LABEL, lang(Languages)),
-    //                field(SKOS.DEFINITION, multilingual()),
-    //
-    //                field(SKOS.IN_SCHEME, required(), Reference()),
-    //                field(SKOS.TOP_CONCEPT_OF, optional(), Reference()),
-    //
-    //                detail(
-    //
-    //                        field(SKOS.BROADER_TRANSITIVE, Reference(),
-    //                                field(SKOS.BROADER, Reference())
-    //                        ),
-    //
-    //                        field(SKOS.BROADER, Reference()),
-    //                        field(SKOS.NARROWER, Reference()),
-    //                        field(SKOS.RELATED, Reference())
-    //
-    //                )
-    //
-    //        ));
-    //    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

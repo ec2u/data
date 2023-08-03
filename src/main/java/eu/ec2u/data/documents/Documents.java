@@ -17,15 +17,21 @@
 package eu.ec2u.data.documents;
 
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.toolkits.Strings;
+import com.metreeca.link.Local;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.concepts.Concept;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities._Universities;
@@ -39,9 +45,12 @@ import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
+import java.net.URI;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -50,17 +59,23 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Strings.lower;
+import static com.metreeca.link.Frame.with;
+import static com.metreeca.link.Local.local;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.concepts.Concept.concept;
+import static eu.ec2u.data.documents.Document.Valid;
+import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Resources.Publisher;
-import static eu.ec2u.work.feeds.Parsers.concept;
-import static eu.ec2u.work.feeds.Parsers.person;
+import static eu.ec2u.work.feeds.Parsers._concept;
+import static eu.ec2u.work.feeds.Parsers._person;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 
-public final class Documents extends Delegator {
+public final class Documents extends Dataset<Document> {
 
     public static final IRI Context=EC2U.item("/documents/");
 
@@ -72,60 +87,36 @@ public final class Documents extends Delegator {
     public static final IRI Document=EC2U.term("Document");
 
 
-    public static Shape Document() {
-
+    static Shape _Document() {
         throw new UnsupportedOperationException(";( be implemented"); // !!!
-
-        // return relate(Resource(),
-        //
-        //         hidden(field(RDF.TYPE, all(Document))),
-        //
-        //         field(Schema.url, multiple(), datatype(IRIType)),
-        //
-        //         field(DCTERMS.IDENTIFIER, optional(), datatype(XSD.STRING)),
-        //         field(DCTERMS.LANGUAGE, multiple(), datatype(XSD.STRING)),
-        //
-        //         field(DCTERMS.VALID, optional(), datatype(XSD.STRING)),
-        //
-        //         field(DCTERMS.CREATOR, multiple(), Reference()),
-        //         field(DCTERMS.CONTRIBUTOR, multiple(), Reference()),
-        //
-        //         field(DCTERMS.LICENSE, optional(), datatype(XSD.STRING)),
-        //         field(DCTERMS.RIGHTS, optional(), datatype(XSD.STRING)),
-        //
-        //         field(DCTERMS.AUDIENCE, multiple(), Reference()),
-        //         field(DCTERMS.RELATION, multiple(), Reference())
-        //
-        // );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Documents() {
-        // delegate(handler(
-        //
-        //         new Driver(Document(),
-        //
-        //                 filter(clazz(Document))
-        //
-        //         ),
-        //
-        //         new Router()
-        //
-        //                 .path("/", new Worker()
-        //                         .get(new Relator())
-        //                 )
-        //
-        //                 .path("/{id}", new Worker()
-        //                         .get(new Relator())
-        //                 )
-        //
-        // ));
+    public static final class Handler extends Delegator {
+
+        public Handler() {
+            delegate(new Worker()
+
+                    .get(new Relator(with(new Documents(), universities -> {
+
+                        universities.setId("");
+                        universities.setLabel(local("en", "Documents"));
+
+                        universities.setMembers(Set.of(with(new Document(), document -> {
+
+                            document.setId("");
+                            document.setLabel(local("en", ""));
+
+                        })));
+
+                    })))
+
+            );
+        }
+
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
 
@@ -149,14 +140,290 @@ public final class Documents extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static final class CSVLoader extends CSVProcessor<Frame> {
+    static final class CSVLoader extends CSVProcessor<Document> {
 
-        private static final Pattern ValidPattern=Pattern.compile("\\d{4}(?:/\\d{4})?");
+        private static final Pattern ValidPattern=Pattern.compile(Valid);
 
 
         private final _Universities university;
 
+
         CSVLoader(final _Universities university) {
+
+            if ( university == null ) {
+                throw new NullPointerException("null university");
+            }
+
+            this.university=university;
+        }
+
+
+        @Override protected Optional<Document> process(final CSVRecord record, final Collection<CSVRecord> records) {
+            return id(record).map(id -> with(new Document(), document -> {
+
+                final Local<String> title=title(record);
+                final Local<String> description=description(record);
+
+                document.setId(id);
+                document.setLabel(title); // !!! clip
+                document.setComment(description); // !!! clip
+                // !!! document.setUniversity(university);
+
+                document.setUrls(urls(record));
+                document.setIdentifier(identifier(record));
+                document.setLanguages(languages(record));
+
+                document.setTitle(title);
+                document.setDescription(description);
+
+                document.setIssued(issued(record));
+                document.setModified(modified(record));
+                document.setValid(valid(record));
+
+                //  .frame(DCTERMS.PUBLISHER, publisher(record))
+
+                document.setCreators(creators(record));
+                document.setContributors(contributors(record));
+
+                document.setLicense(license(record));
+                document.setRights(rights(record));
+
+                document.setTypes(types(record));
+                document.setSubjects(subjects(record));
+                document.setAudiences(audiences(record));
+
+                document.setRelations(relations(record, records));
+
+            }));
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private Optional<String> id(final CSVRecord record) {
+
+            final Optional<String> identifier=value(record, "Identifier");
+            final Optional<String> titleEnglish=value(record, "Title (English)");
+            final Optional<String> titleLocal=value(record, "Title (Local)");
+
+            if ( titleEnglish.isEmpty() && titleLocal.isEmpty() ) {
+
+                warning(record, "no english/local title provided");
+
+                return Optional.empty();
+
+            } else {
+
+                return Optional.of(EC2U.item(Context, university, identifier
+                                        .or(() -> titleEnglish)
+                                        .or(() -> titleLocal)
+                                        .orElse("") // unexpected
+                                )
+                                .stringValue() // !!!
+                );
+
+            }
+        }
+
+
+        private Set<URI> urls(final CSVRecord record) {
+            return Stream
+
+                    .of(
+                            value(record, "URL (English)", Parsers::uri),
+                            value(record, "URL (Local)", Parsers::uri)
+                    )
+
+                    .flatMap(Optional::stream)
+                    .collect(toSet());
+        }
+
+        private String identifier(final CSVRecord record) {
+            return value(record, "Identifier")
+                    .orElse(null);
+        }
+
+        private Set<String> languages(final CSVRecord record) {
+            return Stream
+
+                    .of(
+                            value(record, "Title (English)").map(v -> "en"),
+                            value(record, "Title (Local)").map(v -> university.Language)
+                    )
+
+                    .flatMap(Optional::stream)
+                    .collect(toSet());
+        }
+
+
+        private Local<String> title(final CSVRecord record) {
+            return local(Stream
+
+                    .of(
+                            value(record, "Title (English)").map(v -> local("en", v)),
+                            value(record, "Title (Local)").map(v -> local(university.Language, v))
+                    )
+
+                    .flatMap(Optional::stream)
+                    .collect(toSet())
+            );
+        }
+
+        private Local<String> description(final CSVRecord record) {
+            return local(Stream
+
+                    .of(
+                            value(record, "Description (English)").map(v -> local("en", v)),
+                            value(record, "Description (Local)").map(v -> local(university.Language, v))
+                    )
+
+                    .flatMap(Optional::stream)
+                    .collect(toSet())
+            );
+        }
+
+
+        private LocalDate issued(final CSVRecord record) {
+            return value(record, "Issued", Parsers::localDate)
+                    .orElse(null);
+        }
+
+        private LocalDate modified(final CSVRecord record) {
+            return value(record, "Modified", Parsers::localDate)
+                    .orElse(null);
+        }
+
+        private String valid(final CSVRecord record) {
+            return value(record, "Valid", v -> Optional.of(v)
+                    .filter(ValidPattern.asMatchPredicate())
+            )
+                    .orElse(null);
+        }
+
+
+        private Optional<Frame> publisher(final CSVRecord record) {
+
+            final Optional<IRI> home=value(record, "Home", Parsers::iri);
+            final Optional<String> nameEnglish=value(record, "Publisher (English)");
+            final Optional<String> nameLocal=value(record, "Publisher (Local)");
+
+            return home.map(Value::stringValue)
+
+                    .or(() -> nameEnglish)
+                    .or(() -> nameLocal)
+
+                    .map(id -> {
+
+                        if ( nameEnglish.isEmpty() && nameLocal.isEmpty() ) {
+
+                            warning(record, "no english/local publisher name provided");
+
+                            return null;
+
+                        }
+
+                        return frame(EC2U.item(Organizations.Context, university, lower(id)))
+
+                                .value(RDF.TYPE, Publisher)
+
+                                .value(SKOS.PREF_LABEL, nameEnglish.map(v -> literal(v, "en")))
+                                .value(SKOS.PREF_LABEL, nameLocal.map(v -> literal(v, university.Language)))
+
+                                .value(FOAF.HOMEPAGE, home);
+
+                    });
+
+
+        }
+
+        private Set<Person> creators(final CSVRecord record) {
+            return values(record, "Contact", person -> person(person, university))
+                    .collect(toSet());
+        }
+
+        private Set<Person> contributors(final CSVRecord record) {
+            return values(record, "Contributor", person -> person(person, university))
+                    .collect(toSet());
+        }
+
+
+        private String license(final CSVRecord record) {
+            return value(record, "License")
+                    .map(Strings::title)
+                    .orElse(null);
+        }
+
+        private String rights(final CSVRecord record) {
+            return value(record, "Rights")
+                    .orElse(null);
+        }
+
+
+        private Set<Concept> types(final CSVRecord record) {
+            return value(record, "Type", type ->
+                    concept(Types, type, "en")
+            )
+                    .stream()
+                    .collect(toSet());
+        }
+
+        private Set<Concept> subjects(final CSVRecord record) {
+            return values(record, "Subject", subject ->
+                    concept(Topics, subject, "en")
+            )
+                    .collect(toSet());
+        }
+
+        private Set<Concept> audiences(final CSVRecord record) {
+            return values(record, "Audience", audience ->
+                    concept(Audiences, audience, "en")
+            )
+                    .collect(toSet());
+        }
+
+
+        private Set<Document> relations(final CSVRecord record, final Collection<CSVRecord> records) {
+            return values(record, "Related", related -> {
+
+                final Collection<String> matches=records.stream()
+
+                        .filter(record1 -> value(record1, "Identifier").filter(related::equalsIgnoreCase)
+                                .or(() -> value(record1, "Title (English)").filter(related::equalsIgnoreCase))
+                                .or(() -> value(record1, "Title (Local)").filter(related::equalsIgnoreCase))
+                                .isPresent()
+                        )
+
+                        .map(this::id)
+                        .flatMap(Optional::stream)
+
+                        .collect(toList());
+
+                if ( matches.isEmpty() ) {
+                    warning(format("no matches for reference <%s>", related));
+                }
+
+                if ( matches.size() > 1 ) {
+                    warning(format("multiple matches for reference <%s>", related));
+                }
+
+                return matches.stream().findFirst();
+            })
+
+                    .map(id -> with(new Document(), related -> related.setId(id)))
+                    .collect(toSet());
+        }
+
+    }
+
+    static final class _CSVLoader extends CSVProcessor<Frame> {
+
+        private static final Pattern ValidPattern=Pattern.compile(Valid);
+
+
+        private final _Universities university;
+
+
+        _CSVLoader(final _Universities university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");
@@ -176,8 +443,8 @@ public final class Documents extends Delegator {
                     .values(RDF.TYPE, Document)
                     .value(Resources.university, university.Id)
 
-                    .value(Schema.url, value(record, "URL (English)", Parsers::url))
-                    .value(Schema.url, value(record, "URL (Local)", Parsers::url))
+                    .value(Schema.url, value(record, "URL (English)", Parsers::iri))
+                    .value(Schema.url, value(record, "URL (Local)", Parsers::iri))
 
                     .value(DCTERMS.IDENTIFIER, value(record, "Identifier")
                             .map(Values::literal)
@@ -223,8 +490,8 @@ public final class Documents extends Delegator {
 
                     .frame(DCTERMS.PUBLISHER, publisher(record))
 
-                    .frame(DCTERMS.CREATOR, value(record, "Contact", person -> person(person, university)))
-                    .frames(DCTERMS.CONTRIBUTOR, values(record, "Contributor", person -> person(person, university)))
+                    .frame(DCTERMS.CREATOR, value(record, "Contact", person -> _person(person, university)))
+                    .frames(DCTERMS.CONTRIBUTOR, values(record, "Contributor", person -> _person(person, university)))
 
                     .value(DCTERMS.LICENSE, value(record, "License", this::license)
                             .map(Values::literal)
@@ -235,15 +502,15 @@ public final class Documents extends Delegator {
                     )
 
                     .frame(DCTERMS.TYPE, value(record, "Type", type ->
-                            concept(Types, type, "en")
+                            _concept(Types, type, "en")
                     ))
 
                     .frames(DCTERMS.SUBJECT, values(record, "Subject", subject ->
-                            concept(Topics, subject, "en")
+                            _concept(Topics, subject, "en")
                     ))
 
                     .frames(DCTERMS.AUDIENCE, values(record, "Audience", audience ->
-                            concept(Audiences, audience, "en")
+                            _concept(Audiences, audience, "en")
                     ))
 
                     .values(DCTERMS.RELATION, values(record, "Related", related ->
@@ -281,7 +548,7 @@ public final class Documents extends Delegator {
 
         private Optional<Frame> publisher(final CSVRecord record) {
 
-            final Optional<IRI> home=value(record, "Home", Parsers::url);
+            final Optional<IRI> home=value(record, "Home", Parsers::iri);
             final Optional<String> nameEnglish=value(record, "Publisher (English)");
             final Optional<String> nameLocal=value(record, "Publisher (Local)");
 

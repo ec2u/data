@@ -69,7 +69,7 @@ import static com.metreeca.link.Local.local;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
-import static eu.ec2u.work.feeds.Parsers.person;
+import static eu.ec2u.work.feeds.Parsers._person;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.function.Predicate.not;
@@ -208,14 +208,14 @@ public final class Units extends Dataset<Unit> {
                     .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, "en"))) // !!! no language
                     .value(SKOS.ALT_LABEL, acronym.map(v -> literal(v, university.Language))) // !!! no language
 
-                    .value(FOAF.HOMEPAGE, value(record, "Factsheet", Parsers::url))
-                    .value(FOAF.HOMEPAGE, value(record, "Homepage", Parsers::url))
+                    .value(FOAF.HOMEPAGE, value(record, "Factsheet", Parsers::iri))
+                    .value(FOAF.HOMEPAGE, value(record, "Homepage", Parsers::iri))
 
                     .value(FOAF.MBOX, value(record, "Email", Parsers::email)
                             .map(Values::literal)
                     )
 
-                    .frame(inverse(ORG.HEAD_OF), value(record, "Head", person -> person(person, university)))
+                    .frame(inverse(ORG.HEAD_OF), value(record, "Head", person -> _person(person, university)))
 
             );
         }

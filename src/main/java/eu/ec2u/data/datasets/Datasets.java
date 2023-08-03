@@ -34,8 +34,7 @@ import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.with;
 import static com.metreeca.link.Local.local;
 import static com.metreeca.link.specs.Constraint.any;
-import static com.metreeca.link.specs.Expression.expression;
-import static com.metreeca.link.specs.Index.index;
+import static com.metreeca.link.specs.Query.query;
 import static com.metreeca.link.specs.Specs.filter;
 
 import static eu.ec2u.data.Data.exec;
@@ -56,7 +55,7 @@ public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset
                         datasets.setId("");
                         datasets.setLabel(local("en", "Datasets"));
 
-                        datasets.setMembers(index(
+                        datasets.setMembers(query(
 
                                 with(new Dataset<>(), dataset -> {
 
@@ -65,7 +64,7 @@ public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset
 
                                 }),
 
-                                filter(expression("available"), any())
+                                filter("available", any())
 
                         ));
 

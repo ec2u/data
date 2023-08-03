@@ -16,7 +16,89 @@
 
 package eu.ec2u.data.concepts;
 
-import eu.ec2u.data.resources.Resource;
+import com.metreeca.link.Local;
+import com.metreeca.link.jsonld.Namespace;
+import com.metreeca.link.jsonld.Property;
+import com.metreeca.link.jsonld.Type;
+import com.metreeca.link.shacl.Required;
 
+import eu.ec2u.data.EC2U;
+import eu.ec2u.data.resources.Resource;
+import lombok.Getter;
+import lombok.Setter;
+import org.eclipse.rdf4j.model.IRI;
+
+import java.net.URI;
+import java.util.Optional;
+import java.util.Set;
+
+import static com.metreeca.http.toolkits.Strings.lower;
+import static com.metreeca.http.toolkits.Strings.title;
+import static com.metreeca.link.Frame.with;
+
+@Type
+@Namespace("skos:")
+@Getter
+@Setter
 public final class Concept extends Resource {
+
+    public static Optional<Concept> concept(final IRI scheme, final String label, final String language) { // !!! URI
+
+        return Optional.of(with(new Concept(), concept -> {
+
+            final ConceptScheme conceptScheme=with(new ConceptScheme(), cs -> cs.setId(scheme.stringValue()));
+            final Local<String> local=Local.local(language, title(label));
+
+            concept.setId(EC2U.item(scheme, lower(label)).stringValue()); // !!! string
+
+            concept.setLabel(local);
+            concept.setPrefLabel(local);
+
+            concept.setInScheme(conceptScheme);
+            concept.setTopConceptOf(conceptScheme);
+
+        }));
+
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Required
+    private Local<String> prefLabel;
+
+    @com.metreeca.link.shacl.Optional
+    private Local<Set<String>> altLabel;
+
+    @com.metreeca.link.shacl.Optional
+    private Local<String> definition;
+
+    @Required
+    private ConceptScheme inScheme;
+
+    @com.metreeca.link.shacl.Optional
+    private ConceptScheme topConceptOf; // !!! == inScheme
+
+
+    @com.metreeca.link.shacl.Optional
+    private Set<Concept> broader; // !!! broader.inScheme == inScheme
+
+    @com.metreeca.link.shacl.Optional
+    private Set<Concept> narrower; // !!! broader.inScheme == inScheme
+
+    @com.metreeca.link.shacl.Optional
+    private Set<Concept> related; // !!! broader.inScheme == inScheme
+
+
+    @com.metreeca.link.shacl.Optional
+    @Property("rdfs:")
+    private URI isDefinedBy;
+
+
+    @Type
+    @Namespace("skos:")
+    public static final class ConceptScheme extends Resource {
+
+    }
+
 }

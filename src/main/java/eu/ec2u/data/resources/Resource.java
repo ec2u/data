@@ -22,17 +22,15 @@ import com.metreeca.link.jsonld.Id;
 import com.metreeca.link.jsonld.Namespace;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.shacl.MaxLength;
 import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.universities.University;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.net.URI;
-import java.time.Instant;
-import java.util.Set;
 
 @Type
 @Namespace(EC2U.Terms)
@@ -42,6 +40,7 @@ import java.util.Set;
 @Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
 @Namespace(prefix="void", value="http://rdfs.org/ns/void#")
 @Namespace(prefix="wgs84", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
+@Namespace(prefix="foaf", value="http://xmlns.com/foaf/0.1/")
 @Setter
 @Getter
 public abstract class Resource {
@@ -57,49 +56,36 @@ public abstract class Resource {
     @Property("rdfs:")
     private Local<String> comment;
 
-
     @Optional
-    @Property("dct:")
-    private Instant created;
-
-    @Optional
-    @Property("dct:")
-    private Instant issued;
-
-    @Optional
-    @Property("dct:")
-    private Instant modified;
+    private University university;
 
 
-    @Required
-    @MaxLength(100)
-    @Property("dct:")
-    private Local<String> title;
-
-    @Optional
-    @MaxLength(100)
-    @Property("dct:")
-    private Local<String> alternative;
-
-    @Optional
-    @MaxLength(1000)
-    @Property("dct:")
-    private Local<String> description;
-
-
-    @Optional
-    @Property("dct:")
-    private Publisher publisher;
-
-    @Optional
-    @Property("dct:")
-    private Reference source;
-
-    @Property("dct:")
-    private Set<Reference> type;
-
-    @Property("dct:")
-    private Set<Reference> subject;
+    // @Optional
+    // @Property("dct:")
+    // private Instant created;
+    //
+    // @Optional
+    // @Property("dct:")
+    // private Instant issued;
+    //
+    // @Optional
+    // @Property("dct:")
+    // private Instant modified;
+    //
+    //
+    // @Optional
+    // @Property("dct:")
+    // private Publisher publisher;
+    //
+    // @Optional
+    // @Property("dct:")
+    // private Reference source;
+    //
+    // @Property("dct:")
+    // private Set<Reference> type;
+    //
+    // @Property("dct:")
+    // private Set<Reference> subject;
 
 
     private static final class Publisher extends Resource {
