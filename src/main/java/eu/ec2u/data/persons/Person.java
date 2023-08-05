@@ -19,6 +19,7 @@ package eu.ec2u.data.persons;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.link.jsonld.Namespace;
 import com.metreeca.link.jsonld.Type;
+import com.metreeca.link.shacl.Format;
 import com.metreeca.link.shacl.Required;
 
 import eu.ec2u.data.EC2U;
@@ -79,14 +80,15 @@ public final class Person extends Resource {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @com.metreeca.link.shacl.Optional // !!! clash
-    @com.metreeca.link.shacl.Pattern("") // !!! clash // !!! title pattern
+    @Format("") // !!!
     private String title;
 
     @Required
+    @Format("") // !!!
     private String givenName;
 
     @Required
+    @Format("") // !!!
     private String familyName;
 
 }

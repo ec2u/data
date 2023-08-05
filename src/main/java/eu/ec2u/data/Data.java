@@ -32,6 +32,8 @@ import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
 
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.documents.Document;
+import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.repository.Repository;
@@ -159,13 +161,16 @@ public final class Data implements Runnable {
                                                 .path("/universities/", new Universities.Handler())
                                                 .path("/universities/{code}", new University.Handler())
 
-                                        // .path("/units/", new Units.Handler())
-                                        // .path("/units/{code}", new Unit.Handler())
+                                                // .path("/units/", new Units.Handler())
+                                                // .path("/units/{code}", new Unit.Handler())
 
-                                        //.path("/offers/*", new Offers())
-                                        //.path("/programs/*", new Offers.Programs())
-                                        //.path("/courses/*", new Offers.Courses())
-                                        //.path("/documents/*", new Documents())
+                                                //.path("/offers/*", new Offers())
+                                                //.path("/programs/*", new Offers.Programs())
+                                                //.path("/courses/*", new Offers.Courses())
+
+                                                .path("/documents/*", new Documents.Handler())
+                                                .path("/documents/{code}", new Document.Handler())
+
                                         // .path("/persons/*", new Persons())
                                         //.path("/events/*", new Events())
                                         //.path("/concepts/*", new Concepts())

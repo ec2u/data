@@ -67,30 +67,23 @@ public final class Concept extends Resource {
     @Required
     private Local<String> prefLabel;
 
-    @com.metreeca.link.shacl.Optional
     private Local<Set<String>> altLabel;
 
-    @com.metreeca.link.shacl.Optional
     private Local<String> definition;
 
     @Required
     private ConceptScheme inScheme;
 
-    @com.metreeca.link.shacl.Optional
     private ConceptScheme topConceptOf; // !!! == inScheme
 
 
-    @com.metreeca.link.shacl.Optional
     private Set<Concept> broader; // !!! broader.inScheme == inScheme
 
-    @com.metreeca.link.shacl.Optional
     private Set<Concept> narrower; // !!! broader.inScheme == inScheme
 
-    @com.metreeca.link.shacl.Optional
     private Set<Concept> related; // !!! broader.inScheme == inScheme
 
 
-    @com.metreeca.link.shacl.Optional
     @Property("rdfs:")
     private URI isDefinedBy;
 

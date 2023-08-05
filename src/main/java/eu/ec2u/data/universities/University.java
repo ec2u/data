@@ -23,7 +23,6 @@ import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Local;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
 import eu.ec2u.data.organizations.OrgFormalOrganization;
@@ -72,10 +71,8 @@ public final class University extends Resource implements OrgFormalOrganization 
     private URI image;
 
 
-    @Optional
     private Year inception;
 
-    @Optional
     private BigInteger students;
 
 

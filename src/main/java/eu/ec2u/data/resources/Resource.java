@@ -22,7 +22,6 @@ import com.metreeca.link.jsonld.Id;
 import com.metreeca.link.jsonld.Namespace;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
 import eu.ec2u.data.EC2U;
@@ -52,11 +51,9 @@ public abstract class Resource {
     @Property("rdfs:")
     private Local<String> label;
 
-    @Optional
     @Property("rdfs:")
     private Local<String> comment;
 
-    @Optional
     private University university;
 
 
@@ -90,7 +87,6 @@ public abstract class Resource {
 
     private static final class Publisher extends Resource {
 
-        @Optional
         @Property("dct:")
         private URI coverage;
 

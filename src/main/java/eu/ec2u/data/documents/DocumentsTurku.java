@@ -48,11 +48,9 @@ public final class DocumentsTurku implements Runnable {
 
     @Override public void run() {
 
-        final String url=vault
-                .get(DataUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined data URL <%s>", DataUrl
-                )));
+        final String url=vault.get(DataUrl).orElseThrow(() -> new IllegalStateException(format(
+                "undefined data URL <%s>", DataUrl
+        )));
 
         Xtream.of(url)
 

@@ -19,7 +19,6 @@ package eu.ec2u.data.datasets;
 import com.metreeca.link.Local;
 import com.metreeca.link.jsonld.Property;
 import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.shacl.Optional;
 import com.metreeca.link.shacl.Required;
 
 import eu.ec2u.data.resources.Container;
@@ -37,7 +36,6 @@ import java.time.Instant;
 @Setter
 public class Dataset<T extends Resource> extends Container<T> { // !!! abstract/final
 
-    @Optional
     @Property("dct:")
     private Instant available;
 
@@ -45,19 +43,15 @@ public class Dataset<T extends Resource> extends Container<T> { // !!! abstract/
     @Property("dct:")
     private String rights;
 
-    @Optional
     @Property("dct:")
     private Reference license;
 
-    @Optional
     @Property("dct:")
     private Local<String> accessRights;
 
-    @Optional
     @Property("void:")
     private BigInteger entities;
 
-    @Optional
     @Property("rdfs:")
     private URI isDefinedBy;
 
