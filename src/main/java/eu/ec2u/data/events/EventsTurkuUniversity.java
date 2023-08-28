@@ -34,16 +34,24 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.Work;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.*;
-
-import java.io.InputStream;
-import java.time.*;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import javax.json.Json;
 import javax.json.JsonReader;
+import java.io.InputStream;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.metreeca.core.Locator.service;
 import static com.metreeca.core.services.Logger.logger;
@@ -61,7 +69,6 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
@@ -215,7 +222,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Work::url).map(Values::iri))
                 .value(DCTERMS.CREATED, json.string("published").map(timestamp -> instant(timestamp, now)))
-                .value(DCTERMS.MODIFIED, json.string("updated").map(timestamp1 -> instant(timestamp1, now)))
+                .value(DCTERMS.MODIFIED, json.string("updated").map(timestamp -> instant(timestamp, now)))
 
                 .value(Schema.url, json.string("additional_information.link.url")
                         .or(() -> json.string("source_link"))
