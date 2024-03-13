@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
+import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
@@ -57,7 +58,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(DCTERMS.COVERAGE, Coverage.City)
             .values(RDFS.LABEL,
                     literal("Grand Poitiers / Events", "en"),
                     literal("Grand Poitiers / Sortir", Poitiers.Language)
@@ -167,7 +168,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             final Literal label=literal(category, Poitiers.Language);
 
-            return frame(EC2U.item(Events.Scheme, category))
+            return frame(_EC2U.item(Events.Scheme, category))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                     .value(RDFS.LABEL, label)

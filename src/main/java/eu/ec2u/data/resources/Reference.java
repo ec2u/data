@@ -1,6 +1,6 @@
 
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,24 @@
 
 package eu.ec2u.data.resources;
 
-import static com.metreeca.link.Local.local;
+import com.metreeca.link.Shape;
 
-public final class Reference extends Resource {
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-    public Reference() {
-        setId("");
-        setLabel(local("*", ""));
+import static com.metreeca.link.Frame.ID;
+import static com.metreeca.link.Shape.*;
+
+public final class Reference {
+
+    public static Shape Reference() {
+        return shape(
+
+                property("id", ID),
+
+                property(RDFS.LABEL, required(), local()),
+                property(RDFS.COMMENT, optional(), local())
+
+        );
     }
 
 }

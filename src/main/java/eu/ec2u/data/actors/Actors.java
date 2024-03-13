@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -53,7 +53,7 @@ import static java.util.stream.Collectors.toMap;
 
 public final class Actors implements Runnable {
 
-    private static final IRI Context=EC2U.item("/actors/");
+    private static final IRI Context=_EC2U.item("/actors/");
 
 
     private static final String DataTermsUrl="actors-terms-url";
@@ -67,7 +67,7 @@ public final class Actors implements Runnable {
 
 
     private static IRI term(final String name) {
-        return EC2U.term(format("actors/%s", name));
+        return _EC2U.term(format("actors/%s", name));
     }
 
 
@@ -102,7 +102,7 @@ public final class Actors implements Runnable {
         return Stream
 
                 .of(
-                        rdf(Actors.class, ".ttl", EC2U.Base)
+                        rdf(Actors.class, ".ttl", _EC2U.Base)
                 )
 
                 .flatMap(Collection::stream);
@@ -170,7 +170,7 @@ public final class Actors implements Runnable {
     private Frame actor(final CSVRecord record) {
         return frame(iri(Context, normalize(record.get(col("A")))))
 
-                .value(RDF.TYPE, EC2U.term("Actor"))
+                .value(RDF.TYPE, _EC2U.term("Actor"))
 
                 .value(Resources.university, university(record)) // !!! missing in the survey
 

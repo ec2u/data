@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.http.xml.actions.Untag;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.Value;
@@ -63,7 +63,7 @@ public final class WordPress {
                 .value(DCTERMS.SOURCE, frame.value(Link))
 
                 .frames(DCTERMS.SUBJECT, frame.strings(Category)
-                        .map(category -> frame(EC2U.item(Events.Scheme, category))
+                        .map(category -> frame(_EC2U.item(Events.Scheme, category))
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                                 .value(RDFS.LABEL, literal(category, lang))

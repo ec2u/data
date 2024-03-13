@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,43 +16,54 @@
 
 package eu.ec2u.data.datasets;
 
-import com.metreeca.link.Local;
-import com.metreeca.link.jsonld.Property;
-import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.shacl.Required;
+import com.metreeca.link.Shape;
 
-import eu.ec2u.data.resources.Container;
-import eu.ec2u.data.resources.Reference;
-import eu.ec2u.data.resources.Resource;
-import lombok.Getter;
-import lombok.Setter;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.VOID;
 
-import java.math.BigInteger;
-import java.net.URI;
-import java.time.Instant;
+import static com.metreeca.link.Shape.*;
 
-@Type
-@Getter
-@Setter
-public class Dataset<T extends Resource> extends Container<T> { // !!! abstract/final
+import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data.resources.Reference.Reference;
+import static eu.ec2u.data.resources.Resource.Resource;
 
-    @Property("dct:")
-    private Instant available;
+public final class Dataset {
 
-    @Required
-    @Property("dct:")
-    private String rights;
+    static final IRI Dataset=term("Dataset");
 
-    @Property("dct:")
-    private Reference license;
 
-    @Property("dct:")
-    private Local<String> accessRights;
+    public static Shape Dataset() {
+        return shape(Resource(),
 
-    @Property("void:")
-    private BigInteger entities;
+                property(DCTERMS.AVAILABLE, optional(), instant()), // !!! vs dct:issued?
 
-    @Property("rdfs:")
-    private URI isDefinedBy;
+                property(DCTERMS.RIGHTS, required(), string()),
+                property(DCTERMS.ACCESS_RIGHTS, optional(), local()),
+                property(DCTERMS.LICENSE, optional(), Reference()),
+
+                property(VOID.URI_SPACE, optional(), string()),
+                property(VOID.ENTITIES, optional(), integer()),
+                property(RDFS.ISDEFINEDBY, optional(), reference())
+
+        );
+    }
+
+    public static Shape Dataset(final Shape shape) {
+
+        if ( shape == null ) {
+            throw new NullPointerException("null shape");
+        }
+
+        return shape(virtual(true), // !!! make only rdf:member virtual // Dataset(),
+
+                property("members", RDFS.MEMBER, shape)
+
+        );
+    }
+
+
+    private Dataset() { }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,64 +18,76 @@ package eu.ec2u.data.universities;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.open.actions.WikidataMirror;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
-import com.metreeca.link.jsonld.Virtual;
+import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
-import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.text;
-import static com.metreeca.link.Frame.with;
-import static com.metreeca.link.Local.local;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.filter;
+import static com.metreeca.link.Query.query;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data.datasets.Dataset.Dataset;
+import static eu.ec2u.data.universities.University.University;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
 
-@Virtual
-public final class Universities extends Dataset<University> {
+public final class Universities extends Delegator {
 
-    private static final IRI Context=EC2U.item("/universities/");
+    private static final IRI Context=item("/universities/");
 
-    public static final IRI University=EC2U.term("University");
+    public static final IRI University=term("University");
 
 
-    public static final class Handler extends Delegator {
-
-        public Handler() {
-            delegate(new Worker()
-
-                    .get(new Relator(with(new Universities(), universities -> {
-
-                        universities.setId("");
-                        universities.setLabel(local("en", "Universities"));
-
-                        universities.setMembers(Set.of(with(new University(), university -> {
-
-                            university.setId("");
-                            university.setLabel(local("en", ""));
-
-                        })));
-
-                    })))
-
-            );
-        }
-
+    public static Shape Universities() {
+        return Dataset(University());
     }
+
+
+    public Universities() {
+        delegate(handler(new Driver(Universities()), new Worker()
+
+                .get(new Relator(frame(
+
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("Universities", "en")),
+
+                        field(RDFS.MEMBER, query(
+
+                                frame(
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", "en"))
+                                ),
+
+                                filter(RDF.TYPE, University)
+
+                        ))
+
+                )))
+
+        ));
+    }
+
 
     public static final class Loader implements Runnable {
 
@@ -86,7 +98,7 @@ public final class Universities extends Dataset<University> {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Universities.class, ".ttl", EC2U.Base))
+                    .of(rdf(Universities.class, ".ttl", _EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)
@@ -139,7 +151,7 @@ public final class Universities extends Dataset<University> {
                     .of(text(Universities.class, ".ul"))
 
                     .forEach(new Update()
-                            .base(EC2U.Base)
+                            .base(_EC2U.Base)
                             .insert(iri(Context, "/~"))
                             .clear(true)
                     );

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,8 @@
 
 package eu.ec2u.data.universities;
 
-import com.metreeca.link.jsonld.Namespace;
-import com.metreeca.link.jsonld.Property;
-import com.metreeca.link.jsonld.Reverse;
-import com.metreeca.link.shacl.Required;
-
-import eu.ec2u.data.resources.Reference;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.math.BigInteger;
-
-@Getter
-@Setter
-@Namespace(prefix="", value="http://rdfs.org/ns/void#")
+// @Namespace(prefix="", value="http://rdfs.org/ns/void#")
 public final class Subset {
 
-    @Required
-    @Reverse
-    @Property("subset")
-    private Reference dataset;
-
-    @Required
-    private BigInteger entities;
 
 }

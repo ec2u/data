@@ -1,11 +1,7 @@
 prefix ec2u: <https://data.ec2u.eu/terms/>
-prefix skos:	<http://www.w3.org/2004/02/skos/core#>
 prefix void: <http://rdfs.org/ns/void#>
-prefix org:	<http://www.w3.org/ns/org#>
-prefix schema:	<https://schema.org/>
-prefix dct:	<http://purl.org/dc/terms/>
+prefix dct: <http://purl.org/dc/terms/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix owl: <http://www.w3.org/2002/07/owl#>
 
 
 #### Compute Datasets Aliases ##########################################################################################
@@ -14,61 +10,67 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 
 insert {
 
-	?alias rdfs:isDefinedBy ?dataset.
+    ?alias rdfs:isDefinedBy ?dataset.
 
 } where {
 
-	?dataset a ec2u:Dataset .
+    ?dataset a ec2u:Dataset .
 
-	bind(iri(replace(str(?dataset), "^https://data.ec2u.eu(/\\w+)?/$", "https://data.ec2u.eu/datasets$1" )) as ?alias)
+    bind(iri(replace(str(?dataset), "^https://data.ec2u.eu(/\\w+)?/$", "https://data.ec2u.eu/datasets$1" )) as ?alias)
+
+};
+
+    #### Compute Datasets Size #########################################################################################
+
+insert {
+
+    ?dataset void:entities ?entities
+
+} where {
+
+    {
+        select ?dataset (count(distinct ?entity) as ?entities) {
+
+            ?dataset a ec2u:Dataset ;
+                void:rootResource ?class .
+
+            optional { ?entity a ?class }
+
+        }
+        group by ?dataset
+    }
 
 };
 
 
-#### Compute Datasets Size #############################################################################################
+    #### Compute Dataset University Partitions Size ####################################################################
 
 insert {
 
-	?dataset void:entities ?entities
+    ?dataset void:subset ?subset .
+    ?university dct:extent ?subset .
 
-} where {
-
-	{ select ?dataset (count(distinct ?entity) as ?entities) {
-
-		?dataset a ec2u:Dataset;
-			void:rootResource ?class .
-
-		optional { ?entity a ?class }
-
-	} group by ?dataset }
-
-};
-
-
-#### Compute Dataset University Partitions Size ########################################################################
-
-insert {
-
-	?dataset void:subset ?subset .
-	?university dct:extent ?subset .
-
-	?subset
-		ec2u:university ?university ;
-		void:entities ?entities .
+    ?subset
+        ec2u:university ?university ;
+        void:entities ?entities .
 
 } where {
 
     bind (uuid() as ?subset)
 
-	{ select ?dataset ?university (count(distinct ?entity) as ?entities) {
+    {
+        select ?dataset ?university (count(distinct ?entity) as ?entities) {
 
-		?dataset a ec2u:Dataset ;
-		    dct:available [] ;
-			void:rootResource ?class .
+            ?dataset a ec2u:Dataset ;
+                dct:available [] ;
+                void:rootResource ?class .
 
-		?entity a ec2u:Resource, ?class ;
-			ec2u:university ?university .
+            ?entity a ec2u:Resource,
+                    ?class ;
+                ec2u:university ?university .
 
-    } group by ?dataset ?university }
+        }
+        group by ?dataset ?university
+    }
 
-};
+}

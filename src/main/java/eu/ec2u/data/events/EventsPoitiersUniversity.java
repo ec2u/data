@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -57,7 +57,7 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
@@ -174,7 +174,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
 
                 .frames(DCTERMS.SUBJECT, item.strings("category")
-                        .map(c -> frame(EC2U.item(Events.Scheme, c))
+                        .map(c -> frame(_EC2U.item(Events.Scheme, c))
                                 .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(c, Poitiers.Language))

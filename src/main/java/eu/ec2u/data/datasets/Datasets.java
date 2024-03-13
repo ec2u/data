@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,61 +18,66 @@ package eu.ec2u.data.datasets;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.link.jsonld.Virtual;
+import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.util.stream.Stream;
 
+import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.text;
-import static com.metreeca.link.Frame.with;
-import static com.metreeca.link.Local.local;
-import static com.metreeca.link.specs.Constraint.any;
-import static com.metreeca.link.specs.Query.query;
-import static com.metreeca.link.specs.Specs.filter;
+import static com.metreeca.link.Constraint.any;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.filter;
+import static com.metreeca.link.Query.query;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.datasets.Dataset.Dataset;
 
-@Virtual
-public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset<Dataset<?/Resource>> breaks query parsing
+public final class Datasets extends Delegator {
 
-    private static final IRI Context=EC2U.item("/");
+    private static final IRI Context=item("/");
 
 
-    public static final class Handler extends Delegator {
+    public static Shape Datasets() {
+        return Dataset(Dataset());
+    }
 
-        public Handler() {
-            delegate(new Worker()
 
-                    .get(new Relator(with(new Datasets(), datasets -> {
+    public Datasets() {
+        delegate(handler(new Driver(Datasets()), new Worker()
 
-                        datasets.setId("");
-                        datasets.setLabel(local("en", "Datasets"));
+                .get(new Relator(frame(
 
-                        datasets.setMembers(query(
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("Datasets", "en")),
 
-                                with(new Dataset<>(), dataset -> {
+                        field(RDFS.MEMBER, query(
 
-                                    dataset.setId("");
-                                    dataset.setLabel(local("en", ""));
+                                frame(
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", "en"))
+                                ),
 
-                                }),
+                                filter(RDF.TYPE, Dataset),
+                                filter(DCTERMS.AVAILABLE, any())
 
-                                filter("available", any())
+                        ))
 
-                        ));
+                )))
 
-                    })))
-
-            );
-        }
-
+        ));
     }
 
 
@@ -86,7 +91,7 @@ public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset
             Stream
 
                     .of(
-                            rdf(Datasets.class, ".ttl", EC2U.Base),
+                            rdf(Datasets.class, ".ttl", _EC2U.Base),
 
                             rdf("http://rdfs.org/ns/void.ttl"),
                             rdf("http://www.w3.org/ns/dcat.ttl")
@@ -113,7 +118,7 @@ public final class Datasets extends Dataset<Dataset> { // !!! ;( extends Dataset
                     .of(text(Datasets.class, ".ul"))
 
                     .forEach(new Update()
-                            .base(EC2U.Base)
+                            .base(_EC2U.Base)
                             .insert(iri(Context, "/~"))
                             .clear(true)
                     );

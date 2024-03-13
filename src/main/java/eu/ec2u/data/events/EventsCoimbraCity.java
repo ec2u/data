@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import com.metreeca.http.rdf.Values;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
 import eu.ec2u.data.locations.Locations;
+import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -47,7 +47,7 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.universities._Universities.Coimbra;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
@@ -57,7 +57,7 @@ public final class EventsCoimbraCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.coimbragenda.pt/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(DCTERMS.COVERAGE, Coverage.City)
             .values(RDFS.LABEL,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
                     literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.Language)

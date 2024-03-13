@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Actors, DataActors } from "@ec2u/data/pages/actors";
 import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
@@ -48,6 +49,7 @@ import "./index.css";
 //
 // }
 
+
 createRoot(document.body.firstElementChild!).render((
 
 	<React.StrictMode>
@@ -74,7 +76,7 @@ createRoot(document.body.firstElementChild!).render((
 				// [Documents.id]: DataDocuments,
 				// [Document.id]: DataDocument,
 
-				// [id(Actors)]: DataActors,
+				[id(Actors)]: DataActors,
 
 				// [Events.id]: DataEvents,
 				// [Event.id]: DataEvent,
@@ -92,3 +94,4 @@ createRoot(document.body.firstElementChild!).render((
 	</React.StrictMode>
 
 ));
+

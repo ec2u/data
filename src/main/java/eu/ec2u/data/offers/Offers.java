@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import org.eclipse.rdf4j.model.IRI;
 
@@ -37,15 +37,15 @@ import static eu.ec2u.data.Data.exec;
 
 public final class Offers extends Delegator {
 
-    public static final IRI Context=EC2U.item("/offers/");
+    public static final IRI Context=_EC2U.item("/offers/");
     public static final IRI Scheme=iri(Concepts.Context, "/offer-topics");
 
-    public static final IRI Programs=EC2U.item("/programs/");
-    public static final IRI Courses=EC2U.item("/courses/");
+    public static final IRI Programs=_EC2U.item("/programs/");
+    public static final IRI Courses=_EC2U.item("/courses/");
 
-    public static final IRI Offer=EC2U.term("Offer");
-    public static final IRI Program=EC2U.term("Program");
-    public static final IRI Course=EC2U.term("Course");
+    public static final IRI Offer=_EC2U.term("Offer");
+    public static final IRI Program=_EC2U.term("Program");
+    public static final IRI Course=_EC2U.term("Course");
 
 
     public static Shape Offer() {
@@ -212,7 +212,7 @@ public final class Offers extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Offers.class, ".ttl", EC2U.Base))
+                    .of(rdf(Offers.class, ".ttl", _EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

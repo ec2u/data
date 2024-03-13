@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.toolkits.Strings;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.agents.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities._Universities;
@@ -89,7 +89,7 @@ public final class Parsers {
 
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(EC2U.item(Persons.Context, university, fullName))
+                    return frame(_EC2U.item(Persons.Context, university, fullName))
 
                             .value(RDF.TYPE, Persons.Person)
 
@@ -105,7 +105,7 @@ public final class Parsers {
     }
 
     public static Optional<Frame> _concept(final IRI scheme, final String label, final String language) {
-        return Optional.of(frame(EC2U.item(scheme, lower(label)))
+        return Optional.of(frame(_EC2U.item(scheme, lower(label)))
                 .value(RDF.TYPE, SKOS.CONCEPT)
                 .value(SKOS.TOP_CONCEPT_OF, scheme)
                 .value(SKOS.PREF_LABEL, literal(title(label), language))

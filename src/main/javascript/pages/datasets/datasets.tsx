@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
+import { Actors } from "@ec2u/data/pages/actors";
+import { Courses } from "@ec2u/data/pages/courses/courses";
 import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { Documents } from "@ec2u/data/pages/documents/documents";
+import { Events } from "@ec2u/data/pages/events/events";
+import { Programs } from "@ec2u/data/pages/programs/programs";
+import { Units } from "@ec2u/data/pages/units/units";
+import { Universities } from "@ec2u/data/pages/universities/universities";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required } from "@metreeca/core";
@@ -38,6 +45,7 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { Package } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
+import { ReactNode } from "react";
 
 
 export const Datasets=immutable({
@@ -94,7 +102,7 @@ export function DataDatasets() {
 
 	>
 
-		<ToolSheet placeholder={Datasets[icon]} sorted={{ entities: "increasing" }} as={({
+		<ToolSheet placeholder={Datasets[icon]} sorted={"entities"} as={({
 
 			id,
 			label,
@@ -108,17 +116,40 @@ export function DataDatasets() {
 
 			<ToolCard key={id} size={3}
 
-				title={<ToolLink>{{ id, label: ec2u(label) }}</ToolLink>}
+				title={<ToolLink>{{ id, label: ec2u(alternative || label) }}</ToolLink>}
 
 				tags={`${toIntegerString(entities)}`}
+				image={<div style={{
+					color: "var(--tool--color-light)",
+					transform: " translate(10%, -10%)"
+				}}>{placeholder(id)}</div>}
 
 			>{
 
-				toLocalString(ec2u(alternative || comment || {}))
+				toLocalString(ec2u(comment || {}))
 
 			}</ToolCard>
 
 		}>{datasets}</ToolSheet>
 
 	</DataPage>;
+}
+
+
+export function placeholder(id: string) {
+
+	const icons: { [id: string]: ReactNode }=[
+
+		Datasets,
+		Universities,
+		Units,
+		Programs,
+		Courses,
+		Documents,
+		Actors,
+		Events
+
+	].reduce((icons, dataset) => ({ ...icons, [dataset.id]: (dataset as any)[icon] }), {});
+
+	return icons[id];
 }

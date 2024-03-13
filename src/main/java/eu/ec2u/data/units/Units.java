@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@
 package eu.ec2u.data.units;
 
 
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Worker;
-import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
@@ -28,11 +25,10 @@ import com.metreeca.http.toolkits.Strings;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.UnitTypes;
-import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.Cursor;
@@ -64,11 +60,9 @@ import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
-import static com.metreeca.link.Frame.with;
-import static com.metreeca.link.Local.local;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data._EC2U.Base;
 import static eu.ec2u.work.feeds.Parsers._person;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
@@ -77,12 +71,12 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 
-public final class Units extends Dataset<Unit> {
+public final class Units /*extends Dataset<Unit>*/ {
 
-    public static final IRI Context=EC2U.item("/units/");
+    public static final IRI Context=_EC2U.item("/units/");
     public static final IRI Scheme=iri(Concepts.Context, "/unit-topics");
 
-    public static final IRI Unit=EC2U.term("Unit");
+    public static final IRI Unit=_EC2U.term("Unit");
 
 
     public static Shape Unit() {
@@ -90,22 +84,22 @@ public final class Units extends Dataset<Unit> {
     }
 
 
-    public static final class Handler extends Delegator {
-
-        public Handler() {
-            delegate(new Worker()
-
-                    .get(new Relator(with(new Units(), units -> {
-
-                        units.setLabel(local("en", "Universities"));
-                        units.setMembers(Set.of(new Unit()));
-
-                    })))
-
-            );
-        }
-
-    }
+    // public static final class Handler extends Delegator {
+    //
+    //     public Handler() {
+    //         delegate(new Worker()
+    //
+    //                 .get(new Relator(with(new Units(), units -> {
+    //
+    //                     units.setLabel(local("en", "Universities"));
+    //                     units.setMembers(Set.of(new Unit()));
+    //
+    //                 })))
+    //
+    //         );
+    //     }
+    //
+    // }
 
     public static final class Loader implements Runnable {
 
@@ -237,7 +231,7 @@ public final class Units extends Dataset<Unit> {
 
             } else {
 
-                return Optional.of(EC2U.item(Context, university, code
+                return Optional.of(_EC2U.item(Context, university, code
                         .or(() -> nameEnglish)
                         .or(() -> nameLocal)
                         .orElse("") // unexpected
@@ -408,7 +402,7 @@ public final class Units extends Dataset<Unit> {
                     .flatMap(Strings::split)
                     .map(v -> literal(v, language))
 
-                    .map(label -> frame(EC2U.item(Scheme, label.stringValue()))
+                    .map(label -> frame(_EC2U.item(Scheme, label.stringValue()))
                             .value(RDF.TYPE, SKOS.CONCEPT)
                             .value(SKOS.TOP_CONCEPT_OF, Scheme)
                             .value(SKOS.PREF_LABEL, label)

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package eu.ec2u.data.things;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
@@ -38,7 +38,7 @@ public final class Schema {
 
     public static final String Namespace="https://schema.org/";
 
-    private static final IRI Context=EC2U.item("/things");
+    private static final IRI Context=_EC2U.item("/things");
 
 
     /**
@@ -301,7 +301,7 @@ public final class Schema {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Schema.class, ".ttl", EC2U.Base))
+                    .of(rdf(Schema.class, ".ttl", _EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

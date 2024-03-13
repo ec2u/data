@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,7 @@ import com.metreeca.http.Locator;
 import com.metreeca.http.Request;
 import com.metreeca.http.gcp.GCPServer;
 import com.metreeca.http.gcp.services.GCPVault;
-import com.metreeca.http.handlers.CORS;
-import com.metreeca.http.handlers.Publisher;
-import com.metreeca.http.handlers.Router;
-import com.metreeca.http.handlers.Wrapper;
+import com.metreeca.http.handlers.*;
 import com.metreeca.http.rdf4j.handlers.Graphs;
 import com.metreeca.http.rdf4j.handlers.SPARQL;
 import com.metreeca.http.rdf4j.services.Graph;
@@ -32,8 +29,6 @@ import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
 
 import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.documents.Document;
-import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.repository.Repository;
@@ -46,8 +41,8 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Locator.path;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.SeeOther;
-import static com.metreeca.http.jsonld.formats.Bean.codec;
-import static com.metreeca.http.jsonld.formats.Bean.engine;
+import static com.metreeca.http.jsonld.formats.JSONLD.codec;
+import static com.metreeca.http.jsonld.formats.JSONLD.store;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Cache.cache;
 import static com.metreeca.http.services.Fetcher.fetcher;
@@ -59,7 +54,7 @@ import static com.metreeca.link.rdf4j.RDF4J.rdf4j;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 
-public final class Data implements Runnable {
+public final class Data extends Delegator {
 
     private static final boolean Production=GCPServer.production();
 
@@ -86,11 +81,11 @@ public final class Data implements Runnable {
                 .set(vault(), GCPVault::new)
 
                 .set(path(), () -> Paths.get(Production ? "/tmp" : "data"))
-                .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
+                .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
 
                 .set(graph(), () -> new Graph(service(Data::repository)))
-                .set(engine(), () -> rdf4j(service(Data::repository)))
+                .set(store(), () -> rdf4j(service(Data::repository)))
                 .set(codec(), () -> json().pretty(true));
     }
 
@@ -116,70 +111,66 @@ public final class Data implements Runnable {
     }
 
     public static void main(final String... args) {
-        new Data().run();
+        new GCPServer().delegate(locator -> services(locator).get(Data::new)).start();
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override public void run() {
-        new GCPServer().delegate(locator -> services(locator)
+    public Data() {
+        delegate(handler(
 
-                .get(() -> handler(
+                new CORS(),
 
-                        new CORS(),
+                new Publisher() // static assets published by GAE
 
-                        new Publisher() // static assets published by GAE
+                        .fallback("/index.html"),
 
-                                .fallback("/index.html"),
+                new Wrapper()
 
-                        new Wrapper()
+                        .before(request -> request.base(_EC2U.Base)), // define canonical base
 
-                                .before(request -> request.base(EC2U.Base)), // define canonical base
+                new Router()
 
-                        new Router()
+                        .path("/graphs", new Graphs().query())
 
-                                .path("/graphs", new Graphs().query())
+                        .path("/sparql", handler(Request::route,
 
-                                .path("/sparql", handler(Request::route,
+                                (request, forward) -> request.reply(SeeOther, URI.create(format(
+                                        "https://apps.metreeca.com/self/#endpoint=%s", request.item()
+                                ))),
 
-                                        (request, forward) -> request.reply(SeeOther, URI.create(format(
-                                                "https://apps.metreeca.com/self/#endpoint=%s", request.item()
-                                        ))),
+                                new SPARQL().query()
 
-                                        new SPARQL().query()
+                        ))
 
-                                ))
+                        .path("/cron/*", new Cron())
+                        // .path("/resources/", new Resources())
 
-                                .path("/cron/*", new Cron())
-                                // .path("/resources/", new Resources())
+                        .path("/*", new Router()
 
-                                .path("/*", new Router()
+                                        .path("/", new Datasets())
 
-                                                .path("/", new Datasets.Handler())
+                                        .path("/universities/", new Universities())
+                                        .path("/universities/{code}", new University())
 
-                                                .path("/universities/", new Universities.Handler())
-                                                .path("/universities/{code}", new University.Handler())
+                                // .path("/units/", new Units.Handler())
+                                // .path("/units/{code}", new Unit.Handler())
 
-                                                // .path("/units/", new Units.Handler())
-                                                // .path("/units/{code}", new Unit.Handler())
+                                //.path("/offers/*", new Offers())
+                                //.path("/programs/*", new Offers.Programs())
+                                //.path("/courses/*", new Offers.Courses())
 
-                                                //.path("/offers/*", new Offers())
-                                                //.path("/programs/*", new Offers.Programs())
-                                                //.path("/courses/*", new Offers.Courses())
+                                // .path("/documents/*", new Documents.Handler())
+                                // .path("/documents/{code}", new Document.Handler())
 
-                                                .path("/documents/*", new Documents.Handler())
-                                                .path("/documents/{code}", new Document.Handler())
+                                // .path("/persons/*", new Persons())
+                                //.path("/events/*", new Events())
+                                //.path("/concepts/*", new Concepts())
 
-                                        // .path("/persons/*", new Persons())
-                                        //.path("/events/*", new Events())
-                                        //.path("/concepts/*", new Concepts())
+                        )
 
-                                )
-
-                ))
-
-        ).start();
+        ));
     }
 
 }

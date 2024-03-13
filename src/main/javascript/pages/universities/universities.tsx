@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, required } from "@metreeca/core";
-import { label as toEntryLabel } from "@metreeca/core/entry";
+import { toEntryString } from "@metreeca/core/entry";
 import { integer } from "@metreeca/core/integer";
 import { iri } from "@metreeca/core/iri";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -116,13 +116,13 @@ export function DataUniversities() {
 				title={<ToolLink>{{ id, label }}</ToolLink>}
 				image={image}
 
-				tags={<span>{toEntryLabel(country)}</span>}
+				tags={<span>{toEntryString(country)}</span>}
 
-			>
+			>{
 
-			{toLocalString(comment)}
+				toLocalString(comment)
 
-			</ToolCard>
+			}</ToolCard>
 
 		}>{universities}</ToolSheet>
 

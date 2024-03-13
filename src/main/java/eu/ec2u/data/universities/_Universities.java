@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.universities;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.time.ZoneId;
@@ -26,7 +26,7 @@ import static com.metreeca.http.open.actions.Wikidata.wd;
 public enum _Universities {
 
     Coimbra(
-            EC2U.item("/universities/coimbra"),
+            _EC2U.item("/universities/coimbra"),
             wd("Q45412"),
             wd("Q45"),
             "pt",
@@ -34,7 +34,7 @@ public enum _Universities {
     ),
 
     Iasi(
-            EC2U.item("/universities/iasi"),
+            _EC2U.item("/universities/iasi"),
             wd("Q46852"),
             wd("Q218"),
             "ro",
@@ -42,7 +42,7 @@ public enum _Universities {
     ),
 
     Jena(
-            EC2U.item("/universities/jena"),
+            _EC2U.item("/universities/jena"),
             wd("Q3150"),
             wd("Q183"),
             "de",
@@ -50,7 +50,7 @@ public enum _Universities {
     ),
 
     Pavia(
-            EC2U.item("/universities/pavia"),
+            _EC2U.item("/universities/pavia"),
             wd("Q6259"),
             wd("Q38"),
             "it",
@@ -58,7 +58,7 @@ public enum _Universities {
     ),
 
     Poitiers(
-            EC2U.item("/universities/poitiers"),
+            _EC2U.item("/universities/poitiers"),
             wd("Q6616"),
             wd("Q142"),
             "fr",
@@ -66,7 +66,7 @@ public enum _Universities {
     ),
 
     Salamanca(
-            EC2U.item("/universities/salamanca"),
+            _EC2U.item("/universities/salamanca"),
             wd("Q15695"),
             wd("Q29"),
             "es",
@@ -74,7 +74,7 @@ public enum _Universities {
     ),
 
     Turku(
-            EC2U.item("/universities/turku"),
+            _EC2U.item("/universities/turku"),
             wd("Q38511"),
             wd("Q38511"),
             "fi",

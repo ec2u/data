@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,94 +19,89 @@ package eu.ec2u.data.universities;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.link.Local;
-import com.metreeca.link.jsonld.Property;
-import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.shacl.Required;
+import com.metreeca.link.Shape;
 
-import eu.ec2u.data.organizations.OrgFormalOrganization;
-import eu.ec2u.data.organizations.OrgOrganizationalUnit;
-import eu.ec2u.data.resources.Reference;
-import eu.ec2u.data.resources.Resource;
-import lombok.Getter;
-import lombok.Setter;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.VOID;
 
-import java.math.BigInteger;
-import java.net.URI;
-import java.time.Year;
-import java.util.Set;
+import static com.metreeca.http.Handler.handler;
+import static com.metreeca.http.rdf.Values.inverse;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Shape.integer;
+import static com.metreeca.link.Shape.*;
 
-import static com.metreeca.link.Frame.with;
-import static com.metreeca.link.Local.local;
+import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data.datasets.Dataset.Dataset;
+import static eu.ec2u.data.resources.Reference.Reference;
+import static eu.ec2u.data.resources.Resource.Resource;
 
-@Type
-@Getter
-@Setter
-public final class University extends Resource implements OrgFormalOrganization {
+public final class University extends Delegator {
 
-    //// foaf:Agent ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Set<URI> homepages;
-    private Set<URI> mboxes;
+    private static final IRI SCHAC=term("schac");
+    private static final IRI IMAGE=term("image");
+    private static final IRI INCEPTION=term("inception");
+    private static final IRI STUDENTS=term("students");
+    private static final IRI COUNTRY=term("country");
+    private static final IRI LOCATION=term("location");
 
 
-    //// org:Organization //////////////////////////////////////////////////////////////////////////////////////////////
+    public static Shape University() {
+        return shape(Resource(), /*OrgFormalOrganization*/
 
-    private String identifier;
+                property(SCHAC, required(), string()),
+                property(IMAGE, required(), reference()),
 
-    private Local<String> prefLabel;
-    private Local<String> altLabel;
-    private Local<String> definition;
+                property(INCEPTION, optional(), year()),
+                property(STUDENTS, optional(), integer()),
 
-    private Set<OrgOrganizationalUnit> units;
+                property(COUNTRY, required(), Reference()),
+                property(LOCATION, required(), Reference()),
 
+                property("subsets", DCTERMS.EXTENT,
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        property("dataset", inverse(VOID.SUBSET), required(), Dataset(Resource())),
+                        property(VOID.ENTITIES, required(), integer())
 
-    @Required
-    private String schac;
+                )
 
-    @Required
-    private URI image;
-
-
-    private Year inception;
-
-    private BigInteger students;
+        );
+    }
 
 
-    @Required
-    private Reference country;
-
-    @Required
-    private Reference location;
-
-
-    @Property("dct:extent")
-    private Set<Subset> subsets;
-
-    @Property("rdfs:")
-    private Reference seeAlso;
+    // //// foaf:Agent ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // private Set<URI> homepages;
+    // private Set<URI> mboxes;
+    //
+    //
+    // //// org:Organization //////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // private String identifier;
+    //
+    // private Local<String> prefLabel;
+    // private Local<String> altLabel;
+    // private Local<String> definition;
+    //
+    // private Set<ORGOrganizationalUnit> units;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final class Handler extends Delegator {
+    public University() {
+        delegate(handler(new Driver(University()), new Worker()
 
-        public Handler() {
-            delegate(new Worker()
+                .get(new Relator(frame(
 
-                    .get(new Relator(with(new University(), university -> {
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("", "en"))
 
-                        university.setId("");
-                        university.setLabel(local("en", ""));
+                )))
 
-                    })))
-
-            );
-        }
-
+        ));
     }
 
 }

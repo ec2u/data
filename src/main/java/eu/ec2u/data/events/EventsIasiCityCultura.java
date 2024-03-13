@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,7 @@ import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.formats.XML;
 
-import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
@@ -38,6 +37,7 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.universities._Universities.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 import static java.time.ZoneOffset.UTC;
@@ -48,7 +48,7 @@ public final class EventsIasiCityCultura implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(DCTERMS.COVERAGE, Coverage.City)
             .values(RDFS.LABEL,
                     literal("Iaşul Cultural / Evenimente in Iași", "ro"),
                     literal("Culture in Iasi / Events in Iasi", "en")
@@ -56,7 +56,7 @@ public final class EventsIasiCityCultura implements Runnable {
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new EventsIasiCityCultura().run());
+        exec(() -> new EventsIasiCityCultura().run());
     }
 
 

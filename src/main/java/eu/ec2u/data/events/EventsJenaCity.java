@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -60,7 +60,7 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Strings.clip;
 
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.universities._Universities.Jena;
 import static eu.ec2u.work.JSONLD.jsonld;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -72,7 +72,7 @@ public final class EventsJenaCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.jena-veranstaltungen.de/veranstaltungen"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.City)
+            .value(DCTERMS.COVERAGE, Coverage.City)
             .values(RDFS.LABEL,
                     literal("City of Jena / Event Calendar", "en"),
                     literal("Stadt Jena / Veranstaltungskalender", Jena.Language)

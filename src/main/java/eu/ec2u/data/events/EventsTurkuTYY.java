@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -50,7 +50,7 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
 
@@ -60,7 +60,7 @@ public final class EventsTurkuTYY implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.tyy.fi/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, EC2U.Association)
+            .value(DCTERMS.COVERAGE, Coverage.Association)
             .values(RDFS.LABEL,
                     literal("The Student Union of the University of Turku (TYY) / Calendar of Events", "en"),
                     literal("Turun yliopiston ylioppilaskunta (TYY) / Tapahtumakalenteri", Turku.Language)

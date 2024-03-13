@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package eu.ec2u.data.locations;
 
 import org.eclipse.rdf4j.model.IRI;
 
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 
 public final class Locations {
 

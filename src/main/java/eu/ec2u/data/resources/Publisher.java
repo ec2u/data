@@ -14,8 +14,27 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.agents;
+package eu.ec2u.data.resources;
 
-public interface FOAFPerson /*extends FOAFAgent*/ {
+import com.metreeca.link.Shape;
+
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+
+import static com.metreeca.link.Shape.*;
+
+import static eu.ec2u.data.resources.Resource.Resource;
+
+public final class Publisher {
+
+    public static Shape Publisher() {
+        return shape(Resource(),
+
+                property(DCTERMS.COVERAGE, required(), reference())
+
+        );
+    }
+
+
+    private Publisher() { }
 
 }

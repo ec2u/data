@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package eu.ec2u.data.organizations;
 
 import com.metreeca.http.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 
@@ -27,13 +27,13 @@ import java.util.stream.Stream;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data._EC2U.Base;
 
 public final class Organizations {
 
-    public static final IRI Context=EC2U.item("/organizations/");
+    public static final IRI Context=_EC2U.item("/organizations/");
 
-    public static final IRI Organization=EC2U.term("Organization");
+    public static final IRI Organization=_EC2U.term("Organization");
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

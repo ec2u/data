@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
@@ -34,7 +34,7 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.text;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 
 public final class Concepts extends Delegator {
 
@@ -102,7 +102,7 @@ public final class Concepts extends Delegator {
 
                     .of(
 
-                            rdf(Concepts.class, ".ttl", EC2U.Base),
+                            rdf(Concepts.class, ".ttl", _EC2U.Base),
 
                             skos(rdf("https://www.w3.org/2009/08/skos-reference/skos.rdf"))
 
@@ -138,7 +138,7 @@ public final class Concepts extends Delegator {
                     .of(text(Concepts.class, ".ul"))
 
                     .forEach(new Update()
-                            .base(EC2U.Base)
+                            .base(_EC2U.Base)
                             .insert(iri(Context, "/~"))
                             .clear(true)
                     );

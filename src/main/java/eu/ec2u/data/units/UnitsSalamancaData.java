@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.agents.Persons;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
@@ -202,7 +202,7 @@ public final class UnitsSalamancaData implements Runnable {
                     final String givenName=matcher.group(2);
                     final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(EC2U.item(Persons.Context, Salamanca, fullName))
+                    return frame(_EC2U.item(Persons.Context, Salamanca, fullName))
 
                             .value(RDF.TYPE, Persons.Person)
 

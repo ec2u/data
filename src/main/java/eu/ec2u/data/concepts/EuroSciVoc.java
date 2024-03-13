@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.metreeca.http.rdf.actions.Retrieve;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -41,13 +41,13 @@ import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 /**
  * European Science Vocabulary (EuroSciVoc).
  *
- * <p>European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati Manual
+ * <p>European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati
+ * Manual
  * taxonomy. It was extended with fields of science categories extracted from CORDIS content through a semi-automatic
  * process developed with Natural Language Processing (NLP) techniques</p>
  *
  * @see <a
- * href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa
- * .eu/resource/dataset/euroscivoc">European
+ * href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/euroscivoc">European
  * Science Vocabulary (EuroSciVoc)</a> .eu/resource/dataset/euroscivoc
  */
 public final class EuroSciVoc implements Runnable {
@@ -84,7 +84,7 @@ public final class EuroSciVoc implements Runnable {
 
                 .flatMap(model -> Stream.of(
 
-                        rdf(this, ".ttl", EC2U.Base),
+                        rdf(this, ".ttl", _EC2U.Base),
 
                         model.stream()
 

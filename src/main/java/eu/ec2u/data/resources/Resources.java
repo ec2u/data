@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package eu.ec2u.data.resources;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
 
@@ -30,7 +30,7 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
@@ -40,10 +40,10 @@ public final class Resources extends Delegator {
     private static final IRI Context=item("/resources/");
 
 
-    public static final IRI Resource=EC2U.term("Resource");
-    public static final IRI Publisher=EC2U.term("Publisher");
+    public static final IRI Resource=_EC2U.term("Resource");
+    public static final IRI Publisher=_EC2U.term("Publisher");
 
-    public static final IRI university=EC2U.term("university");
+    public static final IRI university=_EC2U.term("university");
 
 
     public static final Set<String> Languages=Stream
@@ -141,7 +141,7 @@ public final class Resources extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Resources.class, ".ttl", EC2U.Base))
+                    .of(rdf(Resources.class, ".ttl", _EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

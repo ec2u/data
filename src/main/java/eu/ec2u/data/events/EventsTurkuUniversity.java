@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.http.toolkits.Strings.clip;
 
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;

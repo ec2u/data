@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -53,10 +53,10 @@ import static java.util.stream.Collectors.toSet;
 
 public final class Events extends Delegator {
 
-    public static final IRI Context=EC2U.item("/events/");
+    public static final IRI Context=_EC2U.item("/events/");
     public static final IRI Scheme=iri(Concepts.Context, "/event-topics");
 
-    public static final IRI Event=EC2U.term("Event");
+    public static final IRI Event=_EC2U.term("Event");
 
 
     static Instant synced(final IRI context, final Value publisher) {
@@ -74,7 +74,7 @@ public final class Events extends Delegator {
                 )
 
                 .flatMap(new TupleQuery()
-                        .base(EC2U.Base)
+                        .base(_EC2U.Base)
                         .binding("publisher", publisher)
                         .dflt(context)
                 )
@@ -140,7 +140,7 @@ public final class Events extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Events.class, ".ttl", EC2U.Base))
+                    .of(rdf(Events.class, ".ttl", _EC2U.Base))
 
                     .forEach(new Upload()
                             .contexts(Context)
@@ -184,7 +184,7 @@ public final class Events extends Delegator {
             time(() -> Stream.of(text(Events.class, ".ul"))
 
                     .forEach(new Update()
-                            .base(EC2U.Base)
+                            .base(_EC2U.Base)
                             .dflt(context)
                             .insert(context)
                             .remove(context)

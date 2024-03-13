@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,25 @@
 
 package eu.ec2u.data.agents;
 
-import com.metreeca.link.jsonld.Namespace;
-import com.metreeca.link.jsonld.Property;
+import com.metreeca.link.Shape;
 
-import java.net.URI;
-import java.util.Set;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+
+import static com.metreeca.link.Shape.property;
+import static com.metreeca.link.Shape.shape;
+
+public final class FOAFAgent {
+
+    public static Shape FOAFAgent() {
+        return shape(
+                property(FOAF.HOMEPAGE), // !!! datatype?
+                property(FOAF.MBOX) // !!! datatype?
+        );
+    }
 
 
-@Namespace("http://xmlns.com/foaf/0.1/")
-public interface FOAFAgent {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Property("homepage")
-    public Set<URI> getHomepages();
-
-    @Property("mbox")
-    public Set<URI> getMboxes();
+    private FOAFAgent() { }
 
 }

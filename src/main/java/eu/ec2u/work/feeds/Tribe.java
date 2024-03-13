@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Untag;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
@@ -53,7 +53,7 @@ import static com.metreeca.http.toolkits.Formats.SQL_TIMESTAMP;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
@@ -245,7 +245,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             final Optional<Literal> name=category.string("name").map(text -> literal(text, language));
 
-            return frame(EC2U.item(Events.Scheme, self))
+            return frame(_EC2U.item(Events.Scheme, self))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                     .value(RDFS.LABEL, name)

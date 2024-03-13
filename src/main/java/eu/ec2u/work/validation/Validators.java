@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,16 @@
 
 package eu.ec2u.work.validation;
 
-import com.metreeca.http.jsonld.actions.Validate;
 import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.inverse;
-import static com.metreeca.http.rdf.Values.pattern;
-import static com.metreeca.http.services.Logger.logger;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 public final class Validators {
 
@@ -54,66 +39,67 @@ public final class Validators {
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames, final Stream<Frame> context
     ) {
 
-        final Reasoner reasoner=service(Reasoner::new);
+        throw new UnsupportedOperationException(";( be implemented"); // !!!
 
-
-        final List<Frame> batch=frames.collect(toList());
-
-        final Set<Value> resources=batch.stream().map(Frame::focus).collect(toSet());
-
-        final Collection<Statement> explicit=batch.stream().flatMap(Frame::stream).collect(toSet());
-        final Collection<Statement> extended=reasoner.apply(Stream
-
-                .concat(
-                        explicit.stream(),
-                        context.flatMap(Frame::stream)
-                )
-
-                .collect(toSet())
-        );
-
-        final long mistyped=resources.stream()
-
-                .filter(resource -> {
-
-                    final boolean invalid=!resource.isResource() || extended.stream()
-                            .filter(pattern(resource, RDF.TYPE, null))
-                            .map(Statement::getObject)
-                            .noneMatch(types::contains);
-
-                    if ( invalid ) {
-
-                        service(logger()).warning(Validators.class, format(
-                                "mistyped frame <%s> %s", resource, extended.stream()
-                                        .filter(pattern(resource, RDF.TYPE, null))
-                                        .map(Statement::getObject)
-                                        .collect(toSet())
-                        ));
-
-                    }
-
-                    return invalid;
-
-                })
-
-                .count();
-
-        if ( mistyped > 0 ) {
-            throw new IllegalArgumentException(format("<%d> mistyped frames in batch", mistyped));
-        }
-
-        final long invalid=types.stream()
-                .flatMap(type -> frame(type, extended).frames(inverse(RDF.TYPE)))
-                .map(new Validate())
-                .filter(Optional::isEmpty)
-                .count();
-
-        if ( invalid != 0 ) {
-            throw new IllegalArgumentException(format("<%d> malformed frames in batch", invalid));
-        }
-
-        return Xtream.of(explicit);
+        // final Reasoner reasoner=service(Reasoner::new);
+        //
+        //
+        // final List<Frame> batch=frames.collect(toList());
+        //
+        // final Set<Value> resources=batch.stream().map(Frame::focus).collect(toSet());
+        //
+        // final Collection<Statement> explicit=batch.stream().flatMap(Frame::stream).collect(toSet());
+        // final Collection<Statement> extended=reasoner.apply(Stream
+        //
+        //         .concat(
+        //                 explicit.stream(),
+        //                 context.flatMap(Frame::stream)
+        //         )
+        //
+        //         .collect(toSet())
+        // );
+        //
+        // final long mistyped=resources.stream()
+        //
+        //         .filter(resource -> {
+        //
+        //             final boolean invalid=!resource.isResource() || extended.stream()
+        //                     .filter(pattern(resource, RDF.TYPE, null))
+        //                     .map(Statement::getObject)
+        //                     .noneMatch(types::contains);
+        //
+        //             if ( invalid ) {
+        //
+        //                 service(logger()).warning(Validators.class, format(
+        //                         "mistyped frame <%s> %s", resource, extended.stream()
+        //                                 .filter(pattern(resource, RDF.TYPE, null))
+        //                                 .map(Statement::getObject)
+        //                                 .collect(toSet())
+        //                 ));
+        //
+        //             }
+        //
+        //             return invalid;
+        //
+        //         })
+        //
+        //         .count();
+        //
+        // if ( mistyped > 0 ) {
+        //     throw new IllegalArgumentException(format("<%d> mistyped frames in batch", mistyped));
+        // }
+        //
+        // final long invalid=types.stream()
+        //         .flatMap(type -> frame(type, extended).frames(inverse(RDF.TYPE)))
+        //         .map(new Validate())
+        //         .filter(Optional::isEmpty)
+        //         .count();
+        //
+        // if ( invalid != 0 ) {
+        //     throw new IllegalArgumentException(format("<%d> malformed frames in batch", invalid));
+        // }
+        //
+        // return Xtream.of(explicit);
     }
-
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,10 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 /**
  * The EC2U vocabulary namespace.
  */
-public final class EC2U {
+public final class _EC2U {
 
     public static final String Base="https://data.ec2u.eu/";
     public static final String Terms=Base + "terms/";
-
-    public static final IRI College=term("College");
-    public static final IRI Association=term("Association");
-    public static final IRI City=term("City");
 
     private static final Pattern MD5Pattern=Pattern.compile("[a-f0-9]{32}");
 
@@ -58,6 +54,6 @@ public final class EC2U {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private EC2U() { }
+    private _EC2U() { }
 
 }

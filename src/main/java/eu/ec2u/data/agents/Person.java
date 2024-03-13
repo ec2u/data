@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,12 @@
 
 package eu.ec2u.data.agents;
 
-import com.metreeca.link.jsonld.Type;
-
 import eu.ec2u.data.resources.Resource;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.net.URI;
 import java.util.Set;
 
-@Type
-@Getter
-@Setter
+
 public final class Person extends Resource implements FOAFPerson {
 
     private Set<URI> homepages;

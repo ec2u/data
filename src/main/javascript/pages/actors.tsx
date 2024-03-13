@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,15 @@
 
 import { immutable } from "@metreeca/core";
 import { useRouter } from "@metreeca/data/contexts/router";
+import { icon } from "@metreeca/view";
+import { User } from "@metreeca/view/widgets/icon";
 import * as React from "react";
 import { useEffect } from "react";
 
 
 export const Actors=immutable({
+
+	[icon]: <User/>,
 
 	id: "/actors/",
 	label: "Knowledge Ecosystem Actors"

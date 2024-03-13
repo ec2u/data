@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.metreeca.http.rdf.actions.Retrieve;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -43,8 +43,8 @@ import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
 /**
  * International Standard Classification of Education (ISCED-F 2013)
  *
- * @see <a href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa
- * .eu/resource/dataset/international-education-classification">...</a>
+ * @see <a
+ * href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/international-education-classification">...</a>
  */
 final class ISCEDF2013 implements Runnable {
 
@@ -80,7 +80,7 @@ final class ISCEDF2013 implements Runnable {
 
                 .flatMap(model -> Stream.of(
 
-                        rdf(this, ".ttl", EC2U.Base),
+                        rdf(this, ".ttl", _EC2U.Base),
 
                         model.stream()
 
@@ -106,7 +106,7 @@ final class ISCEDF2013 implements Runnable {
                                 // remove original title
 
                                 .filter(not(pattern(null, null, literal("International Standard Classification of "
-                                        + "Education: Fields of Education and Training 2013", "en"))))
+                                        +"Education: Fields of Education and Training 2013", "en"))))
 
                                 // migrate dct: temporal properties to xsd:dateTime to comply with Resource data model
 

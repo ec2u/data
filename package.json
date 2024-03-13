@@ -1,6 +1,7 @@
 {
     "private": true,
-    "name": "@ec2u/data",
+  "type": "module",
+  "name": "@ec2u/data",
     "version": "0.0.0",
     "description": "EC2U Knowledge Hub",
     "homepage": "https://github.com/ec2u/data",
@@ -22,18 +23,18 @@
       "build": "vite build"
     },
     "dependencies": {
-      "@metreeca/core": "^0.0.11",
-      "@metreeca/data": "^0.0.11",
-      "@metreeca/view": "^0.0.11",
+      "@metreeca/core": "^0.0.12",
+      "@metreeca/data": "^0.0.12",
+      "@metreeca/view": "^0.0.12",
       "react": "^18.2.0",
       "react-dom": "^18.2.0"
     },
     "devDependencies": {
-      "@types/react": "^18.2.0",
-      "@types/react-dom": "^18.2.1",
-      "@vitejs/plugin-react": "^4.0.0",
-      "postcss-nesting": "^11.2.2",
-      "typescript": "^5.0.4",
-      "vite": "^4.3.4"
+      "@types/react": "^18.2.65",
+      "@types/react-dom": "^18.2.21",
+      "@vitejs/plugin-react": "^4.2.1",
+      "postcss-nesting": "^12.1.0",
+      "typescript": "^5.4.2",
+      "vite": "^5.1.6"
     }
 }

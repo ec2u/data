@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,16 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.link.jsonld.Property;
+import org.eclipse.rdf4j.model.IRI;
 
-import lombok.Getter;
-import lombok.Setter;
+import static eu.ec2u.data._EC2U.term;
 
-import java.util.Set;
+public final class Coverage {
 
-@Setter
-@Getter
-public abstract class Container<T extends Resource> extends Resource {
+    public static final IRI College=term("College");
+    public static final IRI Association=term("Association");
+    public static final IRI City=term("City");
 
-    @Property("rdfs:member")
-    private Set<T> members;
+    private Coverage() { }
 
 }

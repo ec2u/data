@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.lenient;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.universities._Universities.Coimbra;

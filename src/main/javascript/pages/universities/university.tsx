@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { Universities } from "@ec2u/data/pages/universities/universities";
-import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { integer, toIntegerString } from "@metreeca/core/integer";
@@ -40,7 +39,7 @@ export const University=immutable({
 
 	schac: required(string),
 
-	// !!! inception: optional(dateTime),
+	// inception: optional(date), // !!! native non-value type
 	students: optional(integer),
 
 	country: optional({
@@ -56,8 +55,8 @@ export const University=immutable({
 	subsets: multiple({
 
 		dataset: {
-			id: required(iri),
-			label: required(local)
+			// id: required(iri),
+			// label: required(local)
 		},
 
 		entities: required(integer)
@@ -75,13 +74,11 @@ export function DataUniversity() {
 
 		tray={<ToolFrame as={({
 
-			id,
-
 			// !!! inception,
 			students,
 			country,
-			location,
-			subsets
+			location
+			// subsets
 
 		}) => <>
 
@@ -99,21 +96,21 @@ export function DataUniversity() {
 
 			}}</ToolInfo>
 
-			<ToolInfo>{subsets?.slice()
+			{/* <ToolInfo>{subsets?.slice()
 
-				?.sort(({ entities: x }, { entities: y }) => x - y)
-				?.map(({ dataset, entities }) => ({
+			 ?.sort(({ entities: x }, { entities: y }) => x - y)
+			 ?.map(({ dataset, entities }) => ({
 
-					label: <ToolLink filter={[dataset, { university: id }]}>{{
-						id: dataset.id,
-						label: ec2u(dataset.label)
-					}}</ToolLink>,
+			 label: <ToolLink filter={[dataset, { university: id }]}>{{
+			 id: dataset.id,
+			 label: ec2u(dataset.label)
+			 }}</ToolLink>,
 
-					value: toIntegerString(entities)
+			 value: toIntegerString(entities)
 
-				}))
+			 }))
 
-			}</ToolInfo>
+			 }</ToolInfo> */}
 
 		</>}>{university}</ToolFrame>}
 

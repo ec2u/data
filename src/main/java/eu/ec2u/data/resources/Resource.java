@@ -1,6 +1,6 @@
 
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,79 +17,45 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.link.Local;
-import com.metreeca.link.jsonld.Id;
-import com.metreeca.link.jsonld.Namespace;
-import com.metreeca.link.jsonld.Property;
-import com.metreeca.link.jsonld.Type;
-import com.metreeca.link.shacl.Required;
+import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
-import eu.ec2u.data.universities.University;
-import lombok.Getter;
-import lombok.Setter;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.net.URI;
+import static com.metreeca.link.Shape.*;
 
-@Type
-@Namespace(EC2U.Terms)
-@Namespace(prefix="dct", value="http://purl.org/dc/terms/")
-@Namespace(prefix="org", value="http://rdfs.org/ns/void#")
-@Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
-@Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
-@Namespace(prefix="void", value="http://rdfs.org/ns/void#")
-@Namespace(prefix="wgs84", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
-@Namespace(prefix="foaf", value="http://xmlns.com/foaf/0.1/")
-@Setter
-@Getter
+import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data.resources.Reference.Reference;
+import static eu.ec2u.data.universities.University.University;
+
 public abstract class Resource {
 
-    @Id
-    private String id;
-
-    @Required
-    @Property("rdfs:")
-    private Local<String> label;
-
-    @Property("rdfs:")
-    private Local<String> comment;
-
-    private University university;
+    private static final IRI university=term("university");
 
 
-    // @Optional
-    // @Property("dct:")
-    // private Instant created;
-    //
-    // @Optional
-    // @Property("dct:")
-    // private Instant issued;
-    //
-    // @Optional
-    // @Property("dct:")
-    // private Instant modified;
-    //
-    //
-    // @Optional
-    // @Property("dct:")
-    // private Publisher publisher;
-    //
-    // @Optional
-    // @Property("dct:")
-    // private Reference source;
-    //
-    // @Property("dct:")
-    // private Set<Reference> type;
-    //
-    // @Property("dct:")
-    // private Set<Reference> subject;
+    public static Shape Resource() {
+        return shape(Reference(),
 
+                property(university, () -> shape(required(), University())),
 
-    private static final class Publisher extends Resource {
+                property(DCTERMS.TITLE, required(), local()),
+                property(DCTERMS.ALTERNATIVE, optional(), local()),
+                property(DCTERMS.DESCRIPTION, optional(), local()),
 
-        @Property("dct:")
-        private URI coverage;
+                property(DCTERMS.CREATED, optional(), dateTime()),
+                property(DCTERMS.ISSUED, optional(), dateTime()),
+                property(DCTERMS.MODIFIED, optional(), dateTime()),
 
+                property(DCTERMS.SOURCE, () -> shape(optional(), Resource())),
+                property(DCTERMS.PUBLISHER, () -> shape(optional(), Publisher.Publisher())),
+
+                property(DCTERMS.TYPE, () -> Resource()), // !!! skos:Concept
+                property(DCTERMS.SUBJECT, () -> Resource()), // !!! skos:Concept
+
+                property(RDFS.SEEALSO, reference())
+
+        );
     }
 
 }
