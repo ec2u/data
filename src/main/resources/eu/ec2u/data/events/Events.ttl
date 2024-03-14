@@ -10,7 +10,7 @@
 	dct:alternative "EC2U Academic and Public Local Events"@en ;
 	dct:description "Information about events at EC2U allied universities and associated local communities, dynamically collected from academic, public and commercial sources."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
 	dct:available "2022-01-01"^^xsd:date ;
 	void:rootResource ec2u:Event ;
 	rdfs:isDefinedBy </datasets/events>  .

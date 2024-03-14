@@ -14,7 +14,7 @@
 	dct:alternative "EC2U Allied Universities"@en ;
 	dct:description "Identifying and background information about EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
+	dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
 	dct:available "2022-01-01"^^xsd:date ;
 	void:rootResource ec2u:University ;
 	rdfs:isDefinedBy </datasets/universities> .

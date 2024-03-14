@@ -56,7 +56,7 @@ public final class Dataset {
             throw new NullPointerException("null shape");
         }
 
-        return shape(virtual(true), // !!! make only rdf:member virtual // Dataset(),
+        return virtual(Dataset(),
 
                 property("members", RDFS.MEMBER, shape)
 

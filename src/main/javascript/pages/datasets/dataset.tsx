@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,6 +85,7 @@ export function DataMeta() {
 
 		style={{
 
+			color: "var(--tool--color-label)",
 			transform: "scale(0.75)"
 
 		}}
@@ -99,6 +100,7 @@ export function DataDataset() {
 
 	const [dataset]=useResource({ ...Dataset, id: toData(route) });
 
+	console.log(toData(route));
 
 	return <DataPage
 
