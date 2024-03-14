@@ -19,8 +19,8 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, required } from "@metreeca/core";
 import { toEntryString } from "@metreeca/core/entry";
 import { integer } from "@metreeca/core/integer";
-import { iri } from "@metreeca/core/iri";
 import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
 import { year } from "@metreeca/core/year";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
@@ -52,14 +52,14 @@ export const Universities=immutable({
 
 	members: [{
 
-		id: required(iri),
-		image: required(iri),
+		id: required(reference),
+		image: required(reference),
 
 		label: required(local),
 		comment: required(local),
 
 		country: {
-			id: required(iri),
+			id: required(reference),
 			label: required(local)
 		}
 

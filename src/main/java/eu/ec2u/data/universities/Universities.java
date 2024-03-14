@@ -17,6 +17,7 @@
 package eu.ec2u.data.universities;
 
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
@@ -25,13 +26,16 @@ import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.VOID;
 
 import java.util.stream.Stream;
 
@@ -42,12 +46,15 @@ import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.integer;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data._EC2U.term;
 import static eu.ec2u.data.datasets.Dataset.Dataset;
-import static eu.ec2u.data.universities.University.University;
+import static eu.ec2u.data.resources.Reference.Reference;
+import static eu.ec2u.data.resources.Resource.Resource;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
@@ -56,7 +63,14 @@ public final class Universities extends Delegator {
 
     private static final IRI Context=item("/universities/");
 
-    public static final IRI University=term("University");
+    public static final IRI UNIVERSITY_CLASS=term("University");
+
+    private static final IRI SCHAC=term("schac");
+    private static final IRI IMAGE=term("image");
+    private static final IRI INCEPTION=term("inception");
+    private static final IRI STUDENTS=term("students");
+    private static final IRI COUNTRY=term("country");
+    private static final IRI LOCATION=term("location");
 
 
     public static Shape Universities() {
@@ -64,30 +78,99 @@ public final class Universities extends Delegator {
     }
 
 
-    public Universities() {
-        delegate(handler(new Driver(Universities()), new Worker()
+    public static Shape University() {
+        return shape(Resource(), /*OrgFormalOrganization*/
 
-                .get(new Relator(frame(
+                property(SCHAC, required(), string()),
+                property(IMAGE, required(), reference()),
 
-                        field(ID, iri()),
-                        field(RDFS.LABEL, literal("Universities", "en")),
+                property(INCEPTION, optional(), year()),
+                property(STUDENTS, optional(), integer()),
 
-                        field(RDFS.MEMBER, query(
+                property(COUNTRY, required(), Reference()),
+                property(LOCATION, required(), Reference()),
 
-                                frame(
-                                        field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", "en"))
-                                ),
+                // foaf:Agent
+                //
+                // private Set<URI> homepages;
+                // private Set<URI> mboxes;
+                //
+                //
+                // org:Organization
+                //
+                // private String identifier;
+                //
+                // private Local<String> prefLabel;
+                // private Local<String> altLabel;
+                // private Local<String> definition;
+                //
+                // private Set<ORGOrganizationalUnit> units;
 
-                                filter(RDF.TYPE, University)
+                property("subsets", DCTERMS.EXTENT,
 
-                        ))
+                        property("dataset", reverse(VOID.SUBSET), required(), Dataset()),
+                        property(VOID.ENTITIES, required(), integer())
 
-                )))
+                )
 
-        ));
+        );
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Universities() {
+        delegate(new Router()
+
+                .path("/", handler(new Driver(Universities()), new Worker()
+
+                        .get(new Relator(frame(
+
+                                field(ID, iri()),
+                                field(RDFS.LABEL, literal("", "en")),
+
+                                field(RDFS.MEMBER, query(
+
+                                        frame(
+                                                field(ID, iri()),
+                                                field(RDFS.LABEL, literal("", "en"))
+                                        ),
+
+                                        filter(RDF.TYPE, UNIVERSITY_CLASS)
+
+                                ))
+
+                        )))
+
+                ))
+
+                .path("/{code}", handler(new Driver(University()), new Worker()
+
+                        .get(new Relator(frame(
+
+                                field(ID, Frame.iri()),
+                                field(RDFS.LABEL, literal("", "en")),
+
+                                field(DCTERMS.EXTENT, frame(
+
+                                        field(reverse(VOID.SUBSET), frame(
+                                                field(ID, literal("")),
+                                                field(RDFS.LABEL, literal(""))
+                                        )),
+
+                                        field(VOID.ENTITIES, literal(Frame.integer(0)))
+
+                                ))
+
+                        )))
+
+                ))
+        );
+
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
 

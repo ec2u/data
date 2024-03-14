@@ -14,9 +14,27 @@
  * limitations under the License.
  */
 
-import { immutable, multiple, optional } from "@metreeca/core";
+import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { dateTime } from "@metreeca/core/dateTime";
+import { entry, toEntryString } from "@metreeca/core/entry";
+import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useOptions } from "@metreeca/data/models/options";
+import { useQuery } from "@metreeca/data/models/query";
+import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolKeywords } from "@metreeca/view/lenses/keywords";
+import { ToolOptions } from "@metreeca/view/lenses/options";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
 import { Calendar } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
 
 
@@ -29,55 +47,108 @@ export const Events=immutable({
 
 	members: multiple({
 
-		id: "",
-		image: optional(""),
-		label: {},
-		comment: {},
+		id: required(reference),
+		image: optional(reference),
+		label: required(local),
+		comment: required(local),
 
 		university: {
-			id: "",
-			label: {}
+			id: required(reference),
+			label: required(local)
 		},
 
-		startDate: optional(""),
-		endDate: optional("")
+		startDate: optional(dateTime),
+		endDate: optional(dateTime)
 
 	})
 
 });
 
 
-// export function DataEvents() {
-//
-//     const [route, setRoute]=useRoute();
-//     const [query, setQuery]=useQuery({ ".order": ["startDate", "label"] }, sessionStorage);
-//
-//
-//     useEffect(() => { setRoute({ title: string(Events) }); }, []);
-//
-//
-//     return <DataPage item={string(Events)}
-//
-//         menu={<DataMeta>{route}</DataMeta>}
-//
-//         pane={<DataPane
-//
-//             header={<NodeKeywords state={[query, setQuery]}/>}
-//             footer={<NodeCount state={[query, setQuery]}/>}
-//
-//         >
-//
-//             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
-//             <NodeOptions path={"publisher"} type={"anyURI"} placeholder={"Publisher"} state={[query, setQuery]}/>
-//
-//             <NodeOptions path={"subject"} type={"string"} placeholder={"Topic"} state={[query, setQuery]}/>
-//             <NodeRange path={"startDate"} type={"dateTime"} as={"date"} placeholder={"Start Date"} state={[query,
-// setQuery]}/>  <NodeOptions path={"isAccessibleForFree"} type={"boolean"} placeholder={"Free Entry"} state={[query,
-// setQuery]}/> <NodeOptions path={"location"} type={"anyURI"} placeholder={"Location"} state={[query, setQuery]}/>
-// <NodeOptions path={"organizer"} type={"anyURI"} placeholder={"Organizer"} state={[query, setQuery]}/>  </DataPane>}
-// deps={[JSON.stringify(query)]}  >  <NodeItems model={Events} placeholder={EventsIcon} state={[query, setQuery]}>{({
-// id,  image, label, comment,  university, startDate  }) =>  <DataCard key={id} compact  name={<a
-// href={id}>{string(label)}</a>}  icon={image?.[0]}  tags={<> <span>{string(university)}</span> {startDate && <><span>
-// / </span><span>{startDate.substring(0, 10)}</span></>} </>}  >  {string(comment)}  </DataCard>  }</NodeItems>
-// </DataPage>;  }
+export function DataEvents() {
+
+	const events=useCollection(Events, "members", { store: useQuery() });
+
+	return <DataPage name={Events} menu={<DataMeta/>}
+
+		tray={< >
+
+			<ToolKeywords placeholder={"Name"}>{
+				useKeywords(events, "label")
+			}</ToolKeywords>
+
+
+			<ToolOptions placeholder={"University"}>{
+				useOptions(events, "university", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
+
+			{/* <ToolRange placeholder={"Date"}>{
+			 useRange(events, "startDate", { type: dateTime })
+			 }</ToolRange> */}
+
+			{/* <ToolOptions placeholder={"Topic"} compact>{
+			 useOptions(events, "subject", { type: entry({ id: "", label: required(local) }) })
+			 }</ToolOptions> */}
+
+			<ToolOptions placeholder={"Publisher"} compact>{
+				useOptions(events, "publisher", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
+
+			{/* <ToolOptions placeholder={"Organizer"} compact>{
+			 useOptions(events, "organizer", { type: entry({ id: "", label: required(local) }) })
+			 }</ToolOptions> */}
+
+		</>}
+
+		info={<>
+
+			<ToolCount>{useStats(events)}</ToolCount>
+			<ToolClear>{events}</ToolClear>
+
+		</>}
+
+	>
+
+		<ToolSheet placeholder={Events[icon]}
+
+			sorted={{
+
+				startDate: "decreasing",
+				label: "increasing"
+
+			}}
+
+			as={({
+
+				id,
+				label,
+				comment,
+				image,
+
+				university,
+
+				startDate
+
+			}) =>
+
+
+				<ToolCard key={id} side={"end"}
+
+					title={<ToolLink>{{ id, label }}</ToolLink>}
+					image={image}
+
+					tags={<>
+						<span>{toEntryString(university)}</span>
+						{startDate && <><span>/ </span> <span>{startDate.substring(0, 10)}</span></>}
+					</>}>{
+
+					toLocalString(comment)
+
+				}</ToolCard>
+
+			}>{events}</ToolSheet>;
+
+	</DataPage>;
+
+}
 

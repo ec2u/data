@@ -17,6 +17,8 @@
 import { Actors, DataActors } from "@ec2u/data/pages/actors";
 import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
+import { DataEvent, Event } from "@ec2u/data/pages/events/event";
+import { DataEvents, Events } from "@ec2u/data/pages/events/events";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
 import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
 import DataWild, { Wild } from "@ec2u/data/pages/wild";
@@ -78,9 +80,10 @@ createRoot(document.body.firstElementChild!).render((
 
 				[id(Actors)]: DataActors,
 
-				// [Events.id]: DataEvents,
-				// [Event.id]: DataEvent,
-				//
+				[Events.id]: DataEvents,
+				[Event.id]: DataEvent,
+
+
 				// [Schemes.id]: DataSchemes,
 				// [Scheme.id]: DataScheme,
 				// [Concept.id]: DataConcept,

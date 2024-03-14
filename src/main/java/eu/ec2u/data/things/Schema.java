@@ -21,13 +21,17 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.resources.Reference.Reference;
 
 /**
  * Schema.org RDF vocabulary.
@@ -36,9 +40,18 @@ import static eu.ec2u.data.Data.exec;
  */
 public final class Schema {
 
+    //// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static Shape or(final Shape... shapes) {
+        return shape(); // !!!
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static final String Namespace="https://schema.org/";
 
-    private static final IRI Context=_EC2U.item("/things");
+    private static final IRI Context=item("/things");
 
 
     /**
@@ -76,21 +89,21 @@ public final class Schema {
      * @return a thing shape including {@code labels} constraints for textual labels
      * @throws NullPointerException if {@code labels} is nul or contains null elements
      */
-    //    public static Shape Thing() {
-    //        return and(Reference(),
-    //
-    //                hidden(field(RDF.TYPE, all(Thing))),
-    //
-    //                field(identifier, optional(), datatype(XSD.STRING)),
-    //                field(url, multiple(), datatype(IRIType)),
-    //                field(name, multilingual()),
-    //                field(image, multiple(), datatype(IRIType)),
-    //                field("fullDescription", description, multilingual()), // ;( dct:description
-    //                field(disambiguatingDescription, multilingual()),
-    //                field(about, multiple(), Reference())
-    //
-    //        );
-    //    }
+    public static Shape Thing() {
+        return shape(Reference(),
+
+                property(RDF.TYPE, hasValue(Thing)),
+
+                property(identifier, optional(), string()),
+                property(url, multiple(), reference()),
+                property(name, required(), local()),
+                property("fullDescription", description, required(), local()), // ;( clash with dct:description
+                property(disambiguatingDescription, optional(), local()),
+                property(image, optional(), reference()),
+                property(about, multiple(), Reference())
+
+        );
+    }
 
 
     //// Organizations /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,16 +113,17 @@ public final class Schema {
     public static final IRI legalName=term("legalName");
 
 
-    //    public static Shape Organization() {
-    //        return and(Thing(),
-    //
-    //                hidden(field(RDF.TYPE, all(Organization))),
-    //
-    //                field(legalName, multilingual()),
-    //                field(Schema.email, datatype(XSD.STRING)),
-    //                field(Schema.telephone, datatype(XSD.STRING))
-    //        );
-    //    }
+    public static Shape Organization() {
+        return shape(Thing(),
+
+                property(RDF.TYPE, hasValue(Organization)),
+
+                property(legalName, local()),
+                property(Schema.email, string()),
+                property(Schema.telephone, string())
+
+        );
+    }
 
 
     //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,25 +188,25 @@ public final class Schema {
     public static final IRI endDate=term("endDate");
 
 
-    //    public static Shape Event() {
-    //        return and(Thing(),
-    //
-    //                hidden(field(RDF.TYPE, all(Event))),
-    //
-    //                field(eventStatus, optional(), datatype(IRIType)),
-    //
-    //                field(startDate, optional(), datatype(XSD.DATETIME)),
-    //                field(endDate, optional(), datatype(XSD.DATETIME)),
-    //
-    //                field(inLanguage, multiple(), datatype(XSD.STRING)),
-    //                field(isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
-    //                field(eventAttendanceMode, multiple(), datatype(IRIType)),
-    //
-    //                field(location, multiple(), Location()),
-    //                field(organizer, multiple(), Organization())
-    //
-    //        );
-    //    }
+    public static Shape Event() {
+        return shape(Thing(),
+
+                property(RDF.TYPE, hasValue(Event)),
+
+                property(eventStatus, optional(), reference()),
+
+                property(startDate, optional(), dateTime()),
+                property(endDate, optional(), dateTime()),
+
+                property(inLanguage, multiple(), string()),
+                property(isAccessibleForFree, optional(), bool()),
+                property(eventAttendanceMode, multiple(), reference()),
+
+                property(location, multiple(), Location()),
+                property(organizer, multiple(), Organization())
+
+        );
+    }
 
 
     //// Locations /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,51 +230,49 @@ public final class Schema {
 
 
     public static Shape Location() {
-        throw new UnsupportedOperationException(";( be implemented"); // !!!
+        return or(
 
-        //            return or(
-        //
-        //                    Place(),
-        //                    PostalAddress(),
-        //                    VirtualLocation()
-        //
-        //            );
+                Place(),
+                PostalAddress(),
+                VirtualLocation()
+
+        );
     }
 
-    //    public static Shape Place() {
-    //        return and(Thing(),
-    //
-    //                hidden(field(RDF.TYPE, all(Place))),
-    //
-    //                field(address, optional(), PostalAddress()),
-    //
-    //                field(latitude, optional(), datatype(XSD.DECIMAL)),
-    //                field(longitude, optional(), datatype(XSD.DECIMAL))
-    //
-    //        );
-    //    }
+    public static Shape Place() {
+        return shape(Thing(),
 
-    //    public static Shape PostalAddress() {
-    //        return and(ContactPoint(),
-    //
-    //                hidden(field(RDF.TYPE, all(PostalAddress))),
-    //
-    //                field(addressCountry, optional(), or(Reference(), datatype(XSD.STRING))),
-    //                field(addressRegion, optional(), or(Reference(), datatype(XSD.STRING))),
-    //                field(addressLocality, optional(), or(Reference(), datatype(XSD.STRING))),
-    //                field(postalCode, optional(), datatype(XSD.STRING)),
-    //                field(streetAddress, optional(), datatype(XSD.STRING))
-    //
-    //        );
-    //    }
+                property(RDF.TYPE, hasValue(Place)),
 
-    //    public static Shape VirtualLocation() {
-    //        return and(Thing(),
-    //
-    //                hidden(field(RDF.TYPE, all(VirtualLocation)))
-    //
-    //        );
-    //    }
+                property(address, optional(), PostalAddress()),
+
+                property(latitude, optional(), decimal()),
+                property(longitude, optional(), decimal())
+
+        );
+    }
+
+    public static Shape PostalAddress() {
+        return shape(ContactPoint(),
+
+                property(RDF.TYPE, hasValue(PostalAddress)),
+
+                property(addressCountry, optional(), or(Reference(), string())),
+                property(addressRegion, optional(), or(Reference(), string())),
+                property(addressLocality, optional(), or(Reference(), string())),
+                property(postalCode, optional(), string()),
+                property(streetAddress, optional(), string())
+
+        );
+    }
+
+    public static Shape VirtualLocation() {
+        return shape(Thing(),
+
+                property(RDF.TYPE, hasValue(VirtualLocation))
+
+        );
+    }
 
 
     //// ContactPoints /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -273,16 +285,16 @@ public final class Schema {
     public static final IRI faxNumber=term("faxNumber");
 
 
-    //    public static Shape ContactPoint() {
-    //        return and(Thing(),
-    //
-    //                hidden(field(RDF.TYPE, all(ContactPoint))),
-    //
-    //                field(email, optional(), datatype(XSD.STRING)),
-    //                field(telephone, optional(), datatype(XSD.STRING))
-    //
-    //        );
-    //    }
+    public static Shape ContactPoint() {
+        return shape(Thing(),
+
+                property(RDF.TYPE, hasValue(ContactPoint)),
+
+                property(email, optional(), string()),
+                property(telephone, optional(), string())
+
+        );
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

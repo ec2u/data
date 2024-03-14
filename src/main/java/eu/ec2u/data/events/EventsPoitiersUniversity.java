@@ -32,7 +32,6 @@ import eu.ec2u.data._EC2U;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -58,6 +57,7 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
 import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.universities.Universities.UNIVERSITY_CLASS;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
@@ -69,7 +69,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Universities.University)
+            .value(DCTERMS.COVERAGE, UNIVERSITY_CLASS)
             .values(RDFS.LABEL,
                     literal("University of Poitiers / News and Events", "en"),
                     literal("Université de Poitiers / Actualités et événements", Poitiers.Language)

@@ -27,8 +27,8 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { iri } from "@metreeca/core/iri";
 import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
 import { toValueString } from "@metreeca/core/value";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
@@ -60,7 +60,7 @@ export const Datasets=immutable({
 
 	members: [{
 
-		id: required(iri),
+		id: required(reference),
 		label: required(local),
 		comment: optional(local),
 
@@ -87,7 +87,7 @@ export function DataDatasets() {
 				useKeywords(datasets, "label")
 			}</ToolKeywords>
 
-			<ToolOptions placeholder={"License"} as={line => toValueString(line)}>{
+			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
 				useOptions(datasets, "license", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 

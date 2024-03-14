@@ -27,7 +27,6 @@ import com.metreeca.http.xml.formats.HTML;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.Work;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -57,6 +56,7 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 
+import static eu.ec2u.data.universities.Universities.UNIVERSITY_CLASS;
 import static eu.ec2u.data.universities._Universities.Jena;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
@@ -99,7 +99,7 @@ public final class EventsJenaUniversity implements Runnable {
 
             .map(frame -> frame
                     .value(RDF.TYPE, Resources.Publisher)
-                    .value(DCTERMS.COVERAGE, Universities.University)
+                    .value(DCTERMS.COVERAGE, UNIVERSITY_CLASS)
                     .value(Resources.university, Jena.Id)
             )
 

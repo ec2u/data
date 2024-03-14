@@ -18,8 +18,8 @@ import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required } from "@metreeca/core";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { iri } from "@metreeca/core/iri";
 import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
 import { string } from "@metreeca/core/string";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
@@ -59,7 +59,7 @@ export const Dataset=immutable({
 	description: optional(local),
 
 	license: optional({
-		id: required(iri),
+		id: required(reference),
 		label: required(local)
 	}),
 
@@ -68,7 +68,7 @@ export const Dataset=immutable({
 
 	entities: required(integer),
 
-	isDefinedBy: optional(iri)
+	isDefinedBy: optional(reference)
 
 });
 
@@ -99,8 +99,6 @@ export function DataDataset() {
 	const [route]=useRouter();
 
 	const [dataset]=useResource({ ...Dataset, id: toData(route) });
-
-	console.log(toData(route));
 
 	return <DataPage
 

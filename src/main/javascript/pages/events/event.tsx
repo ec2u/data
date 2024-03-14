@@ -14,244 +14,188 @@
  * limitations under the License.
  */
 
-import { Events, EventsIcon } from "@ec2u/data/pages/events/events";
-import { DataBack } from "@ec2u/data/views/_back";
-import { DataCard } from "@ec2u/data/views/_card";
-import { DataInfo } from "@ec2u/data/views/_info";
+import { Events } from "@ec2u/data/pages/events/events";
 import { DataPage } from "@ec2u/data/views/page";
-import { DataPane } from "@ec2u/data/views/pane";
-import { immutable } from "@metreeca/core";
-import { toIRIString } from "@metreeca/core/_iri";
-import { multiple, optional, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { toLocaleDateString } from "@metreeca/view/tiles/inputs/date";
-import { toLocaleTimeString } from "@metreeca/view/tiles/inputs/time";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import * as React from "react";
-import { useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
+import { toDateString } from "@metreeca/core/date";
+import { dateTime } from "@metreeca/core/dateTime";
+import { toEntryString } from "@metreeca/core/entry";
+import { local, toLocalString } from "@metreeca/core/local";
+import { reference, toReferenceString } from "@metreeca/core/reference";
+import { toTimeString } from "@metreeca/core/time";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React from "react";
 
 export const Event=immutable({
 
-    id: "/events/{code}",
+	id: required("/events/{code}"),
 
-    image: "",
-    label: { "en": "Event" },
-    comment: {},
+	image: optional(reference),
+	label: required(local),
+	comment: required(local),
 
-    university: {
-        id: "",
-        label: {}
-    },
+	university: {
+		id: required(reference),
+		label: required(local)
+	},
 
-    publisher: {
-        id: "",
-        label: {}
-    },
+	publisher: {
+		id: required(reference),
+		label: required(local)
+	},
 
-    source: optional(""),
+	source: optional(reference),
 
+	name: required(local),
+	url: multiple(reference),
 
-    name: { "en": "" },
-    url: multiple(""),
+	fullDescription: required(local),
 
-    fullDescription: optional(""),
+	startDate: optional(dateTime),
+	endDate: optional(dateTime),
 
-    startDate: optional(""),
-    endDate: optional(""),
+	subject: multiple({
+		id: required(reference),
+		label: required(local)
+	}),
 
-    subject: multiple({
-        id: "",
-        label: { "en": "" }
-    }),
+	isAccessibleForFree: optional(boolean),
 
-    isAccessibleForFree: optional(false),
+	// location: multiple({
+	// 	id: required(reference),
+	// 	label: required(local),
+	// 	url: optional(reference)
+	// }),
 
-    location: multiple({
-        id: "",
-        label: {},
-        url: optional("")
-    }),
-
-    organizer: multiple({
-        id: "",
-        label: {},
-        url: optional("")
-    })
+	organizer: multiple({
+		id: required(reference),
+		label: required(local),
+		url: optional(reference)
+	})
 
 });
 
 
 export function DataEvent() {
 
-    const [route, setRoute]=useRoute();
+	const [event]=useResource({ ...Event, id: "" });
 
-    const entry=useEntry(route, Event);
+	return <DataPage name={[Events, event]}
 
+		tray={<ToolFrame as={({
 
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+			university,
+			publisher,
+			source,
 
+			name,
+			url,
 
-    return <DataPage item={entry({ value: string })}
+			startDate,
+			endDate,
 
-        menu={entry({ fetch: <NodeSpin/> })}
+			subject,
 
-        pane={<DataPane
+			isAccessibleForFree,
+			// location,
+			organizer
 
-            header={<DataBack>{Events}</DataBack>}
+		}) => <>
 
-        >{entry({
+			<ToolInfo>{{
 
-            value: event => <DataEventInfo>{event}</DataEventInfo>
+				"University": <ToolLink>{university}</ToolLink>,
 
-        })}</DataPane>}
+				"Source": source
+					? <a href={source} title={toEntryString(publisher)}>{toEntryString(publisher)}</a>
+					: <span title={toEntryString(publisher)}>{toEntryString(publisher)}</span>
 
-    >{entry({
+			}}</ToolInfo>
 
-        fetch: <NodeHint>{EventsIcon}</NodeHint>,
+			<ToolInfo>{{
 
-        value: event => <DataEventBody>{event}</DataEventBody>,
+				"Title": <span title={toLocalString(name)}>{toLocalString(name)}</span>,
 
-        error: error => <span>{error.status}</span> // !!! report
+				"Topics": subject && subject.length && <ul>{[...subject]
+					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+					.map(subject => <li key={subject.id}>
+						<ToolLink filter={[Events, { university, subject }]}>{subject}</ToolLink>
+					</li>)
+				}</ul>
 
-    })}</DataPage>;
+			}}</ToolInfo>
 
-}
+			<ToolInfo>{{
 
+				...(startDate && {
+					"Start Date": toDateString(new Date(startDate)),
+					"Start Time": toTimeString(new Date(startDate))
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				}),
 
-function DataEventInfo({
+				...(endDate && endDate !== startDate && {
 
-    children: {
+					"End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toDateString(new Date(endDate)),
+					"End Time": toTimeString(new Date(endDate))
+				})
 
-        university,
-        publisher,
-        source,
+			}}</ToolInfo>
 
-        name,
-        url,
 
-        startDate,
-        endDate,
+			<ToolInfo>{{
 
-        subject,
+				"Entry": isAccessibleForFree === true ? "Free" : isAccessibleForFree === false ? "Paid" : undefined,
 
-        isAccessibleForFree,
-        location,
-        organizer
+				// "Location": location &&
+				// [...location].sort((x, y) => string(x).localeCompare(string(y))).map(({ id, label, url }) => url ?
+				// <a key={id}
+				// href={url}>{string(label)}</a> : <span key={id}>{string(label)}</span>),
 
-    }
+				"Organizer": organizer && [...organizer]
+					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+					.map(({ id, label, url }) => url
+						? <a key={id} href={url}>{toLocalString(label)}</a>
+						: <span key={id}>{toLocalString(label)}</span>
+					),
 
-}: {
+				"Info": url && url.map(item => <a key={item} href={item}>{
+					toReferenceString(item, { compact: true })
+				}</a>)
 
-    children: typeof Event
+			}}</ToolInfo>
 
-}) {
 
-    return <>
+		</>}>{event}</ToolFrame>}
 
-        <DataInfo>{{
+	>
 
-            "University": <NodeLink>{university}</NodeLink>,
-            "Source": source
-                ? <a href={source} title={string(publisher)}>{string(publisher)}</a>
-                : <span title={string(publisher)}>{string(publisher)}</span>
+		<ToolFrame placeholder={Events[icon]} as={({
 
-        }}</DataInfo>
+			image,
+			label,
 
-        <DataInfo>{{
+			fullDescription
 
-            "Title": <span title={string(name)}>{string(name)}</span>,
+		}) => <>
 
-            "Topics": subject && subject.length && <ul>{[...subject]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(subject => <li key={subject.id}>
-                    <NodeLink search={[Events, { university, subject }]}>{subject}</NodeLink>
-                </li>)
-            }</ul>
+			{image && <img src={image} alt={`Image of ${toLocalString(label)}`} style={{
 
-        }}</DataInfo>
+				float: "right",
+				maxWidth: "33%",
+				margin: "0 0 1rem 2rem"
 
-        <DataInfo>{{
+			}}/>}
 
-            ...(startDate && {
-                "Start Date": toLocaleDateString(new Date(startDate)),
-                "Start Time": toLocaleTimeString(new Date(startDate))
+			<ToolMark>{toLocalString(fullDescription)}</ToolMark>
 
-            }),
+		</>}>{event}</ToolFrame>
 
-            ...(endDate && endDate !== startDate && {
-
-                "End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toLocaleDateString(new Date(endDate)),
-                "End Time": toLocaleTimeString(new Date(endDate))
-
-            })
-
-        }}</DataInfo>
-
-        <DataInfo>{{
-
-            "Entry": isAccessibleForFree === true ? "Free"
-                : isAccessibleForFree === false ? "Paid"
-                    : undefined,
-
-            "Location": location && [...location]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(({ id, label, url }) => url
-                    ? <a key={id} href={url}>{string(label)}</a>
-                    : <span key={id}>{string(label)}</span>
-                ),
-
-            "Organizer": organizer && [...organizer]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(({ id, label, url }) => url
-                    ? <a key={id} href={url}>{string(label)}</a>
-                    : <span key={id}>{string(label)}</span>
-                ),
-
-            "Info": url && url.map(item => <a key={item} href={item}>{toIRIString(item)}</a>)
-
-        }}</DataInfo>
-
-    </>;
-
-}
-
-function DataEventBody({
-
-    children: {
-
-        image,
-        label,
-
-        fullDescription
-
-    }
-
-}: {
-
-    children: typeof Event
-
-}) {
-
-    return <DataCard icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}>
-
-        <ReactMarkdown
-
-            remarkPlugins={[remarkGfm]}
-
-        >{
-
-            string(fullDescription)
-
-        }</ReactMarkdown>
-
-    </DataCard>;
+	</DataPage>;
 
 }

@@ -17,18 +17,27 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf4j.actions.TupleQuery;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -46,31 +55,97 @@ import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
 import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.filter;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data.datasets.Dataset.Dataset;
+import static eu.ec2u.data.resources.Resource.Resource;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 
 public final class Events extends Delegator {
 
-    public static final IRI Context=_EC2U.item("/events/");
+    public static final IRI Context=item("/events/");
     public static final IRI Scheme=iri(Concepts.Context, "/event-topics");
 
-    public static final IRI Event=_EC2U.term("Event");
+    public static final IRI Event=term("Event");
 
+
+    public static Shape Events() {
+        return Dataset(Event());
+    }
+
+    public static Shape Event() {
+        return shape(Resource(), Schema.Event(),
+
+                property(RDF.TYPE, hasValue(Event)),
+
+                property(DCTERMS.MODIFIED, required(), instant()), // housekeeping timestamp
+                property("fullDescription", Schema.description) // prevent clashes with dct:description
+
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Events() {
+        delegate(new Router()
+
+                .path("/", handler(new Driver(Events()), new Worker()
+
+                        .get(new Relator(frame(
+
+                                field(ID, iri()),
+                                field(RDFS.LABEL, Frame.literal("", "en")),
+
+                                field(RDFS.MEMBER, query(
+
+                                        frame(
+                                                field(ID, iri()),
+                                                field(RDFS.LABEL, Frame.literal("", "en"))
+                                        ),
+
+                                        filter(RDF.TYPE, Event)
+
+                                ))
+
+                        )))
+
+                ))
+
+                .path("/{code}", handler(new Driver(Event()), new Worker()
+
+                        .get(new Relator(frame(
+
+                                field(ID, iri())
+
+                        )))
+
+                ))
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static Instant synced(final IRI context, final Value publisher) {
         return Xtream
 
                 .of("prefix ec2u: </terms/>\n"
-                        + "prefix dct: <http://purl.org/dc/terms/>\n\n"
-                        + "select (max(?modified) as ?synced) where {\n"
-                        + "\n"
-                        + "\t?event a ec2u:Event;\n"
-                        + "\t\tdct:publisher ?publisher;\n"
-                        + "\t\tdct:modified ?modified.\n"
-                        + "\n"
-                        + "}"
+                        +"prefix dct: <http://purl.org/dc/terms/>\n\n"
+                        +"select (max(?modified) as ?synced) where {\n"
+                        +"\n"
+                        +"\t?event a ec2u:Event;\n"
+                        +"\t\tdct:publisher ?publisher;\n"
+                        +"\t\tdct:modified ?modified.\n"
+                        +"\n"
+                        +"}"
                 )
 
                 .flatMap(new TupleQuery()
@@ -89,47 +164,6 @@ public final class Events extends Delegator {
                 .orElseGet(() -> Instant.now().minus(Duration.ofDays(30)));
     }
 
-
-    static Shape Event() {
-        throw new UnsupportedOperationException(";( be implemented"); // !!!
-
-        //        return relate(Resource(), Schema.Event(),
-        //
-        //                hidden(field(RDF.TYPE, all(Event))),
-        //
-        //                field(DCTERMS.MODIFIED, required()), // housekeeping timestamp
-        //                field("fullDescription", Schema.description) // prevent clashes with dct:description
-        //
-        //        );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Events() {
-        delegate(handler(
-
-                //                new Driver(Event(),
-                //
-                //                        filter(clazz(Event))
-                //
-                //                ),
-                //
-                //                new Router()
-                //
-                //                        .path("/", new Worker()
-                //                                .get(new Relator())
-                //                        )
-                //
-                //                        .path("/{id}", new Worker()
-                //                                .get(new Relator())
-                //                        )
-
-        ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
 

@@ -19,8 +19,8 @@ import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { iri } from "@metreeca/core/iri";
 import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
 import { string } from "@metreeca/core/string";
 import { year } from "@metreeca/core/year";
 import { useResource } from "@metreeca/data/models/resource";
@@ -35,7 +35,7 @@ export const University=immutable({
 
 	id: required("/universities/{code}"),
 
-	image: required(iri),
+	image: required(reference),
 	label: required(local),
 	comment: required(local),
 
@@ -45,19 +45,19 @@ export const University=immutable({
 	students: optional(integer),
 
 	country: optional({
-		id: required(iri),
+		id: required(reference),
 		label: required(local)
 	}),
 
 	location: optional({
-		id: required(iri),
+		id: required(reference),
 		label: required(local)
 	}),
 
 	subsets: multiple({
 
 		dataset: {
-			id: required(iri),
+			id: required(reference),
 			label: required(local)
 		},
 

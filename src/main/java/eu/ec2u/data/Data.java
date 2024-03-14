@@ -29,8 +29,8 @@ import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
 
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.events.Events;
 import eu.ec2u.data.universities.Universities;
-import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -151,8 +151,7 @@ public final class Data extends Delegator {
 
                                         .path("/", new Datasets())
 
-                                        .path("/universities/", new Universities())
-                                        .path("/universities/{code}", new University())
+                                        .path("/universities/*", new Universities())
 
                                 // .path("/units/", new Units.Handler())
                                 // .path("/units/{code}", new Unit.Handler())
@@ -164,8 +163,8 @@ public final class Data extends Delegator {
                                 // .path("/documents/*", new Documents.Handler())
                                 // .path("/documents/{code}", new Document.Handler())
 
-                                // .path("/persons/*", new Persons())
-                                //.path("/events/*", new Events())
+                                        .path("/events/*", new Events())
+
                                 //.path("/concepts/*", new Concepts())
 
                         )

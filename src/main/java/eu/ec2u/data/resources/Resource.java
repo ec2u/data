@@ -27,7 +27,7 @@ import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data._EC2U.term;
 import static eu.ec2u.data.resources.Reference.Reference;
-import static eu.ec2u.data.universities.University.University;
+import static eu.ec2u.data.universities.Universities.University;
 
 public abstract class Resource {
 

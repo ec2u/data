@@ -20,7 +20,6 @@ import com.metreeca.http.rdf.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -30,6 +29,7 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
+import static eu.ec2u.data.universities.Universities.UNIVERSITY_CLASS;
 import static eu.ec2u.data.universities._Universities.Iasi;
 
 public final class EventsIasiUniversity implements Runnable {
@@ -38,7 +38,7 @@ public final class EventsIasiUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.uaic.ro/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Universities.University)
+            .value(DCTERMS.COVERAGE, UNIVERSITY_CLASS)
             .values(RDFS.LABEL,
                     literal("University of Iasi / Events", "en"),
                     literal("Universitatea din Iași / Evenimente", Iasi.Language)

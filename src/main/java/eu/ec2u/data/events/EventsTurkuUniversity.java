@@ -32,7 +32,6 @@ import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.Work;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -63,6 +62,7 @@ import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.http.toolkits.Strings.clip;
 
 import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.universities.Universities.UNIVERSITY_CLASS;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
@@ -76,7 +76,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.utu.fi/event-search/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Universities.University)
+            .value(DCTERMS.COVERAGE, UNIVERSITY_CLASS)
             .values(RDFS.LABEL,
                     literal("University of Turku / News", "en"),
                     literal("Turun yliopisto / Ajankohtaista", Turku.Language)
