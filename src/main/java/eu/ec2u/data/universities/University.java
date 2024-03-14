@@ -29,7 +29,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.VOID;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.Values.inverse;
+import static com.metreeca.link.Frame.integer;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
@@ -63,7 +63,7 @@ public final class University extends Delegator {
 
                 property("subsets", DCTERMS.EXTENT,
 
-                        property("dataset", inverse(VOID.SUBSET), required(), Dataset(Resource())),
+                        property("dataset", reverse(VOID.SUBSET), required(), Dataset()),
                         property(VOID.ENTITIES, required(), integer())
 
                 )
@@ -97,7 +97,18 @@ public final class University extends Delegator {
                 .get(new Relator(frame(
 
                         field(ID, iri()),
-                        field(RDFS.LABEL, literal("", "en"))
+                        field(RDFS.LABEL, literal("", "en")),
+
+                        field(DCTERMS.EXTENT, frame(
+
+                                field(reverse(VOID.SUBSET), frame(
+                                        field(ID, literal("")),
+                                        field(RDFS.LABEL, literal(""))
+                                )),
+
+                                field(VOID.ENTITIES, literal(integer(0)))
+
+                        ))
 
                 )))
 

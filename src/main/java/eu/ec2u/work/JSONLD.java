@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,9 @@ import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.inverse;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.link.Frame.reverse;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -48,7 +48,7 @@ public final class JSONLD {
 
             final Collection<Statement> model=Schema.normalize(rdf(input, null, new JSONLDParser()));
 
-            return frame(type, model).frames(inverse(RDF.TYPE));
+            return frame(type, model).frames(reverse(RDF.TYPE));
 
         } catch ( final FormatException e ) {
 

@@ -15,12 +15,14 @@
  */
 
 import { Universities } from "@ec2u/data/pages/universities/universities";
+import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { iri } from "@metreeca/core/iri";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { year } from "@metreeca/core/year";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
@@ -39,7 +41,7 @@ export const University=immutable({
 
 	schac: required(string),
 
-	// inception: optional(date), // !!! native non-value type
+	inception: optional(year),
 	students: optional(integer),
 
 	country: optional({
@@ -55,8 +57,8 @@ export const University=immutable({
 	subsets: multiple({
 
 		dataset: {
-			// id: required(iri),
-			// label: required(local)
+			id: required(iri),
+			label: required(local)
 		},
 
 		entities: required(integer)
@@ -74,11 +76,11 @@ export function DataUniversity() {
 
 		tray={<ToolFrame as={({
 
-			// !!! inception,
+			inception,
 			students,
 			country,
-			location
-			// subsets
+			location,
+			subsets
 
 		}) => <>
 
@@ -91,26 +93,26 @@ export function DataUniversity() {
 
 			<ToolInfo>{{
 
-				// !!! "Inception": inception && inception.substring(0, 4) || "-",
+				"Inception": inception && inception.substring(0, 4) || "-",
 				"Students": students && toIntegerString(students)
 
 			}}</ToolInfo>
 
-			{/* <ToolInfo>{subsets?.slice()
+			<ToolInfo>{subsets?.slice()
 
-			 ?.sort(({ entities: x }, { entities: y }) => x - y)
-			 ?.map(({ dataset, entities }) => ({
+				?.sort(({ entities: x }, { entities: y }) => x - y)
+				?.map(({ dataset, entities }) => ({
 
-			 label: <ToolLink filter={[dataset, { university: id }]}>{{
-			 id: dataset.id,
-			 label: ec2u(dataset.label)
-			 }}</ToolLink>,
+					label: <ToolLink filter={[dataset, { university: university?.id }]}>{{
+						id: dataset.id,
+						label: ec2u(dataset.label)
+					}}</ToolLink>,
 
-			 value: toIntegerString(entities)
+					value: toIntegerString(entities)
 
-			 }))
+				}))
 
-			 }</ToolInfo> */}
+			}</ToolInfo>
 
 		</>}>{university}</ToolFrame>}
 

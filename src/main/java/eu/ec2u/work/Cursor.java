@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.metreeca.http.rdf.Shift.Path;
 import com.metreeca.http.rdf.Shift.Seq;
 import com.metreeca.http.rdf.Shift.Step;
 import com.metreeca.http.rdf.Values;
+import com.metreeca.link.Frame;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
@@ -32,7 +33,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Shift.Seq.seq;
-import static com.metreeca.http.rdf.Values.*;
+import static com.metreeca.http.rdf.Values.lang;
+import static com.metreeca.link.Frame.reverse;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -250,7 +252,7 @@ public final class Cursor implements AutoCloseable {
             throw new NullPointerException("null iri");
         }
 
-        return direct(iri)
+        return Frame.forward(iri)
                 ? focus.isResource() ? forward(iri) : Stream.empty()
                 : backward(iri);
     }
@@ -318,11 +320,11 @@ public final class Cursor implements AutoCloseable {
                         .collect(toList())
                 );
 
-        final IRI inverse=inverse(iri);
+        final IRI reverse=reverse(iri);
 
         return statements
                 .stream()
-                .filter(s -> s.getPredicate().equals(inverse))
+                .filter(s -> s.getPredicate().equals(reverse))
                 .map(Statement::getSubject)
                 .map(Value.class::cast)
                 .distinct();

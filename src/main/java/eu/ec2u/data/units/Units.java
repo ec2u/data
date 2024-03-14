@@ -209,7 +209,7 @@ public final class Units /*extends Dataset<Unit>*/ {
                             .map(Values::literal)
                     )
 
-                    .frame(inverse(ORG.HEAD_OF), value(record, "Head", person -> _person(person, university)))
+                    .frame(reverse(ORG.HEAD_OF), value(record, "Head", person -> _person(person, university)))
 
             );
         }
@@ -447,7 +447,7 @@ public final class Units /*extends Dataset<Unit>*/ {
 
                     new Cursor(Unit, connection)
 
-                            .cursors(inverse(RDF.TYPE))
+                            .cursors(reverse(RDF.TYPE))
 
                             .map(unit -> List.of(
 
@@ -504,7 +504,7 @@ public final class Units /*extends Dataset<Unit>*/ {
                                     unit.strings(FOAF.MBOX)
                                             .collect(joining("; ")),
 
-                                    unit.strings(seq(inverse(ORG.HEAD_OF), RDFS.LABEL))
+                                    unit.strings(seq(reverse(ORG.HEAD_OF), RDFS.LABEL))
                                             .collect(joining("; ")),
 
                                     unit.localized(DCTERMS.DESCRIPTION, "en")

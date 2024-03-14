@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ import java.time.Instant;
 import java.util.Map;
 
 import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.inverse;
 import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.link.Frame.reverse;
 
 import static eu.ec2u.data.Data.repository;
 import static java.util.Map.entry;
@@ -97,7 +97,7 @@ public final class UnitsPavia implements Runnable {
                 .flatMap(model -> Types.keySet().stream()
 
                         .flatMap(type -> frame(type, model)
-                                .frames(inverse(RDF.TYPE))
+                                .frames(reverse(RDF.TYPE))
                         )
 
                 );

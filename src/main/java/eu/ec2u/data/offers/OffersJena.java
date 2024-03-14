@@ -140,7 +140,7 @@ public final class OffersJena implements Runnable {
                         final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
 
                         return frame(Schema.term("AboutPage"), model)
-                                .frames(inverse(RDF.TYPE));
+                                .frames(reverse(RDF.TYPE));
 
                     } catch ( final FormatException e ) {
 

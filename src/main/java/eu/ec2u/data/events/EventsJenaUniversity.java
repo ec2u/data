@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,7 +185,7 @@ public final class EventsJenaUniversity implements Runnable {
                         final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
 
                         return frame(Schema.Event, model)
-                                .frames(inverse(RDF.TYPE));
+                                .frames(reverse(RDF.TYPE));
 
                     } catch ( final FormatException e ) {
 

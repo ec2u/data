@@ -21,6 +21,7 @@ import { toEntryString } from "@metreeca/core/entry";
 import { integer } from "@metreeca/core/integer";
 import { iri } from "@metreeca/core/iri";
 import { local, toLocalString } from "@metreeca/core/local";
+import { year } from "@metreeca/core/year";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useQuery } from "@metreeca/data/models/query";
@@ -81,9 +82,9 @@ export function DataUniversities() {
 				useKeywords(universities, "label")
 			}</ToolKeywords>
 
-			{/* <ToolRange placeholder={"Inception"}>{
-			 useRange(universities, "inception", { type: dateTime })
-			 }</ToolRange> */}
+			<ToolRange placeholder={"Inception"}>{
+				useRange(universities, "inception", { type: year })
+			}</ToolRange>
 
 			<ToolRange placeholder={"Students"}>{
 				useRange(universities, "students", { type: integer })

@@ -112,7 +112,7 @@ public final class EventsPaviaCity implements Runnable {
                 .batch(0)
 
                 .flatMap(model -> frame(Schema.Event, model)
-                        .strings(seq(inverse(RDF.TYPE), Schema.url))
+                        .strings(seq(reverse(RDF.TYPE), Schema.url))
                 )
 
                 .flatMap(url -> Xtream.of(url)
@@ -130,7 +130,7 @@ public final class EventsPaviaCity implements Runnable {
                         .batch(0)
 
                         .flatMap(model -> frame(Schema.Event, model)
-                                .values(inverse(RDF.TYPE))
+                                .values(reverse(RDF.TYPE))
                                 .map(event -> frame(event, model)
                                         .value(DCTERMS.SOURCE, iri(url))
                                 )
