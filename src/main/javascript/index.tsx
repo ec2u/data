@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Actors, DataActors } from "@ec2u/data/pages/actors";
+import { Actors, DataActors } from "@ec2u/data/pages/actors/actors";
 import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
@@ -84,7 +84,6 @@ createRoot(document.body.firstElementChild!).render((
 
 				[Events.id]: DataEvents,
 				[Event.id]: DataEvent,
-
 
 				// [Schemes.id]: DataSchemes,
 				// [Scheme.id]: DataScheme,

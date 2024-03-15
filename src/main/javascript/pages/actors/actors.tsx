@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { immutable } from "@metreeca/core";
+import { immutable, required } from "@metreeca/core";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { icon } from "@metreeca/view";
 import { User } from "@metreeca/view/widgets/icon";
@@ -26,8 +26,10 @@ export const Actors=immutable({
 
 	[icon]: <User/>,
 
-	id: "/actors/",
-	label: "Knowledge Ecosystem Actors"
+	id: required("/actors/"),
+	label: required({
+		"en": "Knowledge Ecosystem Actors"
+	})
 
 });
 
