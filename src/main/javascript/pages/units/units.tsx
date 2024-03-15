@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { toUnitLabel } from "@ec2u/data/pages/units/unit";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry, toEntryString } from "@metreeca/core/entry";
@@ -113,7 +114,6 @@ export function DataUnits() {
 		<ToolSheet placeholder={Units[icon]} as={({
 
 			id,
-			label,
 			comment,
 
 			prefLabel,
@@ -126,11 +126,11 @@ export function DataUnits() {
 
 			<ToolCard key={id} side={"end"}
 
-				title={<ToolLink>{{ id, label: altLabel ?? prefLabel }}</ToolLink>}
+				title={<ToolLink>{{ id, label: toUnitLabel({ prefLabel, altLabel }) }}</ToolLink>}
 
 				tags={<>
-					<span>{university && toEntryString(university) || "EC2U Alliance"}</span>
-					{classification && <><br/><span>{toEntryString(classification)}</span></>}
+					<div>{university && toEntryString(university) || "EC2U Alliance"}</div>
+					{classification && <div>{toEntryString(classification)}</div>}
 				</>}
 
 			>{

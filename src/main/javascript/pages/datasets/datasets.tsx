@@ -111,11 +111,7 @@ export function DataDatasets() {
 				title={<ToolLink>{{ id, label: ec2u(alternative || label) }}</ToolLink>}
 
 				tags={`${toIntegerString(entities)}`}
-				image={<div style={{
-					fontWeight: 600,
-					color: "var(--tool--color-light)",
-					transform: " translate(0%, -25%)"
-				}}>{ec2u(toLocalString(label))}</div>}
+				image={<span>{ec2u(toLocalString(label))}</span>}
 
 			>{
 

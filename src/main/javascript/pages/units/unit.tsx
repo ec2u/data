@@ -20,7 +20,7 @@ import { Units } from "@ec2u/data/pages/units/units";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, repeatable, required } from "@metreeca/core";
 import { toEntryString } from "@metreeca/core/entry";
-import { local, toLocalString } from "@metreeca/core/local";
+import { Local, local, toLocalString } from "@metreeca/core/local";
 import { reference, toReferenceString } from "@metreeca/core/reference";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
@@ -34,7 +34,6 @@ export const Unit=immutable({
 
 	id: required("/units/{code}"),
 
-	label: required(local),
 	comment: optional(local),
 
 	prefLabel: required(local),
@@ -75,6 +74,13 @@ export const Unit=immutable({
 });
 
 
+export function toUnitLabel({ altLabel, prefLabel }: { prefLabel: Local, altLabel?: Local }) {
+	return altLabel
+		? `${toLocalString(altLabel)} - ${toLocalString(prefLabel)}`
+		: toLocalString(prefLabel);
+}
+
+
 export function DataUnit() {
 
 	const [unit]=useResource({ ...Unit, id: "" });
@@ -82,10 +88,7 @@ export function DataUnit() {
 
 	return <DataPage
 
-		name={[Units, unit && (unit.altLabel
-				? `${toLocalString(unit.altLabel)} - ${toLocalString(unit.prefLabel)}`
-				: toLocalString(unit.prefLabel)
-		)]}
+		name={[Units, unit && toUnitLabel(unit)]}
 
 		tray={<ToolFrame as={({
 
