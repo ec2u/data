@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U people.
+ * EC2U agents.
  */
 package eu.ec2u.data.agents;

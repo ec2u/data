@@ -17,6 +17,11 @@
 package eu.ec2u.data.units;
 
 
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
@@ -52,6 +57,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Locator.path;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Frame.frame;
@@ -60,9 +66,18 @@ import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
+import static com.metreeca.link.Frame.ID;
+import static com.metreeca.link.Frame.field;
+import static com.metreeca.link.Query.filter;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.Base;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.organizations.Organizations.OrgOrganizationalUnit;
+import static eu.ec2u.data.resources.Resource.Resource;
+import static eu.ec2u.data.resources.Resource.university;
 import static eu.ec2u.work.feeds.Parsers._person;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
@@ -71,7 +86,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 
-public final class Units /*extends Dataset<Unit>*/ {
+public final class Units extends Delegator {
 
     public static final IRI Context=_EC2U.item("/units/");
     public static final IRI Scheme=iri(Concepts.Context, "/unit-topics");
@@ -79,27 +94,68 @@ public final class Units /*extends Dataset<Unit>*/ {
     public static final IRI Unit=_EC2U.term("Unit");
 
 
+    public static Shape Units() { return Dataset(Unit()); }
+
     public static Shape Unit() {
-        throw new UnsupportedOperationException(";( be removed"); // !!!
+        return shape(Resource(), OrgOrganizationalUnit(),
+
+                property(RDF.TYPE, hasValue(Unit))
+
+        );
     }
 
 
-    // public static final class Handler extends Delegator {
-    //
-    //     public Handler() {
-    //         delegate(new Worker()
-    //
-    //                 .get(new Relator(with(new Units(), units -> {
-    //
-    //                     units.setLabel(local("en", "Universities"));
-    //                     units.setMembers(Set.of(new Unit()));
-    //
-    //                 })))
-    //
-    //         );
-    //     }
-    //
-    // }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Units() {
+        delegate(new Router()
+
+                .path("/", handler(new Driver(Units()), new Worker()
+
+                        .get(new Relator(com.metreeca.link.Frame.frame(
+
+                                field(ID, iri()),
+                                field(RDFS.LABEL, com.metreeca.link.Frame.literal("", "en")),
+
+                                field(RDFS.MEMBER, query(
+
+                                        com.metreeca.link.Frame.frame(
+
+                                                field(ID, iri()),
+                                                field(RDFS.LABEL, com.metreeca.link.Frame.literal("", "en")),
+
+                                                field(university, iri()),
+                                                field(ORG.CLASSIFICATION, iri())
+
+                                        ),
+
+                                        filter(RDF.TYPE, Unit)
+
+                                ))
+
+                        )))
+
+                ))
+
+                .path("/{code}", handler(new Driver(Unit()), new Worker()
+
+                        .get(new Relator(com.metreeca.link.Frame.frame(
+
+                                field(ID, iri()),
+
+                                field(RDFS.LABEL, com.metreeca.link.Frame.literal("", "en")),
+
+                                field(university, iri()),
+                                field(ORG.CLASSIFICATION, iri())
+
+                        )))
+
+                ))
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
 

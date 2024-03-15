@@ -25,12 +25,14 @@ import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
 import { useQuery } from "@metreeca/data/models/query";
+import { useRange } from "@metreeca/data/models/range";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
 import { ToolKeywords } from "@metreeca/view/lenses/keywords";
 import { ToolOptions } from "@metreeca/view/lenses/options";
+import { ToolRange } from "@metreeca/view/lenses/range";
 import { ToolSheet } from "@metreeca/view/lenses/sheet";
 import { ToolCard } from "@metreeca/view/widgets/card";
 import { Calendar } from "@metreeca/view/widgets/icon";
@@ -42,23 +44,24 @@ export const Events=immutable({
 
 	[icon]: <Calendar/>,
 
-	id: "/events/",
-	label: { "en": "Events" },
+	id: required("/events/"),
+	label: required({
+		"en": "Events"
+	}),
 
 	members: multiple({
 
 		id: required(reference),
-		image: optional(reference),
 		label: required(local),
 		comment: required(local),
+		image: optional(reference),
+
+		startDate: optional(dateTime),
 
 		university: {
 			id: required(reference),
 			label: required(local)
-		},
-
-		startDate: optional(dateTime),
-		endDate: optional(dateTime)
+		}
 
 	})
 
@@ -82,21 +85,21 @@ export function DataEvents() {
 				useOptions(events, "university", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
-			{/* <ToolRange placeholder={"Date"}>{
-			 useRange(events, "startDate", { type: dateTime })
-			 }</ToolRange> */}
+			<ToolRange placeholder={"Date"}>{
+				useRange(events, "startDate")
+			}</ToolRange>
 
-			{/* <ToolOptions placeholder={"Topic"} compact>{
-			 useOptions(events, "subject", { type: entry({ id: "", label: required(local) }) })
-			 }</ToolOptions> */}
+			<ToolOptions placeholder={"Topic"} compact>{
+				useOptions(events, "subject", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
 
 			<ToolOptions placeholder={"Publisher"} compact>{
 				useOptions(events, "publisher", { type: entry({ id: "", label: required(local) }), size: 10 })
 			}</ToolOptions>
 
-			{/* <ToolOptions placeholder={"Organizer"} compact>{
-			 useOptions(events, "organizer", { type: entry({ id: "", label: required(local) }) })
-			 }</ToolOptions> */}
+			<ToolOptions placeholder={"Organizer"} compact>{
+				useOptions(events, "organizer", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
 
 		</>}
 
@@ -125,22 +128,26 @@ export function DataEvents() {
 				comment,
 				image,
 
-				university,
+				startDate,
 
-				startDate
+				university,
 
 			}) =>
 
 
-				<ToolCard key={id} side={"end"}
+				<ToolCard key={id} side={"end"} size={10}
 
-					title={<ToolLink>{{ id, label }}</ToolLink>}
+					title={<ToolLink>{{
+
+						id,
+						label: startDate ? `${startDate.substring(0, 10)} / ${toLocalString(label)}` : label
+
+					}}</ToolLink>}
+
 					image={image}
+					tags={<span>{toEntryString(university)}</span>}
 
-					tags={<>
-						<span>{toEntryString(university)}</span>
-						{startDate && <><span>/ </span> <span>{startDate.substring(0, 10)}</span></>}
-					</>}>{
+				>{
 
 					toLocalString(comment)
 

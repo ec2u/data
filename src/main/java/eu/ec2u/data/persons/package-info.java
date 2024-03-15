@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.agents;
-
-public interface FOAFPerson /*extends FOAFAgent*/ {
-
-}
+/**
+ * EC2U persons.
+ */
+package eu.ec2u.data.persons;

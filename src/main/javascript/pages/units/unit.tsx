@@ -14,65 +14,62 @@
  * limitations under the License.
  */
 
-import { Units, UnitsIcon } from "@ec2u/data/pages/units/units";
-import { DataBack } from "@ec2u/data/views/_back";
-import { DataCard } from "@ec2u/data/views/_card";
-import { DataInfo } from "@ec2u/data/views/_info";
-import { DataPage } from "@ec2u/data/views/page";
-import { DataPane } from "@ec2u/data/views/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, optional, repeatable, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import * as React from "react";
-import { useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
+import { Events } from "@ec2u/data/pages/events/events";
+import { Units } from "@ec2u/data/pages/units/units";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, repeatable, required } from "@metreeca/core";
+import { toEntryString } from "@metreeca/core/entry";
+import { local, toLocalString } from "@metreeca/core/local";
+import { reference, toReferenceString } from "@metreeca/core/reference";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React from "react";
 
 export const Unit=immutable({
 
-	id: "/units/{code}",
+	id: required("/units/{code}"),
 
-	label: { "en": "Unit" },
-	comment: { "en": "" },
+	label: required(local),
+	comment: optional(local),
 
-	university: {
-		id: "",
-		label: { "en": "" }
-	},
+	prefLabel: required(local),
+	altLabel: optional(local),
 
-	subject: multiple({
-		id: "",
-		label: { "en": "" }
+	homepage: multiple(reference),
+
+	university: optional({
+		id: required(reference),
+		label: required(local)
 	}),
 
-	homepage: multiple(""),
-
-	prefLabel: { "en": "" },
-	altLabel: optional({ "en": "" }),
-
 	classification: optional({
-		id: "",
-		label: { "en": "" }
+		id: required(reference),
+		label: required(local)
 	}),
 
 	head: multiple({
-		id: "",
-		label: { "en": "" }
+		id: required(reference),
+		label: required(local)
 	}),
 
-	unitOf: repeatable({
-		id: "",
-		label: { "en": "" }
+	organization: repeatable({
+		id: required(reference),
+		label: required(local)
 	}),
 
-	hasUnit: multiple({
-		id: "",
-		label: { "en": "" }
+	units: multiple({
+		id: required(reference),
+		label: required(local)
+	}),
+
+	subject: multiple({
+		id: required(reference),
+		label: required(local)
 	})
 
 });
@@ -80,165 +77,125 @@ export const Unit=immutable({
 
 export function DataUnit() {
 
-	const [route, setRoute]=useRoute();
+	const [unit]=useResource({ ...Unit, id: "" });
 
-	const entry=useEntry(route, Unit);
 
+	return <DataPage
 
-	useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+		name={[Units, unit && (unit.altLabel
+				? `${toLocalString(unit.altLabel)} - ${toLocalString(unit.prefLabel)}`
+				: toLocalString(unit.prefLabel)
+		)]}
 
+		tray={<ToolFrame as={({
 
-	return <DataPage item={entry({
-		value: ({ altLabel, prefLabel }) =>
-			altLabel ? `${string(altLabel)} - ${string(prefLabel)}` : string(prefLabel)
-	})}
+			prefLabel,
+			altLabel,
 
-		menu={entry({ fetch: <NodeSpin/> })}
+			homepage,
 
-		pane={<DataPane
+			university,
+			classification,
 
-			header={<DataBack>{Units}</DataBack>}
+			head,
 
-		>{entry({
+			subject
 
-			value: unit => <DataUnitInfo>{unit}</DataUnitInfo>
+		}) => <>
 
-		})}</DataPane>}
+			<ToolInfo>{{
 
-	>{entry({
+				"University": university && <ToolLink>{university}</ToolLink>,
 
-		fetch: <NodeHint>{UnitsIcon}</NodeHint>,
+				"Type": classification && <ToolLink>{classification}</ToolLink>
 
-		value: value => <DataUnitBody>{value}</DataUnitBody>,
+			}}</ToolInfo>
 
-		error: error => <span>{error.status}</span> // !!! report
+			<ToolInfo>{{
 
-	})}</DataPage>;
+				"Acronym": altLabel && <span>{toLocalString(altLabel)}</span>,
+				"Name": <span>{toLocalString(prefLabel)}</span>,
 
-}
+				"Head": head?.length === 1 ? <span>{toEntryString(head[0])}</span> : head?.length && <ul>{[...head]
+					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+					.map(head => <li key={head.id}>{toEntryString(head)}</li>)
+				}</ul>,
 
+				"Topics": subject && subject.length && <ul>{[...subject]
+					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+					.map(subject => <li key={subject.id}>
+						<ToolLink filter={[Units, { university, subject }]}>{subject}</ToolLink>
+					</li>)
+				}</ul>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}}</ToolInfo>
 
-function DataUnitInfo({
+			<ToolInfo>{{
 
-	children: {
+				"Info": homepage && homepage.length && homepage.map(url =>
+					<a key={url} href={url}>{toReferenceString(url, { compact: true })}</a>
+				)
 
-		university,
+			}}</ToolInfo>
 
-		subject,
+		</>}>{unit}</ToolFrame>}
+	>
 
-		label,
-		altLabel,
+		<ToolFrame placeholder={Events[icon]} as={({
 
-		homepage,
+			comment,
 
-		classification,
-		head,
+			university,
+			organization,
+			units
 
-		unitOf
+		}) => {
 
-	}
+			const parents=organization.filter(unit => !university || unit.id !== university.id);
 
-}: {
+			return <>
 
-	children: typeof Unit
+				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
 
-}) {
+				{(parents.length || units?.length) && <>
 
-	return <>
+                    <hr/>
 
-		<DataInfo>{{
+                    <dl>
 
-			"University": university && <NodeLink>{university}</NodeLink>,
+						{parents && <>
 
-			"Parent": unitOf && unitOf.some(unit => !university || unit.id !== university.id) && <ul>{unitOf
-				.filter(unit => !university || unit.id !== university.id)
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
-			}</ul>,
+                            <dt>Parent Organizations</dt>
 
-			"Type": classification && <NodeLink>{classification}</NodeLink>
+                            <dt>
+                                <ul>{parents
+									.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+									.map(parent => <li key={parent.id}><ToolLink>{parent}</ToolLink></li>)
+								}</ul>
+                            </dt>
 
-		}}</DataInfo>
+                        </>}
 
-		<DataInfo>{{
+						{units && <>
 
-			"Acronym": altLabel && <span>{string(altLabel)}</span>,
-			"Name": <span>{string(label)}</span>,
+                            <dt>Organizational Units</dt>
 
-			"Head": head?.length === 1 ? <span>{string(head[0])}</span> : head?.length && <ul>{[...head]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(head => <li key={head.id}>{string(head)}</li>)
-			}</ul>,
+                            <dt>
+                                <ul>{units
+									.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+									.map(unit => <li key={unit.id}><ToolLink>{unit}</ToolLink></li>)
+								}</ul>
+                            </dt>
 
-			"Topics": subject && subject.length && <ul>{[...subject]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(subject => <li key={subject.id}>
-					<NodeLink search={[Units, { university, subject }]}>{subject}</NodeLink>
-				</li>)
-			}</ul>
+                        </>}
 
-		}}</DataInfo>
+                    </dl>
 
-		<DataInfo>{{
+                </>}
 
-			"Info": homepage && homepage.length && homepage.map(url =>
-				<a key={url} href={url}>{new URL(url).host}</a>
-			)
+			</>;
+		}}>{unit}</ToolFrame>
 
-		}}</DataInfo>
-
-	</>;
-}
-
-function DataUnitBody({
-
-	children: {
-
-		comment,
-
-		hasUnit
-
-	}
-
-}: {
-
-	children: typeof Unit
-
-}) {
-
-	return <DataCard>
-
-		<ReactMarkdown
-
-			remarkPlugins={[remarkGfm]}
-
-		>{
-
-			string(comment)
-
-		}</ReactMarkdown>
-
-
-		{hasUnit && <>
-
-			{comment && <hr/>}
-
-            <dl>
-
-                <dt>Organizational Units</dt>
-
-                <dt>
-                    <ul>{hasUnit.map(unit =>
-						<li key={unit.id}><NodeLink>{unit}</NodeLink></li>
-					)}</ul>
-                </dt>
-
-            </dl>
-
-        </>}
-
-	</DataCard>;
+	</DataPage>;
 
 }

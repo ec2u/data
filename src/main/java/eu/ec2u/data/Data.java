@@ -30,6 +30,7 @@ import com.metreeca.http.services.Fetcher.URLFetcher;
 
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.events.Events;
+import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
@@ -152,16 +153,12 @@ public final class Data extends Delegator {
                                         .path("/", new Datasets())
 
                                         .path("/universities/*", new Universities())
+                                        .path("/units/*", new Units())
 
-                                // .path("/units/", new Units.Handler())
-                                // .path("/units/{code}", new Unit.Handler())
-
-                                //.path("/offers/*", new Offers())
-                                //.path("/programs/*", new Offers.Programs())
-                                //.path("/courses/*", new Offers.Courses())
+                                        //.path("/programs/*", new Programs())
+                                        //.path("/courses/*", new Courses())
 
                                 // .path("/documents/*", new Documents.Handler())
-                                // .path("/documents/{code}", new Document.Handler())
 
                                         .path("/events/*", new Events())
 

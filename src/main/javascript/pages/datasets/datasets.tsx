@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-import { Actors } from "@ec2u/data/pages/actors";
-import { Courses } from "@ec2u/data/pages/courses/courses";
 import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
-import { Documents } from "@ec2u/data/pages/documents/documents";
-import { Events } from "@ec2u/data/pages/events/events";
-import { Programs } from "@ec2u/data/pages/programs/programs";
-import { Units } from "@ec2u/data/pages/units/units";
-import { Universities } from "@ec2u/data/pages/universities/universities";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required } from "@metreeca/core";
@@ -45,7 +38,6 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { Package } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { ReactNode } from "react";
 
 
 export const Datasets=immutable({
@@ -114,15 +106,16 @@ export function DataDatasets() {
 
 		}) =>
 
-			<ToolCard key={id} size={3}
+			<ToolCard key={id} size={7.5}
 
 				title={<ToolLink>{{ id, label: ec2u(alternative || label) }}</ToolLink>}
 
 				tags={`${toIntegerString(entities)}`}
 				image={<div style={{
+					fontWeight: 600,
 					color: "var(--tool--color-light)",
-					transform: " translate(10%, -10%)"
-				}}>{placeholder(id)}</div>}
+					transform: " translate(0%, -25%)"
+				}}>{ec2u(toLocalString(label))}</div>}
 
 			>{
 
@@ -133,23 +126,4 @@ export function DataDatasets() {
 		}>{datasets}</ToolSheet>
 
 	</DataPage>;
-}
-
-
-export function placeholder(id: string) { // !!! migrate to index
-
-	const icons: { [id: string]: ReactNode }=[
-
-		Datasets,
-		Universities,
-		Units,
-		Programs,
-		Courses,
-		Documents,
-		Actors,
-		Events
-
-	].reduce((icons, dataset) => ({ ...icons, [dataset.id]: (dataset as any)[icon] }), {});
-
-	return icons[id];
 }

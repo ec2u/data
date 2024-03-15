@@ -52,9 +52,10 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data._EC2U.term;
-import static eu.ec2u.data.datasets.Dataset.Dataset;
-import static eu.ec2u.data.resources.Reference.Reference;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.organizations.Organizations.OrgFormalOrganization;
 import static eu.ec2u.data.resources.Resource.Resource;
+import static eu.ec2u.data.resources.Resources.Reference;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
@@ -63,48 +64,31 @@ public final class Universities extends Delegator {
 
     private static final IRI Context=item("/universities/");
 
-    public static final IRI UNIVERSITY_CLASS=term("University");
+    public static final IRI University=term("University");
 
-    private static final IRI SCHAC=term("schac");
-    private static final IRI IMAGE=term("image");
-    private static final IRI INCEPTION=term("inception");
-    private static final IRI STUDENTS=term("students");
-    private static final IRI COUNTRY=term("country");
-    private static final IRI LOCATION=term("location");
+    private static final IRI schac=term("schac");
+    private static final IRI image=term("image");
+    private static final IRI inception=term("inception");
+    private static final IRI students=term("students");
+    private static final IRI country=term("country");
+    private static final IRI location=term("location");
 
 
     public static Shape Universities() {
         return Dataset(University());
     }
 
-
     public static Shape University() {
-        return shape(Resource(), /*OrgFormalOrganization*/
+        return shape(clazz(University), Resource(), OrgFormalOrganization(),
 
-                property(SCHAC, required(), string()),
-                property(IMAGE, required(), reference()),
+                property(schac, required(), string()),
+                property(image, required(), reference()),
 
-                property(INCEPTION, optional(), year()),
-                property(STUDENTS, optional(), integer()),
+                property(inception, optional(), year()),
+                property(students, optional(), integer()),
 
-                property(COUNTRY, required(), Reference()),
-                property(LOCATION, required(), Reference()),
-
-                // foaf:Agent
-                //
-                // private Set<URI> homepages;
-                // private Set<URI> mboxes;
-                //
-                //
-                // org:Organization
-                //
-                // private String identifier;
-                //
-                // private Local<String> prefLabel;
-                // private Local<String> altLabel;
-                // private Local<String> definition;
-                //
-                // private Set<ORGOrganizationalUnit> units;
+                property(country, required(), Reference()),
+                property(location, required(), Reference()),
 
                 property("subsets", DCTERMS.EXTENT,
 
@@ -136,7 +120,7 @@ public final class Universities extends Delegator {
                                                 field(RDFS.LABEL, literal("", "en"))
                                         ),
 
-                                        filter(RDF.TYPE, UNIVERSITY_CLASS)
+                                        filter(RDF.TYPE, University)
 
                                 ))
 

@@ -19,12 +19,15 @@ package eu.ec2u.data.concepts;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.stream.Stream;
 
@@ -32,31 +35,59 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.resources.Resource.Resource;
+import static eu.ec2u.data.resources.Resources.Reference;
 
 public final class Concepts extends Delegator {
 
     public static final IRI Context=item("/concepts/");
 
+    public static final IRI Concept=item("Concept");
+    public static final IRI ConceptScheme=item("ConceptScheme");
 
-    //    private static Shape ConceptScheme() {
-    //        return relate(link(RDFS.ISDEFINEDBY, Resource(),
-    //
-    //                filter(clazz(SKOS.CONCEPT_SCHEME)),
-    //
-    //                field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
-    //
-    //                detail(
-    //
-    //                        field(SKOS.HAS_TOP_CONCEPT, Reference())
-    //
-    //                )
-    //
-    //        ));
-    //    }
 
+    public static Shape Concept() {
+        return shape(clazz(Concept), Resource(), SKOSConcept(),
+
+                property(DCTERMS.EXTENT, optional(), integer())
+
+        );
+    }
+
+    public static Shape ConceptScheme() {
+        return shape(clazz(ConceptScheme), Resource(), SKOSConceptScheme());
+    }
+
+
+    public static Shape SKOSConcept() {
+        return shape(clazz(SKOS.CONCEPT), Reference(),
+
+                property(SKOS.PREF_LABEL, required(), local()),
+                property(SKOS.ALT_LABEL, multiple(), local()),
+                property(SKOS.DEFINITION, optional(), local()),
+
+                property(SKOS.IN_SCHEME, required(), SKOSConceptScheme()),
+                property(SKOS.TOP_CONCEPT_OF, optional(), SKOSConceptScheme()), // !!! == inScheme
+
+                property(SKOS.BROADER, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
+                property(SKOS.NARROWER, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
+                property(SKOS.RELATED, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
+
+                property(RDFS.ISDEFINEDBY, optional(), reference())
+        );
+    }
+
+    public static Shape SKOSConceptScheme() {
+        return shape(clazz(SKOS.CONCEPT), Reference(),
+
+                property(SKOS.HAS_TOP_CONCEPT, () -> shape(multiple(), SKOSConcept())) // !!! concept.inScheme == this
+
+        );
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,5 +176,27 @@ public final class Concepts extends Delegator {
         }
 
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // public static Optional<Concept> concept(final IRI scheme, final String label, final String language) { // !!! URI
+    //
+    //     return Optional.of(with(new Concept(), concept -> {
+    //
+    //         final ConceptScheme conceptScheme=with(new ConceptScheme(), cs -> cs.setId(scheme.stringValue()));
+    //         final Local<String> local=Local.local(language, title(label));
+    //
+    //         concept.setId(EC2U.item(scheme, lower(label)).stringValue()); // !!! string
+    //
+    //         concept.setLabel(local);
+    //         concept.setPrefLabel(local);
+    //
+    //         concept.setInScheme(conceptScheme);
+    //         concept.setTopConceptOf(conceptScheme);
+    //
+    //     }));
+    //
+    // }
 
 }

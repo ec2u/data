@@ -103,7 +103,7 @@ export function DataEvent() {
 			subject,
 
 			isAccessibleForFree,
-			// location,
+			// !!! location,
 			organizer
 
 		}) => <>

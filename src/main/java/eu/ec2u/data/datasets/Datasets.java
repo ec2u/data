@@ -29,6 +29,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.VOID;
 
 import java.util.stream.Stream;
 
@@ -40,18 +41,53 @@ import static com.metreeca.link.Constraint.any;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.integer;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
-import static eu.ec2u.data.datasets.Dataset.Dataset;
+import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data.resources.Resource.Resource;
+import static eu.ec2u.data.resources.Resources.Reference;
 
 public final class Datasets extends Delegator {
 
     private static final IRI Context=item("/");
 
+    private static final IRI Dataset=term("Dataset");
+
 
     public static Shape Datasets() {
         return Dataset(Dataset());
+    }
+
+    public static Shape Dataset() {
+        return shape(Resource(),
+
+                property(DCTERMS.AVAILABLE, optional(), instant()), // !!! vs dct:issued?
+
+                property(DCTERMS.RIGHTS, required(), string()),
+                property(DCTERMS.ACCESS_RIGHTS, optional(), local()),
+                property(DCTERMS.LICENSE, optional(), Reference()),
+
+                property(VOID.URI_SPACE, optional(), string()),
+                property(VOID.ENTITIES, optional(), integer()),
+                property(RDFS.ISDEFINEDBY, optional(), reference())
+
+        );
+    }
+
+    public static Shape Dataset(final Shape shape) {
+
+        if ( shape == null ) {
+            throw new NullPointerException("null shape");
+        }
+
+        return virtual(Dataset(),
+
+                property("members", RDFS.MEMBER, shape)
+
+        );
     }
 
 
@@ -80,6 +116,8 @@ public final class Datasets extends Delegator {
         ));
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Runnable {
 

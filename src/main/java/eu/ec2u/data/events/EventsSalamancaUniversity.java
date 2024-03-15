@@ -50,7 +50,7 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
-import static eu.ec2u.data.universities.Universities.UNIVERSITY_CLASS;
+import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
@@ -62,7 +62,7 @@ public final class EventsSalamancaUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://sac.usal.es/programacion/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, UNIVERSITY_CLASS)
+            .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Salamanca / Cultural Activities Service", "en"),
                     literal("Universidad de Salamanca / Servicio de Actividades Culturales", "es")

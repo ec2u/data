@@ -26,7 +26,7 @@ import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._EC2U;
-import eu.ec2u.data.agents.Persons;
+import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;

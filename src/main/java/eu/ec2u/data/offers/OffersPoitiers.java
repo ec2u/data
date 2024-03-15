@@ -216,7 +216,7 @@ public final class OffersPoitiers implements Runnable {
 
                 .frame(Schema.provider, json.string("composante")
                         .map(name -> frame(item(Organizations.Context, Poitiers, name))
-                                .value(RDF.TYPE, Organization)
+                                .value(RDF.TYPE, Organization) // !!! Unit
                                 .value(university, Poitiers.Id)
                                 .value(DCTERMS.TITLE, literal(name, Poitiers.Language))
                         )

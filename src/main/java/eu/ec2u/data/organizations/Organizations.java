@@ -17,23 +17,62 @@
 package eu.ec2u.data.organizations;
 
 import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.link.Shape;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.ORG;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.link.Frame.reverse;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.Base;
+import static eu.ec2u.data._EC2U.*;
+import static eu.ec2u.data.agents.Agents.FOAFAgent;
+import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
+import static eu.ec2u.data.persons.Persons.FOAFPerson;
 
 public final class Organizations {
 
-    public static final IRI Context=_EC2U.item("/organizations/");
+    public static final IRI Context=item("/organizations/");
 
-    public static final IRI Organization=_EC2U.term("Organization");
+    public static final IRI Organization=term("Organization");
+
+
+    public static Shape OrgOrganization() {
+        return shape(FOAFAgent(),
+
+                property(ORG.IDENTIFIER, optional(), string()), // !!! datatype?
+
+                property(SKOS.PREF_LABEL, required(), local()), // !!! languages?
+                property(SKOS.ALT_LABEL, required(), local()), // !!! languages?
+                property(SKOS.DEFINITION, required(), local()), // !!! languages?
+
+                property("units", ORG.HAS_UNIT, () -> shape(OrgOrganizationalUnit()))
+
+        );
+    }
+
+    public static Shape OrgFormalOrganization() {
+        return shape(OrgOrganization());
+    }
+
+    public static Shape OrgOrganizationalUnit() {
+        return shape(OrgOrganization(),
+
+                property(ORG.CLASSIFICATION, optional(), SKOSConcept()),
+
+                property("organization", ORG.UNIT_OF, repeatable(), OrgOrganization()),
+
+                property("head", reverse(ORG.HEAD_OF), multiple(), FOAFPerson()),
+                property("members", ORG.HAS_MEMBER, multiple(), FOAFPerson())
+
+        );
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

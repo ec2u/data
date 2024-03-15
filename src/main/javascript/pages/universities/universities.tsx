@@ -16,7 +16,7 @@
 
 import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, required } from "@metreeca/core";
+import { immutable, multiple, required } from "@metreeca/core";
 import { toEntryString } from "@metreeca/core/entry";
 import { integer } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -43,14 +43,14 @@ export const Universities=immutable({
 
 	[icon]: <Landmark/>,
 
-	id: "/universities/",
+	id: required("/universities/"),
 
-	label: {
+	label: required({
 		en: "Universities",
 		it: "Università"
-	},
+	}),
 
-	members: [{
+	members: multiple({
 
 		id: required(reference),
 		image: required(reference),
@@ -58,13 +58,12 @@ export const Universities=immutable({
 		label: required(local),
 		comment: required(local),
 
-		country: {
+		country: required({
 			id: required(reference),
 			label: required(local)
 		}
-
-	}]
-
+		)
+	})
 });
 
 
@@ -76,7 +75,7 @@ export function DataUniversities() {
 
 	return <DataPage name={Universities} menu={<DataMeta/>}
 
-		tray={< >
+		tray={<>
 
 			<ToolKeywords placeholder={"Name"}>{
 				useKeywords(universities, "label")

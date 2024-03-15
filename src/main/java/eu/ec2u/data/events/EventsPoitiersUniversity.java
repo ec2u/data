@@ -57,7 +57,7 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
 import static eu.ec2u.data._EC2U.item;
-import static eu.ec2u.data.universities.Universities.UNIVERSITY_CLASS;
+import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
@@ -69,7 +69,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, UNIVERSITY_CLASS)
+            .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Poitiers / News and Events", "en"),
                     literal("Université de Poitiers / Actualités et événements", Poitiers.Language)

@@ -18,16 +18,20 @@ package eu.ec2u.data.resources;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
 import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.link.Frame.ID;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
@@ -127,6 +131,17 @@ public final class Resources extends Delegator {
                 //                        .get(new Relator())
 
         ));
+    }
+
+    public static Shape Reference() {
+        return shape(
+
+                property("id", ID),
+
+                property(RDFS.LABEL, required(), local()),
+                property(RDFS.COMMENT, optional(), local())
+
+        );
     }
 
 

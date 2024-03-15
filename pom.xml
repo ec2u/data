@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.ec2u</groupId>
-    <artifactId>ec2u-data</artifactId>
+    <artifactId>data</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 
@@ -190,6 +190,8 @@
     </repositories>
 
     <build>
+
+        <finalName>ec2u-${project.artifactId}-${project.version}</finalName>
 
         <resources>
 

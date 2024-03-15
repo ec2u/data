@@ -31,7 +31,7 @@ import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
-import static eu.ec2u.data.resources.Reference.Reference;
+import static eu.ec2u.data.resources.Resources.Reference;
 
 /**
  * Schema.org RDF vocabulary.

@@ -31,7 +31,7 @@ EC2U research units and facilities are described using a controlled subset of th
 
 ## ec2u:Person
 
-❗️ Move to [persons](persons.md)
+> ❗️ Move to [persons](persons.md)
 
 | property                                                     | description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |

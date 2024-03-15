@@ -1,4 +1,3 @@
-
 /*
  * Copyright © 2020-2024 EC2U Alliance
  *
@@ -15,26 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.resources;
-
-import com.metreeca.link.Shape;
-
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-
-import static com.metreeca.link.Frame.ID;
-import static com.metreeca.link.Shape.*;
-
-public final class Reference {
-
-    public static Shape Reference() {
-        return shape(
-
-                property("id", ID),
-
-                property(RDFS.LABEL, required(), local()),
-                property(RDFS.COMMENT, optional(), local())
-
-        );
-    }
-
-}
+/**
+ * EC2U organizations.
+ */
+package eu.ec2u.data.organizations;

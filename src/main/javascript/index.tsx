@@ -19,6 +19,8 @@ import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
+import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
+import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
 import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
 import DataWild, { Wild } from "@ec2u/data/pages/wild";
@@ -66,9 +68,9 @@ createRoot(document.body.firstElementChild!).render((
 				[id(Universities)]: DataUniversities,
 				[(id(University))]: DataUniversity,
 
-				// [Units.id]: DataUnits,
-				// [Unit.id]: DataUnit,
-				//
+				[Units.id]: DataUnits,
+				[Unit.id]: DataUnit,
+
 				// [Programs.id]: DataPrograms,
 				// [Program.id]: DataProgram,
 				//

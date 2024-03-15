@@ -26,12 +26,13 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data._EC2U.term;
-import static eu.ec2u.data.resources.Reference.Reference;
+import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
+import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.universities.Universities.University;
 
 public abstract class Resource {
 
-    private static final IRI university=term("university");
+    public static final IRI university=term("university");
 
 
     public static Shape Resource() {
@@ -50,8 +51,8 @@ public abstract class Resource {
                 property(DCTERMS.SOURCE, () -> shape(optional(), Resource())),
                 property(DCTERMS.PUBLISHER, () -> shape(optional(), Publisher.Publisher())),
 
-                property(DCTERMS.TYPE, () -> Resource()), // !!! skos:Concept
-                property(DCTERMS.SUBJECT, () -> Resource()), // !!! skos:Concept
+                property(DCTERMS.TYPE, () -> shape(SKOSConcept())),
+                property(DCTERMS.SUBJECT, () -> shape(SKOSConcept())),
 
                 property(RDFS.SEEALSO, reference())
 

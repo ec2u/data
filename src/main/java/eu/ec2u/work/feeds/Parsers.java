@@ -21,7 +21,7 @@ import com.metreeca.http.rdf.Values;
 import com.metreeca.http.toolkits.Strings;
 
 import eu.ec2u.data._EC2U;
-import eu.ec2u.data.agents.Persons;
+import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;

@@ -29,7 +29,7 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.universities.Universities.UNIVERSITY_CLASS;
+import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Coimbra;
 
 public final class EventsCoimbraUniversity implements Runnable {
@@ -38,7 +38,7 @@ public final class EventsCoimbraUniversity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://agenda.uc.pt/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, UNIVERSITY_CLASS)
+            .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Coimbra / Agenda UC", "en"),
                     literal("Universidade de Coimbra / Agenda UC", Coimbra.Language)
