@@ -17,6 +17,10 @@
 package eu.ec2u.data.concepts;
 
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
@@ -26,6 +30,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
@@ -35,10 +40,15 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.filter;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resource.Resource;
 import static eu.ec2u.data.resources.Resources.Reference;
 
@@ -50,6 +60,18 @@ public final class Concepts extends Delegator {
     public static final IRI ConceptScheme=item("ConceptScheme");
 
 
+    public static Shape Concepts() {
+        return Dataset(ConceptScheme());
+    }
+
+    public static Shape ConceptScheme() {
+        return shape(clazz(ConceptScheme), Resource(), SKOSConceptScheme(),
+
+                property(DCTERMS.EXTENT, required(), integer())
+
+        );
+    }
+
     public static Shape Concept() {
         return shape(clazz(Concept), Resource(), SKOSConcept(),
 
@@ -58,13 +80,17 @@ public final class Concepts extends Delegator {
         );
     }
 
-    public static Shape ConceptScheme() {
-        return shape(clazz(ConceptScheme), Resource(), SKOSConceptScheme());
+
+    public static Shape SKOSConceptScheme() {
+        return shape(Reference(),
+
+                property(SKOS.HAS_TOP_CONCEPT, () -> shape(multiple(), SKOSConcept())) // !!! concept.inScheme == this
+
+        );
     }
 
-
     public static Shape SKOSConcept() {
-        return shape(clazz(SKOS.CONCEPT), Reference(),
+        return shape(Reference(),
 
                 property(SKOS.PREF_LABEL, required(), local()),
                 property(SKOS.ALT_LABEL, multiple(), local()),
@@ -78,13 +104,6 @@ public final class Concepts extends Delegator {
                 property(SKOS.RELATED, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
 
                 property(RDFS.ISDEFINEDBY, optional(), reference())
-        );
-    }
-
-    public static Shape SKOSConceptScheme() {
-        return shape(clazz(SKOS.CONCEPT), Reference(),
-
-                property(SKOS.HAS_TOP_CONCEPT, () -> shape(multiple(), SKOSConcept())) // !!! concept.inScheme == this
 
         );
     }
@@ -95,26 +114,57 @@ public final class Concepts extends Delegator {
     public Concepts() {
         delegate(handler(
 
-                //                new Driver(ConceptScheme()),
-                //
-                //                new Router()
-                //
-                //                        .path("/", new Worker()
-                //                                .get(new Relator())
-                //                        )
-                //
-                //                        .path("/{scheme}", new Worker()
-                //                                .get(new Relator())
-                //                        )
-                //
-                //                        .path("/{scheme}/*", handler(
-                //
-                //                                new Driver(Concept()),
-                //
-                //                                new Worker()
-                //                                        .get(new Relator())
-                //
-                //                        ))
+                new Driver(ConceptScheme()),
+
+                new Router()
+
+                        .path("/", handler(new Driver(Concepts()), new Worker()
+
+                                .get(new Relator(frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", WILDCARD)),
+
+                                        field(RDFS.MEMBER, query(
+
+                                                frame(
+                                                        field(ID, iri()),
+                                                        field(RDFS.LABEL, literal("", WILDCARD))
+                                                ),
+
+                                                filter(RDF.TYPE, SKOS.CONCEPT_SCHEME) // !!! ConceptScheme
+
+                                        ))
+                                )))
+
+                        ))
+
+                        .path("/{scheme}", handler(new Driver(ConceptScheme()), new Worker()
+
+                                .get(new Relator(frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", WILDCARD)),
+
+                                        field(SKOS.HAS_TOP_CONCEPT, frame(
+                                                field(ID, iri()),
+                                                field(RDFS.LABEL, literal("", WILDCARD))
+                                        ))
+
+                                )))
+
+                        ))
+
+                        .path("/{scheme}/*", handler(new Driver(Concept()), new Worker()
+
+                                .get(new Relator(frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", WILDCARD))
+
+                                )))
+
+                        ))
 
         ));
     }

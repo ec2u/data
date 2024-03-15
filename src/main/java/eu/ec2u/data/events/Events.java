@@ -102,13 +102,13 @@ public final class Events extends Delegator {
                         .get(new Relator(frame(
 
                                 field(ID, iri()),
-                                field(RDFS.LABEL, Frame.literal("", "en")),
+                                field(RDFS.LABEL, Frame.literal("", WILDCARD)),
 
                                 field(RDFS.MEMBER, query(
 
                                         frame(
                                                 field(ID, iri()),
-                                                field(RDFS.LABEL, Frame.literal("", "en"))
+                                                field(RDFS.LABEL, Frame.literal("", WILDCARD))
                                         ),
 
                                         filter(RDF.TYPE, Event)

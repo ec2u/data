@@ -111,13 +111,13 @@ public final class Universities extends Delegator {
                         .get(new Relator(frame(
 
                                 field(ID, iri()),
-                                field(RDFS.LABEL, literal("", "en")),
+                                field(RDFS.LABEL, literal("", WILDCARD)),
 
                                 field(RDFS.MEMBER, query(
 
                                         frame(
                                                 field(ID, iri()),
-                                                field(RDFS.LABEL, literal("", "en"))
+                                                field(RDFS.LABEL, literal("", WILDCARD))
                                         ),
 
                                         filter(RDF.TYPE, University)
@@ -133,7 +133,7 @@ public final class Universities extends Delegator {
                         .get(new Relator(frame(
 
                                 field(ID, Frame.iri()),
-                                field(RDFS.LABEL, literal("", "en")),
+                                field(RDFS.LABEL, literal("", WILDCARD)),
 
                                 field(DCTERMS.EXTENT, frame(
 

@@ -103,7 +103,7 @@ public final class Datasets extends Delegator {
 
                                 frame(
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", "en"))
+                                        field(RDFS.LABEL, literal("", WILDCARD))
                                 ),
 
                                 filter(RDF.TYPE, Dataset),

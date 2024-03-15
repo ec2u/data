@@ -22,7 +22,6 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.rdf4j.services.Graph;
@@ -60,14 +59,12 @@ import java.util.stream.Stream;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Locator.path;
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Shift.Seq.seq;
-import static com.metreeca.http.rdf.Values.*;
+import static com.metreeca.http.rdf.Values.lang;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
-import static com.metreeca.link.Frame.ID;
-import static com.metreeca.link.Frame.field;
+import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
@@ -112,17 +109,17 @@ public final class Units extends Delegator {
 
                 .path("/", handler(new Driver(Units()), new Worker()
 
-                        .get(new Relator(com.metreeca.link.Frame.frame(
+                        .get(new Relator(frame(
 
                                 field(ID, iri()),
-                                field(RDFS.LABEL, com.metreeca.link.Frame.literal("", "en")),
+                                field(RDFS.LABEL, literal("", WILDCARD)),
 
                                 field(RDFS.MEMBER, query(
 
-                                        com.metreeca.link.Frame.frame(
+                                        frame(
 
                                                 field(ID, iri()),
-                                                field(RDFS.LABEL, com.metreeca.link.Frame.literal("", "en")),
+                                                field(RDFS.LABEL, literal("", WILDCARD)),
 
                                                 field(university, iri()),
                                                 field(ORG.CLASSIFICATION, iri())
@@ -139,11 +136,11 @@ public final class Units extends Delegator {
 
                 .path("/{code}", handler(new Driver(Unit()), new Worker()
 
-                        .get(new Relator(com.metreeca.link.Frame.frame(
+                        .get(new Relator(frame(
 
                                 field(ID, iri()),
 
-                                field(RDFS.LABEL, com.metreeca.link.Frame.literal("", "en")),
+                                field(RDFS.LABEL, literal("", WILDCARD)),
 
                                 field(university, iri()),
                                 field(ORG.CLASSIFICATION, iri())
@@ -179,7 +176,7 @@ public final class Units extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static final class CSVLoader extends CSVProcessor<Frame> {
+    static final class CSVLoader extends CSVProcessor<com.metreeca.http.rdf.Frame> {
 
         private final _Universities university;
 
@@ -200,14 +197,14 @@ public final class Units extends Delegator {
         }
 
 
-        @Override protected Optional<Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
+        @Override protected Optional<com.metreeca.http.rdf.Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
 
             final Optional<String> acronym=value(record, "Acronym");
 
             final Optional<Literal> nameEnglish=value(record, "Name (English)").map(v -> literal(v, "en"));
             final Optional<Literal> nameLocal=value(record, "Name (Local)").map(v -> literal(v, university.Language));
 
-            return id(record).map(id -> frame(id)
+            return id(record).map(id -> com.metreeca.http.rdf.Frame.frame((Value)id)
 
                     .values(RDF.TYPE, Unit)
                     .value(Resources.university, university.Id)
@@ -452,13 +449,13 @@ public final class Units extends Delegator {
                     .filter(not(RDF.NIL::equals));
         }
 
-        private Stream<Frame> topics(final String topics, final String language) {
+        private Stream<com.metreeca.http.rdf.Frame> topics(final String topics, final String language) {
             return Stream.of(topics)
 
                     .flatMap(Strings::split)
                     .map(v -> literal(v, language))
 
-                    .map(label -> frame(_EC2U.item(Scheme, label.stringValue()))
+                    .map(label -> com.metreeca.http.rdf.Frame.frame((Value)_EC2U.item(Scheme, label.stringValue()))
                             .value(RDF.TYPE, SKOS.CONCEPT)
                             .value(SKOS.TOP_CONCEPT_OF, Scheme)
                             .value(SKOS.PREF_LABEL, label)

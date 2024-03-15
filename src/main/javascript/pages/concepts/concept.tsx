@@ -14,61 +14,50 @@
  * limitations under the License.
  */
 
-import { SchemesIcon } from "@ec2u/data/pages/concepts/schemes";
-import { DataBack } from "@ec2u/data/views/_back";
-import { DataCard } from "@ec2u/data/views/_card";
-import { DataPage } from "@ec2u/data/views/page";
-import { DataPane } from "@ec2u/data/views/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLabel } from "@metreeca/view/tiles/layouts/label";
-import { NodelPanel } from "@metreeca/view/tiles/layouts/panel";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import * as React from "react";
-import { useEffect } from "react";
 
+import { DataConceptList } from "@ec2u/data/pages/concepts/scheme";
+import { Schemes } from "@ec2u/data/pages/concepts/schemes";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import React from "react";
 
 export const Concept=immutable({
 
-    id: "/concepts/{scheme}/*",
-    label: { "en": "COncept" },
-    comment: { "en": "" },
+    id: required("/concepts/{scheme}/*"),
+    label: required(local),
+
+    prefLabel: required(local),
+    // altLabel: multiple(local),
+    definition: optional(local),
 
     inScheme: {
-        id: "",
-        label: { "en": "" }
+        id: required(reference),
+        label: required(local)
     },
 
-    broaderTransitive: multiple({
-
-        id: "",
-        label: { "en": "" }
-
-    }),
+    // broaderTransitive: multiple({
+    //     id: required(reference),
+    //     label: required(local)
+    // }),
 
     broader: multiple({
-
-        id: "",
-        label: { "en": "" }
-
+        id: required(reference),
+        label: required(local)
     }),
 
     narrower: multiple({
-
-        id: "",
-        label: { "en": "" }
-
+        id: required(reference),
+        label: required(local)
     }),
 
     related: multiple({
-
-        id: "",
-        label: { "en": "" }
-
+        id: required(reference),
+        label: required(local)
     })
 
 });
@@ -76,90 +65,59 @@ export const Concept=immutable({
 
 export function DataConcept() {
 
-    const [route, setRoute]=useRoute();
-
-    const entry=useEntry(route, Concept);
+    const [concept]=useResource({ ...Concept, id: "" });
 
 
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+    return <DataPage name={[Schemes, concept?.inScheme, concept]}>
+
+        <ToolFrame placeholder={Schemes[icon]} as={({
+
+            definition,
+
+            broader,
+            narrower,
+            related
+
+        }) => <>
+
+            {definition && <p>{toLocalString(definition)}</p>}
+
+            {(broader?.length || narrower?.length || related?.length) && <>
+
+                <hr/>
+
+                <dl>
+
+                    {broader?.length && <>
+
+                        <dt>Broader Concepts</dt>
+                        <dd>{DataConceptList(broader)}</dd>
+
+                    </>}
+
+                    {narrower?.length && <>
+
+                        <dt>Narrower Concepts</dt>
+                        <dd>{DataConceptList(narrower)}</dd>
+
+                    </>}
+
+                    {related?.length && <>
+
+                        <dt>Narrower Concepts</dt>
+                        <dd>{DataConceptList(related)}</dd>
+
+                    </>}
+
+                </dl>
+
+            </>}
 
 
-    return <DataPage item={entry({ value: string })}
+            {/*     {broader?.length && <NodeLabel name={"Broader"}>{[...broader]
 
-        menu={entry({ fetch: <NodeSpin/> })}
-
-        pane={<DataPane
-
-            header={entry({
-
-                value: ({ inScheme }) => <DataBack>{inScheme}</DataBack>
-
-            })}
-
-        >{entry({
-
-            value: event => <DataConceptInfo>{event}</DataConceptInfo>
-
-        })}</DataPane>}
-
-    >{entry({
-
-        fetch: <NodeHint>{SchemesIcon}</NodeHint>,
-
-        value: course => <DataConceptBody>{course}</DataConceptBody>,
-
-        error: error => <span>{error.status}</span> // !!! report
-
-    })}</DataPage>;
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function DataConceptInfo({
-
-    children: {
-
-    }
-
-}: {
-
-    children: typeof Concept
-
-}) {
-
-    return <>
-
-    </>;
-}
-
-function DataConceptBody({
-
-    children: {
-
-        comment,
-
-        broader,
-        narrower,
-        related
-
-    }
-
-}: {
-
-    children: typeof Concept
-
-}) {
-
-    return <DataCard>
-
-        <NodelPanel>
-
-            {broader?.length && <NodeLabel name={"Broader"}>{[...broader]
-
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
+             .sort((x, y) => string(x).localeCompare(string(y)))
+             .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
 
             }</NodeLabel>}
 
@@ -168,10 +126,10 @@ function DataConceptBody({
                 .sort((x, y) => string(x).localeCompare(string(y)))
                 .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
 
-            }</NodeLabel>}
+             }</NodeLabel>} */}
 
-        </NodelPanel>
+        </>}>{concept}</ToolFrame>
 
-    </DataCard>;
+    </DataPage>;
 
 }

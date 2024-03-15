@@ -14,127 +14,99 @@
  * limitations under the License.
  */
 
-import { Schemes, SchemesIcon } from "@ec2u/data/pages/concepts/schemes";
-import { DataBack } from "@ec2u/data/views/_back";
-import { DataCard } from "@ec2u/data/views/_card";
+
+import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
-import { DataPane } from "@ec2u/data/views/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLabel } from "@metreeca/view/tiles/layouts/label";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { Entry, toEntryString } from "@metreeca/core/entry";
+import { integer, toIntegerString } from "@metreeca/core/integer";
+import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { useEffect } from "react";
 
 
 export const Scheme=immutable({
 
-    id: "/concepts/{scheme}",
+	id: required("/concepts/{scheme}"),
 
-    label: { "en": "Taxonomy" },
-    comment: { "en": "" },
+	label: required(local),
+	comment: optional(local),
 
-    hasTopConcept: multiple({
+	extent: required(integer),
 
-        id: "",
-        label: { "en": "" },
+	hasTopConcept: multiple({
 
-        prefLabel: { "en": "" },
-        altLabel: { "en": "" },
-        definition: { "en": "" }
+		id: required(reference),
+		label: required(reference),
 
-    })
+		prefLabel: required(local),
+		definition: optional(local)
+
+	})
 
 });
 
 
+export function DataConceptList(concepts: Entry[]) {
+	return <ul>{[...concepts]
+		.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+		.map(concept => <li key={concept.id}><ToolLink>{concept}</ToolLink></li>)
+	}</ul>;
+}
+
 export function DataScheme() {
 
-    const [route, setRoute]=useRoute();
-
-    const entry=useEntry(route, Scheme);
+	const [scheme]=useResource({ ...Scheme, id: "" });
 
 
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+	return <DataPage name={[Schemes, scheme]}
 
+		tray={<ToolFrame as={({
 
-    return <DataPage item={entry({ value: string })}
+			extent
 
-        menu={entry({ fetch: <NodeSpin/> })}
+		}) => <>
 
-        pane={<DataPane
+			<ToolInfo>{{
 
-            header={<DataBack>{Schemes}</DataBack>}
+				"Concepts": toIntegerString(extent)
 
-        >{entry({
+			}}</ToolInfo>
 
-            value: event => <DataSchemeInfo>{event}</DataSchemeInfo>
+		</>}>{scheme}</ToolFrame>}
 
-        })}</DataPane>}
+	>
 
-    >{entry({
+		<ToolFrame placeholder={Schemes[icon]} as={({
 
-        fetch: <NodeHint>{SchemesIcon}</NodeHint>,
+			comment,
 
-        value: course => <DataSchemaBody>{course}</DataSchemaBody>,
+			hasTopConcept
 
-        error: error => <span>{error.status}</span> // !!! report
+		}) => <>
 
-    })}</DataPage>;
+			{comment && <p>{toLocalString(comment)}</p>}
 
-}
+			{hasTopConcept?.length && <>
 
+                <hr/>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                <dl>
 
-function DataSchemeInfo({
+                    <dt>Top Concepts</dt>
+                    <dd>{DataConceptList(hasTopConcept)}</dd>
 
-    children: {}
+                </dl>
 
-}: {
+            </>}
 
-    children: typeof Scheme
+		</>}>{scheme}</ToolFrame>
 
-}) {
-
-    return <>
-
-    </>;
-}
-
-function DataSchemaBody({
-
-    children: {
-
-        comment,
-
-        hasTopConcept
-
-    }
-
-}: {
-
-    children: typeof Scheme
-
-}) {
-
-    return <DataCard>
-
-        {comment && <p>{string(comment)}</p>}
-
-        {comment && hasTopConcept?.length && <hr/>}
-
-        {hasTopConcept?.length && <NodeLabel name={"Top Concepts"}>{[...hasTopConcept]
-
-            .sort((x, y) => string(x).localeCompare(string(y)))
-            .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
-
-        }</NodeLabel>}
-
-    </DataCard>;
+	</DataPage>;
 
 }

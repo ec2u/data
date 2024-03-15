@@ -14,41 +14,42 @@
  * limitations under the License.
  */
 
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
-import { DataCard } from "@ec2u/data/views/_card";
 import { DataPage } from "@ec2u/data/views/page";
-import { DataPane } from "@ec2u/data/views/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/core/value";
-import { useQuery } from "@metreeca/view/hooks/query";
-import { useRoute } from "@metreeca/view/nests/router";
-import { GraduationCap } from "@metreeca/view/tiles/icon";
-import { NodeCount } from "@metreeca/view/tiles/lenses/count";
-import { NodeItems } from "@metreeca/view/tiles/lenses/items";
-import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { integer } from "@metreeca/core/integer";
+import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useQuery } from "@metreeca/data/models/query";
+import { useStats } from "@metreeca/data/models/stats";
+import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolKeywords } from "@metreeca/view/lenses/keywords";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
+import { GraduationCap } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { useEffect } from "react";
 
-
-export const SchemesIcon=<GraduationCap/>;
 
 export const Schemes=immutable({
 
-    id: "/concepts/",
-    label: { "en": "Taxonomies" },
+	[icon]: <GraduationCap/>,
+
+	id: required("/concepts/"),
+	label: required({
+		"en": "Taxonomies"
+	}),
 
 	members: multiple({
 
-		id: "",
-		label: {},
-		comment: {},
+		id: required(reference),
+		label: required(local),
+		comment: optional(local),
 
-		subsets: 0,
-
-		university: {
-			id: "",
-			label: {}
-		}
+		extent: required(integer)
 
 	})
 
@@ -57,57 +58,54 @@ export const Schemes=immutable({
 
 export function DataSchemes() {
 
-    const [route, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
+	const schemes=useCollection(Schemes, "members", { store: useQuery() });
 
 
-    useEffect(() => { setRoute({ title: string(Schemes) }); }, []);
+	return <DataPage name={Schemes}
+
+		tray={< >
+
+			<ToolKeywords placeholder={"Name"}>{
+				useKeywords(schemes, "label")
+			}</ToolKeywords>
+
+		</>}
+
+		info={<>
+
+			<ToolCount>{useStats(schemes)}</ToolCount>
+			<ToolClear>{schemes}</ToolClear>
+
+		</>}
+	>
+
+		<ToolSheet placeholder={Schemes[icon]} as={({
+
+			id,
+
+			label,
+			comment,
+
+			extent
+
+		}) =>
 
 
-    return <DataPage item={string(Schemes)}
+			<ToolCard key={id} side={"end"}
 
-        menu={<DataMeta>{route}</DataMeta>}
+				title={<ToolLink>{{ id, label }}</ToolLink>}
 
-        pane={<DataPane
+				tags={`${extent} concepts`}
 
-            header={<NodeKeywords state={[query, setQuery]}/>}
-            footer={<NodeCount state={[query, setQuery]}/>}
+			>{
 
-        >
+				comment && toLocalString(comment)
 
+			}</ToolCard>
 
-        </DataPane>}
+		}>{schemes}</ToolSheet>
 
-        deps={[JSON.stringify(query)]}
-
-    >
-
-        <NodeItems model={Schemes} placeholder={SchemesIcon} state={[query, setQuery]}>{({
-
-            id,
-
-            label,
-            comment,
-
-            extent
-
-        }) =>
-
-            <DataCard key={id} compact
-
-                name={<a href={id}>{string(label)}</a>}
-
-                tags={`${extent} concepts`}
-
-            >
-
-                {string(comment)}
-
-            </DataCard>
-
-        }</NodeItems>
-
-    </DataPage>;
+	</DataPage>;
 
 }
 

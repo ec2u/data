@@ -28,6 +28,7 @@ import com.metreeca.http.services.Cache.FileCache;
 import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
 
+import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.units.Units;
@@ -162,7 +163,7 @@ public final class Data extends Delegator {
 
                                         .path("/events/*", new Events())
 
-                                //.path("/concepts/*", new Concepts())
+                                .path("/concepts/*", new Concepts())
 
                         )
 
