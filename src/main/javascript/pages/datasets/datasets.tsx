@@ -19,9 +19,9 @@ import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference } from "@metreeca/core/reference";
 import { toValueString } from "@metreeca/core/value";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
@@ -52,7 +52,7 @@ export const Datasets=immutable({
 
 	members: multiple({
 
-		id: required(reference),
+		id: required(id),
 		label: required(local),
 		comment: optional(local),
 

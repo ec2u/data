@@ -21,8 +21,8 @@ import { boolean } from "@metreeca/core/boolean";
 import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
 import { toEntryString } from "@metreeca/core/entry";
+import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference, toReferenceString } from "@metreeca/core/reference";
 import { toTimeString } from "@metreeca/core/time";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
@@ -36,24 +36,24 @@ export const Event=immutable({
 
 	id: required("/events/{code}"),
 
-	image: optional(reference),
+	image: optional(id),
 	label: required(local),
 	comment: required(local),
 
 	university: {
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	},
 
 	publisher: {
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	},
 
-	source: optional(reference),
+	source: optional(id),
 
 	name: required(local),
-	url: multiple(reference),
+	url: multiple(id),
 
 	fullDescription: required(local),
 
@@ -61,22 +61,22 @@ export const Event=immutable({
 	endDate: optional(dateTime),
 
 	subject: multiple({
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	}),
 
 	isAccessibleForFree: optional(boolean),
 
 	// location: multiple({
-	// 	id: required(reference),
+	// 	id: required(id),
 	// 	label: required(local),
-	// 	url: optional(reference)
+	// 	url: optional(id)
 	// }),
 
 	organizer: multiple({
-		id: required(reference),
+		id: required(id),
 		label: required(local),
-		url: optional(reference)
+		url: optional(id)
 	})
 
 });
@@ -165,7 +165,7 @@ export function DataEvent() {
 					),
 
 				"Info": url && url.map(item => <a key={item} href={item}>{
-					toReferenceString(item, { compact: true })
+					toIdString(item, { compact: true })
 				}</a>)
 
 			}}</ToolInfo>

@@ -19,8 +19,8 @@ import { DataConceptList } from "@ec2u/data/pages/concepts/scheme";
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference } from "@metreeca/core/reference";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
@@ -28,81 +28,81 @@ import React from "react";
 
 export const Concept=immutable({
 
-    id: required("/concepts/{scheme}/*"),
-    label: required(local),
+	id: required("/concepts/{scheme}/*"),
+	label: required(local),
 
-    prefLabel: required(local),
-    // altLabel: multiple(local),
-    definition: optional(local),
+	prefLabel: required(local),
+	// altLabel: multiple(local),
+	definition: optional(local),
 
-    inScheme: {
-        id: required(reference),
-        label: required(local)
-    },
+	inScheme: {
+		id: required(id),
+		label: required(local)
+	},
 
-    // broaderTransitive: multiple({
-    //     id: required(reference),
-    //     label: required(local)
-    // }),
+	// broaderTransitive: multiple({
+	//     id: required(id),
+	//     label: required(local)
+	// }),
 
-    broader: multiple({
-        id: required(reference),
-        label: required(local)
-    }),
+	broader: multiple({
+		id: required(id),
+		label: required(local)
+	}),
 
-    narrower: multiple({
-        id: required(reference),
-        label: required(local)
-    }),
+	narrower: multiple({
+		id: required(id),
+		label: required(local)
+	}),
 
-    related: multiple({
-        id: required(reference),
-        label: required(local)
-    })
+	related: multiple({
+		id: required(id),
+		label: required(local)
+	})
 
 });
 
 
 export function DataConcept() {
 
-    const [concept]=useResource(Concept);
+	const [concept]=useResource(Concept);
 
 
-    return <DataPage name={[Schemes, concept?.inScheme, concept]}>
+	return <DataPage name={[Schemes, concept?.inScheme, concept]}>
 
-        <ToolFrame placeholder={Schemes[icon]} as={({
+		<ToolFrame placeholder={Schemes[icon]} as={({
 
-            definition,
+			definition,
 
-            broader,
-            narrower,
-            related
+			broader,
+			narrower,
+			related
 
-        }) => <>
+		}) => <>
 
-            {definition && <p>{toLocalString(definition)}</p>}
+			{definition && <p>{toLocalString(definition)}</p>}
 
-            {(broader?.length || narrower?.length || related?.length) && <>
+			{(broader?.length || narrower?.length || related?.length) && <>
 
                 <hr/>
 
                 <dl>
 
-                    {broader?.length && <>
+					{broader?.length && <>
 
                         <dt>Broader Concepts</dt>
                         <dd>{DataConceptList(broader)}</dd>
 
                     </>}
 
-                    {narrower?.length && <>
+					{narrower?.length && <>
 
                         <dt>Narrower Concepts</dt>
                         <dd>{DataConceptList(narrower)}</dd>
 
                     </>}
 
-                    {related?.length && <>
+					{related?.length && <>
 
                         <dt>Narrower Concepts</dt>
                         <dd>{DataConceptList(related)}</dd>
@@ -114,22 +114,22 @@ export function DataConcept() {
             </>}
 
 
-            {/*     {broader?.length && <NodeLabel name={"Broader"}>{[...broader]
+			{/*     {broader?.length && <NodeLabel name={"Broader"}>{[...broader]
 
-             .sort((x, y) => string(x).localeCompare(string(y)))
-             .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
+			 .sort((x, y) => string(x).localeCompare(string(y)))
+			 .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
 
-            }</NodeLabel>}
+			 }</NodeLabel>}
 
-            {narrower?.length && <NodeLabel name={"Narrower"}>{[...narrower]
+			 {narrower?.length && <NodeLabel name={"Narrower"}>{[...narrower]
 
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
+			 .sort((x, y) => string(x).localeCompare(string(y)))
+			 .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
 
-             }</NodeLabel>} */}
+			 }</NodeLabel>} */}
 
-        </>}>{concept}</ToolFrame>
+		</>}>{concept}</ToolFrame>
 
-    </DataPage>;
+	</DataPage>;
 
 }

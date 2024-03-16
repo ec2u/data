@@ -18,8 +18,8 @@ import { toUnitLabel } from "@ec2u/data/pages/units/unit";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry, toEntryString } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference } from "@metreeca/core/reference";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
@@ -49,7 +49,7 @@ export const Units=immutable({
 
 	members: multiple({
 
-		id: required(reference),
+		id: required(id),
 		label: required(local),
 		comment: optional(local),
 
@@ -57,17 +57,17 @@ export const Units=immutable({
 		altLabel: optional(local),
 
 		university: optional({
-			id: required(reference),
+			id: required(id),
 			label: required(local)
 		}),
 
 		classification: required({
-			id: required(reference),
+			id: required(id),
 			label: required(local)
 		}),
 
 		subject: multiple({
-			id: required(reference),
+			id: required(id),
 			label: required(local)
 		})
 

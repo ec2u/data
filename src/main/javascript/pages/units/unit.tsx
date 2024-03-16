@@ -20,8 +20,8 @@ import { Units } from "@ec2u/data/pages/units/units";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, repeatable, required } from "@metreeca/core";
 import { toEntryString } from "@metreeca/core/entry";
+import { id, toIdString } from "@metreeca/core/id";
 import { Local, local, toLocalString } from "@metreeca/core/local";
-import { reference, toReferenceString } from "@metreeca/core/reference";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
@@ -39,35 +39,35 @@ export const Unit=immutable({
 	prefLabel: required(local),
 	altLabel: optional(local),
 
-	homepage: multiple(reference),
+	homepage: multiple(id),
 
 	university: optional({
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	}),
 
 	classification: optional({
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	}),
 
 	head: multiple({
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	}),
 
 	organization: repeatable({
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	}),
 
 	units: multiple({
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	}),
 
 	subject: multiple({
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	})
 
@@ -136,7 +136,7 @@ export function DataUnit() {
 			<ToolInfo>{{
 
 				"Info": homepage && homepage.length && homepage.map(url =>
-					<a key={url} href={url}>{toReferenceString(url, { compact: true })}</a>
+					<a key={url} href={url}>{toIdString(url, { compact: true })}</a>
 				)
 
 			}}</ToolInfo>

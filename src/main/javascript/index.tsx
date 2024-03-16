@@ -28,7 +28,6 @@ import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
 import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
 import DataWild, { Wild } from "@ec2u/data/pages/wild";
-import { id } from "@metreeca/core/entry";
 import { ToolContext } from "@metreeca/data/contexts/context";
 import { ToolRouter } from "@metreeca/data/contexts/router";
 import "@metreeca/view/styles/quicksand.css";
@@ -45,16 +44,16 @@ createRoot(document.body.firstElementChild!).render((
 
 			<ToolRouter>{{
 
-				[id(Datasets)]: DataDatasets,
-				[id(Dataset)]: DataDataset,
+				[Datasets.id]: DataDatasets,
+				[Dataset.id]: DataDataset,
 
-				[id(Universities)]: DataUniversities,
-				[(id(University))]: DataUniversity,
+				[Universities.id]: DataUniversities,
+				[(University.id)]: DataUniversity,
 
-				[id(Units)]: DataUnits,
-				[id(Unit)]: DataUnit,
+				[Units.id]: DataUnits,
+				[Unit.id]: DataUnit,
 
-				[id(Programs)]: DataPrograms,
+				[Programs.id]: DataPrograms,
 				// [Program.id]: DataProgram,
 
 				// [Courses.id]: DataCourses,
@@ -63,16 +62,16 @@ createRoot(document.body.firstElementChild!).render((
 				// [Documents.id]: DataDocuments,
 				// [Document.id]: DataDocument,
 
-				[id(Actors)]: DataActors,
+				[Actors.id]: DataActors,
 
-				[id(Events)]: DataEvents,
-				[id(Event)]: DataEvent,
+				[Events.id]: DataEvents,
+				[Event.id]: DataEvent,
 
-				[id(Schemes)]: DataSchemes,
-				[id(Scheme)]: DataScheme,
-				[id(Concept)]: DataConcept,
+				[Schemes.id]: DataSchemes,
+				[Scheme.id]: DataScheme,
+				[Concept.id]: DataConcept,
 
-				[id(Wild)]: DataWild
+				[Wild.id]: DataWild
 
 			}}</ToolRouter>
 

@@ -82,7 +82,7 @@ public final class Universities extends Delegator {
         return shape(clazz(University), Resource(), OrgFormalOrganization(),
 
                 property(schac, required(), string()),
-                property(image, required(), reference()),
+                property(image, required(), id()),
 
                 property(inception, optional(), year()),
                 property(students, optional(), integer()),

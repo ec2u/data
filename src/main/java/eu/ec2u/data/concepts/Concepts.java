@@ -103,7 +103,7 @@ public final class Concepts extends Delegator {
                 property(SKOS.NARROWER, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
                 property(SKOS.RELATED, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
 
-                property(RDFS.ISDEFINEDBY, optional(), reference())
+                property(RDFS.ISDEFINEDBY, optional(), id())
 
         );
     }

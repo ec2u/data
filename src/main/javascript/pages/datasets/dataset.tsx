@@ -17,9 +17,9 @@
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required } from "@metreeca/core";
+import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference } from "@metreeca/core/reference";
 import { string } from "@metreeca/core/string";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
@@ -59,7 +59,7 @@ export const Dataset=immutable({
 	description: optional(local),
 
 	license: optional({
-		id: required(reference),
+		id: required(id),
 		label: required(local)
 	}),
 
@@ -68,7 +68,7 @@ export const Dataset=immutable({
 
 	entities: required(integer),
 
-	isDefinedBy: optional(reference)
+	isDefinedBy: optional(id)
 
 });
 

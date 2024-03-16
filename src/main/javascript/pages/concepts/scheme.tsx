@@ -19,9 +19,9 @@ import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { Entry, toEntryString } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference } from "@metreeca/core/reference";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
@@ -41,8 +41,8 @@ export const Scheme=immutable({
 
 	hasTopConcept: multiple({
 
-		id: required(reference),
-		label: required(reference),
+		id: required(id),
+		label: required(id),
 
 		prefLabel: required(local),
 		definition: optional(local)

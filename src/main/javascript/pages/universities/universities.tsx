@@ -18,9 +18,9 @@ import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, required } from "@metreeca/core";
 import { toEntryString } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
 import { integer } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference } from "@metreeca/core/reference";
 import { year } from "@metreeca/core/year";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
@@ -52,14 +52,14 @@ export const Universities=immutable({
 
 	members: multiple({
 
-		id: required(reference),
-		image: required(reference),
+		id: required(id),
+		image: required(id),
 
 		label: required(local),
 		comment: required(local),
 
 		country: required({
-			id: required(reference),
+				id: required(id),
 			label: required(local)
 		}
 		)

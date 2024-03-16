@@ -17,9 +17,9 @@
 import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { id } from "@metreeca/core/id";
 import { integer } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference } from "@metreeca/core/reference";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useQuery } from "@metreeca/data/models/query";
@@ -39,14 +39,14 @@ export const Schemes=immutable({
 
 	[icon]: <GraduationCap/>,
 
-	id: required(reference),
+	id: required(id),
 	label: required({
 		"en": "Taxonomies"
 	}),
 
 	members: multiple({
 
-		id: required(reference),
+		id: required(id),
 		label: required(local),
 		comment: optional(local),
 

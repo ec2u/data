@@ -29,7 +29,7 @@ public final class Publisher {
     public static Shape Publisher() {
         return shape(Resource(),
 
-                property(DCTERMS.COVERAGE, required(), reference())
+                property(DCTERMS.COVERAGE, required(), id())
 
         );
     }

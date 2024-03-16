@@ -54,7 +54,7 @@ public abstract class Resource {
                 property(DCTERMS.TYPE, () -> shape(SKOSConcept())),
                 property(DCTERMS.SUBJECT, () -> shape(SKOSConcept())),
 
-                property(RDFS.SEEALSO, reference())
+                property(RDFS.SEEALSO, id())
 
         );
     }

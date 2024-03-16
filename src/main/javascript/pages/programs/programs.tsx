@@ -18,8 +18,8 @@ import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry, toEntryString } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
-import { reference } from "@metreeca/core/reference";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
@@ -49,12 +49,12 @@ export const Programs=immutable({
 
 	members: multiple({
 
-		id: required(reference),
+		id: required(id),
 		label: required(local),
 		comment: optional(local),
 
 		university: {
-			id: required(reference),
+			id: required(id),
 			label: required(local)
 		}
 

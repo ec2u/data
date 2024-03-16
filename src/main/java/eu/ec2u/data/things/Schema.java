@@ -95,11 +95,11 @@ public final class Schema {
                 property(RDF.TYPE, hasValue(Thing)),
 
                 property(identifier, optional(), string()),
-                property(url, multiple(), reference()),
+                property(url, multiple(), id()),
                 property(name, required(), local()),
                 property("fullDescription", description, required(), local()), // ;( clash with dct:description
                 property(disambiguatingDescription, optional(), local()),
-                property(image, optional(), reference()),
+                property(image, optional(), id()),
                 property(about, multiple(), Reference())
 
         );
@@ -193,14 +193,14 @@ public final class Schema {
 
                 property(RDF.TYPE, hasValue(Event)),
 
-                property(eventStatus, optional(), reference()),
+                property(eventStatus, optional(), id()),
 
                 property(startDate, optional(), dateTime()),
                 property(endDate, optional(), dateTime()),
 
                 property(inLanguage, multiple(), string()),
                 property(isAccessibleForFree, optional(), bool()),
-                property(eventAttendanceMode, multiple(), reference()),
+                property(eventAttendanceMode, multiple(), id()),
 
                 property(location, multiple(), Location()),
                 property(organizer, multiple(), Organization())

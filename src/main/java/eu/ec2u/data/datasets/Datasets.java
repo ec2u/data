@@ -72,7 +72,7 @@ public final class Datasets extends Delegator {
 
                 property(VOID.URI_SPACE, optional(), string()),
                 property(VOID.ENTITIES, optional(), integer()),
-                property(RDFS.ISDEFINEDBY, optional(), reference())
+                property(RDFS.ISDEFINEDBY, optional(), id())
 
         );
     }
