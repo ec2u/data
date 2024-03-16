@@ -14,244 +14,211 @@
  * limitations under the License.
  */
 
-import { CoursesIcon } from "@ec2u/data/pages/courses/courses";
-import { Programs } from "@ec2u/data/pages/programs/programs";
-import { DataBack } from "@ec2u/data/views/_back";
-import { DataInfo } from "@ec2u/data/views/_info";
-import { DataPage } from "@ec2u/data/views/page";
-import { DataPane } from "@ec2u/data/views/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, optional, string } from "@metreeca/core/value";
-import { useResource } from "@metreeca/data/models/resource";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import * as React from "react";
-import { Fragment } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
+import { Programs } from "@ec2u/data/pages/programs/programs";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { decimal } from "@metreeca/core/decimal";
+import { toFrameString } from "@metreeca/core/frame";
+import { id } from "@metreeca/core/id";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React, { Fragment } from "react";
 
 export const Program=immutable({
 
-    id: "/programs/{code}",
+	id: required("/programs/{code}"),
 
-    image: "",
-    label: { "en": "Program" },
-    comment: { "en": "" },
+	label: required(local),
+	comment: optional(local),
 
-    university: {
-        id: "",
-        label: { "en": "" }
-    },
+	identifier: optional(string),
+	url: multiple(string),
 
-    provider: optional({
-        id: "",
-        label: { "en": "" }
-    }),
+	fullDescription: required(local),
 
-    identifier: optional(""),
-    url: multiple(""),
+	numberOfCredits: optional(decimal),
+	timeToComplete: optional(string),
 
-    fullDescription: { "en": "" },
+	educationalLevel: optional({
+		id: optional(id),
+		label: required(local)
+	}),
 
-    numberOfCredits: optional(0.0),
-    timeToComplete: optional(""),
+	educationalCredentialAwarded: optional(local),
+	occupationalCredentialAwarded: optional(local),
 
-    educationalLevel: optional({
-        id: "",
-        label: { "en": "" }
-    }),
+	university: required({
+		id: optional(id),
+		label: required(local)
+	}),
 
-    about: multiple({
-        id: "",
-        label: { "en": "" }
-    }),
+	provider: optional({
+		id: optional(id),
+		label: required(local)
+	}),
 
-    educationalCredentialAwarded: { "en": "" },
-    occupationalCredentialAwarded: { "en": "" },
+	hasCourse: multiple({
+		id: optional(id),
+		label: required(local)
+	}),
 
-    hasCourse: multiple({
-        id: "",
-        label: { "en": "" }
-    })
+	about: multiple({
+		id: optional(id),
+		label: required(local)
+	})
 
 });
 
 
 export function DataProgram() {
 
-    const [event]=useResource(Program);
+	const [program]=useResource(Program);
+
+	return <DataPage name={[Programs, program]}
+
+		tray={<ToolFrame as={({
+
+			label,
+			university,
+			provider,
+
+			identifier,
+			url,
+			educationalLevel,
+			numberOfCredits,
+			timeToComplete,
+			about,
+
+			educationalCredentialAwarded,
+			occupationalCredentialAwarded
+
+		}) => <>
+
+			<ToolInfo>{{
+
+				"University": <ToolLink>{university}</ToolLink>,
+				"Provider": provider && <span>{toFrameString(provider)}</span>
+
+			}}</ToolInfo>
+
+			<ToolInfo>{{
+
+				"Code": identifier && <span>{identifier}</span>,
+				"Name": <span>{toLocalString(label)}</span>
 
 
-    return <DataPage item={entry({ value: string })}
+			}}</ToolInfo>
 
-        menu={entry({ fetch: <NodeSpin/> })}
+			<ToolInfo>{{
 
-        pane={<DataPane
+				"Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
+					{educationalCredentialAwarded && <span>{toLocalString(educationalCredentialAwarded)}</span>}
+					{occupationalCredentialAwarded && <span>{toLocalString(occupationalCredentialAwarded)}</span>}
+                </>,
 
-            header={<DataBack>{Programs}</DataBack>}
+				"Level": educationalLevel && <span>{toFrameString(educationalLevel)}</span>,
+				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
+				"Duration": timeToComplete && <span>{timeToComplete}</span>  // !!! map to localized description
 
-        >{entry({
+			}}</ToolInfo>
 
-            value: event => <DataProgramInfo>{event}</DataProgramInfo>
+			<ToolInfo>{{
 
-        })}</DataPane>}
+				"Subjects": about && about.map(subject => <ToolLink key={subject.id}>{subject}</ToolLink>)
 
-    >{entry({
+			}}</ToolInfo>
 
-        fetch: <NodeHint>{CoursesIcon}</NodeHint>,
+			<ToolInfo>{{
 
-        value: course => <DataProgramBody>{course}</DataProgramBody>,
+				"Info": url && url.map(item => {
 
-        error: error => <span>{error.status}</span> // !!! report
+					const url=new URL(item);
 
-    })}</DataPage>;
+					const host=url.host;
+					const lang=url.pathname.match(/\b[a-z]{2}\b/i);
+
+					return <a key={item} href={item}>{lang ? `${host} (${lang[0].toLowerCase()})` : host}</a>;
+
+				})
+
+			}}</ToolInfo>
+
+		</>}>{program}</ToolFrame>}
+
+	>
+
+		<ToolFrame placeholder={Programs[icon]} as={({}) => <>
+
+		</>}>{program}</ToolFrame>
+
+	</DataPage>;
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function DataProgramInfo({
-
-    children: {
-
-        label,
-        university,
-        provider,
-
-        identifier,
-        url,
-        educationalLevel,
-        numberOfCredits,
-        timeToComplete,
-        about,
-
-        educationalCredentialAwarded,
-        occupationalCredentialAwarded
-
-    }
-
-}: {
-
-    children: typeof Program
-
-}) {
-
-    return <>
-
-        <DataInfo>{{
-
-            "University": <NodeLink>{university}</NodeLink>,
-            "Provider": provider && <span>{string(provider)}</span>
-
-        }}</DataInfo>
-
-        <DataInfo>{{
-
-            "Code": identifier && <span>{identifier}</span>,
-            "Name": <span>{string(label)}</span>
-
-
-        }}</DataInfo>
-
-        <DataInfo>{{
-
-            "Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
-                {educationalCredentialAwarded && <span>{string(educationalCredentialAwarded)}</span>}
-                {occupationalCredentialAwarded && <span>{string(occupationalCredentialAwarded)}</span>}
-            </>,
-
-            "Level": educationalLevel && <span>{string(educationalLevel)}</span>,
-            "Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-            "Duration": timeToComplete && <span>{timeToComplete}</span>  // !!! map to localized description
-
-        }}</DataInfo>
-
-        <DataInfo>{{
-
-            "Subjects": about && about.map(subject => <span key={subject.id}>{string(subject)}</span>) // !!! link
-
-        }}</DataInfo>
-
-        <DataInfo>{{
-
-            "Info": url && url.map(item => {
-
-                const url=new URL(item);
-
-                const host=url.host;
-                const lang=url.pathname.match(/\b[a-z]{2}\b/i);
-
-                return <a key={item} href={item}>{lang ? `${host} (${lang[0].toLowerCase()})` : host}</a>;
-
-            })
-
-        }}</DataInfo>
-
-    </>;
-}
 
 function DataProgramBody({
 
-    children: {
+	children: {
 
-        fullDescription,
+		fullDescription,
 
-        educationalCredentialAwarded,
-        occupationalCredentialAwarded,
+		educationalCredentialAwarded,
+		occupationalCredentialAwarded,
 
-        hasCourse
+		hasCourse
 
-    }
+	}
 
 }: {
 
-    children: typeof Program
+	children: typeof Program
 
 }) {
 
-    const description=string(fullDescription);
+	const details={
+		"Educational Credential Awarded": educationalCredentialAwarded,
+		"Occupational Credential Awarded": occupationalCredentialAwarded
+	};
 
-    const details={
-        "Educational Credential Awarded": string(educationalCredentialAwarded),
-        "Occupational Credential Awarded": string(occupationalCredentialAwarded)
-    };
-
-    const detailed=Object.values(details).some(v => v);
+	const detailed=Object.values(details).some(v => v);
 
 
-    return <>
+	return <>
 
-        {description && <ReactMarkdown remarkPlugins={[remarkGfm]}>{description}</ReactMarkdown>}
+		{fullDescription && <ToolMark>{toLocalString(fullDescription)}</ToolMark>}
 
-        {description && detailed && <hr/>}
+		<hr/>
 
-        {detailed && <dl>{Object.entries(details)
+		{detailed && <dl>{Object.entries(details).map(([term, data]) => data && <Fragment key={term}>
 
-            .filter(([, data]) => data)
+            <dt>{term}</dt>
+            <dd><ToolMark>{toLocalString(data)}</ToolMark></dd>
 
-            .map(([term, data]) => <Fragment key={term}>
+        </Fragment>)
 
-                <dt>{term}</dt>
-                <dd><ReactMarkdown remarkPlugins={[remarkGfm]}>{data}</ReactMarkdown></dd>
+		}</dl>}
 
-            </Fragment>)
-
-        }</dl>}
-
-        {hasCourse?.length && <>
+		{hasCourse?.length && <>
 
             <h1>Courses</h1>
 
             <ul>{[...hasCourse]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(course => <li key={course.id}><NodeLink>{course}</NodeLink></li>)
-            }</ul>
+				.sort((x, y) => toFrameString(x).localeCompare(toFrameString(y)))
+				.map(course => <li key={course.id}><ToolLink>{course}</ToolLink></li>)
+			}</ul>
 
         </>}
 
-    </>;
+	</>;
 
 }

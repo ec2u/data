@@ -37,7 +37,6 @@ export const Course=immutable({
 
 	id: required("/courses/{code}"),
 
-	image: "",
 	label: required(local),
 	comment: optional(local),
 
@@ -71,12 +70,12 @@ export const Course=immutable({
 		label: required(local)
 	}),
 
-	about: multiple({
+	inProgram: multiple({
 		id: required(id),
 		label: required(local)
 	}),
 
-	inProgram: multiple({
+	about: multiple({
 		id: required(id),
 		label: required(local)
 	})
@@ -89,7 +88,7 @@ export function DataCourse() {
 	const [course]=useResource(Course);
 
 
-	return <DataPage name={course}
+	return <DataPage name={[Courses, course]}
 
 		tray={<ToolFrame as={({
 

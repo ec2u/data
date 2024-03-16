@@ -24,6 +24,7 @@ import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
+import { DataProgram, Program } from "@ec2u/data/pages/programs/program";
 import { DataPrograms, Programs } from "@ec2u/data/pages/programs/programs";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
@@ -56,7 +57,7 @@ createRoot(document.body.firstElementChild!).render((
 				[Unit.id]: DataUnit,
 
 				[Programs.id]: DataPrograms,
-				// [Program.id]: DataProgram,
+				[Program.id]: DataProgram,
 
 				[Courses.id]: DataCourses,
 				[Course.id]: DataCourse,
