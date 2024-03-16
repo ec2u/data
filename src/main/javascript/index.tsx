@@ -18,6 +18,8 @@ import { Actors, DataActors } from "@ec2u/data/pages/actors/actors";
 import { Concept, DataConcept } from "@ec2u/data/pages/concepts/concept";
 import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
 import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
+import { Course, DataCourse } from "@ec2u/data/pages/courses/course";
+import { Courses, DataCourses } from "@ec2u/data/pages/courses/courses";
 import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
@@ -56,8 +58,8 @@ createRoot(document.body.firstElementChild!).render((
 				[Programs.id]: DataPrograms,
 				// [Program.id]: DataProgram,
 
-				// [Courses.id]: DataCourses,
-				// [Course.id]: DataCourse,
+				[Courses.id]: DataCourses,
+				[Course.id]: DataCourse,
 
 				// [Documents.id]: DataDocuments,
 				// [Document.id]: DataDocument,
