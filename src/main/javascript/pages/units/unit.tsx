@@ -83,7 +83,7 @@ export function toUnitLabel({ altLabel, prefLabel }: { prefLabel: Local, altLabe
 
 export function DataUnit() {
 
-	const [unit]=useResource({ ...Unit, id: "" });
+	const [unit]=useResource(Unit);
 
 
 	return <DataPage

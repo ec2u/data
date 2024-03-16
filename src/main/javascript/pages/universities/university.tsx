@@ -70,7 +70,7 @@ export const University=immutable({
 
 export function DataUniversity() {
 
-	const [university]=useResource({ ...University, id: "" });
+	const [university]=useResource(University);
 
 	return <DataPage name={[Universities, university]}
 

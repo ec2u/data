@@ -16,8 +16,17 @@
 
 package eu.ec2u.data.documents;
 
+import com.metreeca.http.rdf4j.actions.Upload;
+
 import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
+
+import java.util.stream.Stream;
+
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.Base;
 
 public final class Documents /*extends Dataset<Document>*/ {
 
@@ -61,26 +70,26 @@ public final class Documents /*extends Dataset<Document>*/ {
     //     }
     //
     // }
-    //
-    // public static final class Loader implements Runnable {
-    //
-    //     public static void main(final String... args) {
-    //         exec(() -> new Loader().run());
-    //     }
-    //
-    //     @Override public void run() {
-    //         Stream
-    //
-    //                 .of(rdf(Documents.class, ".ttl", Base))
-    //
-    //                 .forEach(new Upload()
-    //                         .contexts(Context)
-    //                         .clear(true)
-    //                 );
-    //     }
-    //
-    // }
-    //
+
+    public static final class Loader implements Runnable {
+
+        public static void main(final String... args) {
+            exec(() -> new Loader().run());
+        }
+
+        @Override public void run() {
+            Stream
+
+                    .of(rdf(Documents.class, ".ttl", Base))
+
+                    .forEach(new Upload()
+                            .contexts(Context)
+                            .clear(true)
+                    );
+        }
+
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

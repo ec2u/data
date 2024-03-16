@@ -22,13 +22,12 @@ import { DataPage } from "@ec2u/data/views/page";
 import { DataPane } from "@ec2u/data/views/pane";
 import { immutable } from "@metreeca/core";
 import { multiple, optional, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
+import { useResource } from "@metreeca/data/models/resource";
 import { NodeHint } from "@metreeca/view/tiles/hint";
 import { NodeLink } from "@metreeca/view/tiles/link";
 import { NodeSpin } from "@metreeca/view/tiles/spin";
 import * as React from "react";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -82,12 +81,7 @@ export const Program=immutable({
 
 export function DataProgram() {
 
-    const [route, setRoute]=useRoute();
-
-    const entry=useEntry(route, Program);
-
-
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+    const [event]=useResource(Program);
 
 
     return <DataPage item={entry({ value: string })}

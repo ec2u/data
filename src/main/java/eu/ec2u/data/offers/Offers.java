@@ -22,7 +22,10 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,17 +34,24 @@ import java.util.stream.Stream;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.link.Frame.integer;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Shape.decimal;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.resources.Resource.Resource;
+import static eu.ec2u.data.resources.Resources.Reference;
 
 
 public final class Offers extends Delegator {
 
-    public static final IRI Context=_EC2U.item("/offers/");
+    public static final IRI Context=item("/offers/");
     public static final IRI Scheme=iri(Concepts.Context, "/offer-topics");
 
-    public static final IRI Programs=_EC2U.item("/programs/");
-    public static final IRI Courses=_EC2U.item("/courses/");
+    public static final IRI Programs=item("/programs/");
+    public static final IRI Courses=item("/courses/");
 
     public static final IRI Offer=_EC2U.term("Offer");
     public static final IRI Program=_EC2U.term("Program");
@@ -49,101 +59,53 @@ public final class Offers extends Delegator {
 
 
     public static Shape Offer() {
-        throw new UnsupportedOperationException(";( be implemented"); // !!!
-        //            return relate(Resource(), Schema.Thing(),
-        //
-        //                    field(Schema.provider, optional(), Reference()),
-        //                    field(Schema.educationalLevel, optional(), Reference()),
-        //                    field(Schema.numberOfCredits, optional(), datatype(XSD.DECIMAL), minInclusive(literal(0))),
-        //
-        //                    field(Schema.educationalCredentialAwarded, multilingual()),
-        //                    field(Schema.occupationalCredentialAwarded, multilingual())
-        //
-        //            );
+        return shape(Resource(), Schema.Thing(),
+
+                property(Schema.provider, optional(), Reference()),
+                property(Schema.educationalLevel, optional(), Reference()),
+                property(Schema.numberOfCredits, optional(), decimal(), minInclusive(literal(integer(0)))),
+
+                property(Schema.educationalCredentialAwarded, local()),
+                property(Schema.occupationalCredentialAwarded, local())
+
+        );
     }
 
     public static Shape Program() {
-        throw new UnsupportedOperationException(";( be implemented"); // !!!
+        return shape(Offer(),
 
-        //            return relate(Offer(),
-        //
-        //                    hidden(field(RDF.TYPE, all(Program))),
-        //
-        //                    field(Schema.programType, optional(), Reference()),
-        //                    field(Schema.occupationalCategory, optional(), Reference()),
-        //                    field(Schema.timeToComplete, optional(), datatype(XSD.DURATION)),
-        //
-        //                    detail(
-        //
-        //                            field(Schema.programPrerequisites, multilingual()),
-        //
-        //                            field(Schema.hasCourse, multiple(), Reference())
-        //
-        //                    )
-        //            );
+                property(RDF.TYPE, hasValue(Program)),
+
+                property(Schema.programType, optional(), Reference()), // !!! concept?
+                property(Schema.occupationalCategory, optional(), Reference()),
+                property(Schema.timeToComplete, optional(), datatype(XSD.DURATION)), // !!! duration()
+
+                property(Schema.programPrerequisites, local()),
+                property(Schema.hasCourse, () -> shape(multiple(), Course()))
+
+        );
     }
 
     public static Shape Course() {
-        throw new UnsupportedOperationException(";( be implemented"); // !!!
+        return shape(Offer(),
 
-        //            return relate(Offer(),
-        //
-        //                    hidden(field(RDF.TYPE, all(Course))),
-        //
-        //                    field(Schema.courseCode, optional(), datatype(XSD.STRING)),
-        //                    field(Schema.inLanguage, multiple(), datatype(XSD.STRING), pattern("[a-z]{2}")),
-        //                    field(Schema.learningResourceType, multilingual()),
-        //                    field(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
-        //
-        //                    detail(
-        //
-        //                            field(Schema.teaches, multilingual()),
-        //                            field(Schema.assesses, multilingual()),
-        //                            field(Schema.coursePrerequisites, multilingual()),
-        //                            field(Schema.competencyRequired, multilingual()),
-        //
-        //                            field("inProgram", inverse(Schema.hasCourse), multiple(), Reference())
-        //
-        //                    )
-        //
-        //            );
+                property(RDF.TYPE, hasValue(Course)),
+
+                property(Schema.courseCode, optional(), string()),
+                property(Schema.inLanguage, multiple(), string(), pattern("[a-z]{2}")),
+                property(Schema.learningResourceType, local()),
+                property(Schema.timeRequired, optional(), datatype(XSD.DURATION)),
+
+                property(Schema.teaches, local()),
+                property(Schema.assesses, local()),
+                property(Schema.coursePrerequisites, local()),
+                property(Schema.competencyRequired, local()),
+
+                property("inProgram", reverse(Schema.hasCourse), () -> shape(multiple(), Program()))
+
+        );
     }
 
-
-    static BigDecimal ects(final String ects) { return ects(new BigDecimal(ects)); }
-
-    static BigDecimal ects(final Number ects) {
-        return ects(ects instanceof BigDecimal ? ((BigDecimal) ects) : BigDecimal.valueOf(ects.doubleValue()));
-    }
-
-    static BigDecimal ects(final BigDecimal ects) {
-        return ects.setScale(1, RoundingMode.UP);
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Offers() {
-        delegate(handler(
-
-                //                new Driver(Offer(),
-                //
-                //                        filter(clazz(Offer))
-                //
-                //                ),
-                //
-                //                new Router()
-                //
-                //                        .path("/", new Worker()
-                //                                .get(new Relator())
-                //                        )
-                //
-                //                        .path("/{id}", new Worker()
-                //                                .get(new Relator())
-                //                        )
-
-        ));
-    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,6 +160,19 @@ public final class Offers extends Delegator {
             ));
         }
 
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    static BigDecimal ects(final String ects) { return ects(new BigDecimal(ects)); }
+
+    static BigDecimal ects(final Number ects) {
+        return ects(ects instanceof BigDecimal ? ((BigDecimal)ects) : BigDecimal.valueOf(ects.doubleValue()));
+    }
+
+    static BigDecimal ects(final BigDecimal ects) {
+        return ects.setScale(1, RoundingMode.UP);
     }
 
 

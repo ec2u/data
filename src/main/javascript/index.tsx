@@ -22,6 +22,7 @@ import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
+import { DataPrograms, Programs } from "@ec2u/data/pages/programs/programs";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
@@ -34,27 +35,6 @@ import "@metreeca/view/styles/quicksand.css";
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-
-
-// const fetcher=(input, init) => {
-//
-//     const headers=new Headers(init?.headers || {});
-//
-//     const tags=navigator.languages;
-//     const size=tags.length+1;
-//
-//     headers.set("Accept", "application/json");
-//     headers.set("Accept-Language", [
-//
-//         ...tags.map((tag, index) => `${tag};q=${((size-index)/size).toFixed(1)}`),
-//
-//         `*;q=${(1/size).toFixed(1)}`
-//
-//     ].join(", "));
-//
-//     return fetch(input, { ...init, headers });
-//
-// }
 
 
 createRoot(document.body.firstElementChild!).render((
@@ -71,12 +51,12 @@ createRoot(document.body.firstElementChild!).render((
 				[id(Universities)]: DataUniversities,
 				[(id(University))]: DataUniversity,
 
-				[Units.id]: DataUnits,
-				[Unit.id]: DataUnit,
+				[id(Units)]: DataUnits,
+				[id(Unit)]: DataUnit,
 
-				// [Programs.id]: DataPrograms,
+				[id(Programs)]: DataPrograms,
 				// [Program.id]: DataProgram,
-				//
+
 				// [Courses.id]: DataCourses,
 				// [Course.id]: DataCourse,
 
@@ -85,12 +65,12 @@ createRoot(document.body.firstElementChild!).render((
 
 				[id(Actors)]: DataActors,
 
-				[Events.id]: DataEvents,
-				[Event.id]: DataEvent,
+				[id(Events)]: DataEvents,
+				[id(Event)]: DataEvent,
 
-				[Schemes.id]: DataSchemes,
-				[Scheme.id]: DataScheme,
-				[Concept.id]: DataConcept,
+				[id(Schemes)]: DataSchemes,
+				[id(Scheme)]: DataScheme,
+				[id(Concept)]: DataConcept,
 
 				[id(Wild)]: DataWild
 

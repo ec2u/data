@@ -19,7 +19,6 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable } from "@metreeca/core";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { CancelIcon } from "@metreeca/view/widgets/icon";
-
 import * as React from "react";
 import { createElement, useEffect } from "react";
 import "./wild.css";
@@ -43,23 +42,23 @@ export default function DataWild() {
 	useEffect(() => { setRoute({ title: "Not Found" }); }, []);
 
 
-	function doDismiss() {
+	function dismiss() {
 		setRoute(Datasets.id, true);
 	}
 
 
-    return (
+	return (
 
 		<DataPage name={"404 | Not Found"}
 
-            menu={<button title="Remove from History" onClick={() => doDismiss()}><CancelIcon/></button>}
+			menu={<button title="Remove from History" onClick={() => dismiss()}><CancelIcon/></button>}
 
-        >
+		>
 
-            {createElement("data-none", {})}
+			{createElement("data-none", {})}
 
-        </DataPage>
+		</DataPage>
 
-    );
+	);
 
 }

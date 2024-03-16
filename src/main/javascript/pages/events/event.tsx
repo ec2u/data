@@ -84,7 +84,7 @@ export const Event=immutable({
 
 export function DataEvent() {
 
-	const [event]=useResource({ ...Event, id: "" });
+	const [event]=useResource(Event);
 
 	return <DataPage name={[Events, event]}
 

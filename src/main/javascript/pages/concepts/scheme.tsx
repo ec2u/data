@@ -61,7 +61,7 @@ export function DataConceptList(concepts: Entry[]) {
 
 export function DataScheme() {
 
-	const [scheme]=useResource({ ...Scheme, id: "" });
+	const [scheme]=useResource(Scheme);
 
 
 	return <DataPage name={[Schemes, scheme]}

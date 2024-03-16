@@ -17,7 +17,7 @@
 import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, optional, required } from "@metreeca/core";
+import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -44,13 +44,13 @@ export const Datasets=immutable({
 
 	[icon]: <Package/>,
 
-	id: "/",
+	id: required("/"),
 
-	label: {
+	label: required({
 		"": "European Campus of City-Universities"
-	},
+	}),
 
-	members: [{
+	members: multiple({
 
 		id: required(reference),
 		label: required(local),
@@ -60,7 +60,7 @@ export const Datasets=immutable({
 
 		entities: required(integer)
 
-	}]
+	})
 
 });
 

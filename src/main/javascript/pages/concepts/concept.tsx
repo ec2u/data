@@ -65,7 +65,7 @@ export const Concept=immutable({
 
 export function DataConcept() {
 
-    const [concept]=useResource({ ...Concept, id: "" });
+    const [concept]=useResource(Concept);
 
 
     return <DataPage name={[Schemes, concept?.inScheme, concept]}>

@@ -14,9 +14,26 @@
  * limitations under the License.
  */
 
-import { immutable, multiple } from "@metreeca/core";
+import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { entry, toEntryString } from "@metreeca/core/entry";
+import { local, toLocalString } from "@metreeca/core/local";
+import { reference } from "@metreeca/core/reference";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useOptions } from "@metreeca/data/models/options";
+import { useQuery } from "@metreeca/data/models/query";
+import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolKeywords } from "@metreeca/view/lenses/keywords";
+import { ToolOptions } from "@metreeca/view/lenses/options";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
 import { GraduationCap } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
 
 
@@ -24,18 +41,21 @@ export const Programs=immutable({
 
 	[icon]: <GraduationCap/>,
 
-	id: "/programs/",
-	label: { "en": "Programs" },
+	id: required("/programs/"),
+
+	label: required({
+		"en": "Programs"
+	}),
 
 	members: multiple({
 
-		id: "",
-		label: {},
-		comment: {},
+		id: required(reference),
+		label: required(local),
+		comment: optional(local),
 
 		university: {
-			id: "",
-			label: {}
+			id: required(reference),
+			label: required(local)
 		}
 
 	})
@@ -43,34 +63,69 @@ export const Programs=immutable({
 });
 
 
-// export function DataPrograms() {
-//
-//     const [route, setRoute]=useRoute();
-//     const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
-//
-//
-//     useEffect(() => { setRoute({ title: string(Programs) }); }, []);
-//
-//
-//     return <DataPage item={string(Programs)}
-//
-//         menu={<DataMeta>{route}</DataMeta>}
-//
-//         pane={<DataPane
-//
-//             header={<NodeKeywords state={[query, setQuery]}/>}
-//             footer={<NodeCount state={[query, setQuery]}/>}
-//
-//         >
-//
-//             <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
-//             <NodeOptions path={"provider"} type={"anyURI"} placeholder={"Provider"} state={[query, setQuery]}/>
-//             <NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
-//             <NodeOptions path={"timeToComplete"} type={"string"} placeholder={"Time to Complete"} state={[query,
-// setQuery]}/> <NodeRange path={"numberOfCredits"} type={"decimal"} placeholder={"Credits"} state={[query,
-// setQuery]}/> {/*<NodeOptions path={"educationalCredentialAwarded"} type={"anyURI"} placeholder={"Title Awarded"}
-// state={[query, setQuery]}/>*/}  </DataPane>}  deps={[JSON.stringify(query)]}  >  <NodeItems model={Programs}
-// placeholder={ProgramIcon} state={[query, setQuery]}>{({  id,  label, comment,  university  }) =>  <DataCard key={id}
-// compact  name={<a href={id}>{string(label)}</a>}  tags={string(university)}  >  {string(comment)}  </DataCard>
-// }</NodeItems>  </DataPage>;  }
+export function DataPrograms() {
+
+	const programs=useCollection(Programs, "members", { store: useQuery() });
+
+
+	return <DataPage name={Programs} menu={<DataMeta/>}
+
+		tray={< >
+
+			<ToolKeywords placeholder={"Name"}>{
+				useKeywords(programs, "label")
+			}</ToolKeywords>
+
+
+			<ToolOptions placeholder={"University"}>{
+				useOptions(programs, "university", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
+
+		</>}
+
+		/* 
+
+		 <NodeOptions path={"provider"} type={"anyURI"} placeholder={"Provider"} state={[query, setQuery]}/>
+		 <NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
+		 <NodeOptions path={"timeToComplete"} type={"string"} placeholder={"Time to Complete"} state={[query,
+		 setQuery]}/> <NodeRange path={"numberOfCredits"} type={"decimal"} placeholder={"Credits"} state={[query,
+		 setQuery]}/> {/!*<NodeOptions path={"educationalCredentialAwarded"} type={"anyURI"} placeholder={"Title Awarded"}
+		 state={[query, setQuery]}/>*!/}
+
+		 */
+
+		info={<>
+
+			<ToolCount>{useStats(programs)}</ToolCount>
+			<ToolClear>{programs}</ToolClear>
+
+		</>}
+
+	>
+
+		<ToolSheet placeholder={Programs[icon]} as={({
+
+			id,
+			label,
+			comment,
+
+			university
+
+		}) =>
+
+			<ToolCard key={id} side={"end"}
+
+				title={<ToolLink>{{ id, label }}</ToolLink>}
+				tags={toEntryString(university)}
+
+			>{
+
+				comment && toLocalString(comment)
+
+			}</ToolCard>
+
+		}>{programs}</ToolSheet>;
+
+	</DataPage>;
+}
 

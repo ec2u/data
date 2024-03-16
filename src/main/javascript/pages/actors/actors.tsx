@@ -27,6 +27,7 @@ export const Actors=immutable({
 	[icon]: <User/>,
 
 	id: required("/actors/"),
+
 	label: required({
 		"en": "Knowledge Ecosystem Actors"
 	})
