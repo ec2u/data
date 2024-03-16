@@ -15,7 +15,6 @@
  */
 
 
-import { DataConceptList } from "@ec2u/data/pages/concepts/scheme";
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -25,6 +24,8 @@ import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import React from "react";
+import { sortEntries } from "../../../../../../../../Products/Tool/code/core/entry";
+import { ToolLink } from "../../../../../../../../Products/Tool/code/view/widgets/link";
 
 export const Concept=immutable({
 
@@ -91,42 +92,39 @@ export function DataConcept() {
 					{broader?.length && <>
 
                         <dt>Broader Concepts</dt>
-                        <dd>{DataConceptList(broader)}</dd>
+                        <dd>
+                            <ul>{sortEntries(broader).map(entry =>
+								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+							)}</ul>
+                        </dd>
 
                     </>}
 
 					{narrower?.length && <>
 
                         <dt>Narrower Concepts</dt>
-                        <dd>{DataConceptList(narrower)}</dd>
+                        <dd>
+                            <ul>{sortEntries(narrower).map(entry =>
+								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+							)}</ul>
+                        </dd>
 
                     </>}
 
 					{related?.length && <>
 
                         <dt>Narrower Concepts</dt>
-                        <dd>{DataConceptList(related)}</dd>
+                        <dd>
+                            <ul>{sortEntries(related).map(entry =>
+								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+							)}</ul>
+                        </dd>
 
                     </>}
 
                 </dl>
 
             </>}
-
-
-			{/*     {broader?.length && <NodeLabel name={"Broader"}>{[...broader]
-
-			 .sort((x, y) => string(x).localeCompare(string(y)))
-			 .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
-
-			 }</NodeLabel>}
-
-			 {narrower?.length && <NodeLabel name={"Narrower"}>{[...narrower]
-
-			 .sort((x, y) => string(x).localeCompare(string(y)))
-			 .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
-
-			 }</NodeLabel>} */}
 
 		</>}>{concept}</ToolFrame>
 

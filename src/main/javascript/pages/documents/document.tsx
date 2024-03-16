@@ -14,86 +14,84 @@
  * limitations under the License.
  */
 
-import { Documents, DocumentsIcon } from "@ec2u/data/pages/documents/documents";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { toIRIString } from "@metreeca/core/_iri";
-import { multiple, optional, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { toLocaleDateString } from "@metreeca/view/tiles/inputs/date";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import * as React from "react";
-import { useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
+import { Documents } from "@ec2u/data/pages/documents/documents";
+import { Events } from "@ec2u/data/pages/events/events";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { toDateString } from "@metreeca/core/date";
+import { dateTime } from "@metreeca/core/dateTime";
+import { sortEntries, toEntryString } from "@metreeca/core/entry";
+import { id, toIdString } from "@metreeca/core/id";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React from "react";
 
 export const Document=immutable({
 
-	id: "/documents/{code}",
+	id: required("/documents/{code}"),
 
-	label: { "en": "Document" },
-	comment: { "en": "" },
+	label: required(local),
+	comment: optional(local),
 
-	university: {
-		id: "",
-		label: { "en": "" }
-	},
+	url: multiple(string),
 
-	url: multiple(""),
+	identifier: optional(string),
+	language: multiple(string),
 
-	identifier: optional(""),
-	language: multiple(""),
+	license: optional(string),
+	rights: optional(string),
+
+	issued: optional(dateTime),
+	modified: optional(dateTime),
+	valid: optional(dateTime),
 
 	type: multiple({
-		id: "",
-		label: { "en": "" }
+		id: required(id),
+		label: required(local)
 	}),
 
-	issued: optional(""),
-	modified: optional(""),
-	valid: optional(""),
-
+	university: optional({
+			id: required(id),
+			label: required(local)
+		}
+	),
 
 	publisher: optional({
-		id: "",
-		label: { "en": "" },
-		homepage: optional("")
+		id: required(id),
+		label: required(local),
+		homepage: optional(string)
 	}),
 
 	creator: optional({
-		id: "",
-		label: { "en": "" }
+		id: required(id),
+		label: required(local)
 	}),
 
 	contributor: multiple({
-		id: "",
-		label: { "en": "" }
-	}),
-
-	license: optional(""),
-	rights: optional(""),
-
-	subject: multiple({
-		id: "",
-		label: { "en": "" }
+		id: required(id),
+		label: required(local)
 	}),
 
 	audience: multiple({
-		id: "",
-		label: { "en": "" }
+		id: required(id),
+		label: required(local)
 	}),
 
 	relation: multiple({
-		id: "",
-		label: { "en": "" }
+		id: required(id),
+		label: required(local)
+	}),
+
+	subject: multiple({
+		id: required(id),
+		label: required(local)
 	})
 
 });
@@ -101,205 +99,146 @@ export const Document=immutable({
 
 export function DataDocument() {
 
-	const [route, setRoute]=useRoute();
+	const [document]=useResource(Document);
 
-	const entry=useEntry(route, Document);
+	return <DataPage name={[Documents, document]}
 
+		tray={<ToolFrame as={({
 
-	useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+			label,
 
+			url,
 
-	return <DataPage item={entry({
-		value: ({ label }) => string(label)
-	})}
+			identifier,
+			language,
 
-		menu={entry({ fetch: <NodeSpin/> })}
+			issued,
+			modified,
+			valid,
 
-		pane={<DataPane
+			university,
 
-			header={<DataBack>{Documents}</DataBack>}
+			type,
+			subject,
+			audience,
 
-		>{entry({
+			publisher,
+			creator,
+			contributor,
 
-			value: value => <DataDocumentInfo>{value}</DataDocumentInfo>
+			license,
+			rights
 
-		})}</DataPane>}
+		}) => <>
 
-	>{entry({
+			<ToolInfo>{{
 
-		fetch: <NodeHint>{DocumentsIcon}</NodeHint>,
+				"University": university && <ToolLink>{university}</ToolLink>
 
-		value: value => <DataDocumentBody>{value}</DataDocumentBody>,
+			}}</ToolInfo>
 
-		error: error => <span>{error.status}</span> // !!! report
+			<ToolInfo>{{
 
-	})}</DataPage>;
+				"Code": identifier && <span>{identifier}</span>,
 
-}
+				"Title": <span>{toLocalString(label)}</span>,
 
+				"Web": url?.length && url.map(item =>
+					<a key={item} href={item}>{toIdString(item, { compact: true })}</a>
+				),
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				"Language": language?.length && language.map(item => <span key={item}>{item}</span>)
 
-function DataDocumentInfo({
+			}}</ToolInfo>
 
-	children: {
+			<ToolInfo>{{
 
-		university,
+				"Type": type && type.length && <ul>{sortEntries(type).map(type =>
+					<li key={type.id}>
+						<ToolLink filter={[Documents, { university, subject: type }]}>{type}</ToolLink>
+					</li>
+				)}</ul>,
 
-		label,
+				"Audience": audience && audience.length && <ul>{sortEntries(audience).map(audience =>
+					<li key={audience.id}>
+						<ToolLink filter={[Documents, { university, audience }]}>{audience}</ToolLink>
+					</li>
+				)}</ul>,
 
-		url,
+				"Topics": subject && subject.length && <ul>{sortEntries(subject).map(subject =>
+					<li key={subject.id}>
+						<ToolLink filter={[Documents, { university, subject }]}>{subject}</ToolLink>
+					</li>
+				)}</ul>
 
-		identifier,
-		language,
+			}}</ToolInfo>
 
-		type,
-		subject,
-		audience,
+			<ToolInfo>{{
 
-		issued,
-		modified,
-		valid,
+				"Issued": issued && toDateString(new Date(issued)),
+				"Updated": modified && toDateString(new Date(modified)),
+				"Valid": valid
 
-		publisher,
-		creator,
-		contributor,
+			}}</ToolInfo>
 
-		license,
-		rights
+			<ToolInfo>{{
 
-	}
+				"Publisher": publisher && (publisher.homepage
+						? <a href={publisher.homepage}>{toEntryString(publisher)}</a>
+						: <span>{toEntryString(publisher)}</span>
+				),
 
-}: {
+				"Contact": creator && <span>{toEntryString(creator)}</span>,
 
-	children: typeof Document
+				"Contributor": contributor?.length && <ul>{sortEntries(contributor)
+					.map(contributor => <li key={contributor.id}>{toEntryString(contributor)}</li>)
+				}</ul>
 
-}) {
+			}}</ToolInfo>
 
-	return <>
+			<ToolInfo>{{
 
-		<DataInfo>{{
+				"License": license && (license.startsWith("http")
+						? <a href={license}>{license.replace(/^https?:/, "")}</a>
+						: <span>{license}</span>
+				),
 
-			"University": university && <NodeLink>{university}</NodeLink>
+				"Rights": rights && <span>{rights}</span>
 
-		}}</DataInfo>
+			}}</ToolInfo>
 
-		<DataInfo>{{
+		</>}>{document}</ToolFrame>}
 
-			"Code": identifier && <span>{identifier}</span>,
+	>
 
-			"Title": <span>{string(label)}</span>,
+		<ToolFrame placeholder={Events[icon]} as={({
 
-			"Web": url?.length && url.map(item => <a key={item} href={item}>{toIRIString(item)}</a>),
+			comment,
 
-			"Language": language?.length && language.map(item => <span key={item}>{item}</span>)
+			relation
 
-		}}</DataInfo>
+		}) => <>
 
-		<DataInfo>{{
+			{comment && <ToolMark>{
 
-			"Type": type && type.length && <ul>{[...type]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(type => <li key={type.id}>
-					<NodeLink search={[Documents, { university, subject: type }]}>{type}</NodeLink>
-				</li>)
-			}</ul>,
+				comment && toLocalString(comment)
 
-			"Audience": audience && audience.length && <ul>{[...audience]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(audience => <li key={audience.id}>
-					<NodeLink search={[Documents, { university, audience }]}>{audience}</NodeLink>
-				</li>)
-			}</ul>,
+			}</ToolMark>}
 
-			"Topics": subject && subject.length && <ul>{[...subject]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(subject => <li key={subject.id}>
-					<NodeLink search={[Documents, { university, subject }]}>{subject}</NodeLink>
-				</li>)
-			}</ul>
+			{relation?.length && <>
 
-		}}</DataInfo>
+                <h1>Related Documents</h1>
 
-		<DataInfo>{{
+                <ul>{sortEntries(relation).map(relation => <li key={relation.id}>
+						<ToolLink>{relation}</ToolLink>
+					</li>
+				)}</ul>
 
-			"Issued": issued && toLocaleDateString(new Date(issued)),
-			"Updated": modified && toLocaleDateString(new Date(modified)),
-			"Valid": valid
+            </>}
 
-		}}</DataInfo>
 
-		<DataInfo>{{
+		</>}>{document}</ToolFrame>
 
-			"Publisher": publisher && (publisher.homepage
-					? <a href={publisher.homepage}>{string(publisher)}</a>
-					: <span>{string(publisher)}</span>
-			),
-
-			"Contact": creator && <span>{string(creator)}</span>,
-
-			"Contributor": contributor?.length && <ul>{[...contributor]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(contributor => <li key={contributor.id}>{string(contributor)}</li>)
-			}</ul>
-
-		}}</DataInfo>
-
-		<DataInfo>{{
-
-			"License": license && (license.startsWith("http")
-					? <a href={license}>{license.replace(/^https?:/, "")}</a>
-					: <span>{license}</span>
-			),
-
-			"Rights": rights && <span>{string(creator)}</span>
-
-		}}</DataInfo>
-
-	</>;
-}
-
-function DataDocumentBody({
-
-	children: {
-
-		comment,
-
-		relation
-
-	}
-
-}: {
-
-	children: typeof Document
-
-}) {
-
-	return <DataCard>
-
-		<ReactMarkdown
-
-			remarkPlugins={[remarkGfm]}
-
-		>{
-
-			string(comment)
-
-		}</ReactMarkdown>
-
-		{relation?.length && <>
-
-            <h1>Related Documents</h1>
-
-            <ul>{[...relation]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(relation => <li key={relation.id}>
-					<NodeLink>{relation}</NodeLink>
-				</li>)
-			}</ul>
-
-        </>}
-
-	</DataCard>;
+	</DataPage>;
 
 }

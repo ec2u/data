@@ -23,6 +23,7 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
@@ -34,12 +35,14 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.http.toolkits.Strings.lower;
+import static com.metreeca.http.toolkits.Strings.title;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
@@ -229,6 +232,18 @@ public final class Concepts extends Delegator {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static Optional<Frame> concept(final IRI scheme, final String label, final String language) {
+        return Optional.of(frame(
+
+                field(ID, item(scheme, lower(label))),
+
+                field(RDF.TYPE, SKOS.CONCEPT),
+                field(SKOS.TOP_CONCEPT_OF, scheme),
+                field(SKOS.PREF_LABEL, literal(title(label), language))
+
+        ));
+    }
 
     // public static Optional<Concept> concept(final IRI scheme, final String label, final String language) { // !!! URI
     //

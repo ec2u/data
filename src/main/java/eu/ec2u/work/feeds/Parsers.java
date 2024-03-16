@@ -16,32 +16,16 @@
 
 package eu.ec2u.work.feeds;
 
-import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
-import com.metreeca.http.toolkits.Strings;
 
-import eu.ec2u.data._EC2U;
-import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.FOAF;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.guarded;
-import static com.metreeca.http.rdf.Values.literal;
-import static com.metreeca.http.toolkits.Strings.*;
-
-import static java.lang.String.format;
 
 public final class Parsers {
 
@@ -73,43 +57,6 @@ public final class Parsers {
     public static Optional<LocalDate> localDate(final String value) {
         return Optional.of(value)
                 .map(guarded(LocalDate::parse));
-    }
-
-
-    public static Optional<Frame> _person(final String person, final _Universities university) {
-        return Optional.of(person)
-
-                .map(PersonPattern::matcher)
-                .filter(Matcher::matches)
-                .map(matcher -> {
-
-                    final String title=matcher.group(3);
-                    final String familyName=normalize(matcher.group(1));
-                    final String givenName=normalize(matcher.group(2));
-
-                    final String fullName=format("%s %s", givenName, familyName);
-
-                    return frame(_EC2U.item(Persons.Context, university, fullName))
-
-                            .value(RDF.TYPE, Persons.Person)
-
-                            .value(RDFS.LABEL, literal(fullName, university.Language)) // !!! no language
-
-                            .value(Resources.university, university.Id)
-
-                            .value(FOAF.TITLE, Optional.ofNullable(title).map(Strings::normalize).map(Values::literal))
-                            .value(FOAF.GIVEN_NAME, literal(givenName))
-                            .value(FOAF.FAMILY_NAME, literal(familyName));
-
-                });
-    }
-
-    public static Optional<Frame> _concept(final IRI scheme, final String label, final String language) {
-        return Optional.of(frame(_EC2U.item(scheme, lower(label)))
-                .value(RDF.TYPE, SKOS.CONCEPT)
-                .value(SKOS.TOP_CONCEPT_OF, scheme)
-                .value(SKOS.PREF_LABEL, literal(title(label), language))
-        );
     }
 
 }

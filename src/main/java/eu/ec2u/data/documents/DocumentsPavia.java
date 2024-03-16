@@ -16,15 +16,12 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.http.services.Vault;
-
 import org.eclipse.rdf4j.model.IRI;
 
-import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.universities._Universities.Pavia;
 
 public final class DocumentsPavia implements Runnable {
 
@@ -37,30 +34,10 @@ public final class DocumentsPavia implements Runnable {
         exec(() -> new DocumentsPavia().run());
     }
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Vault vault=service(vault());
-
-
     @Override public void run() {
-
-        // final String url=vault
-        //         .get(DataUrl)
-        //         .orElseThrow(() -> new IllegalStateException(format(
-        //                 "undefined data URL <%s>", DataUrl
-        //         )));
-        //
-        // Xtream.of(url)
-        //
-        //         .flatMap(new _CSVLoader(Pavia))
-        //
-        //         .pipe(documents -> validate(Documents._Document(), Set.of(Document), documents))
-        //
-        //         .forEach(new Upload()
-        //                 .contexts(Context)
-        //                 .clear(true)
-        //         );
+        new Documents.CSVLoader(DataUrl, Context, Pavia).run();
     }
 
 }

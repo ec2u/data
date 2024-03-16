@@ -74,7 +74,7 @@ export function DataEvents() {
 
 	return <DataPage name={Events} menu={<DataMeta/>}
 
-		tray={< >
+		tray={<>
 
 			<ToolKeywords placeholder={"Name"}>{
 				useKeywords(events, "label")
@@ -130,7 +130,7 @@ export function DataEvents() {
 
 				startDate,
 
-				university,
+				university
 
 			}) =>
 

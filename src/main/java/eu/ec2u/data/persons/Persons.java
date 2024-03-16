@@ -68,7 +68,7 @@ public final class Persons extends Delegator {
     public static Shape FOAFPerson() {
         return shape(FOAFAgent(),
 
-                property(FOAF.TITLE, optional(), string()), // !!! pattern
+                // !!! property(FOAF.TITLE, optional(), string()), // !!! pattern
                 property(FOAF.GIVEN_NAME, required(), string()), // !!! pattern
                 property(FOAF.FAMILY_NAME, required(), string()), // !!! pattern
 

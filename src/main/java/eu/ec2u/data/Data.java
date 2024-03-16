@@ -30,6 +30,7 @@ import com.metreeca.http.services.Fetcher.URLFetcher;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
@@ -151,17 +152,16 @@ public final class Data extends Delegator {
 
                         .path("/*", new Router()
 
-                                        .path("/", new Datasets())
+                                .path("/", new Datasets())
 
-                                        .path("/universities/*", new Universities())
-                                        .path("/units/*", new Units())
+                                .path("/universities/*", new Universities())
 
-                                        //.path("/programs/*", new Programs())
-                                        //.path("/courses/*", new Courses())
+                                .path("/units/*", new Units())
+                                //.path("/programs/*", new Programs())
+                                //.path("/courses/*", new Courses())
+                                .path("/documents/*", new Documents())
 
-                                // .path("/documents/*", new Documents.Handler())
-
-                                        .path("/events/*", new Events())
+                                .path("/events/*", new Events())
 
                                 .path("/concepts/*", new Concepts())
 

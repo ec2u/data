@@ -27,6 +27,7 @@ import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data._EC2U.term;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
+import static eu.ec2u.data.resources.Publisher.Publisher;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.universities.Universities.University;
 
@@ -49,10 +50,10 @@ public abstract class Resource {
                 property(DCTERMS.MODIFIED, optional(), dateTime()),
 
                 property(DCTERMS.SOURCE, () -> shape(optional(), Resource())),
-                property(DCTERMS.PUBLISHER, () -> shape(optional(), Publisher.Publisher())),
+                property(DCTERMS.PUBLISHER, () -> shape(optional(), Publisher())),
 
-                property(DCTERMS.TYPE, () -> shape(SKOSConcept())),
-                property(DCTERMS.SUBJECT, () -> shape(SKOSConcept())),
+                property(DCTERMS.TYPE, () -> shape(multiple(), SKOSConcept())),
+                property(DCTERMS.SUBJECT, () -> shape(multiple(), SKOSConcept())),
 
                 property(RDFS.SEEALSO, id())
 

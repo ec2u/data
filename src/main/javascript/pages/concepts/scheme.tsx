@@ -18,7 +18,6 @@
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
-import { Entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -26,8 +25,9 @@ import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
+import { sortEntries } from "../../../../../../../../Products/Tool/code/core/entry";
+import { ToolLink } from "../../../../../../../../Products/Tool/code/view/widgets/link";
 
 
 export const Scheme=immutable({
@@ -50,14 +50,6 @@ export const Scheme=immutable({
 	})
 
 });
-
-
-export function DataConceptList(concepts: Entry[]) {
-	return <ul>{[...concepts]
-		.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
-		.map(concept => <li key={concept.id}><ToolLink>{concept}</ToolLink></li>)
-	}</ul>;
-}
 
 export function DataScheme() {
 
@@ -99,7 +91,11 @@ export function DataScheme() {
                 <dl>
 
                     <dt>Top Concepts</dt>
-                    <dd>{DataConceptList(hasTopConcept)}</dd>
+                    <dd>
+                        <ul>{sortEntries(hasTopConcept).map(entry =>
+							<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+						)}</ul>
+                    </dd>
 
                 </dl>
 

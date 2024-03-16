@@ -16,15 +16,12 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.http.services.Vault;
-
 import org.eclipse.rdf4j.model.IRI;
 
-import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.universities._Universities.Turku;
 
 public final class DocumentsTurku implements Runnable {
 
@@ -40,27 +37,8 @@ public final class DocumentsTurku implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Vault vault=service(vault());
-
-
     @Override public void run() {
-
-        // final String url=vault.get(DataUrl).orElseThrow(() -> new IllegalStateException(format(
-        //         "undefined data URL <%s>", DataUrl
-        // )));
-        //
-        // Xtream.of(url)
-        //
-        //         .flatMap(new Documents.CSVLoader(Turku))
-        //
-        //         // !!! .pipe(documents -> validate(Document(), Set.of(Document), documents))
-        //
-        //         .forEach(document -> System.out.println(document));
-
-        // .forEach(new Upload()
-        //         .contexts(Context)
-        //         .clear(true)
-        // );
+        new Documents.CSVLoader(DataUrl, Context, Turku).run();
     }
 
 }
