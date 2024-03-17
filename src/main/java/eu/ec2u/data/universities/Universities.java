@@ -54,8 +54,8 @@ import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data._EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgFormalOrganization;
-import static eu.ec2u.data.resources.Resource.Resource;
 import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 

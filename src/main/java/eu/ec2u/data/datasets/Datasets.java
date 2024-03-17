@@ -25,6 +25,7 @@ import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -47,8 +48,8 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data._EC2U.term;
-import static eu.ec2u.data.resources.Resource.Resource;
 import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Datasets extends Delegator {
 
@@ -67,7 +68,7 @@ public final class Datasets extends Delegator {
                 property(DCTERMS.AVAILABLE, optional(instant())), // !!! vs dct:issued?
 
                 property(DCTERMS.RIGHTS, required(string())),
-                property(DCTERMS.ACCESS_RIGHTS, optional(local())),
+                property(DCTERMS.ACCESS_RIGHTS, optional(Resources.localized())),
                 property(DCTERMS.LICENSE, optional(Reference())),
 
                 property(VOID.URI_SPACE, optional(string())),

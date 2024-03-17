@@ -27,6 +27,7 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
@@ -52,8 +53,8 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resource.Resource;
 import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Concepts extends Delegator {
 
@@ -95,9 +96,9 @@ public final class Concepts extends Delegator {
     public static Shape SKOSConcept() {
         return shape(Reference(),
 
-                property(SKOS.PREF_LABEL, required(local())),
-                property(SKOS.ALT_LABEL, multiple(local())),
-                property(SKOS.DEFINITION, optional(local())),
+                property(SKOS.PREF_LABEL, required(Resources.localized())),
+                property(SKOS.ALT_LABEL, multiple(Resources.localized())),
+                property(SKOS.DEFINITION, optional(Resources.localized())),
 
                 property(SKOS.IN_SCHEME, required(SKOSConceptScheme())),
                 property(SKOS.TOP_CONCEPT_OF, optional(SKOSConceptScheme())), // !!! == inScheme

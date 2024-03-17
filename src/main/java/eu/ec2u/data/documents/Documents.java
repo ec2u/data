@@ -69,9 +69,7 @@ import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
 import static eu.ec2u.data.persons.Persons.Person;
 import static eu.ec2u.data.persons.Persons.person;
-import static eu.ec2u.data.resources.Resource.Resource;
-import static eu.ec2u.data.resources.Resource.university;
-import static eu.ec2u.data.resources.Resources.Publisher;
+import static eu.ec2u.data.resources.Resources.*;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
@@ -102,8 +100,8 @@ public final class Documents extends Delegator {
                 property(DCTERMS.IDENTIFIER, optional(string())),
                 property(DCTERMS.LANGUAGE, multiple(string())),
 
-                property(DCTERMS.TITLE, required(local(), maxLength(100))),
-                property(DCTERMS.DESCRIPTION, optional(local(), maxLength(1000))),
+                property(DCTERMS.TITLE, required(Resources.localized(), maxLength(100))),
+                property(DCTERMS.DESCRIPTION, optional(Resources.localized(), maxLength(1000))),
 
                 property(DCTERMS.ISSUED, optional(dateTime())),
                 property(DCTERMS.MODIFIED, optional(dateTime())),

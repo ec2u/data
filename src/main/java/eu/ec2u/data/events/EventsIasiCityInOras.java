@@ -23,7 +23,6 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.formats.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
@@ -48,7 +47,7 @@ public final class EventsIasiCityInOras implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://iasi.inoras.ro/evenimente"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Coverage.City)
+            .value(DCTERMS.COVERAGE, Resources.City)
             .values(RDFS.LABEL,
                     literal("InOras / Evenimente in Iași", "ro"),
                     literal("InOras / Events in Iasi", "en")

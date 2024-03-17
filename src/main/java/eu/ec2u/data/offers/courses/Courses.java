@@ -34,7 +34,7 @@ import static com.metreeca.link.Query.query;
 
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.offers.Offers.Course;
-import static eu.ec2u.data.resources.Resource.university;
+import static eu.ec2u.data.resources.Resources.university;
 
 public final class Courses extends Delegator {
 

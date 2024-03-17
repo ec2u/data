@@ -17,24 +17,33 @@
 package eu.ec2u.data.resources;
 
 import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
 import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.link.Frame.ID;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.filter;
+import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
+import static eu.ec2u.data.universities.Universities.University;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
@@ -43,11 +52,14 @@ public final class Resources extends Delegator {
 
     private static final IRI Context=item("/resources/");
 
+    public static final IRI Resource=term("Resource");
+    public static final IRI Publisher=term("Publisher");
 
-    public static final IRI Resource=_EC2U.term("Resource");
-    public static final IRI Publisher=_EC2U.term("Publisher");
+    public static final IRI College=term("College");
+    public static final IRI Association=term("Association");
+    public static final IRI City=term("City");
 
-    public static final IRI university=_EC2U.term("university");
+    public static final IRI university=term("university");
 
 
     public static final Set<String> Languages=Stream
@@ -60,88 +72,92 @@ public final class Resources extends Delegator {
             .collect(toUnmodifiableSet());
 
 
-    //    public static Shape Reference() {
-    //        return and(
-    //
-    //                datatype(IRIType),
-    //
-    //                field(RDFS.LABEL, multilingual())
-    //
-    //        );
-    //    }
-
-    //    public static Shape Resource() {
-    //        return and(Reference(),
-    //
-    //                hidden(field(RDF.TYPE, all(Resource))),
-    //
-    //                field(RDFS.COMMENT, multilingual()),
-    //
-    //                field(university, optional(),
-    //                        field(RDFS.LABEL, multilingual())
-    //                ),
-    //
-    //                field(DCTERMS.TITLE, multilingual()),
-    //                field(DCTERMS.DESCRIPTION, multilingual()),
-    //
-    //                field(DCTERMS.PUBLISHER, optional(), Publisher()),
-    //                field(DCTERMS.SOURCE, optional(), datatype(IRIType)),
-    //
-    //                field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
-    //                field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
-    //                field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
-    //
-    //                field(DCTERMS.TYPE, multiple(), Reference()),
-    //                field(DCTERMS.SUBJECT, multiple(), Reference())
-    //
-    //        );
-    //    }
-
-    //    public static Shape Publisher() {
-    //        return and(Reference(),
-    //
-    //                field(DCTERMS.COVERAGE, optional(), datatype(IRIType))
-    //
-    //                 field(SKOS.PREF_LABEL, multilingual()),
-    //                 field(FOAF.HOMEPAGE, optional(), datatype(IRIType))
-    //
-    //        );
-    //    }
-
-    //    public static Shape multilingual() {
-    //        return localized(Languages);
-    //    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Resources() {
-        delegate(handler(
-
-                //                new Driver(Resource(),
-                //
-                //                        filter(clazz(Resource)),
-                //
-                //                        field(RDF.TYPE, Reference()),
-                //                        field(DCTERMS.SUBJECT, Reference())
-                //
-                //                ),
-                //
-                //                new Worker()
-                //                        .get(new Relator())
-
-        ));
-    }
 
     public static Shape Reference() {
         return shape(
 
                 property("id", ID, required(id())),
 
-                property(RDFS.LABEL, required(local())),
-                property(RDFS.COMMENT, optional(local()))
+                property(RDFS.LABEL, required(localized())),
+                property(RDFS.COMMENT, optional(localized()))
 
         );
+    }
+
+    public static Shape Resource() {
+        return shape(Reference(),
+
+                property(university, () -> required(University())),
+
+                property(DCTERMS.TITLE, required(localized())),
+                property(DCTERMS.ALTERNATIVE, optional(localized())),
+                property(DCTERMS.DESCRIPTION, optional(localized())),
+
+                property(DCTERMS.CREATED, optional(dateTime())),
+                property(DCTERMS.ISSUED, optional(dateTime())),
+                property(DCTERMS.MODIFIED, optional(dateTime())),
+
+                property(DCTERMS.SOURCE, () -> optional(Resource())),
+                property(DCTERMS.PUBLISHER, () -> optional(Publisher())),
+
+                property(DCTERMS.TYPE, () -> multiple(SKOSConcept())),
+                property(DCTERMS.SUBJECT, () -> multiple(SKOSConcept())),
+
+                property(RDFS.SEEALSO, optional(id()))
+
+        );
+    }
+
+    public static Shape Publisher() {
+        return shape(Resource(),
+
+                property(DCTERMS.COVERAGE, optional(id())),
+
+                property(SKOS.PREF_LABEL, localized()),
+                property(FOAF.HOMEPAGE, optional(id()))
+
+        );
+    }
+
+
+    public static Shape localized() {
+        return Shape.local(/*Languages*/); // !!!
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Resources() {
+        delegate(handler(new Driver(virtual(Reference(),
+
+                        property("members", RDFS.MEMBER, Resource())
+
+                )), new Worker()
+
+                        .get(new Relator(frame(
+
+                                field(ID, iri()),
+                                field(RDFS.LABEL, literal("EC2U Knowledge Hub Resources", "en")),
+
+                                field(RDFS.MEMBER, query(
+
+                                        frame(
+
+                                                field(ID, iri()),
+                                                field(RDFS.LABEL, literal("", WILDCARD)),
+
+                                                field(university, iri())
+
+                                        ),
+
+                                        filter(RDF.TYPE, Resource)
+
+                                ))
+
+                        )))
+
+        ));
     }
 
 

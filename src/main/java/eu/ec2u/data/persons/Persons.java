@@ -44,9 +44,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data._EC2U.term;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
-import static eu.ec2u.data.resources.Resource.Resource;
-import static eu.ec2u.data.resources.Resource.university;
-import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.*;
 import static java.lang.String.format;
 
 public final class Persons extends Delegator {
@@ -63,7 +61,6 @@ public final class Persons extends Delegator {
 
         );
     }
-
 
     public static Shape FOAFPerson() {
         return shape(FOAFAgent(),

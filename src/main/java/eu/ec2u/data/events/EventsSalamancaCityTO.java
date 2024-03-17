@@ -27,7 +27,6 @@ import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
@@ -61,7 +60,7 @@ public final class EventsSalamancaCityTO implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://salamanca.es/en/calendar"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Coverage.City)
+            .value(DCTERMS.COVERAGE, Resources.City)
             .values(RDFS.LABEL,
                     literal("Oficina de Turismo de Salamanca", "es"),
                     literal("Salamanca Municipal Tourist Office", "en")

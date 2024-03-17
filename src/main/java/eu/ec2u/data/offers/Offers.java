@@ -21,6 +21,7 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -39,8 +40,8 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
-import static eu.ec2u.data.resources.Resource.Resource;
 import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 
 public final class Offers {
@@ -62,8 +63,8 @@ public final class Offers {
                 property(Schema.educationalLevel, optional(Reference())),
                 property(Schema.numberOfCredits, optional(decimal(), minInclusive(literal(integer(0))))),
 
-                property(Schema.educationalCredentialAwarded, optional(local())),
-                property(Schema.occupationalCredentialAwarded, optional(local()))
+                property(Schema.educationalCredentialAwarded, optional(Resources.localized())),
+                property(Schema.occupationalCredentialAwarded, optional(Resources.localized()))
 
         );
     }
@@ -73,7 +74,7 @@ public final class Offers {
 
                 property(RDF.TYPE, hasValue(Program)),
 
-                property(Schema.programPrerequisites, local()),
+                property(Schema.programPrerequisites, Resources.localized()),
                 property(Schema.timeToComplete, optional(duration())),
 
                 property(Schema.hasCourse, () -> shape(multiple(), Course())),
@@ -93,11 +94,11 @@ public final class Offers {
                 property(Schema.inLanguage, multiple(string(), pattern("[a-z]{2}"))),
                 property(Schema.timeRequired, optional(duration())),
 
-                property(Schema.learningResourceType, optional(local())),
-                property(Schema.teaches, optional(local())),
-                property(Schema.assesses, optional(local())),
-                property(Schema.coursePrerequisites, optional(local())),
-                property(Schema.competencyRequired, optional(local())),
+                property(Schema.learningResourceType, optional(Resources.localized())),
+                property(Schema.teaches, optional(Resources.localized())),
+                property(Schema.assesses, optional(Resources.localized())),
+                property(Schema.coursePrerequisites, optional(Resources.localized())),
+                property(Schema.competencyRequired, optional(Resources.localized())),
 
                 property("inProgram", reverse(Schema.hasCourse), () -> multiple(Program()))
 

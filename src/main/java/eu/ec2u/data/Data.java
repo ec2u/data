@@ -34,6 +34,7 @@ import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.offers.courses.Courses;
 import eu.ec2u.data.offers.programs.Programs;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.repository.Repository;
@@ -150,11 +151,11 @@ public final class Data extends Delegator {
                         ))
 
                         .path("/cron/*", new Cron())
-                        // .path("/resources/", new Resources())
 
                         .path("/*", new Router()
 
                                 .path("/", new Datasets())
+                                .path("/resources/", new Resources())
 
                                 .path("/universities/*", new Universities())
 

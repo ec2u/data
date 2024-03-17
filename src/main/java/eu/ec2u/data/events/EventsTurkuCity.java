@@ -28,7 +28,6 @@ import com.metreeca.http.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.locations.Locations;
-import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -68,7 +67,7 @@ public final class EventsTurkuCity implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Coverage.City)
+            .value(DCTERMS.COVERAGE, Resources.City)
             .values(RDFS.LABEL,
                     literal("City of Turku / Event's Calendar", "en"),
                     literal("Turun kaupunki / Tapahtumakalenteri", Turku.Language)

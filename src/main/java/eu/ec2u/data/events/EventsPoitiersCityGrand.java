@@ -28,7 +28,6 @@ import com.metreeca.http.xml.formats.XML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data._EC2U;
-import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
@@ -58,7 +57,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Coverage.City)
+            .value(DCTERMS.COVERAGE, Resources.City)
             .values(RDFS.LABEL,
                     literal("Grand Poitiers / Events", "en"),
                     literal("Grand Poitiers / Sortir", Poitiers.Language)

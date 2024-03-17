@@ -20,6 +20,7 @@ import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data._EC2U;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -96,9 +97,9 @@ public final class Schema {
 
                 property(identifier, optional(string())),
                 property(url, multiple(id())),
-                property(name, required(local())),
-                property("fullDescription", description, required(local())), // ;( clash with dct:description
-                property(disambiguatingDescription, optional(local())),
+                property(name, required(Resources.localized())),
+                property("fullDescription", description, required(Resources.localized())), // ;( clash with dct:description
+                property(disambiguatingDescription, optional(Resources.localized())),
                 property(image, optional(id())),
                 property(about, multiple(Reference()))
 
@@ -118,7 +119,7 @@ public final class Schema {
 
                 property(RDF.TYPE, hasValue(Organization)),
 
-                property(legalName, local()),
+                property(legalName, Resources.localized()),
                 property(Schema.email, string()),
                 property(Schema.telephone, string())
 

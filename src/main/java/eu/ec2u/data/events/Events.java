@@ -64,7 +64,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data._EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resource.Resource;
+import static eu.ec2u.data.resources.Resources.Resource;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 

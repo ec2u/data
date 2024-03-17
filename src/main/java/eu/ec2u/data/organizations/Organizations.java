@@ -48,9 +48,9 @@ public final class Organizations {
 
                 property(ORG.IDENTIFIER, optional(string())), // !!! datatype?
 
-                property(SKOS.PREF_LABEL, required(local())), // !!! languages?
-                property(SKOS.ALT_LABEL, required(local())), // !!! languages?
-                property(SKOS.DEFINITION, required(local())), // !!! languages?
+                property(SKOS.PREF_LABEL, required(Resources.localized())), // !!! languages?
+                property(SKOS.ALT_LABEL, required(Resources.localized())), // !!! languages?
+                property(SKOS.DEFINITION, required(Resources.localized())), // !!! languages?
 
                 property("units", ORG.HAS_UNIT, () -> multiple(OrgOrganizationalUnit()))
 

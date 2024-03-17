@@ -19,7 +19,6 @@ package eu.ec2u.data.events;
 import com.metreeca.http.rdf.Frame;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.resources.Coverage;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
@@ -38,7 +37,7 @@ public final class EventsPaviaBorromeo implements Runnable {
 
     private static final Frame Publisher=frame(iri("http://www.collegioborromeo.it/it/eventi/"))
             .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Coverage.College)
+            .value(DCTERMS.COVERAGE, Resources.College)
             .values(RDFS.LABEL,
                     literal("Almo Collegio Borromeo / Calendar", "en"),
                     literal("Almo Collegio Borromeo / Calendario", Pavia.Language)
