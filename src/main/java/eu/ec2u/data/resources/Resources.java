@@ -136,10 +136,10 @@ public final class Resources extends Delegator {
     public static Shape Reference() {
         return shape(
 
-                property("id", ID),
+                property("id", ID, required(id())),
 
-                property(RDFS.LABEL, required(), local()),
-                property(RDFS.COMMENT, optional(), local())
+                property(RDFS.LABEL, required(local())),
+                property(RDFS.COMMENT, optional(local()))
 
         );
     }

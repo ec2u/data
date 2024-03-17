@@ -40,8 +40,8 @@ public final class Agents {
     public static Shape FOAFAgent() {
         return shape(Reference(),
 
-                property(FOAF.HOMEPAGE, multiple(), id()), // !!! datatype?
-                property(FOAF.MBOX, multiple(), string()) // !!! datatype?
+                property(FOAF.HOMEPAGE, multiple(id())), // !!! datatype?
+                property(FOAF.MBOX, multiple(string())) // !!! datatype?
 
         );
     }

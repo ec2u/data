@@ -35,6 +35,10 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { GraduationCap } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
+import { decimal } from "../../../../../../../../Products/Tool/code/core/decimal";
+import { string } from "../../../../../../../../Products/Tool/code/core/string";
+import { useRange } from "../../../../../../../../Products/Tool/code/data/models/range";
+import { ToolRange } from "../../../../../../../../Products/Tool/code/view/lenses/range";
 
 
 export const Programs=immutable({
@@ -81,18 +85,27 @@ export function DataPrograms() {
 				useOptions(programs, "university", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
+			<ToolOptions placeholder={"Level"}>{
+				useOptions(programs, "educationalLevel", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
+
+			<ToolRange placeholder={"Credits"}>{
+				useRange(programs, "numberOfCredits", { type: decimal })
+			}</ToolRange>
+
+			<ToolOptions placeholder={"Duration"} compact>{
+				useOptions(programs, "timeToComplete", { type: string }) // !!! duration >> range
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Title Awarded"} compact>{
+				useOptions(programs, "educationalCredentialAwarded", { type: local, size: 10 })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Provider"} compact>{
+				useOptions(programs, "provider", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
+
 		</>}
-
-		/* 
-
-		 <NodeOptions path={"provider"} type={"anyURI"} placeholder={"Provider"} state={[query, setQuery]}/>
-		 <NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
-		 <NodeOptions path={"timeToComplete"} type={"string"} placeholder={"Time to Complete"} state={[query,
-		 setQuery]}/> <NodeRange path={"numberOfCredits"} type={"decimal"} placeholder={"Credits"} state={[query,
-		 setQuery]}/> {/!*<NodeOptions path={"educationalCredentialAwarded"} type={"anyURI"} placeholder={"Title Awarded"}
-		 state={[query, setQuery]}/>*!/}
-
-		 */
 
 		info={<>
 

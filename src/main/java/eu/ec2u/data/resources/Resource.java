@@ -39,23 +39,23 @@ public abstract class Resource {
     public static Shape Resource() {
         return shape(Reference(),
 
-                property(university, () -> shape(required(), University())),
+                property(university, () -> required(University())),
 
-                property(DCTERMS.TITLE, required(), local()),
-                property(DCTERMS.ALTERNATIVE, optional(), local()),
-                property(DCTERMS.DESCRIPTION, optional(), local()),
+                property(DCTERMS.TITLE, required(local())),
+                property(DCTERMS.ALTERNATIVE, optional(local())),
+                property(DCTERMS.DESCRIPTION, optional(local())),
 
-                property(DCTERMS.CREATED, optional(), dateTime()),
-                property(DCTERMS.ISSUED, optional(), dateTime()),
-                property(DCTERMS.MODIFIED, optional(), dateTime()),
+                property(DCTERMS.CREATED, optional(dateTime())),
+                property(DCTERMS.ISSUED, optional(dateTime())),
+                property(DCTERMS.MODIFIED, optional(dateTime())),
 
-                property(DCTERMS.SOURCE, () -> shape(optional(), Resource())),
-                property(DCTERMS.PUBLISHER, () -> shape(optional(), Publisher())),
+                property(DCTERMS.SOURCE, () -> optional(Resource())),
+                property(DCTERMS.PUBLISHER, () -> optional(Publisher())),
 
-                property(DCTERMS.TYPE, () -> shape(multiple(), SKOSConcept())),
-                property(DCTERMS.SUBJECT, () -> shape(multiple(), SKOSConcept())),
+                property(DCTERMS.TYPE, () -> multiple(SKOSConcept())),
+                property(DCTERMS.SUBJECT, () -> multiple(SKOSConcept())),
 
-                property(RDFS.SEEALSO, id())
+                property(RDFS.SEEALSO, optional(id()))
 
         );
     }

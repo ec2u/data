@@ -32,6 +32,8 @@ import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
+import eu.ec2u.data.offers.courses.Courses;
+import eu.ec2u.data.offers.programs.Programs;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.repository.Repository;
@@ -157,8 +159,8 @@ public final class Data extends Delegator {
                                 .path("/universities/*", new Universities())
 
                                 .path("/units/*", new Units())
-                                //.path("/programs/*", new Programs())
-                                //.path("/courses/*", new Courses())
+                                .path("/programs/*", new Programs())
+                                .path("/courses/*", new Courses())
                                 .path("/documents/*", new Documents())
 
                                 .path("/events/*", new Events())

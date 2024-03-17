@@ -64,15 +64,15 @@ public final class Datasets extends Delegator {
     public static Shape Dataset() {
         return shape(Resource(),
 
-                property(DCTERMS.AVAILABLE, optional(), instant()), // !!! vs dct:issued?
+                property(DCTERMS.AVAILABLE, optional(instant())), // !!! vs dct:issued?
 
-                property(DCTERMS.RIGHTS, required(), string()),
-                property(DCTERMS.ACCESS_RIGHTS, optional(), local()),
-                property(DCTERMS.LICENSE, optional(), Reference()),
+                property(DCTERMS.RIGHTS, required(string())),
+                property(DCTERMS.ACCESS_RIGHTS, optional(local())),
+                property(DCTERMS.LICENSE, optional(Reference())),
 
-                property(VOID.URI_SPACE, optional(), string()),
-                property(VOID.ENTITIES, optional(), integer()),
-                property(RDFS.ISDEFINEDBY, optional(), id())
+                property(VOID.URI_SPACE, optional(string())),
+                property(VOID.ENTITIES, optional(integer())),
+                property(RDFS.ISDEFINEDBY, optional(id()))
 
         );
     }

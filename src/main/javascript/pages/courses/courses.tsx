@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+import { Languages } from "@ec2u/data/languages";
 import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
-import { toEntryString } from "@metreeca/core/entry";
+import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { useCollection } from "@metreeca/data/models/collection";
@@ -31,6 +32,14 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { BookOpen } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
+import { decimal } from "../../../../../../../../Products/Tool/code/core/decimal";
+import { string } from "../../../../../../../../Products/Tool/code/core/string";
+import { useKeywords } from "../../../../../../../../Products/Tool/code/data/models/keywords";
+import { useOptions } from "../../../../../../../../Products/Tool/code/data/models/options";
+import { useRange } from "../../../../../../../../Products/Tool/code/data/models/range";
+import { ToolKeywords } from "../../../../../../../../Products/Tool/code/view/lenses/keywords";
+import { ToolOptions } from "../../../../../../../../Products/Tool/code/view/lenses/options";
+import { ToolRange } from "../../../../../../../../Products/Tool/code/view/lenses/range";
 
 export const Courses=immutable({
 
@@ -65,17 +74,41 @@ export function DataCourses() {
 
 	return <DataPage name={Courses} menu={<DataMeta/>}
 
-		// tray={<DataPane
-		//
-		// 	<NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
-		// 	<NodeOptions path={"provider"} type={"anyURI"} placeholder={"Provider"} state={[query, setQuery]}/>
-		// 	<NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
-		// 	<NodeOptions path={"inLanguage"} type={"string"} placeholder={"Language"} state={[query, setQuery]}/>
-		// 	{/* !!! labels */}
-		// 	<NodeOptions path={"timeRequired"} type={"string"} placeholder={"Time Required"}
-		// state={[query,setQuery]}/> <NodeRange path={"numberOfCredits"} type={"decimal"} placeholder={"Credits"}
-		// state={[query,setQuery]}/>  {/*<NodeOptions path={"educationalCredentialAwarded"} type={"anyURI"}
-		// placeholder={"Title Awarded"} state={[query, setQuery]}/>*/} }
+		tray={< >
+
+			<ToolKeywords placeholder={"Name"}>{
+				useKeywords(courses, "label")
+			}</ToolKeywords>
+
+			<ToolOptions placeholder={"University"}>{
+				useOptions(courses, "university", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Level"}>{
+				useOptions(courses, "educationalLevel", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
+
+			<ToolRange placeholder={"Credits"}>{
+				useRange(courses, "numberOfCredits", { type: decimal })
+			}</ToolRange>
+
+			<ToolOptions placeholder={"Language"} compact as={value => toLocalString(Languages[value])}>{
+				useOptions(courses, "inLanguage", { type: string })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Duration"} compact>{
+				useOptions(courses, "timeRequired", { type: string, size: 10 }) // !!! duration >> range
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Title Awarded"} compact>{
+				useOptions(courses, "educationalCredentialAwarded", { type: local, size: 10 })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Provider"} compact>{
+				useOptions(courses, "provider", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
+
+		</>}
 
 		info={<>
 

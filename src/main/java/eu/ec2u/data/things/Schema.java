@@ -94,13 +94,13 @@ public final class Schema {
 
                 property(RDF.TYPE, hasValue(Thing)),
 
-                property(identifier, optional(), string()),
-                property(url, multiple(), id()),
-                property(name, required(), local()),
-                property("fullDescription", description, required(), local()), // ;( clash with dct:description
-                property(disambiguatingDescription, optional(), local()),
-                property(image, optional(), id()),
-                property(about, multiple(), Reference())
+                property(identifier, optional(string())),
+                property(url, multiple(id())),
+                property(name, required(local())),
+                property("fullDescription", description, required(local())), // ;( clash with dct:description
+                property(disambiguatingDescription, optional(local())),
+                property(image, optional(id())),
+                property(about, multiple(Reference()))
 
         );
     }
@@ -193,17 +193,17 @@ public final class Schema {
 
                 property(RDF.TYPE, hasValue(Event)),
 
-                property(eventStatus, optional(), id()),
+                property(eventStatus, optional(id())),
 
-                property(startDate, optional(), dateTime()),
-                property(endDate, optional(), dateTime()),
+                property(startDate, optional(dateTime())),
+                property(endDate, optional(dateTime())),
 
-                property(inLanguage, multiple(), string()),
-                property(isAccessibleForFree, optional(), bool()),
-                property(eventAttendanceMode, multiple(), id()),
+                property(inLanguage, multiple(string())),
+                property(isAccessibleForFree, optional(bool())),
+                property(eventAttendanceMode, multiple(id())),
 
-                property(location, multiple(), Location()),
-                property(organizer, multiple(), Organization())
+                property(location, multiple(Location())),
+                property(organizer, multiple(Organization()))
 
         );
     }
@@ -244,10 +244,10 @@ public final class Schema {
 
                 property(RDF.TYPE, hasValue(Place)),
 
-                property(address, optional(), PostalAddress()),
+                property(address, optional(PostalAddress())),
 
-                property(latitude, optional(), decimal()),
-                property(longitude, optional(), decimal())
+                property(latitude, optional(decimal())),
+                property(longitude, optional(decimal()))
 
         );
     }
@@ -257,11 +257,11 @@ public final class Schema {
 
                 property(RDF.TYPE, hasValue(PostalAddress)),
 
-                property(addressCountry, optional(), or(Reference(), string())),
-                property(addressRegion, optional(), or(Reference(), string())),
-                property(addressLocality, optional(), or(Reference(), string())),
-                property(postalCode, optional(), string()),
-                property(streetAddress, optional(), string())
+                property(addressCountry, optional(or(Reference(), string()))),
+                property(addressRegion, optional(or(Reference(), string()))),
+                property(addressLocality, optional(or(Reference(), string()))),
+                property(postalCode, optional(string())),
+                property(streetAddress, optional(string()))
 
         );
     }
@@ -290,8 +290,8 @@ public final class Schema {
 
                 property(RDF.TYPE, hasValue(ContactPoint)),
 
-                property(email, optional(), string()),
-                property(telephone, optional(), string())
+                property(email, optional(string())),
+                property(telephone, optional(string()))
 
         );
     }

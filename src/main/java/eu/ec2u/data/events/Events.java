@@ -85,8 +85,8 @@ public final class Events extends Delegator {
 
                 property(RDF.TYPE, hasValue(Event)),
 
-                property(DCTERMS.MODIFIED, required(), instant()), // housekeeping timestamp
-                property("fullDescription", Schema.description) // prevent clashes with dct:description
+                property(DCTERMS.MODIFIED, required(instant())), // housekeeping timestamp
+                property("fullDescription", Schema.description, optional(string())) // prevent clashes with dct:description
 
         );
     }

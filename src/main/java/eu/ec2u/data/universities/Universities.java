@@ -81,21 +81,21 @@ public final class Universities extends Delegator {
     public static Shape University() {
         return shape(clazz(University), Resource(), OrgFormalOrganization(),
 
-                property(schac, required(), string()),
-                property(image, required(), id()),
+                property(schac, required(string())),
+                property(image, required(id())),
 
-                property(inception, optional(), year()),
-                property(students, optional(), integer()),
+                property(inception, optional(year())),
+                property(students, optional(integer())),
 
-                property(country, required(), Reference()),
-                property(location, required(), Reference()),
+                property(country, required(Reference())),
+                property(location, required(Reference())),
 
-                property("subsets", DCTERMS.EXTENT,
+                property("subsets", DCTERMS.EXTENT, multiple(
 
-                        property("dataset", reverse(VOID.SUBSET), required(), Dataset()),
-                        property(VOID.ENTITIES, required(), integer())
+                        property("dataset", reverse(VOID.SUBSET), required(Dataset())),
+                        property(VOID.ENTITIES, required(integer()))
 
-                )
+                ))
 
         );
     }

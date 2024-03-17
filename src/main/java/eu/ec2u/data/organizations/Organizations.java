@@ -46,13 +46,13 @@ public final class Organizations {
     public static Shape OrgOrganization() {
         return shape(FOAFAgent(),
 
-                property(ORG.IDENTIFIER, optional(), string()), // !!! datatype?
+                property(ORG.IDENTIFIER, optional(string())), // !!! datatype?
 
-                property(SKOS.PREF_LABEL, required(), local()), // !!! languages?
-                property(SKOS.ALT_LABEL, required(), local()), // !!! languages?
-                property(SKOS.DEFINITION, required(), local()), // !!! languages?
+                property(SKOS.PREF_LABEL, required(local())), // !!! languages?
+                property(SKOS.ALT_LABEL, required(local())), // !!! languages?
+                property(SKOS.DEFINITION, required(local())), // !!! languages?
 
-                property("units", ORG.HAS_UNIT, () -> shape(OrgOrganizationalUnit()))
+                property("units", ORG.HAS_UNIT, () -> multiple(OrgOrganizationalUnit()))
 
         );
     }
@@ -64,12 +64,12 @@ public final class Organizations {
     public static Shape OrgOrganizationalUnit() {
         return shape(OrgOrganization(),
 
-                property(ORG.CLASSIFICATION, optional(), SKOSConcept()),
+                property(ORG.CLASSIFICATION, optional(SKOSConcept())),
 
-                property("organization", ORG.UNIT_OF, repeatable(), OrgOrganization()),
+                property("organization", ORG.UNIT_OF, repeatable(OrgOrganization())),
 
-                property("head", reverse(ORG.HEAD_OF), multiple(), FOAFPerson()),
-                property("members", ORG.HAS_MEMBER, multiple(), FOAFPerson())
+                property("head", reverse(ORG.HEAD_OF), multiple(FOAFPerson())),
+                property("members", ORG.HAS_MEMBER, multiple(FOAFPerson()))
 
         );
     }

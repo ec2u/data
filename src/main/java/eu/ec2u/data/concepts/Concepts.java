@@ -70,7 +70,7 @@ public final class Concepts extends Delegator {
     public static Shape ConceptScheme() {
         return shape(clazz(ConceptScheme), Resource(), SKOSConceptScheme(),
 
-                property(DCTERMS.EXTENT, required(), integer())
+                property(DCTERMS.EXTENT, required(integer()))
 
         );
     }
@@ -78,7 +78,7 @@ public final class Concepts extends Delegator {
     public static Shape Concept() {
         return shape(clazz(Concept), Resource(), SKOSConcept(),
 
-                property(DCTERMS.EXTENT, optional(), integer())
+                property(DCTERMS.EXTENT, optional(integer()))
 
         );
     }
@@ -95,18 +95,18 @@ public final class Concepts extends Delegator {
     public static Shape SKOSConcept() {
         return shape(Reference(),
 
-                property(SKOS.PREF_LABEL, required(), local()),
-                property(SKOS.ALT_LABEL, multiple(), local()),
-                property(SKOS.DEFINITION, optional(), local()),
+                property(SKOS.PREF_LABEL, required(local())),
+                property(SKOS.ALT_LABEL, multiple(local())),
+                property(SKOS.DEFINITION, optional(local())),
 
-                property(SKOS.IN_SCHEME, required(), SKOSConceptScheme()),
-                property(SKOS.TOP_CONCEPT_OF, optional(), SKOSConceptScheme()), // !!! == inScheme
+                property(SKOS.IN_SCHEME, required(SKOSConceptScheme())),
+                property(SKOS.TOP_CONCEPT_OF, optional(SKOSConceptScheme())), // !!! == inScheme
 
-                property(SKOS.BROADER, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
-                property(SKOS.NARROWER, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
-                property(SKOS.RELATED, () -> shape(multiple(), SKOSConcept())), // !!! broader.inScheme == inScheme
+                property(SKOS.BROADER, () -> multiple(SKOSConcept())), // !!! broader.inScheme == inScheme
+                property(SKOS.NARROWER, () -> multiple(SKOSConcept())), // !!! broader.inScheme == inScheme
+                property(SKOS.RELATED, () -> multiple(SKOSConcept())), // !!! broader.inScheme == inScheme
 
-                property(RDFS.ISDEFINEDBY, optional(), id())
+                property(RDFS.ISDEFINEDBY, optional(id()))
 
         );
     }

@@ -32,6 +32,7 @@ import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import React, { Fragment } from "react";
+import { duration, toDurationString } from "../../../../../../../../Products/Tool/code/core/duration";
 
 export const Course=immutable({
 
@@ -148,7 +149,7 @@ export function DataCourse() {
 					.map(language => <li key={language}>{language}</li>)
 				}</ul>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeRequired && <span>{timeRequired}</span>  // !!! map to localized description
+				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>
 
 			}}</ToolInfo>
 
@@ -195,7 +196,7 @@ export function DataCourse() {
 				"General Objectives": teaches,
 				"Learning Objectives and Intended Skills": assesses,
 				"Admission Requirements": coursePrerequisites,
-				"Teaching Methods and Mode of Study": learningResourceType,
+				// "Teaching Methods and Mode of Study": learningResourceType,
 				"Graduation Requirements": competencyRequired,
 				"Educational Credential Awarded": educationalCredentialAwarded,
 				"Occupational Credential Awarded": occupationalCredentialAwarded

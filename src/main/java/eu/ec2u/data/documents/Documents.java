@@ -97,27 +97,27 @@ public final class Documents extends Delegator {
     public static Shape Document() {
         return shape(Resource(),
 
-                property(Schema.url, multiple(), id()), // !!! datatype
+                property(Schema.url, multiple(id())), // !!! datatype
 
-                property(DCTERMS.IDENTIFIER, optional(), string()),
-                property(DCTERMS.LANGUAGE, multiple(), string()),
+                property(DCTERMS.IDENTIFIER, optional(string())),
+                property(DCTERMS.LANGUAGE, multiple(string())),
 
-                property(DCTERMS.TITLE, required(), local(), maxLength(100)),
-                property(DCTERMS.DESCRIPTION, optional(), local(), maxLength(1000)),
+                property(DCTERMS.TITLE, required(local(), maxLength(100))),
+                property(DCTERMS.DESCRIPTION, optional(local(), maxLength(1000))),
 
-                property(DCTERMS.ISSUED, optional(), dateTime()),
-                property(DCTERMS.MODIFIED, optional(), dateTime()),
-                property(DCTERMS.VALID, optional(), string(), pattern(ValidPattern.pattern())),
+                property(DCTERMS.ISSUED, optional(dateTime())),
+                property(DCTERMS.MODIFIED, optional(dateTime())),
+                property(DCTERMS.VALID, optional(string(), pattern(ValidPattern.pattern()))),
 
-                property(DCTERMS.CREATOR, optional(), Person()),
-                property(DCTERMS.CONTRIBUTOR, multiple(), Person()),
-                property(DCTERMS.PUBLISHER, optional(), OrgOrganization()), // !!! review/factor
+                property(DCTERMS.CREATOR, optional(Person())),
+                property(DCTERMS.CONTRIBUTOR, multiple(Person())),
+                property(DCTERMS.PUBLISHER, optional(OrgOrganization())), // !!! review/factor
 
-                property(DCTERMS.LICENSE, optional(), string()),
-                property(DCTERMS.RIGHTS, optional(), string()),
+                property(DCTERMS.LICENSE, optional(string())),
+                property(DCTERMS.RIGHTS, optional(string())),
 
-                property(DCTERMS.AUDIENCE, multiple(), SKOSConcept()),
-                property(DCTERMS.RELATION, () -> shape(multiple(), Document()))
+                property(DCTERMS.AUDIENCE, multiple(SKOSConcept())),
+                property(DCTERMS.RELATION, () -> shape(multiple(Document())))
 
         );
     }

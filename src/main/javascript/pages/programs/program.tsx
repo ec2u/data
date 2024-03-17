@@ -30,6 +30,7 @@ import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import React, { Fragment } from "react";
+import { duration, toDurationString } from "../../../../../../../../Products/Tool/code/core/duration";
 
 export const Program=immutable({
 
@@ -46,15 +47,15 @@ export const Program=immutable({
 	numberOfCredits: optional(decimal),
 	timeToComplete: optional(string),
 
-	educationalLevel: optional({
-		id: optional(id),
-		label: required(local)
-	}),
-
 	educationalCredentialAwarded: optional(local),
 	occupationalCredentialAwarded: optional(local),
 
 	university: required({
+		id: optional(id),
+		label: required(local)
+	}),
+
+	educationalLevel: optional({
 		id: optional(id),
 		label: required(local)
 	}),
@@ -125,7 +126,7 @@ export function DataProgram() {
 
 				"Level": educationalLevel && <span>{toFrameString(educationalLevel)}</span>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeToComplete && <span>{timeToComplete}</span>  // !!! map to localized description
+				"Duration": timeToComplete && <span>{toDurationString(duration.decode(timeToComplete))}</span>
 
 			}}</ToolInfo>
 
