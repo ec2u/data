@@ -21,7 +21,8 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
-import { sortEntries, toEntryString } from "@metreeca/core/entry";
+import { toEntryString } from "@metreeca/core/entry";
+import { sortFrames } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
@@ -153,19 +154,19 @@ export function DataDocument() {
 
 			<ToolInfo>{{
 
-				"Type": type && type.length && <ul>{sortEntries(type).map(type =>
+				"Type": type && type.length && <ul>{sortFrames(type).map(type =>
 					<li key={type.id}>
 						<ToolLink filter={[Documents, { university, subject: type }]}>{type}</ToolLink>
 					</li>
 				)}</ul>,
 
-				"Audience": audience && audience.length && <ul>{sortEntries(audience).map(audience =>
+				"Audience": audience && audience.length && <ul>{sortFrames(audience).map(audience =>
 					<li key={audience.id}>
 						<ToolLink filter={[Documents, { university, audience }]}>{audience}</ToolLink>
 					</li>
 				)}</ul>,
 
-				"Topics": subject && subject.length && <ul>{sortEntries(subject).map(subject =>
+				"Topics": subject && subject.length && <ul>{sortFrames(subject).map(subject =>
 					<li key={subject.id}>
 						<ToolLink filter={[Documents, { university, subject }]}>{subject}</ToolLink>
 					</li>
@@ -190,7 +191,7 @@ export function DataDocument() {
 
 				"Contact": creator && <span>{toEntryString(creator)}</span>,
 
-				"Contributor": contributor?.length && <ul>{sortEntries(contributor)
+				"Contributor": contributor?.length && <ul>{sortFrames(contributor)
 					.map(contributor => <li key={contributor.id}>{toEntryString(contributor)}</li>)
 				}</ul>
 
@@ -229,7 +230,7 @@ export function DataDocument() {
 
                 <h1>Related Documents</h1>
 
-                <ul>{sortEntries(relation).map(relation => <li key={relation.id}>
+                <ul>{sortFrames(relation).map(relation => <li key={relation.id}>
 						<ToolLink>{relation}</ToolLink>
 					</li>
 				)}</ul>

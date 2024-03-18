@@ -22,7 +22,6 @@ import { integer } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
-import { useQuery } from "@metreeca/data/models/query";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
@@ -59,7 +58,7 @@ export const Schemes=immutable({
 
 export function DataSchemes() {
 
-	const schemes=useCollection(Schemes, "members", { store: useQuery() });
+	const schemes=useCollection(Schemes, "members");
 
 
 	return <DataPage name={Schemes} menu={<DataMeta/>}

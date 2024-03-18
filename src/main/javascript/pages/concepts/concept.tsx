@@ -18,14 +18,14 @@
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { sortFrames } from "@metreeca/core/frame";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import React from "react";
-import { sortEntries } from "../../../../../../../../Products/Tool/code/core/entry";
-import { ToolLink } from "../../../../../../../../Products/Tool/code/view/widgets/link";
 
 export const Concept=immutable({
 
@@ -93,7 +93,7 @@ export function DataConcept() {
 
                         <dt>Broader Concepts</dt>
                         <dd>
-                            <ul>{sortEntries(broader).map(entry =>
+                            <ul>{sortFrames(broader).map(entry =>
 								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
 							)}</ul>
                         </dd>
@@ -104,7 +104,7 @@ export function DataConcept() {
 
                         <dt>Narrower Concepts</dt>
                         <dd>
-                            <ul>{sortEntries(narrower).map(entry =>
+                            <ul>{sortFrames(narrower).map(entry =>
 								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
 							)}</ul>
                         </dd>
@@ -115,7 +115,7 @@ export function DataConcept() {
 
                         <dt>Narrower Concepts</dt>
                         <dd>
-                            <ul>{sortEntries(related).map(entry =>
+                            <ul>{sortFrames(related).map(entry =>
 								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
 							)}</ul>
                         </dd>

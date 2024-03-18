@@ -21,22 +21,21 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
 import { useCollection } from "@metreeca/data/models/collection";
-import { useQuery } from "@metreeca/data/models/query";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useOptions } from "@metreeca/data/models/options";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolKeywords } from "@metreeca/view/lenses/keywords";
+import { ToolOptions } from "@metreeca/view/lenses/options";
 import { ToolSheet } from "@metreeca/view/lenses/sheet";
 import { ToolCard } from "@metreeca/view/widgets/card";
 import { Files } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { string } from "../../../../../../../../Products/Tool/code/core/string";
-import { useKeywords } from "../../../../../../../../Products/Tool/code/data/models/keywords";
-import { useOptions } from "../../../../../../../../Products/Tool/code/data/models/options";
-import { ToolKeywords } from "../../../../../../../../Products/Tool/code/view/lenses/keywords";
-import { ToolOptions } from "../../../../../../../../Products/Tool/code/view/lenses/options";
 
 
 export const Documents=immutable({
@@ -68,7 +67,7 @@ export const Documents=immutable({
 
 export function DataDocuments() {
 
-	const documents=useCollection(Documents, "members", { store: useQuery() });
+	const documents=useCollection(Documents, "members");
 
 	return <DataPage name={Documents} menu={<DataMeta/>}
 

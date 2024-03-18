@@ -19,6 +19,7 @@ import { Programs } from "@ec2u/data/pages/programs/programs";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { decimal } from "@metreeca/core/decimal";
+import { duration, toDurationString } from "@metreeca/core/duration";
 import { toFrameString } from "@metreeca/core/frame";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -30,7 +31,6 @@ import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import React, { Fragment } from "react";
-import { duration, toDurationString } from "../../../../../../../../Products/Tool/code/core/duration";
 
 export const Program=immutable({
 

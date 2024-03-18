@@ -24,7 +24,6 @@ import { local, toLocalString } from "@metreeca/core/local";
 import { year } from "@metreeca/core/year";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
-import { useQuery } from "@metreeca/data/models/query";
 import { useRange } from "@metreeca/data/models/range";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
@@ -71,7 +70,7 @@ export const Universities=immutable({
 
 export function DataUniversities() {
 
-	const universities=useCollection(Universities, "members", { store: useQuery() });
+	const universities=useCollection(Universities, "members");
 
 	return <DataPage name={Universities} menu={<DataMeta/>}
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { toUnitLabel } from "@ec2u/data/pages/units/unit";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -23,7 +24,6 @@ import { local, toLocalString } from "@metreeca/core/local";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
-import { useQuery } from "@metreeca/data/models/query";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
@@ -61,7 +61,7 @@ export const Units=immutable({
 			label: required(local)
 		}),
 
-		classification: required({
+		classification: optional({
 			id: required(id),
 			label: required(local)
 		}),
@@ -72,15 +72,16 @@ export const Units=immutable({
 		})
 
 	})
+
 });
 
 
 export function DataUnits() {
 
-	const units=useCollection(Units, "members", { store: useQuery() });
+	const units=useCollection(Units, "members");
 
 
-	return <DataPage name={Units}
+	return <DataPage name={Units} menu={<DataMeta/>}
 
 		tray={<>
 
@@ -139,7 +140,6 @@ export function DataUnits() {
 			}</ToolCard>
 
 		}>{units}</ToolSheet>
-
 
 	</DataPage>;
 

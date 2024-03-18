@@ -18,6 +18,7 @@
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { sortFrames } from "@metreeca/core/frame";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -25,9 +26,8 @@ import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { sortEntries } from "../../../../../../../../Products/Tool/code/core/entry";
-import { ToolLink } from "../../../../../../../../Products/Tool/code/view/widgets/link";
 
 
 export const Scheme=immutable({
@@ -92,7 +92,7 @@ export function DataScheme() {
 
                     <dt>Top Concepts</dt>
                     <dd>
-                        <ul>{sortEntries(hasTopConcept).map(entry =>
+                        <ul>{sortFrames(hasTopConcept).map(entry =>
 							<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
 						)}</ul>
                     </dd>

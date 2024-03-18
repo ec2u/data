@@ -26,7 +26,6 @@ import { toValueString } from "@metreeca/core/value";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
-import { useQuery } from "@metreeca/data/models/query";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
@@ -69,7 +68,7 @@ export const Datasets=immutable({
 
 export function DataDatasets() {
 
-	const datasets=useCollection(Datasets, "members", { store: useQuery() });
+	const datasets=useCollection(Datasets, "members");
 
 	return <DataPage name={Datasets} menu={<DataMeta/>}
 

@@ -51,7 +51,7 @@ export default function DataWild() {
 
 		<DataPage name={"404 | Not Found"}
 
-			menu={<button title="Remove from History" onClick={() => dismiss()}><CancelIcon/></button>}
+			menu={<button title="Remove from History" onClick={dismiss}><CancelIcon/></button>}
 
 		>
 

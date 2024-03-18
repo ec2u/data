@@ -98,12 +98,11 @@ export function DataUniversity() {
 
 			}}</ToolInfo>
 
-			<ToolInfo>{subsets?.slice()
-
+			<ToolInfo>{university && subsets?.slice()
 				?.sort(({ entities: x }, { entities: y }) => x - y)
 				?.map(({ dataset, entities }) => ({
 
-					label: <ToolLink filter={[dataset, { university: university?.id }]}>{{
+					label: <ToolLink filter={[dataset, { university }]}>{{
 						id: dataset.id,
 						label: ec2u(dataset.label)
 					}}</ToolLink>,
