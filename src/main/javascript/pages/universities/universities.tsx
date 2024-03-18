@@ -59,8 +59,8 @@ export const Universities=immutable({
 
 		country: required({
 				id: required(id),
-			label: required(local)
-		}
+				label: required(local)
+			}
 		)
 	})
 });

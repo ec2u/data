@@ -17,17 +17,22 @@
 import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { date } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
+import { useRange } from "@metreeca/data/models/range";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolKeywords } from "@metreeca/view/lenses/keywords";
 import { ToolOptions } from "@metreeca/view/lenses/options";
+import { ToolRange } from "@metreeca/view/lenses/range";
 import { ToolSheet } from "@metreeca/view/lenses/sheet";
 import { ToolCard } from "@metreeca/view/widgets/card";
 import { Calendar } from "@metreeca/view/widgets/icon";
@@ -72,30 +77,30 @@ export function DataEvents() {
 
 		tray={<>
 
-			{/* <ToolKeywords placeholder={"Name"}>{
+			<ToolKeywords placeholder={"Name"}>{
 				useKeywords(events, "label")
 			}</ToolKeywords>
 
 
 			<ToolOptions placeholder={"University"}>{
-			 useOptions(events, "university")
+				useOptions(events, "university")
 			}</ToolOptions>
 
 			<ToolRange placeholder={"Date"}>{
-				useRange(events, "startDate")
-			 }</ToolRange> */}
+				useRange(events, "startDate", { type: date.cast(dateTime) })
+			}</ToolRange>
 
-			<ToolOptions placeholder={"Topic"}>{
+			<ToolOptions placeholder={"Topic"} compact>{
 				useOptions(events, "subject", { type: entry({ id: "", label: required(local) }), size: 10 })
 			}</ToolOptions>
 
-			{/* <ToolOptions placeholder={"Publisher"} compact>{
+			<ToolOptions placeholder={"Publisher"} compact>{
 				useOptions(events, "publisher", { type: entry({ id: "", label: required(local) }), size: 10 })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Organizer"} compact>{
 				useOptions(events, "organizer", { type: entry({ id: "", label: required(local) }), size: 10 })
-			 }</ToolOptions> */}
+			}</ToolOptions>
 
 		</>}
 
@@ -149,7 +154,7 @@ export function DataEvents() {
 
 				}</ToolCard>
 
-			}>{events}</ToolSheet>;
+			}>{events}</ToolSheet>
 
 	</DataPage>;
 
