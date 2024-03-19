@@ -53,7 +53,7 @@ public final class Schema {
 
     public static final String Namespace="https://schema.org/";
 
-    private static final IRI Context=item("/things");
+    private static final IRI Context=item("/things/");
 
 
     /**

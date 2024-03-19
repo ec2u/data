@@ -76,7 +76,7 @@ public final class Universities_ implements Runnable {
     private void inferences() {
         Stream
 
-                .of(text(resource(Universities.class, ".ul")))
+                .of(text(resource(Universities_.class, ".ul")))
 
                 .forEach(new Update()
                         .base(Base)
