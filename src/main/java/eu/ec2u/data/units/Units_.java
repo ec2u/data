@@ -19,7 +19,7 @@ package eu.ec2u.data.units;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.work.Cursor;
+import eu.ec2u.work.focus.Cursor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.eclipse.rdf4j.model.Value;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work;
+package eu.ec2u.work.focus;
 
 import com.metreeca.http.rdf.Shift;
 import com.metreeca.http.rdf.Shift.Path;

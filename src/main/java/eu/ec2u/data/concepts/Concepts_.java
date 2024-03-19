@@ -38,10 +38,15 @@ import static eu.ec2u.data.EC2U.item;
 
 public final class Concepts_ implements Runnable {
 
+    private static final IRI Context=iri(Concepts.Context, "/~");
+
+
     public static void main(final String... args) {
         exec(() -> new Concepts_().run());
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static Optional<Frame> concept(final IRI scheme, final String label, final String language) {
         return Optional.of(frame(
@@ -84,7 +89,7 @@ public final class Concepts_ implements Runnable {
 
                 .forEach(new Update()
                         .base(EC2U.Base)
-                        .insert(Frame.iri(Concepts.Context, "/~"))
+                        .insert(Context)
                         .clear(true)
                 );
     }

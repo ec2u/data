@@ -21,7 +21,7 @@ import com.metreeca.http.handlers.Router;
 
 import eu.ec2u.data.actors.Actors;
 import eu.ec2u.data.agents.Agents;
-import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.concepts.*;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
@@ -71,6 +71,7 @@ public final class EC2U extends Delegator {
 
 
     public static void main(final String... args) {
+
         Actors.main();
         Agents.main();
         Concepts.main();
@@ -87,6 +88,12 @@ public final class EC2U extends Delegator {
         Schema.main();
         Units.main();
         Universities.main();
+
+        EuroSciVoc.main();
+        ISCED2011.main();
+        ISCEDF2013.main();
+        UnitTypes.main();
+
     }
 
 

@@ -28,14 +28,13 @@ import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
-import static eu.ec2u.data.EC2U.item;
 
 /**
  * EC2U Research Unit SKOS Concept Scheme.
  */
 public final class UnitTypes implements Runnable {
 
-    public static final IRI Scheme=item("/concepts/units");
+    public static final IRI Scheme=iri(Concepts.Context, "/units");
 
 
     public static final IRI Area=iri(Scheme, "/area");

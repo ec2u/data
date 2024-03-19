@@ -47,7 +47,7 @@ import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
  * @see <a
  * href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/international-education-classification">...</a>
  */
-final class ISCEDF2013 implements Runnable {
+public final class ISCEDF2013 implements Runnable {
 
     public static final IRI Scheme=iri(Concepts.Context, "/isced-f-2013");
 
