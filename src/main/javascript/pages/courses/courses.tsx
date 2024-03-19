@@ -39,6 +39,7 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { BookOpen } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
+import { duration, toDurationString } from "../../../../../../../../Products/Tool/code/core/duration";
 
 export const Courses=immutable({
 
@@ -95,7 +96,7 @@ export function DataCourses() {
 				useOptions(courses, "inLanguage", { type: string })
 			}</ToolOptions>
 
-			<ToolOptions placeholder={"Duration"} compact>{
+			<ToolOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
 				useOptions(courses, "timeRequired", { type: string, size: 10 }) // !!! duration >> range
 			}</ToolOptions>
 

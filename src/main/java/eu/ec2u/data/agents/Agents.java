@@ -19,16 +19,17 @@ package eu.ec2u.data.agents;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.Base;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.resources.Resources.Reference;
 
@@ -63,7 +64,7 @@ public final class Agents {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Agents.class, ".ttl", _EC2U.Base))
+                    .of(rdf(resource(Agents.class, ".ttl"), Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

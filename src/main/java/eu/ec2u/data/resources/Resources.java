@@ -23,7 +23,6 @@ import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -34,14 +33,14 @@ import java.util.stream.Stream;
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.item;
-import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data._EC2U.*;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.universities.Universities.University;
 import static java.util.Arrays.stream;
@@ -172,7 +171,7 @@ public final class Resources extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Resources.class, ".ttl", _EC2U.Base))
+                    .of(rdf(resource(Resources.class, ".ttl"), Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

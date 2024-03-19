@@ -32,12 +32,14 @@ import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.integer;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Shape.decimal;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.Base;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.resources.Resources.Reference;
@@ -135,7 +137,7 @@ public final class Offers {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Offers.class, ".ttl", _EC2U.Base))
+                    .of(rdf(resource(Offers.class, ".ttl"), Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

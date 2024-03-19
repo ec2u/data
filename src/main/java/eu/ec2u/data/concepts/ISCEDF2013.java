@@ -20,7 +20,6 @@ import com.metreeca.http.rdf.actions.Retrieve;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -33,8 +32,10 @@ import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.Base;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
@@ -80,7 +81,7 @@ final class ISCEDF2013 implements Runnable {
 
                 .flatMap(model -> Stream.of(
 
-                        rdf(this, ".ttl", _EC2U.Base),
+                        rdf(resource(this, ".ttl"), Base),
 
                         model.stream()
 

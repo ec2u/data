@@ -54,6 +54,7 @@ import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Strings.lower;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
@@ -180,7 +181,7 @@ public final class Documents extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Documents.class, ".ttl", Base))
+                    .of(rdf(resource(Documents.class, ".ttl"), Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

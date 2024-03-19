@@ -20,7 +20,6 @@ import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.locations.Locations;
-import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -82,23 +81,6 @@ public final class Work {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static Frame organizer(final Frame frame, final String lang) {
-
-        final Optional<Value> name=frame.string(Schema.name).map(value -> literal(value, lang));
-        final Optional<Value> legalName=frame.string(Schema.legalName).map(value -> literal(value, lang));
-
-        return frame(item(Organizations.Context, frame.skolemize(
-                seq(Schema.name),
-                seq(Schema.legalName)
-        )))
-
-                .value(RDF.TYPE, Schema.Organization)
-
-                .value(Schema.name, name)
-                .value(Schema.legalName, legalName)
-                .value(Schema.email, frame.value(Schema.email));
-    }
 
     public static Frame location(final Frame frame, final Frame defaults) {
         return frame(item(Locations.Context, frame.skolemize(

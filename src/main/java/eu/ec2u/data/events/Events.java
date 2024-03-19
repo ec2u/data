@@ -28,7 +28,6 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -54,6 +53,7 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
@@ -61,8 +61,7 @@ import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.item;
-import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data._EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.localized;
@@ -150,7 +149,7 @@ public final class Events extends Delegator {
                 )
 
                 .flatMap(new TupleQuery()
-                        .base(_EC2U.Base)
+                        .base(Base)
                         .binding("publisher", publisher)
                         .dflt(context)
                 )
@@ -177,7 +176,7 @@ public final class Events extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Events.class, ".ttl", _EC2U.Base))
+                    .of(rdf(resource(Events.class, ".ttl"), Base))
 
                     .forEach(new Upload()
                             .contexts(Context)
@@ -218,10 +217,10 @@ public final class Events extends Delegator {
 
             // ;( SPARQL update won't take effect if executed inside the previous txn
 
-            time(() -> Stream.of(text(Events.class, ".ul"))
+            time(() -> Stream.of(text(resource(Events.class, ".ul")))
 
                     .forEach(new Update()
-                            .base(_EC2U.Base)
+                            .base(Base)
                             .dflt(context)
                             .insert(context)
                             .remove(context)

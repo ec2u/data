@@ -43,8 +43,10 @@ import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.Base;
 import static eu.ec2u.data.universities._Universities.*;
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -102,7 +104,7 @@ public final class Actors implements Runnable {
         return Stream
 
                 .of(
-                        rdf(Actors.class, ".ttl", _EC2U.Base)
+                        rdf(resource(Actors.class, ".ttl"), Base)
                 )
 
                 .flatMap(Collection::stream);

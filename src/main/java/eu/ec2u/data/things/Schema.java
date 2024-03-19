@@ -19,7 +19,6 @@ package eu.ec2u.data.things;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -28,9 +27,11 @@ import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.Base;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.resources.Resources.Reference;
 
@@ -314,7 +315,7 @@ public final class Schema {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Schema.class, ".ttl", _EC2U.Base))
+                    .of(rdf(resource(Schema.class, ".ttl"), Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

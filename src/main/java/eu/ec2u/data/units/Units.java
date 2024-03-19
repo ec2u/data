@@ -53,6 +53,7 @@ import static com.metreeca.http.rdf.Values.lang;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
@@ -150,7 +151,7 @@ public final class Units extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(rdf(Units.class, ".ttl", Base))
+                    .of(rdf(resource(Units.class, ".ttl"), Base))
 
                     .forEach(new Upload()
                             .contexts(Context)

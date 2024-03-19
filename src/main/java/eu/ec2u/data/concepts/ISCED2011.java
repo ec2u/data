@@ -18,15 +18,16 @@ package eu.ec2u.data.concepts;
 
 import com.metreeca.http.rdf4j.actions.Upload;
 
-import eu.ec2u.data._EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.Base;
 
 public final class ISCED2011 implements Runnable {
 
@@ -55,7 +56,7 @@ public final class ISCED2011 implements Runnable {
     @Override public void run() {
         Stream
 
-                .of(rdf(this, ".ttl", _EC2U.Base))
+                .of(rdf(resource(this, ".ttl"), Base))
 
                 .forEach(new Upload()
                         .contexts(Scheme)

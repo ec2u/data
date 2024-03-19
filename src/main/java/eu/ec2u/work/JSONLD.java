@@ -25,10 +25,7 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.io.StringReader;
 import java.util.Collection;
 import java.util.stream.Stream;
 
@@ -38,15 +35,14 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.link.Frame.reverse;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 public final class JSONLD {
 
     public static Stream<Frame> jsonld(final String json, final IRI type) {
 
-        try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
 
-            final Collection<Statement> model=Schema.normalize(rdf(input, null, new JSONLDParser()));
+        try {
+
+            final Collection<Statement> model=Schema.normalize(rdf(new StringReader(json), "", new JSONLDParser()));
 
             return frame(type, model).frames(reverse(RDF.TYPE));
 
@@ -56,11 +52,8 @@ public final class JSONLD {
 
             return Stream.empty();
 
-        } catch ( final IOException unexpected ) {
-
-            throw new UncheckedIOException(unexpected);
-
         }
+
     }
 
 

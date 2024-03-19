@@ -22,7 +22,6 @@ import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
-import com.metreeca.http.toolkits.Resources;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.concepts.ISCED2011;
@@ -48,6 +47,8 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.http.toolkits.Resources.reader;
+import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.item;
@@ -143,7 +144,7 @@ public final class OffersPoitiers implements Runnable {
         //                "undefined API key <%s>", APIToken
         //        )));
 
-        try ( final Reader reader=Resources.reader(this, ".json") ) {
+        try ( final Reader reader=reader(resource(this, ".json")) ) {
 
             return new JSONPath(JSON.json(reader)).paths("*");
 

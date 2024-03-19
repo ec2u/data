@@ -41,6 +41,7 @@ import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.http.toolkits.Strings.lower;
 import static com.metreeca.http.toolkits.Strings.title;
@@ -51,6 +52,7 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.Base;
 import static eu.ec2u.data._EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Reference;
@@ -187,9 +189,9 @@ public final class Concepts extends Delegator {
 
                     .of(
 
-                            rdf(Concepts.class, ".ttl", _EC2U.Base),
+                            rdf(resource(Concepts.class, ".ttl"), Base),
 
-                            skos(rdf("https://www.w3.org/2009/08/skos-reference/skos.rdf"))
+                            skos(rdf(resource("https://www.w3.org/2009/08/skos-reference/skos.rdf"), Base))
 
                     )
 
@@ -220,7 +222,7 @@ public final class Concepts extends Delegator {
         @Override public void run() {
             Stream
 
-                    .of(text(Concepts.class, ".ul"))
+                    .of(text(resource(Concepts.class, ".ul")))
 
                     .forEach(new Update()
                             .base(_EC2U.Base)
