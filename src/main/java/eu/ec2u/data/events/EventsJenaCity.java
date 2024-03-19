@@ -59,7 +59,7 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Strings.clip;
 
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.universities._Universities.Jena;
 import static eu.ec2u.work.JSONLD.jsonld;
 import static eu.ec2u.work.validation.Validators.validate;
@@ -89,14 +89,14 @@ public final class EventsJenaCity implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(Events.synced(Context, Publisher.focus()))
+        Xtream.of(Events_.synced(Context, Publisher.focus()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
                 .pipe(events -> validate(Events.Event(), Set.of(Events.Event), events))
 
-                .forEach(new Events.Updater(Context));
+                .forEach(new Events_.Loader(Context));
     }
 
 

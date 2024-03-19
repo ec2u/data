@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work;
+package eu.ec2u.data.resources;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static eu.ec2u.work.Work.url;
+import static eu.ec2u.data.resources.Resources_.url;
 import static org.assertj.core.api.Assertions.assertThat;
 
-final class WorkTest {
+final class ResourcesTest {
 
     @Nested final class URLNormalizer {
 

@@ -20,7 +20,6 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
@@ -37,7 +36,6 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Constraint.any;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
@@ -46,13 +44,13 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.*;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Datasets extends Delegator {
 
-    private static final IRI Context=item("/");
+    public static final IRI Context=item("/");
 
     private static final IRI Dataset=term("Dataset");
 
@@ -91,6 +89,25 @@ public final class Datasets extends Delegator {
     }
 
 
+    public static void main(final String... args) {
+        exec(() -> Stream
+
+                .of(
+                        rdf(resource(Datasets.class, ".ttl"), Base),
+                        rdf(resource("http://rdfs.org/ns/void.ttl"), Base),
+                        rdf(resource("http://www.w3.org/ns/dcat.ttl"), Base)
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public Datasets() {
         delegate(handler(new Driver(Datasets()), new Worker()
 
@@ -114,54 +131,6 @@ public final class Datasets extends Delegator {
                 )))
 
         ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(
-                            rdf(resource(Datasets.class, ".ttl"), Base),
-
-                            rdf(resource("http://rdfs.org/ns/void.ttl"), Base),
-                            rdf(resource("http://www.w3.org/ns/dcat.ttl"), Base)
-
-                    )
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-
-    }
-
-    public static final class Updater implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Updater().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(text(resource(Datasets.class, ".ul")))
-
-                    .forEach(new Update()
-                            .base(Base)
-                            .insert(iri(Context, "/~"))
-                            .clear(true)
-                    );
-        }
-
     }
 
 }

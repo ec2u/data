@@ -41,6 +41,11 @@ public final class Courses extends Delegator {
     public static Shape Courses() { return Dataset(Course()); }
 
 
+    public static void main(final String... args) { }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public Courses() {
         delegate(new Router()
 

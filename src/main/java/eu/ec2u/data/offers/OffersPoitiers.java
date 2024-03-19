@@ -51,7 +51,7 @@ import static com.metreeca.http.toolkits.Resources.reader;
 import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.organizations.Organizations.Organization;
@@ -211,7 +211,7 @@ public final class OffersPoitiers implements Runnable {
                 )
 
                 .value(Schema.numberOfCredits, json.decimal("credits")
-                        .map(Offers::ects)
+                        .map(Offers_::ects)
                         .map(Values::literal)
                 )
 
@@ -272,7 +272,7 @@ public final class OffersPoitiers implements Runnable {
                             .value(Schema.educationalLevel, level)
 
                             .value(Schema.numberOfCredits, json.string("credits")
-                                    .map(Offers::ects)
+                                    .map(Offers_::ects)
                                     .map(Values::literal)
                             )
 

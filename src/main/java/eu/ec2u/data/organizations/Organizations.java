@@ -16,31 +16,23 @@
 
 package eu.ec2u.data.organizations;
 
-import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Shift.Seq.seq;
-import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.reverse;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.*;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.persons.Persons.FOAFPerson;
@@ -83,53 +75,27 @@ public final class Organizations {
         );
     }
 
+    public static void main(final String... args) {
+        exec(() -> Stream
+
+                .of(
+                        rdf(resource(Organizations.class, ".ttl"), Base),
+
+                        rdf(resource("https://www.w3.org/ns/org"), Base)
+
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .langs(Resources.Languages)
+                        .clear(true)
+                )
+        );
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Organizations() { }
-
-    public static Frame organization(final Frame frame, final String lang) {
-
-        final Optional<Value> name=frame.string(Schema.name).map(value -> literal(value, lang));
-        final Optional<Value> legalName=frame.string(Schema.legalName).map(value -> literal(value, lang));
-
-        return frame(item(Context, frame.skolemize(
-                seq(Schema.name),
-                seq(Schema.legalName)
-        )))
-
-                .value(RDF.TYPE, Schema.Organization)
-
-                .value(Schema.name, name)
-                .value(Schema.legalName, legalName)
-                .value(Schema.email, frame.value(Schema.email));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(
-                            rdf(resource(Organizations.class, ".ttl"), Base),
-
-                            rdf(resource("https://www.w3.org/ns/org"), Base)
-
-                    )
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .langs(Resources.Languages)
-                            .clear(true)
-                    );
-        }
-    }
 
 }

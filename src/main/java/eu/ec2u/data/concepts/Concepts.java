@@ -21,30 +21,22 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.http.rdf.Values.pattern;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
-import static com.metreeca.http.toolkits.Strings.lower;
-import static com.metreeca.http.toolkits.Strings.title;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
@@ -52,11 +44,13 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.Base;
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toList;
 
 public final class Concepts extends Delegator {
 
@@ -111,6 +105,27 @@ public final class Concepts extends Delegator {
 
                 property(RDFS.ISDEFINEDBY, optional(id()))
 
+        );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> Stream
+
+                .of(
+
+                        rdf(resource(Concepts.class, ".ttl"), Base),
+
+                        rdf(resource("https://www.w3.org/2009/08/skos-reference/skos.rdf"), Base).stream()
+                                .filter(not(pattern(null, RDFS.SUBPROPERTYOF, RDFS.LABEL)))
+                                .collect(toList())
+
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
         );
     }
 
@@ -174,97 +189,5 @@ public final class Concepts extends Delegator {
 
         ));
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(
-
-                            rdf(resource(Concepts.class, ".ttl"), Base),
-
-                            skos(rdf(resource("https://www.w3.org/2009/08/skos-reference/skos.rdf"), Base))
-
-                    )
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-
-
-        private Model skos(final Model skos) {
-
-            final Model patched=new LinkedHashModel(skos);
-
-            patched.remove(null, RDFS.SUBPROPERTYOF, RDFS.LABEL);
-
-            return patched;
-        }
-
-    }
-
-    public static final class Updater implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Updater().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(text(resource(Concepts.class, ".ul")))
-
-                    .forEach(new Update()
-                            .base(_EC2U.Base)
-                            .insert(iri(Context, "/~"))
-                            .clear(true)
-                    );
-        }
-
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static Optional<Frame> concept(final IRI scheme, final String label, final String language) {
-        return Optional.of(frame(
-
-                field(ID, item(scheme, lower(label))),
-
-                field(RDF.TYPE, SKOS.CONCEPT),
-                field(SKOS.TOP_CONCEPT_OF, scheme),
-                field(SKOS.PREF_LABEL, literal(title(label), language))
-
-        ));
-    }
-
-    // public static Optional<Concept> concept(final IRI scheme, final String label, final String language) { // !!! URI
-    //
-    //     return Optional.of(with(new Concept(), concept -> {
-    //
-    //         final ConceptScheme conceptScheme=with(new ConceptScheme(), cs -> cs.setId(scheme.stringValue()));
-    //         final Local<String> local=Local.local(language, title(label));
-    //
-    //         concept.setId(EC2U.item(scheme, lower(label)).stringValue()); // !!! string
-    //
-    //         concept.setLabel(local);
-    //         concept.setPrefLabel(local);
-    //
-    //         concept.setInScheme(conceptScheme);
-    //         concept.setTopConceptOf(conceptScheme);
-    //
-    //     }));
-    //
-    // }
 
 }

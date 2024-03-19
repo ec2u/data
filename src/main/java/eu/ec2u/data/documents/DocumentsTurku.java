@@ -38,7 +38,7 @@ public final class DocumentsTurku implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        new Documents.CSVLoader(DataUrl, Context, Turku).run();
+        new Documents_.CSVLoader(DataUrl, Context, Turku).run();
     }
 
 }

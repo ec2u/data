@@ -22,7 +22,7 @@ import java.time.ZoneId;
 
 import static com.metreeca.http.open.actions.Wikidata.wd;
 
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.item;
 
 public enum _Universities {
 

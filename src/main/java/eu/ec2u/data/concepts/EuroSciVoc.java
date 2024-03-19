@@ -35,7 +35,7 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.Base;
+import static eu.ec2u.data.EC2U.Base;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 

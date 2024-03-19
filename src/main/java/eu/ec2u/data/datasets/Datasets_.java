@@ -14,31 +14,36 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.documents;
+package eu.ec2u.data.datasets;
 
-import org.eclipse.rdf4j.model.IRI;
+import com.metreeca.http.rdf4j.actions.Update;
 
-import static com.metreeca.http.rdf.Values.iri;
+import java.util.stream.Stream;
+
+import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.universities._Universities.Jena;
+import static eu.ec2u.data.EC2U.Base;
 
-public final class DocumentsJena implements Runnable {
-
-    private static final IRI Context=iri(Documents.Context, "/jena");
-
-    private static final String DataUrl="documents-jena-url"; // vault label
-
+public final class Datasets_ implements Runnable {
 
     public static void main(final String... args) {
-        exec(() -> new DocumentsJena().run());
+        exec(() -> new Datasets_().run());
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override public void run() {
-        new Documents_.CSVLoader(DataUrl, Context, Jena).run();
+        Stream
+
+                .of(text(resource(Datasets_.class, ".ul")))
+
+                .forEach(new Update()
+                        .base(Base)
+                        .insert(iri(Datasets.Context, "/~"))
+                        .clear(true)
+                );
     }
 
 }

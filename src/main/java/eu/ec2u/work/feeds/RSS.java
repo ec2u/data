@@ -35,7 +35,7 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.bnode;
 import static com.metreeca.http.rdf.Values.iri;
 
-import static eu.ec2u.data._EC2U.term;
+import static eu.ec2u.data.EC2U.term;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 

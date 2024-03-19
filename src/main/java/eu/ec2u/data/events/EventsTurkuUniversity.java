@@ -31,8 +31,8 @@ import eu.ec2u.data.Data;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.Resources_;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.work.Work;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -61,7 +61,7 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.http.toolkits.Strings.clip;
 
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
@@ -215,13 +215,13 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 .value(RDF.TYPE, Events.Event)
 
-                .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Work::url).map(Values::iri))
+                .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Resources_::url).map(Values::iri))
                 .value(DCTERMS.CREATED, json.string("published").map(timestamp -> instant(timestamp, now)))
                 .value(DCTERMS.MODIFIED, json.string("updated").map(timestamp1 -> instant(timestamp1, now)))
 
                 .value(Schema.url, json.string("additional_information.link.url")
                         .or(() -> json.string("source_link"))
-                        .flatMap(Work::url)
+                        .flatMap(Resources_::url)
                         .map(Values::iri)
                 )
 
@@ -246,7 +246,7 @@ public final class EventsTurkuUniversity implements Runnable {
         return json.string("url").map(id -> {
 
             final Optional<String> name=json.string("free_text");
-            final Optional<Value> url=json.string("url").flatMap(Work::url).map(Values::iri);
+            final Optional<Value> url=json.string("url").flatMap(Resources_::url).map(Values::iri);
             final Optional<Value> addressCountry=Optional.ofNullable(Turku.Country);
             final Optional<Value> addressLocality=Optional.ofNullable(Turku.City);
             final Optional<Value> postalCode=json.string("postal_code").map(Values::literal);

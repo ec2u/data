@@ -40,7 +40,7 @@ import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.*;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.universities.Universities.University;
 import static java.util.Arrays.stream;
@@ -70,8 +70,6 @@ public final class Resources extends Delegator {
 
             .collect(toUnmodifiableSet());
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static Shape Reference() {
         return shape(
@@ -121,7 +119,20 @@ public final class Resources extends Delegator {
 
 
     public static Shape localized() {
-        return Shape.local(/*Languages*/); // !!!
+        return local(/*Languages*/); // !!!
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> Stream
+
+                .of(rdf(resource(Resources.class, ".ttl"), Base))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
     }
 
 
@@ -157,28 +168,6 @@ public final class Resources extends Delegator {
                         )))
 
         ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(rdf(resource(Resources.class, ".ttl"), Base))
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-
     }
 
 }

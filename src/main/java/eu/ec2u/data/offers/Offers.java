@@ -19,15 +19,13 @@ package eu.ec2u.data.offers;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data._EC2U;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Values.iri;
@@ -39,8 +37,8 @@ import static com.metreeca.link.Shape.decimal;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.Base;
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
@@ -54,8 +52,8 @@ public final class Offers {
     public static final IRI Programs=item("/programs/");
     public static final IRI Courses=item("/courses/");
 
-    public static final IRI Program=_EC2U.term("Program");
-    public static final IRI Course=_EC2U.term("Course");
+    public static final IRI Program=EC2U.term("Program");
+    public static final IRI Course=EC2U.term("Course");
 
 
     public static Shape Offer() {
@@ -108,42 +106,22 @@ public final class Offers {
     }
 
 
+    public static void main(final String... args) {
+        exec(() -> Stream
+
+                .of(rdf(resource(Offers.class, ".ttl"), Base))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Offers() { }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    static BigDecimal ects(final String ects) { return ects(new BigDecimal(ects)); }
-
-    static BigDecimal ects(final Number ects) {
-        return ects(ects instanceof BigDecimal ? ((BigDecimal)ects) : BigDecimal.valueOf(ects.doubleValue()));
-    }
-
-    static BigDecimal ects(final BigDecimal ects) {
-        return ects.setScale(1, RoundingMode.UP);
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(rdf(resource(Offers.class, ".ttl"), Base))
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-    }
 
 }

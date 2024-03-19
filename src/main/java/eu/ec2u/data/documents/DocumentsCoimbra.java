@@ -38,7 +38,7 @@ public final class DocumentsCoimbra implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        new Documents.CSVLoader(DataUrl, Context, Coimbra).run();
+        new Documents_.CSVLoader(DataUrl, Context, Coimbra).run();
     }
 
 }

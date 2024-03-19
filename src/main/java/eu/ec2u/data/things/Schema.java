@@ -31,8 +31,8 @@ import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.Base;
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.resources.Resources.Reference;
 
 /**
@@ -301,27 +301,21 @@ public final class Schema {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Schema() { }
+    public static void main(final String... args) {
+        exec(() -> Stream
+
+                .of(rdf(resource(Schema.class, ".ttl"), Base))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(rdf(resource(Schema.class, ".ttl"), Base))
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-    }
+    private Schema() { }
 
 }

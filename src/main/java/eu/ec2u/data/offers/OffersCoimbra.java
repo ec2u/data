@@ -60,7 +60,7 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.lenient;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.universities._Universities.Coimbra;
@@ -310,7 +310,7 @@ public final class OffersCoimbra implements Runnable {
                 )
 
                 .value(Schema.numberOfCredits, json.string("ects")
-                        .map(Offers::ects)
+                        .map(Offers_::ects)
                         .map(Values::literal)
                 )
 

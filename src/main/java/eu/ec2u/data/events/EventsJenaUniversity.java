@@ -25,7 +25,7 @@ import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.organizations.Organizations_;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -259,7 +259,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .value(Schema.endDate, datetime(frame.string(Schema.endDate)))
 
                 .frame(Schema.organizer, frame.frame(Schema.organizer)
-                        .map(organizer -> Organizations.organization(organizer, "de"))
+                        .map(organizer -> Organizations_.organization(organizer, "de"))
                 )
 
                 // !!! restore after https://github.com/ec2u/data/issues/41 is resolved

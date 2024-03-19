@@ -38,7 +38,7 @@ public final class DocumentsSalamanca implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        new Documents.CSVLoader(DataUrl, Context, Salamanca).run();
+        new Documents_.CSVLoader(DataUrl, Context, Salamanca).run();
     }
 
 }

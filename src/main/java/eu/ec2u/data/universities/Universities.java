@@ -21,15 +21,10 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.open.actions.WikidataMirror;
-import com.metreeca.http.rdf.Values;
-import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -42,7 +37,6 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
@@ -50,18 +44,16 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.*;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgFormalOrganization;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
 
 
 public final class Universities extends Delegator {
 
-    private static final IRI Context=item("/universities/");
+    public static final IRI Context=item("/universities/");
 
     public static final IRI University=term("University");
 
@@ -96,6 +88,19 @@ public final class Universities extends Delegator {
 
                 ))
 
+        );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> Stream
+
+                .of(rdf(resource(Universities.class, ".ttl"), Base))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
         );
     }
 
@@ -149,79 +154,6 @@ public final class Universities extends Delegator {
 
                 ))
         );
-
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(rdf(resource(Universities.class, ".ttl"), Base))
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-
-    }
-
-    public static final class Updater implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Updater().run());
-        }
-
-        @Override public void run() {
-            wikidata();
-            inferences();
-        }
-
-
-        private static void wikidata() {
-            Xtream
-
-                    .of(
-
-                            "?item wdt:P463 wd:Q105627243", // <member of> <EC2U>
-
-                            "values ?item "+Stream
-
-                                    .concat(
-                                            stream(_Universities.values()).map(university -> university.City),
-                                            stream(_Universities.values()).map(university -> university.Country)
-                                    )
-
-                                    .map(Values::format)
-                                    .collect(joining(" ", "{ ", " }"))
-
-                    )
-
-                    .sink(new WikidataMirror()
-                            .contexts(iri(Context, "/wikidata"))
-                            .languages(Resources.Languages)
-                    );
-        }
-
-        private static void inferences() {
-            Stream
-
-                    .of(text(resource(Universities.class, ".ul")))
-
-                    .forEach(new Update()
-                            .base(Base)
-                            .insert(iri(Context, "/~"))
-                            .clear(true)
-                    );
-        }
 
     }
 

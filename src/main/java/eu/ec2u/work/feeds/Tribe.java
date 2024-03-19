@@ -27,12 +27,12 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Untag;
 
-import eu.ec2u.data._EC2U;
+import eu.ec2u.data.EC2U;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.resources.Resources_;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.work.Work;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -53,7 +53,7 @@ import static com.metreeca.http.toolkits.Formats.SQL_TIMESTAMP;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
-import static eu.ec2u.data._EC2U.item;
+import static eu.ec2u.data.EC2U.item;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
@@ -214,14 +214,14 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 .value(RDF.TYPE, Events.Event)
 
-                .value(DCTERMS.SOURCE, event.string("url").flatMap(Work::url).map(Values::iri))
+                .value(DCTERMS.SOURCE, event.string("url").flatMap(Resources_::url).map(Values::iri))
                 .value(DCTERMS.CREATED, event.string("date_utc").map(Tribe::instant))
                 .value(DCTERMS.MODIFIED, event.string("modified_utc").map(Tribe::instant))
                 .frames(DCTERMS.SUBJECT, event.paths("categories.*").optMap(this::category))
 
-                .value(Schema.url, event.string("url").flatMap(Work::url).map(Values::iri))
+                .value(Schema.url, event.string("url").flatMap(Resources_::url).map(Values::iri))
                 .value(Schema.name, title)
-                .value(Schema.image, event.string("image.url").flatMap(Work::url).map(Values::iri))
+                .value(Schema.image, event.string("image.url").flatMap(Resources_::url).map(Values::iri))
                 .value(Schema.description, description)
                 .value(Schema.disambiguatingDescription, excerpt)
 
@@ -245,7 +245,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             final Optional<Literal> name=category.string("name").map(text -> literal(text, language));
 
-            return frame(_EC2U.item(Events.Scheme, self))
+            return frame(EC2U.item(Events.Scheme, self))
                     .value(RDF.TYPE, SKOS.CONCEPT)
                     .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
                     .value(RDFS.LABEL, name)
@@ -259,7 +259,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 .value(RDF.TYPE, Schema.Organization)
 
-                .value(Schema.url, organizer.string("website").flatMap(Work::url).map(Values::iri))
+                .value(Schema.url, organizer.string("website").flatMap(Resources_::url).map(Values::iri))
                 .value(Schema.name, organizer.string("organizer").map(XPath::decode).map(text -> literal(text,
                         language)))
                 .value(Schema.email, organizer.string("email").map(Values::literal))
@@ -301,7 +301,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                             .value(Schema.addressLocality, addressLocality)
                             .value(Schema.streetAddress, streetAddress)
 
-                            .value(Schema.url, location.string("website").flatMap(Work::url).map(Values::iri))
+                            .value(Schema.url, location.string("website").flatMap(Resources_::url).map(Values::iri))
                             .value(Schema.email, location.string("email").map(Values::literal))
                             .value(Schema.telephone, location.string("phone").map(Values::literal))
                     );

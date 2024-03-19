@@ -28,15 +28,6 @@ import com.metreeca.http.services.Cache.FileCache;
 import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
 
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.documents.Documents;
-import eu.ec2u.data.events.Events;
-import eu.ec2u.data.offers.courses.Courses;
-import eu.ec2u.data.offers.programs.Programs;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.units.Units;
-import eu.ec2u.data.universities.Universities;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -112,12 +103,12 @@ public final class Data extends Delegator {
     }
 
 
-    public static void exec(final Runnable... tasks) {
-        services(new Locator()).exec(tasks).clear();
-    }
-
     public static void main(final String... args) {
         new GCPServer().delegate(locator -> services(locator).get(Data::new)).start();
+    }
+
+    public static void exec(final Runnable... tasks) {
+        services(new Locator()).exec(tasks).clear();
     }
 
 
@@ -134,7 +125,7 @@ public final class Data extends Delegator {
 
                 new Wrapper()
 
-                        .before(request -> request.base(_EC2U.Base)), // define canonical base
+                        .before(request -> request.base(EC2U.Base)), // define canonical base
 
                 new Router()
 
@@ -152,23 +143,7 @@ public final class Data extends Delegator {
 
                         .path("/cron/*", new Cron())
 
-                        .path("/*", new Router()
-
-                                .path("/", new Datasets())
-                                .path("/resources/", new Resources())
-
-                                .path("/universities/*", new Universities())
-
-                                .path("/units/*", new Units())
-                                .path("/programs/*", new Programs())
-                                .path("/courses/*", new Courses())
-                                .path("/documents/*", new Documents())
-
-                                .path("/events/*", new Events())
-
-                                .path("/concepts/*", new Concepts())
-
-                        )
+                        .path("/*", new EC2U())
 
         ));
     }

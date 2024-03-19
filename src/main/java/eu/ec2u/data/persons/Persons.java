@@ -18,33 +18,24 @@ package eu.ec2u.data.persons;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.toolkits.Strings;
-import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Strings.normalize;
-import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.*;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
-import static eu.ec2u.data.resources.Resources.*;
-import static java.lang.String.format;
+import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Persons extends Delegator {
 
@@ -75,65 +66,21 @@ public final class Persons extends Delegator {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void main(final String... args) {
+        exec(() -> Stream
 
-    private static final Pattern PersonPattern=Pattern.compile("([^,]+),([^(]+)(?:\\(([^)]+)\\))?");
+                .of(rdf(resource(Persons.class, ".ttl"), Base))
 
-
-    public static Optional<Frame> person(final String string, final _Universities _university) {
-        return Optional.of(string)
-
-                .map(PersonPattern::matcher)
-                .filter(Matcher::matches)
-                .map(matcher -> {
-
-                    final Optional<String> title=Optional.ofNullable(matcher.group(3)).map(Strings::normalize);
-                    final String familyName=normalize(matcher.group(1));
-                    final String givenName=normalize(matcher.group(2));
-
-                    final String fullName=format("%s %s", givenName, familyName);
-
-                    return frame(
-
-                            field(ID, item(Context, _university, fullName)),
-
-                            field(RDFS.LABEL, literal(fullName)),
-                            field(university, _university.Id),
-
-                            field(FOAF.TITLE, title.map(Frame::literal)),
-                            field(FOAF.GIVEN_NAME, literal(givenName)),
-                            field(FOAF.FAMILY_NAME, literal(familyName))
-
-                    );
-
-                });
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Persons() { }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(rdf(resource(Persons.class, ".ttl"), Base))
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-
-    }
 
 }

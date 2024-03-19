@@ -22,13 +22,13 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.services.Logger;
 
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.concepts.Concepts_;
+import eu.ec2u.data.datasets.Datasets_;
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offers.*;
 import eu.ec2u.data.units.*;
-import eu.ec2u.data.universities.Universities;
+import eu.ec2u.data.universities.Universities_;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.BadGateway;
@@ -40,6 +40,7 @@ import static com.metreeca.http.services.Logger.time;
 import static java.lang.String.format;
 
 
+@SuppressWarnings("OverlyCoupledClass")
 public final class Cron extends Delegator {
 
     private final Logger logger=service(logger());
@@ -48,7 +49,7 @@ public final class Cron extends Delegator {
     public Cron() {
         delegate(cron(new Router()
 
-                .path("/universities/", execute(new Universities.Updater()))
+                .path("/universities/", execute(new Universities_()))
 
                 .path("/units/coimbra", execute(new UnitsCoimbra()))
                 .path("/units/iasi", execute(new UnitsIasi()))
@@ -93,8 +94,8 @@ public final class Cron extends Delegator {
                 .path("/events/turku/city", execute(new EventsTurkuCity()))
                 .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
 
-                .path("/concepts/", execute(new Concepts.Updater()))
-                .path("/datasets/", execute(new Datasets.Updater()))
+                .path("/concepts/", execute(new Concepts_()))
+                .path("/datasets/", execute(new Datasets_()))
 
         ));
     }

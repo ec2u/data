@@ -14,31 +14,26 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.documents;
+package eu.ec2u.data.offers;
 
-import org.eclipse.rdf4j.model.IRI;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import static com.metreeca.http.rdf.Values.iri;
+final class Offers_ {
 
-import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.universities._Universities.Jena;
+    static BigDecimal ects(final String ects) { return ects(new BigDecimal(ects)); }
 
-public final class DocumentsJena implements Runnable {
+    static BigDecimal ects(final Number ects) {
+        return ects(ects instanceof BigDecimal ? ((BigDecimal)ects) : BigDecimal.valueOf(ects.doubleValue()));
+    }
 
-    private static final IRI Context=iri(Documents.Context, "/jena");
-
-    private static final String DataUrl="documents-jena-url"; // vault label
-
-
-    public static void main(final String... args) {
-        exec(() -> new DocumentsJena().run());
+    static BigDecimal ects(final BigDecimal ects) {
+        return ects.setScale(1, RoundingMode.UP);
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override public void run() {
-        new Documents_.CSVLoader(DataUrl, Context, Jena).run();
-    }
+    private Offers_() { }
 
 }

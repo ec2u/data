@@ -38,7 +38,7 @@ public final class DocumentsIasi implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        new Documents.CSVLoader(DataUrl, Context, Iasi).run();
+        new Documents_.CSVLoader(DataUrl, Context, Iasi).run();
     }
 
 }

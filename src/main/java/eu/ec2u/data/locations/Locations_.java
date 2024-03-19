@@ -14,73 +14,19 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work;
+package eu.ec2u.data.locations;
 
 import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.things.Schema;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Shift.Seq.seq;
-import static com.metreeca.http.rdf.Values.literal;
 
-import static eu.ec2u.data._EC2U.item;
-import static eu.ec2u.data.universities._Universities.Pavia;
-import static java.lang.String.format;
-import static java.util.function.Predicate.not;
+import static eu.ec2u.data.EC2U.item;
 
-public final class Work {
-
-    public static Stream<Literal> localized(final Stream<Value> values) {
-        return Xtream.from(values).optMap(Work::localized);
-    }
-
-    private static Optional<Literal> localized(final Value value) {
-
-        final String text=literal(value)
-                .map(Value::stringValue)
-                .filter(not(String::isEmpty))
-                .orElse("");
-
-        final String lang=literal(value)
-                .flatMap(Literal::getLanguage)
-                .orElse(Pavia.Language); // !!!
-
-        return text.isEmpty() ? Optional.empty() : Optional.of(literal(text, lang));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static final Pattern FuzzyIRIPattern=Pattern.compile("\\bhttps?:\\S+|\\bwww\\.\\S+");
-
-    public static Optional<String> url(final String text) {
-
-        if ( text == null ) {
-            throw new NullPointerException("null text");
-        }
-
-        return Optional.of(text)
-                .map(FuzzyIRIPattern::matcher)
-                .filter(Matcher::find)
-                .map(Matcher::group)
-                .map(url -> url.replace("[", "%5B")) // !!! generalize
-                .map(url -> url.replace("]", "%5D"))
-                .map(url -> url.startsWith("http") ? url : format("https://%s", url));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public final class Locations_ {
 
     public static Frame location(final Frame frame, final Frame defaults) {
         return frame(item(Locations.Context, frame.skolemize(
@@ -125,6 +71,6 @@ public final class Work {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Work() { }
+    private Locations_() { }
 
 }
