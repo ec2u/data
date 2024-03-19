@@ -65,7 +65,7 @@ public final class Concepts extends Delegator {
     }
 
     public static Shape ConceptScheme() {
-        return shape(clazz(ConceptScheme), Resource(), SKOSConceptScheme(),
+        return shape(ConceptScheme, Resource(), SKOSConceptScheme(),
 
                 property(DCTERMS.EXTENT, required(integer()))
 
@@ -73,7 +73,7 @@ public final class Concepts extends Delegator {
     }
 
     public static Shape Concept() {
-        return shape(clazz(Concept), Resource(), SKOSConcept(),
+        return shape(Concept, Resource(), SKOSConcept(),
 
                 property(DCTERMS.EXTENT, optional(integer()))
 
@@ -82,7 +82,7 @@ public final class Concepts extends Delegator {
 
 
     public static Shape SKOSConceptScheme() {
-        return shape(Reference(),
+        return shape(SKOS.CONCEPT_SCHEME, Reference(),
 
                 property(SKOS.HAS_TOP_CONCEPT, () -> shape(multiple(), SKOSConcept())) // !!! concept.inScheme == this
 
@@ -90,7 +90,7 @@ public final class Concepts extends Delegator {
     }
 
     public static Shape SKOSConcept() {
-        return shape(Reference(),
+        return shape(SKOS.CONCEPT, Reference(),
 
                 property(SKOS.PREF_LABEL, required(Resources.localized())),
                 property(SKOS.ALT_LABEL, multiple(Resources.localized())),

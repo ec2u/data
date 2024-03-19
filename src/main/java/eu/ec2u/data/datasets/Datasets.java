@@ -50,7 +50,7 @@ import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Datasets extends Delegator {
 
-    public static final IRI Context=item("/");
+    public static final IRI Context=item("/datasets/");
 
     private static final IRI Dataset=term("Dataset");
 
@@ -60,7 +60,7 @@ public final class Datasets extends Delegator {
     }
 
     public static Shape Dataset() {
-        return shape(Resource(),
+        return shape(Dataset, Resource(),
 
                 property(DCTERMS.AVAILABLE, optional(instant())), // !!! vs dct:issued?
 

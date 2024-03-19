@@ -45,7 +45,7 @@ public final class Persons extends Delegator {
 
 
     public static Shape Person() {
-        return shape(Resource(), FOAFPerson(),
+        return shape(Person, Resource(), FOAFPerson(),
 
                 property(RDF.TYPE, hasValue(Person))
 
@@ -53,7 +53,7 @@ public final class Persons extends Delegator {
     }
 
     public static Shape FOAFPerson() {
-        return shape(FOAFAgent(),
+        return shape(FOAF.PERSON, FOAFAgent(),
 
                 // !!! property(FOAF.TITLE, optional( string()), // !!! pattern
                 property(FOAF.GIVEN_NAME, required(string())), // !!! pattern

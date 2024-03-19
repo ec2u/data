@@ -70,7 +70,7 @@ public final class Offers {
     }
 
     public static Shape Program() {
-        return shape(Offer(),
+        return shape(Program, Offer(),
 
                 property(RDF.TYPE, hasValue(Program)),
 
@@ -86,7 +86,7 @@ public final class Offers {
     }
 
     public static Shape Course() {
-        return shape(Offer(),
+        return shape(Course, Offer(),
 
                 property(RDF.TYPE, hasValue(Course)),
 

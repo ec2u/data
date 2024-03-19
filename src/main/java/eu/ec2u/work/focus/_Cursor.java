@@ -39,7 +39,7 @@ import static com.metreeca.link.Frame.reverse;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
-public final class Cursor implements AutoCloseable {
+public final class _Cursor implements AutoCloseable {
 
     private final Value focus;
     private final RepositoryConnection connection;
@@ -48,7 +48,7 @@ public final class Cursor implements AutoCloseable {
     private Map<Value, Collection<Statement>> backward;
 
 
-    public Cursor(final Value focus, final RepositoryConnection connection) {
+    public _Cursor(final Value focus, final RepositoryConnection connection) {
 
         if ( focus == null ) {
             throw new NullPointerException("null focus");
@@ -62,7 +62,7 @@ public final class Cursor implements AutoCloseable {
         this.connection=connection;
     }
 
-    private Cursor(final Value focus, final RepositoryConnection connection,
+    private _Cursor(final Value focus, final RepositoryConnection connection,
             final Map<Value, Collection<Statement>> forward, final Map<Value, Collection<Statement>> backward
     ) {
 
@@ -189,7 +189,7 @@ public final class Cursor implements AutoCloseable {
     }
 
 
-    public Optional<Cursor> cursor(final IRI iri) {
+    public Optional<_Cursor> cursor(final IRI iri) {
 
         if ( iri == null ) {
             throw new NullPointerException("null iri");
@@ -198,7 +198,7 @@ public final class Cursor implements AutoCloseable {
         return cursors(iri).findFirst();
     }
 
-    public Optional<Cursor> cursor(final Path path) {
+    public Optional<_Cursor> cursor(final Path path) {
 
         if ( path == null ) {
             throw new NullPointerException("null path");
@@ -208,22 +208,22 @@ public final class Cursor implements AutoCloseable {
     }
 
 
-    public Stream<Cursor> cursors(final IRI iri) {
+    public Stream<_Cursor> cursors(final IRI iri) {
 
         if ( iri == null ) {
             throw new NullPointerException("null iri");
         }
 
-        return values(iri).map(value -> new Cursor(value, connection, forward, backward));
+        return values(iri).map(value -> new _Cursor(value, connection, forward, backward));
     }
 
-    public Stream<Cursor> cursors(final Path path) {
+    public Stream<_Cursor> cursors(final Path path) {
 
         if ( path == null ) {
             throw new NullPointerException("null path");
         }
 
-        return values(path).map(value -> new Cursor(value, connection, forward, backward));
+        return values(path).map(value -> new _Cursor(value, connection, forward, backward));
     }
 
 

@@ -92,7 +92,7 @@ public final class Schema {
      * @throws NullPointerException if {@code labels} is nul or contains null elements
      */
     public static Shape Thing() {
-        return shape(Reference(),
+        return shape(Thing, Reference(),
 
                 property(RDF.TYPE, hasValue(Thing)),
 
@@ -116,7 +116,7 @@ public final class Schema {
 
 
     public static Shape Organization() {
-        return shape(Thing(),
+        return shape(Organization, Thing(),
 
                 property(RDF.TYPE, hasValue(Organization)),
 
@@ -191,7 +191,7 @@ public final class Schema {
 
 
     public static Shape Event() {
-        return shape(Thing(),
+        return shape(Event, Thing(),
 
                 property(RDF.TYPE, hasValue(Event)),
 
@@ -242,7 +242,7 @@ public final class Schema {
     }
 
     public static Shape Place() {
-        return shape(Thing(),
+        return shape(Place, Thing(),
 
                 property(RDF.TYPE, hasValue(Place)),
 
@@ -255,7 +255,7 @@ public final class Schema {
     }
 
     public static Shape PostalAddress() {
-        return shape(ContactPoint(),
+        return shape(PostalAddress, ContactPoint(),
 
                 property(RDF.TYPE, hasValue(PostalAddress)),
 
@@ -269,7 +269,7 @@ public final class Schema {
     }
 
     public static Shape VirtualLocation() {
-        return shape(Thing(),
+        return shape(VirtualLocation, Thing(),
 
                 property(RDF.TYPE, hasValue(VirtualLocation))
 
@@ -288,7 +288,7 @@ public final class Schema {
 
 
     public static Shape ContactPoint() {
-        return shape(Thing(),
+        return shape(ContactPoint, Thing(),
 
                 property(RDF.TYPE, hasValue(ContactPoint)),
 

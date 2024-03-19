@@ -45,7 +45,7 @@ public final class Organizations {
 
 
     public static Shape OrgOrganization() {
-        return shape(FOAFAgent(),
+        return shape(ORG.ORGANIZATION, FOAFAgent(),
 
                 property(ORG.IDENTIFIER, optional(string())), // !!! datatype?
 
@@ -59,11 +59,11 @@ public final class Organizations {
     }
 
     public static Shape OrgFormalOrganization() {
-        return shape(OrgOrganization());
+        return shape(ORG.FORMAL_ORGANIZATION, OrgOrganization());
     }
 
     public static Shape OrgOrganizationalUnit() {
-        return shape(OrgOrganization(),
+        return shape(ORG.ORGANIZATIONAL_UNIT, OrgOrganization(),
 
                 property(ORG.CLASSIFICATION, optional(SKOSConcept())),
 
@@ -74,6 +74,7 @@ public final class Organizations {
 
         );
     }
+
 
     public static void main(final String... args) {
         exec(() -> Stream

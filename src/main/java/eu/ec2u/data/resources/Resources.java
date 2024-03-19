@@ -83,7 +83,7 @@ public final class Resources extends Delegator {
     }
 
     public static Shape Resource() {
-        return shape(Reference(),
+        return shape(Resource, Reference(),
 
                 property(university, () -> required(University())),
 
@@ -107,7 +107,7 @@ public final class Resources extends Delegator {
     }
 
     public static Shape Publisher() {
-        return shape(Resource(),
+        return shape(Publisher, Resource(),
 
                 property(DCTERMS.COVERAGE, optional(id())),
 

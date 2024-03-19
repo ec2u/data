@@ -62,7 +62,7 @@ public final class Events extends Delegator {
     }
 
     public static Shape Event() {
-        return shape(Resource(), Schema.Event(),
+        return shape(Event, Resource(), Schema.Event(),
 
                 property(RDF.TYPE, hasValue(Event)),
 

@@ -74,7 +74,7 @@ public final class Documents extends Delegator {
     }
 
     public static Shape Document() {
-        return shape(Resource(),
+        return shape(Document, Resource(),
 
                 property(Schema.url, multiple(id())), // !!! datatype
 

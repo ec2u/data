@@ -70,7 +70,7 @@ public final class Universities extends Delegator {
     }
 
     public static Shape University() {
-        return shape(clazz(University), Resource(), OrgFormalOrganization(),
+        return shape(University, Resource(), OrgFormalOrganization(),
 
                 property(schac, required(string())),
                 property(image, required(id())),

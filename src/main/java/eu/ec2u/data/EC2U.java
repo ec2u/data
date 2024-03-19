@@ -19,20 +19,13 @@ package eu.ec2u.data;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 
-import eu.ec2u.data.actors.Actors;
-import eu.ec2u.data.agents.Agents;
-import eu.ec2u.data.concepts.*;
+import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
-import eu.ec2u.data.locations.Locations;
-import eu.ec2u.data.offers.Offers;
 import eu.ec2u.data.offers.courses.Courses;
 import eu.ec2u.data.offers.programs.Programs;
-import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities._Universities;
@@ -40,8 +33,13 @@ import org.eclipse.rdf4j.model.IRI;
 
 import java.util.regex.Pattern;
 
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.jsonld.formats.JSONLD.store;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.toolkits.Identifiers.md5;
+
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 
 
 public final class EC2U extends Delegator {
@@ -72,27 +70,69 @@ public final class EC2U extends Delegator {
 
     public static void main(final String... args) {
 
-        Actors.main();
-        Agents.main();
-        Concepts.main();
+        // Actors.main();
+        // Agents.main();
+        // Concepts.main();
         Datasets.main();
-        Documents.main();
-        Events.main();
-        Locations.main();
-        Offers.main();
-        Courses.main();
-        Programs.main();
-        Organizations.main();
-        Persons.main();
-        Resources.main();
-        Schema.main();
-        Units.main();
-        Universities.main();
+        // Documents.main();
+        // Events.main();
+        // Locations.main();
+        // Offers.main();
+        // Courses.main();
+        // Programs.main();
+        // Organizations.main();
+        // Persons.main();
+        // Resources.main();
+        // Schema.main();
+        // Units.main();
+        // Universities.main();
 
-        EuroSciVoc.main();
-        ISCED2011.main();
-        ISCEDF2013.main();
-        UnitTypes.main();
+        // EuroSciVoc.main();
+        // ISCED2011.main();
+        // ISCEDF2013.main();
+        // UnitTypes.main();
+
+        exec(() -> service(store()).validate(
+
+                // FOAFAgent(),
+                //
+                // ConceptScheme(),
+                // Concept(),
+                // SKOSConceptScheme(),
+                // SKOSConcept(),
+
+                Dataset()
+
+                // Document(),
+                //
+                // Event(),
+                //
+                // Program(),
+                // Course(),
+                //
+                // OrgOrganization(),
+                // OrgFormalOrganization(),
+                // OrgOrganizationalUnit(),
+                //
+                // Person(),
+                // FOAFPerson(),
+                //
+                // Resource(),
+                // Publisher(),
+                //
+                // Schema.Thing(),
+                // Schema.Organization(),
+                // Schema.Event(),
+                // Schema.Place(),
+                // Schema.PostalAddress(),
+                // Schema.VirtualLocation(),
+                // Schema.ContactPoint(),
+                //
+                // Unit(),
+
+                // University()
+
+        ));
 
     }
 

@@ -61,7 +61,7 @@ public final class Units extends Delegator {
     public static Shape Units() { return Dataset(Unit()); }
 
     public static Shape Unit() {
-        return shape(Resource(), OrgOrganizationalUnit(),
+        return shape(Unit, Resource(), OrgOrganizationalUnit(),
 
                 property(RDF.TYPE, hasValue(Unit))
 

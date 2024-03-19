@@ -16,26 +16,18 @@
 
 package eu.ec2u.work.focus;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface Focus {
-
-    public static Focus focus() {
-        return FocusEmpty.Instance;
-    }
-
-    public static Focus focus(final Collection<Value> values) {
-
-        if ( values == null || values.stream().anyMatch(Objects::isNull) ) {
-            throw new NullPointerException("null values");
-        }
-
-        return new FocusStatic(new LinkedHashSet<>(values));
-    }
 
     public static Focus focus(final Collection<Value> values, final Collection<Statement> statements) {
 
