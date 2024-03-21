@@ -15,6 +15,7 @@
  */
 
 import { Actors, DataActors } from "@ec2u/data/pages/actors/actors";
+import { Book, DataBook } from "@ec2u/data/pages/book";
 import { Concept, DataConcept } from "@ec2u/data/pages/concepts/concept";
 import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
 import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
@@ -76,6 +77,7 @@ createRoot(document.body.firstElementChild!).render((
 				[Scheme.id]: DataScheme,
 				[Concept.id]: DataConcept,
 
+				[Book.id]: DataBook,
 				[Wild.id]: DataWild
 
 			}}</ToolRouter>

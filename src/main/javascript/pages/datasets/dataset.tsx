@@ -136,7 +136,7 @@ export function DataDataset() {
 
                 <hr/>
 
-                <nav><ToolMark toc>{isDefinedBy}</ToolMark></nav>
+                <nav><ToolMark meta={"toc"}>{isDefinedBy}</ToolMark></nav>
 
             </>}
 
