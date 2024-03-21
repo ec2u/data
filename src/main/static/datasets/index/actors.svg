@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg"
-        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="130 76 363 166" width="363" height="166">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1"
+        viewBox="130 76 363 130" width="363" height="130">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -27,9 +27,9 @@
             </g>
         </marker>
     </defs>
-    <g id="actors" stroke-dasharray="none" fill-opacity="1" fill="none" stroke="none" stroke-opacity="1">
+    <g id="actors" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1" fill="none" stroke="none">
         <title>actors</title>
-        <rect fill="white" x="130" y="76" width="363" height="166"/>
+        <rect fill="white" x="130" y="76" width="363" height="130"/>
         <g id="actors_Layer_1">
             <title>Layer 1</title>
             <g id="Graphic_148">
@@ -38,18 +38,8 @@
                 </text>
             </g>
             <g id="Group_140">
-                <g id="Graphic_143">
-                    <rect x="144.56693" y="125.70866" width="76.179" height="18" fill="white"/>
-                    <rect x="144.56693" y="125.70866" width="76.179" height="18" stroke="black" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width=".25"/>
-                </g>
-                <g id="Graphic_142">
-                    <rect x="144.56693" y="107.70866" width="76.179" height="18" fill="white"/>
-                    <rect x="144.56693" y="107.70866" width="76.179" height="18" stroke="black" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width=".25"/>
-                </g>
                 <g id="Graphic_141">
-                    <a xl:href="resources.svg">
+                    <a xl:href="entities.svg">
             <rect x="144.56693" y="90.70866" width="76.179" height="17" fill="white"/>
                         <rect x="144.56693" y="90.70866" width="76.179" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -62,16 +52,6 @@
         </g>
       </g>
       <g id="Group_135">
-        <g id="Graphic_138">
-          <rect x="154.64862" y="209.3307" width="56.015625" height="18" fill="white"/>
-            <rect x="154.64862" y="209.3307" width="56.015625" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
-        <g id="Graphic_137">
-          <rect x="154.64862" y="191.3307" width="56.015625" height="18" fill="white"/>
-            <rect x="154.64862" y="191.3307" width="56.015625" height="18" stroke="black" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width=".25"/>
-        </g>
         <g id="Graphic_136">
           <rect x="154.64862" y="174.3307" width="56.015625" height="17" fill="white"/>
             <rect x="154.64862" y="174.3307" width="56.015625" height="17" stroke="black" stroke-linecap="round"
@@ -82,7 +62,7 @@
         </g>
       </g>
       <g id="Line_134">
-          <line x1="182.65643" y1="174.3307" x2="182.65643" y2="153.45866" marker-end="url(#UMLInheritance_Marker)"
+          <line x1="182.65643" y1="174.3307" x2="182.65643" y2="117.45866" marker-end="url(#UMLInheritance_Marker)"
                   stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
     </g>

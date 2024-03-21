@@ -30,6 +30,7 @@ import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import React from "react";
+import { useMark } from "../../../../../../../../Products/Tool/code/data/hooks/mark";
 
 
 function isMeta(route: string) {
@@ -100,6 +101,9 @@ export function DataDataset() {
 
 	const [dataset]=useResource({ ...Dataset, id: toData(route) });
 
+	const model=useMark(dataset?.isDefinedBy);
+
+
 	return <DataPage
 
 		name={dataset && toLocalString(dataset.alternative || dataset.title)}
@@ -136,7 +140,7 @@ export function DataDataset() {
 
                 <hr/>
 
-                <nav><ToolMark meta={"toc"}>{isDefinedBy}</ToolMark></nav>
+                <nav><ToolMark meta={"toc"}>{model}</ToolMark></nav>
 
             </>}
 
@@ -153,7 +157,7 @@ export function DataDataset() {
 		}) => <>
 
 			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
-			{isDefinedBy && <ToolMark>{isDefinedBy}</ToolMark>}
+			{isDefinedBy && <ToolMark>{model}</ToolMark>}
 
 
 		</>}>{dataset}</ToolFrame>

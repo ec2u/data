@@ -56,7 +56,7 @@ public final class Data extends Delegator {
     private static final boolean Production=GCPServer.production();
 
     private static final String GraphDBServer="http://base.ec2u.net"; // !!! "https://base.ec2u.eu";
-    private static final String GraphDBRepository="data-link"; // !!!
+    private static final String GraphDBRepository="data-next"; // !!!
     private static final String GraphDBUsr="server";
     private static final String GraphDBPwd="graphdb-server-pwd";
 
@@ -84,6 +84,7 @@ public final class Data extends Delegator {
                 .set(graph(), () -> new Graph(service(Data::repository)))
                 .set(store(), () -> rdf4j(service(Data::repository)))
                 .set(codec(), () -> json().pretty(true));
+
     }
 
 

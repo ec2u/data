@@ -23,7 +23,7 @@ import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.services.Logger;
 
 import eu.ec2u.data.concepts.Concepts_;
-import eu.ec2u.data.datasets.Datasets_;
+import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offers.*;
@@ -95,7 +95,7 @@ public final class Cron extends Delegator {
                 .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
 
                 .path("/concepts/", execute(new Concepts_()))
-                .path("/datasets/", execute(new Datasets_()))
+                .path("/datasets/", execute(new Datasets()))
 
         ));
     }

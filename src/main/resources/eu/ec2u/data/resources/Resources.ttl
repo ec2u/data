@@ -1,11 +1,8 @@
 @prefix ec2u: </terms/> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix void: <http://rdfs.org/ns/void#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dct: <http://purl.org/dc/terms/> .
 
 </resources/> a ec2u:Dataset ;
     dct:title "EC2U Resources"@en ;
@@ -14,18 +11,3 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     void:rootResource ec2u:Resource ;
     rdfs:isDefinedBy </datasets/resources> .
-
-
-########################################################################################################################
-
-ec2u:Resource a owl:Class .
-ec2u:Publisher a owl:Class .
-
-dct:title a owl:DatatypeProperty ;
-    rdfs:subPropertyOf rdfs:label .
-
-dct:description a owl:DatatypeProperty ;
-    rdfs:subPropertyOf rdfs:comment .
-
-owl:sameAs a owl:ObjectProperty, owl:SymmetricProperty .
-

@@ -19,14 +19,19 @@ package eu.ec2u.data.universities;
 import com.metreeca.http.open.actions.WikidataMirror;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Update;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.resources.Resources;
 
 import java.util.stream.Stream;
 
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
@@ -43,10 +48,30 @@ public final class Universities_ implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        wikidata();
-        inferences();
+
+        wikidata(); // ;( fails if executed inside txn
+
+        service(graph()).update(repositoryConnection -> {
+
+            ontology();
+            inferences();
+
+            return null;
+
+        });
+
     }
 
+    private void ontology() {
+        Stream
+
+                .of(rdf(resource(Universities.class, ".ttl"), Base))
+
+                .forEach(new Upload()
+                        .contexts(Universities.Context)
+                        .clear(true)
+                );
+    }
 
     private void wikidata() {
         Xtream
@@ -68,7 +93,7 @@ public final class Universities_ implements Runnable {
                 )
 
                 .sink(new WikidataMirror()
-                        .contexts(Values.iri(Universities.Context, "/wikidata"))
+                        .contexts(iri(Universities.Context, "/wikidata"))
                         .languages(Resources.Languages)
                 );
     }
@@ -80,7 +105,7 @@ public final class Universities_ implements Runnable {
 
                 .forEach(new Update()
                         .base(Base)
-                        .insert(Values.iri(Universities.Context, "/~"))
+                        .insert(iri(Universities.Context, "/~"))
                         .clear(true)
                 );
     }

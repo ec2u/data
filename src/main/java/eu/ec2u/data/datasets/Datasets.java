@@ -20,6 +20,7 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
+import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
@@ -33,9 +34,9 @@ import org.eclipse.rdf4j.model.vocabulary.VOID;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Constraint.any;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
@@ -48,7 +49,7 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Resources.Reference;
 import static eu.ec2u.data.resources.Resources.Resource;
 
-public final class Datasets extends Delegator {
+public final class Datasets extends Delegator implements Runnable {
 
     public static final IRI Context=item("/datasets/");
 
@@ -62,7 +63,7 @@ public final class Datasets extends Delegator {
     public static Shape Dataset() {
         return shape(Dataset, Resource(),
 
-                property(DCTERMS.AVAILABLE, optional(instant())), // !!! vs dct:issued?
+                property(DCTERMS.AVAILABLE, optional(date())), // !!! vs dct:issued?
 
                 property(DCTERMS.RIGHTS, required(string())),
                 property(DCTERMS.ACCESS_RIGHTS, optional(Resources.localized())),
@@ -90,19 +91,7 @@ public final class Datasets extends Delegator {
 
 
     public static void main(final String... args) {
-        exec(() -> Stream
-
-                .of(
-                        rdf(resource(Datasets.class, ".ttl"), Base),
-                        rdf(resource("http://rdfs.org/ns/void.ttl"), Base),
-                        rdf(resource("http://www.w3.org/ns/dcat.ttl"), Base)
-                )
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
+        exec(() -> new Datasets().run());
     }
 
 
@@ -131,6 +120,25 @@ public final class Datasets extends Delegator {
                 )))
 
         ));
+    }
+
+
+    @Override public void run() {
+
+        Stream.of(rdf(resource(Datasets.class, ".ttl"), Base))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                );
+
+        Stream.of(text(resource(Datasets.class, ".ul")))
+
+                .forEach(new Update()
+                        .base(Base)
+                        .insert(Context)
+                );
+
     }
 
 }

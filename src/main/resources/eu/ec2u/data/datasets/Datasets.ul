@@ -4,9 +4,24 @@ prefix dct: <http://purl.org/dc/terms/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 
-#### Compute Datasets Aliases ##########################################################################################
+#### Complete Datasets Descriptions ####################################################################################
 
-# !!! to be removed after metreeca/java supports resource access to collections
+insert {
+
+    ?dataset
+        rdfs:label ?title ;
+        rdfs:comment ?description.
+
+} where {
+
+    ?dataset a ec2u:Dataset ;
+        dct:title ?title ;
+        dct:description ?description .
+
+};
+
+
+    #### Compute Datasets Aliases ######################################################################################
 
 insert {
 
@@ -16,9 +31,10 @@ insert {
 
     ?dataset a ec2u:Dataset .
 
-    bind(iri(replace(str(?dataset), "^https://data.ec2u.eu(/\\w+)?/$", "https://data.ec2u.eu/datasets$1" )) as ?alias)
+    bind(iri(replace(str(?dataset), "^https://data.ec2u.eu/(\\w+)?/$", "https://data.ec2u.eu/datasets/$1" )) as ?alias)
 
 };
+
 
     #### Compute Datasets Size #########################################################################################
 
@@ -59,7 +75,9 @@ insert {
     bind (uuid() as ?subset)
 
     {
-        select ?dataset ?university (count(distinct ?entity) as ?entities) {
+        select ?dataset ?university (count(distinct ?entity) as ?entities)
+
+        where {
 
             ?dataset a ec2u:Dataset ;
                 dct:available [] ;
@@ -70,6 +88,7 @@ insert {
                 ec2u:university ?university .
 
         }
+
         group by ?dataset ?university
     }
 

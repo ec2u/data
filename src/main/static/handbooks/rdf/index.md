@@ -1,18 +1,18 @@
 ---
-title: RDF Data Models
+title: Linked Data Data Models
 ---
 
-EC2U Knowledge Hub data models are defined as *linked data ontologies*.
-
-![Sample Ontology Graph](index/graph.png#50)
-
-- An *ontology* is a high-level *data model* describing relevant entities, related properties and entity relationships
+- Linked data structures are defined by *ontologies*, that is by high-level *data models* describing relevant entities,
+  related properties and entity relationships
   within a specific business or technical domain.
 - Ontologies differentiate themselves from *relational* data models by adopting a *graph-based* representation and
   extensively leveraging *taxonomies*, that is tree-like hierarchical classification schemes.
 - Domain entities are represented as nodes whose connections graphically and concisely depict extensive relationship
   networks; connectivity details and entity properties may vary across classification taxonomies, flexibly capturing the
   specificity of each entity type.
+
+![Sample Ontology Graph](index/graph.png#50)
+
 - This modelling approach makes it possible to express complex connectivity patterns, typical of many real-world
   processes, in a simpler yet more expressive and richer graphical language.
 - Free from the technical constraints of relational models, ontology-based graphs can more accurately capture complex
@@ -123,7 +123,7 @@ from [Unified Modelling Language (UML) 2](https://en.wikipedia.org/wiki/Unified_
 
 IRI prefixes in use in UML diagrams are detailed in a companion prefix table.
 
-| prefix | namespace                         | definition         |
+| prefix | namespace                         | description        |
 |--------|-----------------------------------|--------------------|
 | ex:    | <https://example.org/predicates/> | Example vocabulary |
 
@@ -131,7 +131,7 @@ IRI prefixes in use in UML diagrams are detailed in a companion prefix table.
 
 Class specifications are detailed in tabular format, according to the following template.
 
-| term         | type                                                                                                                             | #              | description                                                                                                                                                                                                                  |
+| term         | type                                                                                                                             | #              | definition                                                                                                                                                                                                                   |
 |--------------|----------------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ex:Class** | [ex:BaseClass](#classes) *inherited class membership specified as cross-links to the specification of the relevant base classes* |                | *class definition*                                                                                                                                                                                                           |
 | ex:property  | datatype {constraint}                                                                                                            | {multiplicity} | *literal property specification with expected datatype, multiplicity and additional constraints*                                                                                                                             |
@@ -144,16 +144,17 @@ as [SHACL core constraints components.](https://www.w3.org/TR/shacl/#core-compon
 
 Ancillary usage or explanatory notes are highlighted in the following formats:
 
-> :warning:  Warning / Usage note warning of potentially limiting or troublesome data model characteristics.
+> **:warning:** Warning / Usage note warning of potentially limiting or troublesome data model characteristics.
 
-> :information_source:  Remark / Usage or explanatory note providing context or explaining design choices.
+> *:information_source:*  Remark / Usage or explanatory note providing context or explaining design choices.
 
 > :question:/:exclamation: Note / Open issue or editorial note.
 
 # Datatypes
 
-To improve modelling robustness and interoperability, literal values are limited to a controlled set of
-standard [XML Schema (XSD) 2 Datatypes](https://www.w3.org/TR/xmlschema-2/), properly supported by compliant SPARQL 1.1
+To improve modelling robustness and interoperability, values are limited to a controlled set of
+standard datatypes, mainly derived from [XML Schema (XSD) 2 Datatypes](https://www.w3.org/TR/xmlschema-2/). This
+datatype set is properly supported by compliant SPARQL 1.1
 query engines and easily mapped to native datatypes in most programming languages.
 
 | datatype | description                                                                                 | RDF                                                               | JSON                             | Java                         |
@@ -177,10 +178,10 @@ query engines and easily mapped to native datatypes in most programming language
 | text     | localised human-readable textual content                                                    | [rdf:langString](https://www.w3.org/TR/rdf-schema/#ch_langstring) | `{ "locale": "text" }`           | ``Map<Locale, String>``      |
 |          |                                                                                             |                                                                   | `{ "locale": ["text", …] }`      | ``Map<Locale, Set<String>>`` |
 
-> :warning: Due to the limitations of SPARQL 1.1 calendrical functions, `xsd:dateTime` is the preferred temporal
+> **:warning:** Due to the limitations of SPARQL 1.1 calendrical functions, `xsd:dateTime` is the preferred temporal
 > datatype.
 
-> :warning:To improve interoperability with third-party calendrical function libraries, date-based (`PyYMMdD`) and
+> **:warning:** ​To improve interoperability with third-party calendrical function libraries, date-based (`PyYMMdD`) and
 > time-based (`PThHmMs.sssS`) representations are preferred.
 
 # Taxonomies
@@ -199,13 +200,13 @@ standard:
 | **skos:ConceptScheme** |                    |      | Hierarchical concept classification scheme.                                                          |
 | skos:hasTopConcept     | skos:Concept       | 1..* | identifiers of top-level concepts in the classification scheme                                       |
 | **skos:Concept**       |                    |      | Concept belonging to a concept scheme.                                                               |
-| skos:prefLabel         | xsd:string         | 1    | preferred/formal human-readable concept label                                                        |
-| skos:definition        | xsd:string         | 0..1 | human-readable concept definition                                                                    |
-| skos:inScheme          | skos:ConceptScheme | 1    | identifier of the scheme the concept belongs to                                                      |
+| skos:prefLabel         | text               | 1    | preferred/formal human-readable concept label                                                        |
+| skos:definition        | text               | 0..1 | human-readable concept definition                                                                    |
+| skos:inScheme          | skos:ConceptScheme | 1    | link to the scheme the concept belongs to                                                            |
 | skos:isTopConceptOf    | skos:ConceptScheme | 0..1 | identifier of the scheme the concept belongs to as a top-level concept; undefined for child concepts |
-| skos:broader           | skos:Concept       | 0..* | identifiers of more general parent concept; defined only for child concepts                          |
-| skos:narrower          | skos:Concept       | 0..* | identifiers of more specific child concepts                                                          |
-| skos:related           | skos:Concept       | 0..* | identifiers of related concepts not included among broader/narrower categories                       |
+| skos:broader           | skos:Concept       | *    | links to more general parent concepts; defined only for child concepts                               |
+| skos:narrower          | skos:Concept       | *    | links to more specific child concepts                                                                |
+| skos:related           | skos:Concept       | *    | links to related concepts not included among broader/narrower categories                             |
 
-> :information_source:Property multiplicities are not specified by the W3C standard: they are introduced to simplify
+> *:information_source:* Property multiplicities are not specified by the W3C standard: they are introduced to simplify
 > application-level taxonomy management.

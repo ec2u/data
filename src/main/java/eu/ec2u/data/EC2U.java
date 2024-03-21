@@ -26,6 +26,7 @@ import eu.ec2u.data.events.Events;
 import eu.ec2u.data.offers.courses.Courses;
 import eu.ec2u.data.offers.programs.Programs;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities._Universities;
@@ -39,7 +40,20 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.agents.Agents.FOAFAgent;
+import static eu.ec2u.data.concepts.Concepts.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.documents.Documents.Document;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.offers.Offers.Course;
+import static eu.ec2u.data.offers.Offers.Program;
+import static eu.ec2u.data.organizations.Organizations.*;
+import static eu.ec2u.data.persons.Persons.FOAFPerson;
+import static eu.ec2u.data.persons.Persons.Person;
+import static eu.ec2u.data.resources.Resources.Publisher;
+import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.universities.Universities.University;
 
 
 public final class EC2U extends Delegator {
@@ -70,69 +84,75 @@ public final class EC2U extends Delegator {
 
     public static void main(final String... args) {
 
-        // Actors.main();
-        // Agents.main();
+        exec(() -> service(store()).validate(
+
+                Resource(),
+                Publisher(),
+
+                ConceptScheme(),
+                Concept(),
+                SKOSConceptScheme(),
+                SKOSConcept(),
+
+                FOAFAgent(),
+                FOAFPerson(),
+
+                OrgOrganization(),
+                OrgFormalOrganization(),
+                OrgOrganizationalUnit(),
+
+                Dataset(),
+
+                University(),
+                Unit(),
+                Person(),
+
+                Program(),
+                Course(),
+
+                Document(),
+
+                Event(),
+
+                Schema.Thing(),
+                Schema.Organization(),
+                Schema.Event(),
+                Schema.Place(),
+                Schema.PostalAddress(),
+                Schema.VirtualLocation(),
+                Schema.ContactPoint()
+
+        ));
+
+
+        // Resources.main();
+        //
         // Concepts.main();
-        Datasets.main();
+        // Agents.main();
+        // Organizations.main();
+        // Locations.main();
+        //
+        // Datasets.main();
+        //
+        // Universities.main();
+        // Units.main();
+        // Persons.main();
+
+
+        // Actors.main();
+
         // Documents.main();
         // Events.main();
-        // Locations.main();
         // Offers.main();
         // Courses.main();
         // Programs.main();
-        // Organizations.main();
-        // Persons.main();
-        // Resources.main();
         // Schema.main();
-        // Units.main();
-        // Universities.main();
 
         // EuroSciVoc.main();
         // ISCED2011.main();
         // ISCEDF2013.main();
         // UnitTypes.main();
 
-        exec(() -> service(store()).validate(
-
-                // FOAFAgent(),
-                //
-                // ConceptScheme(),
-                // Concept(),
-                // SKOSConceptScheme(),
-                // SKOSConcept(),
-
-                Dataset()
-
-                // Document(),
-                //
-                // Event(),
-                //
-                // Program(),
-                // Course(),
-                //
-                // OrgOrganization(),
-                // OrgFormalOrganization(),
-                // OrgOrganizationalUnit(),
-                //
-                // Person(),
-                // FOAFPerson(),
-                //
-                // Resource(),
-                // Publisher(),
-                //
-                // Schema.Thing(),
-                // Schema.Organization(),
-                // Schema.Event(),
-                // Schema.Place(),
-                // Schema.PostalAddress(),
-                // Schema.VirtualLocation(),
-                // Schema.ContactPoint(),
-                //
-                // Unit(),
-
-                // University()
-
-        ));
 
     }
 

@@ -1,3 +1,5 @@
+> **⚠️** **Work in progress…**
+
 The resource data model is *abstract*, that is is not intended to be used in isolation but only to provide a base definition factoring generic properties shared by the specialized models defined by each [dataset](./index.md).
 
 # Data Model

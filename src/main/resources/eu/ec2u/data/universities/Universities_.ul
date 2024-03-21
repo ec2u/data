@@ -2,6 +2,25 @@ prefix ec2u: <https://data.ec2u.eu/terms/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix wdt: <http://www.wikidata.org/prop/direct/>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+
+#### Define SKOS Properties ############################################################################################
+
+insert {
+
+    ?university
+        skos:prefLabel ?title ;
+        skos:definition ?description .
+
+} where {
+
+    ?university a ec2u:University ;
+        dct:title ?title ;
+        dct:description ?description .
+
+};
 
 
 #### Lift Background Info From Wikidata ################################################################################
@@ -9,17 +28,18 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 insert {
 
     ?university
-        ec2u:location ?location;
-        ec2u:country ?country;
-		ec2u:students ?students;
-  		ec2u:inception ?inception.
+        ec2u:location ?location ;
+        ec2u:country ?country ;
+        ec2u:students ?students ;
+        ec2u:inception ?inception.
 
 } where {
 
-    ?university a ec2u:University; rdfs:seeAlso ?wikidata.
+    ?university a ec2u:University ;
+        rdfs:seeAlso ?wikidata .
 
     optional { ?wikidata wdt:P131 ?location }
-    optional { ?wikidata wdt:P17  ?country }
+    optional { ?wikidata wdt:P17 ?country }
     optional { ?wikidata wdt:P2196 ?students_ }
     optional { ?wikidata wdt:P571 ?inception_ }
 

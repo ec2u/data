@@ -16,7 +16,7 @@
 
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, required } from "@metreeca/core";
-import { useRouter } from "@metreeca/data/contexts/router";
+import { useMark } from "@metreeca/data/hooks/mark";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
 
@@ -42,23 +42,21 @@ export const Book=immutable({
 
 export function DataBook() {
 
-	const [route]=useRouter();
-
-	const path=route.endsWith("/") ? `${route}/index.md` : `${route}.md`;
+	const text=useMark("");
 
 	return <DataPage
 
-		name={[Books, <ToolMark key={"title"} meta={"title"}>{path}</ToolMark>]}
+		name={[Books, <ToolMark key={"title"} meta={"title"}>{text}</ToolMark>]}
 
 		tray={
 
-			<ToolMark meta={"toc"}>{path}</ToolMark>
+			<ToolMark meta={"toc"}>{text}</ToolMark>
 
 		}
 
 	>
 
-		<ToolMark>{path}</ToolMark>
+		<ToolMark>{text}</ToolMark>
 
 	</DataPage>;
 

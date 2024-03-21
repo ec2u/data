@@ -1,33 +1,17 @@
----
-title: Organizations
----
+> **⚠️** **Work in progress…**
 
-|                             type                             |           label            |                          definition                          |
-| :----------------------------------------------------------: | :------------------------: | :----------------------------------------------------------: |
-| [vivo:AcademicDepartment](http://vivoweb.org/ontology/core#AcademicDepartment) |  Academic Department  | A distinct, usually specialized educational unit within an educational organization. |
-| [vivo:Association](http://vivoweb.org/ontology/core#Association) |      Association      | A formal organization of people or groups of people around a subject or practice; a group of persons or organizations organized for a common purpose. |
-| [vivo:Center](http://vivoweb.org/ontology/core#Center) |        Center         | A place where a particular activity or service is concentrated; an organization where a specified activity is concentrated. |
-| [vivo:ClinicalOrganization](http://vivoweb.org/ontology/core#ClinicalOrganization) | Clinical Organization | Any organization that offers significant health services or routinely provides medical care to patients; any organization with a significant clinical function as a matter of course and not just through occasional clinical roles. |
-| [vivo:College](http://vivoweb.org/ontology/core#College) |        College        | A primary academic unit within a University or a free-standing higher education organization without graduate degree programs. |
-| [vivo:Company](http://vivoweb.org/ontology/core#Company) |        Company        |         A legally-recognized business organization.         |
-| [vivo:Consortium](http://vivoweb.org/ontology/core#Consortium) |      Consortium       | A group  of independent organizations working together toward a common goal, under an expressed agreement. |
-| [vivo:CoreLaboratory](http://vivoweb.org/ontology/core#CoreLaboratory) |    Core Laboratory    | A lab providing services such as training, protocols, or access to instruments or software |
-| [vivo:Department](http://vivoweb.org/ontology/core#Department) |      Department       | A unit within a larger organization that addresses a specific subject or area of activity. |
-| [vivo:Division](http://vivoweb.org/ontology/core#Division) |       Division        |   A major unit or section within a larger organization.    |
-| [vivo:ExtensionUnit](http://vivoweb.org/ontology/core#ExtensionUnit) |    Extension Unit     | A unit devoted primarily to extension activities, whether for outreach or research. |
-| [vivo:Foundation](http://vivoweb.org/ontology/core#Foundation) |      Foundation       | An institution founded with an endowment to support educational, research, artistic or other charitable activities. |
-| [vivo:FundingOrganization](http://vivoweb.org/ontology/core#FundingOrganization) | Funding Organization  |     A defined class of organizations that fund Grants; an organization that provides financial support to individuals or organizations to carry out specified activities.     |
-| [vivo:GovernmentAgency](http://vivoweb.org/ontology/core#GovernmentAgency) |   Government Agency   | A unit of government responsible for oversight and regulation of certain activities or the administration and provision of specific services. |
-| [vivo:Hospital](http://vivoweb.org/ontology/core#Hospital) |       Hospital        | An institution that provides medical, surgical, psychiatric or nursing care. |
-| [vivo:Institute](http://vivoweb.org/ontology/core#Institute) |       Institute       | An Institute normally has a research focus but may also fulfill instructional or outreach roles; an organization founded to pursue or promote certain research, educational or public policy interests or activities. |
-| [vivo:Laboratory](http://vivoweb.org/ontology/core#Laboratory) |      Laboratory       | An organization unit that facilitates or conduits observation, testing, experimentation, or research in a field of study or practice; an organizational unit (as opposed to the physical facility) that performs research, provides services, or processes materials |
-| [vivo:Library](http://vivoweb.org/ontology/core#Library) |        Library        | An organization maintaining one or more collections of physical and/or electronic information resources for access or lending. |
-| [vivo:Museum](http://vivoweb.org/ontology/core#Museum) |        Museum         | An organization devoted to the acquisition, conservation, study, exhibition, and educational interpretation of objects having scientific, historical, cultural or artistic value. |
-| [vivo:PrivateCompany](http://vivoweb.org/ontology/core#PrivateCompany) |    Private Company    | A private company is one that is privately-owned, and thus, is not publicly-traded in the stock market. Members of the general public cannot purchase stock in a private company unless that company chooses to go public and become a public company. |
-| [vivo:Program](http://vivoweb.org/ontology/core#Program) |        Program        | An ongoing academic initiative not formalized with department or division status. |
-| [vivo:Publisher](http://vivoweb.org/ontology/core#Publisher) |       Publisher       | A person or company whose business is the publishing of books, periodicals, engravings, computer software, etc. |
-| [vivo:ResearchOrganization](http://vivoweb.org/ontology/core#ResearchOrganization) | Research Organization | Any organization (likely also asserted as another class of Organization) with a primary, ongoing research function, not just through occasional roles |
-| [vivo:School](http://vivoweb.org/ontology/core#School) |        School         | An institution for instruction in a particular skill or field. |
-| [vivo:ServiceProvidingLaboratory](http://vivoweb.org/ontology/core#ServiceProvidingLaboratory) | Service Providing Lab |            A laboratory that provides services             |
-| [vivo:StudentOrganization](http://vivoweb.org/ontology/core#StudentOrganization) | Student Organization  | A student organization is an organization, operated by students at a university, whose membership normally consists only of students. |
-| [vivo:University](http://vivoweb.org/ontology/core#University) |      University       | An institution of higher education and research, which grants academic degrees in a variety of subjects, and provides both undergraduate education and postgraduate education. |
+# Data Model
+
+## Organization
+
+##  
+
+| term                                                           | type | # | definition                                                              |
+|----------------------------------------------------------------|------|---|-------------------------------------------------------------------------|
+|                                                                |      |   |                                                                         |
+| [skos:prefLabel](https://www.w3.org/TR/skos-reference/#labels) |      |   | the human-readable, localised official name of the institution          |
+| [skos:altLabel](https://www.w3.org/TR/skos-reference/#labels)  |      |   | human-readable, localised alternate/shortened names for the institution |
+
+## Formal Organization
+
+## Organizational Unit

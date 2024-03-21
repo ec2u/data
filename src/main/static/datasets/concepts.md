@@ -1,4 +1,4 @@
-> ❗️Work in progress
+> **⚠️** **Work in progress…**
 
 [Concept schemes](https://www.w3.org/TR/skos-primer/) provides tree-like subject definitions supporting interactive
 resource searches and selective publishing use cases.

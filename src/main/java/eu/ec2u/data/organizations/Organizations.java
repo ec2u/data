@@ -22,10 +22,12 @@ import com.metreeca.link.Shape;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.stream.Stream;
 
+import static com.metreeca.http.rdf.Values.pattern;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.reverse;
@@ -36,6 +38,9 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.persons.Persons.FOAFPerson;
+import static eu.ec2u.data.resources.Resources.localized;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toList;
 
 public final class Organizations {
 
@@ -49,9 +54,9 @@ public final class Organizations {
 
                 property(ORG.IDENTIFIER, optional(string())), // !!! datatype?
 
-                property(SKOS.PREF_LABEL, required(Resources.localized())), // !!! languages?
-                property(SKOS.ALT_LABEL, required(Resources.localized())), // !!! languages?
-                property(SKOS.DEFINITION, required(Resources.localized())), // !!! languages?
+                property(SKOS.PREF_LABEL, required(localized())), // !!! languages?
+                property(SKOS.ALT_LABEL, optional(localized())), // !!! languages?
+                property(SKOS.DEFINITION, optional(localized())), // !!! languages?
 
                 property("units", ORG.HAS_UNIT, () -> multiple(OrgOrganizationalUnit()))
 
@@ -82,7 +87,9 @@ public final class Organizations {
                 .of(
                         rdf(resource(Organizations.class, ".ttl"), Base),
 
-                        rdf(resource("https://www.w3.org/ns/org"), Base)
+                        rdf(resource("https://www.w3.org/ns/org"), Base).stream()
+                                .filter(not(pattern(null, RDFS.SUBCLASSOF, SKOS.CONCEPT)))
+                                .collect(toList())
 
                 )
 

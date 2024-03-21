@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg"
-        version="1.1" viewBox="21 157 710 212" width="710" height="212">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        viewBox="21 157 710 212" width="710" height="212">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -27,7 +27,7 @@
             </g>
         </marker>
     </defs>
-    <g id="events-mmt" stroke-dasharray="none" fill-opacity="1" fill="none" stroke="none" stroke-opacity="1">
+    <g id="events-mmt" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1" fill="none" stroke="none">
         <title>events-mmt</title>
         <rect fill="white" x="21" y="157" width="710" height="212"/>
         <g id="events-mmt_Layer_1">
@@ -48,9 +48,9 @@
                     </text>
                 </g>
             </g>
-            <g id="Group_38">
+            <g id="Group_44">
                 <g id="Graphic_40">
-                    <text transform="translate(67.52407 277.98396)" fill="black">
+                    <text transform="translate(67.52407 277.98033)" fill="black">
                         <tspan font-family="Font Awesome 5 Free" font-weight="bold" font-size="18" fill="black" x="0"
                                 y="16">
                         </tspan>
@@ -214,17 +214,16 @@
                   stroke-width=".25"/>
       </g>
       <g id="Graphic_9">
-        <text transform="translate(136.3937 281.2245)" fill="black">
+          <text transform="translate(135.6512 281.3498)" fill="black">
           <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="0" y="9">crawler</tspan>
         </text>
       </g>
       <g id="Line_8">
-          <path d="M 87.02407 286.98396 L 101.09857 286.98396 C 101.11557 286.98396 101.13257 286.9839 101.14957 286.98374 L 116.2682 286.85523 C 116.2852 286.8551 116.3022 286.855 116.3192 286.855 L 123.5437 286.855"
-                  marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width=".25"/>
+          <line x1="87.02407" y1="286.98033" x2="122.8012" y2="286.98033" marker-end="url(#StickArrow_Marker)"
+                  stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Line_7">
-          <path d="M 170.4107 286.855 L 198.41832 286.855 C 201.73203 286.855 204.41832 284.16872 204.41832 280.855 L 204.41832 273.33076"
+          <path d="M 169.6682 286.98033 L 198.41832 286.98033 C 201.73203 286.98033 204.41832 284.29404 204.41832 280.98033 L 204.41832 273.33076"
                   marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round"
                   stroke-width=".25"/>
       </g>

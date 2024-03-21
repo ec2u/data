@@ -76,8 +76,8 @@ public final class Resources extends Delegator {
 
                 property("id", ID, required(id())),
 
-                property(RDFS.LABEL, required(localized())),
-                property(RDFS.COMMENT, optional(localized()))
+                property(RDFS.LABEL, required(localized(), maxLength(100))),
+                property(RDFS.COMMENT, optional(localized(), maxLength(1000)))
 
         );
     }
@@ -85,7 +85,7 @@ public final class Resources extends Delegator {
     public static Shape Resource() {
         return shape(Resource, Reference(),
 
-                property(university, () -> required(University())),
+                property(RDF.TYPE, repeatable(id())),
 
                 property(DCTERMS.TITLE, required(localized())),
                 property(DCTERMS.ALTERNATIVE, optional(localized())),
@@ -101,7 +101,9 @@ public final class Resources extends Delegator {
                 property(DCTERMS.TYPE, () -> multiple(SKOSConcept())),
                 property(DCTERMS.SUBJECT, () -> multiple(SKOSConcept())),
 
-                property(RDFS.SEEALSO, optional(id()))
+                property(RDFS.SEEALSO, multiple(id())),
+
+                property(university, () -> optional(University()))
 
         );
     }
@@ -119,7 +121,7 @@ public final class Resources extends Delegator {
 
 
     public static Shape localized() {
-        return local(/*Languages*/); // !!!
+        return text(/* !!! Languages*/);
     }
 
 

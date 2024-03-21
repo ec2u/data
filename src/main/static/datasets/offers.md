@@ -1,3 +1,5 @@
+> **⚠️** **Work in progress…**
+
 # Data Model
 
 ![offer data model](index/offers.svg)

@@ -18,10 +18,10 @@ import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable } from "@metreeca/core";
 import { useRouter } from "@metreeca/data/contexts/router";
-import { CancelIcon } from "@metreeca/view/widgets/icon";
+import { ToolHint } from "@metreeca/view/widgets/hint";
+import { CancelIcon, NotFoundIcon } from "@metreeca/view/widgets/icon";
 import * as React from "react";
-import { createElement, useEffect } from "react";
-import "./wild.css";
+import { useEffect } from "react";
 
 
 export const Wild=immutable({
@@ -55,7 +55,7 @@ export default function DataWild() {
 
 		>
 
-			{createElement("data-none", {})}
+			<ToolHint><NotFoundIcon/></ToolHint>
 
 		</DataPage>
 
