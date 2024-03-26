@@ -32,5 +32,5 @@ languages.
 | **ec2u:Resource**                                                       | [rdfs:Resource](#resource)              |      | a resource included in one of the EC2U Knowledge Hub [datasets](./index.md)                                                            |
 | ec2u:synced                                                             | instant                                 | 0..1 | timestamp of the last synchronisation of the resource description with its primary data source                                         |
 | ec2u:owner                                                              | [org:Organization](agents#organization) | 0..1 | link to an organisation responsible for providing the resource to the EC2U Knowledge Hub; usually  one the EC2U partner university     |
-| *dataset* = ^[rdfs:member](https://www.w3.org/TR/rdf-schema/#ch_member) | [ec2u:Dataset](./index.md)              | 0..1 | link to the EC2U Knowledge Hub dataset the resource belongs to                                                                         |
+| *dataset* = ^[rdfs:member](https://www.w3.org/TR/rdf-schema/#ch_member) | [ec2u:Dataset](./index.md)              | *    | links to the EC2U Knowledge Hub datasets the resource belongs to                                                                       |
 

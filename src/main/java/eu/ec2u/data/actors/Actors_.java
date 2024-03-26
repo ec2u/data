@@ -167,6 +167,7 @@ public final class Actors_ implements Runnable {
         return frame(iri(Context, normalize(record.get(col("A")))))
 
                 .value(RDF.TYPE, EC2U.term("Actor"))
+                .value(RDFS.LABEL, literal("?", "en")) // !!! label
 
                 .value(Resources.owner, university(record)) // !!! missing in the survey
 

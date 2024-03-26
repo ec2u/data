@@ -2,10 +2,22 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix org: <http://www.w3.org/ns/org#> .
-@prefix ec2u:	</terms/> .
+@prefix ec2u: </terms/> .
+
+
+org:Organization rdfs:subClassOf foaf:Agent .
+
+org:FormalOrganization rdfs:subClassOf org:Organization .
+
+org:OrganizationalCollaboration rdfs:subClassOf org:Organization .
+
+org:OrganizationalUnit rdfs:subClassOf org:Organization .
+
+
+########################################################################################################################
 
 <https://ec2u.eu/> a org:OrganizationalCollaboration ;
     rdfs:label "EC2U European Campus of City-Universities"@en ;
-    foaf:homepage </> ;
-    skos:prefLabel "EC2U European Campus of City-Universities"@en .
+    skos:prefLabel "EC2U European Campus of City-Universities"@en ;
+    foaf:homepage <https://www.ec2u.eu/> .
 

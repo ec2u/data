@@ -41,7 +41,7 @@ export const Unit=immutable({
 
 	homepage: multiple(id),
 
-	university: optional({
+	owner: optional({
 		id: required(id),
 		label: required(local)
 	}),
@@ -51,17 +51,17 @@ export const Unit=immutable({
 		label: required(local)
 	}),
 
-	head: multiple({
+	hasHead: multiple({
 		id: required(id),
 		label: required(local)
 	}),
 
-	organization: repeatable({
+	unitOf: repeatable({
 		id: required(id),
 		label: required(local)
 	}),
 
-	units: multiple({
+	hasUnit: multiple({
 		id: required(id),
 		label: required(local)
 	}),
@@ -97,10 +97,10 @@ export function DataUnit() {
 
 			homepage,
 
-			university,
+			owner,
 			classification,
 
-			head,
+			hasHead,
 
 			subject
 
@@ -108,7 +108,7 @@ export function DataUnit() {
 
 			<ToolInfo>{{
 
-				"University": university && <ToolLink>{university}</ToolLink>,
+				"Owner": owner && <ToolLink>{owner}</ToolLink>,
 
 				"Type": classification && <ToolLink>{classification}</ToolLink>
 
@@ -119,7 +119,8 @@ export function DataUnit() {
 				"Acronym": altLabel && <span>{toLocalString(altLabel)}</span>,
 				"Name": <span>{toLocalString(prefLabel)}</span>,
 
-				"Head": head?.length === 1 ? <span>{toEntryString(head[0])}</span> : head?.length && <ul>{[...head]
+				"Head": hasHead?.length === 1 ? <span>{toEntryString(hasHead[0])}</span> : hasHead?.length &&
+                    <ul>{[...hasHead]
 					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
 					.map(head => <li key={head.id}>{toEntryString(head)}</li>)
 				}</ul>,
@@ -127,7 +128,7 @@ export function DataUnit() {
 				"Topics": subject && subject.length && <ul>{[...subject]
 					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
 					.map(subject => <li key={subject.id}>
-						<ToolLink filter={[Units, { university, subject }]}>{subject}</ToolLink>
+						<ToolLink filter={[Units, { owner, subject }]}>{subject}</ToolLink>
 					</li>)
 				}</ul>
 
@@ -148,19 +149,19 @@ export function DataUnit() {
 
 			comment,
 
-			university,
-			organization,
-			units
+			owner,
+			unitOf,
+			hasUnit
 
 		}) => {
 
-			const parents=organization.filter(unit => !university || unit.id !== university.id);
+			const parents=unitOf.filter(unit => !owner || unit.id !== owner.id);
 
 			return <>
 
 				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
 
-				{(parents.length || units?.length) && <>
+				{(parents.length || hasUnit?.length) && <>
 
                     <hr/>
 
@@ -179,12 +180,12 @@ export function DataUnit() {
 
                         </>}
 
-						{units && <>
+						{hasUnit && <>
 
                             <dt>Organizational Units</dt>
 
                             <dt>
-                                <ul>{units
+                                <ul>{hasUnit
 									.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
 									.map(unit => <li key={unit.id}><ToolLink>{unit}</ToolLink></li>)
 								}</ul>

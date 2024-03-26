@@ -26,6 +26,7 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -50,7 +51,6 @@ import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
-import static eu.ec2u.data.persons.Persons.Person;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.owner;
 
@@ -88,8 +88,8 @@ public final class Documents extends Delegator {
                 property(DCTERMS.MODIFIED, optional(dateTime())),
                 property(DCTERMS.VALID, optional(string(), pattern(ValidPattern.pattern()))),
 
-                property(DCTERMS.CREATOR, optional(Person())),
-                property(DCTERMS.CONTRIBUTOR, multiple(Person())),
+                property(DCTERMS.CREATOR, optional(Persons.FOAFPerson())),
+                property(DCTERMS.CONTRIBUTOR, multiple(Persons.FOAFPerson())),
                 property(DCTERMS.PUBLISHER, optional(OrgOrganization())), // !!! review/factor
 
                 property(DCTERMS.LICENSE, optional(string())),

@@ -69,7 +69,7 @@ insert {
 
             ?dataset a ec2u:Dataset ;
                 ec2u:owner ?owner ;
-                dct:issues [] ;
+                dct:issued [] ;
                 void:rootResource ?class .
 
             ?entity a ?class .

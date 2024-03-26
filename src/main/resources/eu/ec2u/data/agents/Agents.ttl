@@ -3,5 +3,3 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
 foaf:Agent a rdfs:Class .
-
-foaf:Person rdfs:subClassOf foaf:Agent .

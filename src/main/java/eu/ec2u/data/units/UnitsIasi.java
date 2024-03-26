@@ -16,7 +16,11 @@
 
 package eu.ec2u.data.units;
 
+import com.metreeca.http.jsonld.actions.Validate;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.IRI;
@@ -24,6 +28,10 @@ import org.eclipse.rdf4j.model.IRI;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
+
+import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.universities._Universities.Iasi;
+import static java.lang.String.format;
 
 public final class UnitsIasi implements Runnable {
 
@@ -43,23 +51,26 @@ public final class UnitsIasi implements Runnable {
 
 
     @Override public void run() {
-        //
-        // final String url=vault
-        //         .get(DataUrl)
-        //         .orElseThrow(() -> new IllegalStateException(format(
-        //                 "undefined data URL <%s>", DataUrl
-        //         )));
-        //
-        // Xtream.of(url)
-        //
-        //         .flatMap(new Units.CSVLoader(Iasi))
-        //
-        //         .pipe(units -> validate(Unit(), Set.of(Unit.Unit), units))
-        //
-        //         .forEach(new Upload()
-        //                 .contexts(Context)
-        //                 .clear(true)
-        //         );
+
+        final String url=vault
+                .get(DataUrl)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined data URL <%s>", DataUrl
+                )));
+
+        Xtream.of(url)
+
+                .flatMap(new Units_.CSVLoader(Iasi))
+
+                .optMap(new Validate(Unit()))
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                );
     }
 
 }

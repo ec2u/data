@@ -23,7 +23,6 @@ import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import static com.metreeca.link.Shape.*;
 
@@ -32,7 +31,6 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
 import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
-import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Persons extends Delegator {
 
@@ -40,14 +38,6 @@ public final class Persons extends Delegator {
 
     public static final IRI Person=term("Person");
 
-
-    public static Shape Person() {
-        return shape(Person, Resource(), FOAFPerson(),
-
-                property(RDF.TYPE, hasValue(Person))
-
-        );
-    }
 
     public static Shape FOAFPerson() {
         return shape(FOAF.PERSON, FOAFAgent(),

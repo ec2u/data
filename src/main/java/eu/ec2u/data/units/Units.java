@@ -22,32 +22,32 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.util.stream.Stream;
-
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgOrganizationalUnit;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.universities.Universities.University;
 
 
 public final class Units extends Delegator {
@@ -63,21 +63,10 @@ public final class Units extends Delegator {
     public static Shape Unit() {
         return shape(Unit, Resource(), OrgOrganizationalUnit(),
 
-                property(RDF.TYPE, hasValue(Unit))
+                property(owner, () -> optional(University())),
 
-        );
-    }
+                property(DCTERMS.SUBJECT, multiple(SKOSConcept()))
 
-
-    public static void main(final String... args) {
-        exec(() -> Stream
-
-                .of(rdf(resource(Units.class, ".ttl"), Base))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
         );
     }
 
@@ -129,6 +118,26 @@ public final class Units extends Delegator {
 
                 ))
         );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(Units::create);
+    }
+
+
+    public static void create() {
+
+        service(graph()).update(connection -> {
+
+            Datasets.create(Units.class, Context);
+            Datasets.update(Units.class, Context);
+
+            return null;
+
+        });
     }
 
 }

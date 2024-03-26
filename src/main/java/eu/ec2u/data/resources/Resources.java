@@ -42,7 +42,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
@@ -85,9 +85,9 @@ public final class Resources extends Delegator {
         return shape(Resource, Entry(),
 
                 property(synced, () -> optional(instant())),
-                property(owner, () -> optional(Organization())),
+                property(owner, () -> optional(OrgOrganization())),
 
-                property("dataset", reverse(RDFS.MEMBER), () -> optional(Dataset()))
+                property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
 
         );
     }

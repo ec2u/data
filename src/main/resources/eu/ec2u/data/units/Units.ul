@@ -1,0 +1,19 @@
+prefix ec2u: </terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX org: <http://www.w3.org/ns/org#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+insert {
+
+    ?unit
+        rdfs:label ?label ;
+        rdfs:comment ?definition.
+
+} where {
+
+    ?unit a org:Organization ;
+        skos:prefLabel ?label .
+
+    optional { ?unit skos:definition ?definition }
+
+}

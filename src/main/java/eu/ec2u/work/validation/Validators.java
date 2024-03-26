@@ -32,7 +32,7 @@ public final class Validators {
     public static Xtream<Collection<Statement>> validate(
             final Shape shape, final Set<IRI> types, final Stream<Frame> frames
     ) {
-        return (validate(shape, types, frames, Stream.empty()));
+        return validate(shape, types, frames, Stream.empty());
     }
 
     public static Xtream<Collection<Statement>> validate(

@@ -56,7 +56,7 @@ export const Units=immutable({
 		prefLabel: required(local),
 		altLabel: optional(local),
 
-		university: optional({
+		unitOf: optional({
 			id: required(id),
 			label: required(local)
 		}),
@@ -90,11 +90,11 @@ export function DataUnits() {
 			}</ToolKeywords>
 
 			<ToolOptions placeholder={"University"}>{
-				useOptions(units, "university", { type: entry({ id: "", label: required(local) }) })
+				useOptions(units, "owner", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Type"}>{
-				useOptions(units, "type", { type: entry({ id: "", label: required(local) }) })
+				useOptions(units, "classification", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Topic"} compact>{
@@ -119,7 +119,7 @@ export function DataUnits() {
 			prefLabel,
 			altLabel,
 
-			university,
+			unitOf,
 			classification
 
 		}) =>
@@ -129,7 +129,7 @@ export function DataUnits() {
 				title={<ToolLink>{{ id, label: toUnitLabel({ prefLabel, altLabel }) }}</ToolLink>}
 
 				tags={<>
-					<div>{university && toEntryString(university) || "EC2U Alliance"}</div>
+					<div>{unitOf && toEntryString(unitOf)}</div>
 					{classification && <div>{toEntryString(classification)}</div>}
 				</>}
 

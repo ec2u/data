@@ -44,6 +44,7 @@ import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.*;
 import static eu.ec2u.data.persons.Persons.FOAFPerson;
 import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.Universities.University;
 
 
@@ -109,6 +110,16 @@ public final class EC2U extends Delegator {
                 Resource(),
                 Dataset(),
 
+                University(),
+                Unit(),
+
+                // Program(),
+                // Course(),
+
+                // Document(),
+
+                // Event(),
+
                 // SKOSConceptScheme(),
                 // SKOSConcept(),
 
@@ -118,20 +129,8 @@ public final class EC2U extends Delegator {
                 OrgOrganization(),
                 OrgFormalOrganization(),
                 OrgOrganizationalCollaboration(),
-                OrgOrganizationalUnit(),
+                OrgOrganizationalUnit()
 
-                University()
-
-                // Unit(),
-                // Person(),
-                //
-                // Program(),
-                // Course(),
-                //
-                // Document(),
-                //
-                // Event(),
-                //
                 // Schema.Thing(),
                 // Schema.Organization(),
                 // Schema.Event(),
