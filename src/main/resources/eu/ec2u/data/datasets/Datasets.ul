@@ -20,6 +20,19 @@ insert {
 
 insert {
 
+    ?dataset rdfs:member ?entity.
+
+} where {
+
+    ?dataset a ec2u:Dataset ;
+        void:rootResource ?class .
+
+    ?entity a ?class .
+
+}; # compute membership
+
+insert {
+
     ?dataset void:entities ?entities
 
 } where {
@@ -37,7 +50,6 @@ insert {
 }; # compute size
 
 insert {
-
 
     ?dataset void:subset ?subset .
     ?owner void:subset ?subset .

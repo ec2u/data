@@ -107,10 +107,10 @@ export function DataDatasets() {
 
 			<ToolCard key={id} size={7.5}
 
-				title={<ToolLink>{{ id, label: ec2u(alternative || label) }}</ToolLink>}
+				title={<ToolLink>{{ id, label: ec2u(label) }}</ToolLink>}
 
 				tags={`${toIntegerString(entities)}`}
-				image={<span>{ec2u(toLocalString(label))}</span>}
+				image={alternative && <span>{ec2u(toLocalString(alternative))}</span>}
 
 			>{
 

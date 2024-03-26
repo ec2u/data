@@ -52,10 +52,7 @@ export const Dataset=immutable({
 
 	id: "/datasets/*",
 
-	label: required(local),
-	comment: optional(local),
-
-	title: { "en": "Dataset" },
+	title: required(local),
 	alternative: optional(local),
 	description: optional(local),
 

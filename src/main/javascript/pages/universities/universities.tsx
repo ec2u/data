@@ -52,16 +52,17 @@ export const Universities=immutable({
 	members: multiple({
 
 		id: required(id),
-		image: required(id),
 
 		label: required(local),
 		comment: required(local),
+		depiction: required(id),
 
 		country: required({
 				id: required(id),
 				label: required(local)
 			}
 		)
+
 	})
 });
 
@@ -104,7 +105,7 @@ export function DataUniversities() {
 			id,
 			label,
 			comment,
-			image,
+			depiction,
 
 			country
 
@@ -113,7 +114,7 @@ export function DataUniversities() {
 			<ToolCard key={id} side={"end"}
 
 				title={<ToolLink>{{ id, label }}</ToolLink>}
-				image={image}
+				image={depiction}
 
 				tags={<span>{toEntryString(country)}</span>}
 

@@ -9,7 +9,7 @@ External supporting datasets may also be listed in the catalog for reference and
 
 # Data Model
 
-![dataset data model](index/datasets.svg)
+![dataset data model](index/datasets.svg#50)
 
 EC2U datasets are described using a controlled subset
 of the  [VoID](https://www.w3.org/TR/void/) data model, as outlined by

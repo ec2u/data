@@ -36,7 +36,6 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.decimal;
 import static com.metreeca.link.Shape.integer;
@@ -115,9 +114,7 @@ public final class Universities extends Delegator {
                                         frame(
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD))
-                                        ),
-
-                                        filter(RDF.TYPE, University)
+                                        )
 
                                 ))
 

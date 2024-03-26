@@ -2,7 +2,7 @@
 
 # Data Model
 
-![university data model](index/universities.svg)
+![university data model](index/universities.svg#75)
 
 EC2U allied universities are described using a controlled subset of the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with:
 

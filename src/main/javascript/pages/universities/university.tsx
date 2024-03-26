@@ -21,7 +21,6 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
-import { string } from "@metreeca/core/string";
 import { year } from "@metreeca/core/year";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
@@ -35,11 +34,9 @@ export const University=immutable({
 
 	id: required("/universities/{code}"),
 
-	image: required(id),
 	label: required(local),
 	comment: required(local),
-
-	schac: required(string),
+	depiction: required(id),
 
 	inception: optional(year),
 	students: optional(integer),
@@ -49,12 +46,12 @@ export const University=immutable({
 		label: required(local)
 	}),
 
-	location: optional({
+	city: optional({
 		id: required(id),
 		label: required(local)
 	}),
 
-	subsets: multiple({
+	subset: multiple({
 
 		dataset: {
 			id: required(id),
@@ -79,15 +76,15 @@ export function DataUniversity() {
 			inception,
 			students,
 			country,
-			location,
-			subsets
+			city,
+			subset
 
 		}) => <>
 
 			<ToolInfo>{{
 
 				"Country": country && <ToolLink>{country}</ToolLink>,
-				"City": location && <ToolLink>{location}</ToolLink>
+				"City": city && <ToolLink>{city}</ToolLink>
 
 			}}</ToolInfo>
 
@@ -98,7 +95,7 @@ export function DataUniversity() {
 
 			}}</ToolInfo>
 
-			<ToolInfo>{university && subsets?.slice()
+			<ToolInfo>{subset?.slice()
 				?.sort(({ entities: x }, { entities: y }) => x - y)
 				?.map(({ dataset, entities }) => ({
 
@@ -119,13 +116,13 @@ export function DataUniversity() {
 
 		<ToolFrame placeholder={Universities[icon]} as={({
 
-			image,
 			label,
-			comment
+			comment,
+			depiction
 
 		}) => <>
 
-			<img className={"right"} src={image} alt={`Image of ${toLocalString(label)}`}/>
+			<img className={"right"} src={depiction} alt={`Image of ${toLocalString(label)}`}/>
 
 			<p>{toLocalString(comment)}</p>
 

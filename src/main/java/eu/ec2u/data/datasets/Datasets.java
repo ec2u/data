@@ -26,7 +26,6 @@ import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.VOID;
 
@@ -64,24 +63,24 @@ public final class Datasets extends Delegator {
     public static Shape Dataset() {
         return shape(Dataset, Resource(),
 
-                property(RDFS.ISDEFINEDBY, required(id())),
-
                 property(DCTERMS.TITLE, required(localized())),
                 property(DCTERMS.ALTERNATIVE, optional(localized())),
                 property(DCTERMS.DESCRIPTION, optional(localized())),
-
-                property(DCTERMS.PUBLISHER, optional(id())),
 
                 property(DCTERMS.CREATED, optional(date())),
                 property(DCTERMS.ISSUED, optional(date())),
                 property(DCTERMS.MODIFIED, optional(date())),
 
                 property(DCTERMS.RIGHTS, required(string())),
-                property(DCTERMS.LICENSE, optional(id())),
                 property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
+                property(DCTERMS.LICENSE, optional(Entry())),
 
                 property(VOID.ROOT_RESOURCE, multiple(id())),
                 property(VOID.ENTITIES, optional(integer())),
+
+                property(DCTERMS.PUBLISHER, optional(Entry())),
+
+                property(RDFS.ISDEFINEDBY, required(id())),
 
                 property(VOID.SUBSET, multiple(Entry(),
 
@@ -124,8 +123,7 @@ public final class Datasets extends Delegator {
                                         field(RDFS.LABEL, literal("", WILDCARD))
                                 ),
 
-                                filter(RDF.TYPE, Dataset),
-                                filter(DCTERMS.AVAILABLE, any())
+                                filter(DCTERMS.ISSUED, any())
 
                         ))
 
@@ -147,7 +145,15 @@ public final class Datasets extends Delegator {
     }
 
     public static void update() {
-        update(Datasets.class, Context);
+        Stream
+
+                .of(text(resource(Datasets.class, ".ul")))
+
+                .forEach(new Update()
+                        .base(Base)
+                        .insert(iri(Context, "/~"))
+                        .clear(true)
+                );
     }
 
 
@@ -171,15 +177,23 @@ public final class Datasets extends Delegator {
     }
 
     public static void update(final Class<?> dataset, final IRI context) {
-        Stream
+        service(graph()).update(connection -> {
 
-                .of(text(resource(dataset, ".ul")))
+            Stream
 
-                .forEach(new Update()
-                        .base(Base)
-                        .insert(iri(context, "/~"))
-                        .clear(true)
-                );
+                    .of(text(resource(dataset, ".ul")))
+
+                    .forEach(new Update()
+                            .base(Base)
+                            .insert(iri(context, "/~"))
+                            .clear(true)
+                    );
+
+            update();
+
+            return null;
+
+        });
     }
 
 }

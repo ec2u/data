@@ -10,7 +10,6 @@
     dct:title "EC2U Dataset Catalog"@en ;
     dct:alternative "EC2U Datasets"@en ;
     dct:description "Datasets published on the EC2U Knowledge Hub."@en ;
-    dct:issued "2022-01-01"^^xsd:date ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     void:rootResource ec2u:Dataset ;
@@ -25,5 +24,5 @@ ec2u:Dataset rdfs::subClassOf ec2u:Resoure, void:Dataset .
 #### Standard Licenses #################################################################################################
 
 <http://creativecommons.org/licenses/by-nc-nd/4.0/>
-    dct:title "CC BY-NC-ND 4.0"@en ;
-    dct:description "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"@en .
+    rdfs:label "CC BY-NC-ND 4.0"@en ;
+    rdfs:comment "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"@en .
