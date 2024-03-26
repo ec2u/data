@@ -40,7 +40,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
-import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Entry;
 import static eu.ec2u.data.resources.Resources.Resource;
 
 
@@ -59,8 +59,8 @@ public final class Offers {
     public static Shape Offer() {
         return shape(Resource(), Schema.Thing(),
 
-                property(Schema.provider, optional(Reference())),
-                property(Schema.educationalLevel, optional(Reference())),
+                property(Schema.provider, optional(Entry())),
+                property(Schema.educationalLevel, optional(Entry())),
                 property(Schema.numberOfCredits, optional(decimal(), minInclusive(literal(integer(0))))),
 
                 property(Schema.educationalCredentialAwarded, optional(Resources.localized())),

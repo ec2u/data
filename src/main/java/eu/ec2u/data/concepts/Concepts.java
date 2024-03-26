@@ -26,10 +26,7 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.stream.Stream;
 
@@ -47,7 +44,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Entry;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
@@ -61,28 +58,15 @@ public final class Concepts extends Delegator {
 
 
     public static Shape Concepts() {
-        return Dataset(ConceptScheme());
+        return Dataset(SKOSConceptScheme());
     }
 
-    public static Shape ConceptScheme() {
-        return shape(ConceptScheme, Resource(), SKOSConceptScheme(),
-
-                property(DCTERMS.EXTENT, required(integer()))
-
-        );
-    }
-
-    public static Shape Concept() {
-        return shape(Concept, Resource(), SKOSConcept(),
-
-                property(DCTERMS.EXTENT, optional(integer()))
-
-        );
-    }
 
 
     public static Shape SKOSConceptScheme() {
-        return shape(SKOS.CONCEPT_SCHEME, Reference(),
+        return shape(SKOS.CONCEPT_SCHEME, Entry(),
+
+                property(VOID.ENTITIES, required(integer())),
 
                 property(SKOS.HAS_TOP_CONCEPT, () -> shape(multiple(), SKOSConcept())) // !!! concept.inScheme == this
 
@@ -90,7 +74,7 @@ public final class Concepts extends Delegator {
     }
 
     public static Shape SKOSConcept() {
-        return shape(SKOS.CONCEPT, Reference(),
+        return shape(SKOS.CONCEPT, Entry(),
 
                 property(SKOS.PREF_LABEL, required(Resources.localized())),
                 property(SKOS.ALT_LABEL, multiple(Resources.localized())),
@@ -101,31 +85,8 @@ public final class Concepts extends Delegator {
 
                 property(SKOS.BROADER, () -> multiple(SKOSConcept())), // !!! broader.inScheme == inScheme
                 property(SKOS.NARROWER, () -> multiple(SKOSConcept())), // !!! broader.inScheme == inScheme
-                property(SKOS.RELATED, () -> multiple(SKOSConcept())), // !!! broader.inScheme == inScheme
+                property(SKOS.RELATED, () -> multiple(SKOSConcept())) // !!! broader.inScheme == inScheme
 
-                property(RDFS.ISDEFINEDBY, optional(id()))
-
-        );
-    }
-
-
-    public static void main(final String... args) {
-        exec(() -> Stream
-
-                .of(
-
-                        rdf(resource(Concepts.class, ".ttl"), Base),
-
-                        rdf(resource("https://www.w3.org/2009/08/skos-reference/skos.rdf"), Base).stream()
-                                .filter(not(pattern(null, RDFS.SUBPROPERTYOF, RDFS.LABEL)))
-                                .collect(toList())
-
-                )
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
         );
     }
 
@@ -135,7 +96,7 @@ public final class Concepts extends Delegator {
     public Concepts() {
         delegate(handler(
 
-                new Driver(ConceptScheme()),
+                new Driver(SKOSConceptScheme()),
 
                 new Router()
 
@@ -153,14 +114,14 @@ public final class Concepts extends Delegator {
                                                         field(RDFS.LABEL, literal("", WILDCARD))
                                                 ),
 
-                                                filter(RDF.TYPE, SKOS.CONCEPT_SCHEME) // !!! ConceptScheme
+                                                filter(RDF.TYPE, SKOS.CONCEPT_SCHEME)
 
                                         ))
                                 )))
 
                         ))
 
-                        .path("/{scheme}", handler(new Driver(ConceptScheme()), new Worker()
+                        .path("/{scheme}", handler(new Driver(SKOSConceptScheme()), new Worker()
 
                                 .get(new Relator(frame(
 
@@ -176,7 +137,7 @@ public final class Concepts extends Delegator {
 
                         ))
 
-                        .path("/{scheme}/*", handler(new Driver(Concept()), new Worker()
+                        .path("/{scheme}/*", handler(new Driver(SKOSConcept()), new Worker()
 
                                 .get(new Relator(frame(
 

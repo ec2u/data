@@ -47,7 +47,7 @@ public final class EventsPaviaUniversity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/pavia/university");
 
     private static final Frame Publisher=frame(iri("http://news.unipv.it/"))
-            .value(RDF.TYPE, Resources.Publisher)
+            .value(RDF.TYPE, Events._Publisher)
             .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Pavia / News", "en"),
@@ -95,7 +95,7 @@ public final class EventsPaviaUniversity implements Runnable {
     private Frame event(final Frame frame) {
         return WordPress(frame, Pavia.Language)
 
-                .value(Resources.university, Pavia.Id)
+                .value(Resources.owner, Pavia.Id)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

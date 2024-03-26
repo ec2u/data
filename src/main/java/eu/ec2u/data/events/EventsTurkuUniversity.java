@@ -30,7 +30,6 @@ import com.metreeca.http.xml.actions.Untag;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.resources.Resources_;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -75,7 +74,7 @@ public final class EventsTurkuUniversity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/turku/university");
 
     private static final Frame Publisher=frame(iri("https://www.utu.fi/event-search/"))
-            .value(RDF.TYPE, Resources.Publisher)
+            .value(RDF.TYPE, Events._Publisher)
             .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Turku / News", "en"),

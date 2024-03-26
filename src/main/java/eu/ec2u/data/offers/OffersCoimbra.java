@@ -280,7 +280,7 @@ public final class OffersCoimbra implements Runnable {
     private Optional<Frame> offer(final IRI context, final JSONPath json) {
         return json.integer("cursoId").map(id -> frame(item(context, Coimbra, String.valueOf(id)))
 
-                .value(Resources.university, Coimbra.Id)
+                .value(Resources.owner, Coimbra.Id)
 
                 .value(Schema.url, json.string("urlEN").map(Values::iri))
                 .value(Schema.url, json.string("urlPT").map(Values::iri))

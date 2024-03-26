@@ -19,7 +19,7 @@
     "scripts": {
       "clean": "rm -rf node_modules",
       "setup": "npm install",
-      "start": "vite --host --open --host",
+      "start": "vite --open --host",
       "build": "vite build"
     },
     "dependencies": {

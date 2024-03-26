@@ -54,8 +54,8 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
     private static final Frame Publisher=frame(iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda"
             +"-salamanca/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Resources.City)
+            .value(RDF.TYPE, Events._Publisher)
+            .value(DCTERMS.COVERAGE, Events._City)
             .values(RDFS.LABEL,
                     literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en"),
                     literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.Language)
@@ -126,7 +126,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
                     .values(RDF.TYPE, Events.Event)
 
-                    .value(Resources.university, Salamanca.Id)
+                    .value(Resources.owner, Salamanca.Id)
 
                     .value(DCTERMS.SOURCE, iri(url))
                     .frame(DCTERMS.PUBLISHER, Publisher)

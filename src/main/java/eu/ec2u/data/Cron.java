@@ -22,13 +22,11 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.services.Logger;
 
-import eu.ec2u.data.concepts.Concepts_;
-import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offers.*;
 import eu.ec2u.data.units.*;
-import eu.ec2u.data.universities.Universities_;
+import eu.ec2u.data.universities.Universities;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.BadGateway;
@@ -49,7 +47,7 @@ public final class Cron extends Delegator {
     public Cron() {
         delegate(cron(new Router()
 
-                .path("/universities/", execute(new Universities_()))
+                .path("/universities/", execute(Universities::update))
 
                 .path("/units/coimbra", execute(new UnitsCoimbra()))
                 .path("/units/iasi", execute(new UnitsIasi()))
@@ -93,9 +91,6 @@ public final class Cron extends Delegator {
                 .path("/events/turku/university", execute(new EventsTurkuUniversity()))
                 .path("/events/turku/city", execute(new EventsTurkuCity()))
                 .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
-
-                .path("/concepts/", execute(new Concepts_()))
-                .path("/datasets/", execute(new Datasets()))
 
         ));
     }

@@ -151,7 +151,7 @@ public final class OffersSalamanca implements Runnable {
                 .map(code -> frame(item(Programs, Salamanca, code))
 
                         .values(RDF.TYPE, Program)
-                        .value(Resources.university, Salamanca.Id)
+                        .value(Resources.owner, Salamanca.Id)
 
                         .value(Schema.url, json.string("programUrl").map(Values::iri))
                         .value(Schema.identifier, literal(code))
@@ -188,7 +188,7 @@ public final class OffersSalamanca implements Runnable {
         return json.string("code").map(code -> frame(item(Courses, Salamanca, code))
 
                 .values(RDF.TYPE, Course)
-                .value(Resources.university, Salamanca.Id)
+                .value(Resources.owner, Salamanca.Id)
 
                 .value(Schema.url, json.string("urlEN").map(Values::iri))
                 .value(Schema.identifier, literal(code))

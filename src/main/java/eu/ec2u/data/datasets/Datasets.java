@@ -24,7 +24,6 @@ import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -34,7 +33,9 @@ import org.eclipse.rdf4j.model.vocabulary.VOID;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Constraint.any;
@@ -46,10 +47,10 @@ import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.resources.Resources.Reference;
-import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
+import static eu.ec2u.data.resources.Resources.*;
 
-public final class Datasets extends Delegator implements Runnable {
+public final class Datasets extends Delegator {
 
     public static final IRI Context=item("/datasets/");
 
@@ -63,15 +64,31 @@ public final class Datasets extends Delegator implements Runnable {
     public static Shape Dataset() {
         return shape(Dataset, Resource(),
 
-                property(DCTERMS.AVAILABLE, optional(date())), // !!! vs dct:issued?
+                property(RDFS.ISDEFINEDBY, required(id())),
+
+                property(DCTERMS.TITLE, required(localized())),
+                property(DCTERMS.ALTERNATIVE, optional(localized())),
+                property(DCTERMS.DESCRIPTION, optional(localized())),
+
+                property(DCTERMS.PUBLISHER, optional(id())),
+
+                property(DCTERMS.CREATED, optional(date())),
+                property(DCTERMS.ISSUED, optional(date())),
+                property(DCTERMS.MODIFIED, optional(date())),
 
                 property(DCTERMS.RIGHTS, required(string())),
-                property(DCTERMS.ACCESS_RIGHTS, optional(Resources.localized())),
-                property(DCTERMS.LICENSE, optional(Reference())),
+                property(DCTERMS.LICENSE, optional(id())),
+                property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
 
-                property(VOID.URI_SPACE, optional(string())),
+                property(VOID.ROOT_RESOURCE, multiple(id())),
                 property(VOID.ENTITIES, optional(integer())),
-                property(RDFS.ISDEFINEDBY, optional(id()))
+
+                property(VOID.SUBSET, multiple(Entry(),
+
+                        property(owner, required(OrgOrganization())),
+                        property(VOID.ENTITIES, required(integer()))
+
+                ))
 
         );
     }
@@ -82,16 +99,11 @@ public final class Datasets extends Delegator implements Runnable {
             throw new NullPointerException("null shape");
         }
 
-        return virtual(Dataset(),
+        return shape(Dataset(),
 
                 property("members", RDFS.MEMBER, shape)
 
         );
-    }
-
-
-    public static void main(final String... args) {
-        exec(() -> new Datasets().run());
     }
 
 
@@ -123,22 +135,51 @@ public final class Datasets extends Delegator implements Runnable {
     }
 
 
-    @Override public void run() {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        Stream.of(rdf(resource(Datasets.class, ".ttl"), Base))
+    public static void main(final String... args) {
+        exec(Datasets::create);
+    }
 
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                );
 
-        Stream.of(text(resource(Datasets.class, ".ul")))
+    public static void create() {
+        create(Datasets.class, Context);
+    }
+
+    public static void update() {
+        update(Datasets.class, Context);
+    }
+
+
+    public static void create(final Class<?> dataset, final IRI context) {
+        service(graph()).update(connection -> {
+
+            Stream
+
+                    .of(rdf(resource(dataset, ".ttl"), Base))
+
+                    .forEach(new Upload()
+                            .contexts(context)
+                            .clear(true)
+                    );
+
+            update();
+
+            return null;
+
+        });
+    }
+
+    public static void update(final Class<?> dataset, final IRI context) {
+        Stream
+
+                .of(text(resource(dataset, ".ul")))
 
                 .forEach(new Update()
                         .base(Base)
-                        .insert(Context)
+                        .insert(iri(context, "/~"))
+                        .clear(true)
                 );
-
     }
 
 }

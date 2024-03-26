@@ -33,7 +33,7 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.Base;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.resources.Resources.Reference;
+import static eu.ec2u.data.resources.Resources.Entry;
 
 /**
  * Schema.org RDF vocabulary.
@@ -92,7 +92,7 @@ public final class Schema {
      * @throws NullPointerException if {@code labels} is nul or contains null elements
      */
     public static Shape Thing() {
-        return shape(Thing, Reference(),
+        return shape(Thing, Entry(),
 
                 property(RDF.TYPE, hasValue(Thing)),
 
@@ -102,7 +102,7 @@ public final class Schema {
                 property("fullDescription", description, required(Resources.localized())), // ;( clash with dct:description
                 property(disambiguatingDescription, optional(Resources.localized())),
                 property(image, optional(id())),
-                property(about, multiple(Reference()))
+                property(about, multiple(Entry()))
 
         );
     }
@@ -259,9 +259,9 @@ public final class Schema {
 
                 property(RDF.TYPE, hasValue(PostalAddress)),
 
-                property(addressCountry, optional(or(Reference(), string()))),
-                property(addressRegion, optional(or(Reference(), string()))),
-                property(addressLocality, optional(or(Reference(), string()))),
+                property(addressCountry, optional(or(Entry(), string()))),
+                property(addressRegion, optional(or(Entry(), string()))),
+                property(addressLocality, optional(or(Entry(), string()))),
                 property(postalCode, optional(string())),
                 property(streetAddress, optional(string()))
 

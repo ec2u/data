@@ -4,8 +4,6 @@ prefix dct: <http://purl.org/dc/terms/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 
-#### Complete Datasets Descriptions ####################################################################################
-
 insert {
 
     ?dataset
@@ -18,25 +16,7 @@ insert {
         dct:title ?title ;
         dct:description ?description .
 
-};
-
-
-    #### Compute Datasets Aliases ######################################################################################
-
-insert {
-
-    ?alias rdfs:isDefinedBy ?dataset.
-
-} where {
-
-    ?dataset a ec2u:Dataset .
-
-    bind(iri(replace(str(?dataset), "^https://data.ec2u.eu/(\\w+)?/$", "https://data.ec2u.eu/datasets/$1" )) as ?alias)
-
-};
-
-
-    #### Compute Datasets Size #########################################################################################
+}; # complete entry
 
 insert {
 
@@ -44,52 +24,47 @@ insert {
 
 } where {
 
-    {
         select ?dataset (count(distinct ?entity) as ?entities) {
 
             ?dataset a ec2u:Dataset ;
                 void:rootResource ?class .
 
-            optional { ?entity a ?class }
+            ?entity a ?class .
 
         }
         group by ?dataset
-    }
 
-};
-
-
-    #### Compute Dataset University Partitions Size ####################################################################
+}; # compute size
 
 insert {
 
+
     ?dataset void:subset ?subset .
-    ?university dct:extent ?subset .
+    ?owner void:subset ?subset .
 
     ?subset
-        ec2u:university ?university ;
+        ec2u:owner ?owner ;
         void:entities ?entities .
+
 
 } where {
 
     bind (uuid() as ?subset)
 
     {
-        select ?dataset ?university (count(distinct ?entity) as ?entities)
-
+        select ?dataset ?owner (count(distinct ?entity) as ?entities)
         where {
 
             ?dataset a ec2u:Dataset ;
-                dct:available [] ;
+                ec2u:owner ?owner ;
+                dct:issues [] ;
                 void:rootResource ?class .
 
-            ?entity a ec2u:Resource,
-                    ?class ;
-                ec2u:university ?university .
+            ?entity a ?class .
 
         }
+        group by ?dataset ?owner
 
-        group by ?dataset ?university
     }
 
-}
+} # create owner partitions

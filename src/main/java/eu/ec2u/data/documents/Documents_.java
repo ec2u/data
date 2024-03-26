@@ -52,7 +52,6 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.concepts.Concepts_.concept;
 import static eu.ec2u.data.persons.Persons_.person;
-import static eu.ec2u.data.resources.Resources.Publisher;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
@@ -129,7 +128,7 @@ final class Documents_ {
                             field(ID, id),
 
                             Frame.field(RDF.TYPE, Documents.Document),
-                            field(Resources.university, university.Id),
+                            field(Resources.owner, university.Id),
 
                             field(Schema.url, value(record, "URL (English)", Parsers::iri)),
                             field(Schema.url, value(record, "URL (Local)", Parsers::iri)),
@@ -272,8 +271,7 @@ final class Documents_ {
 
                                 field(ID, EC2U.item(Organizations.Context, university, lower(id))),
 
-
-                                field(RDF.TYPE, Publisher),
+                                // !!! field(RDF.TYPE, _Publisher),
 
                                 field(SKOS.PREF_LABEL, nameEnglish.map(v -> literal(v, "en"))),
                                 field(SKOS.PREF_LABEL, nameLocal.map(v -> literal(v, university.Language))),

@@ -23,7 +23,7 @@ import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.concepts.UnitTypes;
+import eu.ec2u.data.organizations._UnitTypes;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -42,8 +42,8 @@ public final class UnitsPavia implements Runnable {
     private static final IRI Context=iri(Units.Context, "/pavia");
 
     private static final Map<IRI, IRI> Types=Map.ofEntries(
-            entry(VIVO.AcademicDepartment, UnitTypes.Department),
-            entry(VIVO.Center, UnitTypes.Centre)
+            entry(VIVO.AcademicDepartment, _UnitTypes.Department),
+            entry(VIVO.Center, _UnitTypes.Centre)
     );
 
 

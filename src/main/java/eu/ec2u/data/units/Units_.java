@@ -17,7 +17,7 @@
 package eu.ec2u.data.units;
 
 import eu.ec2u.data.concepts.EuroSciVoc;
-import eu.ec2u.data.concepts.UnitTypes;
+import eu.ec2u.data.organizations._UnitTypes;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.work.focus._Cursor;
 import org.apache.commons.csv.CSVFormat;
@@ -379,7 +379,7 @@ public final class Units_ {
 
                                     unit.focus().stringValue(),
 
-                                    unit.values(seq(Resources.university, RDFS.LABEL))
+                                    unit.values(seq(Resources.owner, RDFS.LABEL))
                                             .filter(value -> lang(value).equals("en"))
                                             .findFirst()
                                             .map(Value::stringValue)
@@ -404,14 +404,14 @@ public final class Units_ {
                                             .orElse(""),
 
                                     unit.cursors(ORG.UNIT_OF)
-                                            .filter(parent -> parent.values(RDF.TYPE).noneMatch(Resources.university::equals))
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(UnitTypes.InstituteVirtual::equals))
+                                            .filter(parent -> parent.values(RDF.TYPE).noneMatch(Resources.owner::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(_UnitTypes.InstituteVirtual::equals))
                                             .flatMap(parent -> parent.localizeds(RDFS.LABEL, "en"))
                                             .filter(not(v -> v.startsWith("University "))) // !!!
                                             .collect(joining("; ")),
 
                                     unit.cursors(ORG.UNIT_OF)
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(UnitTypes.InstituteVirtual::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(_UnitTypes.InstituteVirtual::equals))
                                             .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
                                             .collect(joining("; ")),
 

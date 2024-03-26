@@ -21,36 +21,36 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.open.actions.WikidataMirror;
+import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
+import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.VOID;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
-import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.decimal;
 import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgFormalOrganization;
-import static eu.ec2u.data.resources.Resources.Reference;
-import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.*;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 
 public final class Universities extends Delegator {
@@ -59,12 +59,11 @@ public final class Universities extends Delegator {
 
     public static final IRI University=term("University");
 
-    private static final IRI schac=term("schac");
-    private static final IRI image=term("image");
     private static final IRI inception=term("inception");
     private static final IRI students=term("students");
+
     private static final IRI country=term("country");
-    private static final IRI location=term("location");
+    private static final IRI city=term("city");
 
 
     public static Shape Universities() {
@@ -74,16 +73,21 @@ public final class Universities extends Delegator {
     public static Shape University() {
         return shape(University, Resource(), OrgFormalOrganization(),
 
-                property(schac, required(string())),
-                property(image, required(id())),
+                property(FOAF.DEPICTION, required(id())),
+                property(FOAF.HOMEPAGE, repeatable(id())),
 
-                property(inception, optional(year())),
-                property(students, optional(integer())),
+                property(inception, required(year())),
+                property(students, required(integer())),
 
-                property(country, required(Reference())),
-                property(location, required(Reference())),
+                property(country, required(Entry())),
+                property(city, required(Entry())),
 
-                property("subsets", DCTERMS.EXTENT, multiple(
+                property(WGS84.LAT, required(decimal())),
+                property(WGS84.LONG, required(decimal())),
+
+                property(ORG.SUB_ORGANIZATION_OF, hasValue((iri("https://ec2u.eu/")))),
+
+                property("subset", reverse(owner), multiple(
 
                         property("dataset", reverse(VOID.SUBSET), required(Dataset())),
                         property(VOID.ENTITIES, required(integer()))
@@ -91,26 +95,6 @@ public final class Universities extends Delegator {
                 ))
 
         );
-    }
-
-
-    public static void main(final String... args) {
-        exec(() -> service(graph()).update(repositoryConnection -> {
-
-            Stream
-
-                    .of(rdf(resource(Universities.class, ".ttl"), Base))
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-
-            new Universities_().run();
-
-            return null;
-
-        }));
     }
 
 
@@ -164,6 +148,59 @@ public final class Universities extends Delegator {
                 ))
         );
 
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(Universities::create);
+    }
+
+
+    public static void create() {
+
+        wikidata(); // ;( fails if executed inside txn
+
+        service(graph()).update(repositoryConnection -> {
+
+            Datasets.create(Universities.class, Context);
+
+            update();
+
+            return null;
+
+        });
+    }
+
+    public static void update() {
+        Datasets.update(Universities.class, Context);
+    }
+
+
+    private static void wikidata() {
+        Xtream
+
+                .of(
+
+                        "?item wdt:P463 wd:Q105627243", // <member of> <EC2U>
+
+                        "values ?item "+stream(_Universities.values())
+
+                                .flatMap(university -> Stream.of(
+                                        university.City,
+                                        university.Country
+                                ))
+
+                                .map(iri -> format("<%s>", iri))
+                                .collect(joining(" ", "{ ", " }"))
+
+                )
+
+                .sink(new WikidataMirror()
+                        .contexts(iri(Context, "/wikidata"))
+                        .languages(Languages)
+                );
     }
 
 }

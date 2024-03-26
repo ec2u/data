@@ -55,6 +55,10 @@ public final class Events extends Delegator {
     public static final IRI Scheme=iri(Concepts.Context, "/event-topics");
 
     public static final IRI Event=term("Event");
+    public static final IRI _Publisher=term("Publisher");
+    public static final IRI _College=term("College");
+    public static final IRI _Association=term("Association");
+    public static final IRI _City=term("City");
 
 
     public static Shape Events() {

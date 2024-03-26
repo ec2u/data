@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1"
-        viewBox="458 350 397 369" width="397" height="369">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="539 350 316 331" width="316" height="331">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -41,9 +41,9 @@
             </g>
         </marker>
     </defs>
-    <g id="concepts" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1" fill="none" stroke="none">
+    <g id="concepts" stroke-dasharray="none" fill-opacity="1" fill="none" stroke-opacity="1" stroke="none">
         <title>concepts</title>
-        <rect fill="white" x="458" y="350" width="397" height="369"/>
+        <rect fill="white" x="539" y="350" width="316" height="331"/>
         <g id="concepts_Layer_1">
             <title>Layer 1</title>
             <g id="Group_166">
@@ -53,8 +53,7 @@
                             stroke-linejoin="round" stroke-width=".25"/>
                     <text transform="translate(644.83654 563.0957)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">skos:prefLabel : text</tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">skos:altLabel : text
-                            [0..*]
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">skos:altLabel : text [*]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">skos:definition : text
                             [0..1]
@@ -72,16 +71,9 @@
                     </text>
                 </g>
             </g>
-            <g id="Graphic_165">
-                <a xl:href="http://www.w3.org/2004/02/skos/core#">
-                    <text transform="translate(492.96666 678.0733)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</tspan>
-                    </text>
-                </a>
-            </g>
             <g id="Group_161">
                 <g id="Graphic_162">
-                    <a xl:href="entities.svg">
+                    <a xl:href="resources.svg">
                         <rect x="567.26754" y="378.4252" width="76.179" height="17" fill="white"/>
                         <rect x="567.26754" y="378.4252" width="76.179" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -97,11 +89,6 @@
                 <path d="M 642.3478 434.00817 L 605.35704 434.00817 L 605.35704 405.1752"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
-            </g>
-            <g id="Graphic_154">
-                <text transform="translate(492.96666 651.5512)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix ec2u: &lt;https://data.ec2u.eu/terms/&gt;</tspan>
-                </text>
             </g>
             <g id="Group_150">
                 <g id="Graphic_169">
@@ -123,13 +110,6 @@
                         </tspan>
           </text>
         </g>
-      </g>
-      <g id="Graphic_143">
-        <a xl:href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/">
-            <text transform="translate(493.2206 664.81225)" fill="black">
-                <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix dct: &lt;http://purl.org/dc/terms/&gt;</tspan>
-          </text>
-        </a>
       </g>
       <g id="Line_142">
           <line x1="694.5497" y1="535.98465" x2="694.5497" y2="458.17345" marker-end="url(#StickArrow_Marker)"
@@ -171,6 +151,12 @@
                 <path d="M 638.83654 570.96516 L 605.35704 570.96516 L 605.35704 405.1752"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_171">
+                <text transform="translate(578.5984 637.5433)" fill="black">
+                    <tspan font-family="Helvetica Neue" font-size="9" fill="black" x="35527137e-22" y="9">skos:match
+                    </tspan>
+                </text>
       </g>
     </g>
   </g>

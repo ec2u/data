@@ -47,7 +47,7 @@ public final class EventsIasiUniversity360 implements Runnable {
     private static final IRI Context=iri(Events.Context, "/iasi/university-360");
 
     private static final Frame Publisher=frame(iri("https://360.uaic.ro/blog/category/evenimente/"))
-            .value(RDF.TYPE, Resources.Publisher)
+            .value(RDF.TYPE, Events._Publisher)
             .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Iasi / 360 Events", "en"),
@@ -94,7 +94,7 @@ public final class EventsIasiUniversity360 implements Runnable {
     private Frame event(final Frame frame) {
         return WordPress(frame, Iasi.Language)
 
-                .value(Resources.university, Iasi.Id)
+                .value(Resources.owner, Iasi.Id)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

@@ -52,7 +52,7 @@ import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
 import static eu.ec2u.data.persons.Persons.Person;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.university;
+import static eu.ec2u.data.resources.Resources.owner;
 
 public final class Documents extends Delegator {
 
@@ -134,7 +134,7 @@ public final class Documents extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                                field(university, iri()),
+                                                field(owner, iri()),
                                                 field(DCTERMS.TYPE, iri())
 
                                         ),
@@ -155,7 +155,7 @@ public final class Documents extends Delegator {
 
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                field(university, iri()),
+                                field(owner, iri()),
                                 field(DCTERMS.TYPE, iri())
 
                         )))

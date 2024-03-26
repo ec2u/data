@@ -56,8 +56,8 @@ public final class EventsPoitiersCityGrand implements Runnable {
     private static final IRI Context=iri(Events.Context, "/poitiers/city/grand");
 
     private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Resources.City)
+            .value(RDF.TYPE, Events._Publisher)
+            .value(DCTERMS.COVERAGE, Events._City)
             .values(RDFS.LABEL,
                     literal("Grand Poitiers / Events", "en"),
                     literal("Grand Poitiers / Sortir", Poitiers.Language)
@@ -132,7 +132,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
                     .frame(DCTERMS.SUBJECT, category(item))
 
-                    .value(Resources.university, Poitiers.Id)
+                    .value(Resources.owner, Poitiers.Id)
 
                     .value(DCTERMS.SOURCE, iri(url))
                     .frame(DCTERMS.PUBLISHER, Publisher)

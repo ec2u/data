@@ -66,8 +66,8 @@ public final class EventsTurkuCity implements Runnable {
     private static final Pattern EOLPattern=Pattern.compile("\n+");
 
     private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Resources.City)
+            .value(RDF.TYPE, Events._Publisher)
+            .value(DCTERMS.COVERAGE, Events._City)
             .values(RDFS.LABEL,
                     literal("City of Turku / Event's Calendar", "en"),
                     literal("Turun kaupunki / Tapahtumakalenteri", Turku.Language)
@@ -180,7 +180,7 @@ public final class EventsTurkuCity implements Runnable {
 
                     .value(RDF.TYPE, Events.Event)
 
-                    .value(Resources.university, Turku.Id)
+                    .value(Resources.owner, Turku.Id)
 
                     .frame(DCTERMS.PUBLISHER, Publisher)
                     .value(DCTERMS.SOURCE, iri(id))

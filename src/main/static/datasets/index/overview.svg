@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2024 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+        version="1.1" viewBox="28 45 623 541" width="623" height="541">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
+                color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="overview" stroke-dasharray="none" fill-opacity="1" fill="none" stroke-opacity="1" stroke="none">
+        <title>overview</title>
+        <rect fill="white" x="28" y="45" width="623" height="541"/>
+        <g id="overview_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_2">
+                <g id="Graphic_4">
+                    <rect x="126.14173" y="198.4252" width="86.05664" height="17" fill="white"/>
+                    <rect x="126.14173" y="198.4252" width="86.05664" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(132.14173 201.4252)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Organization
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_6">
+                <g id="Graphic_8">
+                    <rect x="389.7638" y="198.4252" width="233.0537" height="17" fill="white"/>
+                    <rect x="389.7638" y="198.4252" width="233.0537" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(395.7638 201.4252)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">
+                            /concepts/organizations/{code}
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" y="9">: skos:ConceptScheme</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_13">
+                <line x1="212.19837" y1="206.9252" x2="382.9138" y2="206.9252" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_12">
+                <rect x="260.33862" y="200.4252" width="89.77295" height="13" fill="white"/>
+                <text transform="translate(263.33862 201.4252)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">org:classification 0..1</tspan>
+                </text>
+            </g>
+            <g id="Group_31">
+                <g id="Graphic_32">
+                    <rect x="126.14173" y="260.7874" width="62.73486" height="17" fill="white"/>
+                    <rect x="126.14173" y="260.7874" width="62.73486" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(132.14173 263.7874)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Person
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_33">
+                <g id="Graphic_34">
+                    <rect x="98.3195" y="426.6142" width="75.71191" height="17" fill="white"/>
+                    <rect x="98.3195" y="426.6142" width="75.71191" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(104.3195 429.6142)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Document
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_36">
+                <g id="Graphic_37">
+                    <rect x="108.43448" y="114.80315" width="65.47705" height="17" fill="white"/>
+                    <rect x="108.43448" y="114.80315" width="65.47705" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(114.43448 117.80315)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Dataset
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_38">
+                <g id="Graphic_39">
+                    <rect x="135.88907" y="143.25902" width="62.63818" height="17" fill="white"/>
+                    <rect x="135.88907" y="143.25902" width="62.63818" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(141.88907 146.25902)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Subset
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_40">
+                <g id="Graphic_41">
+                    <rect x="164.40945" y="228.18898" width="75.11865" height="17" fill="white"/>
+                    <rect x="164.40945" y="228.18898" width="75.11865" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(170.40945 231.18898)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:University
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_44">
+                <g id="Graphic_45">
+                    <rect x="164.40945" y="283.46457" width="79.979" height="17" fill="white"/>
+                    <rect x="164.40945" y="283.46457" width="79.979" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(170.40945 286.46457)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Researcher
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_46">
+                <g id="Graphic_47">
+                    <rect x="100.05314" y="453.5433" width="56.77588" height="17" fill="white"/>
+                    <rect x="100.05314" y="453.5433" width="56.77588" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(106.05314 456.5433)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Event
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_48">
+                <g id="Graphic_49">
+                    <rect x="417.3014" y="407.4803" width="56.50342" height="17" fill="white"/>
+                    <rect x="417.3014" y="407.4803" width="56.50342" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(423.3014 410.4803)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            EventTopic
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_50">
+                <g id="Graphic_51">
+                    <rect x="413.85827" y="434.40945" width="72.143555" height="17" fill="white"/>
+                    <rect x="413.85827" y="434.40945" width="72.143555" height="17" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(419.85827 437.40945)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            EventAudience
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_52">
+                <g id="Graphic_53">
+                    <rect x="122.13541" y="338.74016" width="69.16846" height="17" fill="white"/>
+                    <rect x="122.13541" y="338.74016" width="69.16846" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(128.13541 341.74016)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Program
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_54">
+                <g id="Graphic_55">
+                    <rect x="122.13541" y="362.83465" width="62.69092" height="17" fill="white"/>
+                    <rect x="122.13541" y="362.83465" width="62.69092" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(128.13541 365.83465)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Course
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_56">
+                <g id="Graphic_57">
+                    <rect x="94.51164" y="516.6142" width="64.3916" height="17" fill="white"/>
+                    <rect x="94.51164" y="516.6142" width="64.3916" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(100.51164 519.6142)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Service
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_58">
+                <g id="Graphic_59">
+                    <rect x="94.51164" y="540.70867" width="67.85889" height="17" fill="white"/>
+                    <rect x="94.51164" y="540.70867" width="67.85889" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(100.51164 543.70867)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Opening
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_60">
+                <g id="Graphic_61">
+                    <rect x="100.62992" y="314.64567" width="67.2832" height="17" fill="white"/>
+                    <rect x="100.62992" y="314.64567" width="67.2832" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(106.62992 317.64567)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Offering
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_64">
+                <g id="Graphic_65">
+                    <rect x="399.90124" y="73.70079" width="100.05762" height="17" fill="white"/>
+                    <rect x="399.90124" y="73.70079" width="100.05762" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(405.90124 76.70079)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            skos:ConceptScheme
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_66">
+                <g id="Graphic_67">
+                    <rect x="56.692914" y="73.70079" width="72.31055" height="17" fill="white"/>
+                    <rect x="56.692914" y="73.70079" width="72.31055" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(62.692914 76.70079)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Resource
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

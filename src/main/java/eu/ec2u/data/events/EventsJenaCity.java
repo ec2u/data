@@ -70,8 +70,8 @@ public final class EventsJenaCity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/jena/city");
 
     private static final Frame Publisher=frame(iri("https://www.jena-veranstaltungen.de/veranstaltungen"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Resources.City)
+            .value(RDF.TYPE, Events._Publisher)
+            .value(DCTERMS.COVERAGE, Events._City)
             .values(RDFS.LABEL,
                     literal("City of Jena / Event Calendar", "en"),
                     literal("Stadt Jena / Veranstaltungskalender", Jena.Language)
@@ -204,7 +204,7 @@ public final class EventsJenaCity implements Runnable {
                             .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
                     )
 
-                    .value(Resources.university, Jena.Id)
+                    .value(Resources.owner, Jena.Id)
 
                     .value(Schema.url, url)
                     .value(Schema.name, name)

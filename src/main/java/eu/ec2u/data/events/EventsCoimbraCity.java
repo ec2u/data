@@ -26,7 +26,6 @@ import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.locations.Locations;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -55,8 +54,8 @@ public final class EventsCoimbraCity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/coimbra/city");
 
     private static final Frame Publisher=frame(iri("https://www.coimbragenda.pt/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Resources.City)
+            .value(RDF.TYPE, Events._Publisher)
+            .value(DCTERMS.COVERAGE, Events._City)
             .values(RDFS.LABEL,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
                     literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.Language)

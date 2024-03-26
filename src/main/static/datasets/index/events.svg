@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1"
-        viewBox="-97 38 667 399" width="667" height="399">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-97 -101 667 538" width="667" height="538">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -34,9 +34,9 @@
             </g>
         </marker>
     </defs>
-    <g id="events" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1" fill="none" stroke="none">
+    <g id="events" stroke-dasharray="none" fill-opacity="1" fill="none" stroke-opacity="1" stroke="none">
         <title>events</title>
-        <rect fill="white" x="-97" y="38" width="667" height="399"/>
+        <rect fill="white" x="-97" y="-101" width="667" height="538"/>
         <g id="events_Layer_1">
             <title>Layer 1</title>
             <g id="Group_173">
@@ -219,7 +219,7 @@
       </g>
       <g id="Group_142">
         <g id="Graphic_143">
-            <a xl:href="entities.svg">
+            <a xl:href="resources.svg">
                 <rect x="-67.905234" y="66.12931" width="76.179" height="17.261063" fill="white"/>
                 <rect x="-67.905234" y="66.12931" width="76.179" height="17.261063" stroke="black"
                         stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -365,6 +365,42 @@
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;https://schema.org/&gt;</tspan>
                     </text>
                 </a>
+            </g>
+            <g id="Group_178">
+                <g id="Graphic_180">
+                    <rect x="276.37796" y="-44.283465" width="79.59668" height="61" fill="white"/>
+                    <rect x="276.37796" y="-44.283465" width="79.59668" height="61" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(282.37796 -41.283465)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">ec2u:University</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">ec2u:College</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">ec2u:Association</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">ec2u:City</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">ec2u:Other</tspan>
+                    </text>
+                </g>
+                <g id="Graphic_179">
+                    <rect x="276.37796" y="-72.283465" width="79.59668" height="28" fill="white"/>
+                    <rect x="276.37796" y="-72.283465" width="79.59668" height="28" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(286.1243 -69.283465)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x=".17797852" y="9">«enumeration»</tspan>
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="20">
+                            ec2u:Coverage
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_177">
+                <path d="M 301.7071 58.293265 L 316.1763 58.293265 L 316.1763 23.566535"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_176">
+                <rect x="279.46145" y="36.89993" width="73.42969" height="13" fill="white"/>
+                <text transform="translate(282.46145 37.89993)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:coverage 0..1</tspan>
+                </text>
             </g>
         </g>
   </g>

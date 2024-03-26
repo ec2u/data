@@ -158,7 +158,7 @@ public final class Actors_ implements Runnable {
 
                 .value(RDF.TYPE, EC2U.term("Actor"))
 
-                .value(Resources.university, university(record)) // !!! missing in the survey
+                .value(Resources.owner, university(record)) // !!! missing in the survey
 
                 .value(term("Q1-1"), profile(record))
                 .values(term("Q1-2"), activityArea(record))

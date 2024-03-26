@@ -55,7 +55,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.offers.Offers.Course;
 import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.organizations.Organizations.Organization;
-import static eu.ec2u.data.resources.Resources.university;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.util.Map.entry;
@@ -197,7 +197,7 @@ public final class OffersPoitiers implements Runnable {
         return json.string("code").map(code -> frame(item(Offers.Programs, Poitiers, code))
 
                 .values(RDF.TYPE, Program)
-                .value(university, Poitiers.Id)
+                .value(owner, Poitiers.Id)
 
                 .value(Schema.name, json.string("name") // !!! code to rdfs:label
                         .map(name -> literal(String.format("%s - %s", code, name), Poitiers.Language))
@@ -218,7 +218,7 @@ public final class OffersPoitiers implements Runnable {
                 .frame(Schema.provider, json.string("composante")
                         .map(name -> frame(item(Organizations.Context, Poitiers, name))
                                 .value(RDF.TYPE, Organization) // !!! Unit
-                                .value(university, Poitiers.Id)
+                                .value(owner, Poitiers.Id)
                                 .value(DCTERMS.TITLE, literal(name, Poitiers.Language))
                         )
                 )
@@ -261,7 +261,7 @@ public final class OffersPoitiers implements Runnable {
                     return frame(item(Offers.Courses, Poitiers, code))
 
                             .values(RDF.TYPE, Course)
-                            .value(university, Poitiers.Id)
+                            .value(owner, Poitiers.Id)
 
                             .value(Schema.name, json.string("name") // !!! code to rdfs:label
                                     .map(name -> literal(String.format("%s - %s", code, name), Poitiers.Language))

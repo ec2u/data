@@ -19,7 +19,6 @@ package eu.ec2u.data.events;
 import com.metreeca.http.rdf.Frame;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -37,7 +36,7 @@ public final class EventsIasiUniversity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/iasi/university");
 
     private static final Frame Publisher=frame(iri("https://www.uaic.ro/"))
-            .value(RDF.TYPE, Resources.Publisher)
+            .value(RDF.TYPE, Events._Publisher)
             .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Iasi / Events", "en"),

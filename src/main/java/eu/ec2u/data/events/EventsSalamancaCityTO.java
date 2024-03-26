@@ -59,8 +59,8 @@ public final class EventsSalamancaCityTO implements Runnable {
     private static final IRI Context=iri(Events.Context, "/salamanca/city/to");
 
     private static final Frame Publisher=frame(iri("https://salamanca.es/en/calendar"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Resources.City)
+            .value(RDF.TYPE, Events._Publisher)
+            .value(DCTERMS.COVERAGE, Events._City)
             .values(RDFS.LABEL,
                     literal("Oficina de Turismo de Salamanca", "es"),
                     literal("Salamanca Municipal Tourist Office", "en")
@@ -149,7 +149,7 @@ public final class EventsSalamancaCityTO implements Runnable {
 
                     .values(RDF.TYPE, Events.Event)
 
-                    .value(Resources.university, Salamanca.Id)
+                    .value(Resources.owner, Salamanca.Id)
 
                     .value(DCTERMS.SOURCE, iri(url))
                     .frame(DCTERMS.PUBLISHER, Publisher)

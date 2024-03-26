@@ -34,7 +34,7 @@ import static com.metreeca.link.Query.query;
 
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.offers.Offers.Course;
-import static eu.ec2u.data.resources.Resources.university;
+import static eu.ec2u.data.resources.Resources.owner;
 
 public final class Courses extends Delegator {
 
@@ -63,7 +63,7 @@ public final class Courses extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                                field(university, iri()),
+                                                field(owner, iri()),
                                                 field(ORG.CLASSIFICATION, iri())
 
                                         ),
@@ -83,7 +83,7 @@ public final class Courses extends Delegator {
                                 field(ID, iri()),
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                field(university, iri()),
+                                field(owner, iri()),
                                 field(ORG.CLASSIFICATION, iri())
 
                         )))

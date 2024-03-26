@@ -16,31 +16,24 @@
 
 package eu.ec2u.data.organizations;
 
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.stream.Stream;
-
-import static com.metreeca.http.rdf.Values.pattern;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.link.Frame.LITERAL;
 import static com.metreeca.link.Frame.reverse;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.persons.Persons.FOAFPerson;
 import static eu.ec2u.data.resources.Resources.localized;
-import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toList;
 
 public final class Organizations {
 
@@ -52,13 +45,17 @@ public final class Organizations {
     public static Shape OrgOrganization() {
         return shape(ORG.ORGANIZATION, FOAFAgent(),
 
-                property(ORG.IDENTIFIER, optional(string())), // !!! datatype?
+                property(ORG.IDENTIFIER, optional(datatype(LITERAL))),
 
-                property(SKOS.PREF_LABEL, required(localized())), // !!! languages?
-                property(SKOS.ALT_LABEL, optional(localized())), // !!! languages?
-                property(SKOS.DEFINITION, optional(localized())), // !!! languages?
+                property(SKOS.PREF_LABEL, required(localized())),
+                property(SKOS.ALT_LABEL, optional(localized())),
+                property(SKOS.DEFINITION, optional(localized())),
 
-                property("units", ORG.HAS_UNIT, () -> multiple(OrgOrganizationalUnit()))
+                property(ORG.HAS_SUB_ORGANIZATION, () -> multiple(OrgOrganization())),
+                property(ORG.SUB_ORGANIZATION_OF, () -> multiple(OrgOrganization())),
+
+                property(ORG.HAS_UNIT, () -> multiple(OrgOrganizationalUnit())),
+                property(ORG.CLASSIFICATION, optional(SKOSConcept()))
 
         );
     }
@@ -67,37 +64,18 @@ public final class Organizations {
         return shape(ORG.FORMAL_ORGANIZATION, OrgOrganization());
     }
 
+    public static Shape OrgOrganizationalCollaboration() {
+        return shape(ORG.ORGANIZATIONAL_COLLABORATION, OrgOrganization());
+    }
+
     public static Shape OrgOrganizationalUnit() {
         return shape(ORG.ORGANIZATIONAL_UNIT, OrgOrganization(),
 
-                property(ORG.CLASSIFICATION, optional(SKOSConcept())),
+                property(ORG.UNIT_OF, repeatable(OrgOrganization())),
 
-                property("organization", ORG.UNIT_OF, repeatable(OrgOrganization())),
+                property("hasHead", reverse(ORG.HEAD_OF), multiple(FOAFPerson())),
+                property(ORG.HAS_MEMBER, multiple(FOAFPerson()))
 
-                property("head", reverse(ORG.HEAD_OF), multiple(FOAFPerson())),
-                property("members", ORG.HAS_MEMBER, multiple(FOAFPerson()))
-
-        );
-    }
-
-
-    public static void main(final String... args) {
-        exec(() -> Stream
-
-                .of(
-                        rdf(resource(Organizations.class, ".ttl"), Base),
-
-                        rdf(resource("https://www.w3.org/ns/org"), Base).stream()
-                                .filter(not(pattern(null, RDFS.SUBCLASSOF, SKOS.CONCEPT)))
-                                .collect(toList())
-
-                )
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .langs(Resources.Languages)
-                        .clear(true)
-                )
         );
     }
 
@@ -105,5 +83,17 @@ public final class Organizations {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Organizations() { }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(Organizations::create);
+    }
+
+
+    public static void create() {
+        Datasets.create(Organizations.class, Context);
+    }
 
 }

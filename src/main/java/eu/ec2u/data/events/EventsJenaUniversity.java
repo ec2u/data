@@ -98,9 +98,9 @@ public final class EventsJenaUniversity implements Runnable {
             )
 
             .map(frame -> frame
-                    .value(RDF.TYPE, Resources.Publisher)
+                    .value(RDF.TYPE, Events._Publisher)
                     .value(DCTERMS.COVERAGE, University)
-                    .value(Resources.university, Jena.Id)
+                    .value(Resources.owner, Jena.Id)
             )
 
             .collect(toList());
@@ -216,7 +216,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .value(RDF.TYPE, Events.Event)
 
-                .value(Resources.university, Jena.Id)
+                .value(Resources.owner, Jena.Id)
 
                 .value(DCTERMS.SOURCE, frame.value(Schema.url))
 

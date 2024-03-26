@@ -46,8 +46,8 @@ public final class EventsIasiCityCultura implements Runnable {
     public static final IRI Context=iri(Events.Context, "/iasi/cultura");
 
     private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Resources.City)
+            .value(RDF.TYPE, Events._Publisher)
+            .value(DCTERMS.COVERAGE, Events._City)
             .values(RDFS.LABEL,
                     literal("Iaşul Cultural / Evenimente in Iași", "ro"),
                     literal("Culture in Iasi / Events in Iasi", "en")
@@ -93,7 +93,7 @@ public final class EventsIasiCityCultura implements Runnable {
     private Frame event(final Frame frame) {
         return WordPress(frame, Iasi.Language)
 
-                .value(Resources.university, Iasi.Id)
+                .value(Resources.owner, Iasi.Id)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));

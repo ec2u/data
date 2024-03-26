@@ -26,7 +26,6 @@ import eu.ec2u.data.events.Events;
 import eu.ec2u.data.offers.courses.Courses;
 import eu.ec2u.data.offers.programs.Programs;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities._Universities;
@@ -41,18 +40,10 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
-import static eu.ec2u.data.concepts.Concepts.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.documents.Documents.Document;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.offers.Offers.Course;
-import static eu.ec2u.data.offers.Offers.Program;
 import static eu.ec2u.data.organizations.Organizations.*;
 import static eu.ec2u.data.persons.Persons.FOAFPerson;
-import static eu.ec2u.data.persons.Persons.Person;
-import static eu.ec2u.data.resources.Resources.Publisher;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.Universities.University;
 
 
@@ -82,51 +73,95 @@ public final class EC2U extends Delegator {
     }
 
 
-    public static void main(final String... args) {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        exec(() -> service(store()).validate(
+    public EC2U() {
+        delegate(new Router()
+
+                .path("/", new Datasets())
+                .path("/resources/", new Resources())
+
+                .path("/universities/*", new Universities())
+
+                .path("/units/*", new Units())
+                .path("/programs/*", new Programs())
+                .path("/courses/*", new Courses())
+                .path("/documents/*", new Documents())
+
+                .path("/events/*", new Events())
+
+                .path("/concepts/*", new Concepts())
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(EC2U::create);
+    }
+
+
+    public static void create() {
+
+        service(store()).validate(
 
                 Resource(),
-                Publisher(),
+                Dataset(),
 
-                ConceptScheme(),
-                Concept(),
-                SKOSConceptScheme(),
-                SKOSConcept(),
+                // SKOSConceptScheme(),
+                // SKOSConcept(),
 
                 FOAFAgent(),
                 FOAFPerson(),
 
                 OrgOrganization(),
                 OrgFormalOrganization(),
+                OrgOrganizationalCollaboration(),
                 OrgOrganizationalUnit(),
 
-                Dataset(),
+                University()
 
-                University(),
-                Unit(),
-                Person(),
+                // Unit(),
+                // Person(),
+                //
+                // Program(),
+                // Course(),
+                //
+                // Document(),
+                //
+                // Event(),
+                //
+                // Schema.Thing(),
+                // Schema.Organization(),
+                // Schema.Event(),
+                // Schema.Place(),
+                // Schema.PostalAddress(),
+                // Schema.VirtualLocation(),
+                // Schema.ContactPoint()
 
-                Program(),
-                Course(),
+        );
 
-                Document(),
-
-                Event(),
-
-                Schema.Thing(),
-                Schema.Organization(),
-                Schema.Event(),
-                Schema.Place(),
-                Schema.PostalAddress(),
-                Schema.VirtualLocation(),
-                Schema.ContactPoint()
-
-        ));
-
-
-        // Resources.main();
+        // service(graph()).update(connection -> {
         //
+        //     Stream.<Runnable>of(
+        //
+        //             Resources::create,
+        //             Datasets::create,
+        //
+        //             Agents::create,
+        //             Persons::create,
+        //             Organizations::create,
+        //
+        //             Universities::create
+        //
+        //     ).forEach(Runnable::run);
+        //
+        //     return null;
+        //
+        // });
+
+
         // Concepts.main();
         // Agents.main();
         // Organizations.main();
@@ -152,30 +187,6 @@ public final class EC2U extends Delegator {
         // ISCED2011.main();
         // ISCEDF2013.main();
         // UnitTypes.main();
-
-
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public EC2U() {
-        delegate(new Router()
-
-                .path("/", new Datasets())
-                .path("/resources/", new Resources())
-
-                .path("/universities/*", new Universities())
-
-                .path("/units/*", new Units())
-                .path("/programs/*", new Programs())
-                .path("/courses/*", new Courses())
-                .path("/documents/*", new Documents())
-
-                .path("/events/*", new Events())
-
-                .path("/concepts/*", new Concepts())
-        );
     }
 
 }

@@ -47,7 +47,7 @@ import static eu.ec2u.data.EC2U.Base;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgOrganizationalUnit;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.university;
+import static eu.ec2u.data.resources.Resources.owner;
 
 
 public final class Units extends Delegator {
@@ -101,7 +101,7 @@ public final class Units extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                                field(university, iri()),
+                                                field(owner, iri()),
                                                 field(ORG.CLASSIFICATION, iri())
 
                                         ),
@@ -122,7 +122,7 @@ public final class Units extends Delegator {
 
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                field(university, iri()),
+                                field(owner, iri()),
                                 field(ORG.CLASSIFICATION, iri())
 
                         )))

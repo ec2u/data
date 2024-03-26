@@ -20,45 +20,41 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
+import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
-import static eu.ec2u.data.universities.Universities.University;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.term;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.things.Schema.Organization;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 
 public final class Resources extends Delegator {
 
-    private static final IRI Context=item("/resources/");
+    public static final IRI Context=item("/resources/");
 
     public static final IRI Resource=term("Resource");
-    public static final IRI Publisher=term("Publisher");
 
-    public static final IRI College=term("College");
-    public static final IRI Association=term("Association");
-    public static final IRI City=term("City");
-
-    public static final IRI university=term("university");
+    public static final IRI synced=term("synced");
+    public static final IRI owner=term("owner");
 
 
     public static final Set<String> Languages=Stream
@@ -71,50 +67,27 @@ public final class Resources extends Delegator {
             .collect(toUnmodifiableSet());
 
 
-    public static Shape Reference() {
+    public static Shape Entry() {
         return shape(
 
                 property("id", ID, required(id())),
 
+                property(RDF.TYPE, multiple(id())),
                 property(RDFS.LABEL, required(localized(), maxLength(100))),
-                property(RDFS.COMMENT, optional(localized(), maxLength(1000)))
+                property(RDFS.COMMENT, optional(localized(), maxLength(1000))),
+
+                property(RDFS.SEEALSO, multiple(id()))
 
         );
     }
 
     public static Shape Resource() {
-        return shape(Resource, Reference(),
+        return shape(Resource, Entry(),
 
-                property(RDF.TYPE, repeatable(id())),
+                property(synced, () -> optional(instant())),
+                property(owner, () -> optional(Organization())),
 
-                property(DCTERMS.TITLE, required(localized())),
-                property(DCTERMS.ALTERNATIVE, optional(localized())),
-                property(DCTERMS.DESCRIPTION, optional(localized())),
-
-                property(DCTERMS.CREATED, optional(dateTime())),
-                property(DCTERMS.ISSUED, optional(dateTime())),
-                property(DCTERMS.MODIFIED, optional(dateTime())),
-
-                property(DCTERMS.SOURCE, () -> optional(Resource())),
-                property(DCTERMS.PUBLISHER, () -> optional(Publisher())),
-
-                property(DCTERMS.TYPE, () -> multiple(SKOSConcept())),
-                property(DCTERMS.SUBJECT, () -> multiple(SKOSConcept())),
-
-                property(RDFS.SEEALSO, multiple(id())),
-
-                property(university, () -> optional(University()))
-
-        );
-    }
-
-    public static Shape Publisher() {
-        return shape(Publisher, Resource(),
-
-                property(DCTERMS.COVERAGE, optional(id())),
-
-                property(SKOS.PREF_LABEL, localized()),
-                property(FOAF.HOMEPAGE, optional(id()))
+                property("dataset", reverse(RDFS.MEMBER), () -> optional(Dataset()))
 
         );
     }
@@ -125,23 +98,10 @@ public final class Resources extends Delegator {
     }
 
 
-    public static void main(final String... args) {
-        exec(() -> Stream
-
-                .of(rdf(resource(Resources.class, ".ttl"), Base))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Resources() {
-        delegate(handler(new Driver(virtual(Reference(),
+        delegate(handler(new Driver(virtual(Entry(),
 
                         property("members", RDFS.MEMBER, Resource())
 
@@ -159,7 +119,7 @@ public final class Resources extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                                field(university, iri())
+                                                field(owner, iri())
 
                                         ),
 
@@ -170,6 +130,18 @@ public final class Resources extends Delegator {
                         )))
 
         ));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(Resources::create);
+    }
+
+
+    public static void create() {
+        Datasets.create(Resources.class, Context);
     }
 
 }

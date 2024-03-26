@@ -1,4 +1,1 @@
-- [RDF Data Models](rdf/)\
-  Sunt equisoes visum peritus, noster sagaes.
-
-- [REST/JSON-LD APIs](api)
+- [Linked Data Models](rdf/)

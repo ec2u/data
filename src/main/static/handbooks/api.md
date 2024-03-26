@@ -2,10 +2,10 @@
 title: REST/JSON-LD APIs
 ---
 
-> **:warning:** Warning
+> **:warning:**  Warning
 
 
-> *:information_source:*  Work in progress
+> *:information_source:* Work in progress
 >
 > Pio
 >

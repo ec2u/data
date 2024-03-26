@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1"
-        viewBox="-524 390 885 648" width="885" height="648">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-566 390 927 648" width="927" height="648">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -54,10 +54,10 @@
             </g>
         </marker>
     </defs>
-    <g id="offers" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1" fill="none" stroke="none">
-        <title>offers</title>
-        <rect fill="white" x="-524" y="390" width="885" height="648"/>
-        <g id="offers_Layer_1">
+    <g id="offerings" stroke-dasharray="none" fill-opacity="1" fill="none" stroke-opacity="1" stroke="none">
+        <title>offerings</title>
+        <rect fill="white" x="-566" y="390" width="927" height="648"/>
+        <g id="offerings_Layer_1">
             <title>Layer 1</title>
             <g id="Line_422">
                 <path d="M 136.91119 841.9841 L 67.94472 841.9841 L 67.94472 778.0435 L 67.94472 694.312 L 67.94472 617.7736"
@@ -138,11 +138,11 @@
             </g>
             <g id="Group_383">
                 <g id="Graphic_384">
-                    <a xl:href="entities.svg">
-                        <rect x="-495.6459" y="418.1734" width="76.179" height="17.261063" fill="white"/>
-                        <rect x="-495.6459" y="418.1734" width="76.179" height="17.261063" stroke="black"
+                    <a xl:href="resources.svg">
+                        <rect x="-537.16536" y="418.1734" width="76.179" height="17.261063" fill="white"/>
+                        <rect x="-537.16536" y="418.1734" width="76.179" height="17.261063" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(-487.7117 421.3039)" fill="black">
+                        <text transform="translate(-529.23113 421.3039)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 ec2u:Resource
                             </tspan>
@@ -151,16 +151,16 @@
                 </g>
             </g>
             <g id="Line_382">
-                <line x1="-266.28207" y1="750.5862" x2="-266.28207" y2="570.2724"
+                <line x1="-266.28207" y1="750.5862" x2="-266.28207" y2="561.7724"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Group_376">
                 <g id="Graphic_377">
-                    <rect x="-490.6464" y="939.7441" width="66.18" height="17" fill="white"/>
-                    <rect x="-490.6464" y="939.7441" width="66.18" height="17" stroke="black" stroke-linecap="round"
+                    <rect x="-470.5512" y="939.7441" width="66.18" height="17" fill="white"/>
+                    <rect x="-470.5512" y="939.7441" width="66.18" height="17" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(-484.6464 942.7441)" fill="black">
+                    <text transform="translate(-464.5512 942.7441)" fill="black">
                         <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="1.7445412" y="9">
                             ec2u:Course
                         </tspan>
@@ -168,13 +168,9 @@
                 </g>
             </g>
             <g id="Line_375">
-                <line x1="-424.4664" y1="948.2441" x2="-363.10897" y2="948.2441"
+                <line x1="-404.3712" y1="948.2441" x2="-363.10897" y2="948.2441"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
-            </g>
-            <g id="Line_374">
-                <line x1="-457.5564" y1="764.8472" x2="-457.5564" y2="550.7724" marker-end="url(#UMLInheritance_Marker)"
-                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Line_373">
                 <path d="M -155.6893 532.5224 L -113.5893 532.5224 L -113.5893 689.562 L 130.06119 689.562"
@@ -182,16 +178,18 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Group_369">
-        <g id="Graphic_370">
-          <a xl:href="datasets.svg">
-            <rect x="34.05483" y="591.0236" width="67.779785" height="17" fill="white"/>
-              <rect x="34.05483" y="591.0236" width="67.779785" height="17" stroke="black" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(40.05483 594.0236)" fill="black">
-              <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">ec2u:Concept</tspan>
-            </text>
-          </a>
-        </g>
+                <g id="Graphic_370">
+                    <a xl:href="datasets.svg">
+                        <rect x="34.05483" y="591.0236" width="67.779785" height="17" fill="white"/>
+                        <rect x="34.05483" y="591.0236" width="67.779785" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(40.05483 594.0236)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                ec2u:Concept
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
             </g>
             <g id="Group_367">
                 <g id="Graphic_368">
@@ -208,9 +206,9 @@
                 </a>
             </g>
             <g id="Graphic_365">
-                <rect x="-75.19579" y="679.062" width="131.08691" height="21" fill="white"/>
-                <text transform="translate(-70.19579 684.062)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:educationalLevel [0..1]
+                <rect x="-73.03808" y="679.062" width="126.77148" height="21" fill="white"/>
+                <text transform="translate(-68.03808 684.062)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:educationalLevel 0..1
                     </tspan>
                 </text>
             </g>
@@ -305,10 +303,10 @@
             </g>
             <g id="Group_342">
                 <g id="Graphic_343">
-                    <rect x="-492.14064" y="764.8472" width="69.16846" height="17" fill="white"/>
-                    <rect x="-492.14064" y="764.8472" width="69.16846" height="17" stroke="black" stroke-linecap="round"
+                    <rect x="-470.5512" y="764.5862" width="69.16846" height="17" fill="white"/>
+                    <rect x="-470.5512" y="764.5862" width="69.16846" height="17" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(-486.14064 767.8472)" fill="black">
+                    <text transform="translate(-464.5512 767.5862)" fill="black">
                         <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                             ec2u:Program
                         </tspan>
@@ -316,7 +314,7 @@
                 </g>
             </g>
             <g id="Line_341">
-                <path d="M -422.9722 773.3472 L -411.9722 773.3472 L -368.47006 773.0862 L -367.22006 773.0862"
+                <line x1="-401.38273" y1="773.0862" x2="-367.22006" y2="773.0862"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
@@ -336,9 +334,9 @@
                         stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_336">
-                <rect x="-74.76103" y="522.0224" width="96.73486" height="21" fill="white"/>
-                <text transform="translate(-69.76103 527.0224)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:provider [0..1]</tspan>
+                <rect x="-71.188275" y="522.0224" width="89.58936" height="21" fill="white"/>
+                <text transform="translate(-66.188275 527.0224)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:provider 0..]</tspan>
                 </text>
             </g>
             <g id="Line_334">
@@ -347,9 +345,9 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_333">
-                <rect x="-71.47586" y="762.7224" width="117.6001" height="21" fill="white"/>
-                <text transform="translate(-66.47586 767.7224)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:programType [0..1]</tspan>
+                <rect x="-69.318145" y="762.7224" width="113.28467" height="21" fill="white"/>
+                <text transform="translate(-64.318145 767.7224)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:programType 0..1</tspan>
                 </text>
             </g>
             <g id="Group_329">
@@ -390,11 +388,6 @@
             </g>
             <g id="Line_397">
                 <line x1="-266.28207" y1="887.2441" x2="-266.28207" y2="797.4612"
-                        marker-end="url(#NegativeControls_Marker)" stroke="black" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width=".25"/>
-            </g>
-            <g id="Line_398">
-                <line x1="-457.5564" y1="939.7441" x2="-457.5564" y2="783.7222"
                         marker-end="url(#NegativeControls_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
@@ -443,27 +436,17 @@
                 </text>
             </g>
             <g id="Graphic_363">
-                <rect x="-98.70372" y="583.5236" width="123.04492" height="32" fill="white"/>
-                <text transform="translate(-93.70372 588.5236)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="25.283936" y="9">schema:about *</tspan>
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">/dct:subject = schema:about
-                    </tspan>
+                <rect x="-57.54351" y="589.0236" width="72.47705" height="21" fill="white"/>
+                <text transform="translate(-52.54351 594.0236)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:about *</tspan>
                 </text>
             </g>
             <g id="Group_417">
-                <g id="Graphic_418">
-                    <rect x="-376.87484" y="504.5224" width="221.18555" height="17" fill="white"/>
-                    <rect x="-376.87484" y="504.5224" width="221.18555" height="17" stroke="black"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(-286.24203 507.5224)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">{abstract}</tspan>
-                    </text>
-                </g>
                 <g id="Graphic_419">
-                    <rect x="-376.87484" y="521.5224" width="221.18555" height="39" fill="white"/>
-                    <rect x="-376.87484" y="521.5224" width="221.18555" height="39" stroke="black"
+                    <rect x="-376.87484" y="513.0224" width="221.18555" height="39" fill="white"/>
+                    <rect x="-376.87484" y="513.0224" width="221.18555" height="39" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(-367.87484 524.5224)" fill="black">
+                    <text transform="translate(-367.87484 516.0224)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:numberOfCredits
                             :decimal [0..1]
                         </tspan>
@@ -477,7 +460,7 @@
                 </g>
             </g>
             <g id="Line_421">
-                <line x1="-266.28207" y1="504.5224" x2="-266.28207" y2="445.18444"
+                <line x1="-266.28207" y1="513.0224" x2="-266.28207" y2="445.18444"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
@@ -535,33 +518,48 @@
                     </tspan>
                 </text>
             </g>
-            <g id="Group_434">
-                <g id="Graphic_435">
-                    <rect x="-484.91603" y="524.0224" width="54.71924" height="17" fill="white"/>
-                    <rect x="-484.91603" y="524.0224" width="54.71924" height="17" stroke="black" stroke-linecap="round"
+            <g id="Line_439">
+                <path d="M -470.5512 773.0862 L -499.07586 773.0862 L -499.07586 445.18444"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_441">
+                <path d="M -470.5512 948.2441 L -499.07586 948.2441 L -499.07586 445.18444"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_442">
+                <g id="Graphic_443">
+                    <rect x="-477.6378" y="530.07874" width="57.87012" height="17" fill="white"/>
+                    <rect x="-477.6378" y="530.07874" width="57.87012" height="17" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(-478.91603 527.0224)" fill="black">
+                    <text transform="translate(-471.6378 533.07874)" fill="black">
                         <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
-                            ec2u:Offer
+                            ec2u:Offerr
                         </tspan>
                     </text>
                 </g>
             </g>
-            <g id="Line_438">
-                <line x1="-430.1968" y1="532.5224" x2="-386.62484" y2="532.52235"
+            <g id="Graphic_444">
+                <path d="M -387.49245 656.00174 C -387.49245 653.3493 -387.94143 653.02114 -391.22103 650.39614 L -391.2557 650.369 C -394.5526 647.71654 -394.5869 647.71654 -397.97045 647.71654 C -402.4757 647.71654 -422.8445 647.71654 -422.8445 647.71654 L -422.8445 675.71654 L -387.49245 675.71654 L -387.49245 656.00174 Z"
+                        fill="#fffd78"/>
+                <path d="M -387.49245 656.00174 C -387.49245 653.3493 -387.94143 653.02114 -391.22103 650.39614 L -391.2557 650.369 C -394.5526 647.71654 -394.5869 647.71654 -397.97045 647.71654 C -402.4757 647.71654 -422.8445 647.71654 -422.8445 647.71654 L -422.8445 675.71654 L -387.49245 675.71654 L -387.49245 656.00174 Z M -387.49245 655.8651 C -387.49245 653.3493 -387.5271 653.3493 -394.5869 653.3493 L -394.5869 653.3493 C -394.5869 647.744 -394.5869 647.71654 -397.7633 647.71654"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                <text transform="translate(-417.8445 650.71654)" fill="black">
+                    <tspan font-family="Roboto" font-style="italic" font-size="9" fill="black" x="0" y="9">role?</tspan>
+                    <tspan font-family="Roboto" font-style="italic" font-size="9" fill="black" x="0" y="20">name?
+                    </tspan>
+                </text>
+            </g>
+            <g id="Line_445">
+                <line x1="-448.70274" y1="547.07874" x2="-410.52942" y2="647.5997" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
+            </g>
+            <g id="Line_446">
+                <path d="M -419.7677 534.32874 L -387.7677 534.32874 L -387.7677 532.52236 L -386.62484 532.52236"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
-      </g>
-      <g id="Line_439">
-          <line x1="-457.5564" y1="524.0224" x2="-457.5564" y2="445.18444" marker-end="url(#UMLInheritance_Marker)"
-                  stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-      </g>
-      <g id="Graphic_440">
-          <rect x="-174.96437" y="803.6221" width="87.11865" height="13" fill="white"/>
-          <text transform="translate(-171.96437 804.6221)" fill="black">
-              <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:inProgram *</tspan>
-        </text>
-      </g>
+            </g>
+        </g>
     </g>
-  </g>
 </svg>

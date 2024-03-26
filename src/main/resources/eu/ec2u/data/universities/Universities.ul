@@ -4,46 +4,53 @@ prefix wdt: <http://www.wikidata.org/prop/direct/>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-
-
-#### Define SKOS Properties ############################################################################################
+PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX org: <http://www.w3.org/ns/org#>
 
 insert {
 
     ?university
-        skos:prefLabel ?title ;
-        skos:definition ?description .
+
+        rdfs:label ?label ;
+        rdfs:comment ?definition ;
+
+        org:subOrganizationOf <https://ec2u.eu/> .
 
 } where {
 
     ?university a ec2u:University ;
-        dct:title ?title ;
-        dct:description ?description .
+        skos:prefLabel ?label ;
+        skos:definition ?definition .
 
-};
-
-
-#### Lift Background Info From Wikidata ################################################################################
+}; # complete entry
 
 insert {
 
     ?university
-        ec2u:location ?location ;
+        ec2u:city ?city ;
         ec2u:country ?country ;
         ec2u:students ?students ;
-        ec2u:inception ?inception.
+        ec2u:inception ?inception ;
+
+        wgs84:lat ?lat ;
+        wgs84:long ?long.
 
 } where {
 
     ?university a ec2u:University ;
         rdfs:seeAlso ?wikidata .
 
-    optional { ?wikidata wdt:P131 ?location }
+    optional { ?wikidata wdt:P131 ?city }
     optional { ?wikidata wdt:P17 ?country }
     optional { ?wikidata wdt:P2196 ?students_ }
     optional { ?wikidata wdt:P571 ?inception_ }
 
+    optional {
+        ?city wgs84:lat ?lat ;
+            wgs84:long ?long
+    }
+
     bind (xsd:integer(?students_) as ?students)
     bind (strdt(str(year(?inception_)), xsd:gYear) as ?inception)
 
-}
+} # lift background info from wikidata

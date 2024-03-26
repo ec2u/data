@@ -1,22 +1,29 @@
-@prefix ec2u:	</terms/> .
+@prefix ec2u: </terms/> .
 
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 
 </> a ec2u:Dataset ;
-	dct:title "EC2U Datasets"@en ;
-	dct:alternative "EC2U Dataset Catalog"@en ;
-	dct:description "Identifying and background information about datasets made available on the EC2U Knowledge Hub."@en ;
-	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+    dct:title "EC2U Dataset Catalog"@en ;
+    dct:alternative "EC2U Datasets"@en ;
+    dct:description "Datasets published on the EC2U Knowledge Hub."@en ;
+    dct:issued "2022-01-01"^^xsd:date ;
+    dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	void:rootResource ec2u:Dataset ;
-	rdfs:isDefinedBy </datasets/> .
+    void:rootResource ec2u:Dataset ;
+    rdfs:isDefinedBy </datasets/> .
+
+
+########################################################################################################################
+
+ec2u:Dataset rdfs::subClassOf ec2u:Resoure, void:Dataset .
 
 
 #### Standard Licenses #################################################################################################
 
 <http://creativecommons.org/licenses/by-nc-nd/4.0/>
-	dct:title "CC BY-NC-ND 4.0"@en ;
-	dct:description "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"@en .
+    dct:title "CC BY-NC-ND 4.0"@en ;
+    dct:description "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"@en .

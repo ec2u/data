@@ -134,7 +134,7 @@ public final class OffersPavia implements Runnable {
         return focus.value().map(program -> frame(item(Programs, Pavia, program.stringValue()))
 
                 .value(RDF.TYPE, Program)
-                .value(Resources.university, Pavia.Id)
+                .value(Resources.owner, Pavia.Id)
 
                 .values(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.Language))
 
@@ -184,7 +184,7 @@ public final class OffersPavia implements Runnable {
         return focus.value().map(course -> frame(item(Courses, Pavia, course.stringValue()))
 
                 .values(RDF.TYPE, Course)
-                .value(Resources.university, Pavia.Id)
+                .value(Resources.owner, Pavia.Id)
 
                 .values(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.Language))
 

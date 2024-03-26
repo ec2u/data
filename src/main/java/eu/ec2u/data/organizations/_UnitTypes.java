@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.concepts;
+package eu.ec2u.data.organizations;
 
+import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
 
+import eu.ec2u.data.concepts.Concepts;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
@@ -32,9 +34,9 @@ import static eu.ec2u.data.EC2U.Base;
 /**
  * EC2U Research Unit SKOS Concept Scheme.
  */
-public final class UnitTypes implements Runnable {
+public final class _UnitTypes implements Runnable {
 
-    public static final IRI Scheme=iri(Concepts.Context, "/units");
+    public static final IRI Scheme=Values.iri(Concepts.Context, "/units");
 
 
     public static final IRI Area=iri(Scheme, "/area");
@@ -58,7 +60,7 @@ public final class UnitTypes implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitTypes().run());
+        exec(() -> new _UnitTypes().run());
     }
 
 

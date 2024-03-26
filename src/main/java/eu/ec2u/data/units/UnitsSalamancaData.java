@@ -208,7 +208,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                             .value(RDFS.LABEL, literal(fullName, Salamanca.Language))
 
-                            .value(Resources.university, Salamanca.Id)
+                            .value(Resources.owner, Salamanca.Id)
 
                             .value(FOAF.GIVEN_NAME, literal(givenName))
                             .value(FOAF.FAMILY_NAME, literal(familyName));

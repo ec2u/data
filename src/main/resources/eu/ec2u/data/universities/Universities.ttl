@@ -1,79 +1,94 @@
-@prefix ec2u:	</terms/> .
-@prefix org:	<http://www.w3.org/ns/org#> .
-@prefix void:	<http://rdfs.org/ns/void#> .
-@prefix dct:	<http://purl.org/dc/terms/> .
-@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
-@prefix void:	<http://rdfs.org/ns/void#> .
-@prefix owl:	<http://www.w3.org/2002/07/owl#> .
-@prefix wd:		<http://www.wikidata.org/entity/> .
-@prefix wdt:	<http://www.wikidata.org/prop/direct/> .
-@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ec2u: </terms/> .
+
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
 
 </universities/> a ec2u:Dataset ;
-	dct:title "EC2U Universities"@en  ;
-	dct:alternative "EC2U Allied Universities"@en ;
-	dct:description "Identifying and background information about EC2U allied universities."@en ;
-	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-	dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	dct:available "2022-01-01"^^xsd:date ;
-	void:rootResource ec2u:University ;
-	rdfs:isDefinedBy </datasets/universities> .
+    dct:title "EC2U Allied Universities"@en ;
+    dct:alternative "EC2U Universities"@en ;
+    dct:description "Background information about EC2U allied universities."@en ;
+    dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:issued "2022-01-01"^^xsd:date ;
+    void:rootResource ec2u:University ;
+    rdfs:isDefinedBy </datasets/universities> .
 
 
 ########################################################################################################################
 
-ec2u:University a owl:Class ;
-	rdfs:subClassOf ec2u:Resource, org:FormalOrganization.
+ec2u:University a rdfs::Class ;
+    rdfs:subClassOf ec2u:Resource, org:FormalOrganization .
 
 
 ########################################################################################################################
 
 </universities/coimbra> a ec2u:University ;
-	dct:title "Universidade de Coimbra"@pt , "University of Coimbra"@en ;
-	dct:description "Focused on the future and recognized as major promoter of change, the University of Coimbra has more than 7 centuries of experience in the creation and dissemination of knowledge, culture, science and technology through study, teaching, cutting-edge research and innovation in the most diverse areas of knowledge."@en ;
-	ec2u:image </blobs/coimbra.png> ;
-	ec2u:schac "uc.pt" ;
-	rdfs:seeAlso wd:Q368643 .
+    skos:prefLabel "Universidade de Coimbra"@pt, "University of Coimbra"@en ;
+    skos:definition
+        """Focused on the future and recognized as major promoter of change, the University of Coimbra has more than 7 centuries of experience in the creation and dissemination of knowledge, culture, science and technology through study, teaching, cutting-edge research and innovation in the most diverse areas of knowledge."""@en ;
+    foaf:homepage <https://www.uc.pt/en/>, <https://www.uc.pt/pt> ;
+    foaf:depiction </blobs/coimbra.png> ;
+    org:identifier "uc.pt"^^<https://github.com/refeds/schac> ;
+    rdfs:seeAlso wd:Q368643 .
 
 </universities/iasi> a ec2u:University ;
-	dct:title "Universitatea din Iași"@ro , "University of Iași"@en ;
-	dct:description "Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, education and institutional transparency. With about 23000 students and 2000 full-time staff in its 15 faculties, our university’s academic offer includes 80 degrees at bachelor level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered in English as well)."@en ;
-	ec2u:image </blobs/iasi.png> ;
-	ec2u:schac "uaic.ro" ;
-	rdfs:seeAlso wd:Q1523902 .
+    skos:prefLabel "Universitatea din Iași"@ro, "University of Iași"@en ;
+    skos:definition
+        "Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, education and institutional transparency. With about 23000 students and 2000 full-time staff in its 15 faculties, our university’s academic offer includes 80 degrees at bachelor level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered in English as well)."@en ;
+    foaf:homepage <https://www.uaic.ro/en/>, <https://www.uaic.ro/> ;
+    foaf:depiction </blobs/iasi.png> ;
+    org:identifier "uaic.ro"^^<https://github.com/refeds/schac> ;
+    rdfs:seeAlso wd:Q1523902 .
 
 </universities/jena> a ec2u:University ;
-	dct:title "University of Jena"@en, "Universität Jena"@de ;
-	dct:description "Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities in Germany. Once the centre of German philosophical thought, it has become a broad-based, research-intensive institution with a global reach and a thriving international community of more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide."@en ;
-	ec2u:image </blobs/jena.png> ;
-	ec2u:schac "uni-jena.de" ;
-	rdfs:seeAlso wd:Q154561 .
+    skos:prefLabel "University of Jena"@en, "Universität Jena"@de ;
+    skos:definition
+        "Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities in Germany. Once the centre of German philosophical thought, it has become a broad-based, research-intensive institution with a global reach and a thriving international community of more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide."@en ;
+    foaf:homepage <https://www.uni-jena.de/en>, <https://www.uni-jena.de/> ;
+    foaf:depiction </blobs/jena.png> ;
+    org:identifier "uni-jena.de"^^<https://github.com/refeds/schac> ;
+    rdfs:seeAlso wd:Q154561 .
 
 </universities/pavia> a ec2u:University ;
-	dct:title "University of Pavia"@en , "Università di Pavia"@it ;
-	dct:description "The University of Pavia (UNIPV) is one of the world’s oldest  academic institutions: it was founded in 1361 and until the 20th century it was the only University in the Milan Area and the region of Lombardy."@en ;
-	ec2u:image </blobs/pavia.png> ;
-	ec2u:schac "unipv.it" ;
-	rdfs:seeAlso wd:Q219317 .
+    skos:prefLabel "University of Pavia"@en, "Università di Pavia"@it ;
+    skos:definition
+        "The University of Pavia (UNIPV) is one of the world’s oldest  academic institutions: it was founded in 1361 and until the 20th century it was the only University in the Milan Area and the region of Lombardy."@en ;
+    foaf:homepage <https://web-en.unipv.it>, <https://portale.unipv.it/it> ;
+    foaf:depiction </blobs/pavia.png> ;
+    org:identifier "unipv.it"^^<https://github.com/refeds/schac> ;
+    rdfs:seeAlso wd:Q219317 .
 
 </universities/poitiers> a ec2u:University ;
-	dct:title "University of Poitiers"@en , "Université de Poitiers"@fr ;
-	dct:description "Founded in 1431, the University of Poitiers is a multidisciplinary university which enrols 29 000 students, 4200 of which are international students from 120 different countries, supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and  is above the national average with 16% of foreign students."@en ;
-	ec2u:image </blobs/poitiers.png> ;
-	ec2u:schac "univ-poitiers.fr" ;
-	rdfs:seeAlso wd:Q661056 .
+    skos:prefLabel "University of Poitiers"@en, "Université de Poitiers"@fr ;
+    skos:definition
+        "Founded in 1431, the University of Poitiers is a multidisciplinary university which enrols 29 000 students, 4200 of which are international students from 120 different countries, supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and  is above the national average with 16% of foreign students."@en ;
+    foaf:homepage <https://www.univ-poitiers.fr/en/>, <https://www.univ-poitiers.fr> ;
+    foaf:depiction </blobs/poitiers.png> ;
+    org:identifier "univ-poitiers.fr"^^<https://github.com/refeds/schac> ;
+    rdfs:seeAlso wd:Q661056 .
 
 </universities/salamanca> a ec2u:University ;
-	dct:title "Universidad de Salamanca"@es , "University of Salamanca"@en ;
-	dct:description "The University of Salamanca was founded in 1218 and is one of the three oldest universities in Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. In 2011, it was awarded the Campus of International Excellence status. It is the university of reference in its region and beyond (Castile and León) and the “Alma Mater” of nearly all historical Latin American universities."@en ;
-	ec2u:image </blobs/salamanca.png> ;
-	ec2u:schac "usal.es" ;
-	rdfs:seeAlso wd:Q308963 .
+    skos:prefLabel "Universidad de Salamanca"@es, "University of Salamanca"@en ;
+    skos:definition
+        "The University of Salamanca was founded in 1218 and is one of the three oldest universities in Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. In 2011, it was awarded the Campus of International Excellence status. It is the university of reference in its region and beyond (Castile and León) and the “Alma Mater” of nearly all historical Latin American universities."@en ;
+    foaf:homepage <https://www.usal.es> ;
+    foaf:depiction </blobs/salamanca.png> ;
+    org:identifier "usal.es"^^<https://github.com/refeds/schac> ;
+    rdfs:seeAlso wd:Q308963 .
 
 </universities/turku> a ec2u:University ;
-	dct:title "University of Turku"@en, "Turun yliopisto"@fi ;
-	dct:description "The University of Turku (UTU) is an international research university and an active academic community of 25,000 students and staff members from over 100 different countries.  The University’s main campus is located in the historical city centre of Turku – close to the unique nature and archipelago of Southwest Finland. As one of the leading universities in Finland, the University of Turku offers study and research opportunities in seven faculties and seven special units. Thanks to the outstanding services, compact campus and active academic society, international students and scholars feel at home from the very beginning of their stay at the University of Turku, Finland!"@en ;
-	ec2u:image </blobs/turku.png> ;
-	ec2u:schac "utu.fi" ;
-	rdfs:seeAlso wd:Q501841 .
+    skos:prefLabel "University of Turku"@en, "Turun yliopisto"@fi ;
+    skos:definition
+        "The University of Turku (UTU) is an international research university and an active academic community of 25,000 students and staff members from over 100 different countries.  The University’s main campus is located in the historical city centre of Turku – close to the unique nature and archipelago of Southwest Finland. As one of the leading universities in Finland, the University of Turku offers study and research opportunities in seven faculties and seven special units. Thanks to the outstanding services, compact campus and active academic society, international students and scholars feel at home from the very beginning of their stay at the University of Turku, Finland!"@en ;
+    foaf:homepage <https://www.utu.fi/en>, <https://www.utu.fi/fi> ;
+    foaf:depiction </blobs/turku.png> ;
+    org:identifier "utu.fi"^^<https://github.com/refeds/schac> ;
+    rdfs:seeAlso wd:Q501841 .
 

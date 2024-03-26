@@ -9,6 +9,10 @@ resource searches and selective publishing use cases.
 
 EC2U concepts are described using a controlled subset of the [SKOS](https://www.w3.org/TR/skos-reference/) data model.
 
+| prefix | namespace                            | description                                                                                     |
+|--------|--------------------------------------|-------------------------------------------------------------------------------------------------|
+| skos:  | http://www.w3.org/2004/02/skos/core# | [Simple Knowledge Organization System (SKOS)](https://www.w3.org/TR/skos-reference/) vocabulary |
+
 ## ec2u:ConceptScheme
 
 > ❗️TBC

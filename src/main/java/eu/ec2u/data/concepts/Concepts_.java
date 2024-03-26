@@ -17,16 +17,20 @@
 package eu.ec2u.data.concepts;
 
 import com.metreeca.http.rdf4j.actions.Update;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.metreeca.http.rdf.Values.pattern;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.http.toolkits.Strings.lower;
@@ -34,7 +38,10 @@ import static com.metreeca.http.toolkits.Strings.title;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.Base;
 import static eu.ec2u.data.EC2U.item;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toList;
 
 public final class Concepts_ implements Runnable {
 
@@ -83,14 +90,31 @@ public final class Concepts_ implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
+
         Stream
 
-                .of(text(resource(Concepts_.class, ".ul")))
+                .of(
+
+                        rdf(resource(Concepts.class, ".ttl"), Base),
+
+                        rdf(resource("https://www.w3.org/2009/08/skos-reference/skos.rdf"), Base).stream()
+                                .filter(not(pattern(null, RDFS.SUBPROPERTYOF, RDFS.LABEL)))
+                                .collect(toList())
+
+                )
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                );
+
+        Stream
+
+                .of(text(resource(Concepts.class, ".ul")))
 
                 .forEach(new Update()
-                        .base(EC2U.Base)
+                        .base(Base)
                         .insert(Context)
-                        .clear(true)
                 );
     }
 

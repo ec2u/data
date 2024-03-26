@@ -61,7 +61,7 @@ public final class EventsSalamancaUniversity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/salamanca/university");
 
     private static final Frame Publisher=frame(iri("https://sac.usal.es/programacion/"))
-            .value(RDF.TYPE, Resources.Publisher)
+            .value(RDF.TYPE, Events._Publisher)
             .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Salamanca / Cultural Activities Service", "en"),
@@ -165,7 +165,7 @@ public final class EventsSalamancaUniversity implements Runnable {
 
                 .values(RDF.TYPE, Events.Event)
 
-                .value(Resources.university, Salamanca.Id)
+                .value(Resources.owner, Salamanca.Id)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, url)

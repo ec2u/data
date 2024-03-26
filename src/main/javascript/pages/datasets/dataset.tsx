@@ -22,6 +22,7 @@ import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
 import { useRouter } from "@metreeca/data/contexts/router";
+import { useAsset } from "@metreeca/data/hooks/asset";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
@@ -30,7 +31,6 @@ import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import React from "react";
-import { useMark } from "../../../../../../../../Products/Tool/code/data/hooks/mark";
 
 
 function isMeta(route: string) {
@@ -80,7 +80,7 @@ export function DataMeta() {
 
 	const data=!isMeta(route);
 
-	return <button title={data ? "View Dataset Metadata" : "View Dataset Content"}
+	return <button title={data ? "View Dataset Metadata" : "View Dataset Catalog"}
 
 		onClick={() => setRoute(data ? toMeta(route) : toData(route))}
 
@@ -101,7 +101,7 @@ export function DataDataset() {
 
 	const [dataset]=useResource({ ...Dataset, id: toData(route) });
 
-	const model=useMark(dataset?.isDefinedBy);
+	const model=useAsset(dataset?.isDefinedBy);
 
 
 	return <DataPage

@@ -162,7 +162,7 @@ public final class OffersJena implements Runnable {
         return frame.string(Schema.url).map(url -> frame(item(Programs, Jena, url))
 
                 .values(RDF.TYPE, Program)
-                .value(Resources.university, Jena.Id)
+                .value(Resources.owner, Jena.Id)
 
                 .value(Schema.url, iri(url))
 

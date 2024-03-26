@@ -16,7 +16,7 @@
 
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, required } from "@metreeca/core";
-import { useMark } from "@metreeca/data/hooks/mark";
+import { useAsset } from "@metreeca/data/hooks/asset";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
 
@@ -42,7 +42,7 @@ export const Book=immutable({
 
 export function DataBook() {
 
-	const text=useMark("");
+	const text=useAsset("");
 
 	return <DataPage
 

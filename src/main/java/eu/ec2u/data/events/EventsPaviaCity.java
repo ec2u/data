@@ -56,8 +56,8 @@ public final class EventsPaviaCity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/pavia/city");
 
     private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Resources.City)
+            .value(RDF.TYPE, Events._Publisher)
+            .value(DCTERMS.COVERAGE, Events._City)
             .values(RDFS.LABEL,
                     literal("Comune di Pavia / ViviPavia", "it"),
                     literal("City of Pavia / ViviPavia", "en")
@@ -143,7 +143,7 @@ public final class EventsPaviaCity implements Runnable {
 
                 .values(RDF.TYPE, Events.Event)
 
-                .value(Resources.university, Pavia.Id)
+                .value(Resources.owner, Pavia.Id)
 
                 .frame(DCTERMS.PUBLISHER, Publisher)
                 .value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
