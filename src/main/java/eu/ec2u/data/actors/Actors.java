@@ -16,17 +16,10 @@
 
 package eu.ec2u.data.actors;
 
-import com.metreeca.http.rdf4j.actions.Upload;
-
+import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 
-import java.util.stream.Stream;
-
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
-
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
 import static eu.ec2u.data.EC2U.item;
 
 public final class Actors {
@@ -34,21 +27,20 @@ public final class Actors {
     public static final IRI Context=item("/actors/");
 
 
-    public static void main(final String... args) {
-        exec(() -> Stream
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                .of(rdf(resource(Actors.class, ".ttl"), Base))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
-    }
+    private Actors() { }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Actors() { }
+    public static void main(final String... args) {
+        exec(Actors::create);
+    }
+
+
+    public static void create() {
+        Datasets.create(Actors.class, Context);
+    }
 
 }

@@ -6,17 +6,17 @@
 @prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
 
 </actors/> a ec2u:Dataset ;
-	dct:title "EC2U Actors"@en ;
-	dct:alternative "EC2U Knowledge Ecosystem Actors"@en ;
+	dct:title "EC2U Knowledge Ecosystem Actors"@en ;
+	dct:alternative "EC2U Actors"@en ;
 	dct:description "Anonymized information about knowledge ecosystem actors at EC2U allied universities and associated local communities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
 	dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	dct:available "2022-01-01"^^xsd:date ;
+	dct:issued "2022-01-01"^^xsd:date ;
 	void:rootResource ec2u:Actor .
 
 
 ########################################################################################################################
 
-ec2u:Actor a owl:Class ;
+ec2u:Actor a rdfs:Class ;
    rdfs:subClassOf ec2u:Resource ;
-   rdfs:label "Knowledge ecosystem actor"@en .
+	rdfs:label "Knowledge Ecosystem Actor"@en .
