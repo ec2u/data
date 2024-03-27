@@ -32,6 +32,7 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { GraduationCap } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
+import { ToolMark } from "../../../../../../../../Products/Tool/code/view/widgets/mark";
 
 
 export const Schemes=immutable({
@@ -99,7 +100,7 @@ export function DataSchemes() {
 
 			>{
 
-				comment && toLocalString(comment)
+				comment && <ToolMark>{toLocalString(comment)}</ToolMark>
 
 			}</ToolCard>
 

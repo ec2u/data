@@ -161,13 +161,13 @@ export function DataUnit() {
 
 				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
 
-				{(parents.length || hasUnit?.length) && <>
+				{(parents?.length || hasUnit?.length) && <>
 
                     <hr/>
 
                     <dl>
 
-						{parents && <>
+						{parents?.length > 0 && <>
 
                             <dt>Parent Organizations</dt>
 

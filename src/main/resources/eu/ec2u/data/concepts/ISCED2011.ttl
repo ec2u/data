@@ -3,8 +3,8 @@
 @prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
 
 </concepts/isced-2011> a skos:ConceptScheme ;
-	rdfs:label "ISCED 2011"@en ;
-	rdfs:comment "ISCED 2011 Education Levels."@en .
+    dct:title "ISCED 2011 Education Levels."@en ;
+    dct:alternative "ISCED 2011"@en .
 
 
 ########################################################################################################################

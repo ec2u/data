@@ -17,6 +17,7 @@
 package eu.ec2u.data.units;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 
 public final class UnitsSalamanca implements Runnable {
 
@@ -28,8 +29,11 @@ public final class UnitsSalamanca implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        new UnitsSalamancaData().run();
-        new UnitsSalamancaVIs().run();
+        txn(
+                new UnitsSalamancaData(),
+                new UnitsSalamancaVIs(),
+                Units::update
+        );
     }
 
 }

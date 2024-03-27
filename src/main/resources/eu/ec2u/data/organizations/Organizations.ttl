@@ -15,11 +15,11 @@ org:OrganizationalCollaboration rdfs:subClassOf org:Organization .
 org:OrganizationalUnit rdfs:subClassOf org:Organization .
 
 
-org:subOrganizationOf rdfs:owl:inverseOf org:hasSubOrganization .
+org:subOrganizationOf owl:inverseOf org:hasSubOrganization .
 
-org:unitOf rdfs:owl:inverseOf org:hasUnit .
+org:unitOf owl:inverseOf org:hasUnit .
 
-org:memberOf rdfs:owl:inverseOf org:hasMember .
+org:memberOf owl:inverseOf org:hasMember .
 
 org:headOf rdfs:subPropertyOf org:hasMember .
 

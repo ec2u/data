@@ -93,8 +93,8 @@ export function DataUnits() {
 				useOptions(units, "owner", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
-			<ToolOptions placeholder={"Type"}>{
-				useOptions(units, "classification", { type: entry({ id: "", label: required(local) }) })
+			<ToolOptions placeholder={"Type"} compact>{
+				useOptions(units, "classification", { type: entry({ id: "", label: required(local) }), size: 10 })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Topic"} compact>{

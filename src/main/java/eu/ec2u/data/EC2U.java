@@ -18,6 +18,7 @@ package eu.ec2u.data;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
+import com.metreeca.link._Report;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.datasets.Datasets;
@@ -29,13 +30,17 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities._Universities;
+import org.eclipse.rdf4j.common.exception.ValidationException;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.repository.RepositoryException;
 
 import java.util.regex.Pattern;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.jsonld.formats.JSONLD.store;
 import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.Data.exec;
@@ -107,87 +112,104 @@ public final class EC2U extends Delegator {
 
     public static void create() {
 
-        service(store()).validate(
+        try {
+            service(store()).validate(
 
-                SKOSConceptScheme(),
-                SKOSConcept(),
+                    SKOSConceptScheme(),
+                    SKOSConcept(),
 
-                FOAFAgent(),
-                FOAFPerson(),
+                    FOAFAgent(),
+                    FOAFPerson(),
 
-                OrgOrganization(),
-                OrgFormalOrganization(),
-                OrgOrganizationalCollaboration(),
-                OrgOrganizationalUnit(),
+                    OrgOrganization(),
+                    OrgFormalOrganization(),
+                    OrgOrganizationalCollaboration(),
+                    OrgOrganizationalUnit(),
 
-                // Schema.Thing(),
-                // Schema.Organization(),
-                // Schema.Event(),
-                // Schema.Place(),
-                // Schema.PostalAddress(),
-                // Schema.VirtualLocation(),
-                // Schema.ContactPoint()
+                    // Schema.Thing(),
+                    // Schema.Organization(),
+                    // Schema.Event(),
+                    // Schema.Place(),
+                    // Schema.PostalAddress(),
+                    // Schema.VirtualLocation(),
+                    // Schema.ContactPoint()
 
-                Resource(),
-                Dataset(),
+                    Resource(),
+                    Dataset(),
 
-                University(),
-                Unit()
+                    University(),
+                    Unit()
 
-                // Program(),
-                // Course(),
+                    // Program(),
+                    // Course(),
 
-                // Document(),
+                    // Document(),
 
-                // Event(),
+                    // Event(),
 
-        );
+            );
 
-        // service(graph()).update(connection -> {
-        //
-        //     Stream.<Runnable>of(
-        //
-        //             Resources::create,
-        //             Datasets::create,
-        //
-        //             Agents::create,
-        //             Persons::create,
-        //             Organizations::create,
-        //
-        //             Universities::create
-        //
-        //     ).forEach(Runnable::run);
-        //
-        //     return null;
-        //
-        // });
-
-
-        // Concepts.main();
-        // Agents.main();
-        // Organizations.main();
-        // Locations.main();
-        //
-        // Datasets.main();
-        //
-        // Universities.main();
-        // Units.main();
-        // Persons.main();
+            // service(graph()).update(connection -> {
+            //
+            //     Stream.<Runnable>of(
+            //
+            //             Resources::create,
+            //             Datasets::create,
+            //
+            //             Agents::create,
+            //             Persons::create,
+            //             Organizations::create,
+            //
+            //             Universities::create
+            //
+            //     ).forEach(Runnable::run);
+            //
+            //     return null;
+            //
+            // });
 
 
-        // Actors.main();
+            // Concepts.main();
+            // Agents.main();
+            // Organizations.main();
+            // Locations.main();
+            //
+            // Datasets.main();
+            //
+            // Universities.main();
+            // Units.main();
+            // Persons.main();
 
-        // Documents.main();
-        // Events.main();
-        // Offers.main();
-        // Courses.main();
-        // Programs.main();
-        // Schema.main();
 
-        // EuroSciVoc.main();
-        // ISCED2011.main();
-        // ISCEDF2013.main();
-        // UnitTypes.main();
+            // Actors.main();
+
+            // Documents.main();
+            // Events.main();
+            // Offers.main();
+            // Courses.main();
+            // Programs.main();
+            // Schema.main();
+
+            // EuroSciVoc.main();
+            // ISCED2011.main();
+            // ISCEDF2013.main();
+            // UnitTypes.main();
+
+        } catch ( final RepositoryException e ) {
+
+            if ( e.getCause() instanceof ValidationException ) {
+
+                final Model model=((ValidationException)e.getCause()).validationReportAsModel();
+
+                service(logger()).warning(EC2U.class, _Report.report(model).toString());
+
+            } else {
+
+                throw e;
+
+            }
+
+        }
     }
 
 }

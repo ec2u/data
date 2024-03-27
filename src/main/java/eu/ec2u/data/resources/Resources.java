@@ -74,7 +74,7 @@ public final class Resources extends Delegator {
                 property("id", ID, required(id())),
 
                 property(RDF.TYPE, multiple(id())),
-                property(RDFS.LABEL, required(localized(), maxLength(100))),
+                property(RDFS.LABEL, required(localized(), maxLength(250))),
                 property(RDFS.COMMENT, optional(localized(), maxLength(1000))),
 
                 property(RDFS.SEEALSO, multiple(id()))

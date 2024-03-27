@@ -25,10 +25,7 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
-import org.eclipse.rdf4j.model.vocabulary.VOID;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
@@ -60,6 +57,10 @@ public final class Concepts extends Delegator {
 
     public static Shape SKOSConceptScheme() {
         return shape(SKOS.CONCEPT_SCHEME, Entry(),
+
+                property(DCTERMS.TITLE, required(localized())),
+                property(DCTERMS.ALTERNATIVE, optional(localized())),
+                property(DCTERMS.DESCRIPTION, optional(localized())),
 
                 property(VOID.ENTITIES, required(integer())),
 

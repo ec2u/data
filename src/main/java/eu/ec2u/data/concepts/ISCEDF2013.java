@@ -37,7 +37,6 @@ import static com.metreeca.http.toolkits.Resources.resource;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.Base;
-import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
 
@@ -106,13 +105,6 @@ public final class ISCEDF2013 implements Runnable {
 
                                     .map(statement -> rewrite(statement, External, Internal))
                                     .map(statement -> replace(statement, Root, Scheme))
-
-                                    // remove original title
-
-                                    .filter(not(pattern(null, null, literal(
-                                            "International Standard Classification of "
-                                                    +"Education: Fields of Education and Training 2013", "en"
-                                    ))))
 
                                     .collect(toList())
 

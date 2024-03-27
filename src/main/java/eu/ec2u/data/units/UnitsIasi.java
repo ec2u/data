@@ -29,6 +29,7 @@ import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities._Universities.Iasi;
 import static java.lang.String.format;
@@ -58,19 +59,27 @@ public final class UnitsIasi implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        Xtream.of(url)
+        txn(() -> {
 
-                .flatMap(new Units_.CSVLoader(Iasi))
+            Xtream.of(url)
 
-                .optMap(new Validate(Unit()))
+                    .flatMap(new Units_.CSVLoader(Iasi))
 
-                .flatMap(Frame::stream)
-                .batch(0)
+                    .optMap(new Validate(Unit()))
 
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                );
+                    .flatMap(Frame::stream)
+                    .batch(0)
+
+                    .forEach(new Upload()
+                            .contexts(Context)
+                            .clear(true)
+                    );
+
+
+            Units.update();
+
+        });
+
     }
 
 }

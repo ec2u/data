@@ -17,26 +17,36 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.http.actions.Fill;
-import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.jsonld.actions.Validate;
 import com.metreeca.http.rdf4j.actions.GraphQuery;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
+import com.metreeca.link._Focus;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.link.Frame.reverse;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.repository;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.concepts.OrganizationTypes.Centre;
 import static eu.ec2u.data.concepts.OrganizationTypes.Department;
+import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.universities._Universities.Pavia;
 import static java.util.Map.entry;
+import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
 
@@ -55,25 +65,33 @@ public final class UnitsPavia implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     @Override public void run() {
-        // Xtream.of(Instant.EPOCH)
-        //
-        //         .flatMap(this::units)
-        //         .map(this::unit)
-        //
-        //         .pipe(units -> validate(Unit(), Set.of(Unit), units))
-        //
-        //         .forEach(new Upload()
-        //                 .contexts(Context)
-        //                 .clear(true)
-        //         );
+        txn(() -> {
+
+            Xtream.of(Instant.EPOCH)
+
+                    .flatMap(this::units)
+                    .map(this::unit)
+
+                    .optMap(new Validate(Unit()))
+
+                    .flatMap(com.metreeca.link.Frame::stream)
+                    .batch(0)
+
+                    .forEach(new Upload()
+                            .contexts(Context)
+                            .clear(true)
+                    );
+
+            Units.update();
+
+        });
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> units(final Instant synced) {
+    private Xtream<_Focus> units(final Instant synced) {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<>()
@@ -97,39 +115,44 @@ public final class UnitsPavia implements Runnable {
 
                 .flatMap(model -> Types.keySet().stream()
 
-                        .flatMap(type -> frame(type, model)
-                                .frames(reverse(RDF.TYPE))
+                        .flatMap(type -> _Focus.focus(type, model)
+                                .shift(reverse(RDF.TYPE))
+                                .split()
                         )
 
                 );
     }
 
-    // private Frame unit(final Frame frame) {
-    //
-    //     final Optional<Literal> label=frame.string(RDFS.LABEL)
-    //             .filter(not(String::isEmpty))
-    //             .map(name -> literal(name, Pavia.Language));
-    //
-    //     return frame(EC2U.item(Units.Context, frame.focus().stringValue()))
-    //
-    //             .values(RDF.TYPE, Unit)
-    //             .value(Resources.university, Pavia.Id)
-    //
-    //             .value(DCTERMS.TITLE, label)
-    //             .value(SKOS.PREF_LABEL, label)
-    //
-    //             .value(ORG.UNIT_OF, Pavia.Id)
-    //
-    //             .value(ORG.CLASSIFICATION, frame.values(RDF.TYPE)
-    //                     .map(Types::get)
-    //                     .filter(Objects::nonNull)
-    //                     .findFirst()
-    //             );
-    //
-    // }
+    private Frame unit(final _Focus focus) {
+
+        final Optional<Literal> label=focus.shift(RDFS.LABEL).value(asString())
+                .filter(not(String::isEmpty))
+                .map(name -> literal(name, Pavia.Language));
+
+        return frame(
+
+                field(ID, EC2U.item(Units.Context, focus.value(asIRI()).orElseThrow().stringValue())), // !!! review
+
+                field(RDF.TYPE, Unit),
+                field(owner, Pavia.Id),
+
+                field(DCTERMS.TITLE, label),
+                field(SKOS.PREF_LABEL, label),
+
+                field(ORG.UNIT_OF, Pavia.Id),
+
+                field(ORG.CLASSIFICATION, focus.shift(RDF.TYPE).values()
+                        .map(Types::get)
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                )
+
+        );
+
+    }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * VIVO RDF vocabulary.

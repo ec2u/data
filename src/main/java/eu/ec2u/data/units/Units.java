@@ -52,7 +52,7 @@ import static eu.ec2u.data.resources.Resources.owner;
 public final class Units extends Delegator {
 
     public static final IRI Context=EC2U.item("/units/");
-    public static final IRI Scheme=iri(Concepts.Context, "/unit-topics");
+    public static final IRI Scheme=iri(Concepts.Context, "/research-topics");
 
     public static final IRI Unit=EC2U.term("Unit");
 
@@ -139,6 +139,7 @@ public final class Units extends Delegator {
         txn(() -> {
 
             Organizations.update();
+            Concepts.update(); // ;( units topics
             Datasets.update();
 
         });
