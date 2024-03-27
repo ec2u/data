@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U educational offers.
+ * EC2U educational offerings.
  */
-package eu.ec2u.data.offers;
+package eu.ec2u.data.offerings;

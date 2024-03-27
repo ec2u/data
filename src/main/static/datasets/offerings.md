@@ -2,7 +2,7 @@
 
 # Data Model
 
-![offer data model](index/offers.svg)
+![offering data model](index/offerings.svg)
 
 EC2U courses are described using a controlled subset of the [schema:EducationalOccupationalProgram](https://schema.org/EducationalOccupationalProgram) and  [schema:Course](https://schema.org/Course) data models.
 

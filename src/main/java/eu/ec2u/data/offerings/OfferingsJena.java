@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offers;
+package eu.ec2u.data.offerings;
 
 import com.metreeca.http.FormatException;
 import com.metreeca.http.actions.GET;
@@ -54,16 +54,16 @@ import static com.metreeca.http.services.Vault.vault;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.ISCED2011.*;
-import static eu.ec2u.data.offers.Offers.Program;
-import static eu.ec2u.data.offers.Offers.Programs;
+import static eu.ec2u.data.offerings.Offerings.Program;
+import static eu.ec2u.data.offerings.Offerings.Programs;
 import static eu.ec2u.data.universities._Universities.Jena;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Map.entry;
 
-public final class OffersJena implements Runnable {
+public final class OfferingsJena implements Runnable {
 
-    private static final IRI Context=iri(Offers.Context, "/jena");
+    private static final IRI Context=iri(Offerings.Context, "/jena");
 
     private static final String SiteURL="https://www.uni-jena.de/en/study-programme";
 
@@ -84,7 +84,7 @@ public final class OffersJena implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new OffersJena().run());
+        exec(() -> new OfferingsJena().run());
     }
 
 

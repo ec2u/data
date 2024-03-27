@@ -34,24 +34,24 @@ cron:
     schedule: every day 00:00
 
 
-  - description: "offers › coimbra - nightly crawling"
-    url: /cron/offers/coimbra
+  - description: "offerings › coimbra - nightly crawling"
+    url: /cron/offerings/coimbra
     schedule: every day 00:00
 
-  - description: "offers › jena - nightly crawling"
-    url: /cron/offers/jena
+  - description: "offerings › jena - nightly crawling"
+    url: /cron/offerings/jena
     schedule: every day 00:00
 
-  #  - description: "offers › pavia - nightly crawling"
-  #    url: /cron/offers/pavia
+  #  - description: "offerings › pavia - nightly crawling"
+  #    url: /cron/offerings/pavia
   #    schedule: every day 00:00
 
-  #  - description: "offers › poitiers - nightly crawling"
-  #    url: /cron/offers/poitiers
+  #  - description: "offerings › poitiers - nightly crawling"
+  #    url: /cron/offerings/poitiers
   #    schedule: every day 00:00
 
-  - description: "offers › salamanca - nightly crawling"
-    url: /cron/offers/salamanca
+  - description: "offerings › salamanca - nightly crawling"
+    url: /cron/offerings/salamanca
     schedule: every day 00:00
 
 

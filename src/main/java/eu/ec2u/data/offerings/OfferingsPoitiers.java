@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offers;
+package eu.ec2u.data.offerings;
 
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
@@ -52,17 +52,17 @@ import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.offers.Offers.Course;
-import static eu.ec2u.data.offers.Offers.Program;
+import static eu.ec2u.data.offerings.Offerings.Course;
+import static eu.ec2u.data.offerings.Offerings.Program;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.util.Map.entry;
 
-public final class OffersPoitiers implements Runnable {
+public final class OfferingsPoitiers implements Runnable {
 
-    private static final IRI Context=iri(Offers.Context, "/poitiers");
+    private static final IRI Context=iri(Offerings.Context, "/poitiers");
 
     private static final String APIUrl="offers-poitiers-url";
     private static final String APIId="offers-poitiers-id";
@@ -85,7 +85,7 @@ public final class OffersPoitiers implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new OffersPoitiers().run());
+        exec(() -> new OfferingsPoitiers().run());
     }
 
 
@@ -194,7 +194,7 @@ public final class OffersPoitiers implements Runnable {
     }
 
     private Optional<Frame> program(final JSONPath json) {
-        return json.string("code").map(code -> frame(item(Offers.Programs, Poitiers, code))
+        return json.string("code").map(code -> frame(item(Offerings.Programs, Poitiers, code))
 
                 .values(RDF.TYPE, Program)
                 .value(owner, Poitiers.Id)
@@ -211,7 +211,7 @@ public final class OffersPoitiers implements Runnable {
                 )
 
                 .value(Schema.numberOfCredits, json.decimal("credits")
-                        .map(Offers_::ects)
+                        .map(Offerings_::ects)
                         .map(Values::literal)
                 )
 
@@ -224,15 +224,15 @@ public final class OffersPoitiers implements Runnable {
                 )
 
                 .frame(Schema.about, json.string("discipline")
-                        .map(name -> frame(item(Offers.Scheme, Poitiers, name))
+                        .map(name -> frame(item(Offerings.Scheme, Poitiers, name))
                                 .value(RDF.TYPE, SKOS.CONCEPT)
-                                .value(SKOS.TOP_CONCEPT_OF, Offers.Scheme)
+                                .value(SKOS.TOP_CONCEPT_OF, Offerings.Scheme)
                                 .value(SKOS.PREF_LABEL, literal(name, Poitiers.Language))
                         )
                 )
 
                 .values(Schema.hasCourse, json.entries("options.*.elemPedago.*")
-                        .map(entry -> item(Offers.Courses, Poitiers, entry.getKey()))
+                        .map(entry -> item(Offerings.Courses, Poitiers, entry.getKey()))
                 )
 
         );
@@ -244,7 +244,7 @@ public final class OffersPoitiers implements Runnable {
                 .map(name -> item(Organizations.Context, Poitiers, name));
 
         final Optional<IRI> subject=program.string("discipline")
-                .map(name -> item(Offers.Scheme, Poitiers, name));
+                .map(name -> item(Offerings.Scheme, Poitiers, name));
 
         final Optional<IRI> level=program.integer("levelISCED")
                 .map(BigInteger::intValue)
@@ -258,7 +258,7 @@ public final class OffersPoitiers implements Runnable {
                     final String code=entry.getKey();
                     final JSONPath json=entry.getValue();
 
-                    return frame(item(Offers.Courses, Poitiers, code))
+                    return frame(item(Offerings.Courses, Poitiers, code))
 
                             .values(RDF.TYPE, Course)
                             .value(owner, Poitiers.Id)
@@ -272,7 +272,7 @@ public final class OffersPoitiers implements Runnable {
                             .value(Schema.educationalLevel, level)
 
                             .value(Schema.numberOfCredits, json.string("credits")
-                                    .map(Offers_::ects)
+                                    .map(Offerings_::ects)
                                     .map(Values::literal)
                             )
 

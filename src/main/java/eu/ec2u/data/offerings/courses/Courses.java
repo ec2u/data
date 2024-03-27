@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offers.programs;
+package eu.ec2u.data.offerings.courses;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
@@ -23,7 +23,7 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.things.Schema;
+import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
@@ -33,12 +33,12 @@ import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.offers.Offers.Program;
+import static eu.ec2u.data.offerings.Offerings.Course;
 import static eu.ec2u.data.resources.Resources.owner;
 
-public final class Programs extends Delegator {
+public final class Courses extends Delegator {
 
-    public static Shape Programs() { return Dataset(Program()); }
+    public static Shape Courses() { return Dataset(Course()); }
 
 
     public static void main(final String... args) { }
@@ -46,10 +46,10 @@ public final class Programs extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Programs() {
+    public Courses() {
         delegate(new Router()
 
-                .path("/", handler(new Driver(Programs()), new Worker()
+                .path("/", handler(new Driver(Courses()), new Worker()
 
                         .get(new Relator(frame(
 
@@ -64,11 +64,11 @@ public final class Programs extends Delegator {
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
                                                 field(owner, iri()),
-                                                field(Schema.programType, iri())
+                                                field(ORG.CLASSIFICATION, iri())
 
                                         ),
 
-                                        filter(RDF.TYPE, Program)
+                                        filter(RDF.TYPE, Course)
 
                                 ))
 
@@ -76,7 +76,7 @@ public final class Programs extends Delegator {
 
                 ))
 
-                .path("/{code}", handler(new Driver(Program()), new Worker()
+                .path("/{code}", handler(new Driver(Course()), new Worker()
 
                         .get(new Relator(frame(
 
@@ -84,14 +84,13 @@ public final class Programs extends Delegator {
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
                                 field(owner, iri()),
-                                field(Schema.programType, iri())
+                                field(ORG.CLASSIFICATION, iri())
 
                         )))
 
                 ))
 
         );
-
     }
 
 }

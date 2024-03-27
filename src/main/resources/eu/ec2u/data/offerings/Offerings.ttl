@@ -8,39 +8,40 @@
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
 </programs/> a ec2u:Dataset ;
-	dct:title "EC2U Programs"@en  ;
-	dct:alternative "EC2U Degree and Occupational Programs"@en ;
-	dct:description "Identifying and background information about degree and occupational programs offered by EC2U allied universities."@en ;
+	dct:title "EC2U Degree and Occupational Programs"@en ;
+	dct:alternative "EC2U Programs"@en ;
+	dct:description "Degree and occupational programs offered by EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	dct:available "2022-03-10"^^xsd:date ;
+	dct:issued "2022-03-10"^^xsd:date ;
 	void:rootResource ec2u:Program ;
-	rdfs:isDefinedBy </datasets/offers> .
+	rdfs:isDefinedBy </datasets/offerings> .
 
 </courses/> a ec2u:Dataset ;
-	dct:title "EC2U Courses"@en  ;
-	dct:alternative "EC2U Academic and Occupational Courses"@en ;
-	dct:description "Identifying and background information about degree and standalone courses and other educational opportunities offered by EC2U allied universities."@en ;
+	dct:title "EC2U Academic and Occupational Courses"@en ;
+	dct:alternative "EC2U Courses"@en ;
+	dct:description
+		"Degree and standalone courses and other educational opportunities offered by EC2U allied universities."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	dct:available "2022-03-10"^^xsd:date ;
+	dct:issued "2022-03-10"^^xsd:date ;
 	void:rootResource ec2u:Course ;
-	rdfs:isDefinedBy </datasets/offers>  .
+	rdfs:isDefinedBy </datasets/offerings> .
 
-</concepts/offer-topics> a skos:ConceptScheme ;
-	dct:title "EC2U Educational Offer Topics"@en .
+</concepts/offering-topics> a skos:ConceptScheme ;
+	dct:title "EC2U Educational Topics"@en .
 
 
 ########################################################################################################################
 
-ec2u:Offer a owl:Class ;
+ec2u:Offering a owl:Class ;
 	rdfs:subClassOf ec2u:Resource .
 
 ec2u:Program a owl:Class ;
-	rdfs:subClassOf ec2u:Offer, schema:EducationalOccupationalProgram .
+	rdfs:subClassOf ec2u:Offering, schema:EducationalOccupationalProgram .
 
 ec2u:Course a owl:Class ;
-	rdfs:subClassOf ec2u:Offer, schema:Course .
+	rdfs:subClassOf ec2u:Offering, schema:Course .
 
 schema:EducationalOccupationalProgram a owl:Class ;
 	rdfs:subClassOf schema:Thing .

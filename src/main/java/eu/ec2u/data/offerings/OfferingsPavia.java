@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offers;
+package eu.ec2u.data.offerings;
 
 import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
@@ -49,7 +49,7 @@ import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.offers.Offers.*;
+import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.resources.Resources_.localized;
 import static eu.ec2u.data.universities._Universities.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
@@ -57,9 +57,9 @@ import static eu.ec2u.work.validation.Validators.validate;
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.toSet;
 
-public final class OffersPavia implements Runnable {
+public final class OfferingsPavia implements Runnable {
 
-    private static final IRI Context=iri(Offers.Context, "/pavia");
+    private static final IRI Context=iri(Offerings.Context, "/pavia");
 
 
     private static final Map<String, IRI> DegreeToLevel=Map.ofEntries(
@@ -81,7 +81,7 @@ public final class OffersPavia implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new OffersPavia().run());
+        exec(() -> new OfferingsPavia().run());
     }
 
 
@@ -208,7 +208,7 @@ public final class OffersPavia implements Runnable {
 
                 .decimal(Schema.numberOfCredits, focus.seq(VIVO.hasValue).value()
                         .flatMap(Values::integer)
-                        .map(Offers_::ects)
+                        .map(Offerings_::ects)
                 )
 
                 .value(Schema.timeRequired, focus.seq(VIVO.dateTimeValue, RDFS.LABEL).value()

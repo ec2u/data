@@ -24,7 +24,7 @@ import com.metreeca.http.services.Logger;
 
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
-import eu.ec2u.data.offers.*;
+import eu.ec2u.data.offerings.*;
 import eu.ec2u.data.units.*;
 import eu.ec2u.data.universities.Universities;
 
@@ -57,11 +57,11 @@ public final class Cron extends Delegator {
                 .path("/units/salamanca", execute(new UnitsSalamanca()))
                 .path("/units/turku", execute(new UnitsTurku()))
 
-                .path("/offers/coimbra", execute(new OffersCoimbra()))
-                .path("/offers/jena", execute(new OffersJena()))
-                .path("/offers/pavia", execute(new OffersPavia()))
-                .path("/offers/poitiers", execute(new OffersPoitiers()))
-                .path("/offers/salamanca", execute(new OffersSalamanca()))
+                .path("/offerings/coimbra", execute(new OfferingsCoimbra()))
+                .path("/offerings/jena", execute(new OfferingsJena()))
+                .path("/offerings/pavia", execute(new OfferingsPavia()))
+                .path("/offerings/poitiers", execute(new OfferingsPoitiers()))
+                .path("/offerings/salamanca", execute(new OfferingsSalamanca()))
 
                 .path("/documents/coimbra", execute(new DocumentsCoimbra()))
                 .path("/documents/iasi", execute(new DocumentsIasi()))

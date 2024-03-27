@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offers;
+package eu.ec2u.data.offerings;
 
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
@@ -46,16 +46,16 @@ import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.offers.Offers.*;
+import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.toSet;
 
-public final class OffersSalamanca implements Runnable {
+public final class OfferingsSalamanca implements Runnable {
 
-    private static final IRI Context=iri(Offers.Context, "/salamanca");
+    private static final IRI Context=iri(Offerings.Context, "/salamanca");
 
     private static final String ProgramsURL="offers-salamanca-programs-url";
     private static final String CoursesURL="offers-salamanca-courses-url";
@@ -71,7 +71,7 @@ public final class OffersSalamanca implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new OffersSalamanca().run());
+        exec(() -> new OfferingsSalamanca().run());
     }
 
 
@@ -201,7 +201,7 @@ public final class OffersSalamanca implements Runnable {
                 .values(Schema.courseCode, literal(code))
 
                 .value(Schema.numberOfCredits, json.string("ects")
-                        .map(Offers_::ects)
+                        .map(Offerings_::ects)
                         .map(Values::literal)
                 )
 

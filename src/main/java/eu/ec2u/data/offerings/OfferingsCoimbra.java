@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offers;
+package eu.ec2u.data.offerings;
 
 import com.metreeca.http.actions.Fetch;
 import com.metreeca.http.actions.Fill;
@@ -61,17 +61,17 @@ import static com.metreeca.http.toolkits.Strings.lenient;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.offers.Offers.Course;
-import static eu.ec2u.data.offers.Offers.Program;
+import static eu.ec2u.data.offerings.Offerings.Course;
+import static eu.ec2u.data.offerings.Offerings.Program;
 import static eu.ec2u.data.universities._Universities.Coimbra;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
-public final class OffersCoimbra implements Runnable {
+public final class OfferingsCoimbra implements Runnable {
 
-    private static final IRI Context=iri(Offers.Context, "/coimbra");
+    private static final IRI Context=iri(Offerings.Context, "/coimbra");
 
     private static final String APIUrl="offers-coimbra-url";
     private static final String APIId="offers-coimbra-id";
@@ -107,20 +107,20 @@ public final class OffersCoimbra implements Runnable {
     // ;( Java Duration natively supports either seconds-based durations or day-based periods
 
     private static final Map<String, Function<Integer, String>> ValueToDuration=Map.ofEntries(
-            entry("year", OffersCoimbra::years),
-            entry("years", OffersCoimbra::years),
-            entry("semester", OffersCoimbra::semesters),
-            entry("semesters", OffersCoimbra::semesters),
-            entry("trimester", OffersCoimbra::trimesters),
-            entry("trimesters", OffersCoimbra::trimesters),
-            entry("month", OffersCoimbra::months),
-            entry("months", OffersCoimbra::months),
-            entry("week", OffersCoimbra::weeks),
-            entry("weeks", OffersCoimbra::weeks),
-            entry("day", OffersCoimbra::days),
-            entry("days", OffersCoimbra::days),
-            entry("hour", OffersCoimbra::hours),
-            entry("hours", OffersCoimbra::hours)
+            entry("year", OfferingsCoimbra::years),
+            entry("years", OfferingsCoimbra::years),
+            entry("semester", OfferingsCoimbra::semesters),
+            entry("semesters", OfferingsCoimbra::semesters),
+            entry("trimester", OfferingsCoimbra::trimesters),
+            entry("trimesters", OfferingsCoimbra::trimesters),
+            entry("month", OfferingsCoimbra::months),
+            entry("months", OfferingsCoimbra::months),
+            entry("week", OfferingsCoimbra::weeks),
+            entry("weeks", OfferingsCoimbra::weeks),
+            entry("day", OfferingsCoimbra::days),
+            entry("days", OfferingsCoimbra::days),
+            entry("hour", OfferingsCoimbra::hours),
+            entry("hours", OfferingsCoimbra::hours)
     );
 
 
@@ -161,7 +161,7 @@ public final class OffersCoimbra implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(final String... args) {
-        exec(() -> new OffersCoimbra().run());
+        exec(() -> new OfferingsCoimbra().run());
     }
 
 
@@ -180,14 +180,14 @@ public final class OffersCoimbra implements Runnable {
 
                         Xtream.from(offers)
 
-                                .filter(OffersCoimbra::isProgram)
+                                .filter(OfferingsCoimbra::isProgram)
                                 .optMap(this::program)
 
                                 .pipe(programs -> validate(Program(), Set.of(Program), programs)),
 
                         Xtream.from(offers)
 
-                                .filter(not(OffersCoimbra::isProgram))
+                                .filter(not(OfferingsCoimbra::isProgram))
                                 .optMap(this::course)
 
                                 .pipe(courses -> validate(Course(), Set.of(Course), courses))
@@ -310,7 +310,7 @@ public final class OffersCoimbra implements Runnable {
                 )
 
                 .value(Schema.numberOfCredits, json.string("ects")
-                        .map(Offers_::ects)
+                        .map(Offerings_::ects)
                         .map(Values::literal)
                 )
 
@@ -350,7 +350,7 @@ public final class OffersCoimbra implements Runnable {
     }
 
     private Optional<Frame> program(final JSONPath json) {
-        return offer(Offers.Programs, json).map(program -> program
+        return offer(Offerings.Programs, json).map(program -> program
 
                 .value(RDF.TYPE, Program)
 
@@ -358,7 +358,7 @@ public final class OffersCoimbra implements Runnable {
     }
 
     private Optional<Frame> course(final JSONPath json) {
-        return offer(Offers.Courses, json).map(course -> course
+        return offer(Offerings.Courses, json).map(course -> course
 
                 .value(RDF.TYPE, Course)
 

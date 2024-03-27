@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offers;
+package eu.ec2u.data.offerings;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-final class Offers_ {
+final class Offerings_ {
 
     static BigDecimal ects(final String ects) { return ects(new BigDecimal(ects)); }
 
@@ -34,6 +34,6 @@ final class Offers_ {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Offers_() { }
+    private Offerings_() { }
 
 }

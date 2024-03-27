@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offers;
+package eu.ec2u.data.offerings;
 
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
@@ -44,9 +44,9 @@ import static eu.ec2u.data.resources.Resources.Entry;
 import static eu.ec2u.data.resources.Resources.Resource;
 
 
-public final class Offers {
+public final class Offerings {
 
-    public static final IRI Context=item("/offers/");
+    public static final IRI Context=item("/offerings/");
     public static final IRI Scheme=iri(Concepts.Context, "/offer-topics");
 
     public static final IRI Programs=item("/programs/");
@@ -109,7 +109,7 @@ public final class Offers {
     public static void main(final String... args) {
         exec(() -> Stream
 
-                .of(rdf(resource(Offers.class, ".ttl"), Base))
+                .of(rdf(resource(Offerings.class, ".ttl"), Base))
 
                 .forEach(new Upload()
                         .contexts(Context)
@@ -121,7 +121,7 @@ public final class Offers {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Offers() { }
+    private Offerings() { }
 
 
 }
