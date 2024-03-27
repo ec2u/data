@@ -58,7 +58,7 @@ export const Document=immutable({
 		label: required(local)
 	}),
 
-	university: optional({
+	owner: optional({
 			id: required(id),
 			label: required(local)
 		}
@@ -117,7 +117,7 @@ export function DataDocument() {
 			modified,
 			valid,
 
-			university,
+			owner,
 
 			type,
 			subject,
@@ -134,7 +134,7 @@ export function DataDocument() {
 
 			<ToolInfo>{{
 
-				"University": university && <ToolLink>{university}</ToolLink>
+				"Owner": owner && <ToolLink>{owner}</ToolLink>
 
 			}}</ToolInfo>
 
@@ -156,19 +156,19 @@ export function DataDocument() {
 
 				"Type": type && type.length && <ul>{sortFrames(type).map(type =>
 					<li key={type.id}>
-						<ToolLink filter={[Documents, { university, subject: type }]}>{type}</ToolLink>
+						<ToolLink filter={[Documents, { owner, subject: type }]}>{type}</ToolLink>
 					</li>
 				)}</ul>,
 
 				"Audience": audience && audience.length && <ul>{sortFrames(audience).map(audience =>
 					<li key={audience.id}>
-						<ToolLink filter={[Documents, { university, audience }]}>{audience}</ToolLink>
+						<ToolLink filter={[Documents, { owner, audience }]}>{audience}</ToolLink>
 					</li>
 				)}</ul>,
 
 				"Topics": subject && subject.length && <ul>{sortFrames(subject).map(subject =>
 					<li key={subject.id}>
-						<ToolLink filter={[Documents, { university, subject }]}>{subject}</ToolLink>
+						<ToolLink filter={[Documents, { owner, subject }]}>{subject}</ToolLink>
 					</li>
 				)}</ul>
 

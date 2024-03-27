@@ -48,6 +48,7 @@ import static eu.ec2u.data.agents.Agents.FOAFAgent;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.concepts.Concepts.SKOSConceptScheme;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.data.organizations.Organizations.*;
 import static eu.ec2u.data.persons.Persons.FOAFPerson;
 import static eu.ec2u.data.resources.Resources.Resource;
@@ -138,12 +139,12 @@ public final class EC2U extends Delegator {
                     Dataset(),
 
                     University(),
-                    Unit()
+                    Unit(),
 
                     // Program(),
                     // Course(),
 
-                    // Document(),
+                    Document()
 
                     // Event(),
 

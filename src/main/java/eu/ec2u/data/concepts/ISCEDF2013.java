@@ -22,12 +22,10 @@ import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Values.*;
@@ -55,8 +53,6 @@ public final class ISCEDF2013 implements Runnable {
 
     private static final String External="http://data.europa.eu/snb/isced-f/";
     private static final String Internal=Scheme+"/";
-
-    private static final Set<IRI> DCTTemporal=Set.of(DCTERMS.CREATED, DCTERMS.ISSUED, DCTERMS.MODIFIED);
 
     private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
             +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fcellar"

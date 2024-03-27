@@ -27,6 +27,7 @@ import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
 
 
@@ -82,7 +83,7 @@ export function DataScheme() {
 
 		}) => <>
 
-			{comment && <p>{toLocalString(comment)}</p>}
+			{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
 
 			{hasTopConcept?.length && <>
 

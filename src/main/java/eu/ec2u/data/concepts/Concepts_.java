@@ -44,26 +44,6 @@ public final class Concepts_ {
         ));
     }
 
-    // public static Optional<Concept> concept(final IRI scheme, final String label, final String language) { // !!! URI
-    //
-    //     return Optional.of(with(new Concept(), concept -> {
-    //
-    //         final ConceptScheme conceptScheme=with(new ConceptScheme(), cs -> cs.setId(scheme.stringValue()));
-    //         final Local<String> local=Local.local(language, title(label));
-    //
-    //         concept.setId(EC2U.item(scheme, lower(label)).stringValue()); // !!! string
-    //
-    //         concept.setLabel(local);
-    //         concept.setPrefLabel(local);
-    //
-    //         concept.setInScheme(conceptScheme);
-    //         concept.setTopConceptOf(conceptScheme);
-    //
-    //     }));
-    //
-    // }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Concepts_() { }

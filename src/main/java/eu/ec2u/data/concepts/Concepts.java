@@ -169,13 +169,7 @@ public final class Concepts extends Delegator {
     }
 
     public static void update() {
-        txn(() -> {
-
-            Datasets.update(Concepts.class, Context);
-
-            Datasets.update();
-
-        });
+        txn(() -> Datasets.update(Concepts.class, Context));
     }
 
 }

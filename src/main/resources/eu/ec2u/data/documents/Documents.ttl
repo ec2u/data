@@ -9,13 +9,14 @@
 @prefix foaf:	<http://xmlns.com/foaf/0.1/> .
 
 </documents/> a ec2u:Dataset ;
-	dct:title "EC2U Documents"@en  ;
-	dct:alternative "EC2U Official Documents"@en ;
+	dct:title "EC2U Official Documents"@en ;
+	dct:alternative "EC2U Documents"@en ;
     dct:description "Official documents published by Alliance partners."@en ;
 	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	dct:available "2023-07-15"^^xsd:date ;
-	void:rootResource ec2u:Document .
+	dct:issued "2023-07-15"^^xsd:date ;
+	void:rootResource ec2u:Document ;
+	rdfs:isDefinedBy </datasets/documents> .
 
 </concepts/document-types> a skos:ConceptScheme ;
 	dct:title "EC2U Document Types"@en .
@@ -31,9 +32,3 @@
 
 ec2u:Document a owl:Class ;
 	rdfs:subClassOf ec2u:Resource .
-
-ec2u:Publisher a owl:Class ;
-	rdfs:subClassOf org:Organization .
-
-org:Organization a owl:Class ;
-	rdfs:subClassOf foaf:Agent .

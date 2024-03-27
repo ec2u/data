@@ -31,8 +31,8 @@ import { ToolSheet } from "@metreeca/view/lenses/sheet";
 import { ToolCard } from "@metreeca/view/widgets/card";
 import { GraduationCap } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
-import { ToolMark } from "../../../../../../../../Products/Tool/code/view/widgets/mark";
 
 
 export const Schemes=immutable({

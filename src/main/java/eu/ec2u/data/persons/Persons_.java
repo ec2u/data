@@ -56,7 +56,7 @@ public final class Persons_ {
 
                             field(ID, item(Persons.Context, _university, fullName)),
 
-                            field(RDFS.LABEL, literal(fullName)),
+                            field(RDFS.LABEL, literal(fullName, _university.Language)), // !!! no language
                             field(owner, _university.Id),
 
                             field(FOAF.TITLE, title.map(Frame::literal)),

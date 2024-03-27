@@ -20,7 +20,6 @@
 
 </concepts/research-topics> a skos:ConceptScheme ;
     dct:title "EC2U Research Unit Topics"@en ;
-    dct:alternative "Research Unit"@en ;
     dct:description "> **:warn:** To be migrated to [EuroSCiVoc](euroscivoc)"@en .
 
 

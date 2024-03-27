@@ -8,7 +8,6 @@ insert {
         rdfs:label ?label ;
         rdfs:comment ?definition.
 
-
 } where {
 
     ?organization a org:Organization ;

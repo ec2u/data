@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.documents;
 
+import com.metreeca.http.jsonld.actions.Validate;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Logger;
 import com.metreeca.http.services.Vault;
@@ -39,10 +40,8 @@ import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.services.Logger.logger;
@@ -50,7 +49,9 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.lower;
 import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.concepts.Concepts_.concept;
+import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.data.persons.Persons_.person;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -103,16 +104,26 @@ final class Documents_ {
                             "undefined data URL <%s>", source
                     )));
 
-            Xtream.of(url)
 
-                    .flatMap(this)
+            txn(
 
-                    .pipe(frames -> Stream.of(frames.flatMap(Frame::stream).collect(toList())))
+                    () -> Xtream.of(url)
 
-                    .forEach(new Upload()
-                            .contexts(context)
-                            .clear(true)
-                    );
+                            .flatMap(this)
+
+                            .optMap(new Validate(Document()))
+
+                            .flatMap(Frame::stream)
+                            .batch(0)
+
+                            .forEach(new Upload()
+                                    .contexts(context)
+                                    .clear(true)
+                            ),
+
+                    Documents::update
+
+            );
         }
 
 
@@ -121,103 +132,92 @@ final class Documents_ {
             final Optional<String> titleEnglish=value(record, "Title (English)");
             final Optional<String> titleLocal=value(record, "Title (Local)");
 
-            return id(record)
+            return id(record).map(id -> frame(
 
-                    .map(id -> frame(
+                    field(ID, id),
 
-                            field(ID, id),
+                    field(RDF.TYPE, Document),
 
-                            Frame.field(RDF.TYPE, Documents.Document),
-                            field(Resources.owner, university.Id),
+                    field(Resources.owner, university.Id),
 
-                            field(Schema.url, value(record, "URL (English)", Parsers::iri)),
-                            field(Schema.url, value(record, "URL (Local)", Parsers::iri)),
+                    field(Schema.url, value(record, "URL (English)", Parsers::iri)),
+                    field(Schema.url, value(record, "URL (Local)", Parsers::iri)),
 
-                            field(DCTERMS.IDENTIFIER, value(record, "Identifier")
-                                    .map(Values::literal)
-                            ),
+                    field(DCTERMS.IDENTIFIER, value(record, "Identifier")
+                            .map(Values::literal)
+                    ),
 
-                            field(DCTERMS.LANGUAGE, titleEnglish
-                                    .map(v -> literal("en"))
-                            ),
+                    field(DCTERMS.LANGUAGE, titleEnglish
+                            .map(v -> literal("en"))
+                    ),
 
-                            field(DCTERMS.LANGUAGE, titleLocal
-                                    .map(v -> literal(university.Language))
-                            ),
+                    field(DCTERMS.LANGUAGE, titleLocal
+                            .map(v -> literal(university.Language))
+                    ),
 
-                            field(DCTERMS.TITLE, titleEnglish
-                                    .map(v -> literal(v, "en"))
-                            ),
+                    field(DCTERMS.TITLE, titleEnglish
+                            .map(v -> literal(v, "en"))
+                    ),
 
-                            field(DCTERMS.TITLE, titleLocal
-                                    .map(v -> literal(v, university.Language))
-                            ),
+                    field(DCTERMS.TITLE, titleLocal
+                            .map(v -> literal(v, university.Language))
+                    ),
 
-                            field(DCTERMS.DESCRIPTION, value(record, "Description (English)")
-                                    .map(v -> literal(v, "en"))
-                            ),
+                    field(DCTERMS.DESCRIPTION, value(record, "Description (English)")
+                            .map(v -> literal(v, "en"))
+                    ),
 
-                            field(DCTERMS.DESCRIPTION, value(record, "Description (Local)")
-                                    .map(v -> literal(v, university.Language))
-                            ),
+                    field(DCTERMS.DESCRIPTION, value(record, "Description (Local)")
+                            .map(v -> literal(v, university.Language))
+                    ),
 
-                            field(DCTERMS.ISSUED, value(record, "Issued", Parsers::localDate)
-                                    .map(v -> v.atStartOfDay(ZoneId.of("UTC"))) // ;( ec2u:Resource requires xsd:dateTime
-                                    .map(Values::literal)
-                            ),
+                    field(DCTERMS.ISSUED, value(record, "Issued", Parsers::localDate)
+                            .map(Values::literal)
+                    ),
 
-                            field(DCTERMS.MODIFIED, value(record, "Modified", Parsers::localDate)
-                                    .map(v -> v.atStartOfDay(ZoneId.of("UTC"))) // ;( ec2u:Resource requires xsd:dateTime
-                                    .map(Values::literal)
-                            ),
+                    field(DCTERMS.MODIFIED, value(record, "Modified", Parsers::localDate)
+                            .map(Values::literal)
+                    ),
 
-                            field(DCTERMS.VALID, value(record, "Valid", this::valid)
-                                    .map(Values::literal)
-                            ),
+                    field(DCTERMS.VALID, value(record, "Valid", this::valid)
+                            .map(Values::literal)
+                    ),
 
-                            field(DCTERMS.PUBLISHER, publisher(record)),
+                    field(DCTERMS.PUBLISHER, publisher(record)),
 
-                            field(DCTERMS.CREATOR, value(record, "Contact", person ->
-                                    person(person, university)
-                            )),
+                    field(DCTERMS.CREATOR, value(record, "Contact", person ->
+                            person(person, university)
+                    )),
 
-                            field(DCTERMS.CONTRIBUTOR, values(record, "Contributor", person ->
-                                    person(person, university)
-                            )),
+                    field(DCTERMS.CONTRIBUTOR, values(record, "Contributor", person ->
+                            person(person, university)
+                    )),
 
-                            field(DCTERMS.LICENSE, value(record, "License", this::license)
-                                    .map(Values::literal)
-                            ),
+                    field(DCTERMS.LICENSE, value(record, "License", this::license)
+                            .map(Values::literal)
+                    ),
 
-                            field(DCTERMS.RIGHTS, value(record, "Rights")
-                                    .map(Values::literal)
-                            ),
+                    field(DCTERMS.RIGHTS, value(record, "Rights")
+                            .map(Values::literal)
+                    ),
 
-                            field(DCTERMS.TYPE, value(record, "Type", type ->
-                                    concept(Documents.Types, type, "en")
-                            )),
+                    field(DCTERMS.TYPE, value(record, "Type", type ->
+                            concept(Documents.Types, type, "en")
+                    )),
 
-                            field(DCTERMS.SUBJECT, values(record, "Subject", subject ->
-                                    concept(Documents.Topics, subject, "en")
-                            )),
+                    field(DCTERMS.SUBJECT, values(record, "Subject", subject ->
+                            concept(Documents.Topics, subject, "en")
+                    )),
 
-                            field(DCTERMS.AUDIENCE, values(record, "Audience", audience ->
-                                    concept(Documents.Audiences, audience, "en")
-                            )),
+                    field(DCTERMS.AUDIENCE, values(record, "Audience", audience ->
+                            concept(Documents.Audiences, audience, "en")
+                    )),
 
-                            field(DCTERMS.RELATION, values(record, "Related", related ->
-                                    related(related, records)
-                            ))
-
+                    field(DCTERMS.RELATION, values(record, "Related", related ->
+                            related(related, records)
                     ))
 
-                    .filter(frame -> Documents.Document().validate(frame)
-
-                            .map(trace -> logger.warning(Documents.class, trace.toString()))
-
-                            .isEmpty()
-
-                    );
+            ));
         }
 
 

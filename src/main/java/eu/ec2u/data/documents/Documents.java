@@ -21,13 +21,11 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
@@ -35,24 +33,21 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.persons.Persons.FOAFPerson;
+import static eu.ec2u.data.resources.Resources.*;
 
 public final class Documents extends Delegator {
 
@@ -76,41 +71,31 @@ public final class Documents extends Delegator {
     public static Shape Document() {
         return shape(Document, Resource(),
 
-                property(Schema.url, multiple(id())), // !!! datatype
+                property(Schema.url, multiple(id())),
 
                 property(DCTERMS.IDENTIFIER, optional(string())),
                 property(DCTERMS.LANGUAGE, multiple(string())),
 
-                property(DCTERMS.TITLE, required(Resources.localized(), maxLength(100))),
-                property(DCTERMS.DESCRIPTION, optional(Resources.localized(), maxLength(1000))),
+                property(DCTERMS.TITLE, required(localized(), maxLength(1_000))),
+                property(DCTERMS.DESCRIPTION, optional(localized(), maxLength(10_000))),
 
-                property(DCTERMS.ISSUED, optional(dateTime())),
-                property(DCTERMS.MODIFIED, optional(dateTime())),
+                property(DCTERMS.ISSUED, optional(date())),
+                property(DCTERMS.MODIFIED, optional(date())),
                 property(DCTERMS.VALID, optional(string(), pattern(ValidPattern.pattern()))),
 
-                property(DCTERMS.CREATOR, optional(Persons.FOAFPerson())),
-                property(DCTERMS.CONTRIBUTOR, multiple(Persons.FOAFPerson())),
-                property(DCTERMS.PUBLISHER, optional(OrgOrganization())), // !!! review/factor
+                property(DCTERMS.CREATOR, optional(FOAFPerson())),
+                property(DCTERMS.CONTRIBUTOR, multiple(FOAFPerson())),
+                property(DCTERMS.PUBLISHER, optional(OrgOrganization())),
 
                 property(DCTERMS.LICENSE, optional(string())),
                 property(DCTERMS.RIGHTS, optional(string())),
 
+                property(DCTERMS.TYPE, multiple(SKOSConcept())),
+                property(DCTERMS.SUBJECT, multiple(SKOSConcept())),
                 property(DCTERMS.AUDIENCE, multiple(SKOSConcept())),
+
                 property(DCTERMS.RELATION, () -> shape(multiple(Document())))
 
-        );
-    }
-
-
-    public static void main(final String... args) {
-        exec(() -> Stream
-
-                .of(rdf(resource(Documents.class, ".ttl"), Base))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
         );
     }
 
@@ -161,6 +146,29 @@ public final class Documents extends Delegator {
                         )))
 
                 ))
+        );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(Documents::create);
+    }
+
+
+    public static void create() {
+        txn(
+                () -> Datasets.create(Documents.class, Context),
+                Documents::update
+        );
+    }
+
+    public static void update() {
+        txn(
+                () -> Datasets.update(Documents.class, Context),
+                Concepts::update, // ;( types/topics/audiences
+                Datasets::update
         );
     }
 
