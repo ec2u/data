@@ -22,15 +22,14 @@ import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities._Universities.Coimbra;
 import static java.lang.String.format;
@@ -60,7 +59,7 @@ public final class UnitsCoimbra implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        service(graph()).update(connection -> {
+        txn(() -> {
 
             Xtream.of(url)
 
@@ -76,10 +75,8 @@ public final class UnitsCoimbra implements Runnable {
                             .clear(true)
                     );
 
-            Datasets.update(Units.class, Units.Context);
-            Datasets.update();
 
-            return null;
+            Units.update();
 
         });
 

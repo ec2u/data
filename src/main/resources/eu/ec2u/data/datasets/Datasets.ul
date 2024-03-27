@@ -2,19 +2,24 @@ prefix ec2u: <https://data.ec2u.eu/terms/>
 prefix void: <http://rdfs.org/ns/void#>
 prefix dct: <http://purl.org/dc/terms/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 
 insert {
 
     ?dataset
-        rdfs:label ?title ;
+        rdfs:label ?label ;
         rdfs:comment ?description.
 
 } where {
 
     ?dataset a ec2u:Dataset ;
-        dct:title ?title ;
-        dct:description ?description .
+        dct:title ?title .
+
+    optional { ?dataset dct:alternative ?alternative }
+    optional { ?dataset dct:description ?description }
+
+    bind(coalesce(?alternative, ?title) as ?label)
 
 }; # complete entry
 
@@ -37,27 +42,29 @@ insert {
 
 } where {
 
-        select ?dataset (count(distinct ?entity) as ?entities) {
+    select ?dataset (count(distinct ?entity) as ?entities) {
 
-            ?dataset a ec2u:Dataset ;
-                void:rootResource ?class .
+        ?dataset a ec2u:Dataset ;
+            void:rootResource ?class .
 
-            ?entity a ?class .
+        ?entity a ?class .
 
-        }
-        group by ?dataset
+    }
+    group by ?dataset
 
 }; # compute size
 
 insert {
 
-    ?dataset void:subset ?subset .
-    ?owner void:subset ?subset .
+    ?dataset
+        void:subset ?subset .
+
+    ?owner
+        void:subset ?subset.
 
     ?subset
         ec2u:owner ?owner ;
         void:entities ?entities .
-
 
 } where {
 
@@ -68,15 +75,15 @@ insert {
         where {
 
             ?dataset a ec2u:Dataset ;
-                ec2u:owner ?owner ;
                 dct:issued [] ;
                 void:rootResource ?class .
 
-            ?entity a ?class .
+            ?entity a ?class ;
+                ec2u:owner ?owner .
 
         }
         group by ?dataset ?owner
 
     }
 
-} # create owner partitions
+} # compute owner partitions

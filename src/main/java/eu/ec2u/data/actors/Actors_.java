@@ -24,7 +24,6 @@ import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.resources.Resources;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -41,11 +40,11 @@ import java.util.stream.Stream;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.*;
-import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.universities._Universities.*;
 import static java.lang.String.format;
@@ -81,7 +80,7 @@ public final class Actors_ implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(graph()).update(repositoryConnection -> {
+        txn(() -> {
 
             Xtream
 
@@ -97,9 +96,7 @@ public final class Actors_ implements Runnable {
                             .clear(true)
                     );
 
-            Datasets.update();
-
-            return null;
+            Actors.update();
 
         });
     }

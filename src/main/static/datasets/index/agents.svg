@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
-        xmlns="http://www.w3.org/2000/svg" viewBox="1171 -5 541 351" width="541" height="351">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink"
+        viewBox="1171 -5 541 351" width="541" height="351">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -41,7 +41,7 @@
             </g>
         </marker>
     </defs>
-    <g id="agents" stroke-dasharray="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke="none">
+    <g id="agents" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
         <title>agents</title>
         <rect fill="white" x="1171" y="-5" width="541" height="351"/>
         <g id="agents_Layer_1">
@@ -208,17 +208,17 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_41">
-                <rect x="1385.0712" y="196.67985" width="78.51416" height="24" fill="white"/>
-                <text transform="translate(1388.0712 197.67985)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">org:memberOf 1..*</tspan>
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="11.544434" y="20">org:headOf *</tspan>
+                <rect x="1389.714" y="196.67985" width="69.228516" height="24" fill="white"/>
+                <text transform="translate(1392.714 197.67985)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="6.901611" y="9">org:headOf *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">org:memberOf *</tspan>
                 </text>
             </g>
             <g id="Graphic_40">
                 <rect x="1387.0927" y="240.59944" width="74.47119" height="24" fill="white"/>
                 <text transform="translate(1390.0927 241.59944)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">org:hasMember *</tspan>
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="11.992676" y="20">‘hasHead’ *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="10.916016" y="9">‹hasHead› *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">org:hasMember *</tspan>
                 </text>
             </g>
             <g id="Line_39">
@@ -279,8 +279,8 @@
                         stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_82">
-                <rect x="1248.427" y="147.87456" width="100.76807" height="13" fill="white"/>
-                <text transform="translate(1251.427 148.87456)" fill="black">
+                <rect x="1248.427" y="147.87455" width="100.76807" height="13" fill="white"/>
+                <text transform="translate(1251.427 148.87455)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">org:subOrganizationOf *</tspan>
                 </text>
             </g>

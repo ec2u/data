@@ -99,7 +99,7 @@ export function DataUniversity() {
 				?.sort(({ entities: x }, { entities: y }) => x - y)
 				?.map(({ dataset, entities }) => ({
 
-					label: <ToolLink filter={[dataset, { university }]}>{{
+					label: <ToolLink filter={[dataset, { owner: university }]}>{{
 						id: dataset.id,
 						label: ec2u(dataset.label)
 					}}</ToolLink>,

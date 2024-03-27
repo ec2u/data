@@ -55,7 +55,7 @@ public final class Data extends Delegator {
 
     private static final boolean Production=GCPServer.production();
 
-    private static final String GraphDBServer="http://localhost:7200"; // !!! https
+    private static final String GraphDBServer="http://base.ec2u.net"; // !!! https
     private static final String GraphDBRepository="data-next"; // !!!
     private static final String GraphDBUsr="server";
     private static final String GraphDBPwd="graphdb-server-pwd";
@@ -96,9 +96,9 @@ public final class Data extends Delegator {
 
         final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GraphDBServer, name));
 
-        // repository.setUsernameAndPassword(GraphDBUsr, service(vault()).get(GraphDBPwd).orElseThrow(() ->
-        //         new IllegalStateException(format("undefined <%s> secret", GraphDBPwd))
-        // ));
+        repository.setUsernameAndPassword(GraphDBUsr, service(vault()).get(GraphDBPwd).orElseThrow(() ->
+                new IllegalStateException(format("undefined <%s> secret", GraphDBPwd))
+        ));
 
         return repository;
     }
@@ -110,6 +110,16 @@ public final class Data extends Delegator {
 
     public static void exec(final Runnable... tasks) {
         services(new Locator()).exec(tasks).clear();
+    }
+
+    public static void txn(final Runnable... tasks) {
+        service(graph()).update(repositoryConnection -> {
+
+            for (final Runnable task : tasks) { task.run(); }
+
+            return null;
+
+        });
     }
 
 

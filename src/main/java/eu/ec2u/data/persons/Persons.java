@@ -46,8 +46,8 @@ public final class Persons extends Delegator {
                 property(FOAF.GIVEN_NAME, required(string())), // !!! pattern
                 property(FOAF.FAMILY_NAME, required(string())), // !!! pattern
 
-                property(ORG.HEAD_OF, multiple(OrgOrganization())),
-                property(ORG.MEMBER_OF, multiple(OrgOrganization()))
+                property(ORG.HEAD_OF, () -> multiple(OrgOrganization())),
+                property(ORG.MEMBER_OF, () -> multiple(OrgOrganization()))
 
         );
     }

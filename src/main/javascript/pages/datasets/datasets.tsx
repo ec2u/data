@@ -55,6 +55,7 @@ export const Datasets=immutable({
 		label: required(local),
 		comment: optional(local),
 
+		title: required(local),
 		alternative: optional(local),
 
 		entities: required(integer)
@@ -96,10 +97,10 @@ export function DataDatasets() {
 		<ToolSheet placeholder={Datasets[icon]} sorted={"entities"} as={({
 
 			id,
-			label,
-			comment,
 
+			title,
 			alternative,
+			comment,
 
 			entities
 
@@ -107,14 +108,14 @@ export function DataDatasets() {
 
 			<ToolCard key={id} size={7.5}
 
-				title={<ToolLink>{{ id, label: ec2u(label) }}</ToolLink>}
+				title={<ToolLink>{{ id, label: ec2u(title) }}</ToolLink>}
 
 				tags={`${toIntegerString(entities)}`}
 				image={alternative && <span>{ec2u(toLocalString(alternative))}</span>}
 
 			>{
 
-				toLocalString(ec2u(comment || {}))
+				comment && toLocalString(ec2u(comment))
 
 			}</ToolCard>
 

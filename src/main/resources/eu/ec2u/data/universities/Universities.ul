@@ -9,24 +9,18 @@ PREFIX org: <http://www.w3.org/ns/org#>
 
 insert {
 
-    ?university
-
-        rdfs:label ?label ;
-        rdfs:comment ?definition ;
-
-        org:subOrganizationOf <https://ec2u.eu/> .
+    ?university org:subOrganizationOf <https://ec2u.eu/> .
 
 } where {
 
-    ?university a ec2u:University ;
-        skos:prefLabel ?label ;
-        skos:definition ?definition .
+    ?university a ec2u:University .
 
 }; # complete entry
 
 insert {
 
     ?university
+
         ec2u:city ?city ;
         ec2u:country ?country ;
         ec2u:students ?students ;

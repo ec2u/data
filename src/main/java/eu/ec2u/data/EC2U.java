@@ -107,19 +107,6 @@ public final class EC2U extends Delegator {
 
         service(store()).validate(
 
-                Resource(),
-                Dataset(),
-
-                University(),
-                Unit(),
-
-                // Program(),
-                // Course(),
-
-                // Document(),
-
-                // Event(),
-
                 // SKOSConceptScheme(),
                 // SKOSConcept(),
 
@@ -129,7 +116,7 @@ public final class EC2U extends Delegator {
                 OrgOrganization(),
                 OrgFormalOrganization(),
                 OrgOrganizationalCollaboration(),
-                OrgOrganizationalUnit()
+                OrgOrganizationalUnit(),
 
                 // Schema.Thing(),
                 // Schema.Organization(),
@@ -138,6 +125,19 @@ public final class EC2U extends Delegator {
                 // Schema.PostalAddress(),
                 // Schema.VirtualLocation(),
                 // Schema.ContactPoint()
+
+                Resource(),
+                Dataset(),
+
+                University(),
+                Unit()
+
+                // Program(),
+                // Course(),
+
+                // Document(),
+
+                // Event(),
 
         );
 

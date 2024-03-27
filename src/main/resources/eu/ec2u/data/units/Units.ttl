@@ -23,8 +23,7 @@
 
 ########################################################################################################################
 
-ec2u:Unit a rdfs:Class ;
-	rdfs:subClassOf ec2u:Resource, org:OrganizationalUnit .
+ec2u:Unit rdfs:subClassOf ec2u:Resource, org:OrganizationalUnit .
 
 
 

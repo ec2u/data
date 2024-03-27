@@ -32,9 +32,7 @@ import org.eclipse.rdf4j.model.vocabulary.VOID;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Constraint.any;
@@ -45,8 +43,8 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
 import static eu.ec2u.data.resources.Resources.*;
 
 public final class Datasets extends Delegator {
@@ -80,14 +78,7 @@ public final class Datasets extends Delegator {
 
                 property(DCTERMS.PUBLISHER, optional(Entry())),
 
-                property(RDFS.ISDEFINEDBY, required(id())),
-
-                property(VOID.SUBSET, multiple(Entry(),
-
-                        property(owner, required(OrgOrganization())),
-                        property(VOID.ENTITIES, required(integer()))
-
-                ))
+                property(RDFS.ISDEFINEDBY, required(id()))
 
         );
     }
@@ -141,59 +132,38 @@ public final class Datasets extends Delegator {
 
 
     public static void create() {
-        create(Datasets.class, Context);
+        txn(() -> {
+            create(Datasets.class, Context);
+            update();
+        });
     }
 
     public static void update() {
-        Stream
-
-                .of(text(resource(Datasets.class, ".ul")))
-
-                .forEach(new Update()
-                        .base(Base)
-                        .insert(iri(Context, "/~"))
-                        .clear(true)
-                );
+        update(Datasets.class, Context);
     }
 
 
     public static void create(final Class<?> dataset, final IRI context) {
-        service(graph()).update(connection -> {
+        Stream
 
-            Stream
+                .of(rdf(resource(dataset, ".ttl"), Base))
 
-                    .of(rdf(resource(dataset, ".ttl"), Base))
-
-                    .forEach(new Upload()
-                            .contexts(context)
-                            .clear(true)
-                    );
-
-            update();
-
-            return null;
-
-        });
+                .forEach(new Upload()
+                        .contexts(context)
+                        .clear(true)
+                );
     }
 
     public static void update(final Class<?> dataset, final IRI context) {
-        service(graph()).update(connection -> {
+        Stream
 
-            Stream
+                .of(text(resource(dataset, ".ul")))
 
-                    .of(text(resource(dataset, ".ul")))
-
-                    .forEach(new Update()
-                            .base(Base)
-                            .insert(iri(context, "/~"))
-                            .clear(true)
-                    );
-
-            update();
-
-            return null;
-
-        });
+                .forEach(new Update()
+                        .base(Base)
+                        .insert(iri(context, "/~"))
+                        .clear(true)
+                );
     }
 
 }

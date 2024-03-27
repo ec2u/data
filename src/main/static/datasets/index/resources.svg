@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
-        xmlns="http://www.w3.org/2000/svg" viewBox="133 127 229 279" width="229" height="279">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink"
+        viewBox="133 127 229 279" width="229" height="279">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -41,7 +41,7 @@
             </g>
         </marker>
     </defs>
-    <g id="resources" stroke-dasharray="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke="none">
+    <g id="resources" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
         <title>resources</title>
         <rect fill="white" x="133" y="127" width="229" height="279"/>
         <g id="resources_Layer_1">
@@ -158,9 +158,9 @@
                 </text>
             </g>
             <g id="Graphic_199">
-                <rect x="168.01133" y="337.9338" width="52.604004" height="13" fill="white"/>
-                <text transform="translate(171.01133 338.9338)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dataset 0..1</tspan>
+                <rect x="170.692" y="337.9338" width="47.242676" height="13" fill="white"/>
+                <text transform="translate(173.692 338.9338)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹dataset› *</tspan>
                 </text>
             </g>
         </g>

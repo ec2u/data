@@ -39,6 +39,7 @@ import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
@@ -141,7 +142,10 @@ public final class Resources extends Delegator {
 
 
     public static void create() {
-        Datasets.create(Resources.class, Context);
+        txn(() -> {
+            Datasets.create(Resources.class, Context);
+            Datasets.update();
+        });
     }
 
 }

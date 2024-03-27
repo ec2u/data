@@ -46,11 +46,6 @@ export const Unit=immutable({
 		label: required(local)
 	}),
 
-	classification: optional({
-		id: required(id),
-		label: required(local)
-	}),
-
 	hasHead: multiple({
 		id: required(id),
 		label: required(local)
@@ -62,6 +57,11 @@ export const Unit=immutable({
 	}),
 
 	hasUnit: multiple({
+		id: required(id),
+		label: required(local)
+	}),
+
+	classification: multiple({
 		id: required(id),
 		label: required(local)
 	}),
@@ -110,7 +110,7 @@ export function DataUnit() {
 
 				"Owner": owner && <ToolLink>{owner}</ToolLink>,
 
-				"Type": classification && <ToolLink>{classification}</ToolLink>
+				"Type": classification?.length && classification.map(type => <ToolLink>{type}</ToolLink>)
 
 			}}</ToolInfo>
 

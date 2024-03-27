@@ -1,3 +1,4 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -14,10 +15,19 @@ org:OrganizationalCollaboration rdfs:subClassOf org:Organization .
 org:OrganizationalUnit rdfs:subClassOf org:Organization .
 
 
+org:subOrganizationOf rdfs:owl:inverseOf org:hasSubOrganization .
+
+org:unitOf rdfs:owl:inverseOf org:hasUnit .
+
+org:memberOf rdfs:owl:inverseOf org:hasMember .
+
+org:headOf rdfs:subPropertyOf org:hasMember .
+
+
 ########################################################################################################################
 
 <https://ec2u.eu/> a org:OrganizationalCollaboration ;
-    rdfs:label "EC2U European Campus of City-Universities"@en ;
     skos:prefLabel "EC2U European Campus of City-Universities"@en ;
+    skos:altLabel "EC2U"@en ;
     foaf:homepage <https://www.ec2u.eu/> .
 

@@ -11,8 +11,3 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     void:rootResource ec2u:Resource ;
     rdfs:isDefinedBy </datasets/resources> .
-
-
-########################################################################################################################
-
-ec2u:Resource a rdfs:Class .

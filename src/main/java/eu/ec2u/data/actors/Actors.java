@@ -20,6 +20,7 @@ import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
 
 public final class Actors {
@@ -40,7 +41,17 @@ public final class Actors {
 
 
     public static void create() {
-        Datasets.create(Actors.class, Context);
+        txn(() -> {
+
+            Datasets.create(Actors.class, Context);
+
+            update();
+
+        });
+    }
+
+    public static void update() {
+        Datasets.update();
     }
 
 }

@@ -1,23 +1,23 @@
-@prefix ec2u:	</terms/> .
-@prefix void:	<http://rdfs.org/ns/void#> .
-@prefix dct:	<http://purl.org/dc/terms/> .
-@prefix owl:	<http://www.w3.org/2002/07/owl#> .
-@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix ec2u: </terms/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 </actors/> a ec2u:Dataset ;
-	dct:title "EC2U Knowledge Ecosystem Actors"@en ;
-	dct:alternative "EC2U Actors"@en ;
-	dct:description "Anonymized information about knowledge ecosystem actors at EC2U allied universities and associated local communities."@en ;
-	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-	dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	dct:issued "2022-01-01"^^xsd:date ;
-	void:rootResource ec2u:Actor ;
-	rdfs:isDefinedBy </datasets/actors> .
+    dct:title "EC2U Knowledge Ecosystem Actors"@en ;
+    dct:alternative "EC2U Actors"@en ;
+    dct:description
+        "Anonymized information about knowledge ecosystem actors at EC2U allied universities and associated local communities."@en ;
+    dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:issued "2022-01-01"^^xsd:date ;
+    void:rootResource ec2u:Actor ;
+    rdfs:isDefinedBy </datasets/actors> .
 
 
 ########################################################################################################################
 
-ec2u:Actor a rdfs:Class ;
-   rdfs:subClassOf ec2u:Resource ;
-	rdfs:label "Knowledge Ecosystem Actor"@en .
+ec2u:Actor rdfs:subClassOf ec2u:Resource ;
+    rdfs:label "Knowledge Ecosystem Actor"@en .

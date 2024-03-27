@@ -56,12 +56,12 @@ export const Units=immutable({
 		prefLabel: required(local),
 		altLabel: optional(local),
 
-		unitOf: optional({
+		unitOf: multiple({
 			id: required(id),
 			label: required(local)
 		}),
 
-		classification: optional({
+		classification: multiple({
 			id: required(id),
 			label: required(local)
 		}),
@@ -129,8 +129,15 @@ export function DataUnits() {
 				title={<ToolLink>{{ id, label: toUnitLabel({ prefLabel, altLabel }) }}</ToolLink>}
 
 				tags={<>
-					<div>{unitOf && toEntryString(unitOf)}</div>
-					{classification && <div>{toEntryString(classification)}</div>}
+
+					{unitOf?.length && unitOf.map((organization, index) =>
+						<div key={index}>{toEntryString(organization)}</div>
+					)}
+
+					{classification?.length && classification.map((type, index) =>
+						<div key={index}>{toEntryString(type)}</div>
+					)}
+
 				</>}
 
 			>{

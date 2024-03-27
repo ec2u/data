@@ -28,6 +28,7 @@ import static com.metreeca.link.Frame.reverse;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
@@ -45,17 +46,21 @@ public final class Organizations {
     public static Shape OrgOrganization() {
         return shape(ORG.ORGANIZATION, FOAFAgent(),
 
-                property(ORG.IDENTIFIER, optional(datatype(LITERAL))),
+                property(ORG.IDENTIFIER, multiple(datatype(LITERAL))),
 
                 property(SKOS.PREF_LABEL, required(localized())),
                 property(SKOS.ALT_LABEL, optional(localized())),
                 property(SKOS.DEFINITION, optional(localized())),
 
-                property(ORG.HAS_SUB_ORGANIZATION, () -> multiple(OrgOrganization())),
+                property(ORG.CLASSIFICATION, multiple(SKOSConcept())),
+
                 property(ORG.SUB_ORGANIZATION_OF, () -> multiple(OrgOrganization())),
+                property(ORG.HAS_SUB_ORGANIZATION, () -> multiple(OrgOrganization())),
 
                 property(ORG.HAS_UNIT, () -> multiple(OrgOrganizationalUnit())),
-                property(ORG.CLASSIFICATION, optional(SKOSConcept()))
+
+                property("hasHead", reverse(ORG.HEAD_OF), multiple(FOAFPerson())),
+                property(ORG.HAS_MEMBER, multiple(FOAFPerson()))
 
         );
     }
@@ -71,10 +76,7 @@ public final class Organizations {
     public static Shape OrgOrganizationalUnit() {
         return shape(ORG.ORGANIZATIONAL_UNIT, OrgOrganization(),
 
-                property(ORG.UNIT_OF, repeatable(OrgOrganization())),
-
-                property("hasHead", reverse(ORG.HEAD_OF), multiple(FOAFPerson())),
-                property(ORG.HAS_MEMBER, multiple(FOAFPerson()))
+                property(ORG.UNIT_OF, repeatable(OrgOrganization()))
 
         );
     }
@@ -93,7 +95,17 @@ public final class Organizations {
 
 
     public static void create() {
-        Datasets.create(Organizations.class, Context);
+        txn(() -> {
+
+            Datasets.create(Organizations.class, Context);
+
+            update();
+
+        });
+    }
+
+    public static void update() {
+        Datasets.update(Organizations.class, Context);
     }
 
 }

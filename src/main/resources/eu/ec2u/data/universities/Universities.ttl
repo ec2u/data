@@ -23,8 +23,7 @@
 
 ########################################################################################################################
 
-ec2u:University a rdfs::Class ;
-    rdfs:subClassOf ec2u:Resource, org:FormalOrganization .
+ec2u:University rdfs:subClassOf ec2u:Resource, org:FormalOrganization .
 
 
 ########################################################################################################################

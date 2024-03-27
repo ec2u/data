@@ -27,14 +27,13 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.organizations.Organizations;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.decimal;
@@ -42,6 +41,7 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
@@ -77,7 +77,6 @@ public final class Universities extends Delegator {
 
                 property(inception, required(year())),
                 property(students, required(integer())),
-
                 property(country, required(Entry())),
                 property(city, required(Entry())),
 
@@ -159,19 +158,30 @@ public final class Universities extends Delegator {
 
         wikidata(); // ;( fails if executed inside txn
 
-        service(graph()).update(repositoryConnection -> {
+        txn(() -> {
 
             Datasets.create(Universities.class, Context);
+            Datasets.update(Universities.class, Context);
 
-            update();
-
-            return null;
+            Organizations.update();
+            Datasets.update();
 
         });
     }
 
     public static void update() {
-        Datasets.update(Universities.class, Context);
+
+        wikidata(); // ;( fails if executed inside txn
+
+        txn(() -> {
+
+            Datasets.update(Universities.class, Context);
+
+            Organizations.update();
+            Datasets.update();
+
+        });
+
     }
 
 

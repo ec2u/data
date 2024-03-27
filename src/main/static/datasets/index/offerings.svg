@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
-        xmlns="http://www.w3.org/2000/svg" viewBox="-566 390 927 648" width="927" height="648">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink"
+        viewBox="-566 390 927 648" width="927" height="648">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -54,7 +54,7 @@
             </g>
         </marker>
     </defs>
-    <g id="offerings" stroke-dasharray="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke="none">
+    <g id="offerings" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
         <title>offerings</title>
         <rect fill="white" x="-566" y="390" width="927" height="648"/>
         <g id="offerings_Layer_1">
@@ -525,38 +525,6 @@
             </g>
             <g id="Line_441">
                 <path d="M -470.5512 948.2441 L -499.07586 948.2441 L -499.07586 445.18444"
-                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width=".25"/>
-            </g>
-            <g id="Group_442">
-                <g id="Graphic_443">
-                    <rect x="-477.6378" y="530.07874" width="57.87012" height="17" fill="white"/>
-                    <rect x="-477.6378" y="530.07874" width="57.87012" height="17" stroke="black" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(-471.6378 533.07874)" fill="black">
-                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
-                            ec2u:Offerr
-                        </tspan>
-                    </text>
-                </g>
-            </g>
-            <g id="Graphic_444">
-                <path d="M -387.49245 656.00174 C -387.49245 653.3493 -387.94143 653.02114 -391.22103 650.39614 L -391.2557 650.369 C -394.5526 647.71654 -394.5869 647.71654 -397.97045 647.71654 C -402.4757 647.71654 -422.8445 647.71654 -422.8445 647.71654 L -422.8445 675.71654 L -387.49245 675.71654 L -387.49245 656.00174 Z"
-                        fill="#fffd78"/>
-                <path d="M -387.49245 656.00174 C -387.49245 653.3493 -387.94143 653.02114 -391.22103 650.39614 L -391.2557 650.369 C -394.5526 647.71654 -394.5869 647.71654 -397.97045 647.71654 C -402.4757 647.71654 -422.8445 647.71654 -422.8445 647.71654 L -422.8445 675.71654 L -387.49245 675.71654 L -387.49245 656.00174 Z M -387.49245 655.8651 C -387.49245 653.3493 -387.5271 653.3493 -394.5869 653.3493 L -394.5869 653.3493 C -394.5869 647.744 -394.5869 647.71654 -397.7633 647.71654"
-                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                <text transform="translate(-417.8445 650.71654)" fill="black">
-                    <tspan font-family="Roboto" font-style="italic" font-size="9" fill="black" x="0" y="9">role?</tspan>
-                    <tspan font-family="Roboto" font-style="italic" font-size="9" fill="black" x="0" y="20">name?
-                    </tspan>
-                </text>
-            </g>
-            <g id="Line_445">
-                <line x1="-448.70274" y1="547.07874" x2="-410.52942" y2="647.5997" stroke="black" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
-            </g>
-            <g id="Line_446">
-                <path d="M -419.7677 534.32874 L -387.7677 534.32874 L -387.7677 532.52236 L -386.62484 532.52236"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
