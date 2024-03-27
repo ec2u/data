@@ -40,6 +40,8 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.agents.Agents.FOAFAgent;
+import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
+import static eu.ec2u.data.concepts.Concepts.SKOSConceptScheme;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.*;
 import static eu.ec2u.data.persons.Persons.FOAFPerson;
@@ -107,8 +109,8 @@ public final class EC2U extends Delegator {
 
         service(store()).validate(
 
-                // SKOSConceptScheme(),
-                // SKOSConcept(),
+                SKOSConceptScheme(),
+                SKOSConcept(),
 
                 FOAFAgent(),
                 FOAFPerson(),

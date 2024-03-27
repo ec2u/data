@@ -37,7 +37,7 @@ export const Scheme=immutable({
 	label: required(local),
 	comment: optional(local),
 
-	extent: required(integer),
+	entities: required(integer),
 
 	hasTopConcept: multiple({
 
@@ -60,13 +60,13 @@ export function DataScheme() {
 
 		tray={<ToolFrame as={({
 
-			extent
+			entities
 
 		}) => <>
 
 			<ToolInfo>{{
 
-				"Concepts": toIntegerString(extent)
+				"Concepts": toIntegerString(entities)
 
 			}}</ToolInfo>
 

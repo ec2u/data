@@ -38,7 +38,7 @@ export const Schemes=immutable({
 
 	[icon]: <GraduationCap/>,
 
-	id: required(id),
+	id: required("/concepts/"),
 	label: required({
 		"en": "Taxonomies"
 	}),
@@ -49,7 +49,7 @@ export const Schemes=immutable({
 		label: required(local),
 		comment: optional(local),
 
-		extent: required(integer)
+		entities: required(integer)
 
 	})
 
@@ -86,7 +86,7 @@ export function DataSchemes() {
 			label,
 			comment,
 
-			extent
+			entities
 
 		}) =>
 
@@ -95,7 +95,7 @@ export function DataSchemes() {
 
 				title={<ToolLink>{{ id, label }}</ToolLink>}
 
-				tags={`${extent} concepts`}
+				tags={`${entities} concepts`}
 
 			>{
 

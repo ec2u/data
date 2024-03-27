@@ -27,6 +27,7 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.Base;
 
 public final class ISCED2011 implements Runnable {
@@ -54,14 +55,20 @@ public final class ISCED2011 implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        Stream
+        txn(() -> {
 
-                .of(rdf(resource(this, ".ttl"), Base))
+            Stream
 
-                .forEach(new Upload()
-                        .contexts(Scheme)
-                        .clear(true)
-                );
+                    .of(rdf(resource(this, ".ttl"), Base))
+
+                    .forEach(new Upload()
+                            .contexts(Scheme)
+                            .clear(true)
+                    );
+
+            Concepts.update();
+
+        });
     }
 
 }

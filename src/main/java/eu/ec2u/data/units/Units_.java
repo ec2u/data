@@ -23,7 +23,7 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.EuroSciVoc;
-import eu.ec2u.data.organizations._UnitTypes;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.feeds.CSVProcessor;
@@ -56,6 +56,7 @@ import static com.metreeca.http.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.concepts.OrganizationTypes.InstituteVirtual;
 import static eu.ec2u.data.persons.Persons_.person;
 import static eu.ec2u.data.units.Units.*;
 import static java.lang.String.format;
@@ -242,7 +243,7 @@ public final class Units_ {
                                 +"}\n"
                         );
 
-                        query.setBinding("scheme", _UnitTypes.Scheme);
+                        query.setBinding("scheme", OrganizationTypes.Scheme);
                         query.setBinding("value", literal(key));
 
                         try ( final TupleQueryResult evaluate=query.evaluate() ) {
@@ -320,7 +321,7 @@ public final class Units_ {
                                 +"}"
                         );
 
-                        query.setBinding("type", _UnitTypes.InstituteVirtual);
+                        query.setBinding("type", InstituteVirtual);
                         query.setBinding("code", literal(key, "en"));
 
                         try ( final TupleQueryResult evaluate=query.evaluate() ) {
@@ -427,13 +428,13 @@ public final class Units_ {
 
                                     unit.cursors(ORG.UNIT_OF)
                                             .filter(parent -> parent.values(RDF.TYPE).noneMatch(Resources.owner::equals))
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(_UnitTypes.InstituteVirtual::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(InstituteVirtual::equals))
                                             .flatMap(parent -> parent.localizeds(RDFS.LABEL, "en"))
                                             .filter(not(v -> v.startsWith("University "))) // !!!
                                             .collect(joining("; ")),
 
                                     unit.cursors(ORG.UNIT_OF)
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(_UnitTypes.InstituteVirtual::equals))
+                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(InstituteVirtual::equals))
                                             .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
                                             .collect(joining("; ")),
 

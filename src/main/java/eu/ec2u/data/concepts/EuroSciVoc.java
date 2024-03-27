@@ -22,10 +22,10 @@ import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -35,6 +35,7 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.Base;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
@@ -76,6 +77,8 @@ public final class EuroSciVoc implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
+        txn(() -> {
+
         Xtream.of(URL)
 
                 .map(new Retrieve()
@@ -108,25 +111,6 @@ public final class EuroSciVoc implements Runnable {
                                 .map(statement -> rewrite(statement, External, Internal))
                                 .map(statement -> replace(statement, Root, Scheme))
 
-                                // migrate dct: temporal properties to xsd:dateTime to comply with Resource data model
-
-                                .map(statement -> {
-
-                                    final IRI predicate=statement.getPredicate();
-                                    final Resource subject=statement.getSubject();
-                                    final Value object=statement.getObject();
-
-                                    return DCTTemporal.contains(predicate) && literal(object)
-                                            .map(Literal::getDatatype)
-                                            .filter(XSD.DATE::equals)
-                                            .isPresent()
-
-                                            ? statement(subject, predicate,
-                                            literal(String.format("%sT00:00:00Z", object.stringValue()), XSD.DATETIME)
-                                    )
-
-                                            : statement;
-                                })
 
                                 .collect(toList())
 
@@ -137,6 +121,10 @@ public final class EuroSciVoc implements Runnable {
                         .langs(Resources.Languages)
                         .clear(true)
                 );
+
+            Concepts.update();
+
+        });
     }
 
 }

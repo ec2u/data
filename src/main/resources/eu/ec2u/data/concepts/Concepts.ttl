@@ -1,28 +1,32 @@
-@prefix ec2u:	</terms/> .
-@prefix dct:	<http://purl.org/dc/terms/> .
-@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
-@prefix owl:	<http://www.w3.org/2002/07/owl#> .
-@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix ec2u: </terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 </concepts/> a ec2u:Dataset ;
-	dct:title "EC2U Taxonomies"@en  ;
-	dct:alternative "EC2U Classification Taxonomies"@en ;
-	dct:description "Topic taxonomies and other concept schemes for classifying resources."@en ;
-	dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	void:rootResource skos:ConceptScheme ;
-	rdfs:isDefinedBy </datasets/concepts>  .
+    dct:title "EC2U Classification Taxonomies"@en ;
+    dct:alternative "EC2U Taxonomies"@en ;
+    dct:description "Topic taxonomies and other concept schemes for classifying resources."@en ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    void:rootResource skos:ConceptScheme ;
+    rdfs:isDefinedBy </datasets/concepts> .
 
 
 ########################################################################################################################
 
-ec2u:ConceptScheme a owl:Class ;
-	rdfs:subclassOf ec2u:Resource, skos:ConceptScheme .
+skos:topConceptOf rdfs:subPropertyOf skos:inScheme ;
+    owl:inverseOf skos:hasTopConcept .
 
-ec2u:Concept a owl:Class ;
-	rdfs:subclassOf ec2u:Resource, skos:Concept .
+skos:broader rdfs:subPropertyOf skos:broaderTransitive ;
+    owl:inverseOf skos:narrower .
 
-skos:prefLabel a owl:DataProperty ;
-	rdfs:subPropertyOf dct:title .
+skos:broaderTransitive a owl:TransitiveProperty .
 
-skos:definition a owl:DataProperty ;
-	rdfs:subPropertyOf dct:description .
+skos:narrower rdfs:subPropertyOf skos:narrowerTransitive ;
+    owl:inverseOf skos:broader .
+
+skos:narrowerTransitive a owl:TransitiveProperty .
+
+skos:related a owl:SymmetricProperty .

@@ -3,7 +3,8 @@
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
 </concepts/isced-f-2013>  a skos:ConceptScheme ;
-	dct:title "ISCED-F 2013"@en ;
-	dct:description """International Standard Classification of Education: Fields of Education and Training 2013
-(ISCED-F 2013) - is a classification of fields of education, which accompanies ISCED 2011. ISCED-F 2013 contains
-11 broad fields (2 digits), 29 narrow fields (3 digits) and about 80 detailed fields (4 digits)."""@en .
+	rdfs:label "ISCED-F 2013"@en ;
+	rdfs:comment
+		"""International Standard Classification of Education: Fields of Education and Training 2013
+       (ISCED-F 2013) - is a classification of fields of education, which accompanies ISCED 2011. ISCED-F 2013 contains
+       11 broad fields (2 digits), 29 narrow fields (3 digits) and about 80 detailed fields (4 digits)."""@en .

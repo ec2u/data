@@ -75,6 +75,7 @@ public final class Datasets extends Delegator {
 
                 property(VOID.ROOT_RESOURCE, multiple(id())),
                 property(VOID.ENTITIES, optional(integer())),
+                property(VOID.SUBSET, () -> multiple(Dataset())),
 
                 property(DCTERMS.PUBLISHER, optional(Entry())),
 

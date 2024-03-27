@@ -1,9 +1,10 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct:	<http://purl.org/dc/terms/> .
 @prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
 
 </concepts/isced-2011> a skos:ConceptScheme ;
-	dct:title "ISCED 2011"@en;
-	dct:description "ISCED 2011 Education Levels."@en .
+	rdfs:label "ISCED 2011"@en ;
+	rdfs:comment "ISCED 2011 Education Levels."@en .
 
 
 ########################################################################################################################

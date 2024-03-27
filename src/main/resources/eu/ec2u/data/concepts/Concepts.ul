@@ -1,20 +1,37 @@
-prefix skos:	<http://www.w3.org/2004/02/skos/core#>
-prefix dct:		<http://purl.org/dc/terms/>
-
-#### Compute Concept Schemes Size #####################################################################################
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix void: <http://rdfs.org/ns/void#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 insert {
 
-	?scheme dct:extent ?extent .
+    ?scheme void:entities ?entities .
 
 } where {
 
-	{ select ?scheme (count(?concept) as ?extent) {
+    {
+        select ?scheme (count(?concept) as ?entities) {
 
-		?scheme a skos:ConceptScheme .
+            ?scheme a skos:ConceptScheme .
 
-		optional { ?concept skos:inScheme ?scheme }
+            optional { ?concept skos:inScheme ?scheme }
 
-    } group by ?scheme }
+        }
+        group by ?scheme
+    }
 
-};
+}; # compute concept scheme size
+
+insert {
+
+    ?concept
+        rdfs:label ?pref ;
+        rdfs:comment ?definition.
+
+} where {
+
+    ?concept a skos:Concept ;
+        skos:prefLabel ?pref .
+
+    optional { ?concept skos:definition ?definition }
+
+} # complete concept entry

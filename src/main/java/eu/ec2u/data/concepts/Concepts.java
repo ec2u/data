@@ -21,19 +21,16 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
-
-import java.util.stream.Stream;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.model.vocabulary.VOID;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.Values.pattern;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
@@ -41,13 +38,11 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Entry;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toList;
+import static eu.ec2u.data.resources.Resources.localized;
 
 public final class Concepts extends Delegator {
 
@@ -68,7 +63,7 @@ public final class Concepts extends Delegator {
 
                 property(VOID.ENTITIES, required(integer())),
 
-                property(SKOS.HAS_TOP_CONCEPT, () -> shape(multiple(), SKOSConcept())) // !!! concept.inScheme == this
+                property(SKOS.HAS_TOP_CONCEPT, () -> multiple(SKOSConcept()))
 
         );
     }
@@ -76,16 +71,19 @@ public final class Concepts extends Delegator {
     public static Shape SKOSConcept() {
         return shape(SKOS.CONCEPT, Entry(),
 
-                property(SKOS.PREF_LABEL, required(Resources.localized())),
-                property(SKOS.ALT_LABEL, multiple(Resources.localized())),
-                property(SKOS.DEFINITION, optional(Resources.localized())),
+                property(SKOS.PREF_LABEL, required(localized())),
+                property(SKOS.ALT_LABEL, multiple(localized())),
+                property(SKOS.DEFINITION, optional(localized())),
 
                 property(SKOS.IN_SCHEME, required(SKOSConceptScheme())),
-                property(SKOS.TOP_CONCEPT_OF, optional(SKOSConceptScheme())), // !!! == inScheme
+                property(SKOS.TOP_CONCEPT_OF, optional(SKOSConceptScheme())),
 
-                property(SKOS.BROADER, () -> multiple(SKOSConcept())), // !!! broader.inScheme == inScheme
-                property(SKOS.NARROWER, () -> multiple(SKOSConcept())), // !!! broader.inScheme == inScheme
-                property(SKOS.RELATED, () -> multiple(SKOSConcept())) // !!! broader.inScheme == inScheme
+                property(SKOS.BROADER_TRANSITIVE, () -> multiple(SKOSConcept())),
+                property(SKOS.NARROWER_TRANSITIVE, () -> multiple(SKOSConcept())),
+
+                property(SKOS.BROADER, () -> multiple(SKOSConcept())),
+                property(SKOS.NARROWER, () -> multiple(SKOSConcept())),
+                property(SKOS.RELATED, () -> multiple(SKOSConcept()))
 
         );
     }
@@ -149,6 +147,34 @@ public final class Concepts extends Delegator {
                         ))
 
         ));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(Concepts::create);
+    }
+
+
+    public static void create() {
+        txn(() -> {
+
+            Datasets.create(Concepts.class, Context);
+
+            update();
+
+        });
+    }
+
+    public static void update() {
+        txn(() -> {
+
+            Datasets.update(Concepts.class, Context);
+
+            Datasets.update();
+
+        });
     }
 
 }

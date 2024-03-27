@@ -48,7 +48,7 @@ The main objective of the GLADE Virtual Institute is to develop cooperation’s 
 
     org:unitOf <https://ec2u.eu/> ;
     org:identifier "GLADE" ;
-    org:classification </concepts/units/institute/virtual> .
+	org:classification </concepts/organizations/university-unit/institute/virtual> .
 
 </units/viqe> a ec2u:Unit ;
 
@@ -67,7 +67,7 @@ In practice, VIQE will carry out the following activities:
 
     org:unitOf <https://ec2u.eu/> ;
 	org:identifier "VIQE" ;
-    org:classification </concepts/units/institute/virtual> .
+	org:classification </concepts/organizations/university-unit/institute/virtual> .
 
 
 </units/viscc> a ec2u:Unit ;
@@ -91,5 +91,5 @@ What does the VISCC offer?
 
     org:unitOf <https://ec2u.eu/> ;
     org:identifier "VISCC" ;
-    org:classification </concepts/units/institute/virtual> .
+	org:classification </concepts/organizations/university-unit/institute/virtual> .
 

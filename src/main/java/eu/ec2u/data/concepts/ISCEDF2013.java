@@ -22,10 +22,10 @@ import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -35,6 +35,7 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.Base;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
@@ -72,72 +73,60 @@ public final class ISCEDF2013 implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        Xtream.of(URL)
-
-                .map(new Retrieve()
-                        .format(RDFXML)
-                )
+        txn(() -> {
 
 
-                .flatMap(model -> Stream.of(
+            Xtream.of(URL)
 
-                        rdf(resource(this, ".ttl"), Base),
+                    .map(new Retrieve()
+                            .format(RDFXML)
+                    )
 
-                        model.stream()
+                    .flatMap(model -> Stream.of(
 
-                                .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT_SCHEME)
-                                        .or(pattern(null, RDF.TYPE, SKOS.CONCEPT))
-                                )
+                            rdf(resource(this, ".ttl"), Base),
 
-                                .filter(statement -> statement.getSubject().stringValue().startsWith(External))
+                            model.stream()
 
-                                .map(statement -> statement(
-                                        rewrite((IRI)statement.getSubject(), External, Internal),
-                                        OWL.SAMEAS,
-                                        statement.getSubject()
-                                ))
-
-                                .collect(toList()),
-
-                        model.stream()
-
-                                .map(statement -> rewrite(statement, External, Internal))
-                                .map(statement -> replace(statement, Root, Scheme))
-
-                                // remove original title
-
-                                .filter(not(pattern(null, null, literal("International Standard Classification of "
-                                        +"Education: Fields of Education and Training 2013", "en"))))
-
-                                // migrate dct: temporal properties to xsd:dateTime to comply with Resource data model
-
-                                .map(statement -> {
-
-                                    final IRI predicate=statement.getPredicate();
-                                    final Resource subject=statement.getSubject();
-                                    final Value object=statement.getObject();
-
-                                    return DCTTemporal.contains(predicate) && literal(object)
-                                            .map(Literal::getDatatype)
-                                            .filter(XSD.DATE::equals)
-                                            .isPresent()
-
-                                            ? statement(subject, predicate,
-                                            literal(String.format("%sT00:00:00Z", object.stringValue()), XSD.DATETIME)
+                                    .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT_SCHEME)
+                                            .or(pattern(null, RDF.TYPE, SKOS.CONCEPT))
                                     )
 
-                                            : statement;
-                                })
+                                    .filter(statement -> statement.getSubject().stringValue().startsWith(External))
 
-                                .collect(toList())
+                                    .map(statement -> statement(
+                                            rewrite((IRI)statement.getSubject(), External, Internal),
+                                            OWL.SAMEAS,
+                                            statement.getSubject()
+                                    ))
 
-                ))
+                                    .collect(toList()),
 
-                .forEach(new Upload()
-                        .contexts(Scheme)
-                        .langs(Resources.Languages)
-                        .clear(true)
-                );
+                            model.stream()
+
+                                    .map(statement -> rewrite(statement, External, Internal))
+                                    .map(statement -> replace(statement, Root, Scheme))
+
+                                    // remove original title
+
+                                    .filter(not(pattern(null, null, literal(
+                                            "International Standard Classification of "
+                                                    +"Education: Fields of Education and Training 2013", "en"
+                                    ))))
+
+                                    .collect(toList())
+
+                    ))
+
+                    .forEach(new Upload()
+                            .contexts(Scheme)
+                            .langs(Resources.Languages)
+                            .clear(true)
+                    );
+
+            Concepts.update();
+
+        });
     }
 
 }

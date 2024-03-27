@@ -3,4 +3,6 @@
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
 </concepts/euroscivoc>  a skos:ConceptScheme ;
-	dct:description "European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati Manual taxonomy. It was extended with fields of science categories extracted from CORDIS content through a semi-automatic process developed with Natural Language Processing (NLP) techniques."@en .
+	rdfs:label "EuroSciVoc"@en ;
+	rdfs:comment
+		"European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati Manual taxonomy. It was extended with fields of science categories extracted from CORDIS content through a semi-automatic process developed with Natural Language Processing (NLP) techniques."@en .
