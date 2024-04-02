@@ -18,6 +18,8 @@ package eu.ec2u.data.actors;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 
 public final class Actors {
@@ -25,29 +27,13 @@ public final class Actors {
     public static final IRI Context=item("/actors/");
 
 
+    public static void main(final String... args) {
+        exec(() -> create(Context, Actors.class));
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Actors() { }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // public static void main(final String... args) {
-    //     exec(Actors::create);
-    // }
-    //
-    //
-    // public static void create() {
-    //     EC2U.update(() -> {
-    //
-    //         EC2U.create(Context, Actors.class);
-    //
-    //         update();
-    //
-    //     });
-    // }
-    //
-    // public static void update() {
-    // }
 
 }

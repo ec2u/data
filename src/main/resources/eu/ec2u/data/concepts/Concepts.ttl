@@ -16,17 +16,24 @@
 
 ########################################################################################################################
 
-skos:topConceptOf rdfs:subPropertyOf skos:inScheme ;
+skos:ConceptScheme a owl:Class .
+
+skos:Concept a owl:Class .
+
+skos:topConceptOf a owl:ObjectProperty ;
+    rdfs:subPropertyOf skos:inScheme ;
     owl:inverseOf skos:hasTopConcept .
 
-skos:broader rdfs:subPropertyOf skos:broaderTransitive ;
+skos:broader a owl:ObjectProperty ;
+    rdfs:subPropertyOf skos:broaderTransitive ;
     owl:inverseOf skos:narrower .
 
-skos:broaderTransitive a owl:TransitiveProperty .
+skos:broaderTransitive a owl:ObjectProperty, owl:TransitiveProperty .
 
-skos:narrower rdfs:subPropertyOf skos:narrowerTransitive ;
+skos:narrower a owl:ObjectProperty ;
+    rdfs:subPropertyOf skos:narrowerTransitive ;
     owl:inverseOf skos:broader .
 
-skos:narrowerTransitive a owl:TransitiveProperty .
+skos:narrowerTransitive a owl:ObjectProperty, owl:TransitiveProperty .
 
-skos:related a owl:SymmetricProperty .
+skos:related a owl:ObjectProperty, owl:SymmetricProperty .

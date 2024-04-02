@@ -21,11 +21,17 @@ insert {
 
 }; # complete concept scheme entry
 
-insert {
+delete {
+
+    ?scheme void:entities ?entities_ .
+
+} insert {
 
     ?scheme void:entities ?entities .
 
 } where {
+
+    optional { ?scheme void:entities ?entities_ }
 
     {
         select ?scheme (count(?concept) as ?entities) {

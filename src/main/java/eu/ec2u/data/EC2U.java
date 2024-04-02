@@ -129,19 +129,10 @@ public final class EC2U extends Delegator {
 
             try {
 
-                final Collection<Statement> shacl=new SHACLCodec().encode(List.of(shape));
-
-                shacl.stream()
-                        .filter(statement -> statement.getPredicate().equals(SHACL.TARGET_CLASS))
-                        .forEach(statement -> connection.remove(null, SHACL.TARGET_CLASS, statement.getObject(), RDF4J.SHACL_SHAPE_GRAPH));
-
-                // !!! shape garbage collection
-
                 Stream
 
                         .of(
 
-                                shacl,
                                 rdf(resource(master, ".ttl"), BASE),
                                 List.of(statement(context, RULE, literal(text(resource(master, ".ul"))), null))
 
@@ -151,6 +142,24 @@ public final class EC2U extends Delegator {
                                 .contexts(context)
                                 .clear(true)
                         );
+
+
+                final Collection<Statement> shacl=new SHACLCodec().encode(List.of(shape));
+
+                shacl.stream()
+                        .filter(statement -> statement.getPredicate().equals(SHACL.TARGET_CLASS))
+                        .peek(statement -> System.out.println(statement.getObject()))
+                        .forEach(statement -> connection.remove(null, SHACL.TARGET_CLASS, statement.getObject(), RDF4J.SHACL_SHAPE_GRAPH));
+
+                Stream
+
+                        .of(shacl)
+
+                        .forEach(new Upload()
+                                .contexts(RDF4J.SHACL_SHAPE_GRAPH)
+                        );
+
+                // !!! shape garbage collection
 
             } catch ( final RepositoryException e ) {
 

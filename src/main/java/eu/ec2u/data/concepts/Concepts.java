@@ -34,6 +34,7 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
@@ -84,6 +85,11 @@ public final class Concepts extends Delegator {
                 property(SKOS.RELATED, () -> multiple(Concept()))
 
         );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Concepts.class, ConceptScheme(), Concept()));
     }
 
 
@@ -146,27 +152,5 @@ public final class Concepts extends Delegator {
 
         ));
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Concepts::create);
-    }
-
-
-    public static void create() {
-        // EC2U.update(() -> {
-        //
-        //     EC2U.create(Context, Concepts.class);
-        //
-        //     update();
-        //
-        // });
-    }
-
-    // public static void update() {
-    //     EC2U.update(() -> { });
-    // }
 
 }

@@ -28,6 +28,7 @@ import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.BASE;
+import static eu.ec2u.data.EC2U.update;
 
 /**
  * EC2U Research Unit SKOS Concept Scheme.
@@ -66,22 +67,16 @@ public final class OrganizationTypes implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        // update(
-        //         this::upload,
-        //         Concepts::update
-        // );
-    }
-
-
-    private void upload() {
-        Stream
+        update(connection -> Stream
 
                 .of(rdf(resource(this, ".ttl"), BASE))
 
                 .forEach(new Upload()
                         .contexts(Scheme)
                         .clear(true)
-                );
+                )
+
+        );
     }
 
 }
