@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataInfo } from "@ec2u/data/pages/meta";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
@@ -62,7 +62,7 @@ export function DataSchemes() {
 	const schemes=useCollection(Schemes, "members");
 
 
-	return <DataPage name={Schemes} menu={<DataMeta/>}
+	return <DataPage name={Schemes} menu={<DataInfo/>}
 
 		tray={< >
 

@@ -18,7 +18,6 @@ package eu.ec2u.data.organizations;
 
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
@@ -28,12 +27,10 @@ import static com.metreeca.link.Frame.reverse;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.term;
-import static eu.ec2u.data.agents.Agents.FOAFAgent;
-import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
-import static eu.ec2u.data.persons.Persons.FOAFPerson;
+import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.agents.Agents.Agent;
+import static eu.ec2u.data.concepts.Concepts.Concept;
+import static eu.ec2u.data.persons.Persons.Person;
 import static eu.ec2u.data.resources.Resources.localized;
 
 public final class Organizations {
@@ -43,8 +40,8 @@ public final class Organizations {
     public static final IRI Organization=term("Organization");
 
 
-    public static Shape OrgOrganization() {
-        return shape(ORG.ORGANIZATION, FOAFAgent(),
+    public static Shape Organization() {
+        return shape(ORG.ORGANIZATION, Agent(),
 
                 property(ORG.IDENTIFIER, multiple(datatype(LITERAL))),
 
@@ -52,60 +49,48 @@ public final class Organizations {
                 property(SKOS.ALT_LABEL, optional(localized())),
                 property(SKOS.DEFINITION, optional(localized())),
 
-                property(ORG.CLASSIFICATION, multiple(SKOSConcept())),
+                property(ORG.CLASSIFICATION, multiple(Concept())),
 
-                property(ORG.SUB_ORGANIZATION_OF, () -> multiple(OrgOrganization())),
-                property(ORG.HAS_SUB_ORGANIZATION, () -> multiple(OrgOrganization())),
+                property(ORG.SUB_ORGANIZATION_OF, () -> multiple(Organization())),
+                property(ORG.HAS_SUB_ORGANIZATION, () -> multiple(Organization())),
 
-                property(ORG.HAS_UNIT, () -> multiple(OrgOrganizationalUnit())),
+                property(ORG.HAS_UNIT, () -> multiple(OrganizationalUnit())),
 
-                property("hasHead", reverse(ORG.HEAD_OF), multiple(FOAFPerson())),
-                property(ORG.HAS_MEMBER, multiple(FOAFPerson()))
+                property("hasHead", reverse(ORG.HEAD_OF), multiple(Person())),
+                property(ORG.HAS_MEMBER, multiple(Person()))
+
+        );
+    }
+
+    public static Shape FormalOrganization() {
+        return shape(ORG.FORMAL_ORGANIZATION, Organization());
+    }
+
+    public static Shape OrganizationalCollaboration() {
+        return shape(ORG.ORGANIZATIONAL_COLLABORATION, Organization());
+    }
+
+    public static Shape OrganizationalUnit() {
+        return shape(ORG.ORGANIZATIONAL_UNIT, Organization(),
+
+                property(ORG.UNIT_OF, repeatable(Organization()))
 
         );
     }
 
-    public static Shape OrgFormalOrganization() {
-        return shape(ORG.FORMAL_ORGANIZATION, OrgOrganization());
-    }
 
-    public static Shape OrgOrganizationalCollaboration() {
-        return shape(ORG.ORGANIZATIONAL_COLLABORATION, OrgOrganization());
-    }
-
-    public static Shape OrgOrganizationalUnit() {
-        return shape(ORG.ORGANIZATIONAL_UNIT, OrgOrganization(),
-
-                property(ORG.UNIT_OF, repeatable(OrgOrganization()))
-
-        );
+    public static void main(final String... args) {
+        exec(() -> create(Context, Organizations.class,
+                Organization(),
+                FormalOrganization(),
+                OrganizationalCollaboration(),
+                OrganizationalUnit()
+        ));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Organizations() { }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Organizations::create);
-    }
-
-
-    public static void create() {
-        txn(() -> {
-
-            Datasets.create(Organizations.class, Context);
-
-            update();
-
-        });
-    }
-
-    public static void update() {
-        Datasets.update(Organizations.class, Context);
-    }
 
 }

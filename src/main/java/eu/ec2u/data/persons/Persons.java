@@ -19,7 +19,7 @@ package eu.ec2u.data.persons;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
@@ -29,8 +29,8 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.term;
-import static eu.ec2u.data.agents.Agents.FOAFAgent;
-import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
+import static eu.ec2u.data.agents.Agents.Agent;
+import static eu.ec2u.data.organizations.Organizations.Organization;
 
 public final class Persons extends Delegator {
 
@@ -39,15 +39,15 @@ public final class Persons extends Delegator {
     public static final IRI Person=term("Person");
 
 
-    public static Shape FOAFPerson() {
-        return shape(FOAF.PERSON, FOAFAgent(),
+    public static Shape Person() {
+        return shape(FOAF.PERSON, Agent(),
 
                 property(FOAF.TITLE, optional(string())), // !!! pattern
                 property(FOAF.GIVEN_NAME, required(string())), // !!! pattern
                 property(FOAF.FAMILY_NAME, required(string())), // !!! pattern
 
-                property(ORG.HEAD_OF, () -> multiple(OrgOrganization())),
-                property(ORG.MEMBER_OF, () -> multiple(OrgOrganization()))
+                property(ORG.HEAD_OF, () -> multiple(Organization())),
+                property(ORG.MEMBER_OF, () -> multiple(Organization()))
 
         );
     }
@@ -66,7 +66,7 @@ public final class Persons extends Delegator {
 
 
     public static void create() {
-        Datasets.create(Persons.class, Context);
+        EC2U.create(Context, Persons.class);
     }
 
 }

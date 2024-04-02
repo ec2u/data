@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.universities;
+package eu.ec2u.data.organizations.universities;
 
 import org.eclipse.rdf4j.model.IRI;
 

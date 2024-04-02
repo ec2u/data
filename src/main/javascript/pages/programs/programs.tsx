@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataInfo } from "@ec2u/data/pages/meta";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { decimal } from "@metreeca/core/decimal";
@@ -72,7 +72,7 @@ export function DataPrograms() {
 	const programs=useCollection(Programs, "members");
 
 
-	return <DataPage name={Programs} menu={<DataMeta/>}
+	return <DataPage name={Programs} menu={<DataInfo/>}
 
 		tray={< >
 

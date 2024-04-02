@@ -1,0 +1,13 @@
+prefix ec2u: <https://data.ec2u.eu/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+insert {
+
+    </resources/> rdfs:member ?member.
+
+} where {
+
+    ?dataset a ec2u:Dataset ;
+        rdfs:member ?member .
+
+} # compute membership

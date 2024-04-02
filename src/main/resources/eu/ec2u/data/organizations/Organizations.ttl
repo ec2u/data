@@ -6,22 +6,30 @@
 @prefix ec2u: </terms/> .
 
 
-org:Organization rdfs:subClassOf foaf:Agent .
+org:Organization a owl:Class ;
+    rdfs:subClassOf foaf:Agent .
 
-org:FormalOrganization rdfs:subClassOf org:Organization .
+org:FormalOrganization a owl:Class ;
+    rdfs:subClassOf org:Organization .
 
-org:OrganizationalCollaboration rdfs:subClassOf org:Organization .
+org:OrganizationalCollaboration a owl:Class ;
+    rdfs:subClassOf org:Organization .
 
-org:OrganizationalUnit rdfs:subClassOf org:Organization .
+org:OrganizationalUnit a owl:Class ;
+    rdfs:subClassOf org:Organization .
 
 
-org:subOrganizationOf owl:inverseOf org:hasSubOrganization .
+org:subOrganizationOf a owl:ObjectProperty ;
+    owl:inverseOf org:hasSubOrganization .
 
-org:unitOf owl:inverseOf org:hasUnit .
+org:unitOf a owl:ObjectProperty ;
+    owl:inverseOf org:hasUnit .
 
-org:memberOf owl:inverseOf org:hasMember .
+org:memberOf a owl:ObjectProperty ;
+    owl:inverseOf org:hasMember .
 
-org:headOf rdfs:subPropertyOf org:hasMember .
+org:headOf a owl:ObjectProperty ;
+    rdfs:subPropertyOf org:hasMember .
 
 
 ########################################################################################################################

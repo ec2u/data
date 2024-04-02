@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.universities;
+package eu.ec2u.data.organizations.universities;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.open.actions.WikidataMirror;
-import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.organizations.Organizations;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
-
-import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
@@ -41,15 +35,10 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.term;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.organizations.Organizations.OrgFormalOrganization;
-import static eu.ec2u.data.resources.Resources.*;
-import static java.lang.String.format;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
+import static eu.ec2u.data.organizations.Organizations.FormalOrganization;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 
 public final class Universities extends Delegator {
@@ -70,15 +59,15 @@ public final class Universities extends Delegator {
     }
 
     public static Shape University() {
-        return shape(University, Resource(), OrgFormalOrganization(),
+        return shape(University, Resource(), FormalOrganization(),
 
                 property(FOAF.DEPICTION, required(id())),
                 property(FOAF.HOMEPAGE, repeatable(id())),
 
                 property(inception, required(year())),
                 property(students, required(integer())),
-                property(country, required(Entry())),
-                property(city, required(Entry())),
+                property(country, required(Resource())),
+                property(city, required(Resource())),
 
                 property(WGS84.LAT, required(decimal())),
                 property(WGS84.LONG, required(decimal())),
@@ -92,6 +81,14 @@ public final class Universities extends Delegator {
 
                 ))
 
+        );
+    }
+
+
+    public static void main(final String... args) {
+        exec(
+                () -> create(Context, Universities.class, University()),
+                () -> new Universities_().run()
         );
     }
 
@@ -149,65 +146,5 @@ public final class Universities extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void main(final String... args) {
-        exec(Universities::create);
-    }
-
-
-    public static void create() {
-
-        wikidata(); // ;( fails if executed inside txn
-
-        txn(() -> {
-
-            Datasets.create(Universities.class, Context);
-            Datasets.update(Universities.class, Context);
-
-            Organizations.update();
-            Datasets.update();
-
-        });
-    }
-
-    public static void update() {
-
-        wikidata(); // ;( fails if executed inside txn
-
-        txn(() -> {
-
-            Datasets.update(Universities.class, Context);
-
-            Organizations.update();
-            Datasets.update();
-
-        });
-
-    }
-
-
-    private static void wikidata() {
-        Xtream
-
-                .of(
-
-                        "?item wdt:P463 wd:Q105627243", // <member of> <EC2U>
-
-                        "values ?item "+stream(_Universities.values())
-
-                                .flatMap(university -> Stream.of(
-                                        university.City,
-                                        university.Country
-                                ))
-
-                                .map(iri -> format("<%s>", iri))
-                                .collect(joining(" ", "{ ", " }"))
-
-                )
-
-                .sink(new WikidataMirror()
-                        .contexts(iri(Context, "/wikidata"))
-                        .languages(Languages)
-                );
-    }
 
 }

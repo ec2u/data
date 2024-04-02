@@ -15,7 +15,7 @@
  */
 
 import { Languages } from "@ec2u/data/languages";
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataInfo } from "@ec2u/data/pages/meta";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { decimal } from "@metreeca/core/decimal";
@@ -72,7 +72,7 @@ export function DataCourses() {
 
 	const courses=useCollection(Courses, "members");
 
-	return <DataPage name={Courses} menu={<DataMeta/>}
+	return <DataPage name={Courses} menu={<DataInfo/>}
 
 		tray={< >
 

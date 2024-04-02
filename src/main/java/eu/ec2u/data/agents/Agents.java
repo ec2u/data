@@ -16,31 +16,25 @@
 
 package eu.ec2u.data.agents;
 
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 
-import java.util.stream.Stream;
-
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.resources.Resources.Entry;
+import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Agents {
 
     public static final IRI Context=item("/agents/");
 
 
-    public static Shape FOAFAgent() {
-        return shape(FOAF.AGENT, Entry(),
+    public static Shape Agent() {
+        return shape(FOAF.AGENT, Resource(),
 
                 property(FOAF.DEPICTION, multiple(id())),
                 property(FOAF.HOMEPAGE, multiple(id())),
@@ -50,20 +44,13 @@ public final class Agents {
     }
 
 
+    public static void main(final String... args) {
+        exec(() -> create(Context, Agents.class, Agent()));
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Agents() { }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Agents::create);
-    }
-
-
-    public static void create() {
-        Datasets.create(Agents.class, Context);
-    }
 
 }

@@ -19,21 +19,25 @@ package eu.ec2u.data.things;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.concepts.ESCO;
+import eu.ec2u.data.concepts.EuroSciVoc;
+import eu.ec2u.data.concepts.ISCED2011;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.stream.Stream;
 
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.link.Frame.reverse;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.EC2U.BASE;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.resources.Resources.Entry;
+import static eu.ec2u.data.concepts.Concepts.Concept;
+import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.localized;
 
 /**
  * Schema.org RDF vocabulary.
@@ -92,20 +96,25 @@ public final class Schema {
      * @throws NullPointerException if {@code labels} is nul or contains null elements
      */
     public static Shape Thing() {
-        return shape(Thing, Entry(),
+        return shape(Thing, Resource(),
 
-                property(RDF.TYPE, hasValue(Thing)),
-
-                property(identifier, optional(string())),
                 property(url, multiple(id())),
-                property(name, required(Resources.localized())),
-                property("fullDescription", description, required(Resources.localized())), // ;( clash with dct:description
-                property(disambiguatingDescription, optional(Resources.localized())),
+                property(identifier, optional(string())),
+                property(name, required(localized())),
                 property(image, optional(id())),
-                property(about, multiple(Entry()))
+                property(description, required(localized())),
+                property(disambiguatingDescription, optional(localized()))
 
         );
     }
+
+
+    //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI about=term("about");
+    public static final IRI inLanguage=term("inLanguage");
+    public static final IRI email=term("email");
+    public static final IRI telephone=term("telephone");
 
 
     //// Organizations /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,23 +127,54 @@ public final class Schema {
     public static Shape Organization() {
         return shape(Organization, Thing(),
 
-                property(RDF.TYPE, hasValue(Organization)),
-
-                property(legalName, Resources.localized()),
-                property(Schema.email, string()),
-                property(Schema.telephone, string())
+                property(legalName, optional(localized())),
+                property(email, optional(string())),
+                property(telephone, optional(string()))
 
         );
     }
 
 
-    //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //// Creative Work /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI inLanguage=term("inLanguage");
+    public static final IRI provider=term("provider");
+    public static final IRI dateCreated=term("dateCreated");
+    public static final IRI dateModified=term("dateModified");
+    public static final IRI timeRequired=term("timeRequired");
+
+
+    //// Learning Resource /////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI LearningResource=term("LearningResource");
+
+    public static final IRI assesses=term("assesses");
+    public static final IRI competencyRequired=term("competencyRequired");
+    public static final IRI learningResourceType=term("learningResourceType");
+    public static final IRI teaches=term("teaches");
+
+
+    //// Offerings /////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static final IRI numberOfCredits=term("numberOfCredits");
     public static final IRI educationalCredentialAwarded=term("educationalCredentialAwarded");
     public static final IRI occupationalCredentialAwarded=term("occupationalCredentialAwarded");
     public static final IRI educationalLevel=term("educationalLevel");
+
+
+    public static Shape Offering() {
+        return shape(Thing(),
+
+                property(numberOfCredits, optional(decimal(), minInclusive(0))),
+                property(educationalCredentialAwarded, optional(localized())),
+                property(occupationalCredentialAwarded, optional(localized())),
+
+                property(provider, optional(Organization())),
+
+                property(educationalLevel, optional(Concept(), scheme(ISCED2011.Scheme))),
+                property(about, multiple(Concept(), scheme(EuroSciVoc.Scheme)))
+
+        );
+    }
 
 
     //// Programs //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,6 +188,21 @@ public final class Schema {
     public static final IRI hasCourse=term("hasCourse");
 
 
+    public static Shape EducationalOccupationalProgram() {
+        return shape(EducationalOccupationalProgram, Offering(),
+
+                property(timeToComplete, optional(duration())),
+                property(programPrerequisites, optional(localized())),
+
+                property(hasCourse, () -> multiple(Course())),
+
+                property(programType, optional(Concept())), // !!! scheme?
+                property(occupationalCategory, multiple(Concept(), scheme(ESCO.Scheme)))
+
+        );
+    }
+
+
     //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final IRI Course=term("Course");
@@ -156,23 +211,24 @@ public final class Schema {
     public static final IRI coursePrerequisites=term("coursePrerequisites");
 
 
-    //// Learning Resource /////////////////////////////////////////////////////////////////////////////////////////////
+    public static Shape Course() {
+        return shape(Course, Offering(),
 
-    public static final IRI LearningResource=term("LearningResource");
+                property(courseCode, optional(string())),
+                property(inLanguage, multiple(string(), pattern("[a-z]{2}"))),
+                property(timeRequired, optional(duration())),
 
-    public static final IRI assesses=term("assesses");
-    public static final IRI competencyRequired=term("competencyRequired");
-    public static final IRI learningResourceType=term("learningResourceType");
-    public static final IRI teaches=term("teaches");
+                property(learningResourceType, optional(localized())),
+                property(teaches, optional(localized())),
+                property(assesses, optional(localized())),
+                property(coursePrerequisites, optional(localized())),
+                property(competencyRequired, optional(localized())),
 
+                property("inProgram", reverse(hasCourse), () -> multiple(EducationalOccupationalProgram()))
 
-    //// Creative Work /////////////////////////////////////////////////////////////////////////////////////////////////
+        );
+    }
 
-    public static final IRI provider=term("provider");
-    public static final IRI dateCreated=term("dateCreated");
-    public static final IRI dateModified=term("dateModified");
-    public static final IRI about=term("about");
-    public static final IRI timeRequired=term("timeRequired");
 
 
     //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,8 +248,6 @@ public final class Schema {
 
     public static Shape Event() {
         return shape(Event, Thing(),
-
-                property(RDF.TYPE, hasValue(Event)),
 
                 property(eventStatus, optional(id())),
 
@@ -244,8 +298,6 @@ public final class Schema {
     public static Shape Place() {
         return shape(Place, Thing(),
 
-                property(RDF.TYPE, hasValue(Place)),
-
                 property(address, optional(PostalAddress())),
 
                 property(latitude, optional(decimal())),
@@ -257,11 +309,9 @@ public final class Schema {
     public static Shape PostalAddress() {
         return shape(PostalAddress, ContactPoint(),
 
-                property(RDF.TYPE, hasValue(PostalAddress)),
-
-                property(addressCountry, optional(or(Entry(), string()))),
-                property(addressRegion, optional(or(Entry(), string()))),
-                property(addressLocality, optional(or(Entry(), string()))),
+                property(addressCountry, optional(or(Resource(), string()))),
+                property(addressRegion, optional(or(Resource(), string()))),
+                property(addressLocality, optional(or(Resource(), string()))),
                 property(postalCode, optional(string())),
                 property(streetAddress, optional(string()))
 
@@ -269,11 +319,7 @@ public final class Schema {
     }
 
     public static Shape VirtualLocation() {
-        return shape(VirtualLocation, Thing(),
-
-                property(RDF.TYPE, hasValue(VirtualLocation))
-
-        );
+        return shape(VirtualLocation, Thing());
     }
 
 
@@ -282,15 +328,8 @@ public final class Schema {
     public static final IRI ContactPoint=term("ContactPoint");
 
 
-    public static final IRI email=term("email");
-    public static final IRI telephone=term("telephone");
-    public static final IRI faxNumber=term("faxNumber");
-
-
     public static Shape ContactPoint() {
         return shape(ContactPoint, Thing(),
-
-                property(RDF.TYPE, hasValue(ContactPoint)),
 
                 property(email, optional(string())),
                 property(telephone, optional(string()))
@@ -301,10 +340,15 @@ public final class Schema {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private Schema() { }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static void main(final String... args) {
         exec(() -> Stream
 
-                .of(rdf(resource(Schema.class, ".ttl"), Base))
+                .of(rdf(resource(Schema.class, ".ttl"), BASE))
 
                 .forEach(new Upload()
                         .contexts(Context)
@@ -312,10 +356,5 @@ public final class Schema {
                 )
         );
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Schema() { }
 
 }

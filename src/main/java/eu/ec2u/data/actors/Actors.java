@@ -16,11 +16,8 @@
 
 package eu.ec2u.data.actors;
 
-import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 
-import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
 
 public final class Actors {
@@ -35,23 +32,22 @@ public final class Actors {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void main(final String... args) {
-        exec(Actors::create);
-    }
-
-
-    public static void create() {
-        txn(() -> {
-
-            Datasets.create(Actors.class, Context);
-
-            update();
-
-        });
-    }
-
-    public static void update() {
-        Datasets.update();
-    }
+    // public static void main(final String... args) {
+    //     exec(Actors::create);
+    // }
+    //
+    //
+    // public static void create() {
+    //     EC2U.update(() -> {
+    //
+    //         EC2U.create(Context, Actors.class);
+    //
+    //         update();
+    //
+    //     });
+    // }
+    //
+    // public static void update() {
+    // }
 
 }

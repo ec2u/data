@@ -20,8 +20,6 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.http.rdf4j.actions.Update;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
@@ -29,12 +27,7 @@ import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.VOID;
 
-import java.util.stream.Stream;
-
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Constraint.any;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
@@ -43,9 +36,10 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.resources.Resources.*;
+import static eu.ec2u.data.organizations.Organizations.Organization;
+import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.localized;
 
 public final class Datasets extends Delegator {
 
@@ -71,13 +65,13 @@ public final class Datasets extends Delegator {
 
                 property(DCTERMS.RIGHTS, required(string())),
                 property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
-                property(DCTERMS.LICENSE, optional(Entry())),
+                property(DCTERMS.LICENSE, optional(Resource())),
+
+                property(DCTERMS.PUBLISHER, optional(Organization())),
 
                 property(VOID.ROOT_RESOURCE, multiple(id())),
                 property(VOID.ENTITIES, optional(integer())),
                 property(VOID.SUBSET, () -> multiple(Dataset())),
-
-                property(DCTERMS.PUBLISHER, optional(Entry())),
 
                 property(RDFS.ISDEFINEDBY, required(id()))
 
@@ -95,6 +89,11 @@ public final class Datasets extends Delegator {
                 property("members", RDFS.MEMBER, shape)
 
         );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Datasets.class, Dataset()));
     }
 
 
@@ -122,49 +121,6 @@ public final class Datasets extends Delegator {
                 )))
 
         ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Datasets::create);
-    }
-
-
-    public static void create() {
-        txn(() -> {
-            create(Datasets.class, Context);
-            update();
-        });
-    }
-
-    public static void update() {
-        update(Datasets.class, Context);
-    }
-
-
-    public static void create(final Class<?> dataset, final IRI context) {
-        Stream
-
-                .of(rdf(resource(dataset, ".ttl"), Base))
-
-                .forEach(new Upload()
-                        .contexts(context)
-                        .clear(true)
-                );
-    }
-
-    public static void update(final Class<?> dataset, final IRI context) {
-        Stream
-
-                .of(text(resource(dataset, ".ul")))
-
-                .forEach(new Update()
-                        .base(Base)
-                        .insert(iri(context, "/~"))
-                        .clear(true)
-                );
     }
 
 }

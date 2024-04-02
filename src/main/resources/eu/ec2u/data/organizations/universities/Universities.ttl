@@ -1,3 +1,4 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ec2u: </terms/> .
 
@@ -18,12 +19,13 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     dct:issued "2022-01-01"^^xsd:date ;
     void:rootResource ec2u:University ;
-    rdfs:isDefinedBy </datasets/universities> .
+    rdfs:isDefinedBy </schemas/universities> .
 
 
 ########################################################################################################################
 
-ec2u:University rdfs:subClassOf ec2u:Resource, org:FormalOrganization .
+ec2u:University a owl:Class ;
+    rdfs:subClassOf org:FormalOrganization .
 
 
 ########################################################################################################################

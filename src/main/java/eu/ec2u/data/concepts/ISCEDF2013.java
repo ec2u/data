@@ -16,27 +16,11 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.http.rdf.actions.Retrieve;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.work.Xtream;
-
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.OWL;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.stream.Stream;
-
-import static com.metreeca.http.rdf.Values.*;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.http.rdf.Values.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
-import static eu.ec2u.data.EC2U.Base;
-import static java.util.stream.Collectors.toList;
-import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
 
 
 /**
@@ -68,53 +52,53 @@ public final class ISCEDF2013 implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        txn(() -> {
-
-
-            Xtream.of(URL)
-
-                    .map(new Retrieve()
-                            .format(RDFXML)
-                    )
-
-                    .flatMap(model -> Stream.of(
-
-                            rdf(resource(this, ".ttl"), Base),
-
-                            model.stream()
-
-                                    .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT_SCHEME)
-                                            .or(pattern(null, RDF.TYPE, SKOS.CONCEPT))
-                                    )
-
-                                    .filter(statement -> statement.getSubject().stringValue().startsWith(External))
-
-                                    .map(statement -> statement(
-                                            rewrite((IRI)statement.getSubject(), External, Internal),
-                                            OWL.SAMEAS,
-                                            statement.getSubject()
-                                    ))
-
-                                    .collect(toList()),
-
-                            model.stream()
-
-                                    .map(statement -> rewrite(statement, External, Internal))
-                                    .map(statement -> replace(statement, Root, Scheme))
-
-                                    .collect(toList())
-
-                    ))
-
-                    .forEach(new Upload()
-                            .contexts(Scheme)
-                            .langs(Resources.Languages)
-                            .clear(true)
-                    );
-
-            Concepts.update();
-
-        });
+        // update(() -> {
+        //
+        //
+        //     Xtream.of(URL)
+        //
+        //             .map(new Retrieve()
+        //                     .format(RDFXML)
+        //             )
+        //
+        //             .flatMap(model -> Stream.of(
+        //
+        //                     rdf(resource(this, ".ttl"), BASE),
+        //
+        //                     model.stream()
+        //
+        //                             .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT_SCHEME)
+        //                                     .or(pattern(null, RDF.TYPE, SKOS.CONCEPT))
+        //                             )
+        //
+        //                             .filter(statement -> statement.getSubject().stringValue().startsWith(External))
+        //
+        //                             .map(statement -> statement(
+        //                                     rewrite((IRI)statement.getSubject(), External, Internal),
+        //                                     OWL.SAMEAS,
+        //                                     statement.getSubject()
+        //                             ))
+        //
+        //                             .collect(toList()),
+        //
+        //                     model.stream()
+        //
+        //                             .map(statement -> rewrite(statement, External, Internal))
+        //                             .map(statement -> replace(statement, Root, Scheme))
+        //
+        //                             .collect(toList())
+        //
+        //             ))
+        //
+        //             .forEach(new Upload()
+        //                     .contexts(Scheme)
+        //                     .langs(Resources.Languages)
+        //                     .clear(true)
+        //             );
+        //
+        //     Concepts.update();
+        //
+        // });
     }
 
 }

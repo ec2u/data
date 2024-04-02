@@ -50,8 +50,8 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
-import static eu.ec2u.data.universities.Universities.University;
-import static eu.ec2u.data.universities._Universities.Salamanca;
+import static eu.ec2u.data.organizations.universities.Universities.University;
+import static eu.ec2u.data.organizations.universities._Universities.Salamanca;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
 import static net.fortuna.ical4j.model.Component.VEVENT;

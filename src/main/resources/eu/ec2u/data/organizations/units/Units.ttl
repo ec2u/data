@@ -1,7 +1,9 @@
+@prefix ec2u: </terms/> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix org: <http://www.w3.org/ns/org#> .
-@prefix ec2u: </terms/> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -16,16 +18,17 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     dct:issued "2022-01-01"^^xsd:date ;
     void:rootResource ec2u:Unit ;
-    rdfs:isDefinedBy </datasets/units> .
+    rdfs:isDefinedBy </schemas/units> .
 
-</concepts/research-topics> a skos:ConceptScheme ;
+</concepts/research-topics/> a skos:ConceptScheme ;
     dct:title "EC2U Research Unit Topics"@en ;
     dct:description "> **:warn:** To be migrated to [EuroSCiVoc](euroscivoc)"@en .
 
 
 ########################################################################################################################
 
-ec2u:Unit rdfs:subClassOf ec2u:Resource, org:OrganizationalUnit .
+ec2u:Unit a owl:Class ;
+    rdfs:subClassOf org:OrganizationalUnit .
 
 
 

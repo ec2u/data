@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataInfo } from "@ec2u/data/pages/meta";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { date } from "@metreeca/core/date";
@@ -73,7 +73,7 @@ export function DataEvents() {
 
 	const events=useCollection(Events, "members");
 
-	return <DataPage name={Events} menu={<DataMeta/>}
+	return <DataPage name={Events} menu={<DataInfo/>}
 
 		tray={<>
 

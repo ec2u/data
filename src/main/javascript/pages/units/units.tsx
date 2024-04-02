@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataInfo } from "@ec2u/data/pages/meta";
 import { toUnitLabel } from "@ec2u/data/pages/units/unit";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -81,7 +81,7 @@ export function DataUnits() {
 	const units=useCollection(Units, "members");
 
 
-	return <DataPage name={Units} menu={<DataMeta/>}
+	return <DataPage name={Units} menu={<DataInfo/>}
 
 		tray={<>
 

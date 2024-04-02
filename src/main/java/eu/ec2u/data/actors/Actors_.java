@@ -20,7 +20,6 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.http.csv.formats.CSV;
 import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
 import eu.ec2u.data.EC2U;
@@ -44,9 +43,8 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.universities._Universities.*;
+import static eu.ec2u.data.organizations.universities._Universities.*;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
@@ -80,25 +78,25 @@ public final class Actors_ implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        txn(() -> {
-
-            Xtream
-
-                    .from(
-                            fields(),
-                            entries()
-                    )
-
-                    .batch(0)
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-
-            Actors.update();
-
-        });
+        // update(() -> {
+        //
+        //     Xtream
+        //
+        //             .from(
+        //                     fields(),
+        //                     entries()
+        //             )
+        //
+        //             .batch(0)
+        //
+        //             .forEach(new Upload()
+        //                     .contexts(Context)
+        //                     .clear(true)
+        //             );
+        //
+        //     Actors.update();
+        //
+        // });
     }
 
 

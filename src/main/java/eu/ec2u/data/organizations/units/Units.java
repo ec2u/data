@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.units;
+package eu.ec2u.data.organizations.units;
 
 
 import com.metreeca.http.handlers.Delegator;
@@ -26,8 +26,6 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.organizations.Organizations;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
@@ -41,10 +39,10 @@ import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
-import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
+import static eu.ec2u.data.EC2U.create;
+import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.organizations.Organizations.OrgOrganizationalUnit;
+import static eu.ec2u.data.organizations.Organizations.OrganizationalUnit;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.owner;
 
@@ -60,11 +58,16 @@ public final class Units extends Delegator {
     public static Shape Units() { return Dataset(Unit()); }
 
     public static Shape Unit() {
-        return shape(Unit, Resource(), OrgOrganizationalUnit(),
+        return shape(Unit, Resource(), OrganizationalUnit(),
 
-                property(DCTERMS.SUBJECT, multiple(SKOSConcept()))
+                property(DCTERMS.SUBJECT, multiple(Concept()))
 
         );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Units.class, Unit()));
     }
 
 
@@ -115,34 +118,6 @@ public final class Units extends Delegator {
 
                 ))
         );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Units::create);
-    }
-
-
-    public static void create() {
-        txn(() -> {
-
-            Datasets.create(Units.class, Context);
-
-            update();
-
-        });
-    }
-
-    public static void update() {
-        txn(() -> {
-
-            Organizations.update();
-            Concepts.update(); // ;( units topics
-            Datasets.update();
-
-        });
     }
 
 }

@@ -47,7 +47,6 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.localized;
 
 public final class Events extends Delegator {
 
@@ -70,8 +69,7 @@ public final class Events extends Delegator {
 
                 property(RDF.TYPE, hasValue(Event)),
 
-                property(DCTERMS.MODIFIED, required(instant())), // housekeeping timestamp
-                property("fullDescription", Schema.description, optional(localized())) // ;( prevent clashes with dct:description
+                property(DCTERMS.MODIFIED, required(instant())) // housekeeping timestamp
 
         );
     }
@@ -80,7 +78,7 @@ public final class Events extends Delegator {
     public static void main(final String... args) {
         exec(() -> Stream
 
-                .of(rdf(resource(Events.class, ".ttl"), Base))
+                .of(rdf(resource(Events.class, ".ttl"), BASE))
 
                 .forEach(new Upload()
                         .contexts(Context)

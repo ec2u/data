@@ -16,41 +16,41 @@
 
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, optional, required } from "@metreeca/core";
-import { id } from "@metreeca/core/id";
-import { integer, toIntegerString } from "@metreeca/core/integer";
-import { local, toLocalString } from "@metreeca/core/local";
-import { string } from "@metreeca/core/string";
-import { useRouter } from "@metreeca/data/contexts/router";
-import { useAsset } from "@metreeca/data/hooks/asset";
-import { useResource } from "@metreeca/data/models/resource";
-import { icon } from "@metreeca/view";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { DoneIcon, InfoIcon } from "@metreeca/view/widgets/icon";
-import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
 import React from "react";
+import { immutable, optional, required } from "../../../../../../../Products/Tool/code/core";
+import { id } from "../../../../../../../Products/Tool/code/core/id";
+import { integer, toIntegerString } from "../../../../../../../Products/Tool/code/core/integer";
+import { local, toLocalString } from "../../../../../../../Products/Tool/code/core/local";
+import { string } from "../../../../../../../Products/Tool/code/core/string";
+import { useRouter } from "../../../../../../../Products/Tool/code/data/contexts/router";
+import { useAsset } from "../../../../../../../Products/Tool/code/data/hooks/asset";
+import { useResource } from "../../../../../../../Products/Tool/code/data/models/resource";
+import { icon } from "../../../../../../../Products/Tool/code/view";
+import { ToolFrame } from "../../../../../../../Products/Tool/code/view/lenses/frame";
+import { DoneIcon, InfoIcon } from "../../../../../../../Products/Tool/code/view/widgets/icon";
+import { ToolInfo } from "../../../../../../../Products/Tool/code/view/widgets/info";
+import { ToolLink } from "../../../../../../../Products/Tool/code/view/widgets/link";
+import { ToolMark } from "../../../../../../../Products/Tool/code/view/widgets/mark";
 
 
 function isMeta(route: string) {
-	return route.startsWith("/datasets/");
+	return route.startsWith("/schemas/");
 }
 
 function toMeta(route: string) {
-	return route.replace(/^\/(?<name>\w*)\/?$/, "/datasets/$<name>");
+	return route.replace(/^\/(?<name>\w*)\/?$/, "/schemas/$<name>");
 }
 
 function toData(route: string) {
-	return route === "/datasets/" ? "/" : route.replace(/^\/datasets\/(?<name>\w*?)$/, "/$<name>/");
+	return route === "/schemas/" ? "/" : route.replace(/^\/schemas\/(?<name>\w*?)$/, "/$<name>/");
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const Dataset=immutable({
+export const Meta=immutable({
 
-	id: "/datasets/*",
+	id: "/schemas/*",
 
 	title: required(local),
 	alternative: optional(local),
@@ -71,7 +71,7 @@ export const Dataset=immutable({
 });
 
 
-export function DataMeta() {
+export function DataInfo() {
 
 	const [route, setRoute]=useRouter();
 
@@ -92,11 +92,11 @@ export function DataMeta() {
 
 }
 
-export function DataDataset() {
+export function DataMeta() {
 
 	const [route]=useRouter();
 
-	const [dataset]=useResource({ ...Dataset, id: toData(route) });
+	const [dataset]=useResource({ ...Meta, id: toData(route) });
 
 	const model=useAsset(dataset?.isDefinedBy);
 
@@ -105,7 +105,7 @@ export function DataDataset() {
 
 		name={dataset && toLocalString(dataset.alternative || dataset.title)}
 
-		menu={<DataMeta/>}
+		menu={<DataInfo/>}
 
 		tray={<ToolFrame as={({
 

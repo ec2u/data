@@ -49,7 +49,7 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.universities._Universities.Turku;
+import static eu.ec2u.data.organizations.universities._Universities.Turku;
 import static java.lang.String.format;
 
 public final class EventsTurkuTYY implements Runnable {

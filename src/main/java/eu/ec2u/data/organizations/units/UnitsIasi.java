@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.units;
+package eu.ec2u.data.organizations.units;
 
 import com.metreeca.http.jsonld.actions.Validate;
 import com.metreeca.http.rdf4j.actions.Upload;
@@ -29,9 +29,9 @@ import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 
-import static eu.ec2u.data.Data.txn;
-import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.data.universities._Universities.Iasi;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.organizations.units.Units.Unit;
+import static eu.ec2u.data.organizations.universities._Universities.Iasi;
 import static java.lang.String.format;
 
 public final class UnitsIasi implements Runnable {
@@ -59,26 +59,21 @@ public final class UnitsIasi implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        txn(() -> {
+        update(connection -> Xtream.of(url)
 
-            Xtream.of(url)
+                .flatMap(new Units_.CSVLoader(Iasi))
 
-                    .flatMap(new Units_.CSVLoader(Iasi))
+                .optMap(new Validate(Unit()))
 
-                    .optMap(new Validate(Unit()))
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                    .flatMap(Frame::stream)
-                    .batch(0)
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
 
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-
-
-            Units.update();
-
-        });
+        );
 
     }
 

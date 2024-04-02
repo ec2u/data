@@ -1,9 +1,9 @@
 @prefix ec2u: </terms/> .
 
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix dct: <http://purl.org/dc/terms/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 
 </> a ec2u:Dataset ;
@@ -13,12 +13,13 @@
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     void:rootResource ec2u:Dataset ;
-    rdfs:isDefinedBy </datasets/> .
+    rdfs:isDefinedBy </schemas/> .
 
 
 ########################################################################################################################
 
-ec2u:Dataset rdfs:subClassOf ec2u:Resoure, void:Dataset .
+ec2u:Dataset a owl:Class ;
+    rdfs:subClassOf void:Dataset .
 
 
 #### Standard Licenses #################################################################################################

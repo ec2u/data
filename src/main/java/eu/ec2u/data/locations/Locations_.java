@@ -64,7 +64,6 @@ public final class Locations_ {
 
                 .value(Schema.email, frame.value(Schema.email))
                 .value(Schema.telephone, frame.value(Schema.telephone))
-                .value(Schema.faxNumber, frame.value(Schema.faxNumber))
                 .value(Schema.streetAddress, frame.value(Schema.streetAddress));
     }
 

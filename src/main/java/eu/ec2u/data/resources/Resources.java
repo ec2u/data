@@ -22,8 +22,7 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.universities._Universities;
+import eu.ec2u.data.organizations.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
@@ -39,11 +38,9 @@ import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.term;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
+import static eu.ec2u.data.organizations.Organizations.Organization;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
@@ -68,25 +65,20 @@ public final class Resources extends Delegator {
             .collect(toUnmodifiableSet());
 
 
-    public static Shape Entry() {
+    public static Shape Resource() {
         return shape(
 
                 property("id", ID, required(id())),
 
                 property(RDF.TYPE, multiple(id())),
-                property(RDFS.LABEL, required(localized(), maxLength(1_000))),
-                property(RDFS.COMMENT, optional(localized(), maxLength(10_000))),
+                property(RDFS.LABEL, required(localized(), maxLength(1_000))), // !!! 1000
+                property(RDFS.COMMENT, optional(localized(), maxLength(10_000))), // !!! 1_000
 
-                property(RDFS.SEEALSO, multiple(id()))
-
-        );
-    }
-
-    public static Shape Resource() {
-        return shape(Resource, Entry(),
+                property(RDFS.SEEALSO, multiple(id())),
+                property(RDFS.ISDEFINEDBY, optional(id())),
 
                 property(synced, () -> optional(instant())),
-                property(owner, () -> optional(OrgOrganization())),
+                property(owner, () -> optional(Organization())),
 
                 property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
 
@@ -99,10 +91,15 @@ public final class Resources extends Delegator {
     }
 
 
+    public static void main(final String... args) {
+        exec(() -> create(Context, Resources.class, Resource()));
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Resources() {
-        delegate(handler(new Driver(virtual(Entry(),
+        delegate(handler(new Driver(virtual(Resource(),
 
                         property("members", RDFS.MEMBER, Resource())
 
@@ -131,21 +128,6 @@ public final class Resources extends Delegator {
                         )))
 
         ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Resources::create);
-    }
-
-
-    public static void create() {
-        txn(() -> {
-            Datasets.create(Resources.class, Context);
-            Datasets.update();
-        });
     }
 
 }

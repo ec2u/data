@@ -57,8 +57,8 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.universities.Universities.University;
-import static eu.ec2u.data.universities._Universities.Poitiers;
+import static eu.ec2u.data.organizations.universities.Universities.University;
+import static eu.ec2u.data.organizations.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 import static java.util.function.Predicate.not;

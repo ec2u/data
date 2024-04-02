@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataInfo } from "@ec2u/data/pages/meta";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, required } from "@metreeca/core";
 import { toEntryString } from "@metreeca/core/entry";
@@ -73,7 +73,7 @@ export function DataUniversities() {
 
 	const universities=useCollection(Universities, "members");
 
-	return <DataPage name={Universities} menu={<DataMeta/>}
+	return <DataPage name={Universities} menu={<DataInfo/>}
 
 		tray={<>
 

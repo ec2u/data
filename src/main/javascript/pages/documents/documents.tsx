@@ -15,7 +15,7 @@
  */
 
 import { Languages } from "@ec2u/data/languages";
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataInfo } from "@ec2u/data/pages/meta";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry, toEntryString } from "@metreeca/core/entry";
@@ -69,7 +69,7 @@ export function DataDocuments() {
 
 	const documents=useCollection(Documents, "members");
 
-	return <DataPage name={Documents} menu={<DataMeta/>}
+	return <DataPage name={Documents} menu={<DataInfo/>}
 
 		tray={<>
 

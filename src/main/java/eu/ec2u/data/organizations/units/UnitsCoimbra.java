@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.units;
+package eu.ec2u.data.organizations.units;
 
 import com.metreeca.http.jsonld.actions.Validate;
 import com.metreeca.http.rdf4j.actions.Upload;
@@ -22,27 +22,27 @@ import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 
-import static eu.ec2u.data.Data.txn;
-import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.data.universities._Universities.Turku;
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.organizations.units.Units.Unit;
+import static eu.ec2u.data.organizations.universities._Universities.Coimbra;
 import static java.lang.String.format;
 
-public final class UnitsTurku implements Runnable {
+public final class UnitsCoimbra implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/turku");
+    private static final IRI Context=iri(Units.Context, "/coimbra");
 
-    private static final String DataUrl="units-turku-url"; // vault label
+    private static final String DataUrl="units-coimbra-url"; // vault label
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new UnitsTurku().run());
+        exec(() -> new UnitsCoimbra().run());
     }
 
 
@@ -59,26 +59,21 @@ public final class UnitsTurku implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        txn(() -> {
+        update(connection -> Xtream.of(url)
 
-            Xtream.of(url)
+                .flatMap(new Units_.CSVLoader(Coimbra))
 
-                    .flatMap(new Units_.CSVLoader(Turku))
+                .optMap(new Validate(Unit()))
 
-                    .optMap(new Validate(Unit()))
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                    .flatMap(Frame::stream)
-                    .batch(0)
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
 
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-
-
-            Units.update();
-
-        });
+        );
 
     }
 

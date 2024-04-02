@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offerings;
-
-import org.eclipse.rdf4j.model.IRI;
-
-import static eu.ec2u.data.EC2U.item;
-
-public final class Offerings {
-
-    public static final IRI Context=item("/offerings/");
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Offerings() { }
-
-}
+/**
+ * EC2U research units and facilities.
+ */
+package eu.ec2u.data.organizations.units;

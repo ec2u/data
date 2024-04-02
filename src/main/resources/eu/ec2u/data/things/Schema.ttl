@@ -5,27 +5,22 @@
 @prefix owl:	<http://www.w3.org/2002/07/owl#> .
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
-</things/> a ec2u:Dataset ;
-	dct:title "EC2U Things"@en ;
-	dct:alternative "EC2U Knowledge Hub Things"@en ;
-	dct:description "Items of interest made available on the EC2U Knowledge Hub as described according to schema.org vocabularies."@en ;
-    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-	void:rootResource schema:Thing ;
-	rdfs:isDefinedBy </datasets/things>  .
-
-
-########################################################################################################################
-
 schema:Thing a owl:Class .
 
-schema:about a owl:ObjectProperty ;
-	rdfs:subPropertyOf dct:subject .
 
-schema:name a owl:DatatypeProperty ;
- 	rdfs:subPropertyOf dct:title .
+schema:EducationalOccupationalProgram a owl:Class ;
+    rdfs:subClassOf schema:Thing .
 
-schema:disambiguatingDescription a owl:DatatypeProperty ;
-	rdfs:subPropertyOf dct:description .
+schema:Course a owl:Class ;
+    rdfs:subClassOf schema:Thing .
+
+schema:courseCode a owl:DatatypeProperty ;
+    rdfs:subPropertyOf schema:identifier .
+
+
+schema:Organization a owl:Class ;
+    rdfs:subClassOf schema:Thing .
+
 
 schema:latitude a owl:DatatypeProperty ;
 	rdfs:subPropertyOf wgs84:lat .

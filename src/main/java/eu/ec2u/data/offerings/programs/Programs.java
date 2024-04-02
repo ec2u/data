@@ -23,25 +23,40 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
+import eu.ec2u.data.EC2U;
+import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.things.Schema;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.shape;
 
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.offerings.Offerings.Program;
+import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.owner;
 
 public final class Programs extends Delegator {
 
+    public static final IRI Context=item("/programs/");
+    public static final IRI Scheme=iri(Concepts.Context, "/program-topics");
+
+    public static final IRI Program=term("Program");
+
+
     public static Shape Programs() { return Dataset(Program()); }
 
-
-    public static void main(final String... args) { }
+    public static Shape Program() {
+        return shape(Program, Resource(), Schema.EducationalOccupationalProgram());
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,6 +107,18 @@ public final class Programs extends Delegator {
 
         );
 
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(Programs::create);
+    }
+
+
+    public static void create() {
+        EC2U.create(Context, Programs.class);
     }
 
 }

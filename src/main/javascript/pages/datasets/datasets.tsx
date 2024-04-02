@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DataMeta } from "@ec2u/data/pages/datasets/dataset";
+import { DataInfo } from "@ec2u/data/pages/meta";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -58,7 +58,7 @@ export const Datasets=immutable({
 		title: required(local),
 		alternative: optional(local),
 
-		entities: required(integer)
+		entities: optional(integer)
 
 	})
 
@@ -71,7 +71,7 @@ export function DataDatasets() {
 
 	const datasets=useCollection(Datasets, "members");
 
-	return <DataPage name={Datasets} menu={<DataMeta/>}
+	return <DataPage name={Datasets} menu={<DataInfo/>}
 
 		tray={< >
 
@@ -110,7 +110,7 @@ export function DataDatasets() {
 
 				title={<ToolLink>{{ id, label: ec2u(title) }}</ToolLink>}
 
-				tags={`${toIntegerString(entities)}`}
+				tags={entities && `${toIntegerString(entities)}`}
 				image={alternative && <span>{ec2u(toLocalString(alternative))}</span>}
 
 			>{

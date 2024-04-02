@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.units;
+package eu.ec2u.data.organizations.units;
 
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.jsonld.actions.Validate;
@@ -39,12 +39,12 @@ import java.util.Optional;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.repository;
-import static eu.ec2u.data.Data.txn;
+import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.concepts.OrganizationTypes.Centre;
 import static eu.ec2u.data.concepts.OrganizationTypes.Department;
+import static eu.ec2u.data.organizations.units.Units.Unit;
+import static eu.ec2u.data.organizations.universities._Universities.Pavia;
 import static eu.ec2u.data.resources.Resources.owner;
-import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.data.universities._Universities.Pavia;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
@@ -66,7 +66,7 @@ public final class UnitsPavia implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        txn(() -> {
+        update(connection -> {
 
             Xtream.of(Instant.EPOCH)
 
@@ -75,15 +75,13 @@ public final class UnitsPavia implements Runnable {
 
                     .optMap(new Validate(Unit()))
 
-                    .flatMap(com.metreeca.link.Frame::stream)
+                    .flatMap(Frame::stream)
                     .batch(0)
 
                     .forEach(new Upload()
                             .contexts(Context)
                             .clear(true)
                     );
-
-            Units.update();
 
         });
     }

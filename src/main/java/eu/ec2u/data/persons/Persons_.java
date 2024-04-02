@@ -19,7 +19,7 @@ package eu.ec2u.data.persons;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data.universities._Universities;
+import eu.ec2u.data.organizations.universities._Universities;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 

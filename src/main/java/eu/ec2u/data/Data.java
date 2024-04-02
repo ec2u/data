@@ -112,16 +112,6 @@ public final class Data extends Delegator {
         services(new Locator()).exec(tasks).clear();
     }
 
-    public static void txn(final Runnable... tasks) {
-        service(graph()).update(repositoryConnection -> {
-
-            for (final Runnable task : tasks) { task.run(); }
-
-            return null;
-
-        });
-    }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -136,7 +126,7 @@ public final class Data extends Delegator {
 
                 new Wrapper()
 
-                        .before(request -> request.base(EC2U.Base)), // define canonical base
+                        .before(request -> request.base(EC2U.BASE)), // define canonical base
 
                 new Router()
 

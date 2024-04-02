@@ -23,25 +23,39 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
+import eu.ec2u.data.EC2U;
+import eu.ec2u.data.things.Schema;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.shape;
 
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.offerings.Offerings.Course;
+import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.owner;
 
 public final class Courses extends Delegator {
 
+    public static final IRI Context=item("/courses/");
+
+    public static final IRI Course=term("Course");
+
+
     public static Shape Courses() { return Dataset(Course()); }
 
-
-    public static void main(final String... args) { }
+    public static Shape Course() {
+        return shape(Course, Resource(), Schema.Course());
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,14 +97,25 @@ public final class Courses extends Delegator {
                                 field(ID, iri()),
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                field(owner, iri()),
-                                field(ORG.CLASSIFICATION, iri())
+                                field(owner, iri())
 
                         )))
 
                 ))
 
         );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(final String... args) {
+        exec(Courses::create);
+    }
+
+
+    public static void create() {
+        EC2U.create(Context, Courses.class);
     }
 
 }

@@ -23,7 +23,6 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.datasets.Datasets;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -35,10 +34,9 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.Entry;
+import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.localized;
 
 public final class Concepts extends Delegator {
@@ -50,13 +48,12 @@ public final class Concepts extends Delegator {
 
 
     public static Shape Concepts() {
-        return Dataset(SKOSConceptScheme());
+        return Dataset(ConceptScheme());
     }
 
 
-
-    public static Shape SKOSConceptScheme() {
-        return shape(SKOS.CONCEPT_SCHEME, Entry(),
+    public static Shape ConceptScheme() {
+        return shape(SKOS.CONCEPT_SCHEME, Resource(),
 
                 property(DCTERMS.TITLE, required(localized())),
                 property(DCTERMS.ALTERNATIVE, optional(localized())),
@@ -64,27 +61,27 @@ public final class Concepts extends Delegator {
 
                 property(VOID.ENTITIES, required(integer())),
 
-                property(SKOS.HAS_TOP_CONCEPT, () -> multiple(SKOSConcept()))
+                property(SKOS.HAS_TOP_CONCEPT, () -> multiple(Concept()))
 
         );
     }
 
-    public static Shape SKOSConcept() {
-        return shape(SKOS.CONCEPT, Entry(),
+    public static Shape Concept() {
+        return shape(SKOS.CONCEPT, Resource(),
 
                 property(SKOS.PREF_LABEL, required(localized())),
                 property(SKOS.ALT_LABEL, multiple(localized())),
                 property(SKOS.DEFINITION, optional(localized())),
 
-                property(SKOS.IN_SCHEME, required(SKOSConceptScheme())),
-                property(SKOS.TOP_CONCEPT_OF, optional(SKOSConceptScheme())),
+                property(SKOS.IN_SCHEME, required(ConceptScheme())),
+                property(SKOS.TOP_CONCEPT_OF, optional(ConceptScheme())),
 
-                property(SKOS.BROADER_TRANSITIVE, () -> multiple(SKOSConcept())),
-                property(SKOS.NARROWER_TRANSITIVE, () -> multiple(SKOSConcept())),
+                property(SKOS.BROADER_TRANSITIVE, () -> multiple(Concept())),
+                property(SKOS.NARROWER_TRANSITIVE, () -> multiple(Concept())),
 
-                property(SKOS.BROADER, () -> multiple(SKOSConcept())),
-                property(SKOS.NARROWER, () -> multiple(SKOSConcept())),
-                property(SKOS.RELATED, () -> multiple(SKOSConcept()))
+                property(SKOS.BROADER, () -> multiple(Concept())),
+                property(SKOS.NARROWER, () -> multiple(Concept())),
+                property(SKOS.RELATED, () -> multiple(Concept()))
 
         );
     }
@@ -95,7 +92,7 @@ public final class Concepts extends Delegator {
     public Concepts() {
         delegate(handler(
 
-                new Driver(SKOSConceptScheme()),
+                new Driver(ConceptScheme()),
 
                 new Router()
 
@@ -120,7 +117,7 @@ public final class Concepts extends Delegator {
 
                         ))
 
-                        .path("/{scheme}", handler(new Driver(SKOSConceptScheme()), new Worker()
+                        .path("/{scheme}", handler(new Driver(ConceptScheme()), new Worker()
 
                                 .get(new Relator(frame(
 
@@ -136,7 +133,7 @@ public final class Concepts extends Delegator {
 
                         ))
 
-                        .path("/{scheme}/*", handler(new Driver(SKOSConcept()), new Worker()
+                        .path("/{scheme}/*", handler(new Driver(Concept()), new Worker()
 
                                 .get(new Relator(frame(
 
@@ -159,17 +156,17 @@ public final class Concepts extends Delegator {
 
 
     public static void create() {
-        txn(() -> {
-
-            Datasets.create(Concepts.class, Context);
-
-            update();
-
-        });
+        // EC2U.update(() -> {
+        //
+        //     EC2U.create(Context, Concepts.class);
+        //
+        //     update();
+        //
+        // });
     }
 
-    public static void update() {
-        txn(() -> Datasets.update(Concepts.class, Context));
-    }
+    // public static void update() {
+    //     EC2U.update(() -> { });
+    // }
 
 }

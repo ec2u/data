@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.units;
+package eu.ec2u.data.organizations.units;
 
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
@@ -47,9 +47,9 @@ import static com.metreeca.http.toolkits.Strings.split;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.concepts.OrganizationTypes.*;
+import static eu.ec2u.data.organizations.units.Units.Unit;
+import static eu.ec2u.data.organizations.universities._Universities.Salamanca;
 import static eu.ec2u.data.resources.Resources.owner;
-import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.function.Predicate.not;
@@ -86,7 +86,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                 .optMap(new Validate(Unit()))
 
-                .flatMap(com.metreeca.link.Frame::stream)
+                .flatMap(Frame::stream)
                 .batch(0)
 
                 .forEach(new Upload()

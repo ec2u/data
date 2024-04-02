@@ -14,26 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.units;
-
-import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
-
-public final class UnitsSalamanca implements Runnable {
-
-    public static void main(final String... args) {
-        exec(() -> new UnitsSalamanca().run());
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override public void run() {
-        txn(
-                new UnitsSalamancaData(),
-                new UnitsSalamancaVIs(),
-                Units::update
-        );
-    }
-
-}
+/**
+ * EC2U allied universities.
+ */
+package eu.ec2u.data.organizations.universities;

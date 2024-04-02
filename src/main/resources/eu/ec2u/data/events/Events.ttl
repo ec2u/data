@@ -16,7 +16,7 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     dct:available "2022-01-01"^^xsd:date ;
     void:rootResource ec2u:Event ;
-    rdfs:isDefinedBy </datasets/events> .
+    rdfs:isDefinedBy </schemas/events> .
 
 </concepts/event-topics> a skos:ConceptScheme ;
     dct:title "EC2U Local Event Topics"@en .

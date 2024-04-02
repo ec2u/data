@@ -46,7 +46,7 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.universities._Universities.Coimbra;
+import static eu.ec2u.data.organizations.universities._Universities.Coimbra;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 public final class EventsCoimbraCity implements Runnable {

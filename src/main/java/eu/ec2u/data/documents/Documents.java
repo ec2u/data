@@ -25,7 +25,6 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
@@ -41,12 +40,11 @@ import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.txn;
 import static eu.ec2u.data.EC2U.term;
-import static eu.ec2u.data.concepts.Concepts.SKOSConcept;
+import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.organizations.Organizations.OrgOrganization;
-import static eu.ec2u.data.persons.Persons.FOAFPerson;
+import static eu.ec2u.data.organizations.Organizations.Organization;
+import static eu.ec2u.data.persons.Persons.Person;
 import static eu.ec2u.data.resources.Resources.*;
 
 public final class Documents extends Delegator {
@@ -83,16 +81,16 @@ public final class Documents extends Delegator {
                 property(DCTERMS.MODIFIED, optional(date())),
                 property(DCTERMS.VALID, optional(string(), pattern(ValidPattern.pattern()))),
 
-                property(DCTERMS.CREATOR, optional(FOAFPerson())),
-                property(DCTERMS.CONTRIBUTOR, multiple(FOAFPerson())),
-                property(DCTERMS.PUBLISHER, optional(OrgOrganization())),
+                property(DCTERMS.CREATOR, optional(Person())),
+                property(DCTERMS.CONTRIBUTOR, multiple(Person())),
+                property(DCTERMS.PUBLISHER, optional(Organization())),
 
                 property(DCTERMS.LICENSE, optional(string())),
                 property(DCTERMS.RIGHTS, optional(string())),
 
-                property(DCTERMS.TYPE, multiple(SKOSConcept())),
-                property(DCTERMS.SUBJECT, multiple(SKOSConcept())),
-                property(DCTERMS.AUDIENCE, multiple(SKOSConcept())),
+                property(DCTERMS.TYPE, multiple(Concept())),
+                property(DCTERMS.SUBJECT, multiple(Concept())),
+                property(DCTERMS.AUDIENCE, multiple(Concept())),
 
                 property(DCTERMS.RELATION, () -> shape(multiple(Document())))
 
@@ -158,18 +156,18 @@ public final class Documents extends Delegator {
 
 
     public static void create() {
-        txn(
-                () -> Datasets.create(Documents.class, Context),
-                Documents::update
-        );
+        // EC2U.update(
+        //         () -> EC2U.create(Context, Documents.class),
+        //         Documents::update
+        // );
     }
 
     public static void update() {
-        txn(
-                () -> Datasets.update(Documents.class, Context),
-                Concepts::update, // ;( types/topics/audiences
-                Datasets::update
-        );
+        // EC2U.update(
+        //         () -> { },
+        //         Concepts::update, // ;( types/topics/audiences
+        //         () -> { }
+        // );
     }
 
 }

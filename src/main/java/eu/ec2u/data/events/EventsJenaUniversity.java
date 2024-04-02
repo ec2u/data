@@ -56,8 +56,8 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 
-import static eu.ec2u.data.universities.Universities.University;
-import static eu.ec2u.data.universities._Universities.Jena;
+import static eu.ec2u.data.organizations.universities.Universities.University;
+import static eu.ec2u.data.organizations.universities._Universities.Jena;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;

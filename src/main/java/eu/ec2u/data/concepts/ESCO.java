@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-/**
- * EC2U research units and facilities.
- */
-package eu.ec2u.data.units;
+package eu.ec2u.data.concepts;
+
+import org.eclipse.rdf4j.model.IRI;
+
+import static com.metreeca.http.rdf.Values.iri;
+
+public final class ESCO {
+
+    public static final IRI Scheme=iri(Concepts.Context, "/esco");
+
+}

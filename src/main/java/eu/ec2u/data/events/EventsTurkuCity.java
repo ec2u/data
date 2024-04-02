@@ -53,7 +53,7 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.universities._Universities.Turku;
+import static eu.ec2u.data.organizations.universities._Universities.Turku;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;

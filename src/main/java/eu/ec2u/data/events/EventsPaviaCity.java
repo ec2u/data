@@ -48,7 +48,7 @@ import static com.metreeca.http.rdf.Shift.Step.step;
 import static com.metreeca.http.rdf.Values.*;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.universities._Universities.Pavia;
+import static eu.ec2u.data.organizations.universities._Universities.Pavia;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {

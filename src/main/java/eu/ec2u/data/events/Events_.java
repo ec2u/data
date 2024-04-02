@@ -37,7 +37,7 @@ import static com.metreeca.http.services.Logger.time;
 import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
 
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.EC2U.BASE;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 
@@ -59,7 +59,7 @@ final class Events_ {
                 )
 
                 .flatMap(new TupleQuery()
-                        .base(Base)
+                        .base(BASE)
                         .binding("publisher", publisher)
                         .dflt(context)
                 )
@@ -117,7 +117,7 @@ final class Events_ {
             time(() -> Stream.of(text(resource(Events_.class, ".ul")))
 
                     .forEach(new Update()
-                            .base(Base)
+                            .base(BASE)
                             .dflt(context)
                             .insert(context)
                             .remove(context)

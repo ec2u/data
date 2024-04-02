@@ -60,7 +60,7 @@ import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Strings.clip;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.universities._Universities.Jena;
+import static eu.ec2u.data.organizations.universities._Universities.Jena;
 import static eu.ec2u.work.JSONLD.jsonld;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.util.function.Predicate.not;
