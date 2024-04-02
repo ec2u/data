@@ -40,6 +40,7 @@ import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
@@ -98,6 +99,11 @@ public final class Documents extends Delegator {
     }
 
 
+    public static void main(final String... args) {
+        exec(() -> create(Context, Documents.class));
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Documents() {
@@ -145,29 +151,6 @@ public final class Documents extends Delegator {
 
                 ))
         );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Documents::create);
-    }
-
-
-    public static void create() {
-        // EC2U.update(
-        //         () -> EC2U.create(Context, Documents.class),
-        //         Documents::update
-        // );
-    }
-
-    public static void update() {
-        // EC2U.update(
-        //         () -> { },
-        //         Concepts::update, // ;( types/topics/audiences
-        //         () -> { }
-        // );
     }
 
 }

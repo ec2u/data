@@ -30,5 +30,4 @@
 
 ########################################################################################################################
 
-ec2u:Document a owl:Class ;
-	rdfs:subClassOf ec2u:Resource .
+ec2u:Document a owl:Class .

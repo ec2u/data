@@ -16,9 +16,12 @@
 
 package eu.ec2u.data.documents;
 
+import com.metreeca.http.jsonld.actions.Validate;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Logger;
 import com.metreeca.http.services.Vault;
 import com.metreeca.http.toolkits.Strings;
+import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
@@ -46,6 +49,7 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.lower;
 import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.concepts.Concepts_.concept;
 import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.data.persons.Persons_.person;
@@ -101,25 +105,21 @@ final class Documents_ {
                     )));
 
 
-            // update(
-            //
-            //         () -> Xtream.of(url)
-            //
-            //                 .flatMap(this)
-            //
-            //                 .optMap(new Validate(Document()))
-            //
-            //                 .flatMap(Frame::stream)
-            //                 .batch(0)
-            //
-            //                 .forEach(new Upload()
-            //                         .contexts(context)
-            //                         .clear(true)
-            //                 ),
-            //
-            //         Documents::update
-            //
-            // );
+            update(connection -> Xtream.of(url)
+
+                    .flatMap(this)
+
+                    .optMap(new Validate(Document()))
+
+                    .flatMap(Frame::stream)
+                    .batch(0)
+
+                    .forEach(new Upload()
+                            .contexts(context)
+                            .clear(true)
+                    )
+
+            );
         }
 
 
