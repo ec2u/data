@@ -19,7 +19,7 @@
 
 - filter out immaterial events (e.g. children, …)
 
-## 2024-04-8
+## 2024-04-08
 
 * Restored using the new API @ https://api.hel.fi/linkedevents/v1/event/
 

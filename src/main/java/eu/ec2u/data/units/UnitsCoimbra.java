@@ -28,6 +28,7 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
@@ -150,13 +151,24 @@ public final class UnitsCoimbra implements Runnable {
                 field(FOAF.MBOX, json.string("email").map(Frame::literal)),
 
                 field(ORG.IDENTIFIER, literal(id)),
-                field(SKOS.PREF_LABEL, json.string("name_en").map(v -> literal(v, "en"))),
-                field(SKOS.PREF_LABEL, json.string("name_pt").map(v -> literal(v, Coimbra.language))),
-                field(SKOS.ALT_LABEL, json.string("acronym_en").map(v -> literal(v, "en"))),
-                field(SKOS.ALT_LABEL, json.string("acronym_pr").map(v -> literal(v, Coimbra.language))),
-                field(SKOS.DEFINITION),
+                field(SKOS.PREF_LABEL, json.string("name_en").filter(not(String::isEmpty)).map(v -> literal(v, "en"))),
+                field(SKOS.PREF_LABEL, json.string("name_pt").filter(not(String::isEmpty)).map(v -> literal(v, Coimbra.language))),
+                field(SKOS.ALT_LABEL, json.string("acronym_en").filter(not(String::isEmpty)).map(v -> literal(v, "en"))),
+                field(SKOS.ALT_LABEL, json.string("acronym_pt").filter(not(String::isEmpty)).map(v -> literal(v, Coimbra.language))),
+                field(SKOS.DEFINITION, json.string("description_en").filter(not(String::isEmpty)).map(v -> literal(v, "en"))),
+                field(SKOS.DEFINITION, json.string("description_pt").filter(not(String::isEmpty)).map(v -> literal(v, Coimbra.language))),
 
-                // field(reverse(ORG.HEAD_OF), json.string("acronym_pr").map(Frame::literal)), // !!! parse as frame
+                field(reverse(ORG.HEAD_OF), json.string("surname").flatMap(surname ->
+                        json.string("forename").map(forename -> frame(
+
+                                field(ID, item(Persons.Context, Coimbra, format("%s, %s", surname, forename))),
+                                field(TYPE, FOAF.PERSON),
+
+                                field(FOAF.GIVEN_NAME, literal(forename)),
+                                field(FOAF.FAMILY_NAME, literal(surname))
+
+                        ))
+                )),
 
                 field(ORG.UNIT_OF, Coimbra.id),
                 field(ORG.CLASSIFICATION, json.string("type_en").flatMap(this::type)),

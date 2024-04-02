@@ -6,9 +6,14 @@
 
 * data loaded from dedicated API
 
+## 2022-05-03
+
+* Ingest description and head name
+
 ## 2022-04-19
 
 * upgrade to dedicated API
+*
 
 ## 2022-12-13
 
@@ -27,11 +32,15 @@
     "web_url": "https://www.uc.pt/fluc/uidief/",
     "email": "iestudosfilosoficos@gmail.com",
     "head": "Mário Avelino Santiago de Carvalho",
+    "surname": "Mário",
+    "forename": "Carvalho",
     "name_en": "Institute for Philosophical Studies",
     "knowledge_branch_en": "Arts and Humanities",
     "type_en": "Institute",
     "acronym_en": "IEF",
-    "logo_Base64": "data:image/png;base64,…",
+    "logo_Base64": "",
+    "description_en": "The IEF is dedicated to research in Philosophy. Based at the…",
+    "description_pt": "",
     "topics": [
       {
         "name_pt": "História da Filosofia e da Ética",
@@ -46,7 +55,7 @@
         "name_en": " Philosophy of Technics"
       }
     ]
-  }
+  },
   …
 ]
 ```

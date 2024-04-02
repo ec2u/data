@@ -77,7 +77,7 @@ public final class Agents extends Delegator {
                                 frame(
 
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", ANY_LOCALE)),
+                                        field(RDFS.LABEL, literal("", "en")),
 
                                         field(partner, iri())
 
