@@ -53,7 +53,6 @@ import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 
 import static eu.ec2u.data.events.Events.*;
@@ -183,7 +182,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                     try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
 
-                        final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
+                        final Collection<Statement> model=rdf(input, null, new JSONLDParser());
 
                         return frame(Event, model)
                                 .frames(reverse(RDF.TYPE));

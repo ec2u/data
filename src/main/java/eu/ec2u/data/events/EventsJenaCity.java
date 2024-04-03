@@ -22,6 +22,7 @@ import com.metreeca.http.actions.Fetch;
 import com.metreeca.http.actions.GET;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
+import com.metreeca.http.jsonld.formats.JSONLD;
 import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.rdf.Values;
 import com.metreeca.http.work.Xtream;
@@ -36,18 +37,21 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import javax.json.Json;
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
@@ -56,14 +60,14 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Shift.Seq.seq;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Strings.clip;
+import static com.metreeca.link.Frame.reverse;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.universities._Universities.Jena;
-import static eu.ec2u.work.JSONLD.jsonld;
-import static eu.ec2u.work.validation.Validators.validate;
 import static java.util.function.Predicate.not;
 
 public final class EventsJenaCity implements Runnable {
@@ -95,7 +99,8 @@ public final class EventsJenaCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .pipe(events -> validate(Event(), Set.of(Event), events))
+                .flatMap(Frame::stream)
+                .batch(0)
 
                 .forEach(new Events_.Loader(Context));
     }
@@ -161,7 +166,23 @@ public final class EventsJenaCity implements Runnable {
                         .string("//script[@type='application/ld+json']")
                 )
 
-                .flatMap(json -> jsonld(json, Event));
+                .flatMap(json -> {
+
+                    try {
+
+                        final Collection<Statement> model=rdf(new StringReader(json), "", new JSONLDParser());
+
+                        return frame(Event, model).frames(reverse(RDF.TYPE));
+
+                    } catch ( final FormatException e ) {
+
+                        service(logger()).warning(JSONLD.class, e.getMessage());
+
+                        return Stream.empty();
+
+                    }
+
+                });
     }
 
     private Optional<Frame> event(final Frame frame) {

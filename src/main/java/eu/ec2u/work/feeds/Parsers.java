@@ -31,7 +31,6 @@ public final class Parsers {
 
     private static final Pattern URIPattern=Pattern.compile("^https?://\\S+$");
     private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
-    private static final Pattern PersonPattern=Pattern.compile("([^,]+),([^(]+)(?:\\(([^)]+)\\))?");
 
 
     private Parsers() { }

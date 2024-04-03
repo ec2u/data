@@ -118,8 +118,6 @@ public final class OfferingsJena implements Runnable {
 
                 .optMap(new GET<>(new HTML()))
 
-                .peek(document -> System.out.println(document))
-
                 .map(XPath::new)
 
                 .flatMap(xpath -> xpath
