@@ -53,7 +53,8 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.organizations.universities._Universities.Turku;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.universities._Universities.Turku;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
@@ -206,21 +207,21 @@ public final class EventsTurkuCity implements Runnable {
                     .values(Schema.disambiguatingDescription, shortDescription)
                     .values(Schema.description, fullDescription)
 
-                    .value(Schema.isAccessibleForFree, json.bools("offers.*.is_free")
+                    .value(isAccessibleForFree, json.bools("offers.*.is_free")
                             .filter(v -> v)
                             .findFirst()
                             .map(Values::literal)
                     )
 
-                    .value(Schema.eventStatus, json.string("event_status")
-                            .filter(v -> stream(Schema.EventStatus.values()).map(Enum::name).anyMatch(v::equals))
-                            .map(status -> iri(Schema.Namespace, status))
+                    .value(eventStatus, json.string("event_status")
+                            .filter(v -> stream(Events.EventStatus.values()).map(Enum::name).anyMatch(v::equals))
+                            .map(Schema::schema)
                     )
 
-                    .frames(Schema.location, location(json))
+                    .frames(location, location(json))
 
-                    .value(Schema.startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME)))
-                    .value(Schema.endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
+                    .value(startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME)))
+                    .value(endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME)))
 
                     // !!! in_language
                     // !!! audience
@@ -273,7 +274,7 @@ public final class EventsTurkuCity implements Runnable {
 
         return frame(item(Locations.Context, id))
 
-                .value(RDF.TYPE, json.string("@type").map(Schema::term).orElse(Schema.Place))
+                .value(RDF.TYPE, json.string("@type").map(Schema::schema).orElse(Schema.Place))
 
                 .value(Schema.url, iri(id))
 

@@ -56,8 +56,9 @@ import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 
-import static eu.ec2u.data.organizations.universities.Universities.University;
-import static eu.ec2u.data.organizations.universities._Universities.Jena;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.universities.Universities.University;
+import static eu.ec2u.data.universities._Universities.Jena;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
@@ -184,7 +185,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                         final Collection<Statement> model=normalize(rdf(input, null, new JSONLDParser()));
 
-                        return frame(Schema.Event, model)
+                        return frame(Event, model)
                                 .frames(reverse(RDF.TYPE));
 
                     } catch ( final FormatException e ) {
@@ -214,13 +215,13 @@ public final class EventsJenaUniversity implements Runnable {
 
         return frame(iri(Events.Context, frame.skolemize(Schema.url)))
 
-                .value(RDF.TYPE, Events.Event)
+                .value(RDF.TYPE, Event)
 
                 .value(Resources.owner, Jena.Id)
 
                 .value(DCTERMS.SOURCE, frame.value(Schema.url))
 
-                .value(DCTERMS.CREATED, frame.value(Schema.dateCreated)
+                .value(DCTERMS.CREATED, frame.value(dateCreated)
                         .flatMap(Values::literal)
                         .map(Literal::temporalAccessorValue)
                         .map(OffsetDateTime::from)
@@ -228,7 +229,7 @@ public final class EventsJenaUniversity implements Runnable {
                         .map(Values::literal)
                 )
 
-                .value(DCTERMS.MODIFIED, frame.value(Schema.dateModified)
+                .value(DCTERMS.MODIFIED, frame.value(dateModified)
                         .flatMap(Values::literal)
                         .map(Literal::temporalAccessorValue)
                         .map(OffsetDateTime::from)
@@ -249,16 +250,16 @@ public final class EventsJenaUniversity implements Runnable {
                 .value(Schema.image, frame.value(Schema.image))
                 .value(Schema.url, frame.value(Schema.url))
 
-                .bool(Schema.isAccessibleForFree, frame.bool(Schema.isAccessibleForFree))
+                .bool(isAccessibleForFree, frame.bool(isAccessibleForFree))
 
                 .string(Schema.inLanguage, frame.string(Schema.inLanguage) // retain only language
                         .map(tag -> tag.toLowerCase(Locale.ROOT).replaceAll("^([a-z]+).*$", "$1"))
                 )
 
-                .value(Schema.startDate, datetime(frame.string(Schema.startDate)))
-                .value(Schema.endDate, datetime(frame.string(Schema.endDate)))
+                .value(startDate, datetime(frame.string(startDate)))
+                .value(endDate, datetime(frame.string(endDate)))
 
-                .frame(Schema.organizer, frame.frame(Schema.organizer)
+                .frame(organizer, frame.frame(organizer)
                         .map(organizer -> Organizations_.organization(organizer, "de"))
                 )
 

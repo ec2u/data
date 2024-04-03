@@ -26,9 +26,7 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
@@ -46,18 +44,39 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.synced;
+import static eu.ec2u.data.things.Schema.*;
 
 public final class Events extends Delegator {
 
     public static final IRI Context=item("/events/");
     public static final IRI Scheme=iri(Concepts.Context, "/event-topics");
 
-    public static final IRI Event=term("Event");
     public static final IRI _Publisher=term("Publisher");
     public static final IRI _College=term("College");
     public static final IRI _Association=term("Association");
     public static final IRI _City=term("City");
+
+
+    //// Creative Work /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI dateCreated=schema("dateCreated");
+    public static final IRI dateModified=schema("dateModified");
+
+
+    //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public enum EventStatus { EventScheduled, EventMovedOnline, EventPostponed, EventRescheduled, EventCancelled }
+
+    public static final IRI Event=schema("Event");
+
+    public static final IRI organizer=schema("organizer");
+    public static final IRI isAccessibleForFree=schema("isAccessibleForFree");
+    public static final IRI eventStatus=schema("eventStatus");
+    public static final IRI location=schema("location");
+    public static final IRI eventAttendanceMode=schema("eventAttendanceMode");
+    public static final IRI startDate=schema("startDate");
+    public static final IRI endDate=schema("endDate");
 
 
     public static Shape Events() {
@@ -65,11 +84,21 @@ public final class Events extends Delegator {
     }
 
     public static Shape Event() {
-        return shape(Event, Resource(), Schema.Event(),
+        return shape(Event, Thing(),
 
-                property(RDF.TYPE, hasValue(Event)),
+                property(eventStatus, optional(id())),
 
-                property(DCTERMS.MODIFIED, required(instant())) // housekeeping timestamp
+                property(startDate, optional(dateTime())),
+                property(endDate, optional(dateTime())),
+
+                property(inLanguage, multiple(string())),
+                property(isAccessibleForFree, optional(bool())),
+                property(eventAttendanceMode, multiple(id())),
+
+                property(location, multiple(Location())),
+                property(organizer, multiple(Organization())),
+
+                property(synced, required(instant())) // housekeeping timestamp
 
         );
     }

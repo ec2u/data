@@ -6,7 +6,7 @@ This dataset is mainly intended to support event search on the [My Mobile Tutor]
 
 ![event data model](index/events.svg)
 
-EC2U events are described using a controlled subset of the [schema:Event](https://schema.org/Event) data model, with the
+EC2U events are described using a controlled subset of the [schema:Event](http://schema.org/Event) data model, with the
 following major deviations:
 
 * only events of interest to the academic population are included, so properties like `schema:typicalAgeRange` or

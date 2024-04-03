@@ -49,7 +49,9 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.organizations.universities._Universities.Turku;
+import static eu.ec2u.data.events.Events.endDate;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
 
 public final class EventsTurkuTYY implements Runnable {
@@ -153,8 +155,8 @@ public final class EventsTurkuTYY implements Runnable {
                                         disambiguatingDescription.map(s -> literal(s, lang))
                                 )
 
-                                .value(Schema.startDate, json.string("start_date").flatMap(this::datetime))
-                                .value(Schema.endDate, json.string("end_date").flatMap(this::datetime))
+                                .value(startDate, json.string("start_date").flatMap(this::datetime))
+                                .value(endDate, json.string("end_date").flatMap(this::datetime))
 
                         // ;-( apparently no longer included after 2022-09-22
 

@@ -60,7 +60,8 @@ import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Strings.clip;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.organizations.universities._Universities.Jena;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.universities._Universities.Jena;
 import static eu.ec2u.work.JSONLD.jsonld;
 import static eu.ec2u.work.validation.Validators.validate;
 import static java.util.function.Predicate.not;
@@ -94,7 +95,7 @@ public final class EventsJenaCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .pipe(events -> validate(Events.Event(), Set.of(Events.Event), events))
+                .pipe(events -> validate(Event(), Set.of(Event), events))
 
                 .forEach(new Events_.Loader(Context));
     }
@@ -160,7 +161,7 @@ public final class EventsJenaCity implements Runnable {
                         .string("//script[@type='application/ld+json']")
                 )
 
-                .flatMap(json -> jsonld(json, Schema.Event));
+                .flatMap(json -> jsonld(json, Event));
     }
 
     private Optional<Frame> event(final Frame frame) {
@@ -180,11 +181,11 @@ public final class EventsJenaCity implements Runnable {
 
             // repeating events are described multiple times with different start dates
 
-            return frame(iri(Events.Context, frame.skolemize(Schema.url, Schema.startDate)))
+            return frame(iri(Events.Context, frame.skolemize(Schema.url, startDate)))
 
-                    .values(RDF.TYPE, Events.Event)
+                    .values(RDF.TYPE, Event)
 
-                    .frames(DCTERMS.SUBJECT, frame.string(Schema.term("keywords")).stream()
+                    .frames(DCTERMS.SUBJECT, frame.string(Schema.schema("keywords")).stream()
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))
                             .filter(not(keyword -> keyword.startsWith("import_")))
                             .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
@@ -199,8 +200,8 @@ public final class EventsJenaCity implements Runnable {
 
                     .value(DCTERMS.SOURCE, url)
                     .frame(DCTERMS.PUBLISHER, Publisher)
-                    .value(DCTERMS.CREATED, frame.value(Schema.dateCreated).map(this::datetime))
-                    .value(DCTERMS.MODIFIED, frame.value(Schema.dateModified).map(this::datetime)
+                    .value(DCTERMS.CREATED, frame.value(dateCreated).map(this::datetime))
+                    .value(DCTERMS.MODIFIED, frame.value(dateModified).map(this::datetime)
                             .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
                     )
 
@@ -212,14 +213,14 @@ public final class EventsJenaCity implements Runnable {
                     .value(Schema.description, description)
                     .value(Schema.disambiguatingDescription, disambiguatingDescription)
 
-                    .value(Schema.startDate, frame.value(Schema.startDate).map(this::datetime))
-                    .value(Schema.endDate, frame.value(Schema.endDate).map(this::datetime))
+                    .value(startDate, frame.value(startDate).map(this::datetime))
+                    .value(endDate, frame.value(endDate).map(this::datetime))
 
-                    .frame(Schema.organizer, frame.frame(Schema.organizer)
+                    .frame(organizer, frame.frame(organizer)
                             .flatMap(location -> thing(location, Organizations.Context))
                     )
 
-                    .frame(Schema.location, frame.frame(Schema.location)
+                    .frame(location, frame.frame(location)
                             .flatMap(location -> thing(location, Locations.Context))
                     );
 

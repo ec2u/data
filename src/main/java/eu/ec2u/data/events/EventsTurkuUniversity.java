@@ -61,8 +61,9 @@ import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.http.toolkits.Strings.clip;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.organizations.universities.Universities.University;
-import static eu.ec2u.data.organizations.universities._Universities.Turku;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.universities.Universities.University;
+import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
@@ -228,11 +229,11 @@ public final class EventsTurkuUniversity implements Runnable {
                 .values(Schema.description, description)
                 .values(Schema.disambiguatingDescription, excerpt)
 
-                .value(Schema.startDate, json.string("start_time").map(timestamp2 -> datetime(timestamp2, now)))
-                .value(Schema.endDate, json.string("end_time").map(timestamp3 -> datetime(timestamp3, now)))
+                .value(startDate, json.string("start_time").map(timestamp2 -> datetime(timestamp2, now)))
+                .value(endDate, json.string("end_time").map(timestamp3 -> datetime(timestamp3, now)))
 
-                .frame(Schema.location, json.path("location").flatMap(this::location))
-                .frames(Schema.organizer, json.paths("additional_information.contact").optMap(this::organizer))
+                .frame(location, json.path("location").flatMap(this::location))
+                .frames(organizer, json.paths("additional_information.contact").optMap(this::organizer))
 
         );
 

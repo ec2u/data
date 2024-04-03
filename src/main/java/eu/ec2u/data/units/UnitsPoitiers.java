@@ -14,35 +14,33 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations.units;
+package eu.ec2u.data.units;
 
-import com.metreeca.http.jsonld.actions.Validate;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
+import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 
-import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.organizations.units.Units.Unit;
-import static eu.ec2u.data.organizations.universities._Universities.Coimbra;
+import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.lang.String.format;
 
-public final class UnitsCoimbra implements Runnable {
+public final class UnitsPoitiers implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/coimbra");
+    private static final IRI Context=iri(Units.Context, "/poitiers");
 
-    private static final String DataUrl="units-coimbra-url"; // vault label
+    private static final String DataUrl="units-poitiers-url"; // vault label
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitsCoimbra().run());
+        Data.exec(() -> new UnitsPoitiers().run());
     }
 
 
@@ -61,9 +59,7 @@ public final class UnitsCoimbra implements Runnable {
 
         update(connection -> Xtream.of(url)
 
-                .flatMap(new Units_.CSVLoader(Coimbra))
-
-                .optMap(new Validate(Unit()))
+                .flatMap(new Units_.CSVLoader(Poitiers))
 
                 .flatMap(Frame::stream)
                 .batch(0)

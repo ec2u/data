@@ -50,7 +50,8 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
-import static eu.ec2u.data.organizations.universities._Universities.Salamanca;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 
@@ -161,7 +162,7 @@ public final class EventsSalamancaCityTO implements Runnable {
                     .value(Schema.description, description)
                     .value(Schema.disambiguatingDescription, disambiguatingDescription)
 
-                    .value(Schema.startDate, item.string("title")
+                    .value(startDate, item.string("title")
                             .map(v -> FeedDateTime.parse(v, new ParsePosition(0)))
                             .map(v -> LocalDateTime.from(v).atOffset(Salamanca.TimeZone.getRules().getOffset(now)))
                             .map(Values::literal)

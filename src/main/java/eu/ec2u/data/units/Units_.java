@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations.units;
+package eu.ec2u.data.units;
 
 import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.toolkits.Strings;
@@ -24,8 +24,8 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.organizations.universities._Universities;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import eu.ec2u.work.focus._Cursor;
@@ -57,8 +57,8 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.concepts.OrganizationTypes.InstituteVirtual;
-import static eu.ec2u.data.organizations.units.Units.*;
 import static eu.ec2u.data.persons.Persons_.person;
+import static eu.ec2u.data.units.Units.*;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.function.Predicate.not;

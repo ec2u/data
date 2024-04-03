@@ -54,6 +54,7 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.events.Events.*;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
@@ -225,16 +226,16 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 .value(Schema.description, description)
                 .value(Schema.disambiguatingDescription, excerpt)
 
-                .value(Schema.startDate, event.string("start_date").map(timestamp -> datetime(timestamp, zone, now)))
-                .value(Schema.endDate, event.string("end_date").map(timestamp -> datetime(timestamp, zone, now)))
+                .value(startDate, event.string("start_date").map(timestamp -> datetime(timestamp, zone, now)))
+                .value(endDate, event.string("end_date").map(timestamp -> datetime(timestamp, zone, now)))
 
-                .bool(Schema.isAccessibleForFree, event
+                .bool(isAccessibleForFree, event
                         .string("cost").filter(v -> v.equalsIgnoreCase("livre")) // !!! localize
                         .isPresent()
                 )
 
-                .frame(Schema.location, event.path("venue").flatMap(this::location))
-                .frames(Schema.organizer, event.paths("organizer.*").optMap(this::organizer))
+                .frame(location, event.path("venue").flatMap(this::location))
+                .frames(organizer, event.paths("organizer.*").optMap(this::organizer))
 
         );
 

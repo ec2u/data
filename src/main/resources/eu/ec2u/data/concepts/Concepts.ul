@@ -11,9 +11,9 @@ insert {
 
 } where {
 
-    ?scheme a skos:ConceptScheme ;
-        dct:title ?title .
+    ?scheme a skos:ConceptScheme .
 
+    optional { ?scheme dct:title ?title }
     optional { ?scheme dct:alternative ?alternative }
     optional { ?scheme dct:description ?description }
 
@@ -54,9 +54,9 @@ insert {
 
 } where {
 
-    ?concept a skos:Concept ;
-        skos:prefLabel ?pref .
+    ?concept a skos:Concept .
 
+    optional { ?concept skos:prefLabel ?pref }
     optional { ?concept skos:definition ?definition }
 
 } # complete concept entry

@@ -76,7 +76,7 @@
             </g>
             <g id="Group_391">
                 <g id="Graphic_392">
-                    <a xl:href="https://schema.org/Course">
+                    <a xl:href="http://schema.org/Course">
                         <rect x="-353.35897" y="887.2441" width="174.1538" height="17" fill="white"/>
                         <rect x="-353.35897" y="887.2441" width="174.1538" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -199,9 +199,9 @@
                 </g>
             </g>
             <g id="Graphic_366">
-                <a xl:href="https://schema.org/">
+                <a xl:href="http://schema.org/">
                     <text transform="translate(66.6712 445.6955)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;https://schema.org/&gt;</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;http://schema.org/&gt;</tspan>
                     </text>
                 </a>
             </g>
@@ -276,7 +276,7 @@
             </g>
             <g id="Group_346">
                 <g id="Graphic_347">
-                    <a xl:href="https://schema.org/EducationalOccupationalProgram">
+                    <a xl:href="http://schema.org/EducationalOccupationalProgram">
                         <rect x="-357.47006" y="750.5862" width="182.37598" height="17" fill="white"/>
                         <rect x="-357.47006" y="750.5862" width="182.37598" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -494,7 +494,7 @@
             </g>
             <g id="Group_428">
                 <g id="Graphic_429">
-                    <a xl:href="https://schema.org/CourseInstance">
+                    <a xl:href="http://schema.org/CourseInstance">
                         <rect x="136.91119" y="939.7441" width="109.6289" height="17" fill="white"/>
                         <rect x="136.91119" y="939.7441" width="109.6289" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>

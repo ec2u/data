@@ -57,7 +57,7 @@ export const Courses=immutable({
 		label: required(local),
 		comment: optional((local)),
 
-		university: required({
+		owner: optional({
 				id: required(id),
 				label: required(local)
 			}
@@ -81,7 +81,7 @@ export function DataCourses() {
 			}</ToolKeywords>
 
 			<ToolOptions placeholder={"University"}>{
-				useOptions(courses, "university", { type: entry({ id: "", label: required(local) }) })
+				useOptions(courses, "owner", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Level"}>{
@@ -124,7 +124,7 @@ export function DataCourses() {
 			label,
 			comment,
 
-			university
+			owner
 
 		}) =>
 
@@ -132,7 +132,7 @@ export function DataCourses() {
 			<ToolCard key={id} side={"end"}
 
 				title={<ToolLink>{{ id, label }}</ToolLink>}
-				tags={<span>{toEntryString(university)}</span>}
+				tags={owner && <span>{toEntryString(owner)}</span>}
 
 			>{
 

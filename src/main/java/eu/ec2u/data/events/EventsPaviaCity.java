@@ -48,7 +48,8 @@ import static com.metreeca.http.rdf.Shift.Step.step;
 import static com.metreeca.http.rdf.Values.*;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.organizations.universities._Universities.Pavia;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.universities._Universities.Pavia;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
@@ -110,7 +111,7 @@ public final class EventsPaviaCity implements Runnable {
                 .flatMap(new Microdata())
                 .batch(0)
 
-                .flatMap(model -> frame(Schema.Event, model)
+                .flatMap(model -> frame(Event, model)
                         .strings(seq(reverse(RDF.TYPE), Schema.url))
                 )
 
@@ -128,7 +129,7 @@ public final class EventsPaviaCity implements Runnable {
 
                         .batch(0)
 
-                        .flatMap(model -> frame(Schema.Event, model)
+                        .flatMap(model -> frame(Event, model)
                                 .values(reverse(RDF.TYPE))
                                 .map(event -> frame(event, model)
                                         .value(DCTERMS.SOURCE, iri(url))
@@ -141,7 +142,7 @@ public final class EventsPaviaCity implements Runnable {
     private Frame event(final Frame frame) {
         return frame(iri(Events.Context, frame.skolemize(DCTERMS.SOURCE)))
 
-                .values(RDF.TYPE, Events.Event)
+                .values(RDF.TYPE, Event)
 
                 .value(Resources.owner, Pavia.Id)
 
@@ -155,12 +156,12 @@ public final class EventsPaviaCity implements Runnable {
                 .values(Schema.image, frame.values(Schema.image))
                 .values(Schema.url, frame.values(DCTERMS.SOURCE))
 
-                .value(Schema.startDate, frame.value(Schema.startDate))
-                .value(Schema.endDate, frame.value(Schema.endDate))
+                .value(startDate, frame.value(startDate))
+                .value(endDate, frame.value(endDate))
 
-                .value(Schema.eventStatus, frame.value(Schema.eventStatus))
+                .value(eventStatus, frame.value(eventStatus))
 
-                .frame(Schema.location, frame.frame(Schema.location).map(this::location));
+                .frame(location, frame.frame(location).map(this::location));
     }
 
 

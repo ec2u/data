@@ -42,7 +42,7 @@ export const Program=immutable({
 	identifier: optional(string),
 	url: multiple(string),
 
-	fullDescription: required(local),
+	description: required(local),
 
 	numberOfCredits: optional(decimal),
 	timeToComplete: optional(string),
@@ -50,7 +50,7 @@ export const Program=immutable({
 	educationalCredentialAwarded: optional(local),
 	occupationalCredentialAwarded: optional(local),
 
-	university: required({
+	owner: optional({
 		id: optional(id),
 		label: required(local)
 	}),
@@ -87,7 +87,7 @@ export function DataProgram() {
 		tray={<ToolFrame as={({
 
 			label,
-			university,
+			owner,
 			provider,
 
 			identifier,
@@ -104,7 +104,7 @@ export function DataProgram() {
 
 			<ToolInfo>{{
 
-				"University": <ToolLink>{university}</ToolLink>,
+				"University": owner && <ToolLink>{owner}</ToolLink>,
 				"Provider": provider && <span>{toFrameString(provider)}</span>
 
 			}}</ToolInfo>
@@ -155,71 +155,56 @@ export function DataProgram() {
 
 	>
 
-		<ToolFrame placeholder={Programs[icon]} as={({}) => <>
+		<ToolFrame placeholder={Programs[icon]} as={({
 
-		</>}>{program}</ToolFrame>
+				description,
+
+				educationalCredentialAwarded,
+				occupationalCredentialAwarded,
+
+				hasCourse
+
+			}
+		) => {
+
+			const details={
+				"Educational Credential Awarded": educationalCredentialAwarded,
+				"Occupational Credential Awarded": occupationalCredentialAwarded
+			};
+
+			const detailed=Object.values(details).some(v => v);
+
+
+			return <>
+
+				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+
+				<hr/>
+
+				{detailed && <dl>{Object.entries(details).map(([term, data]) => data && <Fragment key={term}>
+
+                    <dt>{term}</dt>
+                    <dd><ToolMark>{toLocalString(data)}</ToolMark></dd>
+
+                </Fragment>)
+
+				}</dl>}
+
+				{hasCourse?.length && <>
+
+                    <h1>Courses</h1>
+
+                    <ul>{[...hasCourse]
+						.sort((x, y) => toFrameString(x).localeCompare(toFrameString(y)))
+						.map(course => <li key={course.id}><ToolLink>{course}</ToolLink></li>)
+					}</ul>
+
+                </>}
+
+			</>;
+		}
+		}>{program}</ToolFrame>
 
 	</DataPage>;
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-function DataProgramBody({
-
-	children: {
-
-		fullDescription,
-
-		educationalCredentialAwarded,
-		occupationalCredentialAwarded,
-
-		hasCourse
-
-	}
-
-}: {
-
-	children: typeof Program
-
-}) {
-
-	const details={
-		"Educational Credential Awarded": educationalCredentialAwarded,
-		"Occupational Credential Awarded": occupationalCredentialAwarded
-	};
-
-	const detailed=Object.values(details).some(v => v);
-
-
-	return <>
-
-		{fullDescription && <ToolMark>{toLocalString(fullDescription)}</ToolMark>}
-
-		<hr/>
-
-		{detailed && <dl>{Object.entries(details).map(([term, data]) => data && <Fragment key={term}>
-
-            <dt>{term}</dt>
-            <dd><ToolMark>{toLocalString(data)}</ToolMark></dd>
-
-        </Fragment>)
-
-		}</dl>}
-
-		{hasCourse?.length && <>
-
-            <h1>Courses</h1>
-
-            <ul>{[...hasCourse]
-				.sort((x, y) => toFrameString(x).localeCompare(toFrameString(y)))
-				.map(course => <li key={course.id}><ToolLink>{course}</ToolLink></li>)
-			}</ul>
-
-        </>}
-
-	</>;
 
 }

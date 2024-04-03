@@ -17,4 +17,4 @@
 /**
  * EC2U research units and facilities.
  */
-package eu.ec2u.data.organizations.units;
+package eu.ec2u.data.units;

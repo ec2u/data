@@ -57,8 +57,9 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.organizations.universities.Universities.University;
-import static eu.ec2u.data.organizations.universities._Universities.Poitiers;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.universities.Universities.University;
+import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 import static java.util.function.Predicate.not;
@@ -188,10 +189,10 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .value(Schema.disambiguatingDescription, brief)
                 .value(Schema.description, description.map(value -> literal(value, Poitiers.Language)))
 
-                .value(Schema.startDate, startDate(item))
-                .value(Schema.endDate, endDate(item))
+                .value(startDate, startDate(item))
+                .value(endDate, endDate(item))
 
-                .frame(Schema.location, location(item));
+                .frame(location, location(item));
 
     }
 

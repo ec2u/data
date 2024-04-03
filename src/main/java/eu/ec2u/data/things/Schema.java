@@ -16,33 +16,23 @@
 
 package eu.ec2u.data.things;
 
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.concepts.ESCO;
-import eu.ec2u.data.concepts.EuroSciVoc;
-import eu.ec2u.data.concepts.ISCED2011;
 import org.eclipse.rdf4j.model.IRI;
 
-import java.util.stream.Stream;
-
 import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.link.Frame.reverse;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.BASE;
+import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.localized;
 
 /**
  * Schema.org RDF vocabulary.
  *
- * @see <a href="https://schema.org/">Schema.org</a>
+ * @see <a href="http://schema.org/">Schema.org</a>
  */
 public final class Schema {
 
@@ -55,7 +45,7 @@ public final class Schema {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final String Namespace="https://schema.org/";
+    private static final String Namespace="http://schema.org/";
 
     private static final IRI Context=item("/things/");
 
@@ -67,7 +57,7 @@ public final class Schema {
      * @return the schema.org term identified by {@code id}
      * @throws NullPointerException if {@code id} is null
      */
-    public static IRI term(final String id) {
+    public static IRI schema(final String id) {
 
         if ( id == null ) {
             throw new NullPointerException("null id");
@@ -77,16 +67,24 @@ public final class Schema {
     }
 
 
+    //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI about=schema("about");
+    public static final IRI inLanguage=schema("inLanguage");
+    public static final IRI email=schema("email");
+    public static final IRI telephone=schema("telephone");
+
+
     //// Things ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI Thing=term("Thing");
+    public static final IRI Thing=schema("Thing");
 
-    public static final IRI identifier=term("identifier");
-    public static final IRI url=term("url");
-    public static final IRI name=term("name");
-    public static final IRI image=term("image");
-    public static final IRI description=term("description");
-    public static final IRI disambiguatingDescription=term("disambiguatingDescription");
+    public static final IRI identifier=schema("identifier");
+    public static final IRI url=schema("url");
+    public static final IRI name=schema("name");
+    public static final IRI image=schema("image");
+    public static final IRI description=schema("description");
+    public static final IRI disambiguatingDescription=schema("disambiguatingDescription");
 
 
     /**
@@ -102,26 +100,18 @@ public final class Schema {
                 property(identifier, optional(string())),
                 property(name, required(localized())),
                 property(image, optional(id())),
-                property(description, required(localized())),
+                property(description, optional(localized())),
                 property(disambiguatingDescription, optional(localized()))
 
         );
     }
 
 
-    //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI about=term("about");
-    public static final IRI inLanguage=term("inLanguage");
-    public static final IRI email=term("email");
-    public static final IRI telephone=term("telephone");
-
-
     //// Organizations /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI Organization=term("Organization");
+    public static final IRI Organization=schema("Organization");
 
-    public static final IRI legalName=term("legalName");
+    public static final IRI legalName=schema("legalName");
 
 
     public static Shape Organization() {
@@ -135,154 +125,24 @@ public final class Schema {
     }
 
 
-    //// Creative Work /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI provider=term("provider");
-    public static final IRI dateCreated=term("dateCreated");
-    public static final IRI dateModified=term("dateModified");
-    public static final IRI timeRequired=term("timeRequired");
-
-
-    //// Learning Resource /////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI LearningResource=term("LearningResource");
-
-    public static final IRI assesses=term("assesses");
-    public static final IRI competencyRequired=term("competencyRequired");
-    public static final IRI learningResourceType=term("learningResourceType");
-    public static final IRI teaches=term("teaches");
-
-
-    //// Offerings /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI numberOfCredits=term("numberOfCredits");
-    public static final IRI educationalCredentialAwarded=term("educationalCredentialAwarded");
-    public static final IRI occupationalCredentialAwarded=term("occupationalCredentialAwarded");
-    public static final IRI educationalLevel=term("educationalLevel");
-
-
-    public static Shape Offering() {
-        return shape(Thing(),
-
-                property(numberOfCredits, optional(decimal(), minInclusive(0))),
-                property(educationalCredentialAwarded, optional(localized())),
-                property(occupationalCredentialAwarded, optional(localized())),
-
-                property(provider, optional(Organization())),
-
-                property(educationalLevel, optional(Concept(), scheme(ISCED2011.Scheme))),
-                property(about, multiple(Concept(), scheme(EuroSciVoc.Scheme)))
-
-        );
-    }
-
-
-    //// Programs //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI EducationalOccupationalProgram=term("EducationalOccupationalProgram");
-
-    public static final IRI programType=term("programType");
-    public static final IRI occupationalCategory=term("occupationalCategory");
-    public static final IRI timeToComplete=term("timeToComplete");
-    public static final IRI programPrerequisites=term("programPrerequisites");
-    public static final IRI hasCourse=term("hasCourse");
-
-
-    public static Shape EducationalOccupationalProgram() {
-        return shape(EducationalOccupationalProgram, Offering(),
-
-                property(timeToComplete, optional(duration())),
-                property(programPrerequisites, optional(localized())),
-
-                property(hasCourse, () -> multiple(Course())),
-
-                property(programType, optional(Concept())), // !!! scheme?
-                property(occupationalCategory, multiple(Concept(), scheme(ESCO.Scheme)))
-
-        );
-    }
-
-
-    //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Course=term("Course");
-
-    public static final IRI courseCode=term("courseCode");
-    public static final IRI coursePrerequisites=term("coursePrerequisites");
-
-
-    public static Shape Course() {
-        return shape(Course, Offering(),
-
-                property(courseCode, optional(string())),
-                property(inLanguage, multiple(string(), pattern("[a-z]{2}"))),
-                property(timeRequired, optional(duration())),
-
-                property(learningResourceType, optional(localized())),
-                property(teaches, optional(localized())),
-                property(assesses, optional(localized())),
-                property(coursePrerequisites, optional(localized())),
-                property(competencyRequired, optional(localized())),
-
-                property("inProgram", reverse(hasCourse), () -> multiple(EducationalOccupationalProgram()))
-
-        );
-    }
-
-
-
-    //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public enum EventStatus { EventScheduled, EventMovedOnline, EventPostponed, EventRescheduled, EventCancelled }
-
-    public static final IRI Event=term("Event");
-
-    public static final IRI organizer=term("organizer");
-    public static final IRI isAccessibleForFree=term("isAccessibleForFree");
-    public static final IRI eventStatus=term("eventStatus");
-    public static final IRI location=term("location");
-    public static final IRI eventAttendanceMode=term("eventAttendanceMode");
-    public static final IRI startDate=term("startDate");
-    public static final IRI endDate=term("endDate");
-
-
-    public static Shape Event() {
-        return shape(Event, Thing(),
-
-                property(eventStatus, optional(id())),
-
-                property(startDate, optional(dateTime())),
-                property(endDate, optional(dateTime())),
-
-                property(inLanguage, multiple(string())),
-                property(isAccessibleForFree, optional(bool())),
-                property(eventAttendanceMode, multiple(id())),
-
-                property(location, multiple(Location())),
-                property(organizer, multiple(Organization()))
-
-        );
-    }
-
-
     //// Locations /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI Place=term("Place");
-    public static final IRI PostalAddress=term("PostalAddress");
-    public static final IRI VirtualLocation=term("VirtualLocation");
+    public static final IRI Place=schema("Place");
+    public static final IRI PostalAddress=schema("PostalAddress");
+    public static final IRI VirtualLocation=schema("VirtualLocation");
 
 
-    public static final IRI address=term("address");
+    public static final IRI address=schema("address");
 
-    public static final IRI latitude=term("latitude");
-    public static final IRI longitude=term("longitude");
+    public static final IRI latitude=schema("latitude");
+    public static final IRI longitude=schema("longitude");
 
-    public static final IRI addressCountry=term("addressCountry");
-    public static final IRI addressRegion=term("addressRegion");
-    public static final IRI addressLocality=term("addressLocality");
+    public static final IRI addressCountry=schema("addressCountry");
+    public static final IRI addressRegion=schema("addressRegion");
+    public static final IRI addressLocality=schema("addressLocality");
 
-    public static final IRI postalCode=term("postalCode");
-    public static final IRI streetAddress=term("streetAddress");
+    public static final IRI postalCode=schema("postalCode");
+    public static final IRI streetAddress=schema("streetAddress");
 
 
     public static Shape Location() {
@@ -325,7 +185,7 @@ public final class Schema {
 
     //// ContactPoints /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI ContactPoint=term("ContactPoint");
+    public static final IRI ContactPoint=schema("ContactPoint");
 
 
     public static Shape ContactPoint() {
@@ -340,21 +200,17 @@ public final class Schema {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Schema() { }
+    public static void main(final String... args) {
+        exec(() -> create(Context, Schema.class,
+                Thing(),
+                Organization()
+                // !!! locations
+        ));
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void main(final String... args) {
-        exec(() -> Stream
-
-                .of(rdf(resource(Schema.class, ".ttl"), BASE))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
-    }
+    private Schema() { }
 
 }

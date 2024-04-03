@@ -15,6 +15,7 @@
  */
 
 
+import { Languages } from "@ec2u/data/languages";
 import { Documents } from "@ec2u/data/pages/documents/documents";
 import { Events } from "@ec2u/data/pages/events/events";
 import { DataPage } from "@ec2u/data/views/page";
@@ -148,7 +149,8 @@ export function DataDocument() {
 					<a key={item} href={item}>{toIdString(item, { compact: true })}</a>
 				),
 
-				"Language": language?.length && language.map(item => <span key={item}>{item}</span>)
+				"Language": language?.length && language.map(item => <span
+					key={item}>{toLocalString(Languages[item])}</span>)
 
 			}}</ToolInfo>
 

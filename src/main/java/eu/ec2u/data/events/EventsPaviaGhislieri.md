@@ -110,7 +110,7 @@ GET https://www.ghislieri.it/evento/ciclo-lanterne-1/
 
 ```json
 {
-    "@context": "https://schema.org",
+    "@context": "http://schema.org",
     "@graph": [
         {
             "@type": "WebSite",

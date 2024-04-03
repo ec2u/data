@@ -21,19 +21,18 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Logger;
 import com.metreeca.link.Shape;
-import com.metreeca.link._Report;
-import com.metreeca.link.rdf4j.SHACLCodec;
+import com.metreeca.link.Trace;
 
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
-import eu.ec2u.data.offerings.courses.Courses;
-import eu.ec2u.data.offerings.programs.Programs;
-import eu.ec2u.data.organizations.units.Units;
-import eu.ec2u.data.organizations.universities.Universities;
-import eu.ec2u.data.organizations.universities._Universities;
+import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.units.Units;
+import eu.ec2u.data.universities.Universities;
+import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.common.exception.ValidationException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -124,7 +123,7 @@ public final class EC2U extends Delegator {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void create(final IRI context, final Class<?> master, final Shape... shape) {
+    public static void create(final IRI context, final Class<?> master, final Shape... shapes) {
         update(connection -> {
 
             try {
@@ -144,12 +143,15 @@ public final class EC2U extends Delegator {
                         );
 
 
-                final Collection<Statement> shacl=new SHACLCodec().encode(List.of(shape));
+                final Collection<Statement> shacl=Shape.encode(shapes);
 
                 shacl.stream()
+
                         .filter(statement -> statement.getPredicate().equals(SHACL.TARGET_CLASS))
-                        .peek(statement -> System.out.println(statement.getObject()))
-                        .forEach(statement -> connection.remove(null, SHACL.TARGET_CLASS, statement.getObject(), RDF4J.SHACL_SHAPE_GRAPH));
+
+                        .forEach(statement -> connection.remove(
+                                null, SHACL.TARGET_CLASS, statement.getObject(), RDF4J.SHACL_SHAPE_GRAPH
+                        ));
 
                 Stream
 
@@ -167,7 +169,7 @@ public final class EC2U extends Delegator {
 
                     final Model model=((ValidationException)e.getCause()).validationReportAsModel();
 
-                    service(logger()).warning(EC2U.class, _Report.report(model).toString());
+                    service(logger()).warning(EC2U.class, Trace.decode(model).toString());
 
                 } else {
 

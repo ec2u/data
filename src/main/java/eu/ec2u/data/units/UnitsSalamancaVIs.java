@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations.units;
+package eu.ec2u.data.units;
 
 import com.metreeca.http.actions.GET;
 import com.metreeca.http.csv.formats.CSV;

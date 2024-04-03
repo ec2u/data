@@ -48,7 +48,9 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
-import static eu.ec2u.data.organizations.universities._Universities.Poitiers;
+import static eu.ec2u.data.events.Events.endDate;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCityGrand implements Runnable {
@@ -145,8 +147,8 @@ public final class EventsPoitiersCityGrand implements Runnable {
                     .value(Schema.description, description)
                     .value(Schema.disambiguatingDescription, disambiguatingDescription)
 
-                    .value(Schema.startDate, datetime(item, "ev:startdate"))
-                    .value(Schema.endDate, datetime(item, "ev:enddate"));
+                    .value(startDate, datetime(item, "ev:startdate"))
+                    .value(endDate, datetime(item, "ev:enddate"));
 
         });
     }

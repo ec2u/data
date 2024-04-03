@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.http.jsonld.actions.Validate;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Logger;
 import com.metreeca.http.services.Vault;
@@ -26,9 +25,9 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.organizations.universities._Universities;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVRecord;
@@ -108,8 +107,6 @@ final class Documents_ {
             update(connection -> Xtream.of(url)
 
                     .flatMap(this)
-
-                    .optMap(new Validate(Document()))
 
                     .flatMap(Frame::stream)
                     .batch(0)

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations.units;
+package eu.ec2u.data.units;
 
 import com.metreeca.http.actions.Fill;
-import com.metreeca.http.jsonld.actions.Validate;
 import com.metreeca.http.rdf4j.actions.GraphQuery;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.rdf4j.services.Graph;
@@ -42,9 +41,9 @@ import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.concepts.OrganizationTypes.Centre;
 import static eu.ec2u.data.concepts.OrganizationTypes.Department;
-import static eu.ec2u.data.organizations.units.Units.Unit;
-import static eu.ec2u.data.organizations.universities._Universities.Pavia;
 import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.units.Units.Unit;
+import static eu.ec2u.data.universities._Universities.Pavia;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
@@ -73,7 +72,6 @@ public final class UnitsPavia implements Runnable {
                     .flatMap(this::units)
                     .map(this::unit)
 
-                    .optMap(new Validate(Unit()))
 
                     .flatMap(Frame::stream)
                     .batch(0)

@@ -9,7 +9,11 @@
 
 * program details
   * page-level JSON-LD + **scheme:AboutPage** metadata
-  * no detailed **schema:EducationalOccupationalProgram**description
+  * no detailed **schema:EducationalOccupationalProgram **description
+
+## 2024-04-03
+
+* fix root XPath crawling expression
 
 ## 2023-03-02
 

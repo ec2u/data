@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.offerings.courses;
+package eu.ec2u.data.courses;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
@@ -23,39 +23,71 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
-import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
-import static com.metreeca.link.Shape.shape;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.term;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.offerings.Offerings.Offering;
+import static eu.ec2u.data.programs.Programs.Program;
+import static eu.ec2u.data.programs.Programs.hasCourse;
+import static eu.ec2u.data.resources.Resources.localized;
 import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.things.Schema.inLanguage;
+import static eu.ec2u.data.things.Schema.schema;
 
 public final class Courses extends Delegator {
 
     public static final IRI Context=item("/courses/");
 
-    public static final IRI Course=term("Course");
+
+    public static final IRI Course=schema("Course");
+
+    public static final IRI courseCode=schema("courseCode");
+    public static final IRI timeRequired=schema("timeRequired");
+
+    public static final IRI teaches=schema("teaches");
+    public static final IRI assesses=schema("assesses");
+    public static final IRI coursePrerequisites=schema("coursePrerequisites");
+    public static final IRI competencyRequired=schema("competencyRequired");
+    public static final IRI learningResourceType=schema("learningResourceType");
+
 
 
     public static Shape Courses() { return Dataset(Course()); }
 
     public static Shape Course() {
-        return shape(Course, Resource(), Schema.Course());
+        return shape(Course, Offering(),
+
+                property(courseCode, optional(string())),
+                property(inLanguage, multiple(string(), pattern("[a-z]{2}"))),
+                property(timeRequired, optional(duration())),
+
+                property(teaches, optional(localized())),
+                property(assesses, optional(localized())),
+                property(coursePrerequisites, optional(localized())),
+                property(competencyRequired, optional(localized())),
+
+                property(learningResourceType, optional(localized())),
+
+                property("inProgram", reverse(hasCourse), () -> multiple(Program()))
+
+        );
     }
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Courses.class, Course()));
+    }
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,9 +112,7 @@ public final class Courses extends Delegator {
                                                 field(owner, iri()),
                                                 field(ORG.CLASSIFICATION, iri())
 
-                                        ),
-
-                                        filter(RDF.TYPE, Course)
+                                        )
 
                                 ))
 
@@ -104,18 +134,6 @@ public final class Courses extends Delegator {
                 ))
 
         );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Courses::create);
-    }
-
-
-    public static void create() {
-        EC2U.create(Context, Courses.class);
     }
 
 }

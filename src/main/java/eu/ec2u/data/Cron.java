@@ -25,8 +25,8 @@ import com.metreeca.http.services.Logger;
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offerings.*;
-import eu.ec2u.data.organizations.units.*;
-import eu.ec2u.data.organizations.universities.Universities_;
+import eu.ec2u.data.units.*;
+import eu.ec2u.data.universities.Universities_;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.BadGateway;

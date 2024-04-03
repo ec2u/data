@@ -46,7 +46,7 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.organizations.universities._Universities.*;
+import static eu.ec2u.data.universities._Universities.*;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;

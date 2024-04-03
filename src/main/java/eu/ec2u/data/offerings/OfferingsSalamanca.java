@@ -16,27 +16,51 @@
 
 package eu.ec2u.data.offerings;
 
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.http.json.JSONPath;
+import com.metreeca.http.json.formats.JSON;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 
+import eu.ec2u.data.courses.Courses;
+import eu.ec2u.data.programs.Programs;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
+import java.time.Instant;
 import java.time.Period;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.courses.Courses.*;
+import static eu.ec2u.data.offerings.Offerings.numberOfCredits;
+import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
+import static eu.ec2u.data.programs.Programs.hasCourse;
+import static eu.ec2u.data.universities._Universities.Salamanca;
+import static java.lang.String.format;
 import static java.util.Map.entry;
 
 public final class OfferingsSalamanca implements Runnable {
 
     private static final IRI Context=iri(Offerings.Context, "/salamanca");
 
-    private static final String ProgramsURL="offers-salamanca-programs-url";
-    private static final String CoursesURL="offers-salamanca-courses-url";
-    private static final String ProgramsCoursesURL="courses-salamanca-programs-courses-url";
+    private static final String ProgramsURL="offerings-salamanca-programs-url";
+    private static final String CoursesURL="offerings-salamanca-courses-url";
+    private static final String ProgramsCoursesURL="offerings-salamanca-programs-courses-url";
 
 
     private static final Map<String, Period> Durations=Map.ofEntries(
@@ -58,165 +82,164 @@ public final class OfferingsSalamanca implements Runnable {
 
 
     @Override public void run() {
-        // Xtream
-        //
-        //         .from(
-        //
-        //                 Xtream.of(Instant.EPOCH)
-        //
-        //                         .flatMap(this::programs)
-        //                         .optMap(this::program)
-        //
-        //                         .batch(1000).flatMap(programs -> // !!! optimize validation
-        //                                 validate(Program(), Set.of(Program), programs.stream())
-        //                         ),
-        //
-        //                 Xtream.of(Instant.EPOCH)
-        //
-        //                         .flatMap(this::courses)
-        //                         .optMap(this::course)
-        //
-        //                         .batch(1000).flatMap(courses -> // !!! optimize validation
-        //                                 validate(Course(), Set.of(Course), courses.stream())
-        //                         ),
-        //
-        //
-        //                 Xtream.of(Instant.EPOCH)
-        //
-        //                         .flatMap(this::programsCourses)
-        //                         .optMap(this::programCourses)
-        //
-        //                         .pipe(frames -> Xtream.of(frames
-        //                                 .flatMap(Frame::stream)
-        //                                 .collect(toSet())
-        //                         ))
-        //
-        //         )
-        //
-        //         .forEach(new Upload()
-        //                 .contexts(Context)
-        //                 .clear(true)
-        //         );
+        update(connection -> Xtream
+
+                .from(
+
+                        Xtream.of(Instant.EPOCH)
+
+                                .flatMap(this::programs)
+                                .optMap(this::program),
+
+                        Xtream.of(Instant.EPOCH)
+
+                                .flatMap(this::courses)
+                                .optMap(this::course),
+
+
+                        Xtream.of(Instant.EPOCH)
+
+                                .flatMap(this::programsCourses)
+                                .optMap(this::programCourses)
+
+                )
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // private Xtream<JSONPath> programs(final Instant synced) {
-    //
-    //     final String url=vault
-    //             .get(ProgramsURL)
-    //             .orElseThrow(() -> new IllegalStateException(format(
-    //                     "undefined API URL <%s>", ProgramsURL
-    //             )));
-    //
-    //     return Xtream.of(synced)
-    //
-    //             .flatMap(new Fill<>()
-    //                     .model(url)
-    //             )
-    //
-    //             .optMap(new GET<>(new JSON()))
-    //
-    //             .map(JSONPath::new)
-    //             .flatMap(json -> json.paths("*"));
-    // }
-    //
-    // private Optional<Frame> program(final JSONPath json) {
-    //     return json.string("programCode")
-    //
-    //             .map(code -> frame(item(Programs, Salamanca, code))
-    //
-    //                     .values(RDF.TYPE, Program)
-    //                     .value(Resources.owner, Salamanca.Id)
-    //
-    //                     .value(Schema.url, json.string("programUrl").map(Values::iri))
-    //                     .value(Schema.identifier, literal(code))
-    //
-    //                     .values(Schema.name, json.strings("programName").map(v -> literal(v, Salamanca.Language)))
-    //
-    //             );
-    // }
-    //
-    //
-    // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // private Xtream<JSONPath> courses(final Instant synced) {
-    //
-    //     final String url=vault
-    //             .get(CoursesURL)
-    //             .orElseThrow(() -> new IllegalStateException(format(
-    //                     "undefined API URL <%s>", CoursesURL
-    //             )));
-    //
-    //     return Xtream.of(synced)
-    //
-    //             .flatMap(new Fill<>()
-    //                     .model(url)
-    //             )
-    //
-    //             .optMap(new GET<>(new JSON()))
-    //
-    //             .map(JSONPath::new)
-    //             .flatMap(json -> json.paths("*"));
-    // }
-    //
-    // private Optional<Frame> course(final JSONPath json) {
-    //     return json.string("code").map(code -> frame(item(Courses, Salamanca, code))
-    //
-    //             .values(RDF.TYPE, Course)
-    //             .value(Resources.owner, Salamanca.Id)
-    //
-    //             .value(Schema.url, json.string("urlEN").map(Values::iri))
-    //             .value(Schema.identifier, literal(code))
-    //
-    //             .values(Schema.name, Stream.concat(
-    //                     json.strings("nameInEnglish").map(v -> literal(v, "en")),
-    //                     json.strings("nameInSpanish").map(v -> literal(v, Salamanca.Language))
-    //             ))
-    //
-    //             .values(Schema.courseCode, literal(code))
-    //
-    //             .value(Schema.numberOfCredits, json.string("ects")
-    //                     .map(Offerings_::ects)
-    //                     .map(Values::literal)
-    //             )
-    //
-    //             .value(Schema.timeRequired, json.string("field_guias_asig_tdu_value")
-    //                     .map(Durations::get)
-    //                     .map(Values::literal)
-    //             )
-    //
-    //     );
-    // }
-    //
-    //
-    // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // private Xtream<JSONPath> programsCourses(final Instant synced) {
-    //
-    //     final String url=vault
-    //             .get(ProgramsCoursesURL)
-    //             .orElseThrow(() -> new IllegalStateException(format(
-    //                     "undefined API URL <%s>", ProgramsCoursesURL
-    //             )));
-    //
-    //     return Xtream.of(synced)
-    //
-    //             .flatMap(new Fill<>()
-    //                     .model(url)
-    //             )
-    //
-    //             .optMap(new GET<>(new JSON()))
-    //
-    //             .map(JSONPath::new)
-    //             .flatMap(json -> json.paths("*"));
-    // }
-    //
-    // private Optional<Frame> programCourses(final JSONPath json) {
-    //     return json.string("programCode").map(program -> frame(item(Programs, Salamanca, program))
-    //             .value(Schema.hasCourse, json.string("code").map(course -> item(Courses, Salamanca, course)))
-    //     );
-    // }
+    private Xtream<JSONPath> programs(final Instant synced) {
+
+        final String url=vault
+                .get(ProgramsURL)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined API URL <%s>", ProgramsURL
+                )));
+
+        return Xtream.of(synced)
+
+                .flatMap(new Fill<>()
+                        .model(url)
+                )
+
+                .optMap(new GET<>(new JSON()))
+
+                .map(JSONPath::new)
+                .flatMap(json -> json.paths("*"));
+    }
+
+    private Optional<Frame> program(final JSONPath json) {
+        return json.string("programCode")
+
+                .map(code -> frame(
+
+                        field(ID, item(Programs.Context, Salamanca, code)),
+
+                        field(RDF.TYPE, EducationalOccupationalProgram),
+                        field(Resources.owner, Salamanca.Id),
+
+                        field(Schema.url, json.string("programUrl").map(Frame::iri)),
+                        field(Schema.identifier, literal(code)),
+
+                        field(Schema.name, json.strings("programName").map(v -> literal(v, Salamanca.Language)))
+
+                ));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Xtream<JSONPath> courses(final Instant synced) {
+
+        final String url=vault
+                .get(CoursesURL)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined API URL <%s>", CoursesURL
+                )));
+
+        return Xtream.of(synced)
+
+                .flatMap(new Fill<>()
+                        .model(url)
+                )
+
+                .optMap(new GET<>(new JSON()))
+
+                .map(JSONPath::new)
+                .flatMap(json -> json.paths("*"));
+    }
+
+    private Optional<Frame> course(final JSONPath json) {
+        return json.string("code").map(code -> frame(
+
+                field(ID, item(Courses.Context, Salamanca, code)),
+
+                field(RDF.TYPE, Course),
+                field(Resources.owner, Salamanca.Id),
+
+                field(Schema.url, json.string("urlEN").map(Frame::iri)),
+                field(Schema.identifier, literal(code)),
+
+                field(Schema.name, Stream.concat(
+                        json.strings("nameInEnglish").map(v -> literal(v, "en")),
+                        json.strings("nameInSpanish").map(v -> literal(v, Salamanca.Language))
+                )),
+
+                field(courseCode, literal(code)),
+
+                field(numberOfCredits, json.string("ects")
+                        .map(Offerings_::ects)
+                        .map(Frame::literal)
+                ),
+
+                field(timeRequired, json.string("field_guias_asig_tdu_value")
+                        .map(Durations::get)
+                        .map(Frame::literal)
+                )
+
+        ));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Xtream<JSONPath> programsCourses(final Instant synced) {
+
+        final String url=vault
+                .get(ProgramsCoursesURL)
+                .orElseThrow(() -> new IllegalStateException(format(
+                        "undefined API URL <%s>", ProgramsCoursesURL
+                )));
+
+        return Xtream.of(synced)
+
+                .flatMap(new Fill<>()
+                        .model(url)
+                )
+
+                .optMap(new GET<>(new JSON()))
+
+                .map(JSONPath::new)
+                .flatMap(json -> json.paths("*"));
+    }
+
+    private Optional<Frame> programCourses(final JSONPath json) {
+        return json.string("programCode").map(program -> frame(
+
+                field(ID, item(Programs.Context, Salamanca, program)),
+                field(hasCourse, json.string("code").map(course -> item(Courses.Context, Salamanca, course)))
+
+        ));
+    }
 
 }

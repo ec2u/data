@@ -4,28 +4,30 @@
 @prefix ec2u: </terms/> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix dct: <http://purl.org/dc/terms/> .
-@prefix schema: <https://schema.org/> .
+@prefix schema: <http://schema.org/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-</programs/> a ec2u:Dataset ;
-    dct:title "EC2U Programs"@en ;
-    dct:alternative "EC2U Degree and Occupational Programs"@en ;
-    dct:description "Degree and occupational programs offered by EC2U allied universities."@en ;
+</courses/> a ec2u:Dataset ;
+    dct:title "EC2U Academic and Occupational Courses"@en ;
+    dct:alternative "EC2U Courses"@en ;
+    dct:description
+        "Degree and standalone courses and other educational opportunities offered by EC2U allied universities."@en ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     dct:issued "2022-03-10"^^xsd:date ;
-    void:rootResource ec2u:Program ;
+    void:rootResource schema:Course ;
     rdfs:isDefinedBy </schemas/offerings> .
-
-</concepts/program-topics> a skos:ConceptScheme ;
-    dct:title "EC2U Educational Topics"@en ;
-    dct:description "> **:warn:** To be migrated to a standardized taxonomy"@en .
 
 
 ########################################################################################################################
 
-ec2u:Program a owl:Class ;
-    rdfs:subClassOf ec2u:Resource, schema:EducationalOccupationalProgram .
+schema:Course a owl:Class ;
+    rdfs:subClassOf schema:Thing .
+
+schema:courseCode a owl:DatatypeProperty ;
+    rdfs:subPropertyOf schema:identifier .
+
+
 
 
 

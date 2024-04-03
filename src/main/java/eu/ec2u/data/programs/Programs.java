@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations.units;
-
+package eu.ec2u.data.programs;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
@@ -24,59 +23,69 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
-import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.concepts.ESCO;
+import eu.ec2u.data.offerings.Offerings;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.ORG;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
+import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.organizations.Organizations.OrganizationalUnit;
-import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.offerings.Offerings.Offering;
+import static eu.ec2u.data.resources.Resources.localized;
 import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.things.Schema.schema;
+
+public final class Programs extends Delegator {
+
+    public static final IRI Context=item("/programs/");
+
+    public static final IRI EducationalOccupationalProgram=schema("EducationalOccupationalProgram");
+
+    public static final IRI timeToComplete=schema("timeToComplete");
+    public static final IRI programPrerequisites=schema("programPrerequisites");
+    public static final IRI programType=schema("programType");
+    public static final IRI occupationalCategory=schema("occupationalCategory");
+    public static final IRI hasCourse=schema("hasCourse");
 
 
-public final class Units extends Delegator {
+    public static Shape Programs() { return Dataset(Program()); }
 
-    public static final IRI Context=EC2U.item("/units/");
-    public static final IRI Scheme=iri(Concepts.Context, "/research-topics");
+    public static Shape Program() {
+        return shape(EducationalOccupationalProgram, Offering(),
 
-    public static final IRI Unit=EC2U.term("Unit");
+                property(timeToComplete, optional(duration())),
+                property(programPrerequisites, optional(localized())),
 
+                property(programType, optional(Concept(), scheme(Offerings.Types))),
+                property(occupationalCategory, multiple(Concept(), scheme(ESCO.Scheme))),
 
-    public static Shape Units() { return Dataset(Unit()); }
-
-    public static Shape Unit() {
-        return shape(Unit, Resource(), OrganizationalUnit(),
-
-                property(DCTERMS.SUBJECT, multiple(Concept()))
+                property(hasCourse, () -> multiple(Course()))
 
         );
     }
 
 
     public static void main(final String... args) {
-        exec(() -> create(Context, Units.class, Unit()));
+        exec(() -> create(Context, Programs.class, Program()));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Units() {
+    public Programs() {
         delegate(new Router()
 
-                .path("/", handler(new Driver(Units()), new Worker()
+                .path("/", handler(new Driver(Programs()), new Worker()
 
                         .get(new Relator(frame(
 
@@ -91,11 +100,9 @@ public final class Units extends Delegator {
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
                                                 field(owner, iri()),
-                                                field(ORG.CLASSIFICATION, iri())
+                                                field(programType, iri())
 
-                                        ),
-
-                                        filter(RDF.TYPE, Unit)
+                                        )
 
                                 ))
 
@@ -103,21 +110,22 @@ public final class Units extends Delegator {
 
                 ))
 
-                .path("/{code}", handler(new Driver(Unit()), new Worker()
+                .path("/{code}", handler(new Driver(Program()), new Worker()
 
                         .get(new Relator(frame(
 
                                 field(ID, iri()),
-
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
                                 field(owner, iri()),
-                                field(ORG.CLASSIFICATION, iri())
+                                field(programType, iri())
 
                         )))
 
                 ))
+
         );
+
     }
 
 }

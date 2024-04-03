@@ -38,7 +38,8 @@ public final class Agents {
 
                 property(FOAF.DEPICTION, multiple(id())),
                 property(FOAF.HOMEPAGE, multiple(id())),
-                property(FOAF.MBOX, multiple(string()))
+                property(FOAF.MBOX, multiple(string())),
+                property(FOAF.PHONE, multiple(string()))
 
         );
     }

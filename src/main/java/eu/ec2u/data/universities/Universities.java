@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations.universities;
+package eu.ec2u.data.universities;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;

@@ -37,8 +37,8 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
-import static eu.ec2u.data.organizations.universities.Universities.University;
-import static eu.ec2u.data.organizations.universities._Universities.Iasi;
+import static eu.ec2u.data.universities.Universities.University;
+import static eu.ec2u.data.universities._Universities.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 import static java.time.ZoneOffset.UTC;
 

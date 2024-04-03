@@ -18,25 +18,46 @@ package eu.ec2u.data.offerings;
 
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
+import eu.ec2u.data.courses.Courses;
+import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.programs.Programs;
+import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Resources.reader;
 import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.courses.Courses.Course;
+import static eu.ec2u.data.courses.Courses.courseCode;
+import static eu.ec2u.data.offerings.Offerings.*;
+import static eu.ec2u.data.programs.Programs.hasCourse;
+import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.universities._Universities.Poitiers;
+import static java.lang.String.format;
 import static java.util.Map.entry;
 
 public final class OfferingsPoitiers implements Runnable {
@@ -74,54 +95,37 @@ public final class OfferingsPoitiers implements Runnable {
 
 
     @Override public void run() {
-        // Xtream.of(Instant.EPOCH)
-        //
-        //         .flatMap(instant -> Stream.concat(
-        //
-        //                 Xtream.of(instant)
-        //
-        //                         .flatMap(this::programs)
-        //                         .optMap(this::program)
-        //
-        //                         .pipe(programs -> validate(Program(), Set.of(Program), programs)),
-        //
-        //                 Xtream.of(instant)
-        //
-        //                         .flatMap(this::programs)
-        //                         .flatMap(this::courses)
-        //
-        //                         .pipe(courses -> validate(Offerings.Course(), Set.of(Course), courses))
-        //
-        //         ))
-        //
-        //         .forEach(new Upload()
-        //                 .contexts(Context)
-        //                 .clear(true)
-        //         );
+        update(connection -> Xtream.of(Instant.EPOCH)
+
+                .flatMap(instant -> Stream.concat(
+
+                        Xtream.of(instant)
+
+                                .flatMap(this::programs)
+                                .optMap(this::program),
+
+                        Xtream.of(instant)
+
+                                .flatMap(this::programs)
+                                .flatMap(this::courses)
+
+                ))
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<JSONPath> programs(final Instant synced) {
-
-        // final String url=vault
-        //        .get(APIUrl)
-        //        .orElseThrow(() -> new IllegalStateException(format(
-        //                "undefined API URL <%s>", APIUrl
-        //        )));
-        //
-        // final String id=vault
-        //        .get(APIId)
-        //        .orElseThrow(() -> new IllegalStateException(format(
-        //                "undefined API ID <%s>", APIId
-        //        )));
-        //
-        // final String token=service(vault())
-        //        .get(APIToken)
-        //        .orElseThrow(() -> new IllegalStateException(format(
-        //                "undefined API key <%s>", APIToken
-        //        )));
 
         try ( final Reader reader=reader(resource(this, ".json")) ) {
 
@@ -133,132 +137,164 @@ public final class OfferingsPoitiers implements Runnable {
 
         }
 
+        // final String url=vault
+        //         .get(APIUrl)
+        //         .orElseThrow(() -> new IllegalStateException(format(
+        //                 "undefined API URL <%s>", APIUrl
+        //         )));
+        //
+        // final String id=vault
+        //         .get(APIId)
+        //         .orElseThrow(() -> new IllegalStateException(format(
+        //                 "undefined API ID <%s>", APIId
+        //         )));
+        //
+        // final String token=service(vault())
+        //         .get(APIToken)
+        //         .orElseThrow(() -> new IllegalStateException(format(
+        //                 "undefined API key <%s>", APIToken
+        //         )));
+        //
         // return Xtream.of(synced)
         //
-        //        .flatMap(new Fill<>()
-        //                .model(url+"/obtemCursosBloco")
-        //        )
+        //         .flatMap(new Fill<>()
+        //                 .model(url+"/obtemCursosBloco")
+        //         )
         //
-        //        .optMap(new Query(request -> request
-        //                .method(POST)
-        //                .header("Content-Type", "application/x-www-form-urlencoded")
-        //                .header("Accept", JSON.MIME)
-        //                .input(() -> new ByteArrayInputStream(query(Map.ofEntries(
-        //                        entry("applicationId", List.of(id)),
-        //                        entry("accessToken", List.of(token)),
-        //                        entry("anoLectivo", List.of("2022/2023")) // !!! dynamic
-        //                )).getBytes(StandardCharsets.UTF_8)))
-        //        ))
+        //         .optMap(new Query(request -> request
+        //                 .method(POST)
+        //                 .header("Content-Type", "application/x-www-form-urlencoded")
+        //                 .header("Accept", JSON.MIME)
+        //                 .input(() -> new ByteArrayInputStream(query(Map.ofEntries(
+        //                         entry("applicationId", List.of(id)),
+        //                         entry("accessToken", List.of(token)),
+        //                         entry("anoLectivo", List.of("2022/2023")) // !!! dynamic
+        //                 )).getBytes(StandardCharsets.UTF_8)))
+        //         ))
         //
-        //        .optMap(new Fetch())
-        //        .optMap(new Parse<>(new JSON()))
+        //         .optMap(new Fetch())
+        //         .optMap(new Parse<>(new JSON()))
         //
-        //        .optMap(json -> {
+        //         .optMap(json -> {
         //
-        //            if ( "SUCCESS".equals(json.asJsonObject().getString("status")) ) {
+        //             if ( "SUCCESS".equals(json.asJsonObject().getString("status")) ) {
         //
-        //                return Optional.of(json);
+        //                 return Optional.of(json);
         //
-        //            } else {
+        //             } else {
         //
-        //                service(logger()).warning(this, json.toString());
+        //                 service(logger()).warning(this, json.toString());
         //
-        //                return Optional.empty();
+        //                 return Optional.empty();
         //
-        //            }
-        //        })
+        //             }
+        //         })
         //
-        //        .map(JSONPath::new)
-        //        .flatMap(json -> json.paths("listaResultados.*"));
+        //         .map(JSONPath::new)
+        //         .flatMap(json -> json.paths("listaResultados.*"));
     }
 
-    // private Optional<Frame> program(final JSONPath json) {
-    //     return json.string("code").map(code -> frame(item(Offerings.Programs, Poitiers, code))
-    //
-    //             .values(RDF.TYPE, Program)
-    //             .value(owner, Poitiers.Id)
-    //
-    //             .value(Schema.name, json.string("name") // !!! code to rdfs:label
-    //                     .map(name -> literal(String.format("%s - %s", code, name), Poitiers.Language))
-    //             )
-    //
-    //             .values(Schema.identifier, literal(code))
-    //
-    //             .value(Schema.educationalLevel, json.integer("levelISCED")
-    //                     .map(BigInteger::intValue)
-    //                     .map(ISCEDLevels::get)
-    //             )
-    //
-    //             .value(Schema.numberOfCredits, json.decimal("credits")
-    //                     .map(Offerings_::ects)
-    //                     .map(Values::literal)
-    //             )
-    //
-    //             .frame(Schema.provider, json.string("composante")
-    //                     .map(name -> frame(item(Organizations.Context, Poitiers, name))
-    //                             .value(RDF.TYPE, Organization) // !!! Unit
-    //                             .value(owner, Poitiers.Id)
-    //                             .value(DCTERMS.TITLE, literal(name, Poitiers.Language))
-    //                     )
-    //             )
-    //
-    //             .frame(Schema.about, json.string("discipline")
-    //                     .map(name -> frame(item(Offerings.Scheme, Poitiers, name))
-    //                             .value(RDF.TYPE, SKOS.CONCEPT)
-    //                             .value(SKOS.TOP_CONCEPT_OF, Offerings.Scheme)
-    //                             .value(SKOS.PREF_LABEL, literal(name, Poitiers.Language))
-    //                     )
-    //             )
-    //
-    //             .values(Schema.hasCourse, json.entries("options.*.elemPedago.*")
-    //                     .map(entry -> item(Offerings.Courses, Poitiers, entry.getKey()))
-    //             )
-    //
-    //     );
-    // }
-    //
-    // private Xtream<Frame> courses(final JSONPath program) {
-    //
-    //     final Optional<IRI> provider=program.string("composante")
-    //             .map(name -> item(Organizations.Context, Poitiers, name));
-    //
-    //     final Optional<IRI> subject=program.string("discipline")
-    //             .map(name -> item(Offerings.Scheme, Poitiers, name));
-    //
-    //     final Optional<IRI> level=program.integer("levelISCED")
-    //             .map(BigInteger::intValue)
-    //             .map(ISCEDLevels::get);
-    //
-    //
-    //     return program.entries("options.*.elemPedago.*")
-    //
-    //             .map(entry -> {
-    //
-    //                 final String code=entry.getKey();
-    //                 final JSONPath json=entry.getValue();
-    //
-    //                 return frame(item(Offerings.Courses, Poitiers, code))
-    //
-    //                         .values(RDF.TYPE, Course)
-    //                         .value(owner, Poitiers.Id)
-    //
-    //                         .value(Schema.name, json.string("name") // !!! code to rdfs:label
-    //                                 .map(name -> literal(String.format("%s - %s", code, name), Poitiers.Language))
-    //                         )
-    //
-    //                         .values(Schema.courseCode, literal(code))
-    //
-    //                         .value(Schema.educationalLevel, level)
-    //
-    //                         .value(Schema.numberOfCredits, json.string("credits")
-    //                                 .map(Offerings_::ects)
-    //                                 .map(Values::literal)
-    //                         )
-    //
-    //                         .value(Schema.provider, provider)
-    //                         .value(Schema.about, subject);
-    //
-    //             });
-    // }
+    private Optional<Frame> program(final JSONPath json) {
+        return json.string("code").map(code -> frame(
+
+                field(ID, item(Programs.Context, Poitiers, code)),
+
+                field(RDF.TYPE, Programs.EducationalOccupationalProgram),
+                field(owner, Poitiers.Id),
+
+                field(Schema.name, json.string("name")
+                        .map(name -> literal(format("%s - %s", code, name), Poitiers.Language))
+                ),
+
+                field(Schema.identifier, literal(code)),
+
+                field(educationalLevel, json.integer("levelISCED")
+                        .map(BigInteger::intValue)
+                        .map(ISCEDLevels::get)
+                ),
+
+                field(numberOfCredits, json.decimal("credits")
+                        .map(Offerings_::ects)
+                        .map(Frame::literal)
+                ),
+
+                field(provider, json.string("composante")
+                        .map(name -> frame(
+
+                                field(ID, item(Organizations.Context, Poitiers, name)),
+
+                                field(RDF.TYPE, Schema.Organization),
+                                field(owner, Poitiers.Id),
+                                field(Schema.name, literal(name, Poitiers.Language))
+
+                        ))
+                ),
+
+                field(Schema.about, json.string("discipline")
+                        .map(name -> frame(
+
+                                field(ID, item(Types, Poitiers, name)),
+
+                                field(RDF.TYPE, SKOS.CONCEPT),
+                                field(SKOS.TOP_CONCEPT_OF, Types),
+                                field(SKOS.PREF_LABEL, literal(name, Poitiers.Language))
+
+                        ))
+                ),
+
+                field(hasCourse, json.entries("options.*.elemPedago.*")
+                        .map(entry -> item(Courses.Context, Poitiers, entry.getKey()))
+                )
+
+        ));
+    }
+
+    private Xtream<Frame> courses(final JSONPath program) {
+
+        final Optional<IRI> provider=program.string("composante")
+                .map(name -> item(Organizations.Context, Poitiers, name));
+
+        final Optional<IRI> subject=program.string("discipline")
+                .map(name -> item(Types, Poitiers, name));
+
+        final Optional<IRI> level=program.integer("levelISCED")
+                .map(BigInteger::intValue)
+                .map(ISCEDLevels::get);
+
+
+        return program.entries("options.*.elemPedago.*")
+
+                .map(entry -> {
+
+                    final String code=entry.getKey();
+                    final JSONPath json=entry.getValue();
+
+                    return frame(
+
+                            field(ID, item(Courses.Context, Poitiers, code)),
+
+                            field(RDF.TYPE, Course),
+                            field(owner, Poitiers.Id),
+
+                            field(Schema.name, json.string("name")
+                                    .map(name -> literal(format("%s - %s", code, name), Poitiers.Language))
+                            ),
+
+                            field(courseCode, literal(code)),
+
+                            field(educationalLevel, level),
+
+                            field(numberOfCredits, json.string("credits")
+                                    .map(Offerings_::ects)
+                                    .map(Frame::literal)
+                            ),
+
+                            field(Offerings.provider, provider),
+                            field(Schema.about, subject)
+
+                    );
+
+                });
+    }
 
 }
