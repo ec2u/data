@@ -12,6 +12,29 @@
 
 ########################################################################################################################
 
+</concepts/organizations/university> a skos:Concept ;
+    skos:topConceptOf </concepts/organizations> ;
+    skos:prefLabel "University"@en .
+
+</concepts/organizations/college> a skos:Concept ;
+    skos:topConceptOf </concepts/organizations> ;
+    skos:prefLabel "University College"@en .
+
+</concepts/organizations/association> a skos:Concept ;
+    skos:topConceptOf </concepts/organizations> ;
+    skos:prefLabel "Association"@en .
+
+</concepts/organizations/city> a skos:Concept ;
+    skos:topConceptOf </concepts/organizations> ;
+    skos:prefLabel "City"@en .
+
+</concepts/organizations/other> a skos:Concept ;
+    skos:topConceptOf </concepts/organizations> ;
+    skos:prefLabel "Other"@en .
+
+
+########################################################################################################################
+
 </concepts/organizations/university-unit> a skos:Concept ;
     skos:topConceptOf </concepts/organizations> ;
     skos:prefLabel "University Unit"@en .
@@ -32,8 +55,8 @@
     skos:prefLabel "Research Network"@en ;
     skos:definition
         """Networks of researchers sharing a research theme or topic;
-       not part of the formal organization of the University;
-       not limited to the researchers of the University"""@en .
+        not part of the formal organization of the University;
+        not limited to the researchers of the University"""@en .
 
 </concepts/organizations/university-unit/institute> a skos:Concept ;
     skos:inScheme </concepts/organizations> ;

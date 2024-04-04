@@ -41,7 +41,7 @@
             <title>Layer 1</title>
             <g id="Group_69">
                 <g id="Graphic_70">
-                    <a xl:href="http://schema.org/Thing">
+                    <a xl:href="https://schema.org/Thing">
                         <rect x="144.56693" y="4.2519685" width="194.3291" height="17.261063" fill="white"/>
                         <rect x="144.56693" y="4.2519685" width="194.3291" height="17.261063" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -82,9 +82,9 @@
                 </g>
             </g>
             <g id="Graphic_76">
-                <a xl:href="http://schema.org/">
+                <a xl:href="https://schema.org/">
                     <text transform="translate(157.32284 -89.2035)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;http://schema.org/&gt;</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;https://schema.org/&gt;</tspan>
                     </text>
                 </a>
             </g>

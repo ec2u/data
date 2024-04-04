@@ -57,7 +57,10 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events.endDate;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
@@ -69,7 +72,7 @@ public final class EventsPoitiersUniversity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/poitiers/university");
 
     private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
-            .value(RDF.TYPE, Events._Publisher)
+            .value(RDF.TYPE, Organization)
             .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Poitiers / News and Events", "en"),
@@ -175,8 +178,8 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
 
                 .frames(DCTERMS.SUBJECT, item.strings("category")
-                        .map(c -> frame(EC2U.item(Events.Scheme, c))
-                                .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
+                        .map(c -> frame(EC2U.item(Events.Topics, c))
+                                .value(SKOS.TOP_CONCEPT_OF, Events.Topics)
                                 .value(RDF.TYPE, SKOS.CONCEPT)
                                 .value(RDFS.LABEL, literal(c, Poitiers.Language))
                                 .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))

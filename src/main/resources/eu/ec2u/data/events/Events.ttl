@@ -1,5 +1,5 @@
 @prefix ec2u: </terms/> .
-@prefix schema: <http://schema.org/> .
+@prefix schema: <https://schema.org/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -8,39 +8,45 @@
 @prefix void: <http://rdfs.org/ns/void#> .
 
 </events/> a ec2u:Dataset ;
-    dct:title "EC2U Events"@en ;
-    dct:alternative "EC2U Academic and Public Local Events"@en ;
+    dct:title "EC2U Academic and Public Local Events"@en ;
+    dct:alternative "EC2U Events"@en ;
     dct:description
         "Information about events at EC2U allied universities and associated local communities, dynamically collected from academic, public and commercial sources."@en ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
-    dct:available "2022-01-01"^^xsd:date ;
-    void:rootResource ec2u:Event ;
+    dct:issued "2022-01-01"^^xsd:date ;
+    void:rootResource schema:Event ;
     rdfs:isDefinedBy </schemas/events> .
 
 </concepts/event-topics> a skos:ConceptScheme ;
-    dct:title "EC2U Local Event Topics"@en .
+    dct:title "EC2U Local Event Topics"@en ;
+    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en .
+
+</concepts/event-audience> a skos:ConceptScheme ;
+    dct:title "EC2U Local Event Audience"@en ;
+    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en .
+
 
 
 ########################################################################################################################
 
-ec2u:Event a owl:Class ;
-    rdfs:subClassOf ec2u:Resource, schema:Event .
-
 schema:Event a owl:Class ;
     rdfs:subClassOf schema:Thing .
 
-schema:Organization a owl:Class ;
-    rdfs:subClassOf schema:Thing .
+schema:MixedEventAttendanceMode rdfs:label "mixed"@en .
+schema:OfflineEventAttendanceMode rdfs:label "offline"@en .
+schema:OnlineEventAttendanceMode rdfs:label "online"@en .
 
-schema:Place a owl:Class ;
-    rdfs:subClassOf schema:Thing .
+schema:EventScheduled rdfs:label "scheduled"@en .
+schema:EventMovedOnline rdfs:label "moved online"@en .
+schema:EventPostponed rdfs:label "postponed"@en .
+schema:EventRescheduled rdfs:label "rescheduled"@en .
+schema:EventCancelled rdfs:label "cancelled"@en .
 
-schema:PostalAddress a owl:Class ;
-    rdfs:subClassOf schema:ContactPoint .
 
-schema:ContactPoint a owl:Class ;
-    rdfs:subClassOf schema:Thing .
 
-schema:VirtualLocation a owl:Class ;
-    rdfs:subClassOf schema:Thing .
+
+
+
+
+

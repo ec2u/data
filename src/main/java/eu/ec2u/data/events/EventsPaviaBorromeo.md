@@ -426,13 +426,13 @@ GET http://www.collegioborromeo.it/it/event/invicta-juditha/
 ```json
 [
     {
-        "@context": "http://schema.org",
+      "@context": "https://schema.org",
         "@type": "Event",
         "name": "Invicta Juditha",
         "description": "&lt;p&gt;Invicta Juditha. Stories of Judith in Judaism, Christianity and Islam from Antiquity to Modern Times INTERNATIONAL SUMMER SCHOOL IN INTERRELIGIOUS...&lt;/p&gt;\\n",
         "image": "http://www.collegioborromeo.it/it/wp-content/uploads/2022/07/Summer-Collegio-Copia.jpg",
         "url": "http://www.collegioborromeo.it/it/event/invicta-juditha/",
-        "eventAttendanceMode": "http://schema.org/OfflineEventAttendanceMode",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "startDate": "2022-08-29T00:00:00+02:00",
         "endDate": "2022-09-02T23:59:59+02:00",
         "location": {

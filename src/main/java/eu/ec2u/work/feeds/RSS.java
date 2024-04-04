@@ -16,11 +16,10 @@
 
 package eu.ec2u.work.feeds;
 
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.link.Frame;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.w3c.dom.Document;
@@ -31,15 +30,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.bnode;
-import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.term;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 public final class RSS implements Function<Document, Xtream<Frame>> {
+
+    // !!! namespace
 
     public static final IRI Title=term("title");
     public static final IRI Link=term("link");
@@ -71,22 +70,23 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
                 .map(XPath::new)
                 .flatMap(xpath -> xpath.paths("/rss/channel/item"))
 
-                .map(item -> frame(bnode())
+                .map(item -> frame(
 
-                        .string(Title, item.string("title"))
-                        .value(Link, item.link("link").map(Values::iri))
-                        .strings(Category, item.strings("category"))
+                        field(Title, item.string("title").map(Frame::literal)),
 
-                        .value(PubDate, item.string("pubDate")
+                        field(Link, item.link("link").map(Frame::iri)),
+                        field(Category, item.strings("category").map(Frame::literal)),
+
+                        field(PubDate, item.string("pubDate")
                                 .map(RFC_1123_DATE_TIME::parse)
                                 .map(OffsetDateTime::from)
                                 .map(timestamp -> timestamp.withOffsetSameInstant(ZoneOffset.UTC))
-                                .map(Values::literal)
-                        )
+                                .map(Frame::literal)
+                        ),
 
-                        .string(Description, item.string("description"))
-                        .string(Encoded, item.string("content:encoded").map(Untag::untag))
-                );
+                        field(Description, item.string("description").map(Frame::literal)),
+                        field(Encoded, item.string("content:encoded").map(Untag::untag).map(Frame::literal))
+                ));
 
     }
 

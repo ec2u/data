@@ -59,7 +59,7 @@ export const Events=immutable({
 
 		startDate: optional(dateTime),
 
-		university: required({
+		owner: optional({
 			id: required(id),
 			label: required(local)
 		})
@@ -83,7 +83,7 @@ export function DataEvents() {
 
 
 			<ToolOptions placeholder={"University"}>{
-				useOptions(events, "university")
+				useOptions(events, "owner")
 			}</ToolOptions>
 
 			<ToolRange placeholder={"Date"}>{
@@ -91,15 +91,23 @@ export function DataEvents() {
 			}</ToolRange>
 
 			<ToolOptions placeholder={"Topic"} compact>{
-				useOptions(events, "subject", { type: entry({ id: "", label: required(local) }), size: 10 })
+				useOptions(events, "about", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Audience"} compact>{
+				useOptions(events, "audience", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Organizer"} compact>{
+				useOptions(events, "organizer", { type: entry({ id: "", label: required(local) }), size: 10 })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Publisher"} compact>{
 				useOptions(events, "publisher", { type: entry({ id: "", label: required(local) }), size: 10 })
 			}</ToolOptions>
 
-			<ToolOptions placeholder={"Organizer"} compact>{
-				useOptions(events, "organizer", { type: entry({ id: "", label: required(local) }), size: 10 })
+			<ToolOptions placeholder={"Source"} compact>{
+				useOptions(events, "publisher.about", { type: entry({ id: "", label: required(local) }), size: 10 })
 			}</ToolOptions>
 
 		</>}
@@ -131,7 +139,7 @@ export function DataEvents() {
 
 				startDate,
 
-				university
+				owner
 
 			}) =>
 
@@ -146,7 +154,7 @@ export function DataEvents() {
 					}}</ToolLink>}
 
 					image={image}
-					tags={<span>{toEntryString(university)}</span>}
+					tags={owner && <span>{toEntryString(owner)}</span>}
 
 				>{
 

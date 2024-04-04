@@ -17,7 +17,6 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.http.rdf4j.actions.TupleQuery;
-import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.work.Xtream;
 
 import org.eclipse.rdf4j.model.*;
@@ -27,15 +26,12 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
-import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
 
 import static eu.ec2u.data.EC2U.BASE;
 import static java.lang.String.format;
@@ -48,12 +44,14 @@ final class Events_ {
         return Xtream
 
                 .of("prefix ec2u: </terms/>\n"
-                        +"prefix dct: <http://purl.org/dc/terms/>\n\n"
-                        +"select (max(?modified) as ?synced) where {\n"
+                        +
+                        "PREFIX schema: <https://schema.org/>\n"+
+                        "\n"
+                        +"select (max(?synced) as ?instant) where {\n"
                         +"\n"
-                        +"\t?event a ec2u:Event;\n"
-                        +"\t\tdct:publisher ?publisher;\n"
-                        +"\t\tdct:modified ?modified.\n"
+                        +"\t?event a schema:Event;\n"
+                        +"\t\tschema:publisher ?publisher;\n"
+                        +"\t\tec2u:synced ?synced.\n"
                         +"\n"
                         +"}"
                 )
@@ -64,7 +62,7 @@ final class Events_ {
                         .dflt(context)
                 )
 
-                .optMap(bindings -> literal(bindings.getValue("synced")))
+                .optMap(bindings -> literal(bindings.getValue("instant")))
 
                 .map(Literal::temporalAccessorValue)
                 .map(Instant::from)
@@ -86,7 +84,9 @@ final class Events_ {
 
         private final IRI context;
 
+
         public Loader(final IRI context) { this.context=context; }
+
 
         @Override public void accept(final Collection<Statement> model) {
 
@@ -114,18 +114,18 @@ final class Events_ {
 
             // ;( SPARQL update won't take effect if executed inside the previous txn
 
-            time(() -> Stream.of(text(resource(Events_.class, ".ul")))
-
-                    .forEach(new Update()
-                            .base(BASE)
-                            .dflt(context)
-                            .insert(context)
-                            .remove(context)
-                    )
-
-            ).apply(elapsed -> service(logger()).info(Events.class, format(
-                    "purged stale events  from <%s> in <%d> ms", context, elapsed
-            )));
+            // time(() -> Stream.of(text(resource(Events_.class, ".ul")))
+            //
+            //         .forEach(new Update()
+            //                 .base(BASE)
+            //                 .dflt(context)
+            //                 .insert(context)
+            //                 .remove(context)
+            //         )
+            //
+            // ).apply(elapsed -> service(logger()).info(Events.class, format(
+            //         "purged stale events from <%s> in <%d> ms", context, elapsed
+            // )));
 
         }
 

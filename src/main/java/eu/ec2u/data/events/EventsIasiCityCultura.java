@@ -18,40 +18,44 @@ package eu.ec2u.data.events;
 
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.http.rdf.Frame;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.formats.XML;
+import com.metreeca.link.Frame;
 
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.universities._Universities.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
-import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiCityCultura implements Runnable {
 
     public static final IRI Context=iri(Events.Context, "/iasi/cultura");
 
-    private static final Frame Publisher=frame(iri("https://culturainiasi.ro/evenimente-culturale/"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._City)
-            .values(RDFS.LABEL,
-                    literal("Iaşul Cultural / Evenimente in Iași", "ro"),
+    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+
+            field(ID, iri("https://culturainiasi.ro/evenimente-culturale/")),
+            field(TYPE, Schema.Organization),
+
+            field(Schema.name,
+                    literal("Iaşul Cultural / Evenimente in Iași", Iasi.Language),
                     literal("Culture in Iasi / Events in Iasi", "en")
-            );
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
@@ -61,18 +65,18 @@ public final class EventsIasiCityCultura implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final ZonedDateTime now=ZonedDateTime.now(UTC);
-
-
     @Override public void run() {
-        // Xtream.of(synced(Context, Publisher.focus()))
-        //
-        //         .flatMap(this::crawl)
-        //         .map(this::event)
-        //
-        //         .pipe(events -> validate(Event(), Set.of(Event), events))
-        //
-        //         .forEach(new Events.Updater(Context));
+        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+
+                .flatMap(this::crawl)
+                .map(this::event)
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
@@ -91,12 +95,12 @@ public final class EventsIasiCityCultura implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return WordPress(frame, Iasi.Language)
+        return frame(WordPress(frame, Iasi.Language),
 
-                .value(Resources.owner, Iasi.Id)
+                field(owner, Iasi.Id),
+                field(publisher, Publisher)
 
-                .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));
+        );
     }
 
 }

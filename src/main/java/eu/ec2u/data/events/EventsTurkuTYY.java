@@ -27,6 +27,7 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Schema;
@@ -51,6 +52,7 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.endDate;
 import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
 
@@ -59,8 +61,8 @@ public final class EventsTurkuTYY implements Runnable {
     private static final IRI Context=iri(Events.Context, "/turku/tyy");
 
     private static final Frame Publisher=frame(iri("https://www.tyy.fi/"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._Association)
+            .value(RDF.TYPE, Organization)
+            .value(DCTERMS.COVERAGE, OrganizationTypes.Association)
             .values(RDFS.LABEL,
                     literal("The Student Union of the University of Turku (TYY) / Calendar of Events", "en"),
                     literal("Turun yliopiston ylioppilaskunta (TYY) / Tapahtumakalenteri", Turku.Language)

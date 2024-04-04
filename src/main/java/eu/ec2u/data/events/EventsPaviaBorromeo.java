@@ -19,6 +19,7 @@ package eu.ec2u.data.events;
 import com.metreeca.http.rdf.Frame;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -28,6 +29,7 @@ import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
+import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Pavia;
 
 public final class EventsPaviaBorromeo implements Runnable {
@@ -35,8 +37,8 @@ public final class EventsPaviaBorromeo implements Runnable {
     private static final IRI Context=iri(Events.Context, "/pavia/borromeo");
 
     private static final Frame Publisher=frame(iri("http://www.collegioborromeo.it/it/eventi/"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._College)
+            .value(RDF.TYPE, Organization)
+            .value(DCTERMS.COVERAGE, OrganizationTypes.College)
             .values(RDFS.LABEL,
                     literal("Almo Collegio Borromeo / Calendar", "en"),
                     literal("Almo Collegio Borromeo / Calendario", Pavia.Language)

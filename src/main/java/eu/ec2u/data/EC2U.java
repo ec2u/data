@@ -20,6 +20,7 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Logger;
+import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 import com.metreeca.link.Trace;
 
@@ -46,8 +47,10 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -65,6 +68,7 @@ import static com.metreeca.link.Frame.literal;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.model.util.Statements.statement;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
@@ -224,4 +228,21 @@ public final class EC2U extends Delegator {
         });
     }
 
+    public static String skolemize(final Frame frame, final IRI... predicates) {
+
+        if ( frame == null ) {
+            throw new NullPointerException("null frame");
+        }
+
+        if ( predicates == null || Arrays.stream(predicates).anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null predicates");
+        }
+
+        return md5(Arrays.stream(predicates)
+                .flatMap(predicate -> frame.values(predicate)
+                        .map(value -> format("'%s':'%s'", predicate, value))
+                )
+                .collect(joining("\0"))
+        );
+    }
 }

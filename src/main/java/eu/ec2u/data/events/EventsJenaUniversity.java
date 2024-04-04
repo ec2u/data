@@ -36,10 +36,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.io.StringReader;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
@@ -53,12 +50,13 @@ import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Frame.frame;
 import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 
 import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Jena;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
 
@@ -98,7 +96,7 @@ public final class EventsJenaUniversity implements Runnable {
             )
 
             .map(frame -> frame
-                    .value(RDF.TYPE, Events._Publisher)
+                    .value(RDF.TYPE, Organization)
                     .value(DCTERMS.COVERAGE, University)
                     .value(Resources.owner, Jena.Id)
             )
@@ -180,9 +178,9 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .flatMap(json -> {
 
-                    try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
+                    try ( final StringReader reader=new StringReader(json) ) {
 
-                        final Collection<Statement> model=rdf(input, null, new JSONLDParser());
+                        final Collection<Statement> model=normalize(rdf(reader, "", new JSONLDParser()));
 
                         return frame(Event, model)
                                 .frames(reverse(RDF.TYPE));
@@ -192,10 +190,6 @@ public final class EventsJenaUniversity implements Runnable {
                         service(logger()).warning(this, e.getMessage());
 
                         return Stream.empty();
-
-                    } catch ( final IOException unexpected ) {
-
-                        throw new UncheckedIOException(unexpected);
 
                     }
 
@@ -220,22 +214,22 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .value(DCTERMS.SOURCE, frame.value(Schema.url))
 
-                .value(DCTERMS.CREATED, frame.value(dateCreated)
-                        .flatMap(Values::literal)
-                        .map(Literal::temporalAccessorValue)
-                        .map(OffsetDateTime::from)
-                        .map(v -> v.withOffsetSameInstant(UTC))
-                        .map(Values::literal)
-                )
-
-                .value(DCTERMS.MODIFIED, frame.value(dateModified)
-                        .flatMap(Values::literal)
-                        .map(Literal::temporalAccessorValue)
-                        .map(OffsetDateTime::from)
-                        .map(v -> v.withOffsetSameInstant(UTC))
-                        .map(Values::literal)
-                        .orElseGet(() -> literal(now))
-                )
+                // .value(DCTERMS.CREATED, frame.value(dateCreated)
+                //         .flatMap(Values::literal)
+                //         .map(Literal::temporalAccessorValue)
+                //         .map(OffsetDateTime::from)
+                //         .map(v -> v.withOffsetSameInstant(UTC))
+                //         .map(Values::literal)
+                // )
+                //
+                // .value(DCTERMS.MODIFIED, frame.value(dateModified)
+                //         .flatMap(Values::literal)
+                //         .map(Literal::temporalAccessorValue)
+                //         .map(OffsetDateTime::from)
+                //         .map(v -> v.withOffsetSameInstant(UTC))
+                //         .map(Values::literal)
+                //         .orElseGet(() -> literal(now))
+                // )
 
                 .frame(DCTERMS.PUBLISHER, publisher)
 

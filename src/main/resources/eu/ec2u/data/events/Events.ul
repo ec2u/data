@@ -1,0 +1,17 @@
+prefix schema: <https://schema.org/>
+
+insert {
+
+    ?event schema:duration ?duration
+
+} where {
+
+    ?event a schema:Event ;
+        schema:startDate ?start ;
+        schema:endDate ?end .
+
+    filter not exists { ?event schema:duration ?duration }
+
+    bind(?end-?start as ?duration)
+
+} # compute duration

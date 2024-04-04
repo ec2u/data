@@ -18,6 +18,7 @@ package eu.ec2u.data.organizations;
 
 import com.metreeca.link.Shape;
 
+import eu.ec2u.data.concepts.OrganizationTypes;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
@@ -49,7 +50,7 @@ public final class Organizations {
                 property(SKOS.ALT_LABEL, optional(localized())),
                 property(SKOS.DEFINITION, optional(localized())),
 
-                property(ORG.CLASSIFICATION, multiple(Concept())),
+                property(ORG.CLASSIFICATION, multiple(Concept(), scheme(OrganizationTypes.Scheme))),
 
                 property(ORG.SUB_ORGANIZATION_OF, () -> multiple(Organization())),
                 property(ORG.HAS_SUB_ORGANIZATION, () -> multiple(Organization())),

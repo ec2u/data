@@ -39,6 +39,12 @@ public final class OrganizationTypes implements Runnable {
     public static final IRI Unit=iri(Scheme, "/university-unit");
 
 
+    public static final IRI University=iri(Scheme, "/university");
+    public static final IRI College=iri(Scheme, "/college");
+    public static final IRI Association=iri(Scheme, "/association");
+    public static final IRI City=iri(Scheme, "/city");
+    public static final IRI Other=iri(Scheme, "/other");
+
     public static final IRI Area=iri(Unit, "/area");
     public static final IRI Network=iri(Unit, "/network");
     public static final IRI Institute=iri(Unit, "/institute");

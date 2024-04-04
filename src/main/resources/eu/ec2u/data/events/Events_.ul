@@ -1,6 +1,5 @@
 prefix ec2u:	</terms/>
-prefix dct:		<http://purl.org/dc/terms/>
-prefix schema: <http://schema.org/>
+prefix schema: <https://schema.org/>
 
 
 #### Purge Stale Events ################################################################################################
@@ -12,19 +11,17 @@ delete {
 
 } where {
 
-	?e a ec2u:Event.
+    ?e a schema:Event .
 
 	optional { ?e schema:startDate ?start }
 	optional { ?e schema:endDate ?end }
 
-	optional { ?e dct:created ?created }
-	optional { ?e dct:modified ?modified }
+    optional { ?e ec2u:synced ?synced }
 
 	bind (coalesce(?end, ?start) as ?date)
-	bind (coalesce(?modified, ?created) as ?mutated)
 
 	bind (?date < now() as ?stale)
-	bind ((year(now())*12+month(now()))-(year(?mutated)*12+month(?mutated)) as ?delta)
+    bind ((year(now())*12+month(now()))-(year(?synced)*12+month(?synced)) as ?delta)
 
 	filter ( ?stale || !bound(?date) && ?delta >= 1)
 
@@ -44,7 +41,7 @@ delete {
 
 	?r ?p ?o.
 
-	filter not exists { ?r a ec2u:Event }
+    filter not exists { ?r a schema:Event }
 	filter not exists { ?s ?q ?r }
 
 }

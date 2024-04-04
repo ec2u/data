@@ -33,10 +33,7 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.io.StringReader;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
@@ -45,6 +42,7 @@ import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.link.Frame.*;
 
@@ -57,7 +55,6 @@ import static eu.ec2u.data.offerings.Offerings.educationalLevel;
 import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities._Universities.Jena;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Map.entry;
 
 public final class OfferingsJena implements Runnable {
@@ -134,9 +131,9 @@ public final class OfferingsJena implements Runnable {
 
                 .flatMap(json -> {
 
-                    try ( final InputStream input=new ByteArrayInputStream(json.getBytes(UTF_8)) ) {
+                    try ( final StringReader reader=new StringReader(json) ) {
 
-                        final Collection<Statement> model=rdf(input, SiteURL, new JSONLDParser());
+                        final Collection<Statement> model=normalize(rdf(reader, SiteURL, new JSONLDParser()));
 
                         return _Focus.focus(schema("AboutPage"), model)
                                 .shift(reverse(RDF.TYPE))
@@ -147,10 +144,6 @@ public final class OfferingsJena implements Runnable {
                         service(logger()).warning(this, e.getMessage());
 
                         return Stream.empty();
-
-                    } catch ( final IOException unexpected ) {
-
-                        throw new UncheckedIOException(unexpected);
 
                     }
 

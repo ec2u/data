@@ -1,5 +1,5 @@
 @prefix org: <http://www.w3.org/ns/org#> .
-@prefix schema: <http://schema.org/> .
+@prefix schema: <https://schema.org/> .
 @prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -8,6 +8,16 @@ schema:Thing a owl:Class .
 
 schema:Organization a owl:Class ;
     rdfs:subClassOf schema:Thing, org:Organization .
+
+
+schema:PostalAddress a owl:Class ;
+    rdfs:subClassOf schema:Thing .
+
+schema:Place a owl:Class ;
+    rdfs:subClassOf schema:Thing .
+
+schema:VirtualLocation a owl:Class ;
+    rdfs:subClassOf schema:Thing .
 
 
 schema:latitude a owl:DatatypeProperty ;

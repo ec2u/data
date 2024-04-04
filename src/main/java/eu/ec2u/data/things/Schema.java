@@ -19,6 +19,7 @@ package eu.ec2u.data.things;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.link.Shape.*;
@@ -32,21 +33,11 @@ import static eu.ec2u.data.resources.Resources.localized;
 /**
  * Schema.org RDF vocabulary.
  *
- * @see <a href="http://schema.org/">Schema.org</a>
+ * @see <a href="https://schema.org/">Schema.org</a>
  */
 public final class Schema {
 
-    //// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static Shape or(final Shape... shapes) {
-        return shape(); // !!!
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static final String Namespace="http://schema.org/";
-
+    private static final String Namespace="https://schema.org/";
     private static final IRI Context=item("/things/");
 
 
@@ -73,6 +64,7 @@ public final class Schema {
     public static final IRI inLanguage=schema("inLanguage");
     public static final IRI email=schema("email");
     public static final IRI telephone=schema("telephone");
+    public static final IRI location=schema("location");
 
 
     //// Things ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +90,7 @@ public final class Schema {
 
                 property(url, multiple(id())),
                 property(identifier, optional(string())),
-                property(name, required(localized())),
+                property(name, optional(localized())),
                 property(image, optional(id())),
                 property(description, optional(localized())),
                 property(disambiguatingDescription, optional(localized()))
@@ -119,7 +111,9 @@ public final class Schema {
 
                 property(legalName, optional(localized())),
                 property(email, optional(string())),
-                property(telephone, optional(string()))
+                property(telephone, optional(string())),
+
+                property(location, optional(Location()))
 
         );
     }
@@ -133,24 +127,24 @@ public final class Schema {
 
 
     public static final IRI address=schema("address");
-
     public static final IRI latitude=schema("latitude");
     public static final IRI longitude=schema("longitude");
 
     public static final IRI addressCountry=schema("addressCountry");
     public static final IRI addressRegion=schema("addressRegion");
     public static final IRI addressLocality=schema("addressLocality");
-
     public static final IRI postalCode=schema("postalCode");
     public static final IRI streetAddress=schema("streetAddress");
 
 
     public static Shape Location() {
-        return or(
+        return composite(
 
-                Place(),
-                PostalAddress(),
-                VirtualLocation()
+                property("Text", XSD.STRING, optional(string())),
+
+                property(Place, optional(Place())),
+                property(PostalAddress, optional(PostalAddress())),
+                property(VirtualLocation, optional(VirtualLocation()))
 
         );
     }
@@ -167,32 +161,25 @@ public final class Schema {
     }
 
     public static Shape PostalAddress() {
-        return shape(PostalAddress, ContactPoint(),
+        return shape(PostalAddress, Thing(),
 
-                property(addressCountry, optional(or(Resource(), string()))),
-                property(addressRegion, optional(or(Resource(), string()))),
-                property(addressLocality, optional(or(Resource(), string()))),
+                property(addressCountry, optional(Resource())),
+                property(addressRegion, optional(Resource())),
+                property(addressLocality, optional(Resource())),
+
                 property(postalCode, optional(string())),
-                property(streetAddress, optional(string()))
+                property(streetAddress, optional(string())),
+
+                property(email, optional(string())),
+                property(telephone, optional(string()))
 
         );
     }
 
     public static Shape VirtualLocation() {
-        return shape(VirtualLocation, Thing());
-    }
+        return shape(VirtualLocation, Thing(),
 
-
-    //// ContactPoints /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI ContactPoint=schema("ContactPoint");
-
-
-    public static Shape ContactPoint() {
-        return shape(ContactPoint, Thing(),
-
-                property(email, optional(string())),
-                property(telephone, optional(string()))
+                property(url, required())
 
         );
     }
@@ -203,8 +190,11 @@ public final class Schema {
     public static void main(final String... args) {
         exec(() -> create(Context, Schema.class,
                 Thing(),
-                Organization()
-                // !!! locations
+                Organization(),
+                Location(),
+                Place(),
+                PostalAddress(),
+                VirtualLocation()
         ));
     }
 

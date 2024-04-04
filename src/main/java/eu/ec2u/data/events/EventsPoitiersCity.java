@@ -18,6 +18,7 @@ package eu.ec2u.data.events;
 
 import com.metreeca.http.rdf.Frame;
 
+import eu.ec2u.data.concepts.OrganizationTypes;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -31,6 +32,7 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.things.Schema.Organization;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCity implements Runnable {
@@ -38,8 +40,8 @@ public final class EventsPoitiersCity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/poitiers/city");
 
     private static final Frame Publisher=frame(iri("https://www.poitiers.fr/"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._City)
+            .value(RDF.TYPE, Organization)
+            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
             .values(RDFS.LABEL,
                     literal("Ville de Poitiers / Evenements", "fr"),
                     literal("City of Poitiers / Events", "en")

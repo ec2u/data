@@ -87,8 +87,8 @@ public final class Universities extends Delegator {
 
     public static void main(final String... args) {
         exec(
-                () -> create(Context, Universities.class, University()),
-                () -> new Universities_().run()
+                () -> new Universities_().run(),
+                () -> create(Context, Universities.class, University())
         );
     }
 

@@ -28,6 +28,7 @@ import com.metreeca.http.xml.formats.XML;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
@@ -50,6 +51,7 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.events.Events.endDate;
 import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 
@@ -58,8 +60,8 @@ public final class EventsPoitiersCityGrand implements Runnable {
     private static final IRI Context=iri(Events.Context, "/poitiers/city/grand");
 
     private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._City)
+            .value(RDF.TYPE, Organization)
+            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
             .values(RDFS.LABEL,
                     literal("Grand Poitiers / Events", "en"),
                     literal("Grand Poitiers / Sortir", Poitiers.Language)
@@ -169,9 +171,9 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             final Literal label=literal(category, Poitiers.Language);
 
-            return frame(EC2U.item(Events.Scheme, category))
+            return frame(EC2U.item(Events.Topics, category))
                     .value(RDF.TYPE, SKOS.CONCEPT)
-                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
+                    .value(SKOS.TOP_CONCEPT_OF, Events.Topics)
                     .value(RDFS.LABEL, label)
                     .value(SKOS.PREF_LABEL, label);
 

@@ -131,7 +131,7 @@ GET https://linkedevents-api.turku.fi/v1/event/?last_modified_since=2022-03-01
                 "en": "Vauhdikas vesijumppa illan päätteeksi!"
             },
             "@id": "https://linkedevents-api.turku.fi/v1/event/turku:991417/",
-            "@context": "http://schema.org",
+            "@context": "https://schema.org",
             "@type": "Event/LinkedEvent"
         }
     ]

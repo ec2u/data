@@ -38,7 +38,7 @@ GET https://www.ghislieri.it/calendario-eventi/
 ```
 
 ```html
-<div id="event_14409" class="eventon_list_event evo_eventtop  event" data-event_id="14409" data-time="1656925200-1661526000" data-colr="#fcc875" itemscope itemtype="http://schema.org/Event" 1>
+<div id="event_14409" class="eventon_list_event evo_eventtop  event" data-event_id="14409" data-time="1656925200-1661526000" data-colr="#fcc875" itemscope itemtype="https://schema.org/Event" 1>
   …
 </div>
 ```
@@ -53,7 +53,7 @@ GET https://www.ghislieri.it/evento/ciclo-lanterne-1/
 ```
 
 ```html
-<div id="event_14409" class="eventon_list_event evo_eventtop  event" data-event_id="14409" data-time="1656925200-1661526000" data-colr="#fcc875" itemscope itemtype="http://schema.org/Event" 1>
+<div id="event_14409" class="eventon_list_event evo_eventtop  event" data-event_id="14409" data-time="1656925200-1661526000" data-colr="#fcc875" itemscope itemtype="https://schema.org/Event" 1>
 	…
 </div>
 ```
@@ -70,7 +70,7 @@ GET https://www.ghislieri.it/calendario-eventi/
 ```
 
 ```json
-{	"@context": "http://schema.org",
+{	"@context": "https://schema.org",
 
     "@type": "Event",
 
@@ -110,7 +110,7 @@ GET https://www.ghislieri.it/evento/ciclo-lanterne-1/
 
 ```json
 {
-    "@context": "http://schema.org",
+  "@context": "https://schema.org",
     "@graph": [
         {
             "@type": "WebSite",

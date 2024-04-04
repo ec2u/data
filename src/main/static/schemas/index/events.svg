@@ -41,7 +41,7 @@
             <title>Layer 1</title>
             <g id="Group_173">
                 <g id="Graphic_174">
-                    <a xl:href="http://schema.org/Event">
+                    <a xl:href="https://schema.org/Event">
                         <rect x="47.19951" y="146.36465" width="184.09863" height="17.261063" fill="white"/>
                         <rect x="47.19951" y="146.36465" width="184.09863" height="17.261063" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -74,7 +74,7 @@
             </g>
             <g id="Group_169">
                 <g id="Graphic_170">
-                    <a xl:href="http://schema.org/Place">
+                    <a xl:href="https://schema.org/Place">
                         <rect x="400.50815" y="254.41067" width="140.90918" height="17.261063" fill="white"/>
                         <rect x="400.50815" y="254.41067" width="140.90918" height="17.261063" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -114,7 +114,7 @@
                     </text>
                 </g>
                 <g id="Graphic_166">
-                    <a xl:href="http://schema.org/PostalAddress">
+                    <a xl:href="https://schema.org/PostalAddress">
                         <rect x="413.11824" y="140.98303" width="115.689" height="16.232056" fill="white"/>
                         <rect x="413.11824" y="140.98303" width="115.689" height="16.232056" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -128,7 +128,7 @@
             </g>
             <g id="Group_161">
                 <g id="Graphic_162">
-                    <a xl:href="http://schema.org/VirtualLocation">
+                    <a xl:href="https://schema.org/VirtualLocation">
                         <rect x="416.7987" y="323.8177" width="108.32812" height="17" fill="white"/>
                         <rect x="416.7987" y="323.8177" width="108.32812" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -181,7 +181,7 @@
       </g>
       <g id="Group_148">
           <g id="Graphic_149">
-              <a xl:href="http://schema.org/EventStatusType">
+              <a xl:href="https://schema.org/EventStatusType">
                   <rect x="-8.574803" y="319.46723" width="114.57275" height="28" fill="white"/>
                   <rect x="-8.574803" y="319.46723" width="114.57275" height="28" stroke="black" stroke-linecap="round"
                           stroke-linejoin="round" stroke-width=".25"/>
@@ -240,7 +240,7 @@
               </text>
           </g>
           <g id="Graphic_139">
-              <a xl:href="http://schema.org/ContactPoint">
+              <a xl:href="https://schema.org/ContactPoint">
                   <rect x="413.11824" y="70.86614" width="113.57959" height="16.232056" fill="white"/>
                   <rect x="413.11824" y="70.86614" width="113.57959" height="16.232056" stroke="black"
                           stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -259,7 +259,7 @@
             </g>
             <g id="Group_133">
                 <g id="Graphic_134">
-                    <a xl:href="http://schema.org/Organization">
+                    <a xl:href="https://schema.org/Organization">
                         <rect x="131.66614" y="319.46723" width="117.01611" height="17" fill="white"/>
                         <rect x="131.66614" y="319.46723" width="117.01611" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -360,9 +360,9 @@
                 </g>
             </g>
             <g id="Graphic_114">
-                <a xl:href="http://schema.org/">
+                <a xl:href="https://schema.org/">
                     <text transform="translate(321.90756 396.46723)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;http://schema.org/&gt;</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;https://schema.org/&gt;</tspan>
                     </text>
                 </a>
             </g>

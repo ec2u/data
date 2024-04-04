@@ -27,6 +27,7 @@ import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.XML;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
@@ -51,6 +52,7 @@ import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
@@ -60,8 +62,8 @@ public final class EventsSalamancaCityTO implements Runnable {
     private static final IRI Context=iri(Events.Context, "/salamanca/city/to");
 
     private static final Frame Publisher=frame(iri("https://salamanca.es/en/calendar"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._City)
+            .value(RDF.TYPE, Organization)
+            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
             .values(RDFS.LABEL,
                     literal("Oficina de Turismo de Salamanca", "es"),
                     literal("Salamanca Municipal Tourist Office", "en")

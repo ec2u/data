@@ -20,18 +20,16 @@ import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
@@ -40,26 +38,36 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.toolkits.Strings.clip;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.universities._Universities.Coimbra;
-import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+import static java.lang.String.format;
 
 public final class EventsCoimbraCity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/coimbra/city");
 
-    private static final Frame Publisher=frame(iri("https://www.coimbragenda.pt/"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._City)
-            .values(RDFS.LABEL,
+    private static final Frame Publisher=frame(
+
+            field(ID, iri("https://www.coimbragenda.pt/")),
+            field(TYPE, Schema.Organization),
+
+            field(Schema.name,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
                     literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.Language)
-            );
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
     private static final Pattern FreePattern=Pattern.compile("(?i)\\blivre\\b");
 
@@ -72,14 +80,17 @@ public final class EventsCoimbraCity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        // Xtream.of(synced(Context, Publisher.focus()))
-        //
-        //         .flatMap(this::crawl)
-        //         .optMap(this::event)
-        //
-        //         .pipe(events -> validate(Event(), Set.of(Event), events))
-        //
-        //         .forEach(new Events.Updater(Context));
+        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+
+                .flatMap(this::crawl)
+                .optMap(this::event)
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
@@ -101,71 +112,70 @@ public final class EventsCoimbraCity implements Runnable {
                 .flatMap(json -> json.paths("data.docs.*"));
     }
 
-    // private Optional<Frame> event(final JSONPath json) {
-    //     return json.string("categories.*._id")
-    //
-    //             .flatMap(category -> json.string("_id")
-    //                     .map(id -> format("https://www.coimbragenda.pt/#!/category/%s/event/%s", category, id))
-    //             )
-    //
-    //             .map(url -> {
-    //
-    //                 final Optional<Literal> name=json
-    //                         .string("languageObjects.*.title")
-    //                         .map(title -> json
-    //                                 .string("languageObjects.*.subtitle")
-    //                                 .map(subtitle -> format("%s - %s", title, subtitle))
-    //                                 .orElse(title)
-    //                         )
-    //                         .map(text -> literal(text, Coimbra.Language));
-    //
-    //                 final Optional<Literal> description=json
-    //                         .string("languageObjects.*.description")
-    //                         .map(text -> literal(text, Coimbra.Language));
-    //
-    //                 final Optional<Literal> disambiguatingDescription=description
-    //                         .map(literal -> literal(clip(literal.stringValue()), Coimbra.Language));
-    //
-    //                 return frame(item(Events.Context, url))
-    //
-    //                         .values(RDF.TYPE, Event)
-    //
-    //                         .frames(DCTERMS.SUBJECT, subjects(json))
-    //
-    //                         .value(DCTERMS.SOURCE, iri(url))
-    //                         .frame(DCTERMS.PUBLISHER, Publisher)
-    //                         .value(DCTERMS.CREATED, json.string("createdAt").map(this::timestamp))
-    //                         .value(DCTERMS.MODIFIED, json.string("updatedAt").map(this::timestamp))
-    //
-    //                         .value(Resources.university, Coimbra.Id)
-    //
-    //                         .value(Schema.url, iri(url))
-    //                         .value(Schema.name, name)
-    //                         .value(Schema.image, json.string("profileImage._id")
-    //                                 .map(image -> iri(format("https://www.coimbragenda.pt/api/v1/file/%s", image)))
-    //                         )
-    //                         .value(Schema.description, description)
-    //                         .value(Schema.disambiguatingDescription, disambiguatingDescription)
-    //
-    //                         .value(Schema.startDate, datetime(json, "startDate", "startHour"))
-    //                         .value(Schema.endDate, datetime(json, "endDate", "endHour"))
-    //
-    //                         .value(Schema.isAccessibleForFree, json.string("languageObjects.*.priceList")
-    //                                 .filter(s -> FreePattern.matcher(s).find())
-    //                                 .map(v -> literal(true))
-    //                         )
-    //
-    //                         .frame(Schema.location, location(json));
-    //
-    //             });
-    // }
+    private Optional<Frame> event(final JSONPath json) {
+        return json.string("categories.*._id")
+
+                .flatMap(category -> json.string("_id")
+                        .map(id -> format("https://www.coimbragenda.pt/#!/category/%s/event/%s", category, id))
+                )
+
+                .map(url -> {
+
+                    final Optional<Literal> name=json
+                            .string("languageObjects.*.title")
+                            .map(title -> json
+                                    .string("languageObjects.*.subtitle")
+                                    .map(subtitle -> format("%s - %s", title, subtitle))
+                                    .orElse(title)
+                            )
+                            .map(text -> literal(text, Coimbra.Language));
+
+                    final Optional<Literal> description=json
+                            .string("languageObjects.*.description")
+                            .map(text -> literal(text, Coimbra.Language));
+
+                    final Optional<Literal> disambiguatingDescription=description
+                            .map(literal -> literal(clip(literal.stringValue()), Coimbra.Language));
+
+                    return frame(
+
+                            field(ID, item(Events.Context, url)),
+
+                            field(RDF.TYPE, Event),
+
+                            field(owner, Coimbra.Id),
+
+                            field(Schema.url, iri(url)),
+                            field(Schema.name, name),
+
+                            field(Schema.image, json.string("profileImage._id")
+                                    .map(image -> iri(String.format("https://www.coimbragenda.pt/api/v1/file/%s", image)))
+                            ),
+
+                            field(Schema.description, description),
+                            field(Schema.disambiguatingDescription, disambiguatingDescription),
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            field(startDate, datetime(json, "startDate", "startHour")),
+                            field(endDate, datetime(json, "endDate", "endHour")),
 
-    private Literal timestamp(final String date) {
-        return literal(OffsetDateTime.parse(date, ISO_OFFSET_DATE_TIME));
+                            field(isAccessibleForFree, json.string("languageObjects.*.priceList")
+                                    .map(s -> FreePattern.matcher(s).find())
+                                    .map(v -> literal(true))
+                            ),
+
+                            field(Schema.about, topics(json)),
+
+                            field(publisher, Publisher),
+                            field(Schema.location, location(json))
+
+                    );
+
+                });
     }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Optional<Literal> datetime(final JSONPath json, final String date, final String hour) {
         return json.string(date)
@@ -175,31 +185,45 @@ public final class EventsCoimbraCity implements Runnable {
                         .map(integer -> LocalTime.of(integer.intValue()/60, 0))
                         .map(time -> LocalDateTime.of(_date, time).atZone(Coimbra.TimeZone))
                 )
-                .map(Values::literal);
+                .map(Frame::literal);
     }
 
-    private Xtream<Frame> subjects(final JSONPath json) {
+    private Stream<Frame> topics(final JSONPath json) {
         return Xtream.from(json.paths("categories.*")).optMap(category -> category.string("_id").map(id -> {
 
             final Optional<Literal> label=category.string("codename")
                     .map(text -> literal(text, Coimbra.Language));
 
-            return frame(item(Events.Scheme, id))
-                    .value(RDF.TYPE, SKOS.CONCEPT)
-                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
-                    .value(RDFS.LABEL, label)
-                    .value(SKOS.PREF_LABEL, label);
+            return frame(
+
+                    field(ID, item(Topics, id)),
+
+                    field(RDF.TYPE, SKOS.CONCEPT),
+                    field(SKOS.TOP_CONCEPT_OF, Topics),
+                    field(SKOS.PREF_LABEL, label)
+
+            );
 
         }));
     }
 
     private Optional<Frame> location(final JSONPath json) {
-        return json.string("place.name").map(name -> frame(item(Locations.Context, name))
-                .value(RDF.TYPE, Schema.Place)
-                .value(Schema.name, literal(name, Coimbra.Language))
-                .value(Schema.longitude, json.decimal("place.longitude").map(Values::literal))
-                .value(Schema.latitude, json.decimal("place.latitude").map(Values::literal))
-        );
+        return json.string("place.name").map(name -> frame(
+
+                field(ID, iri()),
+
+                field(Schema.Place, frame(
+
+                        field(ID, item(Locations.Context, name)),
+                        field(TYPE, Schema.Place),
+
+                        field(Schema.name, literal(name, Coimbra.Language)),
+                        field(Schema.longitude, json.decimal("place.longitude").map(Frame::literal)),
+                        field(Schema.latitude, json.decimal("place.latitude").map(Frame::literal))
+
+                ))
+
+        ));
     }
 
 }

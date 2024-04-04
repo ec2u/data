@@ -325,9 +325,9 @@
                 </a>
             </g>
             <g id="Graphic_204">
-                <a xl:href="http://schema.org/">
+                <a xl:href="https://schema.org/">
                     <text transform="translate(361.79506 100.01575)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;http://schema.org/&gt;</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">prefix schema: &lt;https://schema.org/&gt;</tspan>
                     </text>
                 </a>
             </g>

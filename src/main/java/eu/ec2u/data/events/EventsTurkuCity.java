@@ -27,6 +27,7 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -54,6 +55,8 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -67,8 +70,8 @@ public final class EventsTurkuCity implements Runnable {
     private static final Pattern EOLPattern=Pattern.compile("\n+");
 
     private static final Frame Publisher=frame(iri("https://kalenteri.turku.fi/"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._City)
+            .value(RDF.TYPE, Organization)
+            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
             .values(RDFS.LABEL,
                     literal("City of Turku / Event's Calendar", "en"),
                     literal("Turun kaupunki / Tapahtumakalenteri", Turku.Language)
@@ -214,7 +217,7 @@ public final class EventsTurkuCity implements Runnable {
                     )
 
                     .value(eventStatus, json.string("event_status")
-                            .filter(v -> stream(Events.EventStatus.values()).map(Enum::name).anyMatch(v::equals))
+                            .filter(v -> stream(EventStatusType.values()).map(Enum::name).anyMatch(v::equals))
                             .map(Schema::schema)
                     )
 

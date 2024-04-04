@@ -31,6 +31,7 @@ import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources;
@@ -47,7 +48,6 @@ import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -61,12 +61,15 @@ import static com.metreeca.http.rdf.Shift.Seq.seq;
 import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Strings.clip;
 import static com.metreeca.link.Frame.reverse;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities._Universities.Jena;
 import static java.util.function.Predicate.not;
 
@@ -75,8 +78,8 @@ public final class EventsJenaCity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/jena/city");
 
     private static final Frame Publisher=frame(iri("https://www.jena-veranstaltungen.de/veranstaltungen"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._City)
+            .value(RDF.TYPE, Organization)
+            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
             .values(RDFS.LABEL,
                     literal("City of Jena / Event Calendar", "en"),
                     literal("Stadt Jena / Veranstaltungskalender", Jena.Language)
@@ -168,9 +171,9 @@ public final class EventsJenaCity implements Runnable {
 
                 .flatMap(json -> {
 
-                    try {
+                    try ( final StringReader reader=new StringReader(json) ) {
 
-                        final Collection<Statement> model=rdf(new StringReader(json), "", new JSONLDParser());
+                        final Collection<Statement> model=normalize(rdf(reader, "", new JSONLDParser()));
 
                         return frame(Event, model).frames(reverse(RDF.TYPE));
 
@@ -210,9 +213,9 @@ public final class EventsJenaCity implements Runnable {
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))
                             .filter(not(keyword -> keyword.startsWith("import_")))
                             .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
-                            .map(keyword -> frame(item(Events.Scheme, keyword))
+                            .map(keyword -> frame(item(Events.Topics, keyword))
                                     .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
+                                    .value(SKOS.TOP_CONCEPT_OF, Events.Topics)
                                     .value(RDFS.LABEL, literal(keyword, Jena.Language))
                                     .value(SKOS.PREF_LABEL, literal(keyword, Jena.Language))
 
@@ -221,10 +224,10 @@ public final class EventsJenaCity implements Runnable {
 
                     .value(DCTERMS.SOURCE, url)
                     .frame(DCTERMS.PUBLISHER, Publisher)
-                    .value(DCTERMS.CREATED, frame.value(dateCreated).map(this::datetime))
-                    .value(DCTERMS.MODIFIED, frame.value(dateModified).map(this::datetime)
-                            .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
-                    )
+                    // .value(DCTERMS.CREATED, frame.value(dateCreated).map(this::datetime))
+                    // .value(DCTERMS.MODIFIED, frame.value(dateModified).map(this::datetime)
+                    //         .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
+                    // )
 
                     .value(Resources.owner, Jena.Id)
 

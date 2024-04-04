@@ -28,6 +28,7 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.formats.HTML;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -49,6 +50,8 @@ import static com.metreeca.http.rdf.Values.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities._Universities.Pavia;
 import static java.time.ZoneOffset.UTC;
 
@@ -57,8 +60,8 @@ public final class EventsPaviaCity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/pavia/city");
 
     private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
-            .value(RDF.TYPE, Events._Publisher)
-            .value(DCTERMS.COVERAGE, Events._City)
+            .value(RDF.TYPE, Organization)
+            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
             .values(RDFS.LABEL,
                     literal("Comune di Pavia / ViviPavia", "it"),
                     literal("City of Pavia / ViviPavia", "en")

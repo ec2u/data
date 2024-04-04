@@ -62,6 +62,8 @@ import static com.metreeca.http.toolkits.Strings.clip;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
@@ -75,7 +77,7 @@ public final class EventsTurkuUniversity implements Runnable {
     private static final IRI Context=iri(Events.Context, "/turku/university");
 
     private static final Frame Publisher=frame(iri("https://www.utu.fi/event-search/"))
-            .value(RDF.TYPE, Events._Publisher)
+            .value(RDF.TYPE, Organization)
             .value(DCTERMS.COVERAGE, University)
             .values(RDFS.LABEL,
                     literal("University of Turku / News", "en"),
