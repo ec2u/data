@@ -74,7 +74,7 @@ public final class Universities extends Delegator {
 
                 property(ORG.SUB_ORGANIZATION_OF, hasValue((iri("https://ec2u.eu/")))),
 
-                property(VOID.SUBSET, multiple(
+                property(term("scope"), multiple(
 
                         property("dataset", reverse(VOID.SUBSET), required(Dataset())),
                         property(VOID.ENTITIES, required(integer()))

@@ -51,7 +51,7 @@ export const University=immutable({
 		label: required(local)
 	}),
 
-	subset: multiple({
+	scope: multiple({
 
 		dataset: {
 			id: required(id),
@@ -77,7 +77,7 @@ export function DataUniversity() {
 			students,
 			country,
 			city,
-			subset
+			scope
 
 		}) => <>
 
@@ -95,7 +95,7 @@ export function DataUniversity() {
 
 			}}</ToolInfo>
 
-			<ToolInfo>{subset?.slice()
+			<ToolInfo>{scope?.slice()
 				?.sort(({ entities: x }, { entities: y }) => x - y)
 				?.map(({ dataset, entities }) => ({
 
