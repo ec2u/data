@@ -23,7 +23,6 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.concepts.ESCO;
 import eu.ec2u.data.offerings.Offerings;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
@@ -40,7 +39,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.offerings.Offerings.Offering;
+import static eu.ec2u.data.offerings.Offerings.LearningResource;
 import static eu.ec2u.data.resources.Resources.localized;
 import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.schema;
@@ -54,20 +53,18 @@ public final class Programs extends Delegator {
     public static final IRI timeToComplete=schema("timeToComplete");
     public static final IRI programPrerequisites=schema("programPrerequisites");
     public static final IRI programType=schema("programType");
-    public static final IRI occupationalCategory=schema("occupationalCategory");
     public static final IRI hasCourse=schema("hasCourse");
 
 
     public static Shape Programs() { return Dataset(Program()); }
 
     public static Shape Program() {
-        return shape(EducationalOccupationalProgram, Offering(),
+        return shape(EducationalOccupationalProgram, LearningResource(),
 
                 property(timeToComplete, optional(duration())),
                 property(programPrerequisites, optional(localized())),
 
-                property(programType, optional(Concept(), scheme(Offerings.Types))),
-                property(occupationalCategory, multiple(Concept(), scheme(ESCO.Scheme))),
+                property(programType, multiple(Concept(), scheme(Offerings.Types))),
 
                 property(hasCourse, () -> multiple(Course()))
 

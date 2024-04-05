@@ -89,7 +89,7 @@ public final class Schema {
         return shape(Thing, Resource(),
 
                 property(url, multiple(id())),
-                property(identifier, optional(string())),
+                property(identifier, multiple(string())),
                 property(name, optional(localized())),
                 property(image, optional(id())),
                 property(description, optional(localized())),

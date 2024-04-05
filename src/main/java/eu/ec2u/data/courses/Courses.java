@@ -37,7 +37,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.offerings.Offerings.Offering;
+import static eu.ec2u.data.offerings.Offerings.LearningResource;
 import static eu.ec2u.data.programs.Programs.Program;
 import static eu.ec2u.data.programs.Programs.hasCourse;
 import static eu.ec2u.data.resources.Resources.localized;
@@ -49,35 +49,22 @@ public final class Courses extends Delegator {
 
     public static final IRI Context=item("/courses/");
 
-
     public static final IRI Course=schema("Course");
 
     public static final IRI courseCode=schema("courseCode");
     public static final IRI timeRequired=schema("timeRequired");
-
-    public static final IRI teaches=schema("teaches");
-    public static final IRI assesses=schema("assesses");
     public static final IRI coursePrerequisites=schema("coursePrerequisites");
-    public static final IRI competencyRequired=schema("competencyRequired");
-    public static final IRI learningResourceType=schema("learningResourceType");
-
 
 
     public static Shape Courses() { return Dataset(Course()); }
 
     public static Shape Course() {
-        return shape(Course, Offering(),
+        return shape(Course, LearningResource(),
 
                 property(courseCode, optional(string())),
                 property(inLanguage, multiple(string(), pattern("[a-z]{2}"))),
                 property(timeRequired, optional(duration())),
-
-                property(teaches, optional(localized())),
-                property(assesses, optional(localized())),
                 property(coursePrerequisites, optional(localized())),
-                property(competencyRequired, optional(localized())),
-
-                property(learningResourceType, optional(localized())),
 
                 property("inProgram", reverse(hasCourse), () -> multiple(Program()))
 
@@ -87,7 +74,6 @@ public final class Courses extends Delegator {
     public static void main(final String... args) {
         exec(() -> create(Context, Courses.class, Course()));
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

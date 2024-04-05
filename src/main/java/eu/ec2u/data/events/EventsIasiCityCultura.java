@@ -48,6 +48,8 @@ public final class EventsIasiCityCultura implements Runnable {
             field(ID, iri("https://culturainiasi.ro/evenimente-culturale/")),
             field(TYPE, Schema.Organization),
 
+            field(owner, Iasi.Id),
+
             field(Schema.name,
                     literal("Iaşul Cultural / Evenimente in Iași", Iasi.Language),
                     literal("Culture in Iasi / Events in Iasi", "en")

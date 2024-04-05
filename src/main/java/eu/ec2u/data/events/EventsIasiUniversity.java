@@ -43,6 +43,8 @@ public final class EventsIasiUniversity implements Runnable {
             field(ID, iri("https://www.uaic.ro/")),
             field(TYPE, Schema.Organization),
 
+            field(owner, Iasi.Id),
+
             field(Schema.name,
                     literal("University of Iasi / Events", "en"),
                     literal("Universitatea din Iași / Evenimente", Iasi.Language)

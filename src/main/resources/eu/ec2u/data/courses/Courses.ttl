@@ -22,7 +22,7 @@
 ########################################################################################################################
 
 schema:Course a owl:Class ;
-    rdfs:subClassOf schema:Thing .
+    rdfs:subClassOf schema:LearningResource .
 
 schema:courseCode a owl:DatatypeProperty ;
     rdfs:subPropertyOf schema:identifier .

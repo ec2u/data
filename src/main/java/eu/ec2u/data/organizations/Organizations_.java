@@ -16,37 +16,46 @@
 
 package eu.ec2u.data.organizations;
 
-import com.metreeca.http.rdf.Frame;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.things.Schema;
-import org.eclipse.rdf4j.model.Value;
+import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.Optional;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Shift.Seq.seq;
-import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.skolemize;
 
 public final class Organizations_ {
 
-    public static Frame organization(final Frame frame, final String lang) {
+    public static Optional<Frame> organization(final Focus focus, final String lang) {
+        return Optional
 
-        final Optional<Value> name=frame.string(Schema.name).map(value -> literal(value, lang));
-        final Optional<Value> legalName=frame.string(Schema.legalName).map(value -> literal(value, lang));
+                .of(frame(
 
-        return frame(item(Organizations.Context, frame.skolemize(
-                seq(Schema.name),
-                seq(Schema.legalName)
-        )))
+                        field(ID, item(Organizations.Context, skolemize(focus, Schema.name, Schema.legalName))),
 
-                .value(RDF.TYPE, Schema.Organization)
+                        field(RDF.TYPE, Schema.Organization),
 
-                .value(Schema.name, name)
-                .value(Schema.legalName, legalName)
-                .value(Schema.email, frame.value(Schema.email));
+                        field(Schema.url, focus.seq(Schema.url).value()),
+                        field(Schema.identifier, focus.seq(Schema.identifier).value()),
+                        field(Schema.image, focus.seq(Schema.identifier).value()),
+
+                        field(Schema.name, focus.seq(Schema.name).value(asString()).map(v -> literal(v, lang))),
+                        field(Schema.legalName, focus.seq(Schema.legalName).value(asString()).map(v -> literal(v, lang))),
+
+                        field(Schema.description, focus.seq(Schema.description).value(asString()).map(v -> literal(v, lang))),
+                        field(Schema.disambiguatingDescription, focus.seq(Schema.disambiguatingDescription).value(asString()).map(v -> literal(v, lang))),
+
+                        field(Schema.email, focus.seq(Schema.email).value()),
+                        field(Schema.telephone, focus.seq(Schema.telephone).value())
+
+                ))
+
+                .filter(frame -> frame.value(Schema.name).isPresent());
     }
 
 

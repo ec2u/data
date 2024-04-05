@@ -18,46 +18,43 @@ package eu.ec2u.data.events;
 
 import com.metreeca.http.FormatException;
 import com.metreeca.http.actions.GET;
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.formats.HTML;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.organizations.Organizations_;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import java.io.StringReader;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.EC2U.skolemize;
+import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Jena;
-import static java.time.ZoneOffset.UTC;
+import static eu.ec2u.work.focus.Focus.focus;
 import static java.util.stream.Collectors.toList;
 
 public final class EventsJenaUniversity implements Runnable {
@@ -68,38 +65,55 @@ public final class EventsJenaUniversity implements Runnable {
 
             .of(
 
-                    frame(iri("https://www.uni-jena.de/veranstaltungskalender")).values(RDFS.LABEL,
-                            literal("Jena University / Events", "en"),
-                            literal("Universität Jena / Veranstaltungen", "de")
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/veranstaltungskalender")),
+                            field(Schema.name,
+                                    literal("Jena University / Events", "en"),
+                                    literal("Universität Jena / Veranstaltungen", Jena.Language)
+                            )
                     ),
 
-                    frame(iri("https://www.uni-jena.de/international/veranstaltungskalender")).values(RDFS.LABEL,
-                            literal("Jena University / International / Events", "en"),
-                            literal("Universität Jena / International / Veranstaltungen", "de")
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/international/veranstaltungskalender")),
+                            field(Schema.name,
+                                    literal("Jena University / International / Events", "en"),
+                                    literal("Universität Jena / International / Veranstaltungen", Jena.Language)
+                            )
                     ),
 
-                    frame(iri("https://www.uni-jena.de/kalenderstudiuminternational")).values(RDFS.LABEL,
-                            literal("Jena University / Calendar Studies international / Events", "en"),
-                            literal("Universität Jena / Kalender Studium international / Veranstaltungen", "de")
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/kalenderstudiuminternational")),
+                            field(Schema.name,
+                                    literal("Jena University / Calendar Studies international / Events", "en"),
+                                    literal("Universität Jena / Kalender Studium international / Veranstaltungen", Jena.Language)
+                            )
                     ),
 
-                    frame(iri("https://www.uni-jena.de/ec2u-veranstaltungen")).values(RDFS.LABEL,
-                            literal("Jena University / EC2U / Events", "en"),
-                            literal("Universität Jena / EC2U / Veranstaltungen", "de")
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/ec2u-veranstaltungen")),
+                            field(Schema.name,
+                                    literal("Jena University / EC2U / Events", "en"),
+                                    literal("Universität Jena / EC2U / Veranstaltungen", Jena.Language)
+                            )
                     ),
 
-                    frame(iri("https://www.uni-jena.de/promotion-events")).values(RDFS.LABEL,
-                            literal("Jena University / Academic Career / Events", "en"),
-                            literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", "de")
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/promotion-events")),
+                            field(Schema.name,
+                                    literal("Jena University / Academic Career / Events", "en"),
+                                    literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", Jena.Language)
+                            )
                     )
 
             )
 
-            .map(frame -> frame
-                    .value(RDF.TYPE, Organization)
-                    .value(DCTERMS.COVERAGE, University)
-                    .value(Resources.owner, Jena.Id)
-            )
+            .map(frame -> frame(frame,
+
+                    field(RDF.TYPE, Organization),
+                    field(owner, Jena.Id),
+                    field(Schema.about, University)
+
+            ))
 
             .collect(toList());
 
@@ -111,51 +125,52 @@ public final class EventsJenaUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final ZonedDateTime now=ZonedDateTime.now(UTC);
-
-
     @Override public void run() {
-        // Xtream.from(Publishers)
-        //
-        //         .flatMap(publisher -> Xtream.of(synced(Context, publisher.focus()))
-        //
-        //                 .flatMap(synced -> crawl(publisher, synced))
-        //                 .map(frame -> event(publisher, frame))
-        //
-        //         )
-        //
-        //         .distinct(Frame::focus) // events may be published multiple times by different publishers
-        //
-        //         .pipe(events -> validate(Event(), Set.of(Event), events))
-        //
-        //         .forEach(new Events.Updater(Context));
+        update(connection -> Xtream.from(Publishers)
+
+                .flatMap(publisher -> Xtream.of(synced(Context, publisher.id().orElseThrow()))
+
+                        .flatMap(synced -> crawl(publisher, synced))
+                        .map(frame -> event(publisher, frame))
+
+                )
+
+                .distinct(frame -> frame.id().orElse(RDF.NIL)) // events may be published multiple times by different publishers
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Frame publisher, final Instant synced) {
+    private Xtream<Focus> crawl(final Frame publisher, final Instant synced) {
         return Xtream
 
-                .of(publisher.focus().stringValue())
+                .of(publisher.id().orElseThrow().stringValue())
 
                 // paginate through catalog
 
                 .loop(batch -> Xtream.of(batch)
+
                         .optMap(new GET<>(new HTML()))
 
                         .filter(document -> new XPath(document)
 
                                 // ;( pagination links are disabled under javascript control: test for page links
 
-                                .link("//div[contains(@class, 'entry_wrapper')]/div[@class='title']/a/@href")
+                                .link("//ul[contains(@class, 'entries')]//a[contains(@class, 'entry')]")
                                 .isPresent()
 
                         )
 
                         .map(XPath::new)
                         .flatMap(xpath -> xpath
-                                .links("//div[@class='pagination']//li[last()]/a/@href")
+                                .links("//nav[@class='pagination']//a[@data-direction='next']/@href")
                         )
                 )
 
@@ -164,7 +179,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .optMap(new GET<>(new HTML()))
 
                 .map(XPath::new).flatMap(xpath -> xpath
-                        .links("//div[contains(@class, 'entry_wrapper')]/div[@class='title']/a/@href")
+                        .links("//ul[contains(@class, 'entries')]//a[contains(@class, 'entry')]/@href")
                 )
 
 
@@ -182,8 +197,12 @@ public final class EventsJenaUniversity implements Runnable {
 
                         final Collection<Statement> model=normalize(rdf(reader, "", new JSONLDParser()));
 
-                        return frame(Event, model)
-                                .frames(reverse(RDF.TYPE));
+                        return focus(Set.of(Event), model)
+                                .seq(reverse(RDF.TYPE))
+                                .split()
+                                .filter(focus -> focus.seq(reverse(schema("subEvent"))).isEmpty());
+
+                        // !!! handle subevents using parent as default
 
                     } catch ( final FormatException e ) {
 
@@ -197,24 +216,34 @@ public final class EventsJenaUniversity implements Runnable {
 
     }
 
-    private Frame event(final Frame publisher, final Frame frame) {
+    private Frame event(final Frame publisher, final Focus focus) {
 
-        final Optional<Literal> label=frame.string(Schema.name)
+        final Optional<Literal> label=focus.seq(Schema.name).value(asString())
                 .map(text -> literal(text, "de"));
 
-        final Optional<Literal> brief=frame.string(Schema.disambiguatingDescription)
-                .or(() -> frame.string(Schema.description))
-                .map(text -> literal(text, "de"));
+        final Optional<Literal> brief=focus.seq(Schema.disambiguatingDescription).value(asString())
+                .or(() -> focus.seq(Schema.description).value(asString()))
+                .map(text -> literal(text, Jena.Language));
 
-        return frame(iri(Events.Context, frame.skolemize(Schema.url)))
+        return frame(
 
-                .value(RDF.TYPE, Event)
+                field(ID, iri(Events.Context, skolemize(focus, Schema.url))),
 
-                .value(Resources.owner, Jena.Id)
+                field(RDF.TYPE, Event),
 
-                .value(DCTERMS.SOURCE, frame.value(Schema.url))
+                field(owner, Jena.Id),
 
-                // .value(DCTERMS.CREATED, frame.value(dateCreated)
+                field(Schema.url, focus.seq(Schema.url).value()),
+                field(Schema.name, label),
+                field(Schema.image, focus.seq(Schema.image).value()),
+
+                field(Schema.disambiguatingDescription, brief),
+                field(Schema.description, focus.seq(Schema.description).value(asString())
+                        .or(() -> focus.seq(Schema.disambiguatingDescription).value(asString()))
+                        .map(text -> literal(text, Jena.Language))
+                ),
+
+                // .value(DCTERMS.CREATED, focus.value(dateCreated)
                 //         .flatMap(Values::literal)
                 //         .map(Literal::temporalAccessorValue)
                 //         .map(OffsetDateTime::from)
@@ -222,7 +251,7 @@ public final class EventsJenaUniversity implements Runnable {
                 //         .map(Values::literal)
                 // )
                 //
-                // .value(DCTERMS.MODIFIED, frame.value(dateModified)
+                // .value(DCTERMS.MODIFIED, focus.value(dateModified)
                 //         .flatMap(Values::literal)
                 //         .map(Literal::temporalAccessorValue)
                 //         .map(OffsetDateTime::from)
@@ -231,41 +260,34 @@ public final class EventsJenaUniversity implements Runnable {
                 //         .orElseGet(() -> literal(now))
                 // )
 
-                .frame(DCTERMS.PUBLISHER, publisher)
+                field(startDate, datetime(focus.seq(startDate).value(asString()))),
+                field(endDate, datetime(focus.seq(endDate).value(asString()))),
 
-                .value(Schema.name, label)
-                .value(Schema.disambiguatingDescription, brief)
-                .value(Schema.description, frame.string(Schema.description)
-                        .or(() -> frame.string(Schema.disambiguatingDescription))
-                        .map(text -> literal(text, "de"))
-                )
+                field(isAccessibleForFree, focus.seq(isAccessibleForFree).value(asBoolean()).map(Frame::literal)),
 
-                .value(Schema.image, frame.value(Schema.image))
-                .value(Schema.url, frame.value(Schema.url))
-
-                .bool(isAccessibleForFree, frame.bool(isAccessibleForFree))
-
-                .string(Schema.inLanguage, frame.string(Schema.inLanguage) // retain only language
+                field(Schema.inLanguage, focus.seq(Schema.inLanguage).value(asString()) // retain only language
                         .map(tag -> tag.toLowerCase(Locale.ROOT).replaceAll("^([a-z]+).*$", "$1"))
-                )
+                        .map(Frame::literal)
+                ),
 
-                .value(startDate, datetime(frame.string(startDate)))
-                .value(endDate, datetime(frame.string(endDate)))
+                field(eventAttendanceMode, focus.seq(eventAttendanceMode).value(asString()) // ;( included as strings
+                        .map(Frame::iri)
+                ),
 
-                .frame(organizer, frame.frame(organizer)
-                        .map(organizer -> Organizations_.organization(organizer, "de"))
-                )
+                field(Events.publisher, publisher),
+
+                field(organizer, Organizations_.organization(focus.seq(organizer), Jena.Language))
 
                 // !!! restore after https://github.com/ec2u/data/issues/41 is resolved
-
-                //.frame(Schema.location, frame.frame(Schema.location)
-                //        .map(location -> location(location, frame(bnode())
-                //                .value(Schema.addressCountry, Jena.Country)
-                //                .value(Schema.addressLocality, Jena.City)
+                //
+                // field(Schema.location, focus.seq(Schema.location).split()
+                //        .map(location -> location(location, frame(
+                //                field(Schema.addressCountry, Jena.Country),
+                //                field(Schema.addressLocality, Jena.City)
                 //        ))
-                //)
+                // ))
 
-                ;
+        );
 
     }
 
@@ -275,7 +297,7 @@ public final class EventsJenaUniversity implements Runnable {
     private Optional<Literal> datetime(final Optional<String> datetime) {
         return datetime
                 .map(OffsetDateTime::parse)
-                .map(Values::literal);
+                .map(Frame::literal);
     }
 
 }

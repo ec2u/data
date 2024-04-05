@@ -60,6 +60,8 @@ public final class EventsCoimbraCity implements Runnable {
             field(ID, iri("https://www.coimbragenda.pt/")),
             field(TYPE, Schema.Organization),
 
+            field(owner, Coimbra.Id),
+
             field(Schema.name,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
                     literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.Language)

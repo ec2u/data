@@ -50,6 +50,8 @@ public final class EventsIasiCityInOras implements Runnable {
             field(ID, iri("https://iasi.inoras.ro/evenimente")),
             field(TYPE, Schema.Organization),
 
+            field(owner, Iasi.Id),
+
             field(Schema.name,
                     literal("InOras / Events in Iasi", "en"),
                     literal("InOras / Evenimente in Iași", Iasi.Language)

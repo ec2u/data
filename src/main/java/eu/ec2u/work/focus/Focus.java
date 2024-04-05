@@ -64,6 +64,11 @@ public interface Focus {
     public Stream<Focus> split();
 
 
+    public default boolean isEmpty() {
+        return value().isEmpty();
+    }
+
+
     public default Optional<Value> value() { return values().findFirst(); }
 
     public Stream<Value> values();

@@ -30,6 +30,8 @@ import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.locations.Locations;
+import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
@@ -58,11 +60,11 @@ import static com.metreeca.http.toolkits.Strings.clip;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.synced;
 import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities._Universities.Jena;
 import static eu.ec2u.work.focus.Focus.focus;
@@ -76,6 +78,8 @@ public final class EventsJenaCity implements Runnable {
 
             field(ID, iri("https://www.jena-veranstaltungen.de/veranstaltungen")),
             field(TYPE, Schema.Organization),
+
+            field(owner, Jena.Id),
 
             field(Schema.name,
                     literal("City of Jena / Event Calendar", "en"),
@@ -212,7 +216,7 @@ public final class EventsJenaCity implements Runnable {
 
             return frame(
 
-                    // !!! field(ID, iri(Events.Context, skolemize(focus, Schema.url, startDate))),
+                    field(ID, iri(Events.Context, skolemize(focus, Schema.url, startDate))),
 
                     field(RDF.TYPE, Event),
 
@@ -235,13 +239,8 @@ public final class EventsJenaCity implements Runnable {
 
                     field(publisher, Publisher),
 
-                    // !!! field(organizer, focus.frame(organizer)
-                    //         .flatMap(location -> thing(location, Organizations.Context))
-                    // ),
-
-                    // !!! field(Schema.location, focus.frame(location)
-                    //         .flatMap(location -> thing(location, Locations.Context))
-                    // ),
+                    field(organizer, thing(focus.seq(organizer), Organizations.Context)),
+                    field(Schema.location, thing(focus.seq(location), Locations.Context)),
 
                     field(Schema.about, focus.seq(schema("keywords")).value(asString()).stream()
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))
@@ -269,18 +268,21 @@ public final class EventsJenaCity implements Runnable {
         return literal(value.stringValue(), XSD.DATETIME);
     }
 
-    // private Optional<Frame> thing(final Frame frame, final IRI collection) {
-    //     return frame.value(Schema.url).or(() -> frame.value(Schema.name))
-    //
-    //             .map(Value::stringValue)
-    //
-    //             .map(id -> frame(item(collection, frame.skolemize(Schema.url, Schema.name)))
-    //
-    //                     .value(RDF.TYPE, frame.value(RDF.TYPE))
-    //
-    //                     .value(Schema.url, frame.value(Schema.url).map(v -> iri(v.stringValue())))
-    //                     .value(Schema.name, frame.value(Schema.name).map(v -> literal(v.stringValue(), Jena.Language)))
-    //             );
-    // }
+    private Optional<Frame> thing(final Focus focus, final IRI collection) {
+        return focus.seq(Schema.url).value().or(() -> focus.seq(Schema.name).value())
+
+                .map(Value::stringValue)
+
+                .map(id -> frame(
+
+                        field(ID, item(collection, skolemize(focus, Schema.url, Schema.name))),
+
+                        field(RDF.TYPE, focus.seq(RDF.TYPE).value()),
+
+                        field(Schema.url, focus.seq(Schema.url).value().map(v -> iri(v.stringValue()))),
+                        field(Schema.name, focus.seq(Schema.name).value().map(v -> literal(v.stringValue(), Jena.Language)))
+
+                ));
+    }
 
 }

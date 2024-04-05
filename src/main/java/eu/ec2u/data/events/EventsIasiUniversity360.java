@@ -48,6 +48,8 @@ public final class EventsIasiUniversity360 implements Runnable {
             field(ID, iri("https://360.uaic.ro/blog/category/evenimente/")),
             field(TYPE, Schema.Organization),
 
+            field(owner, Iasi.Id),
+
             field(Schema.name,
                     literal("University of Iasi / 360 Events", "en"),
                     literal("Universitatea din Iași / 360 Evenimente", Iasi.Language)

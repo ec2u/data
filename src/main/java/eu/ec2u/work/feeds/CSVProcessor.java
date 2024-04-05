@@ -121,8 +121,8 @@ public abstract class CSVProcessor<V> implements Function<String, Xtream<V>> {
         warning(format("line <%d> - %s", record.getRecordNumber()+1, message));
     }
 
-    protected void warning(final String format) {
-        logger.warning(getClass(), format);
+    protected void warning(final String message) {
+        logger.warning(getClass(), message);
     }
 
 }

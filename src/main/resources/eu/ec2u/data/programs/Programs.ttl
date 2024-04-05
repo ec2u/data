@@ -21,6 +21,7 @@
 ########################################################################################################################
 
 schema:EducationalOccupationalProgram a owl:Class ;
-    rdfs:subClassOf schema:Thing .
+    rdfs:subClassOf schema:LearningResource .
 
-
+schema:programType a owl:DatatypeProperty ;
+    rdfs:subPropertyOf schema:learningResourceType .

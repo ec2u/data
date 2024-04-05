@@ -33,15 +33,15 @@
 schema:Event a owl:Class ;
     rdfs:subClassOf schema:Thing .
 
-schema:MixedEventAttendanceMode rdfs:label "mixed"@en .
-schema:OfflineEventAttendanceMode rdfs:label "offline"@en .
-schema:OnlineEventAttendanceMode rdfs:label "online"@en .
+schema:MixedEventAttendanceMode rdfs:label "Mixed"@en .
+schema:OfflineEventAttendanceMode rdfs:label "Offline"@en .
+schema:OnlineEventAttendanceMode rdfs:label "Online"@en .
 
-schema:EventScheduled rdfs:label "scheduled"@en .
-schema:EventMovedOnline rdfs:label "moved online"@en .
-schema:EventPostponed rdfs:label "postponed"@en .
-schema:EventRescheduled rdfs:label "rescheduled"@en .
-schema:EventCancelled rdfs:label "cancelled"@en .
+schema:EventScheduled rdfs:label "Scheduled"@en .
+schema:EventMovedOnline rdfs:label "Moved Online"@en .
+schema:EventPostponed rdfs:label "Postponed"@en .
+schema:EventRescheduled rdfs:label "Rescheduled"@en .
+schema:EventCancelled rdfs:label "Cancelled"@en .
 
 
 

@@ -43,6 +43,8 @@ public final class EventsCoimbraUniversity implements Runnable {
             field(ID, iri("https://agenda.uc.pt/")),
             field(TYPE, Organization),
 
+            field(owner, Coimbra.Id),
+
             field(Schema.name,
                     literal("University of Coimbra / Agenda UC", "en"),
                     literal("Universidade de Coimbra / Agenda UC", Coimbra.Language)

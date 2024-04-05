@@ -21,7 +21,6 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
-import { duration, toDurationString } from "@metreeca/core/duration";
 import { toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -48,7 +47,6 @@ export const Event=immutable({
 
 	startDate: optional(dateTime),
 	endDate: optional(dateTime),
-	duration: optional(duration),
 
 	inLanguage: optional(string),
 	isAccessibleForFree: optional(boolean),
@@ -73,7 +71,7 @@ export const Event=immutable({
 		label: required(local)
 	}),
 
-	organizer: optional({
+	organizer: multiple({
 		id: required(id),
 		label: required(local),
 		url: optional(id)
@@ -134,7 +132,6 @@ export function DataEvent() {
 
 			startDate,
 			endDate,
-			duration,
 
 			about,
 			audience,
@@ -191,9 +188,7 @@ export function DataEvent() {
 
 					"End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toDateString(new Date(endDate)),
 					"End Time": toTimeString(new Date(endDate))
-				}),
-
-				"Duration": duration && toDurationString(duration)
+				})
 
 			}}</ToolInfo>
 
@@ -226,10 +221,12 @@ export function DataEvent() {
 					toIdString(item, { compact: true })
 				}</a>),
 
-				"Organizer": organizer && [organizer].map(({ id, label, url }) => url
-					? <a key={id} href={url}>{toLocalString(label)}</a>
-					: <span key={id}>{toLocalString(label)}</span>
-				),
+				"Organizer": organizer && [...organizer]
+					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+					.map(({ id, label, url }) => url
+						? <a key={id} href={url}>{toLocalString(label)}</a>
+						: <span key={id}>{toLocalString(label)}</span>
+					),
 
 				"Publisher": publisher && [publisher].map(({ id, label, url }) =>
 					<a key={id} href={url || id}>{toLocalString(label)}</a>

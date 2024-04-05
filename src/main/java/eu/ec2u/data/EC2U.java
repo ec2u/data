@@ -34,6 +34,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities._Universities;
+import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.common.exception.ValidationException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -52,6 +53,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -228,6 +230,7 @@ public final class EC2U extends Delegator {
         });
     }
 
+
     public static String skolemize(final Frame frame, final IRI... predicates) {
 
         if ( frame == null ) {
@@ -238,11 +241,30 @@ public final class EC2U extends Delegator {
             throw new NullPointerException("null predicates");
         }
 
+        return skolemize(frame::values, predicates);
+    }
+
+    public static String skolemize(final Focus focus, final IRI... predicates) {
+
+        if ( focus == null ) {
+            throw new NullPointerException("null focus");
+        }
+
+        if ( predicates == null || Arrays.stream(predicates).anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null predicates");
+        }
+
+        return skolemize(predicate -> focus.seq(predicate).values(), predicates);
+    }
+
+
+    private static String skolemize(final Function<IRI, Stream<Value>> source, final IRI... predicates) {
         return md5(Arrays.stream(predicates)
-                .flatMap(predicate -> frame.values(predicate)
+                .flatMap(predicate -> source.apply(predicate)
                         .map(value -> format("'%s':'%s'", predicate, value))
                 )
                 .collect(joining("\0"))
         );
     }
+
 }
