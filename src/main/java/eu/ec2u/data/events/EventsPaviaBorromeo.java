@@ -16,19 +16,21 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.rdf.Frame;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.things.Schema;
+import eu.ec2u.work.feeds.Tribe;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Pavia;
 
@@ -36,14 +38,21 @@ public final class EventsPaviaBorromeo implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/pavia/borromeo");
 
-    private static final Frame Publisher=frame(iri("http://www.collegioborromeo.it/it/eventi/"))
-            .value(RDF.TYPE, Organization)
-            .value(DCTERMS.COVERAGE, OrganizationTypes.College)
-            .values(RDFS.LABEL,
+    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+
+            field(ID, iri("http://www.collegioborromeo.it/it/eventi/")),
+            field(TYPE, Organization),
+
+            field(owner, Pavia.Id),
+
+            field(Schema.name,
                     literal("Almo Collegio Borromeo / Calendar", "en"),
                     literal("Almo Collegio Borromeo / Calendario", Pavia.Language)
-            );
+            ),
 
+            field(Schema.about, OrganizationTypes.College)
+
+    );
 
     public static void main(final String... args) {
         Data.exec(() -> new EventsPaviaBorromeo().run());
@@ -53,30 +62,28 @@ public final class EventsPaviaBorromeo implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
+        update(connection -> Xtream
 
-        // final ZonedDateTime now=ZonedDateTime.now(UTC);
-        //
-        // Xtream.of(synced(Context, Publisher.focus()))
-        //
-        //         .flatMap(new Tribe("http://www.collegioborromeo.it/it/")
-        //                 .country(Pavia.Country)
-        //                 .locality(Pavia.City)
-        //                 .language(Pavia.Language)
-        //                 .zone(Pavia.TimeZone)
-        //         )
-        //
-        //         .map(event -> event
-        //
-        //                 .value(Resources.university, Pavia.Id)
-        //
-        //                 .frame(DCTERMS.PUBLISHER, Publisher)
-        //                 .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
-        //
-        //         )
-        //
-        //         .pipe(events -> validate(Event(), Set.of(Event), events))
-        //
-        //         .forEach(new Events.Updater(Context));
+                .of(synced(Context, Publisher.id().orElseThrow()))
+
+                .flatMap(new Tribe("http://www.collegioborromeo.it/it/")
+                        .country(Pavia.Country)
+                        .locality(Pavia.City)
+                        .language(Pavia.Language)
+                        .zone(Pavia.TimeZone)
+                )
+
+                .map(event -> frame(event,
+                        field(owner, Pavia.Id),
+                        field(publisher, Publisher)
+                ))
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 }

@@ -52,8 +52,9 @@ delete {
     {
         select ?dataset (count(distinct ?member) as ?entities) {
 
-            ?dataset a ec2u:Dataset ;
-                rdfs:member ?member .
+            ?dataset a ec2u:Dataset .
+
+            optional { ?dataset rdfs:member ?member }
 
         }
         group by ?dataset

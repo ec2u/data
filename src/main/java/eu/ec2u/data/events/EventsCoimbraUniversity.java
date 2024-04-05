@@ -63,28 +63,28 @@ public final class EventsCoimbraUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> {
+        update(connection -> Xtream
 
-            Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+                .of(synced(Context, Publisher.id().orElseThrow()))
 
-                    .flatMap(new Tribe("https://agenda.uc.pt/")
-                            .country(Coimbra.Country)
-                            .locality(Coimbra.City)
-                            .language(Coimbra.Language)
-                            .zone(Coimbra.TimeZone)
-                    )
+                .flatMap(new Tribe("https://agenda.uc.pt/")
+                        .country(Coimbra.Country)
+                        .locality(Coimbra.City)
+                        .language(Coimbra.Language)
+                        .zone(Coimbra.TimeZone)
+                )
 
-                    .map(event -> frame(event,
-                            field(owner, Coimbra.Id),
-                            field(publisher, Publisher)
-                    ))
+                .map(event -> frame(event,
+                        field(owner, Coimbra.Id),
+                        field(publisher, Publisher)
+                ))
 
-                    .flatMap(Frame::stream)
-                    .batch(0)
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                    .forEach(new Events_.Loader(Context));
+                .forEach(new Events_.Loader(Context))
 
-        });
+        );
     }
 
 }

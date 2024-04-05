@@ -110,7 +110,7 @@ export function DataDatasets() {
 
 				title={<ToolLink>{{ id, label: ec2u(title) }}</ToolLink>}
 
-				tags={entities && `${toIntegerString(entities)}`}
+				tags={entities ? `${toIntegerString(entities)}` : null}
 				image={alternative && <span>{ec2u(toLocalString(alternative))}</span>}
 
 			>{
