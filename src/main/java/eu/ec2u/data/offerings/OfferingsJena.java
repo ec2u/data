@@ -23,11 +23,11 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
-import com.metreeca.link._Focus;
 
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -38,6 +38,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
@@ -106,7 +107,7 @@ public final class OfferingsJena implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<_Focus> programs(final Instant synced) {
+    private Xtream<Focus> programs(final Instant synced) {
         return Xtream
 
                 .of(SiteURL)
@@ -135,8 +136,8 @@ public final class OfferingsJena implements Runnable {
 
                         final Collection<Statement> model=normalize(rdf(reader, SiteURL, new JSONLDParser()));
 
-                        return _Focus.focus(schema("AboutPage"), model)
-                                .shift(reverse(RDF.TYPE))
+                        return Focus.focus(Set.of(schema("AboutPage")), model)
+                                .seq(reverse(RDF.TYPE))
                                 .split();
 
                     } catch ( final FormatException e ) {
@@ -151,8 +152,8 @@ public final class OfferingsJena implements Runnable {
 
     }
 
-    private Optional<Frame> program(final _Focus focus) {
-        return focus.shift(Schema.url).value(asIRI()).map(url -> frame(
+    private Optional<Frame> program(final Focus focus) {
+        return focus.seq(Schema.url).value(asIRI()).map(url -> frame(
 
                 field(ID, item(Programs.Context, Jena, url.stringValue())),
 
@@ -161,13 +162,13 @@ public final class OfferingsJena implements Runnable {
 
                 field(Schema.url, url),
 
-                field(Schema.name, focus.shift(SchemaHeadline).value(asString()).map(v -> literal(v, "en"))),
-                field(Schema.description, focus.shift(SchemaAbstract).value(asString()).map(v -> literal(v, "en"))),
+                field(Schema.name, focus.seq(SchemaHeadline).value(asString()).map(v -> literal(v, "en"))),
+                field(Schema.description, focus.seq(SchemaAbstract).value(asString()).map(v -> literal(v, "en"))),
 
-                field(educationalLevel, focus.shift(educationalLevel).value(asString()).map(levels::get)),
+                field(educationalLevel, focus.seq(educationalLevel).value(asString()).map(levels::get)),
 
                 field(educationalCredentialAwarded,
-                        focus.shift(educationalLevel).value(asString()).map(v -> literal(v, "en"))
+                        focus.seq(educationalLevel).value(asString()).map(v -> literal(v, "en"))
                 )
 
         ));

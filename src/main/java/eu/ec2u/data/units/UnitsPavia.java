@@ -22,10 +22,10 @@ import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
-import com.metreeca.link._Focus;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
+import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -34,6 +34,7 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.metreeca.link.Frame.*;
 
@@ -87,7 +88,7 @@ public final class UnitsPavia implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<_Focus> units(final Instant synced) {
+    private Xtream<Focus> units(final Instant synced) {
         return Xtream.of(synced)
 
                 .flatMap(new Fill<>()
@@ -111,17 +112,17 @@ public final class UnitsPavia implements Runnable {
 
                 .flatMap(model -> Types.keySet().stream()
 
-                        .flatMap(type -> _Focus.focus(type, model)
-                                .shift(reverse(RDF.TYPE))
+                        .flatMap(type -> Focus.focus(Set.of(type), model)
+                                .seq(reverse(RDF.TYPE))
                                 .split()
                         )
 
                 );
     }
 
-    private Frame unit(final _Focus focus) {
+    private Frame unit(final Focus focus) {
 
-        final Optional<Literal> label=focus.shift(RDFS.LABEL).value(asString())
+        final Optional<Literal> label=focus.seq(RDFS.LABEL).value(asString())
                 .filter(not(String::isEmpty))
                 .map(name -> literal(name, Pavia.Language));
 
@@ -137,7 +138,7 @@ public final class UnitsPavia implements Runnable {
 
                 field(ORG.UNIT_OF, Pavia.Id),
 
-                field(ORG.CLASSIFICATION, focus.shift(RDF.TYPE).values()
+                field(ORG.CLASSIFICATION, focus.seq(RDF.TYPE).values()
                         .map(Types::get)
                         .filter(Objects::nonNull)
                         .findFirst()

@@ -23,24 +23,22 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
 import com.metreeca.http.jsonld.formats.JSONLD;
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.HTML;
+import com.metreeca.link.Frame;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.locations.Locations;
-import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import javax.json.Json;
@@ -48,46 +46,49 @@ import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Request.POST;
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Shift.Seq.seq;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.toolkits.Strings.clip;
-import static com.metreeca.link.Frame.reverse;
+import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.things.Schema.location;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities._Universities.Jena;
+import static eu.ec2u.work.focus.Focus.focus;
 import static java.util.function.Predicate.not;
 
 public final class EventsJenaCity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/jena/city");
 
-    private static final Frame Publisher=frame(iri("https://www.jena-veranstaltungen.de/veranstaltungen"))
-            .value(RDF.TYPE, Organization)
-            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
-            .values(RDFS.LABEL,
+    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+
+            field(ID, iri("https://www.jena-veranstaltungen.de/veranstaltungen")),
+            field(TYPE, Schema.Organization),
+
+            field(Schema.name,
                     literal("City of Jena / Event Calendar", "en"),
                     literal("Stadt Jena / Veranstaltungskalender", Jena.Language)
-            );
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new EventsJenaCity().run());
+        exec(() -> new EventsJenaCity().run());
     }
 
 
@@ -97,7 +98,7 @@ public final class EventsJenaCity implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(Events_.synced(Context, Publisher.focus()))
+        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -105,13 +106,15 @@ public final class EventsJenaCity implements Runnable {
                 .flatMap(Frame::stream)
                 .batch(0)
 
-                .forEach(new Events_.Loader(Context));
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant synced) {
+    private Xtream<Focus> crawl(final Instant synced) {
         return Xtream.of(0)
 
                 // paginate through search results
@@ -175,7 +178,9 @@ public final class EventsJenaCity implements Runnable {
 
                         final Collection<Statement> model=normalize(rdf(reader, "", new JSONLDParser()));
 
-                        return frame(Event, model).frames(reverse(RDF.TYPE));
+                        return focus(Set.of(Event), model)
+                                .seq(reverse(RDF.TYPE))
+                                .split();
 
                     } catch ( final FormatException e ) {
 
@@ -188,14 +193,14 @@ public final class EventsJenaCity implements Runnable {
                 });
     }
 
-    private Optional<Frame> event(final Frame frame) {
-        return frame.value(Schema.url).map(url -> {
+    private Optional<Frame> event(final Focus focus) {
+        return focus.seq(Schema.url).value(asIRI()).map(url -> {
 
-            final Optional<Literal> name=frame.value(Schema.name)
+            final Optional<Literal> name=focus.seq(Schema.name).value()
                     .map(Value::stringValue)
                     .map(text -> literal(text, Jena.Language));
 
-            final Optional<Literal> description=frame.value(Schema.description)
+            final Optional<Literal> description=focus.seq(Schema.description).value()
                     .map(Value::stringValue)
                     .map(Untag::untag)
                     .map(text -> literal(text, Jena.Language));
@@ -205,48 +210,54 @@ public final class EventsJenaCity implements Runnable {
 
             // repeating events are described multiple times with different start dates
 
-            return frame(iri(Events.Context, frame.skolemize(Schema.url, startDate)))
+            return frame(
 
-                    .values(RDF.TYPE, Event)
+                    // !!! field(ID, iri(Events.Context, skolemize(focus, Schema.url, startDate))),
 
-                    .frames(DCTERMS.SUBJECT, frame.string(Schema.schema("keywords")).stream()
-                            .flatMap(keywords -> Arrays.stream(keywords.split(",")))
-                            .filter(not(keyword -> keyword.startsWith("import_")))
-                            .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
-                            .map(keyword -> frame(item(Events.Topics, keyword))
-                                    .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .value(SKOS.TOP_CONCEPT_OF, Events.Topics)
-                                    .value(RDFS.LABEL, literal(keyword, Jena.Language))
-                                    .value(SKOS.PREF_LABEL, literal(keyword, Jena.Language))
+                    field(RDF.TYPE, Event),
 
-                            )
-                    )
 
-                    .value(DCTERMS.SOURCE, url)
-                    .frame(DCTERMS.PUBLISHER, Publisher)
                     // .value(DCTERMS.CREATED, frame.value(dateCreated).map(this::datetime))
                     // .value(DCTERMS.MODIFIED, frame.value(dateModified).map(this::datetime)
                     //         .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
                     // )
 
-                    .value(Resources.owner, Jena.Id)
+                    field(owner, Jena.Id),
 
-                    .value(Schema.url, url)
-                    .value(Schema.name, name)
-                    .value(Schema.image, frame.string(seq(Schema.image, Schema.url)).map(Values::iri))
-                    .value(Schema.description, description)
-                    .value(Schema.disambiguatingDescription, disambiguatingDescription)
+                    field(Schema.url, url),
+                    field(Schema.name, name),
+                    field(Schema.image, focus.seq(Schema.image, Schema.url).value(asString()).map(Frame::iri)),
+                    field(Schema.description, description),
+                    field(Schema.disambiguatingDescription, disambiguatingDescription),
 
-                    .value(startDate, frame.value(startDate).map(this::datetime))
-                    .value(endDate, frame.value(endDate).map(this::datetime))
+                    field(startDate, focus.seq(startDate).value().map(this::datetime)),
+                    field(endDate, focus.seq(endDate).value().map(this::datetime)),
 
-                    .frame(organizer, frame.frame(organizer)
-                            .flatMap(location -> thing(location, Organizations.Context))
+                    field(publisher, Publisher),
+
+                    // !!! field(organizer, focus.frame(organizer)
+                    //         .flatMap(location -> thing(location, Organizations.Context))
+                    // ),
+
+                    // !!! field(Schema.location, focus.frame(location)
+                    //         .flatMap(location -> thing(location, Locations.Context))
+                    // ),
+
+                    field(Schema.about, focus.seq(schema("keywords")).value(asString()).stream()
+                            .flatMap(keywords -> Arrays.stream(keywords.split(",")))
+                            .filter(not(keyword -> keyword.startsWith("import_")))
+                            .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
+                            .map(keyword -> frame(
+
+                                    field(ID, item(Events.Topics, keyword)),
+
+                                    field(RDF.TYPE, SKOS.CONCEPT),
+                                    field(SKOS.TOP_CONCEPT_OF, Events.Topics),
+                                    field(SKOS.PREF_LABEL, literal(keyword, Jena.Language))
+
+                            ))
                     )
-
-                    .frame(location, frame.frame(location)
-                            .flatMap(location -> thing(location, Locations.Context))
-                    );
+            );
 
         });
     }
@@ -254,22 +265,22 @@ public final class EventsJenaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Literal datetime(final Value v) {
-        return literal(v.stringValue(), XSD.DATETIME);
+    private Literal datetime(final Value value) {
+        return literal(value.stringValue(), XSD.DATETIME);
     }
 
-    private Optional<Frame> thing(final Frame frame, final IRI collection) {
-        return frame.value(Schema.url).or(() -> frame.value(Schema.name))
-
-                .map(Value::stringValue)
-
-                .map(id -> frame(item(collection, frame.skolemize(Schema.url, Schema.name)))
-
-                        .value(RDF.TYPE, frame.value(RDF.TYPE))
-
-                        .value(Schema.url, frame.value(Schema.url).map(v -> iri(v.stringValue())))
-                        .value(Schema.name, frame.value(Schema.name).map(v -> literal(v.stringValue(), Jena.Language)))
-                );
-    }
+    // private Optional<Frame> thing(final Frame frame, final IRI collection) {
+    //     return frame.value(Schema.url).or(() -> frame.value(Schema.name))
+    //
+    //             .map(Value::stringValue)
+    //
+    //             .map(id -> frame(item(collection, frame.skolemize(Schema.url, Schema.name)))
+    //
+    //                     .value(RDF.TYPE, frame.value(RDF.TYPE))
+    //
+    //                     .value(Schema.url, frame.value(Schema.url).map(v -> iri(v.stringValue())))
+    //                     .value(Schema.name, frame.value(Schema.name).map(v -> literal(v.stringValue(), Jena.Language)))
+    //             );
+    // }
 
 }

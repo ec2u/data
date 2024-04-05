@@ -16,10 +16,17 @@
 
 package eu.ec2u.work.focus;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
+
+import static com.metreeca.link.Frame.forward;
+import static com.metreeca.link.Frame.reverse;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -51,7 +58,7 @@ final class FocusModel implements Focus {
             throw new NullPointerException("null step");
         }
 
-        return new FocusModel(recto(step).collect(toSet()), statements);
+        return new FocusModel(shift(step).collect(toSet()), statements);
     }
 
     @Override public Focus seq(final IRI... steps) {
@@ -62,23 +69,17 @@ final class FocusModel implements Focus {
 
         Stream<Value> next=values.stream();
 
-        for (final IRI step : steps) { next=recto(step); }
+        for (final IRI step : steps) { next=shift(step); }
 
         return new FocusModel(next.collect(toSet()), statements);
     }
 
 
-    @Override public Focus inv(final IRI step) {
-
-        if ( step == null ) {
-            throw new NullPointerException("null step");
-        }
-
-        return new FocusModel(verso(step).collect(toSet()), statements);
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Stream<Value> shift(final IRI step) {
+        return forward(step) ? recto(step) : verso(reverse(step));
+    }
 
     private Stream<Value> recto(final IRI step) {
         return statements.stream()
@@ -87,7 +88,7 @@ final class FocusModel implements Focus {
                 .map(Statement::getObject);
     }
 
-    private Stream<Resource> verso(final IRI step) {
+    private Stream<Value> verso(final IRI step) {
         return statements.stream()
                 .filter(statement -> step.equals(statement.getPredicate()))
                 .filter(statement -> values.contains(statement.getObject()))

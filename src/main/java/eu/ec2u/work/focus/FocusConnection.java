@@ -30,6 +30,8 @@ import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.link.Frame.forward;
+import static com.metreeca.link.Frame.reverse;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
@@ -135,7 +137,7 @@ final class FocusConnection implements Focus {
             throw new NullPointerException("null step");
         }
 
-        return new FocusConnection(recto(step).collect(toSet()), connection, cache);
+        return new FocusConnection(shift(step).collect(toSet()), connection, cache);
     }
 
     @Override public Focus seq(final IRI... steps) {
@@ -146,23 +148,17 @@ final class FocusConnection implements Focus {
 
         Stream<Value> next=values.stream();
 
-        for (final IRI step : steps) { next=recto(step); }
+        for (final IRI step : steps) { next=shift(step); }
 
         return new FocusConnection(next.collect(toSet()), connection, cache);
     }
 
 
-    @Override public Focus inv(final IRI step) {
-
-        if ( step == null ) {
-            throw new NullPointerException("null step");
-        }
-
-        return new FocusConnection(verso(step).collect(toSet()), connection, cache);
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Stream<Value> shift(final IRI step) {
+        return forward(step) ? recto(step) : verso(reverse(step));
+    }
 
     private Stream<Value> recto(final IRI step) {
         return values.stream()
@@ -187,7 +183,7 @@ final class FocusConnection implements Focus {
                 .map(Statement::getObject);
     }
 
-    private Stream<Resource> verso(final IRI step) {
+    private Stream<Value> verso(final IRI step) {
         return values.stream()
 
                 .flatMap(value -> Optional.ofNullable(cache.get(value))

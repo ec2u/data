@@ -28,9 +28,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
-import eu.ec2u.work.focus._Cursor;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -39,18 +37,11 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.io.Writer;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.path;
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Shift.Seq.seq;
-import static com.metreeca.http.rdf.Values.lang;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.link.Frame.*;
@@ -60,9 +51,7 @@ import static eu.ec2u.data.concepts.OrganizationTypes.InstituteVirtual;
 import static eu.ec2u.data.persons.Persons_.person;
 import static eu.ec2u.data.units.Units.*;
 import static java.lang.String.format;
-import static java.util.Comparator.comparing;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.model.util.Values.literal;
 
@@ -387,112 +376,115 @@ public final class Units_ {
 
         @Override public void run() {
 
-            try (
-                    final Writer writer=Files.newBufferedWriter(service(path()).resolve(Output));
-                    final CSVPrinter printer=new CSVPrinter(writer, Format);
-            ) {
+            throw new UnsupportedOperationException(";( be implemented"); // !!!
 
-                service(graph()).query(connection -> {
-
-                    new _Cursor(Unit, connection)
-
-                            .cursors(reverse(RDF.TYPE))
-
-                            .map(unit -> List.of(
-
-                                    unit.focus().stringValue(),
-
-                                    unit.values(seq(Resources.owner, RDFS.LABEL))
-                                            .filter(value -> lang(value).equals("en"))
-                                            .findFirst()
-                                            .map(Value::stringValue)
-                                            .orElse(""),
-
-                                    unit.cursors(DCTERMS.SUBJECT)
-                                            .filter(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/"))
-                                            .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
-                                            .filter(value -> lang(value).equals("en"))
-                                            .findFirst()
-                                            .map(Value::stringValue)
-                                            .orElse(""),
-
-                                    unit.values(seq(ORG.CLASSIFICATION, SKOS.PREF_LABEL))
-                                            .filter(value -> lang(value).equals("en"))
-                                            .findFirst()
-                                            .map(Value::stringValue)
-                                            .orElse(""),
-
-                                    unit.value(ORG.IDENTIFIER)
-                                            .map(Value::stringValue)
-                                            .orElse(""),
-
-                                    unit.cursors(ORG.UNIT_OF)
-                                            .filter(parent -> parent.values(RDF.TYPE).noneMatch(Resources.owner::equals))
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(InstituteVirtual::equals))
-                                            .flatMap(parent -> parent.localizeds(RDFS.LABEL, "en"))
-                                            .filter(not(v -> v.startsWith("University "))) // !!!
-                                            .collect(joining("; ")),
-
-                                    unit.cursors(ORG.UNIT_OF)
-                                            .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(InstituteVirtual::equals))
-                                            .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
-                                            .collect(joining("; ")),
-
-                                    unit.localized(SKOS.ALT_LABEL, "en")
-                                            .or(() -> unit.string(SKOS.ALT_LABEL)) // !!! local language
-                                            .orElse(""),
-
-                                    unit.localized(SKOS.PREF_LABEL, "en")
-                                            .or(() -> unit.string(SKOS.PREF_LABEL)) // !!! local language
-                                            .orElse(""),
-
-                                    unit.iris(FOAF.HOMEPAGE)
-                                            .map(Value::stringValue)
-                                            .collect(joining("; ")),
-
-                                    unit.strings(FOAF.MBOX)
-                                            .collect(joining("; ")),
-
-                                    unit.strings(seq(reverse(ORG.HEAD_OF), RDFS.LABEL))
-                                            .collect(joining("; ")),
-
-                                    unit.localized(DCTERMS.DESCRIPTION, "en")
-                                            .or(() -> unit.string(DCTERMS.DESCRIPTION)) // !!! local language
-                                            .orElse(""),
-
-                                    unit.cursors(DCTERMS.SUBJECT)
-                                            .filter(not(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/")))
-                                            .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
-                                            // !!! .filter(value -> lang(value).equals("en"))
-                                            .map(Value::stringValue)
-                                            .collect(joining(";\n"))
-
-                            ))
-
-                            .sorted(comparing((List<String> record) -> record.get(1)) // University
-                                    .thenComparing(record -> record.get(2)) // Type
-                                    .thenComparing(record -> record.get(7)) // Name
-                            )
-
-                            .forEach(record -> {
-
-                                try {
-
-                                    printer.printRecord(record);
-
-                                } catch ( final IOException e ) {
-                                    throw new UncheckedIOException(e);
-                                }
-
-                            });
-
-                    return this;
-
-                });
-
-            } catch ( final IOException e ) {
-                throw new UncheckedIOException(e);
-            }
+            // try (
+            //         final Writer writer=Files.newBufferedWriter(service(path()).resolve(Output));
+            //         final CSVPrinter printer=new CSVPrinter(writer, Format);
+            // ) {
+            //
+            //     service(graph()).query(connection -> {
+            //
+            //         focus(Set.of(Unit), connection)
+            //
+            //                 .seq(reverse(RDF.TYPE))
+            //                 .split()
+            //
+            //                 .map(unit -> List.of(
+            //
+            //                         unit.focus().stringValue(),
+            //
+            //                         unit.seq(Resources.owner, RDFS.LABEL).values()
+            //                                 .filter(value -> lang(value).equals("en"))
+            //                                 .findFirst()
+            //                                 .map(Value::stringValue)
+            //                                 .orElse(""),
+            //
+            //                         unit.cursors(DCTERMS.SUBJECT)
+            //                                 .filter(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/"))
+            //                                 .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
+            //                                 .filter(value -> lang(value).equals("en"))
+            //                                 .findFirst()
+            //                                 .map(Value::stringValue)
+            //                                 .orElse(""),
+            //
+            //                         unit.values(seq(ORG.CLASSIFICATION, SKOS.PREF_LABEL))
+            //                                 .filter(value -> lang(value).equals("en"))
+            //                                 .findFirst()
+            //                                 .map(Value::stringValue)
+            //                                 .orElse(""),
+            //
+            //                         unit.value(ORG.IDENTIFIER)
+            //                                 .map(Value::stringValue)
+            //                                 .orElse(""),
+            //
+            //                         unit.cursors(ORG.UNIT_OF)
+            //                                 .filter(parent -> parent.values(RDF.TYPE).noneMatch(Resources.owner::equals))
+            //                                 .filter(parent -> parent.values(ORG.CLASSIFICATION).noneMatch(InstituteVirtual::equals))
+            //                                 .flatMap(parent -> parent.localizeds(RDFS.LABEL, "en"))
+            //                                 .filter(not(v -> v.startsWith("University "))) // !!!
+            //                                 .collect(joining("; ")),
+            //
+            //                         unit.cursors(ORG.UNIT_OF)
+            //                                 .filter(parent -> parent.values(ORG.CLASSIFICATION).anyMatch(InstituteVirtual::equals))
+            //                                 .flatMap(parent -> parent.strings(SKOS.ALT_LABEL))
+            //                                 .collect(joining("; ")),
+            //
+            //                         unit.localized(SKOS.ALT_LABEL, "en")
+            //                                 .or(() -> unit.string(SKOS.ALT_LABEL)) // !!! local language
+            //                                 .orElse(""),
+            //
+            //                         unit.localized(SKOS.PREF_LABEL, "en")
+            //                                 .or(() -> unit.string(SKOS.PREF_LABEL)) // !!! local language
+            //                                 .orElse(""),
+            //
+            //                         unit.iris(FOAF.HOMEPAGE)
+            //                                 .map(Value::stringValue)
+            //                                 .collect(joining("; ")),
+            //
+            //                         unit.strings(FOAF.MBOX)
+            //                                 .collect(joining("; ")),
+            //
+            //                         unit.strings(seq(reverse(ORG.HEAD_OF), RDFS.LABEL))
+            //                                 .collect(joining("; ")),
+            //
+            //                         unit.localized(DCTERMS.DESCRIPTION, "en")
+            //                                 .or(() -> unit.string(DCTERMS.DESCRIPTION)) // !!! local language
+            //                                 .orElse(""),
+            //
+            //                         unit.cursors(DCTERMS.SUBJECT)
+            //                                 .filter(not(v -> v.focus().stringValue().startsWith(EuroSciVoc.Scheme+"/")))
+            //                                 .flatMap(cursor -> cursor.values(SKOS.PREF_LABEL))
+            //                                 // !!! .filter(value -> lang(value).equals("en"))
+            //                                 .map(Value::stringValue)
+            //                                 .collect(joining(";\n"))
+            //
+            //                 ))
+            //
+            //                 .sorted(comparing((List<String> record) -> record.get(1)) // University
+            //                         .thenComparing(record -> record.get(2)) // Type
+            //                         .thenComparing(record -> record.get(7)) // Name
+            //                 )
+            //
+            //                 .forEach(record -> {
+            //
+            //                     try {
+            //
+            //                         printer.printRecord(record);
+            //
+            //                     } catch ( final IOException e ) {
+            //                         throw new UncheckedIOException(e);
+            //                     }
+            //
+            //                 });
+            //
+            //         return this;
+            //
+            //     });
+            //
+            // } catch ( final IOException e ) {
+            //     throw new UncheckedIOException(e);
+            // }
 
         }
 

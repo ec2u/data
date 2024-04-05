@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface Focus {
@@ -68,10 +69,45 @@ public interface Focus {
     public Stream<Value> values();
 
 
+    public default <T> Optional<T> value(final Function<Value, T> converter) {
+
+        if ( converter == null ) {
+            throw new NullPointerException("null converter");
+        }
+
+        return value().map(guard(converter));
+    }
+
+    public default <T> Stream<T> values(final Function<Value, T> converter) {
+
+        if ( converter == null ) {
+            throw new NullPointerException("null converter");
+        }
+        return values().map(guard(converter)).filter(Objects::nonNull);
+    }
+
+
     public Focus seq(final IRI step);
 
     public Focus seq(final IRI... steps);
 
 
-    public Focus inv(final IRI step);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static <T> Function<Value, T> guard(final Function<Value, T> converter) {
+        return value -> {
+
+            try {
+
+                return converter.apply(value);
+
+            } catch ( final RuntimeException ignored ) {
+
+                return null;
+
+            }
+
+        };
+    }
+
 }

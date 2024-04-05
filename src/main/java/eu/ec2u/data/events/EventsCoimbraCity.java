@@ -69,6 +69,7 @@ public final class EventsCoimbraCity implements Runnable {
 
     );
 
+
     private static final Pattern FreePattern=Pattern.compile("(?i)\\blivre\\b");
 
 

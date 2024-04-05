@@ -130,7 +130,7 @@ public final class OfferingsPavia implements Runnable {
 
     private Stream<Focus> programs(final RepositoryConnection connection, final Instant synced) {
         return focus(Set.of(VIVO.AcademicDegree), connection)
-                .inv(RDF.TYPE)
+                .seq(reverse(RDF.TYPE))
                 .cache()
                 .split();
     }
@@ -181,7 +181,7 @@ public final class OfferingsPavia implements Runnable {
 
     private Stream<Focus> courses(final RepositoryConnection connection, final Instant synced) {
         return focus(Set.of(VIVO.Course), connection)
-                .inv(RDF.TYPE)
+                .seq(reverse(RDF.TYPE))
                 .cache()
                 .split();
     }
