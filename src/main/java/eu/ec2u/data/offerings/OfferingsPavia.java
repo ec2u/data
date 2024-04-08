@@ -208,13 +208,14 @@ public final class OfferingsPavia implements Runnable {
                 field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.Language)),
                 field(coursePrerequisites, localized(focus.seq(HEMO.coursePrerequisitesDescription).values(), Pavia.Language)),
 
+                // field(competencyRequired,
+                //         localized(focus.seq(HEMO.courseAssessmentMethodsDescription).values(), Pavia.Language)
+                // ),
+
                 field(learningResourceType,
                         localized(focus.seq(HEMO.courseTeachingMethodsDescription).values(), Pavia.Language)
                 ),
 
-                field(competencyRequired,
-                        localized(focus.seq(HEMO.courseAssessmentMethodsDescription).values(), Pavia.Language)
-                ),
 
                 field(numberOfCredits, focus.seq(VIVO.hasValue).value()
                         .flatMap(Values::integer)

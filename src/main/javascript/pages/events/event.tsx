@@ -42,7 +42,7 @@ export const Event=immutable({
 
 	url: multiple(id),
 	name: required(local),
-	description: required(local),
+	description: optional(local),
 	image: optional(id),
 
 	startDate: optional(dateTime),
@@ -262,7 +262,7 @@ export function DataEvent() {
 
 			}}/>}
 
-			<ToolMark>{toLocalString(description)}</ToolMark>
+			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
 		</>}>{event}</ToolFrame>
 

@@ -16,20 +16,41 @@
 
 package eu.ec2u.data.events;
 
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.http.rdf.actions.Localize;
+import com.metreeca.http.rdf.actions.Microdata;
+import com.metreeca.http.rdf.actions.Normalize;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.actions.Extract;
+import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.synced;
 import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Pavia;
+import static eu.ec2u.work.focus.Focus.focus;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
@@ -64,100 +85,118 @@ public final class EventsPaviaCity implements Runnable {
 
 
     @Override public void run() {
-        // update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
-        //
-        //         .flatMap(this::crawl)
-        //         .map(this::event)
-        //
-        //         .flatMap(Frame::stream)
-        //         .batch(0)
-        //
-        //         .forEach(new Events_.Loader(Context))
-        //
-        // );
+        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+
+                .flatMap(this::crawl)
+                .flatMap(this::event)
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // private Xtream<Frame> crawl(final Instant synced) {
-    //     return Xtream.of(synced)
-    //
-    //             .flatMap(new Fill<Instant>()
-    //                     .model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
-    //                             +"?new=yes"
-    //                             +"&instance=10"
-    //                             +"&channel=34"
-    //                             +"&size=9999"
-    //                             +"&node=4613"
-    //                             +"&fromDate=%{date}"
-    //                     )
-    //                     .value("date", date -> LocalDate.ofInstant(date, UTC)
-    //                             .atStartOfDay(UTC)
-    //                             .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-    //                     )
-    //             )
-    //
-    //             .optMap(new GET<>(new HTML()))
-    //             .flatMap(new Microdata())
-    //             .batch(0)
-    //
-    //             .flatMap(model -> focus(Set.of(Event), model)
-    //                     .seq(reverse(RDF.TYPE), Schema.url)
-    //                     .values(asString())
-    //             )
-    //
-    //             .flatMap(url -> Xtream.of(url)
-    //
-    //                     .optMap(new GET<>(new HTML()))
-    //                     .flatMap(new Microdata())
-    //
-    //                     .map(new Normalize(
-    //                             new StringToDate(),
-    //                             new DateToDateTime()
-    //                     ))
-    //
-    //                     .map(new Localize("it"))
-    //
-    //                     .batch(0)
-    //
-    //                     .flatMap(model -> focus(Set.of(Event), model)
-    //                             .seq(reverse(RDF.TYPE))
-    //                             .map(event -> frame(event, model)
-    //                                     .value(DCTERMS.SOURCE, iri(url))
-    //                             )
-    //                     )
-    //
-    //             );
-    // }
-    //
-    // private Frame event(final Frame frame) {
-    //     return frame(iri(Events.Context, frame.skolemize(DCTERMS.SOURCE)))
-    //
-    //             .values(RDF.TYPE, Event)
-    //
-    //             .value(owner, Pavia.Id)
-    //
-    //             .frame(publisher, Publisher)
-    //             .value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
-    //
-    //             .values(Schema.name, frame.values(Schema.name))
-    //             .values(Schema.description, frame.values(Schema.description))
-    //             .values(Schema.disambiguatingDescription, frame.values(Schema.disambiguatingDescription))
-    //             .values(Schema.image, frame.values(Schema.image))
-    //             .values(Schema.url, frame.values(DCTERMS.SOURCE))
-    //
-    //             .value(startDate, frame.value(startDate))
-    //             .value(endDate, frame.value(endDate))
-    //
-    //             .value(eventStatus, frame.value(eventStatus))
-    //
-    //             .frame(location, frame.frame(location).map(this::location));
-    // }
-    //
-    //
-    // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    private Xtream<IRI> crawl(final Instant synced) {
+        return Xtream.of(synced)
+
+                .flatMap(new Fill<Instant>()
+                        .model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
+                                +"?new=yes"
+                                +"&instance=10"
+                                +"&channel=34"
+                                +"&size=9999"
+                                +"&node=4613"
+                                +"&fromDate=%{date}"
+                        )
+                        .value("date", date -> LocalDate.ofInstant(date, UTC)
+                                .atStartOfDay(UTC)
+                                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                        )
+                )
+
+                .optMap(new GET<>(new HTML()))
+
+
+                .flatMap(new Microdata())
+                .batch(0)
+
+                .flatMap(model -> focus(Set.of(Event), model)
+                        .seq(reverse(RDF.TYPE), Schema.url)
+                        .values(asIRI())
+                );
+    }
+
+    private Xtream<Frame> event(final IRI url) {
+        return Xtream.of(url.stringValue())
+
+                .optMap(new GET<>(new HTML()))
+
+                .flatMap(document -> {
+
+                    final Optional<Value> description=Optional.of(document)
+
+                            .map(d -> document.getElementsByTagName("body").item(0))
+
+                            .flatMap(new Extract())
+                            .map(new Untag())
+
+                            .map(s -> literal(s, Pavia.Language));
+
+
+                    return Xtream.of(document)
+
+                            .flatMap(new Microdata())
+
+                            .map(new Normalize(
+                                    new Normalize.StringToDate(),
+                                    new Normalize.DateToDateTime()
+                            ))
+
+                            .map(new Localize("it"))
+
+                            .batch(0)
+
+                            .flatMap(model -> focus(Set.of(Event), model)
+
+                                    .seq(reverse(RDF.TYPE))
+                                    .split()
+
+                                    .map(focus -> frame(
+
+                                            field(ID, item(Events.Context, url.stringValue())),
+
+                                            field(RDF.TYPE, Event),
+
+                                            field(owner, Pavia.Id),
+
+                                            field(Schema.url, url),
+                                            field(Schema.name, focus.seq(Schema.name).value()),
+                                            field(Schema.description, focus.seq(Schema.description).value().or(() -> description)),
+                                            field(Schema.disambiguatingDescription, focus.seq(Schema.disambiguatingDescription).value()),
+                                            field(Schema.image, focus.seq(Schema.image).values()),
+
+                                            field(startDate, focus.seq(startDate).value()),
+                                            field(endDate, focus.seq(endDate).value()),
+
+                                            field(eventStatus, focus.seq(eventStatus).value()),
+
+                                            field(publisher, Publisher)
+                                            // field(location, focus.frame(location).map(this::location))
+
+                                    ))
+                            );
+
+                });
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // private Frame location(final Frame location) {
     //     return frame(item(Locations.Context, location.skolemize(
     //             seq(Schema.name),

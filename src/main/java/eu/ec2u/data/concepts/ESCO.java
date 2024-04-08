@@ -22,6 +22,18 @@ import static com.metreeca.http.rdf.Values.iri;
 
 public final class ESCO {
 
-    public static final IRI Scheme=iri(Concepts.Context, "/esco");
+    // https://esco.ec.europa.eu/en/classification/occupation_main
+
+    public static final IRI Occupations=iri(Concepts.Context, "/esco-occupations");
+
+
+    // https://esco.ec.europa.eu/en/classification/skill_main
+
+    public static final IRI Skills=iri(Concepts.Context, "/esco-skils");
+
+
+    // https://esco.ec.europa.eu/en/classification/qualifications
+
+    public static final IRI Qualifications=iri(Concepts.Context, "/esco-qualifications");
 
 }

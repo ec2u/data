@@ -61,7 +61,6 @@ public final class Offerings {
 
                 property(teaches, optional(localized())),
                 property(assesses, optional(localized())),
-                property(competencyRequired, optional(localized())),
 
                 property(numberOfCredits, optional(decimal(), minInclusive(0))),
                 property(educationalCredentialAwarded, optional(localized())),
@@ -70,9 +69,10 @@ public final class Offerings {
                 property(provider, optional(Organization())),
 
                 property(educationalLevel, optional(Concept(), scheme(ISCED2011.Scheme))),
+                property(about, multiple(Concept(), scheme(EuroSciVoc.Scheme))),
                 property(learningResourceType, multiple(Concept(), scheme(Types))),
-                property(occupationalCategory, multiple(Concept(), scheme(ESCO.Scheme))),
-                property(about, multiple(Concept(), scheme(EuroSciVoc.Scheme)))
+                property(occupationalCategory, multiple(Concept(), scheme(ESCO.Occupations))),
+                property(competencyRequired, multiple(Concept(), scheme(ESCO.Skills)))
 
         );
     }

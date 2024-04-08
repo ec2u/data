@@ -21,6 +21,7 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -28,7 +29,7 @@ import java.util.stream.Stream;
 import static com.metreeca.link.Frame.forward;
 import static com.metreeca.link.Frame.reverse;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 final class FocusModel implements Focus {
 
@@ -58,7 +59,7 @@ final class FocusModel implements Focus {
             throw new NullPointerException("null step");
         }
 
-        return new FocusModel(shift(step).collect(toSet()), statements);
+        return new FocusModel(shift(values, step), statements);
     }
 
     @Override public Focus seq(final IRI... steps) {
@@ -67,32 +68,34 @@ final class FocusModel implements Focus {
             throw new NullPointerException("null steps");
         }
 
-        Stream<Value> next=values.stream();
+        Set<Value> next=values;
 
-        for (final IRI step : steps) { next=shift(step); }
+        for (final IRI step : steps) { next=shift(next, step); }
 
-        return new FocusModel(next.collect(toSet()), statements);
+        return new FocusModel(next, statements);
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<Value> shift(final IRI step) {
-        return forward(step) ? recto(step) : verso(reverse(step));
+    private Set<Value> shift(final Collection<Value> values, final IRI step) {
+        return forward(step) ? recto(values, step) : verso(values, reverse(step));
     }
 
-    private Stream<Value> recto(final IRI step) {
+    private Set<Value> recto(final Collection<Value> values, final IRI step) {
         return statements.stream()
                 .filter(statement -> step.equals(statement.getPredicate()))
                 .filter(statement -> values.contains(statement.getSubject()))
-                .map(Statement::getObject);
+                .map(Statement::getObject)
+                .collect(toUnmodifiableSet());
     }
 
-    private Stream<Value> verso(final IRI step) {
+    private Set<Value> verso(final Collection<Value> values, final IRI step) {
         return statements.stream()
                 .filter(statement -> step.equals(statement.getPredicate()))
                 .filter(statement -> values.contains(statement.getObject()))
-                .map(Statement::getSubject);
+                .map(Statement::getSubject)
+                .collect(toUnmodifiableSet());
     }
 
 }

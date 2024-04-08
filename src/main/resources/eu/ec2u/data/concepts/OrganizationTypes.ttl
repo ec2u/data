@@ -18,7 +18,7 @@
 
 </concepts/organizations/college> a skos:Concept ;
     skos:topConceptOf </concepts/organizations> ;
-    skos:prefLabel "University College"@en .
+    skos:prefLabel "College"@en .
 
 </concepts/organizations/association> a skos:Concept ;
     skos:topConceptOf </concepts/organizations> ;

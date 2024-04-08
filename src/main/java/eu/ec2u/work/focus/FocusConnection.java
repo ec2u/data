@@ -35,8 +35,7 @@ import static com.metreeca.link.Frame.reverse;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 final class FocusConnection implements Focus {
 
@@ -137,7 +136,7 @@ final class FocusConnection implements Focus {
             throw new NullPointerException("null step");
         }
 
-        return new FocusConnection(shift(step).collect(toSet()), connection, cache);
+        return new FocusConnection(shift(values, step), connection, cache);
     }
 
     @Override public Focus seq(final IRI... steps) {
@@ -146,21 +145,21 @@ final class FocusConnection implements Focus {
             throw new NullPointerException("null steps");
         }
 
-        Stream<Value> next=values.stream();
+        Set<Value> next=values;
 
-        for (final IRI step : steps) { next=shift(step); }
+        for (final IRI step : steps) { next=shift(next, step); }
 
-        return new FocusConnection(next.collect(toSet()), connection, cache);
+        return new FocusConnection(next, connection, cache);
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<Value> shift(final IRI step) {
-        return forward(step) ? recto(step) : verso(reverse(step));
+    private Set<Value> shift(final Collection<Value> values, final IRI step) {
+        return forward(step) ? recto(values, step) : verso(values, reverse(step));
     }
 
-    private Stream<Value> recto(final IRI step) {
+    private Set<Value> recto(final Collection<Value> values, final IRI step) {
         return values.stream()
 
                 .filter(Value::isResource)
@@ -180,10 +179,11 @@ final class FocusConnection implements Focus {
 
                 )
 
-                .map(Statement::getObject);
+                .map(Statement::getObject)
+                .collect(toUnmodifiableSet());
     }
 
-    private Stream<Value> verso(final IRI step) {
+    private Set<Value> verso(final Collection<Value> values, final IRI step) {
         return values.stream()
 
                 .flatMap(value -> Optional.ofNullable(cache.get(value))
@@ -200,7 +200,8 @@ final class FocusConnection implements Focus {
 
                 )
 
-                .map(Statement::getSubject);
+                .map(Statement::getSubject)
+                .collect(toUnmodifiableSet());
     }
 
 }
