@@ -39,8 +39,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.split;
 import static com.metreeca.link.Frame.*;

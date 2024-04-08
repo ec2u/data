@@ -18,7 +18,8 @@ package eu.ec2u.data.concepts;
 
 import org.eclipse.rdf4j.model.IRI;
 
-import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.link.Frame.iri;
+
 
 public final class ESCO {
 

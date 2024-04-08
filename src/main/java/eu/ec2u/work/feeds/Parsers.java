@@ -16,7 +16,8 @@
 
 package eu.ec2u.work.feeds;
 
-import com.metreeca.http.rdf.Values;
+
+import com.metreeca.link.Frame;
 
 import org.eclipse.rdf4j.model.IRI;
 
@@ -39,7 +40,7 @@ public final class Parsers {
     public static Optional<IRI> iri(final String iri) {
         return Optional.of(iri)
                 .filter(URIPattern.asMatchPredicate())
-                .map(Values::iri);
+                .map(Frame::iri);
     }
 
     public static Optional<URI> uri(final String uri) {

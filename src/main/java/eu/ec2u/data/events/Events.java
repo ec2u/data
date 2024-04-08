@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;

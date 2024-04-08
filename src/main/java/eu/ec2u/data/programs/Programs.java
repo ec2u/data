@@ -28,7 +28,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;

@@ -44,7 +44,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
 import static com.metreeca.link.Frame.*;
 

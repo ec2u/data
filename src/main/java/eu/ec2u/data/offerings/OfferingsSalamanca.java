@@ -39,7 +39,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.*;
 

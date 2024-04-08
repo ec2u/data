@@ -18,7 +18,7 @@ package eu.ec2u.data.documents;
 
 import org.eclipse.rdf4j.model.IRI;
 
-import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.universities._Universities.Salamanca;

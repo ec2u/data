@@ -38,7 +38,6 @@ import org.eclipse.rdf4j.model.vocabulary.XSD;
 import javax.json.JsonValue;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -46,7 +45,6 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.*;
 
@@ -94,9 +92,6 @@ public final class EventsTurkuCity implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private final ZonedDateTime now=ZonedDateTime.now(UTC);
-
 
     @Override public void run() {
         update(connection -> {

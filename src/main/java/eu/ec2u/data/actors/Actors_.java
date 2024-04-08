@@ -18,10 +18,9 @@ package eu.ec2u.data.actors;
 
 import com.metreeca.http.actions.GET;
 import com.metreeca.http.csv.formats.CSV;
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
@@ -38,10 +37,10 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.*;
+import static com.metreeca.http.rdf.Values.statement;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -157,53 +156,57 @@ public final class Actors_ implements Runnable {
     }
 
     private Frame actor(final CSVRecord record) {
-        return frame(iri(Context, normalize(record.get(col("A")))))
+        return frame(
 
-                .value(RDF.TYPE, EC2U.term("Actor"))
-                .value(RDFS.LABEL, literal("?", "en")) // !!! label
+                field(ID, iri(Context, normalize(record.get(col("A"))))),
 
-                .value(Resources.owner, university(record)) // !!! missing in the survey
+                field(RDF.TYPE, EC2U.term("Actor")),
+                field(RDFS.LABEL, literal("?", "en")), // !!! label
 
-                .value(term("Q1-1"), profile(record))
-                .values(term("Q1-2"), activityArea(record))
-                .value(term("Q1-3"), activitySpan(record))
-                .value(term("Q2-1"), activityCoverage(record))
-                .value(term("Q1-2"), turnover(record))
-                .value(term("Q1-3"), researchBudget(record))
-                .value(term("Q2-4"), size(record))
-                .value(term("Q2-5"), researchWeight(record))
+                field(Resources.owner, university(record)), // !!! missing in the survey
 
-                .value(term("Q2-6"), researchPartnerships(record))
-                .value(term("Q2-6a"), researchSpan(record))
-                .value(term("Q2-6b"), researchPartners(record))
-                .values(term("Q2-7"), researchArea(record))
-                .values(term("Q2-8"), researchRelation(record))
-                .frames(term("Q2-9"), researchRelationQuality(record))
-                .values(term("Q2-10"), researchIssue(record))
-                .value(term("Q2-11"), researchProjects(record))
-                .value(term("Q2-12"), researchNetworks(record))
-                .value(term("Q2-13"), researchRecruiting(record))
-                .values(term("Q2-14"), researchValorization(record))
-                .value(term("Q2-15"), researchCoverage(record))
-                .values(term("Q2-16"), researchDigitization(record))
+                field(term("Q1-1"), profile(record)),
+                field(term("Q1-2"), activityArea(record)),
+                field(term("Q1-3"), activitySpan(record)),
+                field(term("Q2-1"), activityCoverage(record)),
+                field(term("Q1-2"), turnover(record)),
+                field(term("Q1-3"), researchBudget(record)),
+                field(term("Q2-4"), size(record)),
+                field(term("Q2-5"), researchWeight(record)),
 
-                .value(term("Q2-17"), citizenPartnerships(record))
-                .values(term("Q3-1"), citizenPartners(record))
-                .values(term("Q3-1b"), citizenInvolvement(record))
-                .values(term("Q3-1c"), citizenStage(record))
-                .values(term("Q3-2"), citizenTarget(record))
-                .value(term("Q3-3"), citizenImpact(record))
-                .value(term("Q3-4"), citizenProjects(record))
-                .value(term("Q3-4a"), citizenExperience(record))
-                .value(term("Q3-5"), citizenBudget(record))
-                .values(term("Q3-6"), citizenFunding(record))
-                .value(term("Q3-7"), citizenNetwork(record))
-                .value(term("Q3-7a"), citizenNetworkSize(record))
-                .value(term("Q3-7b"), citizenNetworkSample(record))
-                .values(term("Q3-8"), citizenExpertise(record))
-                .values(term("Q3-9"), citizenIssues(record))
-                .value(term("Q3-10"), citizenRecruiting(record))
-                .value(term("Q3-11"), citizenRewarding(record));
+                field(term("Q2-6"), researchPartnerships(record)),
+                field(term("Q2-6a"), researchSpan(record)),
+                field(term("Q2-6b"), researchPartners(record)),
+                field(term("Q2-7"), researchArea(record)),
+                field(term("Q2-8"), researchRelation(record)),
+                field(term("Q2-9"), researchRelationQuality(record)),
+                field(term("Q2-10"), researchIssue(record)),
+                field(term("Q2-11"), researchProjects(record)),
+                field(term("Q2-12"), researchNetworks(record)),
+                field(term("Q2-13"), researchRecruiting(record)),
+                field(term("Q2-14"), researchValorization(record)),
+                field(term("Q2-15"), researchCoverage(record)),
+                field(term("Q2-16"), researchDigitization(record)),
+
+                field(term("Q2-17"), citizenPartnerships(record)),
+                field(term("Q3-1"), citizenPartners(record)),
+                field(term("Q3-1b"), citizenInvolvement(record)),
+                field(term("Q3-1c"), citizenStage(record)),
+                field(term("Q3-2"), citizenTarget(record)),
+                field(term("Q3-3"), citizenImpact(record)),
+                field(term("Q3-4"), citizenProjects(record)),
+                field(term("Q3-4a"), citizenExperience(record)),
+                field(term("Q3-5"), citizenBudget(record)),
+                field(term("Q3-6"), citizenFunding(record)),
+                field(term("Q3-7"), citizenNetwork(record)),
+                field(term("Q3-7a"), citizenNetworkSize(record)),
+                field(term("Q3-7b"), citizenNetworkSample(record)),
+                field(term("Q3-8"), citizenExpertise(record)),
+                field(term("Q3-9"), citizenIssues(record)),
+                field(term("Q3-10"), citizenRecruiting(record)),
+                field(term("Q3-11"), citizenRewarding(record))
+
+        );
     }
 
 
@@ -352,7 +355,7 @@ public final class Actors_ implements Runnable {
         return Optional.ofNullable(map().get(normalize(record.get(col("AG"))))).or(() -> Optional
                 .of(normalize(record.get(col("AI"))))
                 .filter(not(("i don't know / no opinion")::equals))
-                .map(Values::literal)
+                .map(Frame::literal)
         );
     }
 
@@ -447,10 +450,11 @@ public final class Actors_ implements Runnable {
                         .filter(v -> v.matches("\\d+"))
                         .map(Integer::valueOf)
 
-                        .map(v -> frame(iri(Context, format("%s/%s", id, md5())))
-                                .value(RDF.SUBJECT, literal(entry.getValue()))
-                                .value(RDF.VALUE, literal(v))
-                        )
+                        .map(v -> frame(
+                                field(ID, iri(Context, format("%s/%s", id, md5()))),
+                                field(RDF.SUBJECT, literal(entry.getValue())),
+                                field(RDF.VALUE, literal(v))
+                        ))
 
                         .stream()
                 );
@@ -826,7 +830,7 @@ public final class Actors_ implements Runnable {
     private static Optional<Literal> open(final CSVRecord record, final String col) {
         return Optional.of(normalize(record.get(col(col))))
                 .filter(not(String::isEmpty))
-                .map(Values::literal);
+                .map(Frame::literal);
     }
 
     private static Optional<Literal> other(final String value) {

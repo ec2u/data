@@ -24,8 +24,8 @@ import com.metreeca.link.Frame;
 import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;

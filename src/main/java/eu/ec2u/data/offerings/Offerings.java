@@ -24,7 +24,7 @@ import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.ISCED2011;
 import org.eclipse.rdf4j.model.IRI;
 
-import static com.metreeca.http.rdf.Values.iri;
+import static com.metreeca.link.Frame.iri;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
