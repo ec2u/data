@@ -18,27 +18,23 @@ package eu.ec2u.data.events;
 
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.toolkits.Identifiers;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.XML;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.locations.Locations;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
@@ -51,17 +47,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Optional;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Strings.TextLength;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.events.Events.endDate;
-import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
-import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
@@ -71,13 +66,22 @@ public final class EventsPoitiersUniversity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/poitiers/university");
 
-    private static final Frame Publisher=frame(iri("https://www.univ-poitiers.fr/c/actualites/"))
-            .value(RDF.TYPE, Organization)
-            .value(DCTERMS.COVERAGE, University)
-            .values(RDFS.LABEL,
+    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+
+            field(ID, iri("https://www.univ-poitiers.fr/c/actualites/")),
+            field(TYPE, Organization),
+
+            field(owner, Poitiers.Id),
+
+            field(Schema.name,
+
                     literal("University of Poitiers / News and Events", "en"),
                     literal("Université de Poitiers / Actualités et événements", Poitiers.Language)
-            );
+            ),
+
+            field(Schema.about, OrganizationTypes.University)
+
+    );
 
 
     private static final DateTimeFormatter EU_DATE=new DateTimeFormatterBuilder()
@@ -119,14 +123,16 @@ public final class EventsPoitiersUniversity implements Runnable {
 
 
     @Override public void run() {
-        // Xtream.of(synced(Context, Publisher.focus()))
-        //
-        //         .flatMap(this::crawl)
-        //         .map(this::event)
-        //
-        //         .pipe(events -> validate(Event(), Set.of(Event), events))
-        //
-        //         .forEach(new Events.Updater(Context));
+        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+
+                .flatMap(this::crawl)
+                .map(this::event)
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+        );
     }
 
 
@@ -147,9 +153,9 @@ public final class EventsPoitiersUniversity implements Runnable {
     private Frame event(final XPath item) {
 
         final Optional<IRI> link=item.link("link")
-                .map(Values::iri);
+                .map(Frame::iri);
 
-        final Optional<Literal> pubDate=RSS.pubDate(item).map(Values::literal);
+        final Optional<Literal> pubDate=RSS.pubDate(item).map(Frame::literal);
 
         final Optional<Value> label=item.string("title")
                 .map(text -> Strings.clip(text, TextLength))
@@ -163,40 +169,39 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .map(text -> Strings.clip(text, TextLength))
                 .map(text -> literal(text, Poitiers.Language));
 
-        return frame(iri(Events.Context,
-                link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
-        ))
+        return frame(
 
-                .values(RDF.TYPE, Events.Event)
+                field(ID, iri(Events.Context,
+                        link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
+                )),
 
-                .value(Resources.owner, Poitiers.Id)
+                field(RDF.TYPE, Events.Event),
 
-                .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(DCTERMS.SOURCE, link)
 
-                .value(DCTERMS.CREATED, pubDate)
-                .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
+                field(Schema.url, link),
+                field(Schema.name, label),
+                field(Schema.image, item.link("image").map(Frame::iri)),
+                field(Schema.disambiguatingDescription, brief),
+                field(Schema.description, description.map(value -> literal(value, Poitiers.Language))),
 
-                .frames(DCTERMS.SUBJECT, item.strings("category")
-                        .map(c -> frame(EC2U.item(Events.Topics, c))
-                                .value(SKOS.TOP_CONCEPT_OF, Events.Topics)
-                                .value(RDF.TYPE, SKOS.CONCEPT)
-                                .value(RDFS.LABEL, literal(c, Poitiers.Language))
-                                .value(SKOS.PREF_LABEL, literal(c, Poitiers.Language))
-                        )
-                )
+                field(startDate, startDate(item)),
+                field(endDate, endDate(item)),
 
-                .value(Schema.url, link)
-                .value(Schema.name, label)
-                .value(Schema.image, item.link("image").map(Values::iri))
-                .value(Schema.disambiguatingDescription, brief)
-                .value(Schema.description, description.map(value -> literal(value, Poitiers.Language)))
+                // field(DCTERMS.CREATED, pubDate),
+                // field(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now))),
 
-                .value(startDate, startDate(item))
-                .value(endDate, endDate(item))
+                field(Schema.about, item.strings("category").map(category -> frame(
+                        field(ID, item(Topics, category)),
+                        field(RDF.TYPE, SKOS.CONCEPT),
+                        field(SKOS.TOP_CONCEPT_OF, Topics),
+                        field(SKOS.PREF_LABEL, literal(category, Poitiers.Language))
+                ))),
 
-                .frame(location, location(item));
+                field(owner, Poitiers.Id),
+                field(publisher, Publisher),
+                field(location, location(item))
 
+        );
     }
 
 
@@ -218,7 +223,7 @@ public final class EventsPoitiersUniversity implements Runnable {
         return dateFrom
                 .map(date -> date.atTime(hourFrom))
                 .map(dateTime -> dateTime.atZone(Poitiers.TimeZone))
-                .map(Values::literal);
+                .map(Frame::literal);
     }
 
     private Optional<Literal> endDate(final XPath item) {
@@ -236,25 +241,27 @@ public final class EventsPoitiersUniversity implements Runnable {
         return dateTo
                 .map(date -> date.atTime(hourTo))
                 .map(dateTime -> dateTime.atZone(Poitiers.TimeZone))
-                .map(Values::literal);
+                .map(Frame::literal);
     }
 
     private Optional<Frame> location(final XPath item) {
 
         return item.string("place/place_name").filter(not(String::isEmpty))
 
-                .map(name -> frame(item(Locations.Context, name))
+                .map(name -> frame(
 
-                        .value(RDF.TYPE, Schema.Place)
+                        field(ID, item(Locations.Context, name)),
 
-                        .value(Schema.name, literal(name, Poitiers.Language))
+                        field(RDF.TYPE, Schema.Place),
 
-                        .value(Schema.description, item.string("place/place_address")
+                        field(Schema.name, literal(name, Poitiers.Language)),
+
+                        field(Schema.description, item.string("place/place_address")
                                 .filter(not(String::isEmpty))
                                 .map(Untag::untag)
                                 .map(value -> literal(value, Poitiers.Language))
                         )
-                );
+                ));
     }
 
 }

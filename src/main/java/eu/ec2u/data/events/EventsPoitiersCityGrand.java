@@ -18,39 +18,35 @@ package eu.ec2u.data.events;
 
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.XML;
+import com.metreeca.link.Frame;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.events.Events.endDate;
-import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
@@ -59,17 +55,25 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/poitiers/city/grand");
 
-    private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
-            .value(RDF.TYPE, Organization)
-            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
-            .values(RDFS.LABEL,
+    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+
+            field(ID, iri("https://sortir.grandpoitiers.fr/")),
+            field(TYPE, Organization),
+
+            field(owner, Poitiers.Id),
+
+            field(Schema.name,
                     literal("Grand Poitiers / Events", "en"),
                     literal("Grand Poitiers / Sortir", Poitiers.Language)
-            );
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new EventsPoitiersCityGrand().run());
+        exec(() -> new EventsPoitiersCityGrand().run());
     }
 
 
@@ -79,14 +83,16 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
 
     @Override public void run() {
-        // Xtream.of(synced(Context, Publisher.focus()))
-        //
-        //         .flatMap(this::crawl)
-        //         .optMap(this::event)
-        //
-        //         .pipe(events -> validate(Event(), Set.of(Event), events))
-        //
-        //         .forEach(new Events.Updater(Context));
+        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+
+                .flatMap(this::crawl)
+                .optMap(this::event)
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+        );
     }
 
 
@@ -127,31 +133,33 @@ public final class EventsPoitiersCityGrand implements Runnable {
                     .map(text -> literal(text, Poitiers.Language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
-                    .map(Values::literal);
+                    .map(Frame::literal);
 
 
-            return frame(iri(Events.Context, md5(url)))
+            return frame(
 
-                    .values(RDF.TYPE, Events.Event)
+                    field(ID, iri(Events.Context, md5(url))),
 
-                    .frame(DCTERMS.SUBJECT, category(item))
+                    field(RDF.TYPE, Events.Event),
 
-                    .value(Resources.owner, Poitiers.Id)
+                    field(Schema.url, iri(url)),
+                    field(Schema.name, name),
+                    field(Schema.image, item.link("enclosure/@url").map(Frame::iri)),
+                    field(Schema.description, description),
+                    field(Schema.disambiguatingDescription, disambiguatingDescription),
 
-                    .value(DCTERMS.SOURCE, iri(url))
-                    .frame(DCTERMS.PUBLISHER, Publisher)
-                    .value(DCTERMS.CREATED, pubDate)
-                    .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
+                    field(startDate, datetime(item, "ev:startdate")),
+                    field(endDate, datetime(item, "ev:enddate")),
 
-                    .value(Schema.url, iri(url))
-                    .value(Schema.name, name)
-                    .value(Schema.image, item.link("enclosure/@url").map(Values::iri))
-                    .value(Schema.description, description)
-                    .value(Schema.disambiguatingDescription, disambiguatingDescription)
+                    // field(DCTERMS.CREATED, pubDate),
+                    // field(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now))),
 
-                    .value(startDate, datetime(item, "ev:startdate"))
-                    .value(endDate, datetime(item, "ev:enddate"));
+                    field(Schema.about, category(item)),
 
+                    field(owner, Poitiers.Id),
+                    field(publisher, Publisher)
+
+            );
         });
     }
 
@@ -163,7 +171,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
                 .map(OffsetDateTime::parse)
                 .map(OffsetDateTime::toLocalDateTime)
                 .map(v -> v.atOffset(Poitiers.TimeZone.getRules().getOffset(v)))
-                .map(Values::literal);
+                .map(Frame::literal);
     }
 
     private Optional<Frame> category(final XPath item) {
@@ -171,11 +179,15 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             final Literal label=literal(category, Poitiers.Language);
 
-            return frame(EC2U.item(Events.Topics, category))
-                    .value(RDF.TYPE, SKOS.CONCEPT)
-                    .value(SKOS.TOP_CONCEPT_OF, Events.Topics)
-                    .value(RDFS.LABEL, label)
-                    .value(SKOS.PREF_LABEL, label);
+            return frame(
+
+                    field(ID, EC2U.item(Events.Topics, category)),
+
+                    field(RDF.TYPE, SKOS.CONCEPT),
+                    field(SKOS.TOP_CONCEPT_OF, Events.Topics),
+                    field(SKOS.PREF_LABEL, label)
+
+            );
 
         });
     }

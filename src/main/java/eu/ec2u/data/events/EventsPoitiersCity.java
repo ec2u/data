@@ -16,36 +16,43 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.rdf.Frame;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/poitiers/city");
 
-    private static final Frame Publisher=frame(iri("https://www.poitiers.fr/"))
-            .value(RDF.TYPE, Organization)
-            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
-            .values(RDFS.LABEL,
-                    literal("Ville de Poitiers / Evenements", "fr"),
-                    literal("City of Poitiers / Events", "en")
-            );
+    private static final Frame Publisher=frame(
+
+            field(ID, iri("https://www.poitiers.fr/")),
+            field(TYPE, Organization),
+
+            field(owner, Poitiers.Id),
+
+            field(Schema.name,
+
+                    literal("City of Poitiers / Events", "en"),
+                    literal("Ville de Poitiers / Evenements", Poitiers.Language)
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
