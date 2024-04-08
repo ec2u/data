@@ -7,7 +7,7 @@
 # API
 
 * LinkedEvents
-  * https://linkedevents-api.turku.fi/v1/
+  * https://api.hel.fi/linkedevents/v1/event/
 
 # Integration
 
@@ -18,6 +18,10 @@
 ## Pending
 
 - filter out immaterial events (e.g. children, …)
+
+## 2024-04-8
+
+* Restored using the new API @ https://api.hel.fi/linkedevents/v1/event/
 
 ## 2022-09-07
 

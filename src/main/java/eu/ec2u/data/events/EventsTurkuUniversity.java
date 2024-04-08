@@ -21,13 +21,13 @@ import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.Query;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources_;
@@ -35,9 +35,7 @@ import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import javax.json.Json;
 import javax.json.JsonReader;
@@ -50,21 +48,21 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Formats.SQL_TIMESTAMP;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.http.toolkits.Strings.clip;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
-import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
@@ -74,17 +72,26 @@ import static java.util.stream.Collectors.toList;
 
 public final class EventsTurkuUniversity implements Runnable {
 
-    private static final IRI Context=iri(Events.Context, "/turku/university");
+    private static final IRI Context=iri(Events.Context, "/turku/city");
 
-    private static final Frame Publisher=frame(iri("https://www.utu.fi/event-search/"))
-            .value(RDF.TYPE, Organization)
-            .value(DCTERMS.COVERAGE, University)
-            .values(RDFS.LABEL,
+    private static final com.metreeca.link.Frame Publisher=frame(
+
+            field(ID, iri("https://www.utu.fi/event-search/")),
+            field(TYPE, Organization),
+
+            field(owner, Turku.Id),
+
+            field(Schema.name,
                     literal("University of Turku / News", "en"),
                     literal("Turun yliopisto / Ajankohtaista", Turku.Language)
-            );
+            ),
 
-    private static final String APIKey="key-events-turku-university"; // vault label
+            field(Schema.about, OrganizationTypes.University)
+
+    );
+
+
+    private static final String APIKey="events-turku-university-key"; // vault label
 
 
     private static Literal instant(final String timestamp, final Instant instant) {
@@ -111,25 +118,17 @@ public final class EventsTurkuUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
+        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
 
-        // final ZonedDateTime now=ZonedDateTime.now(UTC);
-        //
-        // Xtream.of(synced(Context, Publisher.focus()))
-        //
-        //         .flatMap(this::crawl)
-        //         .optMap(this::event)
-        //
-        //         .map(event -> event
-        //
-        //                 .value(Resources.university, Turku.Id)
-        //
-        //                 .frame(DCTERMS.PUBLISHER, Publisher)
-        //                 .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
-        //         )
-        //
-        //         .pipe(events -> validate(Event(), Set.of(Event), events))
-        //
-        //         .forEach(new Events.Updater(Context));
+                .flatMap(this::crawl)
+                .optMap(this::event)
+
+                .flatMap(com.metreeca.link.Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
@@ -213,31 +212,37 @@ public final class EventsTurkuUniversity implements Runnable {
                 )
                 .collect(toList());
 
-        return json.integer("id").map(id -> frame(iri(Events.Context, md5(Publisher.focus().stringValue()+id)))
+        return json.integer("id").map(id -> frame(
 
-                .value(RDF.TYPE, Events.Event)
+                field(ID, iri(Events.Context, md5(Publisher.id().orElseThrow().stringValue()+id))),
 
-                .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Resources_::url).map(Values::iri))
-                .value(DCTERMS.CREATED, json.string("published").map(timestamp -> instant(timestamp, now)))
-                .value(DCTERMS.MODIFIED, json.string("updated").map(timestamp1 -> instant(timestamp1, now)))
+                field(RDF.TYPE, Event),
 
-                .value(Schema.url, json.string("additional_information.link.url")
+                field(Schema.url, json.string("additional_information.link.url")
                         .or(() -> json.string("source_link"))
                         .flatMap(Resources_::url)
-                        .map(Values::iri)
-                )
+                        .map(Frame::iri)
+                ),
 
-                .values(Schema.name, title)
-                .values(Schema.description, description)
-                .values(Schema.disambiguatingDescription, excerpt)
+                field(Schema.name, title),
+                field(Schema.description, description),
+                field(Schema.disambiguatingDescription, excerpt),
 
-                .value(startDate, json.string("start_time").map(timestamp2 -> datetime(timestamp2, now)))
-                .value(endDate, json.string("end_time").map(timestamp3 -> datetime(timestamp3, now)))
+                field(startDate, json.string("start_time").map(timestamp2 -> datetime(timestamp2, now))),
+                field(endDate, json.string("end_time").map(timestamp3 -> datetime(timestamp3, now))),
 
-                .frame(location, json.path("location").flatMap(this::location))
-                .frames(organizer, json.paths("additional_information.contact").optMap(this::organizer))
+                // field(DCTERMS.CREATED, json.string("published").map(timestamp -> instant(timestamp, now))),
+                // field(DCTERMS.MODIFIED, json.string("updated").map(timestamp1 -> instant(timestamp1, now))),
 
-        );
+
+                field(owner, Turku.Id),
+                field(publisher, Publisher),
+                field(organizer, json.paths("additional_information.contact").optMap(this::organizer)),
+
+                field(location, json.path("location").flatMap(this::location))
+
+
+        ));
 
     }
 
@@ -248,33 +253,37 @@ public final class EventsTurkuUniversity implements Runnable {
         return json.string("url").map(id -> {
 
             final Optional<String> name=json.string("free_text");
-            final Optional<Value> url=json.string("url").flatMap(Resources_::url).map(Values::iri);
+            final Optional<Value> url=json.string("url").flatMap(Resources_::url).map(Frame::iri);
             final Optional<Value> addressCountry=Optional.ofNullable(Turku.Country);
             final Optional<Value> addressLocality=Optional.ofNullable(Turku.City);
-            final Optional<Value> postalCode=json.string("postal_code").map(Values::literal);
-            final Optional<Value> streetAddress=json.string("street").map(Values::literal);
+            final Optional<Value> postalCode=json.string("postal_code").map(Frame::literal);
+            final Optional<Value> streetAddress=json.string("street").map(Frame::literal);
 
             // the same URL may be used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
 
-            return frame(item(Locations.Context, Xtream
+            return frame(
 
-                    .of(
-                            Optional.of(id).map(Values::literal), name.map(Values::literal),
-                            url, addressCountry, addressLocality, postalCode, streetAddress
-                    )
+                    field(ID, item(Locations.Context, Xtream
 
-                    .optMap(value -> value)
-                    .map(Value::stringValue)
-                    .collect(joining("\n"))
+                            .of(
+                                    Optional.of(id).map(Frame::literal), name.map(Frame::literal),
+                                    url, addressCountry, addressLocality, postalCode, streetAddress
+                            )
 
-            ))
+                            .optMap(value -> value)
+                            .map(Value::stringValue)
+                            .collect(joining("\n"))
 
-                    .value(RDF.TYPE, Schema.Place)
+                    )),
 
-                    .value(Schema.url, url)
-                    .value(Schema.name, name.map(text -> literal(text, Turku.Language)))
+                    field(RDF.TYPE, Schema.Place),
 
-                    .frame(Schema.address, frame(item(Locations.Context, Xtream
+                    field(Schema.url, url),
+                    field(Schema.name, name.map(text -> literal(text, Turku.Language))),
+
+                    field(Schema.address, frame(
+
+                            field(ID, item(Locations.Context, Xtream
 
                                     .of(url, addressCountry, addressLocality, postalCode, streetAddress)
 
@@ -282,30 +291,35 @@ public final class EventsTurkuUniversity implements Runnable {
                                     .map(Value::stringValue)
                                     .collect(joining("\n"))
 
-                            ))
+                            )),
 
-                                    .value(RDF.TYPE, Schema.PostalAddress)
+                            field(RDF.TYPE, Schema.PostalAddress),
 
-                                    .value(Schema.addressCountry, addressCountry)
-                                    .value(Schema.addressLocality, addressLocality)
-                                    .value(Schema.postalCode, postalCode)
-                                    .value(Schema.streetAddress, streetAddress)
+                            field(Schema.addressCountry, addressCountry),
+                            field(Schema.addressLocality, addressLocality),
+                            field(Schema.postalCode, postalCode),
+                            field(Schema.streetAddress, streetAddress),
 
-                                    .value(Schema.url, url)
-                    );
+                            field(Schema.url, url)
+
+                    ))
+
+            );
 
         });
     }
 
     private Optional<Frame> organizer(final JSONPath json) {
-        return json.string("url").map(id -> frame(item(Organizations.Context, id))
+        return json.string("url").map(id -> frame(
 
-                .value(RDF.TYPE, Schema.Organization)
+                field(ID, item(Organizations.Context, id)),
 
-                .value(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.Language)))
-                .value(Schema.email, json.string("email").map(Values::literal))
+                field(RDF.TYPE, Organization),
 
-        );
+                field(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.Language))),
+                field(Schema.email, json.string("email").map(Frame::literal))
+
+        ));
     }
 
 }
