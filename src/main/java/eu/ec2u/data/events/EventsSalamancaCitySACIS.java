@@ -18,50 +18,54 @@ package eu.ec2u.data.events;
 
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.http.rdf.Frame;
-import com.metreeca.http.rdf.Values;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.XML;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.time.Instant;
 import java.util.Optional;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Values.iri;
-import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events_.synced;
+import static eu.ec2u.data.resources.Resources.owner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Salamanca;
-import static java.time.ZoneOffset.UTC;
 
 public final class EventsSalamancaCitySACIS implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/salamanca/city/sacis");
 
-    private static final Frame Publisher=frame(iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda"
-            +"-salamanca/"))
-            .value(RDF.TYPE, Organization)
-            .value(DCTERMS.COVERAGE, OrganizationTypes.City)
-            .values(RDFS.LABEL,
+    private static final Frame Publisher=Frame.frame(
+
+            field(ID, iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda-salamanca/")),
+            field(TYPE, Organization),
+
+            field(owner, Salamanca.Id),
+
+            field(Schema.name,
                     literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en"),
                     literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.Language)
-            );
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
@@ -71,18 +75,18 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
-
     @Override public void run() {
-        // Xtream.of(synced(Context, Publisher.focus()))
-        //
-        //         .flatMap(this::crawl)
-        //         .optMap(this::event)
-        //
-        //         .pipe(events -> validate(Event(), Set.of(Event), events))
-        //
-        //         .forEach(new Events.Updater(Context));
+        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+
+                .flatMap(this::crawl)
+                .optMap(this::event)
+
+                .flatMap(Frame::stream)
+                .batch(0)
+
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
@@ -121,24 +125,26 @@ public final class EventsSalamancaCitySACIS implements Runnable {
                     .map(text -> literal(text, Salamanca.Language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
-                    .map(Values::literal);
+                    .map(Frame::literal);
 
 
-            return frame(iri(Events.Context, md5(url)))
+            return frame(
 
-                    .values(RDF.TYPE, Events.Event)
+                    field(ID, iri(Events.Context, md5(url))),
 
-                    .value(Resources.owner, Salamanca.Id)
+                    field(RDF.TYPE, Events.Event),
 
-                    .value(DCTERMS.SOURCE, iri(url))
-                    .frame(DCTERMS.PUBLISHER, Publisher)
-                    .value(DCTERMS.CREATED, pubDate)
-                    .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now.atOffset(UTC))))
+                    field(Schema.url, iri(url)),
+                    field(Schema.name, name),
+                    field(Schema.description, description),
+                    field(Schema.disambiguatingDescription, disambiguatingDescription),
 
-                    .value(Schema.url, iri(url))
-                    .value(Schema.name, name)
-                    .value(Schema.description, description)
-                    .value(Schema.disambiguatingDescription, disambiguatingDescription);
+                    // field(DCTERMS.CREATED, pubDate),
+                    // field(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now.atOffset(UTC)))),
+
+                    field(owner, Salamanca.Id),
+                    field(publisher, Publisher)
+            );
 
         });
     }
