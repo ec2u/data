@@ -16,12 +16,25 @@
 
 package eu.ec2u.data.concepts;
 
+import com.metreeca.http.rdf4j.actions.Upload;
+
 import org.eclipse.rdf4j.model.IRI;
 
+import java.util.stream.Stream;
+
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.iri;
 
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.BASE;
+import static eu.ec2u.data.EC2U.update;
 
-public final class ESCO {
+
+public final class ESCO implements Runnable {
+
+    public static final IRI Context=iri(Concepts.Context, "/esco");
+
 
     // https://esco.ec.europa.eu/en/classification/occupation_main
 
@@ -37,4 +50,24 @@ public final class ESCO {
 
     public static final IRI Qualifications=iri(Concepts.Context, "/esco-qualifications");
 
+
+    public static void main(final String... args) {
+        exec(() -> new ESCO().run());
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override public void run() {
+        update(connection -> Stream
+
+                .of(rdf(resource(this, ".ttl"), BASE))
+
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+
+        );
+    }
 }
