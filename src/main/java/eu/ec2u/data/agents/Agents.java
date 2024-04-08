@@ -16,22 +16,34 @@
 
 package eu.ec2u.data.agents;
 
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
+import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.owner;
 
-public final class Agents {
+public final class Agents extends Delegator {
 
     public static final IRI Context=item("/agents/");
 
+
+    public static Shape Agents() { return Dataset(Agent()); }
 
     public static Shape Agent() {
         return shape(FOAF.AGENT, Resource(),
@@ -52,6 +64,32 @@ public final class Agents {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Agents() { }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Agents() {
+        delegate(handler(new Driver(Agents()), new Worker()
+
+                .get(new Relator(frame(
+
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("EC2U Knowledge Hub Agents", "en")),
+
+                        field(RDFS.MEMBER, query(
+
+                                frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", WILDCARD)),
+
+                                        field(owner, iri())
+
+                                )
+
+                        ))
+
+                )))
+
+        ));
+    }
 }

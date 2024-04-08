@@ -23,7 +23,6 @@ import com.metreeca.link.Frame;
 import java.util.stream.Stream;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.resources.Resources.Languages;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
@@ -37,7 +36,7 @@ public final class Universities_ implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream
+        Xtream
 
                 .of(
 
@@ -58,8 +57,6 @@ public final class Universities_ implements Runnable {
                 .sink(new WikidataMirror()
                         .contexts(Frame.iri(Universities.Context, "/wikidata"))
                         .languages(Languages)
-                )
-
-        );
+                );
     }
 }

@@ -1,7 +1,7 @@
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ec2u: </terms/> .
 
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix wd: <http://www.wikidata.org/entity/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix org: <http://www.w3.org/ns/org#> .
@@ -9,7 +9,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix dct: <http://purl.org/dc/terms/> .
-
 
 </universities/> a ec2u:Dataset ;
     dct:title "EC2U Allied Universities"@en ;
@@ -31,7 +30,10 @@ ec2u:University a owl:Class ;
 ########################################################################################################################
 
 </universities/coimbra> a ec2u:University ;
-    skos:prefLabel "Universidade de Coimbra"@pt, "University of Coimbra"@en ;
+    skos:prefLabel
+        "Universidade de Coimbra"@pt,
+        "University of Coimbra"@en ;
+    skos:altLabel "Coimbra"@pt, "Coimbra"@en ;
     skos:definition
         """Focused on the future and recognized as major promoter of change, the University of Coimbra has more than 7 centuries of experience in the creation and dissemination of knowledge, culture, science and technology through study, teaching, cutting-edge research and innovation in the most diverse areas of knowledge."""@en ;
     foaf:homepage <https://www.uc.pt/en/>, <https://www.uc.pt/pt> ;
@@ -40,7 +42,10 @@ ec2u:University a owl:Class ;
     rdfs:seeAlso wd:Q368643 .
 
 </universities/iasi> a ec2u:University ;
-    skos:prefLabel "Universitatea din Iași"@ro, "University of Iași"@en ;
+    skos:prefLabel
+        "Universitatea Alexandru Ioan Cuza din Iași"@ro,
+        "Alexandru Ioan Cuza University of Iaşi"@en ;
+    skos:altLabel "Iași"@ro, "Iași"@en ;
     skos:definition
         "Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, education and institutional transparency. With about 23000 students and 2000 full-time staff in its 15 faculties, our university’s academic offer includes 80 degrees at bachelor level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered in English as well)."@en ;
     foaf:homepage <https://www.uaic.ro/en/>, <https://www.uaic.ro/> ;
@@ -49,7 +54,10 @@ ec2u:University a owl:Class ;
     rdfs:seeAlso wd:Q1523902 .
 
 </universities/jena> a ec2u:University ;
-    skos:prefLabel "University of Jena"@en, "Universität Jena"@de ;
+    skos:prefLabel
+        "Friedrich-Schiller-Universität Jena"@de,
+        "Friedrich Schiller University Jena"@en ;
+    skos:altLabel "Jena"@de, "Jena"@en ;
     skos:definition
         "Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities in Germany. Once the centre of German philosophical thought, it has become a broad-based, research-intensive institution with a global reach and a thriving international community of more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide."@en ;
     foaf:homepage <https://www.uni-jena.de/en>, <https://www.uni-jena.de/> ;
@@ -58,7 +66,10 @@ ec2u:University a owl:Class ;
     rdfs:seeAlso wd:Q154561 .
 
 </universities/pavia> a ec2u:University ;
-    skos:prefLabel "University of Pavia"@en, "Università di Pavia"@it ;
+    skos:prefLabel
+        "University of Pavia"@en,
+        "Università degli Studi di Pavia"@it ;
+    skos:altLabel "Pavia"@it, "Pavia"@en ;
     skos:definition
         "The University of Pavia (UNIPV) is one of the world’s oldest  academic institutions: it was founded in 1361 and until the 20th century it was the only University in the Milan Area and the region of Lombardy."@en ;
     foaf:homepage <https://web-en.unipv.it>, <https://portale.unipv.it/it> ;
@@ -68,6 +79,7 @@ ec2u:University a owl:Class ;
 
 </universities/poitiers> a ec2u:University ;
     skos:prefLabel "University of Poitiers"@en, "Université de Poitiers"@fr ;
+    skos:altLabel "Poitiers"@fr, "Poitiers"@en ;
     skos:definition
         "Founded in 1431, the University of Poitiers is a multidisciplinary university which enrols 29 000 students, 4200 of which are international students from 120 different countries, supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and  is above the national average with 16% of foreign students."@en ;
     foaf:homepage <https://www.univ-poitiers.fr/en/>, <https://www.univ-poitiers.fr> ;
@@ -77,6 +89,7 @@ ec2u:University a owl:Class ;
 
 </universities/salamanca> a ec2u:University ;
     skos:prefLabel "Universidad de Salamanca"@es, "University of Salamanca"@en ;
+    skos:altLabel "Salamanca"@es, "Salamanca"@en ;
     skos:definition
         "The University of Salamanca was founded in 1218 and is one of the three oldest universities in Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. In 2011, it was awarded the Campus of International Excellence status. It is the university of reference in its region and beyond (Castile and León) and the “Alma Mater” of nearly all historical Latin American universities."@en ;
     foaf:homepage <https://www.usal.es> ;
@@ -85,7 +98,8 @@ ec2u:University a owl:Class ;
     rdfs:seeAlso wd:Q308963 .
 
 </universities/turku> a ec2u:University ;
-    skos:prefLabel "University of Turku"@en, "Turun yliopisto"@fi ;
+    skos:prefLabel "University of Turku"@en, "Turun Yliopisto"@fi ;
+    skos:altLabel "Turku"@fi, "Turku"@en ;
     skos:definition
         "The University of Turku (UTU) is an international research university and an active academic community of 25,000 students and staff members from over 100 different countries.  The University’s main campus is located in the historical city centre of Turku – close to the unique nature and archipelago of Southwest Finland. As one of the leading universities in Finland, the University of Turku offers study and research opportunities in seven faculties and seven special units. Thanks to the outstanding services, compact campus and active academic society, international students and scholars feel at home from the very beginning of their stay at the University of Turku, Finland!"@en ;
     foaf:homepage <https://www.utu.fi/en>, <https://www.utu.fi/fi> ;

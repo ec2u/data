@@ -16,6 +16,7 @@
 
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { ec2u } from "@ec2u/data/views";
+import { DataName } from "@ec2u/data/views/name";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
@@ -35,8 +36,10 @@ export const University=immutable({
 	id: required("/universities/{code}"),
 
 	label: required(local),
-	comment: required(local),
 	depiction: required(id),
+
+	prefLabel: required(local),
+	definition: required(local),
 
 	inception: optional(year),
 	students: optional(integer),
@@ -117,17 +120,23 @@ export function DataUniversity() {
 		<ToolFrame placeholder={Universities[icon]} as={({
 
 			label,
-			comment,
-			depiction
+			depiction,
+
+			definition,
+			prefLabel
 
 		}) => <>
 
 			<img className={"right"} src={depiction} alt={`Image of ${toLocalString(label)}`}/>
 
-			<p>{toLocalString(comment)}</p>
+			<DataName>{{ label, title: prefLabel }}</DataName>
+
+			<p>{toLocalString(definition)}</p>
 
 		</>}>{university}</ToolFrame>
 
 	</DataPage>;
 
 }
+
+

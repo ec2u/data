@@ -5,16 +5,27 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 insert {
 
     ?organization
+
         rdfs:label ?label ;
-        rdfs:comment ?definition.
+        rdfs:comment ?definition ;
+
+        skos:hiddenLabel ?pref, ?alt.
 
 } where {
 
     ?organization a org:Organization ;
         skos:prefLabel ?pref .
 
-    optional { ?organization skos:altLabel ?alt }
-    optional { ?organization skos:definition ?definition }
+    bind (lang(?pref) as ?lang)
+
+    optional {
+        ?organization skos:altLabel ?alt
+        filter (lang(?alt) = ?lang)
+    }
+    optional {
+        ?organization skos:definition ?definition
+        filter (lang(?definition) = ?lang)
+    }
 
     bind(coalesce(?alt, ?pref) as ?label)
 

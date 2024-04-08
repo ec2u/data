@@ -53,7 +53,7 @@ export const Universities=immutable({
 
 		id: required(id),
 
-		label: required(local),
+		prefLabel: required(local),
 		comment: required(local),
 		depiction: required(id),
 
@@ -78,7 +78,7 @@ export function DataUniversities() {
 		tray={<>
 
 			<ToolKeywords placeholder={"Name"}>{
-				useKeywords(universities, "label")
+				useKeywords(universities, "prefLabel")
 			}</ToolKeywords>
 
 			<ToolRange placeholder={"Inception"}>{
@@ -103,7 +103,7 @@ export function DataUniversities() {
 		<ToolSheet placeholder={Universities[icon]} as={({
 
 			id,
-			label,
+			prefLabel,
 			comment,
 			depiction,
 
@@ -113,7 +113,7 @@ export function DataUniversities() {
 
 			<ToolCard key={id} side={"end"}
 
-				title={<ToolLink>{{ id, label }}</ToolLink>}
+				title={<ToolLink>{{ id, label: prefLabel }}</ToolLink>}
 				image={depiction}
 
 				tags={<span>{toEntryString(country)}</span>}

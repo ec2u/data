@@ -24,6 +24,7 @@ import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 import com.metreeca.link.Trace;
 
+import eu.ec2u.data.agents.Agents;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
@@ -113,6 +114,7 @@ public final class EC2U extends Delegator {
                 .path("/", new Datasets())
                 .path("/resources/", new Resources())
 
+                .path("/agents/*", new Agents())
                 .path("/universities/*", new Universities())
 
                 .path("/units/*", new Units())

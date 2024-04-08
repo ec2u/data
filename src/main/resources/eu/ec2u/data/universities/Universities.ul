@@ -11,15 +11,11 @@ PREFIX dct: <http://purl.org/dc/terms/>
 
 insert {
 
-    ?university org:subOrganizationOf <https://ec2u.eu/> ;
-        rdfs:label ?label ;
-        rdfs:comment ?definition.
+    ?university org:subOrganizationOf <https://ec2u.eu/> .
 
 } where {
 
-    ?university a ec2u:University ;
-        skos:prefLabel ?label ;
-        skos:definition ?definition .
+    ?university a ec2u:University .
 
 }; # complete entry
 

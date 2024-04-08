@@ -53,6 +53,8 @@ public final class Universities extends Delegator {
     private static final IRI country=term("country");
     private static final IRI city=term("city");
 
+    private static final IRI scope=term("scope");
+
 
     public static Shape Universities() {
         return Dataset(University());
@@ -74,7 +76,7 @@ public final class Universities extends Delegator {
 
                 property(ORG.SUB_ORGANIZATION_OF, hasValue((iri("https://ec2u.eu/")))),
 
-                property(term("scope"), multiple(
+                property(scope, multiple(
 
                         property("dataset", reverse(VOID.SUBSET), required(Dataset())),
                         property(VOID.ENTITIES, required(integer()))
@@ -122,10 +124,10 @@ public final class Universities extends Delegator {
 
                         .get(new Relator(frame(
 
-                                field(ID, Frame.iri()),
+                                field(ID, iri()),
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                field(DCTERMS.EXTENT, frame(
+                                field(scope, frame(
 
                                         field(reverse(VOID.SUBSET), frame(
                                                 field(ID, literal("")),
@@ -142,9 +144,5 @@ public final class Universities extends Delegator {
         );
 
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 }

@@ -32,7 +32,6 @@ import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
@@ -116,9 +115,7 @@ public final class Resources extends Delegator {
 
                                                 field(owner, iri())
 
-                                        ),
-
-                                        filter(RDF.TYPE, Resource)
+                                        )
 
                                 ))
 
