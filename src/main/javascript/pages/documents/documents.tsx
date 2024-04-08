@@ -15,7 +15,7 @@
  */
 
 import { Languages } from "@ec2u/data/languages";
-import { DataInfo } from "@ec2u/data/pages/meta";
+import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry, toEntryString } from "@metreeca/core/entry";

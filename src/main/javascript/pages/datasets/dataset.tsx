@@ -16,45 +16,44 @@
 
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
+import { immutable, optional, required } from "@metreeca/core";
+import { date } from "@metreeca/core/date";
+import { id } from "@metreeca/core/id";
+import { integer, toIntegerString } from "@metreeca/core/integer";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
+import { useRouter } from "@metreeca/data/contexts/router";
+import { useAsset } from "@metreeca/data/hooks/asset";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { DoneIcon, InfoIcon } from "@metreeca/view/widgets/icon";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
 import React from "react";
-import { immutable, optional, required } from "../../../../../../../Products/Tool/code/core";
-import { id } from "../../../../../../../Products/Tool/code/core/id";
-import { integer, toIntegerString } from "../../../../../../../Products/Tool/code/core/integer";
-import { local, toLocalString } from "../../../../../../../Products/Tool/code/core/local";
-import { string } from "../../../../../../../Products/Tool/code/core/string";
-import { useRouter } from "../../../../../../../Products/Tool/code/data/contexts/router";
-import { useAsset } from "../../../../../../../Products/Tool/code/data/hooks/asset";
-import { useResource } from "../../../../../../../Products/Tool/code/data/models/resource";
-import { icon } from "../../../../../../../Products/Tool/code/view";
-import { ToolFrame } from "../../../../../../../Products/Tool/code/view/lenses/frame";
-import { DoneIcon, InfoIcon } from "../../../../../../../Products/Tool/code/view/widgets/icon";
-import { ToolInfo } from "../../../../../../../Products/Tool/code/view/widgets/info";
-import { ToolLink } from "../../../../../../../Products/Tool/code/view/widgets/link";
-import { ToolMark } from "../../../../../../../Products/Tool/code/view/widgets/mark";
 
-
-function isMeta(route: string) {
-	return route.startsWith("/schemas/");
-}
 
 function toMeta(route: string) {
-	return route.replace(/^\/(?<name>\w*)\/?$/, "/schemas/$<name>");
+	return route.replace(/^\/(?<name>\w*)\/?$/, "/datasets/$<name>");
 }
 
 function toData(route: string) {
-	return route === "/schemas/" ? "/" : route.replace(/^\/schemas\/(?<name>\w*?)$/, "/$<name>/");
+	return route === "/datasets/" ? "/" : route.replace(/^\/datasets\/(?<name>\w*?)$/, "/$<name>/");
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const Meta=immutable({
+export const Dataset=immutable({
 
-	id: "/schemas/*",
+	id: "/datasets/*",
 
 	title: required(local),
 	alternative: optional(local),
 	description: optional(local),
+
+	issued: optional(date),
 
 	license: optional({
 		id: required(id),
@@ -75,37 +74,46 @@ export function DataInfo() {
 
 	const [route, setRoute]=useRouter();
 
-	const data=!isMeta(route);
 
-	return <button title={data ? "View Dataset Metadata" : "View Dataset Catalog"}
+	function open() {
+		setRoute(toMeta(route));
+	}
 
-		onClick={() => setRoute(data ? toMeta(route) : toData(route))}
+	return <button title={"View Dataset Docs"}
+
+		onClick={open}
 
 		style={{
-
-			color: "var(--tool--color-label)",
 			transform: "scale(0.75)"
-
 		}}
 
-	>{data ? <InfoIcon/> : <DoneIcon/>}</button>;
+	>{<InfoIcon/>}</button>;
 
 }
 
 export function DataMeta() {
 
-	const [route]=useRouter();
+	const [route, setRoute]=useRouter();
 
-	const [dataset]=useResource({ ...Meta, id: toData(route) });
+	const [dataset]=useResource({ ...Dataset, id: toData(route) });
 
 	const model=useAsset(dataset?.isDefinedBy);
+
+
+	function close() {
+		dataset && setRoute(dataset.id);
+	}
 
 
 	return <DataPage
 
 		name={dataset && toLocalString(dataset.alternative || dataset.title)}
 
-		menu={<DataInfo/>}
+		menu={(dataset?.id === "/" || dataset?.issued) && <button
+
+            onClick={close}
+
+        ><DoneIcon/></button>}
 
 		tray={<ToolFrame as={({
 

@@ -16,7 +16,7 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     dct:issued "2022-03-10"^^xsd:date ;
     void:rootResource schema:Course ;
-    rdfs:isDefinedBy </schemas/offerings> .
+    rdfs:isDefinedBy </datasets/offerings> .
 
 
 ########################################################################################################################

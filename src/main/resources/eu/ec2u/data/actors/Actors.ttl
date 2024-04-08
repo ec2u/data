@@ -14,7 +14,7 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     dct:issued "2022-01-01"^^xsd:date ;
     void:rootResource ec2u:Actor ;
-    rdfs:isDefinedBy </schemas/actors> .
+    rdfs:isDefinedBy </datasets/actors> .
 
 
 ########################################################################################################################

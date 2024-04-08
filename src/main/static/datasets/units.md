@@ -2,7 +2,7 @@
 
 # Data Model
 
-![research unit data model](index/units.svg)
+![research unit data model](index/units.svg#75)
 
 EC2U research units and facilities are described using a controlled subset of the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with:
 

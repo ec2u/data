@@ -69,8 +69,8 @@ public final class Offerings {
                 property(provider, optional(Organization())),
 
                 property(educationalLevel, optional(Concept(), scheme(ISCED2011.Scheme))),
-                property(about, multiple(Concept(), scheme(EuroSciVoc.Scheme))),
                 property(learningResourceType, multiple(Concept(), scheme(Types))),
+                property(about, multiple(Concept(), scheme(EuroSciVoc.Scheme))),
                 property(occupationalCategory, multiple(Concept(), scheme(ESCO.Occupations))),
                 property(competencyRequired, multiple(Concept(), scheme(ESCO.Skills)))
 

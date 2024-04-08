@@ -16,7 +16,7 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
 	dct:issued "2023-07-15"^^xsd:date ;
 	void:rootResource ec2u:Document ;
-    rdfs:isDefinedBy </schemas/documents> .
+    rdfs:isDefinedBy </datasets/documents> .
 
 </concepts/document-types> a skos:ConceptScheme ;
 	dct:title "EC2U Document Types"@en .

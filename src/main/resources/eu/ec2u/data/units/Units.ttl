@@ -18,7 +18,7 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     dct:issued "2022-01-01"^^xsd:date ;
     void:rootResource ec2u:Unit ;
-    rdfs:isDefinedBy </schemas/units> .
+    rdfs:isDefinedBy </datasets/units> .
 
 </concepts/research-topics/> a skos:ConceptScheme ;
     dct:title "EC2U Research Unit Topics"@en ;

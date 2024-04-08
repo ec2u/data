@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2024 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="540 159 324 150" width="324" height="150">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
+                color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
+                color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="units" stroke="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none">
+        <title>units</title>
+        <rect fill="white" x="540" y="159" width="324" height="150"/>
+        <g id="units_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_369">
+                <g id="Graphic_371">
+                    <rect x="581.1024" y="221.10236" width="51.032227" height="17" fill="white"/>
+                    <rect x="581.1024" y="221.10236" width="51.032227" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(587.1024 224.10236)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                            ec2u:Unit
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_367">
+                <g id="Graphic_368">
+                    <a xl:href="agents.svg">
+                        <rect x="554.744" y="173.4803" width="103.74902" height="17" fill="white"/>
+                        <rect x="554.744" y="173.4803" width="103.74902" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(560.744 176.4803)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                org:OrganizationalUnit
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_364">
+                <line x1="606.6185" y1="221.10236" x2="606.6185" y2="200.2303" marker-end="url(#UMLInheritance_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_339">
+                <path d="M 606.6185 238.10236 L 606.6185 263.6181 L 704.6461 263.6181"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_338">
+                <rect x="622.275" y="257.1181" width="81.24756" height="13" fill="white"/>
+                <text transform="translate(625.275 258.1181)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="1.0942383" y="9">org:classification *
+                    </tspan>
+                </text>
+            </g>
+            <g id="Line_376">
+                <path d="M 606.6185 238.10236 L 606.6185 286.29528 L 704.6461 286.29528"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_377">
+                <rect x="647.91895" y="279.79528" width="55.592285" height="13" fill="white"/>
+                <text transform="translate(650.91895 280.79528)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:subject *</tspan>
+                </text>
+            </g>
+            <g id="Group_378">
+                <g id="Graphic_379">
+                    <a xl:href="agents.svg">
+                        <rect x="711.4961" y="255.1181" width="138.31201" height="17" fill="white"/>
+                        <rect x="711.4961" y="255.1181" width="138.31201" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(717.4961 258.1181)" fill="black">
+                            <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">
+                                /concepts/organizations/{code}
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Graphic_390">
+                <a xl:href="concepts.svg">
+                    <rect x="711.4961" y="277.79528" width="127.4707" height="17" fill="white"/>
+                    <rect x="711.4961" y="277.79528" width="127.4707" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(717.4961 280.79528)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">/concepts/euroscivoc/{code}
+                        </tspan>
+                    </text>
+                </a>
+            </g>
+        </g>
+    </g>
+</svg>

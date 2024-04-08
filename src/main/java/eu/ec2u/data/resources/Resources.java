@@ -64,6 +64,8 @@ public final class Resources extends Delegator {
             .collect(toUnmodifiableSet());
 
 
+    public static Shape Resources() { return Dataset(Resource()); }
+
     public static Shape Resource() {
         return shape(
 
@@ -98,11 +100,7 @@ public final class Resources extends Delegator {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Resources() {
-        delegate(handler(new Driver(virtual(Resource(),
-
-                        property("members", RDFS.MEMBER, Resource())
-
-                )), new Worker()
+        delegate(handler(new Driver(Resources()), new Worker()
 
                         .get(new Relator(frame(
 

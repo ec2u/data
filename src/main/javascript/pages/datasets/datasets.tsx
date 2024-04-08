@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DataInfo } from "@ec2u/data/pages/meta";
+import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";

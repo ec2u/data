@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink"
-        viewBox="1171 -5 541 351" width="541" height="351">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="1171 -5 541 351" width="541" height="351">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -41,7 +41,7 @@
             </g>
         </marker>
     </defs>
-    <g id="agents" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
+    <g id="agents" stroke="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none">
         <title>agents</title>
         <rect fill="white" x="1171" y="-5" width="541" height="351"/>
         <g id="agents_Layer_1">
@@ -120,22 +120,22 @@
                 </g>
             </g>
             <g id="Line_53">
-                <line x1="1424.3283" y1="102.04725" x2="1424.3283" y2="34.032323" marker-end="url(#StickArrow_Marker)"
+                <line x1="1424.3283" y1="102.04725" x2="1424.3283" y2="33.77126" marker-end="url(#StickArrow_Marker)"
                         stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_52">
-                <rect x="1384.7987" y="37.61466" width="79.05908" height="13" fill="white"/>
-                <text transform="translate(1387.7987 38.61466)" fill="black">
+                <rect x="1384.7987" y="37.16802" width="79.05908" height="13" fill="white"/>
+                <text transform="translate(1387.7987 38.16802)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">org:classification *</tspan>
                 </text>
             </g>
             <g id="Group_49">
                 <g id="Graphic_51">
                     <a xl:href="http://xmlns.com/foaf/0.1/#term_Agent">
-                        <rect x="1185.7323" y="56.692914" width="95.46094" height="17" fill="white"/>
-                        <rect x="1185.7323" y="56.692914" width="95.46094" height="17" stroke="black"
+                        <rect x="1185.7323" y="47.692914" width="95.46094" height="17" fill="white"/>
+                        <rect x="1185.7323" y="47.692914" width="95.46094" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(1212.0966 59.692914)" fill="black">
+                        <text transform="translate(1212.0966 50.692914)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 foaf:Agent
                             </tspan>
@@ -143,21 +143,23 @@
                     </a>
                 </g>
                 <g id="Graphic_50">
-                    <rect x="1185.7323" y="73.69291" width="95.46094" height="39" fill="white"/>
-                    <rect x="1185.7323" y="73.69291" width="95.46094" height="39" stroke="black" stroke-linecap="round"
+                    <rect x="1185.7323" y="64.692914" width="95.46094" height="50" fill="white"/>
+                    <rect x="1185.7323" y="64.692914" width="95.46094" height="50" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(1191.7323 76.69291)" fill="black">
+                    <text transform="translate(1191.7323 67.69291)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">foaf:depiction : id [*]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">foaf:homepage : id [*]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">foaf:mbox : string [*]
                         </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">foaf:phone : string [*]
+                        </tspan>
                     </text>
                 </g>
             </g>
             <g id="Line_48">
-                <path d="M 1369.7094 136.06908 L 1233.4628 136.06908 L 1233.4628 122.44291"
+                <path d="M 1369.7094 136.06908 L 1233.4628 136.06908 L 1233.4628 124.44291"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
@@ -208,8 +210,8 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_41">
-                <rect x="1389.714" y="196.67985" width="69.228516" height="24" fill="white"/>
-                <text transform="translate(1392.714 197.67985)" fill="black">
+                <rect x="1389.714" y="189.90351" width="69.228516" height="24" fill="white"/>
+                <text transform="translate(1392.714 190.90351)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="6.901611" y="9">org:headOf *</tspan>
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">org:memberOf *</tspan>
                 </text>
@@ -222,23 +224,9 @@
                 </text>
             </g>
             <g id="Line_39">
-                <path d="M 1366.297 302.9606 L 1233.4628 302.9606 L 1233.4628 122.44291"
+                <path d="M 1366.297 302.9606 L 1233.4628 302.9606 L 1233.4628 124.44291"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
-            </g>
-            <g id="Group_37">
-                <g id="Graphic_38">
-                    <a xl:href="concepts.svg">
-                        <rect x="1388.6598" y="9.92126" width="71.337" height="17.261063" fill="white"/>
-                        <rect x="1388.6598" y="9.92126" width="71.337" height="17.261063" stroke="black"
-                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(1396.68 13.051791)" fill="black">
-                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
-                                skos:Concept
-                            </tspan>
-                        </text>
-                    </a>
-                </g>
             </g>
             <g id="Group_71">
                 <g id="Graphic_72">
@@ -255,7 +243,7 @@
                 </g>
             </g>
             <g id="Line_69">
-                <line x1="1233.4628" y1="56.692914" x2="1233.4628" y2="36.67126"
+                <path d="M 1233.4628 47.692914 L 1233.4628 37.307087 L 1233.4628 36.67126"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
@@ -294,6 +282,38 @@
                 <path d="M 1556.2205 136.05905 L 1545.2205 136.05905 L 1489.9472 136.06911 L 1488.6972 136.06911"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_87">
+                <path d="M 1376.6913 73.63118 C 1376.6913 70.931 1375.7854 70.59693 1369.1674 67.92468 L 1369.0975 67.897035 C 1362.4446 65.19685 1362.3754 65.19685 1355.5478 65.19685 C 1346.4566 65.19685 1305.3543 65.19685 1305.3543 65.19685 L 1305.3543 93.70085 L 1376.6913 93.70085 L 1376.6913 73.63118 Z"
+                        fill="#fffd78"/>
+                <path d="M 1376.6913 73.63118 C 1376.6913 70.931 1375.7854 70.59693 1369.1674 67.92468 L 1369.0975 67.897035 C 1362.4446 65.19685 1362.3754 65.19685 1355.5478 65.19685 C 1346.4566 65.19685 1305.3543 65.19685 1305.3543 65.19685 L 1305.3543 93.70085 L 1376.6913 93.70085 L 1376.6913 73.63118 Z M 1376.6913 73.492084 C 1376.6913 70.931 1376.6214 70.931 1362.3754 70.931 L 1362.3754 70.931 C 1362.3754 65.224785 1362.3754 65.19685 1355.9658 65.19685"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                <text transform="translate(1310.3543 68.19685)" fill="black">
+                    <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">
+                        mbox/phone
+                    </tspan>
+                    <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="20.252">
+                        should be IRIs
+                    </tspan>
+                </text>
+            </g>
+            <g id="Line_88">
+                <line x1="1281.1932" y1="97.45991" x2="1305.2346" y2="90.2225" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
+            </g>
+            <g id="Group_89">
+                <g id="Graphic_90">
+                    <a xl:href="">
+                        <rect x="1355.1723" y="9.92126" width="138.31201" height="17" fill="white"/>
+                        <rect x="1355.1723" y="9.92126" width="138.31201" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(1361.1723 12.92126)" fill="black">
+                            <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">
+                                /concepts/organizations/{code}
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
             </g>
         </g>
     </g>

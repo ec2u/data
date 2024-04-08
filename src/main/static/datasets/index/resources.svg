@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2024 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-108 137 350 232" width="350" height="232">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
+                color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker_2"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-25 -10 26 20" markerWidth="26"
+                markerHeight="20" color="black">
+            <g>
+                <path d="M -24 0 L 0 0 M 0 9 L -24 0 L 0 -9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="resources" stroke="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none">
+        <title>resources</title>
+        <rect fill="white" x="-108" y="137" width="350" height="232"/>
+        <g id="resources_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_223">
+                <g id="Graphic_225">
+                    <rect x="-79.29652" y="165.81481" width="116.29102" height="17.661808" fill="white"/>
+                    <rect x="-79.29652" y="165.81481" width="116.29102" height="17.661808" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-47.96424 169.14572)" fill="black">
+                        <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9" fill="black"
+                                x="0" y="9">rdfs:Resource
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_224">
+                    <rect x="-79.29652" y="183.47662" width="116.29102" height="72" fill="white"/>
+                    <rect x="-79.29652" y="183.47662" width="116.29102" height="72" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-73.29652 186.47662)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">rdf:type : id [*]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">rdfs:label : text [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">rdfs:comment : text [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">rdfs:seeAlso : id [*]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">rdfs:isDefinedBy : id
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="64">ec2u:synced : instant
+                            [0..1]
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_219">
+                <g id="Graphic_220">
+                    <a xl:href="agents.svg">
+                        <rect x="133.22835" y="202.14572" width="79.70215" height="17" fill="white"/>
+                        <rect x="133.22835" y="202.14572" width="79.70215" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(139.22835 205.14572)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                org:Organization
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_218">
+                <line x1="36.9945" y1="210.64572" x2="126.37835" y2="210.64572" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_217">
+                <rect x="54.92111" y="204.14572" width="68.45508" height="13" fill="white"/>
+                <text transform="translate(57.92111 205.14572)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">ec2u:owner 0..1</tspan>
+                </text>
+            </g>
+            <g id="Group_229">
+                <g id="Graphic_230">
+                    <a xl:href="datasets.svg">
+                        <rect x="-53.889535" y="323.1496" width="65.47705" height="17" fill="white"/>
+                        <rect x="-53.889535" y="323.1496" width="65.47705" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-47.889535 326.1496)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                ec2u:Dataset
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_231">
+                <line x1="-21.15101" y1="316.2996" x2="-21.15101" y2="262.32662" marker-end="url(#StickArrow_Marker)"
+                        marker-start="url(#StickArrow_Marker_2)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_232">
+                <rect x="-52.522104" y="263.73016" width="62.74219" height="13" fill="white"/>
+                <text transform="translate(-49.522104 264.73016)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">rdfs:member *</tspan>
+                </text>
+            </g>
+            <g id="Graphic_233">
+                <rect x="-44.77235" y="300.57376" width="47.242676" height="13" fill="white"/>
+                <text transform="translate(-41.77235 301.57376)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹dataset› *</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>
