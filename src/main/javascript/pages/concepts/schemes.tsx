@@ -17,26 +17,26 @@
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { entry } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
+import { toValueString } from "@metreeca/core/value";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
+import { useOptions } from "@metreeca/data/models/options";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
 import { ToolKeywords } from "@metreeca/view/lenses/keywords";
+import { ToolOptions } from "@metreeca/view/lenses/options";
 import { ToolSheet } from "@metreeca/view/lenses/sheet";
 import { ToolCard } from "@metreeca/view/widgets/card";
 import { GraduationCap } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
-import { entry } from "../../../../../../../../Products/Tool/code/core/entry";
-import { toValueString } from "../../../../../../../../Products/Tool/code/core/value";
-import { useOptions } from "../../../../../../../../Products/Tool/code/data/models/options";
-import { ToolOptions } from "../../../../../../../../Products/Tool/code/view/lenses/options";
 
 
 export const Schemes=immutable({
@@ -111,7 +111,14 @@ export function DataSchemes() {
 
 			<ToolCard key={id} side={"end"}
 
-				title={<ToolLink>{{ id, label: `${toLocalString(alternative)} / ${toLocalString(title)}` }}</ToolLink>}
+				title={<ToolLink>{{
+
+					id,
+					label: alternative
+						? `${toLocalString(alternative)} / ${toLocalString(title)}`
+						: toLocalString(title)
+
+				}}</ToolLink>}
 
 				tags={`${entities} concepts`}
 

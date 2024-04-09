@@ -17,7 +17,7 @@
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="540 159 324 150" width="324" height="150">
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="540 159 357 105" width="357" height="105">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -36,7 +36,7 @@
     </defs>
     <g id="units" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
         <title>units</title>
-        <rect fill="white" x="540" y="159" width="324" height="150"/>
+        <rect fill="white" x="540" y="159" width="357" height="105"/>
         <g id="units_Layer_1">
             <title>Layer 1</title>
             <g id="Group_369">
@@ -70,35 +70,35 @@
                         stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Line_339">
-                <path d="M 606.6185 238.10236 L 606.6185 263.6181 L 704.6461 263.6181"
+                <path d="M 632.1346 229.60236 L 648.2346 229.60236 L 648.2346 218.26378 L 737.2445 218.26378"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_338">
-                <rect x="622.275" y="257.1181" width="81.24756" height="13" fill="white"/>
-                <text transform="translate(625.275 258.1181)" fill="black">
+                <rect x="654.9472" y="211.76378" width="81.24756" height="13" fill="white"/>
+                <text transform="translate(657.9472 212.76378)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="1.0942383" y="9">org:classification *
                     </tspan>
                 </text>
             </g>
             <g id="Line_376">
-                <path d="M 606.6185 238.10236 L 606.6185 286.29528 L 704.6461 286.29528"
+                <path d="M 632.1346 229.60236 L 648.2346 229.60236 L 648.2346 240.94095 L 737.2445 240.94095"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_377">
-                <rect x="647.91895" y="279.79528" width="55.592285" height="13" fill="white"/>
-                <text transform="translate(650.91895 280.79528)" fill="black">
+                <rect x="680.2915" y="234.44095" width="55.592285" height="13" fill="white"/>
+                <text transform="translate(683.2915 235.44095)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:subject *</tspan>
                 </text>
             </g>
             <g id="Group_378">
                 <g id="Graphic_379">
                     <a xl:href="agents.svg">
-                        <rect x="711.4961" y="255.1181" width="138.31201" height="17" fill="white"/>
-                        <rect x="711.4961" y="255.1181" width="138.31201" height="17" stroke="black"
+                        <rect x="744.0945" y="209.76378" width="138.31201" height="17" fill="white"/>
+                        <rect x="744.0945" y="209.76378" width="138.31201" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(717.4961 258.1181)" fill="black">
+                        <text transform="translate(750.0945 212.76378)" fill="black">
                             <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">
                                 /concepts/organizations/{code}
                             </tspan>
@@ -108,10 +108,10 @@
             </g>
             <g id="Graphic_390">
                 <a xl:href="concepts.svg">
-                    <rect x="711.4961" y="277.79528" width="127.4707" height="17" fill="white"/>
-                    <rect x="711.4961" y="277.79528" width="127.4707" height="17" stroke="black" stroke-linecap="round"
+                    <rect x="744.0945" y="232.44095" width="127.4707" height="17" fill="white"/>
+                    <rect x="744.0945" y="232.44095" width="127.4707" height="17" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(717.4961 280.79528)" fill="black">
+                    <text transform="translate(750.0945 235.44095)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">/concepts/euroscivoc/{code}
                         </tspan>
                     </text>

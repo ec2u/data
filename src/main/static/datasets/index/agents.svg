@@ -17,7 +17,7 @@
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="1171 -5 541 351" width="541" height="351">
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="1171 -32 541 378" width="541" height="378">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -43,7 +43,7 @@
     </defs>
     <g id="agents" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
         <title>agents</title>
-        <rect fill="white" x="1171" y="-5" width="541" height="351"/>
+        <rect fill="white" x="1171" y="-32" width="541" height="378"/>
         <g id="agents_Layer_1">
             <title>Layer 1</title>
             <g id="Group_67">
@@ -120,22 +120,22 @@
                 </g>
             </g>
             <g id="Line_53">
-                <line x1="1424.3283" y1="102.04725" x2="1424.3283" y2="33.77126" marker-end="url(#StickArrow_Marker)"
+                <line x1="1424.3283" y1="102.04725" x2="1424.3283" y2="6.77126" marker-end="url(#StickArrow_Marker)"
                         stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_52">
-                <rect x="1384.7987" y="37.16802" width="79.05908" height="13" fill="white"/>
-                <text transform="translate(1387.7987 38.16802)" fill="black">
+                <rect x="1384.7987" y="16.186746" width="79.05908" height="13" fill="white"/>
+                <text transform="translate(1387.7987 17.186746)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">org:classification *</tspan>
                 </text>
             </g>
             <g id="Group_49">
                 <g id="Graphic_51">
                     <a xl:href="http://xmlns.com/foaf/0.1/#term_Agent">
-                        <rect x="1185.7323" y="47.692914" width="95.46094" height="17" fill="white"/>
-                        <rect x="1185.7323" y="47.692914" width="95.46094" height="17" stroke="black"
+                        <rect x="1185.7323" y="20.692914" width="95.46094" height="17" fill="white"/>
+                        <rect x="1185.7323" y="20.692914" width="95.46094" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(1212.0966 50.692914)" fill="black">
+                        <text transform="translate(1212.0966 23.692914)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 foaf:Agent
                             </tspan>
@@ -143,10 +143,10 @@
                     </a>
                 </g>
                 <g id="Graphic_50">
-                    <rect x="1185.7323" y="64.692914" width="95.46094" height="50" fill="white"/>
-                    <rect x="1185.7323" y="64.692914" width="95.46094" height="50" stroke="black" stroke-linecap="round"
+                    <rect x="1185.7323" y="37.692914" width="95.46094" height="50" fill="white"/>
+                    <rect x="1185.7323" y="37.692914" width="95.46094" height="50" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(1191.7323 67.69291)" fill="black">
+                    <text transform="translate(1191.7323 40.692914)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">foaf:depiction : id [*]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">foaf:homepage : id [*]
@@ -159,7 +159,7 @@
                 </g>
             </g>
             <g id="Line_48">
-                <path d="M 1369.7094 136.06908 L 1233.4628 136.06908 L 1233.4628 124.44291"
+                <path d="M 1369.7094 136.06908 L 1358.7094 136.06908 L 1355.1561 136.05906 L 1353.9061 136.05906"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
@@ -223,17 +223,17 @@
                 </text>
             </g>
             <g id="Line_39">
-                <path d="M 1366.297 302.9606 L 1233.4628 302.9606 L 1233.4628 124.44291"
+                <path d="M 1366.297 302.9606 L 1233.4628 302.9606 L 1233.4628 97.44291"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Group_71">
                 <g id="Graphic_72">
                     <a xl:href="resources.svg">
-                        <rect x="1195.3733" y="9.92126" width="76.179" height="17" fill="white"/>
-                        <rect x="1195.3733" y="9.92126" width="76.179" height="17" stroke="black" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(1201.3733 12.92126)" fill="black">
+                        <rect x="1195.3733" y="-17.07874" width="76.179" height="17" fill="white"/>
+                        <rect x="1195.3733" y="-17.07874" width="76.179" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(1201.3733 -14.07874)" fill="black">
                             <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
                                     fill="black" x="5.276268" y="9">rdfs:Resource
                             </tspan>
@@ -242,7 +242,7 @@
                 </g>
             </g>
             <g id="Line_69">
-                <path d="M 1233.4628 47.692914 L 1233.4628 37.307087 L 1233.4628 36.67126"
+                <path d="M 1233.4628 20.692914 L 1233.4628 10.307087 L 1233.4628 9.67126"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
@@ -285,16 +285,35 @@
             <g id="Group_89">
                 <g id="Graphic_90">
                     <a xl:href="">
-                        <rect x="1355.1723" y="9.92126" width="138.31201" height="17" fill="white"/>
-                        <rect x="1355.1723" y="9.92126" width="138.31201" height="17" stroke="black"
+                        <rect x="1355.1723" y="-17.07874" width="138.31201" height="17" fill="white"/>
+                        <rect x="1355.1723" y="-17.07874" width="138.31201" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(1361.1723 12.92126)" fill="black">
+                        <text transform="translate(1361.1723 -14.07874)" fill="black">
                             <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">
                                 /concepts/organizations/{code}
                             </tspan>
                         </text>
                     </a>
                 </g>
+            </g>
+            <g id="Group_91">
+                <g id="Graphic_92">
+                    <a xl:href="http://xmlns.com/foaf/spec/#term_Organization">
+                        <rect x="1261.4173" y="127.56911" width="82.73877" height="17" fill="white"/>
+                        <rect x="1261.4173" y="127.56911" width="82.73877" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(1267.4173 130.56911)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                foaf:Organization
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_94">
+                <path d="M 1261.4173 136.05905 L 1233.4628 136.05905 L 1233.4628 97.44291"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
             </g>
         </g>
     </g>

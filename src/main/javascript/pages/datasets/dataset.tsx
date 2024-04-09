@@ -151,7 +151,7 @@ export function DataMeta() {
 
 			<ToolInfo>{{
 
-				"Concepts": toIntegerString(entities)
+				"Resources": toIntegerString(entities)
 
 			}}</ToolInfo>
 

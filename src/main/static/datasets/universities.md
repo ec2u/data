@@ -1,14 +1,14 @@
 # Data Model
 
 EC2U allied universities are described using a controlled subset of
-the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with some internal specialised
+the [Organization Ontology](https://www.w3.org/TR/vocab-org/) data model, extended with some specialised
 properties.
 
 | prefix | namespace                                | description                                                              |
 |--------|------------------------------------------|--------------------------------------------------------------------------|
 | ec2u:  | https://data.ec2u.eu/terms/              | EC2U Knowledge Hub vocabulary                                            |
 | geo:   | http://www.w3.org/2003/01/geo/wgs84_pos# | [Basic Geo (WGS84 lat/long) Vocabulary](https://www.w3.org/2003/01/geo/) |
-| org:   | http://www.w3.org/ns/org#                | https://www.w3.org/TR/vocab-org/                                         |
+| org:   | http://www.w3.org/ns/org#                | [The Organization Ontology](https://www.w3.org/TR/vocab-org/)            |
 | void:  | http://rdfs.org/ns/void#                 | [Vocabulary of Interlinked Datasets (VoID)](http://vocab.deri.ie/void)   |
 
 ![university data model](index/universities.svg)

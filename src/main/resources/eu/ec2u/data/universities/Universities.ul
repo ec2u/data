@@ -86,7 +86,7 @@ insert {
     ?university
         ec2u:scope ?subset .
 
-    ?subset a void:Dataset ;
+    ?subset
         ec2u:partner ?university ;
         void:entities ?entities .
 

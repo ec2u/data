@@ -50,7 +50,7 @@ export const Program=immutable({
 	educationalCredentialAwarded: optional(local),
 	occupationalCredentialAwarded: optional(local),
 
-	owner: optional({
+	partner: optional({
 		id: optional(id),
 		label: required(local)
 	}),
@@ -87,7 +87,7 @@ export function DataProgram() {
 		tray={<ToolFrame as={({
 
 			label,
-			owner,
+			partner,
 			provider,
 
 			identifier,
@@ -104,7 +104,7 @@ export function DataProgram() {
 
 			<ToolInfo>{{
 
-				"University": owner && <ToolLink>{owner}</ToolLink>,
+				"University": partner && <ToolLink>{partner}</ToolLink>,
 				"Provider": provider && <span>{toFrameString(provider)}</span>
 
 			}}</ToolInfo>

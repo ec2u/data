@@ -56,7 +56,7 @@ export const Course=immutable({
 	educationalCredentialAwarded: optional(local),
 	occupationalCredentialAwarded: optional(local),
 
-	owner: optional({
+	partner: optional({
 		id: required(id),
 		label: required(local)
 	}),
@@ -94,7 +94,7 @@ export function DataCourse() {
 		tray={<ToolFrame as={({
 
 				label,
-			owner,
+			partner,
 				provider,
 
 				url,
@@ -115,7 +115,7 @@ export function DataCourse() {
 
 			<ToolInfo>{{
 
-				"University": owner && <ToolLink>{owner}</ToolLink>,
+				"University": partner && <ToolLink>{partner}</ToolLink>,
 				"Provider": provider && <span>{toFrameString(provider)}</span>,
 
 				"Programs": inProgram?.length && <ul>{[...inProgram]

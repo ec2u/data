@@ -1,0 +1,17 @@
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+insert {
+
+    ?person rdfs:label ?label .
+
+} where {
+
+    ?person a foaf:Person .
+
+    optional { ?person foaf:givenName ?given }
+    optional { ?person foaf:familiyName ?family }
+
+    bind (concat(?given, if(bound(?given) && bound(?family), ' ', 1/0), ?family) as ?label)
+
+}

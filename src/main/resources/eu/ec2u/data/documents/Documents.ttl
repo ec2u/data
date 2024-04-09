@@ -19,13 +19,19 @@
     rdfs:isDefinedBy </datasets/documents> .
 
 </concepts/document-types> a skos:ConceptScheme ;
-	dct:title "EC2U Document Types"@en .
+	dct:title "EC2U Document Types"@en ;
+	dct:publisher <https://ec2u.eu/> ;
+	dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 
 </concepts/document-topics> a skos:ConceptScheme ;
-	dct:title "EC2U Document Topics"@en .
+	dct:title "EC2U Document Topics"@en ;
+	dct:publisher <https://ec2u.eu/> ;
+	dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 
 </concepts/document-audiences> a skos:ConceptScheme ;
-	dct:title "EC2U Document Audiences"@en .
+	dct:title "EC2U Document Audiences"@en ;
+	dct:publisher <https://ec2u.eu/> ;
+	dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 
 
 ########################################################################################################################

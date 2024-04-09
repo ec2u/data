@@ -3,6 +3,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix dct: <http://purl.org/dc/terms/> .
+@prefix js: <http://www.ontotext.com/js#> .
 
 </resources/> a void:Dataset ;
     dct:title "EC2U Knowledge Hub Resources"@en ;
@@ -10,3 +11,16 @@
     dct:description "Shared resources published on the EC2U Knowledge Hub."@en ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     rdfs:isDefinedBy </datasets/resources> .
+
+
+########################################################################################################################
+
+[] js:register '''
+
+    function clip(text, length) {
+        return text.replace(/^\\s*(.*\\.)\\s*\\n.*$/, function($0, $1) {
+			return !$1 ? $0 : $1.length <= length ? $1: $1.substring(0, length-4)+" […]"
+        })
+    }
+
+''' .

@@ -111,7 +111,7 @@ export const Event=immutable({
 
 	}),
 
-	owner: optional({
+	partner: optional({
 		id: required(id),
 		label: required(local)
 	})
@@ -146,13 +146,13 @@ export function DataEvent() {
 			publisher,
 			location,
 
-			owner
+			partner
 
 		}) => <>
 
 			<ToolInfo>{{
 
-				"University": owner && <ToolLink>{owner}</ToolLink>
+				"University": partner && <ToolLink>{partner}</ToolLink>
 
 			}}</ToolInfo>
 
@@ -163,14 +163,14 @@ export function DataEvent() {
 				"Topics": about?.length && <ul>{[...about]
 					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
 					.map(about => <li key={about.id}>
-						<ToolLink filter={[Events, { owner, about }]}>{about}</ToolLink>
+						<ToolLink filter={[Events, { partner, about }]}>{about}</ToolLink>
 					</li>)
 				}</ul>,
 
 				"Audience": audience?.length && <ul>{[...audience]
 					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
 					.map(audience => <li key={audience.id}>
-						<ToolLink filter={[Events, { owner, audience }]}>{audience}</ToolLink>
+						<ToolLink filter={[Events, { partner, audience }]}>{audience}</ToolLink>
 					</li>)
 				}</ul>
 

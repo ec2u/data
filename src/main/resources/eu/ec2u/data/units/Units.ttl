@@ -14,15 +14,17 @@
     dct:alternative "EC2U Units"@en ;
     dct:description
         "Identifying and background information about research and innovation units and supporting structures at EC2U allied universities."@en ;
-    dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+    dct:publisher <https://ec2u.eu/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:issued "2022-01-01"^^xsd:date ;
     void:rootResource ec2u:Unit ;
     rdfs:isDefinedBy </datasets/units> .
 
 </concepts/research-topics/> a skos:ConceptScheme ;
     dct:title "EC2U Research Unit Topics"@en ;
-    dct:description "> **:warn:** To be migrated to [EuroSCiVoc](euroscivoc)"@en .
+    dct:description "> **:warn:** To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 
 
 ########################################################################################################################

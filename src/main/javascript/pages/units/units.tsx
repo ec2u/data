@@ -90,7 +90,7 @@ export function DataUnits() {
 			}</ToolKeywords>
 
 			<ToolOptions placeholder={"University"}>{
-				useOptions(units, "owner", { type: entry({ id: "", label: required(local) }) })
+				useOptions(units, "partner", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Type"} compact>{

@@ -59,7 +59,7 @@ export const Events=immutable({
 
 		startDate: optional(dateTime),
 
-		owner: optional({
+		partner: optional({
 			id: required(id),
 			label: required(local)
 		})
@@ -83,7 +83,7 @@ export function DataEvents() {
 
 
 			<ToolOptions placeholder={"University"}>{
-				useOptions(events, "owner")
+				useOptions(events, "partner")
 			}</ToolOptions>
 
 			<ToolRange placeholder={"Date"}>{
@@ -139,7 +139,7 @@ export function DataEvents() {
 
 				startDate,
 
-				owner
+				partner
 
 			}) =>
 
@@ -154,7 +154,7 @@ export function DataEvents() {
 					}}</ToolLink>}
 
 					image={image}
-					tags={owner && <span>{toEntryString(owner)}</span>}
+					tags={partner && <span>{toEntryString(partner)}</span>}
 
 				>{
 

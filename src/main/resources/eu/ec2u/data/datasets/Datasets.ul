@@ -1,27 +1,30 @@
-prefix ec2u: <https://data.ec2u.eu/terms/>
-
 prefix void: <http://rdfs.org/ns/void#>
 prefix dct: <http://purl.org/dc/terms/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix js: <http://www.ontotext.com/js#>
 
 
 insert {
 
     ?dataset
         rdfs:label ?label ;
-        rdfs:comment ?description.
+        rdfs:comment ?comment.
 
 } where {
 
     ?dataset a void:Dataset ;
         dct:title ?title .
 
-    optional { ?dataset dct:alternative ?alternative }
+    optional {
+        ?dataset dct:alternative ?alternative
+        filter (lang(?alternative) = lang(?title))
+    }
+
     optional { ?dataset dct:description ?description }
 
-    filter (lang(?title) = lang(?alternative))
+    bind(strlang(js:clip(str(coalesce(?alternative, ?title)), 100), lang(?title)) as ?label)
+    bind(strlang(js:clip(str(?description), 1000), lang(?description)) as ?comment)
 
-    bind(coalesce(?alternative, ?title) as ?label)
 
 }; # complete entry
 

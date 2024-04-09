@@ -41,7 +41,7 @@ export const Unit=immutable({
 
 	homepage: multiple(id),
 
-	owner: optional({
+	partner: optional({
 		id: required(id),
 		label: required(local)
 	}),
@@ -97,7 +97,7 @@ export function DataUnit() {
 
 			homepage,
 
-			owner,
+			partner,
 			classification,
 
 			hasHead,
@@ -108,9 +108,11 @@ export function DataUnit() {
 
 			<ToolInfo>{{
 
-				"Owner": owner && <ToolLink>{owner}</ToolLink>,
+				"Owner": partner && <ToolLink>{partner}</ToolLink>,
 
-				"Type": classification?.length && classification.map(type => <ToolLink>{type}</ToolLink>)
+				"Type": classification?.length && <ul>{classification.map(type =>
+					<li key={type.id}><ToolLink>{type}</ToolLink></li>
+				)}</ul>
 
 			}}</ToolInfo>
 
@@ -128,7 +130,7 @@ export function DataUnit() {
 				"Topics": subject && subject.length && <ul>{[...subject]
 					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
 					.map(subject => <li key={subject.id}>
-						<ToolLink filter={[Units, { owner, subject }]}>{subject}</ToolLink>
+						<ToolLink filter={[Units, { partner, subject }]}>{subject}</ToolLink>
 					</li>)
 				}</ul>
 
@@ -149,13 +151,13 @@ export function DataUnit() {
 
 			comment,
 
-			owner,
+			partner,
 			unitOf,
 			hasUnit
 
 		}) => {
 
-			const parents=unitOf.filter(unit => !owner || unit.id !== owner.id);
+			const parents=unitOf.filter(unit => !partner || unit.id !== partner.id);
 
 			return <>
 

@@ -6,8 +6,11 @@
 @prefix ec2u: </terms/> .
 
 
-org:Organization a owl:Class ;
+foaf:Organization a owl:Class ;
     rdfs:subClassOf foaf:Agent .
+
+org:Organization a owl:Class ;
+    rdfs:subClassOf foaf:Organization .
 
 org:FormalOrganization a owl:Class ;
     rdfs:subClassOf org:Organization .
