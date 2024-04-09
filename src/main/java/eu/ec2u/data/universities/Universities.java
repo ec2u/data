@@ -61,10 +61,10 @@ public final class Universities extends Delegator {
     }
 
     public static Shape University() {
-        return shape(University, Resource(), FormalOrganization(),
+        return shape(University, FormalOrganization(),
 
-                property(FOAF.DEPICTION, required(id())),
-                property(FOAF.HOMEPAGE, repeatable(id())),
+                property(FOAF.DEPICTION, required()),
+                property(FOAF.HOMEPAGE, repeatable()),
 
                 property(inception, required(year())),
                 property(students, required(integer())),

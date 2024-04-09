@@ -114,7 +114,7 @@ public final class EC2U extends Delegator {
                 .path("/", new Datasets())
                 .path("/resources/", new Resources())
 
-                .path("/agents/*", new Agents())
+                .path("/agents/", new Agents())
                 .path("/universities/*", new Universities())
 
                 .path("/units/*", new Units())

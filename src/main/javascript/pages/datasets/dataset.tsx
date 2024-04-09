@@ -160,7 +160,7 @@ export function DataMeta() {
 
                 <hr/>
 
-                <nav><ToolMark meta={"toc"}>{model}</ToolMark></nav>
+                <ToolMark meta={"toc"}>{model}</ToolMark>
 
             </>}
 

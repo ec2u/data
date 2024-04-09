@@ -14,7 +14,7 @@ the [Describing Linked Datasets with the VoID Vocabulary](https://www.w3.org/TR/
 | prefix | namespace                             | definition                                                                                                                |
 |--------|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
 | dct:   | http://purl.org/dc/terms/             | [Dublin Core](https://www.dublincore.org) [DCMI Terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) |
-| rdfs:  | http://www.w3.org/2000/01/rdf-schema# | [RDF Schema 1.1 (RDFS)](https://www.w3.org/TR/rdf11-schema/) vocabulary                                                   |
+| rdfs:  | http://www.w3.org/2000/01/rdf-schema# | [RDF Schema 1.1 (RDFS)](https://www.w3.org/TR/rdf11-schema/)                                                              |
 | void:  | http://rdfs.org/ns/void#              | [Vocabulary of Interlinked Datasets (VoID)](http://vocab.deri.ie/void)                                                    |
 
 ![dataset data model](index/datasets.svg#75)

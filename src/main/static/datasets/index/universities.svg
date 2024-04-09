@@ -17,7 +17,7 @@
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="51 174 441 254" width="441" height="254">
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="51 174 500 254" width="500" height="254">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -43,7 +43,7 @@
     </defs>
     <g id="universities" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
         <title>universities</title>
-        <rect fill="white" x="51" y="174" width="441" height="254"/>
+        <rect fill="white" x="51" y="174" width="500" height="254"/>
         <g id="universities_Layer_1">
             <title>Layer 1</title>
             <g id="Group_163">
@@ -154,39 +154,25 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_148">
-                <rect x="237.17517" y="290.86613" width="58.910156" height="13" fill="white"/>
-                <text transform="translate(240.17517 291.86613)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">ec2u:owner 1</tspan>
+                <rect x="235.0658" y="290.86613" width="63.12891" height="13" fill="white"/>
+                <text transform="translate(238.0658 291.86613)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">ec2u:partner 1</tspan>
                 </text>
             </g>
-            <g id="Group_146">
-                <g id="Graphic_147">
-                    <a xl:href="datasets.svg">
-                        <rect x="392.8088" y="189" width="65.47705" height="17" fill="white"/>
-                        <rect x="392.8088" y="189" width="65.47705" height="17" stroke="black" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(398.8088 192)" fill="black">
-                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
-                                ec2u:Dataset
-                            </tspan>
-                        </text>
-                    </a>
-                </g>
-            </g>
             <g id="Line_145">
-                <line x1="425.5473" y1="212.85" x2="425.5473" y2="273.51614" marker-end="url(#StickArrow_Marker)"
-                        marker-start="url(#StickArrow_Marker_2)" stroke="black" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width=".25"/>
+                <path d="M 484.5992 297.36614 L 520.9446 297.36614 L 520.9446 352.86614 L 427.2959 352.86614 L 427.2959 321.21614"
+                        marker-end="url(#StickArrow_Marker)" marker-start="url(#StickArrow_Marker_2)" stroke="black"
+                        stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_144">
-                <rect x="396.9843" y="258.52552" width="57.125977" height="13" fill="white"/>
-                <text transform="translate(399.9843 259.52552)" fill="black">
+                <rect x="398.73293" y="324.7492" width="57.125977" height="13" fill="white"/>
+                <text transform="translate(401.73293 325.7492)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">void:subset *</tspan>
                 </text>
             </g>
             <g id="Graphic_143">
-                <rect x="401.3415" y="215.97114" width="48.41162" height="13" fill="white"/>
-                <text transform="translate(404.3415 216.97114)" fill="black">
+                <rect x="487.8556" y="290.86614" width="48.41162" height="13" fill="white"/>
+                <text transform="translate(490.8556 291.86614)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹dataset› 1</tspan>
                 </text>
             </g>

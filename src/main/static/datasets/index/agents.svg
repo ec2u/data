@@ -169,8 +169,7 @@
                     <rect x="1369.7094" y="120.09098" width="109.23779" height="50" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
                     <text transform="translate(1375.7094 123.09098)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">org:identifier : literal
-                            [*]
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">org:identifier : typed [*]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">skos:prefLabel: text [1]
                         </tspan>
@@ -282,24 +281,6 @@
                 <path d="M 1556.2205 136.05905 L 1545.2205 136.05905 L 1489.9472 136.06911 L 1488.6972 136.06911"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
-            </g>
-            <g id="Graphic_87">
-                <path d="M 1376.6913 73.63118 C 1376.6913 70.931 1375.7854 70.59693 1369.1674 67.92468 L 1369.0975 67.897035 C 1362.4446 65.19685 1362.3754 65.19685 1355.5478 65.19685 C 1346.4566 65.19685 1305.3543 65.19685 1305.3543 65.19685 L 1305.3543 93.70085 L 1376.6913 93.70085 L 1376.6913 73.63118 Z"
-                        fill="#fffd78"/>
-                <path d="M 1376.6913 73.63118 C 1376.6913 70.931 1375.7854 70.59693 1369.1674 67.92468 L 1369.0975 67.897035 C 1362.4446 65.19685 1362.3754 65.19685 1355.5478 65.19685 C 1346.4566 65.19685 1305.3543 65.19685 1305.3543 65.19685 L 1305.3543 93.70085 L 1376.6913 93.70085 L 1376.6913 73.63118 Z M 1376.6913 73.492084 C 1376.6913 70.931 1376.6214 70.931 1362.3754 70.931 L 1362.3754 70.931 C 1362.3754 65.224785 1362.3754 65.19685 1355.9658 65.19685"
-                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                <text transform="translate(1310.3543 68.19685)" fill="black">
-                    <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">
-                        mbox/phone
-                    </tspan>
-                    <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="20.252">
-                        should be IRIs
-                    </tspan>
-                </text>
-            </g>
-            <g id="Line_88">
-                <line x1="1281.1932" y1="97.45991" x2="1305.2346" y2="90.2225" stroke="black" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-dasharray="1.0,1.0" stroke-width=".25"/>
             </g>
             <g id="Group_89">
                 <g id="Graphic_90">
