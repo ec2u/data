@@ -123,7 +123,7 @@ public final class Documents extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                                field(owner, iri()),
+                                                field(partner, iri()),
                                                 field(DCTERMS.TYPE, iri())
 
                                         ),
@@ -144,7 +144,7 @@ public final class Documents extends Delegator {
 
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                field(owner, iri()),
+                                field(partner, iri()),
                                 field(DCTERMS.TYPE, iri())
 
                         )))

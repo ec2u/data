@@ -107,7 +107,7 @@ public final class OfferingsJena implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Focus> programs(final Instant synced) {
+    private Xtream<Focus> programs(final Instant updated) {
         return Xtream
 
                 .of(SiteURL)
@@ -158,7 +158,7 @@ public final class OfferingsJena implements Runnable {
                 field(ID, item(Programs.Context, Jena, url.stringValue())),
 
                 field(RDF.TYPE, EducationalOccupationalProgram),
-                field(Resources.owner, Jena.Id),
+                field(Resources.partner, Jena.Id),
 
                 field(Schema.url, url),
 

@@ -1,11 +1,10 @@
 @prefix void: <http://rdfs.org/ns/void#> .
-@prefix ec2u: </terms/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-</concepts/> a ec2u:Dataset ;
+</concepts/> a void:Dataset ;
     dct:title "EC2U Classification Taxonomies"@en ;
     dct:alternative "EC2U Taxonomies"@en ;
     dct:description "Topic taxonomies and other concept schemes for classifying resources."@en ;
@@ -16,13 +15,25 @@
 
 ########################################################################################################################
 
-skos:ConceptScheme a owl:Class .
+skos:ConceptScheme a owl:Class ;
+    rdfs:subClassOf void:Dataset .
 
 skos:Concept a owl:Class .
 
 skos:topConceptOf a owl:ObjectProperty ;
     rdfs:subPropertyOf skos:inScheme ;
     owl:inverseOf skos:hasTopConcept .
+
+
+skos:inScheme a owl:ObjectProperty ;
+    owl:inverseOf skos:hasConcept .
+
+skos:hasTopConcept a owl:ObjectProperty ;
+    rdfs:subPropertyOf void:rootResource .
+
+skos:hasConcept a owl:ObjectProperty ; # ;( standard extension
+    rdfs:subPropertyOf rdfs:member .
+
 
 skos:broader a owl:ObjectProperty ;
     rdfs:subPropertyOf skos:broaderTransitive ;

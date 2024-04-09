@@ -33,6 +33,10 @@ import { GraduationCap } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
+import { entry } from "../../../../../../../../Products/Tool/code/core/entry";
+import { toValueString } from "../../../../../../../../Products/Tool/code/core/value";
+import { useOptions } from "../../../../../../../../Products/Tool/code/data/models/options";
+import { ToolOptions } from "../../../../../../../../Products/Tool/code/view/lenses/options";
 
 
 export const Schemes=immutable({
@@ -40,6 +44,7 @@ export const Schemes=immutable({
 	[icon]: <GraduationCap/>,
 
 	id: required("/concepts/"),
+
 	label: required({
 		"en": "Taxonomies"
 	}),
@@ -47,8 +52,10 @@ export const Schemes=immutable({
 	members: multiple({
 
 		id: required(id),
-		label: required(local),
 		comment: optional(local),
+
+		title: required(local),
+		alternative: required(local),
 
 		entities: required(integer)
 
@@ -67,8 +74,16 @@ export function DataSchemes() {
 		tray={< >
 
 			<ToolKeywords placeholder={"Name"}>{
-				useKeywords(schemes, "label")
+				useKeywords(schemes, "title")
 			}</ToolKeywords>
+
+			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
+				useOptions(schemes, "license", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Publisher"} as={license => toValueString(license)}>{
+				useOptions(schemes, "publisher", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
 
 		</>}
 
@@ -84,7 +99,9 @@ export function DataSchemes() {
 
 			id,
 
-			label,
+			title,
+			alternative,
+
 			comment,
 
 			entities
@@ -94,7 +111,7 @@ export function DataSchemes() {
 
 			<ToolCard key={id} side={"end"}
 
-				title={<ToolLink>{{ id, label }}</ToolLink>}
+				title={<ToolLink>{{ id, label: `${toLocalString(alternative)} / ${toLocalString(title)}` }}</ToolLink>}
 
 				tags={`${entities} concepts`}
 

@@ -47,8 +47,8 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.time.ZoneOffset.UTC;
@@ -65,7 +65,7 @@ public final class EventsSalamancaUniversity implements Runnable {
             field(ID, iri("https://sac.usal.es/programacion/")),
             field(TYPE, Organization),
 
-            field(owner, Salamanca.Id),
+            field(partner, Salamanca.Id),
 
             field(Schema.name,
                     literal("University of Salamanca / Cultural Activities Service", "en"),
@@ -88,7 +88,7 @@ public final class EventsSalamancaUniversity implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -104,8 +104,8 @@ public final class EventsSalamancaUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<VEvent> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<VEvent> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://calendar.google.com/calendar/ical"
@@ -191,7 +191,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                             // field(DCTERMS.CREATED, created),
                             // field(DCTERMS.MODIFIED, lastModified.orElseGet(() -> literal(now))),
 
-                            field(owner, Salamanca.Id),
+                            field(partner, Salamanca.Id),
                             field(publisher, Publisher)
 
                     );

@@ -54,7 +54,7 @@ import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.data.courses.Courses.courseCode;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.hasCourse;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -124,7 +124,7 @@ public final class OfferingsPoitiers implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> programs(final Instant synced) {
+    private Xtream<JSONPath> programs(final Instant instant) {
 
         try ( final Reader reader=reader(resource(this, ".json")) ) {
 
@@ -154,7 +154,7 @@ public final class OfferingsPoitiers implements Runnable {
         //                 "undefined API key <%s>", APIToken
         //         )));
         //
-        // return Xtream.of(synced)
+        // return Xtream.of(updated)
         //
         //         .flatMap(new Fill<>()
         //                 .model(url+"/obtemCursosBloco")
@@ -199,7 +199,7 @@ public final class OfferingsPoitiers implements Runnable {
                 field(ID, item(Programs.Context, Poitiers, code)),
 
                 field(RDF.TYPE, Programs.EducationalOccupationalProgram),
-                field(owner, Poitiers.Id),
+                field(partner, Poitiers.Id),
 
                 field(Schema.name, json.string("name")
                         .map(name -> literal(format("%s - %s", code, name), Poitiers.Language))
@@ -223,7 +223,7 @@ public final class OfferingsPoitiers implements Runnable {
                                 field(ID, item(Organizations.Context, Poitiers, name)),
 
                                 field(RDF.TYPE, Schema.Organization),
-                                field(owner, Poitiers.Id),
+                                field(partner, Poitiers.Id),
                                 field(Schema.name, literal(name, Poitiers.Language))
 
                         ))
@@ -273,7 +273,7 @@ public final class OfferingsPoitiers implements Runnable {
                             field(ID, item(Courses.Context, Poitiers, code)),
 
                             field(RDF.TYPE, Course),
-                            field(owner, Poitiers.Id),
+                            field(partner, Poitiers.Id),
 
                             field(Schema.name, json.string("name")
                                     .map(name -> literal(format("%s - %s", code, name), Poitiers.Language))

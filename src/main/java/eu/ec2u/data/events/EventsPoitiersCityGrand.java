@@ -45,8 +45,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Poitiers;
 import static java.time.ZoneOffset.UTC;
@@ -60,7 +60,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
             field(ID, iri("https://sortir.grandpoitiers.fr/")),
             field(TYPE, Organization),
 
-            field(owner, Poitiers.Id),
+            field(partner, Poitiers.Id),
 
             field(Schema.name,
                     literal("Grand Poitiers / Events", "en"),
@@ -83,7 +83,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -98,8 +98,8 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<XPath> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://sortir.grandpoitiers.fr/agenda/rss")
@@ -156,7 +156,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
                     field(Schema.about, category(item)),
 
-                    field(owner, Poitiers.Id),
+                    field(partner, Poitiers.Id),
                     field(publisher, Publisher)
 
             );

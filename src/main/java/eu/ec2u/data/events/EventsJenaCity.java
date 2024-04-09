@@ -62,8 +62,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities._Universities.Jena;
@@ -79,7 +79,7 @@ public final class EventsJenaCity implements Runnable {
             field(ID, iri("https://www.jena-veranstaltungen.de/veranstaltungen")),
             field(TYPE, Schema.Organization),
 
-            field(owner, Jena.Id),
+            field(partner, Jena.Id),
 
             field(Schema.name,
                     literal("City of Jena / Event Calendar", "en"),
@@ -102,7 +102,7 @@ public final class EventsJenaCity implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -118,7 +118,7 @@ public final class EventsJenaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Focus> crawl(final Instant synced) {
+    private Xtream<Focus> crawl(final Instant updated) {
         return Xtream.of(0)
 
                 // paginate through search results
@@ -226,7 +226,7 @@ public final class EventsJenaCity implements Runnable {
                     //         .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
                     // )
 
-                    field(owner, Jena.Id),
+                    field(partner, Jena.Id),
 
                     field(Schema.url, url),
                     field(Schema.name, name),

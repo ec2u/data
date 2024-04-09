@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg"
-        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="66 92 629 332" width="629" height="332">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="66 92 629 332" width="629" height="332">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="events" stroke="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none">
+    <g id="events" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
         <title>events</title>
         <rect fill="white" x="66" y="92" width="629" height="332"/>
         <g id="events_Layer_1">
@@ -244,10 +244,10 @@
             <g id="Group_216">
                 <g id="Graphic_218">
                     <a xl:href="https://schema.org/EventAttendanceModeEnumeration">
-                        <rect x="477.3967" y="179.8032" width="189.43799" height="28.040452" fill="white"/>
-                        <rect x="477.3967" y="179.8032" width="189.43799" height="28.040452" stroke="black"
+                        <rect x="477.3967" y="179.8032" width="189.43799" height="28.047194" fill="white"/>
+                        <rect x="477.3967" y="179.8032" width="189.43799" height="28.047194" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(483.3967 182.82342)" fill="black">
+                        <text transform="translate(483.3967 182.8268)" fill="black">
                             <tspan font-family="Roboto" font-size="9" fill="black" x="58.84497" y="9">«enumeration»
                             </tspan>
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="20">
@@ -257,10 +257,10 @@
                     </a>
                 </g>
                 <g id="Graphic_217">
-                    <rect x="477.3967" y="207.85713" width="189.43799" height="39.02697" fill="white"/>
-                    <rect x="477.3967" y="207.85713" width="189.43799" height="39.02697" stroke="black"
+                    <rect x="477.3967" y="207.8504" width="189.43799" height="39.03371" fill="white"/>
+                    <rect x="477.3967" y="207.8504" width="189.43799" height="39.03371" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(483.3967 210.87061)" fill="black">
+                    <text transform="translate(483.3967 210.86724)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">
                             schema:MixedEventAttendanceMode
                         </tspan>

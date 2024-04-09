@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg"
-        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="535 319 320 356" width="320" height="356">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="541 357 332 354" width="332" height="354">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -41,135 +41,138 @@
             </g>
         </marker>
     </defs>
-    <g id="concepts" stroke="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none">
+    <g id="concepts" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
         <title>concepts</title>
-        <rect fill="white" x="535" y="319" width="320" height="356"/>
+        <rect fill="white" x="541" y="357" width="332" height="354"/>
         <g id="concepts_Layer_1">
             <title>Layer 1</title>
-            <g id="Group_166">
-                <g id="Graphic_168">
-                    <rect x="638.83654" y="560.0957" width="111.42627" height="39" fill="white"/>
-                    <rect x="638.83654" y="560.0957" width="111.42627" height="39" stroke="black" stroke-linecap="round"
+            <g id="Group_209">
+                <g id="Graphic_211">
+                    <rect x="655.76696" y="577.0261" width="112.11621" height="50" fill="white"/>
+                    <rect x="655.76696" y="577.0261" width="112.11621" height="50" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(644.83654 563.0957)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">skos:prefLabel : text</tspan>
+                    <text transform="translate(661.76696 580.0261)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">skos:prefLabel : text [1]
+                        </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">skos:altLabel : text [*]
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">skos:definition : text
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">skos:hiddenLabel : text
+                            [*]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">skos:definition : text
                             [0..1]
                         </tspan>
                     </text>
                 </g>
-                <g id="Graphic_167">
-                    <rect x="638.83654" y="542.83465" width="111.42627" height="17.261063" fill="white"/>
-                    <rect x="638.83654" y="542.83465" width="111.42627" height="17.261063" stroke="black"
+                <g id="Graphic_210">
+                    <rect x="655.76696" y="559.76507" width="112.11621" height="17.261063" fill="white"/>
+                    <rect x="655.76696" y="559.76507" width="112.11621" height="17.261063" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(666.9015 545.9652)" fill="black">
+                    <text transform="translate(684.1769 562.8956)" fill="black">
                         <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                             skos:Concept
                         </tspan>
                     </text>
                 </g>
             </g>
-            <g id="Group_161">
-                <g id="Graphic_162">
+            <g id="Group_207">
+                <g id="Graphic_208">
                     <a xl:href="resources.svg">
-                        <rect x="564.0945" y="347.2441" width="76.179" height="17" fill="white"/>
-                        <rect x="564.0945" y="347.2441" width="76.179" height="17" stroke="black" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(570.0945 350.2441)" fill="black">
+                        <rect x="569.7638" y="385.9304" width="65.626465" height="17" fill="white"/>
+                        <rect x="569.7638" y="385.9304" width="65.626465" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(575.7638 388.9304)" fill="black">
                             <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
-                                    fill="black" x="5.276268" y="9">rdfs:Resource
+                                    fill="black" x="0" y="9">rdfs:Resource
                             </tspan>
                         </text>
                     </a>
                 </g>
             </g>
-            <g id="Line_156">
-                <path d="M 638.0675 419.32705 L 602.184 419.32705 L 602.184 373.9941"
-                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width=".25"/>
+            <g id="Line_206">
+                <line x1="711.8251" y1="426.04725" x2="711.8251" y2="412.6804" marker-end="url(#UMLInheritance_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Group_150">
-                <g id="Graphic_169">
-                    <rect x="638.0675" y="403.14235" width="112.96436" height="50" fill="white"/>
-                    <rect x="638.0675" y="403.14235" width="112.96436" height="50" stroke="black" stroke-linecap="round"
+            <g id="Group_203">
+                <g id="Graphic_205">
+                    <rect x="621.995" y="443.04725" width="179.66016" height="28" fill="white"/>
+                    <rect x="621.995" y="443.04725" width="179.66016" height="28" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(644.0675 406.14235)" fill="black">
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:title : text [1]</tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">dct:alternative : text
-                            [0..1]
+                    <text transform="translate(627.995 446.04725)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">/void:rootResource =
+                            skos:hasTopConcept
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">dct:description : text
-                            [0..1]
-                        </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">void:entities : integer
-                            [1]
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">/rdfs:member =
+                            ^skos:inScheme
                         </tspan>
                     </text>
                 </g>
-                <g id="Graphic_151">
-                    <rect x="638.0675" y="385.5118" width="112.96436" height="17.630531" fill="white"/>
-                    <rect x="638.0675" y="385.5118" width="112.96436" height="17.630531" stroke="black"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(650.5209 388.8271)" fill="black">
+                <g id="Graphic_204">
+                    <rect x="621.995" y="426.04725" width="179.66016" height="17" fill="white"/>
+                    <rect x="621.995" y="426.04725" width="179.66016" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(667.79625 429.04725)" fill="black">
                         <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                             skos:ConceptScheme
                         </tspan>
                     </text>
                 </g>
             </g>
-            <g id="Line_142">
-                <line x1="694.5497" y1="535.98465" x2="694.5497" y2="459.99235" marker-end="url(#StickArrow_Marker)"
+            <g id="Line_202">
+                <line x1="711.8251" y1="552.91507" x2="711.8251" y2="477.89725" marker-end="url(#StickArrow_Marker)"
                         marker-start="url(#StickArrow_Marker_2)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Graphic_141">
-                <rect x="645.4269" y="464.50025" width="98.2456" height="24" fill="white"/>
-                <text transform="translate(648.4269 465.50025)" fill="black">
+            <g id="Graphic_201">
+                <rect x="662.70226" y="481.6642" width="98.2456" height="24" fill="white"/>
+                <text transform="translate(665.70226 482.6642)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="12.590332" y="9">skos:inScheme 1</tspan>
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">skos:topConceptOf 0..1</tspan>
                 </text>
             </g>
-            <g id="Graphic_140">
-                <rect x="647.077" y="517.015" width="94.94531" height="13" fill="white"/>
-                <text transform="translate(650.077 518.015)" fill="black">
+            <g id="Graphic_200">
+                <rect x="664.3524" y="535.77985" width="94.94531" height="13" fill="white"/>
+                <text transform="translate(667.3524 536.77985)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">skos:hasTopConcept *</tspan>
                 </text>
             </g>
-            <g id="Line_139">
-                <path d="M 694.5497 605.9457 L 694.5497 646.07916 L 777.6162 646.07916 L 777.6162 570.9652 L 757.1128 570.9652"
+            <g id="Line_199">
+                <path d="M 711.8251 633.8761 L 711.8251 682.0557 L 808.3623 682.0557 L 808.3623 593.3956 L 774.7332 593.3956"
                         marker-end="url(#StickArrow_Marker)" marker-start="url(#StickArrow_Marker_2)" stroke="black"
                         stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Graphic_138">
-                <rect x="761.1024" y="564.4652" width="65.242676" height="13" fill="white"/>
-                <text transform="translate(764.1024 565.4652)" fill="black">
+            <g id="Graphic_198">
+                <rect x="779.4501" y="586.8956" width="65.242676" height="13" fill="white"/>
+                <text transform="translate(782.4501 587.8956)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">skos:broader *</tspan>
                 </text>
             </g>
-            <g id="Graphic_137">
-                <rect x="660.5902" y="608.7988" width="67.918945" height="24" fill="white"/>
-                <text transform="translate(663.5902 609.7988)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">skos:narrower *</tspan>
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="4.137451" y="20">skos:related *</tspan>
+            <g id="Graphic_197">
+                <rect x="672.1549" y="638.8622" width="79.34033" height="35" fill="white"/>
+                <text transform="translate(675.1549 639.8622)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="5.7106934" y="9">skos:narrower *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="9.848145" y="20">skos:related *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">skos:exactMatch *</tspan>
                 </text>
             </g>
-            <g id="Line_170">
-                <path d="M 638.83654 570.96516 L 602.184 570.96516 L 602.184 373.9941"
+            <g id="Line_196">
+                <path d="M 655.76696 593.3956 L 602.577 593.3956 L 602.577 412.6804"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Graphic_171">
-                <path d="M 635.35104 632.9789 C 635.35104 631.3446 634.6441 631.1424 629.47995 629.52504 L 629.4254 629.5083 C 624.234 627.874 624.18 627.874 618.8522 627.874 C 611.7581 627.874 579.68504 627.874 579.68504 627.874 L 579.68504 645.126 L 635.35104 645.126 L 635.35104 632.9789 Z"
-                        fill="#fffd78"/>
-                <path d="M 635.35104 632.9789 C 635.35104 631.3446 634.6441 631.1424 629.47995 629.52504 L 629.4254 629.5083 C 624.234 627.874 624.18 627.874 618.8522 627.874 C 611.7581 627.874 579.68504 627.874 579.68504 627.874 L 579.68504 645.126 L 635.35104 645.126 L 635.35104 632.9789 Z M 635.35104 632.8947 C 635.35104 631.3446 635.2965 631.3446 624.18 631.3446 L 624.18 631.3446 C 624.18 627.8909 624.18 627.874 619.1784 627.874"
-                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                <text transform="translate(584.68504 630.874)" fill="black">
-                    <tspan font-family="Helvetica Neue" font-style="italic" font-size="9" fill="black" x="0" y="9">
-                        skos:match
-                    </tspan>
-                </text>
+            <g id="Group_194">
+                <g id="Graphic_195">
+                    <a xl:href="datasets.svg">
+                        <rect x="680.3763" y="385.9304" width="62.89746" height="17" fill="white"/>
+                        <rect x="680.3763" y="385.9304" width="62.89746" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(686.3763 388.9304)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                void:Dataset
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
             </g>
         </g>
     </g>

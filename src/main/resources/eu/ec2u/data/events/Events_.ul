@@ -16,12 +16,12 @@ delete {
 	optional { ?e schema:startDate ?start }
 	optional { ?e schema:endDate ?end }
 
-    optional { ?e ec2u:synced ?synced }
+    optional { ?e ec2u:updated ?updated }
 
 	bind (coalesce(?end, ?start) as ?date)
 
 	bind (?date < now() as ?stale)
-    bind ((year(now())*12+month(now()))-(year(?synced)*12+month(?synced)) as ?delta)
+    bind ((year(now())*12+month(now()))-(year(?updated)*12+month(?updated)) as ?delta)
 
 	filter ( ?stale || !bound(?date) && ?delta >= 1)
 

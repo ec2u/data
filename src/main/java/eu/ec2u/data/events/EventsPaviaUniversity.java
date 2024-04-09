@@ -34,8 +34,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Pavia;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
@@ -49,7 +49,7 @@ public final class EventsPaviaUniversity implements Runnable {
             field(ID, iri("http://news.unipv.it/")),
             field(TYPE, Organization),
 
-            field(owner, Pavia.Id),
+            field(partner, Pavia.Id),
 
             field(Schema.name,
                     literal("University of Pavia / News", "en"),
@@ -69,7 +69,7 @@ public final class EventsPaviaUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .map(this::event)
@@ -85,7 +85,7 @@ public final class EventsPaviaUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant synced) {
+    private Xtream<Frame> crawl(final Instant updated) {
         return Xtream.of(7929, 7891, 8086, 8251)
 
                 .flatMap(new Fill<Integer>()
@@ -101,7 +101,7 @@ public final class EventsPaviaUniversity implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Pavia.Language),
 
-                field(owner, Pavia.Id),
+                field(partner, Pavia.Id),
                 field(publisher, Publisher)
 
         );

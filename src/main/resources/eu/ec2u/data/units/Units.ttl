@@ -9,7 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-</units/> a ec2u:Dataset ;
+</units/> a void:Dataset ;
     dct:title "EC2U Research Units and Facilities"@en ;
     dct:alternative "EC2U Units"@en ;
     dct:description

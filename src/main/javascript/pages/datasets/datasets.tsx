@@ -49,6 +49,8 @@ export const Datasets=immutable({
 		"": "European Campus of City-Universities"
 	}),
 
+	isDefinedBy: optional(id),
+
 	members: multiple({
 
 		id: required(id),

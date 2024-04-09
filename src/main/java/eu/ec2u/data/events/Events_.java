@@ -40,18 +40,18 @@ import static java.util.stream.Collectors.toSet;
 
 final class Events_ {
 
-    static Instant synced(final IRI context, final Value publisher) {
+    static Instant updated(final IRI context, final Value publisher) {
         return Xtream
 
                 .of("prefix ec2u: </terms/>\n"
                         +
                         "PREFIX schema: <https://schema.org/>\n"+
                         "\n"
-                        +"select (max(?synced) as ?instant) where {\n"
+                        +"select (max(?updated) as ?instant) where {\n"
                         +"\n"
                         +"\t?event a schema:Event;\n"
                         +"\t\tschema:publisher ?publisher;\n"
-                        +"\t\tec2u:synced ?synced.\n"
+                        +"\t\tec2u:updated ?updated.\n"
                         +"\n"
                         +"}"
                 )

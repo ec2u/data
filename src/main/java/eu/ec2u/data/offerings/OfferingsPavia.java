@@ -117,8 +117,8 @@ public final class OfferingsPavia implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Set<Frame> programs(final Instant synced) {
-        return graph.query(connection -> Xtream.of(synced)
+    private Set<Frame> programs(final Instant updated) {
+        return graph.query(connection -> Xtream.of(updated)
 
                 .flatMap(instant -> programs(connection, instant))
                 .optMap(this::program)
@@ -127,7 +127,7 @@ public final class OfferingsPavia implements Runnable {
         );
     }
 
-    private Stream<Focus> programs(final RepositoryConnection connection, final Instant synced) {
+    private Stream<Focus> programs(final RepositoryConnection connection, final Instant updated) {
         return focus(Set.of(VIVO.AcademicDegree), connection)
                 .seq(reverse(RDF.TYPE))
                 .cache()
@@ -140,7 +140,7 @@ public final class OfferingsPavia implements Runnable {
                 field(ID, item(Programs.Context, Pavia, program.stringValue())),
 
                 field(RDF.TYPE, EducationalOccupationalProgram),
-                field(Resources.owner, Pavia.Id),
+                field(Resources.partner, Pavia.Id),
 
                 field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.Language)),
 
@@ -168,8 +168,8 @@ public final class OfferingsPavia implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Set<Frame> courses(final Instant synced) {
-        return graph.query(connection -> Xtream.of(synced)
+    private Set<Frame> courses(final Instant updated) {
+        return graph.query(connection -> Xtream.of(updated)
 
                 .flatMap(instant -> courses(connection, instant))
                 .optMap(this::course)
@@ -178,7 +178,7 @@ public final class OfferingsPavia implements Runnable {
         );
     }
 
-    private Stream<Focus> courses(final RepositoryConnection connection, final Instant synced) {
+    private Stream<Focus> courses(final RepositoryConnection connection, final Instant updated) {
         return focus(Set.of(VIVO.Course), connection)
                 .seq(reverse(RDF.TYPE))
                 .cache()
@@ -191,7 +191,7 @@ public final class OfferingsPavia implements Runnable {
                 field(ID, item(Courses.Context, Pavia, course.stringValue())),
 
                 field(RDF.TYPE, Course),
-                field(Resources.owner, Pavia.Id),
+                field(Resources.partner, Pavia.Id),
 
                 field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.Language)),
 

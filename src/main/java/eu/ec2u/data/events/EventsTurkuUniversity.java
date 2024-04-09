@@ -59,8 +59,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities._Universities.Turku;
@@ -79,7 +79,7 @@ public final class EventsTurkuUniversity implements Runnable {
             field(ID, iri("https://www.utu.fi/event-search/")),
             field(TYPE, Organization),
 
-            field(owner, Turku.Id),
+            field(partner, Turku.Id),
 
             field(Schema.name,
                     literal("University of Turku / News", "en"),
@@ -118,7 +118,7 @@ public final class EventsTurkuUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -134,8 +134,8 @@ public final class EventsTurkuUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<JSONPath> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://api-ext.utu.fi/events/v1/public")
@@ -235,7 +235,7 @@ public final class EventsTurkuUniversity implements Runnable {
                 // field(DCTERMS.MODIFIED, json.string("updated").map(timestamp1 -> instant(timestamp1, now))),
 
 
-                field(owner, Turku.Id),
+                field(partner, Turku.Id),
                 field(publisher, Publisher),
                 field(organizer, json.paths("additional_information.contact").optMap(this::organizer)),
 

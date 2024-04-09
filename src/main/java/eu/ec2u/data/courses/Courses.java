@@ -40,7 +40,7 @@ import static eu.ec2u.data.offerings.Offerings.LearningResource;
 import static eu.ec2u.data.programs.Programs.Program;
 import static eu.ec2u.data.programs.Programs.hasCourse;
 import static eu.ec2u.data.resources.Resources.localized;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.inLanguage;
 import static eu.ec2u.data.things.Schema.schema;
 
@@ -94,7 +94,7 @@ public final class Courses extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                                field(owner, iri()),
+                                                field(partner, iri()),
                                                 field(ORG.CLASSIFICATION, iri())
 
                                         )
@@ -112,7 +112,7 @@ public final class Courses extends Delegator {
                                 field(ID, iri()),
                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                field(owner, iri())
+                                field(partner, iri())
 
                         )))
 

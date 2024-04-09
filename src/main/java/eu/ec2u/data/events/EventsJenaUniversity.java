@@ -48,8 +48,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.skolemize;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities.Universities.University;
@@ -110,7 +110,7 @@ public final class EventsJenaUniversity implements Runnable {
             .map(frame -> frame(frame,
 
                     field(RDF.TYPE, Organization),
-                    field(owner, Jena.Id),
+                    field(partner, Jena.Id),
                     field(Schema.about, University)
 
             ))
@@ -128,9 +128,9 @@ public final class EventsJenaUniversity implements Runnable {
     @Override public void run() {
         update(connection -> Xtream.from(Publishers)
 
-                .flatMap(publisher -> Xtream.of(synced(Context, publisher.id().orElseThrow()))
+                .flatMap(publisher -> Xtream.of(updated(Context, publisher.id().orElseThrow()))
 
-                        .flatMap(synced -> crawl(publisher, synced))
+                        .flatMap(updated -> crawl(publisher, updated))
                         .map(frame -> event(publisher, frame))
 
                 )
@@ -148,7 +148,7 @@ public final class EventsJenaUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Focus> crawl(final Frame publisher, final Instant synced) {
+    private Xtream<Focus> crawl(final Frame publisher, final Instant updated) {
         return Xtream
 
                 .of(publisher.id().orElseThrow().stringValue())
@@ -231,7 +231,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 field(RDF.TYPE, Event),
 
-                field(owner, Jena.Id),
+                field(partner, Jena.Id),
 
                 field(Schema.url, focus.seq(Schema.url).value()),
                 field(Schema.name, label),

@@ -17,7 +17,6 @@
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
-import { decimal } from "@metreeca/core/decimal";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -25,14 +24,12 @@ import { string } from "@metreeca/core/string";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
-import { useRange } from "@metreeca/data/models/range";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
 import { ToolKeywords } from "@metreeca/view/lenses/keywords";
 import { ToolOptions } from "@metreeca/view/lenses/options";
-import { ToolRange } from "@metreeca/view/lenses/range";
 import { ToolSheet } from "@metreeca/view/lenses/sheet";
 import { ToolCard } from "@metreeca/view/widgets/card";
 import { GraduationCap } from "@metreeca/view/widgets/icon";
@@ -89,10 +86,6 @@ export function DataPrograms() {
 			<ToolOptions placeholder={"Level"}>{
 				useOptions(programs, "educationalLevel", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
-
-			<ToolRange placeholder={"Credits"}>{
-				useRange(programs, "numberOfCredits", { type: decimal })
-			}</ToolRange>
 
 			<ToolOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
 				useOptions(programs, "timeToComplete", { type: string }) // !!! duration >> range

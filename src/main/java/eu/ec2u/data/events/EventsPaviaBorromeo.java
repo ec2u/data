@@ -29,8 +29,8 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Pavia;
 
@@ -43,7 +43,7 @@ public final class EventsPaviaBorromeo implements Runnable {
             field(ID, iri("http://www.collegioborromeo.it/it/eventi/")),
             field(TYPE, Organization),
 
-            field(owner, Pavia.Id),
+            field(partner, Pavia.Id),
 
             field(Schema.name,
                     literal("Almo Collegio Borromeo / Calendar", "en"),
@@ -64,7 +64,7 @@ public final class EventsPaviaBorromeo implements Runnable {
     @Override public void run() {
         update(connection -> Xtream
 
-                .of(synced(Context, Publisher.id().orElseThrow()))
+                .of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(new Tribe("http://www.collegioborromeo.it/it/")
                         .country(Pavia.Country)
@@ -74,7 +74,7 @@ public final class EventsPaviaBorromeo implements Runnable {
                 )
 
                 .map(event -> frame(event,
-                        field(owner, Pavia.Id),
+                        field(partner, Pavia.Id),
                         field(publisher, Publisher)
                 ))
 

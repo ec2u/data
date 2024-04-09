@@ -46,8 +46,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
@@ -62,7 +62,7 @@ public final class EventsPaviaCity implements Runnable {
             field(ID, iri("http://www.vivipavia.it/site/home/eventi.html")),
             field(TYPE, Organization),
 
-            field(owner, Pavia.Id),
+            field(partner, Pavia.Id),
 
             field(Schema.name,
                     literal("City of Pavia / ViviPavia", "en"),
@@ -85,7 +85,7 @@ public final class EventsPaviaCity implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .flatMap(this::event)
@@ -101,8 +101,8 @@ public final class EventsPaviaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<IRI> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<IRI> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
@@ -172,7 +172,7 @@ public final class EventsPaviaCity implements Runnable {
 
                                             field(RDF.TYPE, Event),
 
-                                            field(owner, Pavia.Id),
+                                            field(partner, Pavia.Id),
 
                                             field(Schema.url, url),
                                             field(Schema.name, focus.seq(Schema.name).value()),

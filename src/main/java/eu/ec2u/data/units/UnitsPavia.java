@@ -42,7 +42,7 @@ import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.concepts.OrganizationTypes.Centre;
 import static eu.ec2u.data.concepts.OrganizationTypes.Department;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities._Universities.Pavia;
 import static java.util.Map.entry;
@@ -88,8 +88,8 @@ public final class UnitsPavia implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Focus> units(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<Focus> units(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<>()
 
@@ -131,7 +131,7 @@ public final class UnitsPavia implements Runnable {
                 field(ID, EC2U.item(Units.Context, focus.value(asIRI()).orElseThrow().stringValue())), // !!! review
 
                 field(RDF.TYPE, Unit),
-                field(owner, Pavia.Id),
+                field(partner, Pavia.Id),
 
                 field(DCTERMS.TITLE, label),
                 field(SKOS.PREF_LABEL, label),

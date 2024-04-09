@@ -34,8 +34,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.universities._Universities.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 
@@ -48,7 +48,7 @@ public final class EventsIasiCityCultura implements Runnable {
             field(ID, iri("https://culturainiasi.ro/evenimente-culturale/")),
             field(TYPE, Schema.Organization),
 
-            field(owner, Iasi.Id),
+            field(partner, Iasi.Id),
 
             field(Schema.name,
                     literal("Iaşul Cultural / Evenimente in Iași", Iasi.Language),
@@ -68,7 +68,7 @@ public final class EventsIasiCityCultura implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .map(this::event)
@@ -84,8 +84,8 @@ public final class EventsIasiCityCultura implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<Frame> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://culturainiasi.ro/feed")
@@ -99,7 +99,7 @@ public final class EventsIasiCityCultura implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Iasi.Language),
 
-                field(owner, Iasi.Id),
+                field(partner, Iasi.Id),
                 field(publisher, Publisher)
 
         );

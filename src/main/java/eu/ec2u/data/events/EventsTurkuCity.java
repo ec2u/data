@@ -52,8 +52,8 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.time.ZoneOffset.UTC;
@@ -71,7 +71,7 @@ public final class EventsTurkuCity implements Runnable {
             field(ID, iri("https://kalenteri.turku.fi/")),
             field(TYPE, Organization),
 
-            field(owner, Turku.Id),
+            field(partner, Turku.Id),
 
             field(name,
                     literal("City of Turku / Event's Calendar", "en"),
@@ -96,7 +96,7 @@ public final class EventsTurkuCity implements Runnable {
     @Override public void run() {
         update(connection -> {
 
-            final List<Frame> events=Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+            final List<Frame> events=Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                     .flatMap(this::crawl)
                     .flatMap(this::event)
@@ -137,8 +137,8 @@ public final class EventsTurkuCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JsonValue> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<JsonValue> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://api.hel.fi/linkedevents/v1/event/"
@@ -227,7 +227,7 @@ public final class EventsTurkuCity implements Runnable {
                             // !!! in_language
                             // !!! audience
 
-                            field(owner, Turku.Id),
+                            field(partner, Turku.Id),
                             field(publisher, Publisher),
 
                             field(location, location(json))

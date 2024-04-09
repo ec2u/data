@@ -36,7 +36,7 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.resources.Resources.partner;
 
 public final class Agents extends Delegator {
 
@@ -82,7 +82,7 @@ public final class Agents extends Delegator {
                                         field(ID, iri()),
                                         field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                        field(owner, iri())
+                                        field(partner, iri())
 
                                 )
 

@@ -8,7 +8,7 @@
 @prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
 @prefix foaf:	<http://xmlns.com/foaf/0.1/> .
 
-</documents/> a ec2u:Dataset ;
+</documents/> a void:Dataset ;
 	dct:title "EC2U Official Documents"@en ;
 	dct:alternative "EC2U Documents"@en ;
     dct:description "Official documents published by Alliance partners."@en ;

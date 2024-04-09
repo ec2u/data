@@ -1,40 +1,21 @@
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix void: <http://rdfs.org/ns/void#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX dct: <http://purl.org/dc/terms/>
-
-insert {
-
-    ?scheme
-        rdfs:label ?label ;
-        rdfs:comment ?description.
-
-} where {
-
-    ?scheme a skos:ConceptScheme .
-
-    optional { ?scheme dct:title ?title }
-    optional { ?scheme dct:alternative ?alternative }
-    optional { ?scheme dct:description ?description }
-
-    bind(coalesce(?alternative, ?title) as ?label)
-
-}; # complete concept scheme entry
 
 delete {
 
-    ?scheme void:entities ?entities_ .
+    ?scheme void:entities ?concepts_ .
 
 } insert {
 
-    ?scheme void:entities ?entities .
+      ?scheme void:entities ?concepts .
 
-} where {
+  } where {
 
-    optional { ?scheme void:entities ?entities_ }
+    optional { ?scheme void:entities ?concepts_ }
 
     {
-        select ?scheme (count(?concept) as ?entities) {
+        select ?scheme (count(?concept) as ?concepts) {
 
             ?scheme a skos:ConceptScheme .
 

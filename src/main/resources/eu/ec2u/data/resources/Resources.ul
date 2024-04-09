@@ -1,5 +1,5 @@
-prefix ec2u: <https://data.ec2u.eu/terms/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX void: <http://rdfs.org/ns/void#>
 
 insert {
 
@@ -7,7 +7,7 @@ insert {
 
 } where {
 
-    ?dataset a ec2u:Dataset ;
+    ?dataset a void:Dataset ;
         rdfs:member ?member .
 
 } # compute membership

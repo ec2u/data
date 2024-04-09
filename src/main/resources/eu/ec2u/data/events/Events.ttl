@@ -7,7 +7,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix void: <http://rdfs.org/ns/void#> .
 
-</events/> a ec2u:Dataset ;
+</events/> a void:Dataset ;
     dct:title "EC2U Academic and Public Local Events"@en ;
     dct:alternative "EC2U Events"@en ;
     dct:description

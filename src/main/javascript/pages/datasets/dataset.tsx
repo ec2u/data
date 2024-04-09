@@ -16,7 +16,7 @@
 
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, optional, required } from "@metreeca/core";
+import { immutable, multiple, optional, required } from "@metreeca/core";
 import { date } from "@metreeca/core/date";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
@@ -34,10 +34,6 @@ import { ToolMark } from "@metreeca/view/widgets/mark";
 import React from "react";
 
 
-function toMeta(route: string) {
-	return route.replace(/^\/(?<name>\w*)\/?$/, "/datasets/$<name>");
-}
-
 function toData(route: string) {
 	return route === "/datasets/" ? "/" : route.replace(/^\/datasets\/(?<name>\w*?)$/, "/$<name>/");
 }
@@ -53,15 +49,22 @@ export const Dataset=immutable({
 	alternative: optional(local),
 	description: optional(local),
 
-	issued: optional(date),
-
-	license: optional({
+	publisher: optional({
 		id: required(id),
 		label: required(local)
 	}),
 
-	rights: optional(string),
+	source: optional(id),
+
+	issued: optional(date),
+
+	rights: required(string),
 	accessRights: optional(local),
+
+	license: multiple({
+		id: required(id),
+		label: required(local)
+	}),
 
 	entities: required(integer),
 
@@ -74,20 +77,23 @@ export function DataInfo() {
 
 	const [route, setRoute]=useRouter();
 
+	const [resource]=useResource({ id: route, isDefinedBy: optional(id) });
+
+	const isDefinedBy=resource?.isDefinedBy;
 
 	function open() {
-		setRoute(toMeta(route));
+		isDefinedBy && setRoute(isDefinedBy);
 	}
 
-	return <button title={"View Dataset Docs"}
+	return isDefinedBy && <button title={"View Dataset Docs"}
 
-		onClick={open}
+        onClick={open}
 
-		style={{
+        style={{
 			transform: "scale(0.75)"
 		}}
 
-	>{<InfoIcon/>}</button>;
+    >{<InfoIcon/>}</button>;
 
 }
 
@@ -117,29 +123,38 @@ export function DataMeta() {
 
 		tray={<ToolFrame as={({
 
-			id,
-
-			entities,
+			publisher,
+			source,
 
 			license,
 			rights,
+
+			entities,
 
 			isDefinedBy
 
 		}) => <>
 
+
 			<ToolInfo>{{
 
-				"Entities": <span>{toIntegerString(entities)}</span>
+				"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
+				"Source": source && <ToolLink>{source}</ToolLink>,
+
+				"Rights": <span>{rights}</span>,
+
+				"License": license?.length && <ul>{license.map(license =>
+					<li key={license.id}><ToolLink>{license}</ToolLink></li>
+				)}</ul>
 
 			}}</ToolInfo>
 
 			<ToolInfo>{{
 
-				"License": license && <ToolLink>{license}</ToolLink>,
-				"Rights": rights && <span>{rights}</span>
+				"Concepts": toIntegerString(entities)
 
 			}}</ToolInfo>
+
 
 			{isDefinedBy && <>
 

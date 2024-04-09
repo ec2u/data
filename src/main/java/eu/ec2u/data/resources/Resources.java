@@ -38,7 +38,7 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.organizations.Organizations.Organization;
+import static eu.ec2u.data.universities.Universities.University;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
@@ -49,8 +49,8 @@ public final class Resources extends Delegator {
 
     public static final IRI Resource=term("Resource");
 
-    public static final IRI synced=term("synced");
-    public static final IRI owner=term("owner");
+    public static final IRI partner=term("partner");
+    public static final IRI updated=term("updated");
 
 
     public static final Set<String> Languages=Stream
@@ -77,8 +77,8 @@ public final class Resources extends Delegator {
                 property(RDFS.SEEALSO, multiple(id())),
                 property(RDFS.ISDEFINEDBY, optional(id())),
 
-                property(synced, () -> optional(instant())),
-                property(owner, () -> optional(Organization())),
+                property(partner, () -> optional(University())),
+                property(updated, () -> optional(instant())),
 
                 property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
 
@@ -113,7 +113,7 @@ public final class Resources extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                                field(owner, iri())
+                                                field(partner, iri())
 
                                         )
 

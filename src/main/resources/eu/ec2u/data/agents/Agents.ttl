@@ -7,7 +7,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
-</agents/> a ec2u:Dataset ;
+</agents/> a void:Dataset ;
     dct:title "EC2U Agents"@en ;
     dct:alternative "EC2U Agents"@en ;
     dct:description "Background information about EC2U Agents."@en ;

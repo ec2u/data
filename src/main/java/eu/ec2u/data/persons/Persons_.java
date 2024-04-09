@@ -31,7 +31,7 @@ import static com.metreeca.http.toolkits.Strings.normalize;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.resources.Resources.partner;
 import static java.lang.String.format;
 
 public final class Persons_ {
@@ -57,7 +57,7 @@ public final class Persons_ {
                             field(ID, item(Persons.Context, _university, fullName)),
 
                             field(RDFS.LABEL, literal(fullName, _university.Language)), // !!! no language
-                            field(owner, _university.Id),
+                            field(partner, _university.Id),
 
                             field(FOAF.TITLE, title.map(Frame::literal)),
                             field(FOAF.GIVEN_NAME, literal(givenName)),

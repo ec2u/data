@@ -49,8 +49,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events.startDate;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.time.temporal.ChronoField.*;
@@ -64,7 +64,7 @@ public final class EventsSalamancaCityTO implements Runnable {
             field(ID, iri("https://salamanca.es/en/calendar")),
             field(TYPE, Organization),
 
-            field(owner, Salamanca.Id),
+            field(partner, Salamanca.Id),
 
             field(Schema.name,
                     literal("Salamanca Municipal Tourist Office", "en"),
@@ -105,7 +105,7 @@ public final class EventsSalamancaCityTO implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -121,8 +121,8 @@ public final class EventsSalamancaCityTO implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<XPath> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss")
@@ -177,7 +177,7 @@ public final class EventsSalamancaCityTO implements Runnable {
                     // field(DCTERMS.CREATED, pubDate),
                     // field(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now.atOffset(UTC)))),
 
-                    field(owner, Salamanca.Id),
+                    field(partner, Salamanca.Id),
                     field(publisher, Publisher)
 
             );

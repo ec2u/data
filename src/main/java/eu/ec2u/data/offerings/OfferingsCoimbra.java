@@ -209,7 +209,7 @@ public final class OfferingsCoimbra implements Runnable {
     }
 
 
-    private Xtream<JSONPath> offerings(final Instant synced) {
+    private Xtream<JSONPath> offerings(final Instant updated) {
 
         final String url=vault
                 .get(APIUrl)
@@ -233,7 +233,7 @@ public final class OfferingsCoimbra implements Runnable {
                 ? Year.now()
                 : Year.now().minusYears(1);
 
-        return Xtream.of(synced)
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<>()
                         .model(url+"/obtemCursosBloco")
@@ -285,7 +285,7 @@ public final class OfferingsCoimbra implements Runnable {
                 field(ID, item(Programs.Context, Coimbra, String.valueOf(id))),
                 field(RDF.TYPE, EducationalOccupationalProgram),
 
-                field(Resources.owner, Coimbra.Id),
+                field(Resources.partner, Coimbra.Id),
 
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.url, json.string("urlPT").map(Frame::iri)),
@@ -317,7 +317,7 @@ public final class OfferingsCoimbra implements Runnable {
                 field(ID, item(Courses.Context, Coimbra, String.valueOf(id))),
                 field(RDF.TYPE, Course),
 
-                field(Resources.owner, Coimbra.Id),
+                field(Resources.partner, Coimbra.Id),
 
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.url, json.string("urlPT").map(Frame::iri)),

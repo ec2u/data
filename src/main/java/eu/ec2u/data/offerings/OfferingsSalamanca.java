@@ -117,7 +117,7 @@ public final class OfferingsSalamanca implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> programs(final Instant synced) {
+    private Xtream<JSONPath> programs(final Instant updated) {
 
         final String url=vault
                 .get(ProgramsURL)
@@ -125,7 +125,7 @@ public final class OfferingsSalamanca implements Runnable {
                         "undefined API URL <%s>", ProgramsURL
                 )));
 
-        return Xtream.of(synced)
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<>()
                         .model(url)
@@ -145,7 +145,7 @@ public final class OfferingsSalamanca implements Runnable {
                         field(ID, item(Programs.Context, Salamanca, code)),
 
                         field(RDF.TYPE, EducationalOccupationalProgram),
-                        field(Resources.owner, Salamanca.Id),
+                        field(Resources.partner, Salamanca.Id),
 
                         field(Schema.url, json.string("programUrl").map(Frame::iri)),
                         field(Schema.identifier, literal(code)),
@@ -158,7 +158,7 @@ public final class OfferingsSalamanca implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> courses(final Instant synced) {
+    private Xtream<JSONPath> courses(final Instant updated) {
 
         final String url=vault
                 .get(CoursesURL)
@@ -166,7 +166,7 @@ public final class OfferingsSalamanca implements Runnable {
                         "undefined API URL <%s>", CoursesURL
                 )));
 
-        return Xtream.of(synced)
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<>()
                         .model(url)
@@ -184,7 +184,7 @@ public final class OfferingsSalamanca implements Runnable {
                 field(ID, item(Courses.Context, Salamanca, code)),
 
                 field(RDF.TYPE, Course),
-                field(Resources.owner, Salamanca.Id),
+                field(Resources.partner, Salamanca.Id),
 
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.identifier, literal(code)),
@@ -212,7 +212,7 @@ public final class OfferingsSalamanca implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> programsCourses(final Instant synced) {
+    private Xtream<JSONPath> programsCourses(final Instant updated) {
 
         final String url=vault
                 .get(ProgramsCoursesURL)
@@ -220,7 +220,7 @@ public final class OfferingsSalamanca implements Runnable {
                         "undefined API URL <%s>", ProgramsCoursesURL
                 )));
 
-        return Xtream.of(synced)
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<>()
                         .model(url)

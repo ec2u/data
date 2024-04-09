@@ -16,6 +16,7 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
+import { DataName } from "@ec2u/data/views/name";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { sortFrames } from "@metreeca/core/frame";
@@ -29,14 +30,31 @@ import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
+import { string } from "../../../../../../../../Products/Tool/code/core/string";
 
 
 export const Scheme=immutable({
 
 	id: required("/concepts/{scheme}"),
-
 	label: required(local),
-	comment: optional(local),
+
+	title: required(local),
+	description: optional(local),
+
+	publisher: optional({
+		id: required(id),
+		label: required(local)
+	}),
+
+	source: optional(id),
+
+	rights: required(string),
+	accessRights: optional(local),
+
+	license: multiple({
+		id: required(id),
+		label: required(local)
+	}),
 
 	entities: required(integer),
 
@@ -61,9 +79,28 @@ export function DataScheme() {
 
 		tray={<ToolFrame as={({
 
+			publisher,
+			source,
+
+			rights,
+			license,
+
 			entities
 
 		}) => <>
+
+			<ToolInfo>{{
+
+				"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
+				"Source": source && <ToolLink>{source}</ToolLink>,
+
+				"Rights": <span>{rights}</span>,
+
+				"License": license?.length && <ul>{license.map(license =>
+					<li key={license.id}><ToolLink>{license}</ToolLink></li>
+				)}</ul>
+
+			}}</ToolInfo>
 
 			<ToolInfo>{{
 
@@ -75,15 +112,17 @@ export function DataScheme() {
 
 	>
 
+		<DataName>{{ label: scheme?.label, title: scheme?.title }}</DataName>
+
 		<ToolFrame placeholder={Schemes[icon]} as={({
 
-			comment,
+			description,
 
 			hasTopConcept
 
 		}) => <>
 
-			{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
+			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
 			{hasTopConcept?.length && <>
 

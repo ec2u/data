@@ -4,7 +4,7 @@
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 
-</resources/> a ec2u:Dataset ;
+</resources/> a void:Dataset ;
     dct:title "EC2U Knowledge Hub Resources"@en ;
     dct:alternative "EC2U Resources"@en ;
     dct:description "Shared resources published on the EC2U Knowledge Hub."@en ;

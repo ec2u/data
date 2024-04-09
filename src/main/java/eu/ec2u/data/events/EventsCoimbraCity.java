@@ -46,8 +46,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.universities._Universities.Coimbra;
 import static java.lang.String.format;
 
@@ -60,7 +60,7 @@ public final class EventsCoimbraCity implements Runnable {
             field(ID, iri("https://www.coimbragenda.pt/")),
             field(TYPE, Schema.Organization),
 
-            field(owner, Coimbra.Id),
+            field(partner, Coimbra.Id),
 
             field(Schema.name,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
@@ -83,7 +83,7 @@ public final class EventsCoimbraCity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -99,8 +99,8 @@ public final class EventsCoimbraCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<JSONPath> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://www.coimbragenda.pt/api/v1/event/filter"
@@ -146,7 +146,7 @@ public final class EventsCoimbraCity implements Runnable {
 
                             field(RDF.TYPE, Event),
 
-                            field(owner, Coimbra.Id),
+                            field(partner, Coimbra.Id),
 
                             field(Schema.url, iri(url)),
                             field(Schema.name, name),

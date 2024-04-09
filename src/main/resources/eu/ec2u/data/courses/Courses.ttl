@@ -7,7 +7,7 @@
 @prefix schema: <https://schema.org/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-</courses/> a ec2u:Dataset ;
+</courses/> a void:Dataset ;
     dct:title "EC2U Academic and Occupational Courses"@en ;
     dct:alternative "EC2U Courses"@en ;
     dct:description

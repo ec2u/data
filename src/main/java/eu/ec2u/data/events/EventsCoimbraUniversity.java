@@ -29,8 +29,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Coimbra;
 
@@ -43,7 +43,7 @@ public final class EventsCoimbraUniversity implements Runnable {
             field(ID, iri("https://agenda.uc.pt/")),
             field(TYPE, Organization),
 
-            field(owner, Coimbra.Id),
+            field(partner, Coimbra.Id),
 
             field(Schema.name,
                     literal("University of Coimbra / Agenda UC", "en"),
@@ -65,7 +65,7 @@ public final class EventsCoimbraUniversity implements Runnable {
     @Override public void run() {
         update(connection -> Xtream
 
-                .of(synced(Context, Publisher.id().orElseThrow()))
+                .of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(new Tribe("https://agenda.uc.pt/")
                         .country(Coimbra.Country)
@@ -75,7 +75,7 @@ public final class EventsCoimbraUniversity implements Runnable {
                 )
 
                 .map(event -> frame(event,
-                        field(owner, Coimbra.Id),
+                        field(partner, Coimbra.Id),
                         field(publisher, Publisher)
                 ))
 

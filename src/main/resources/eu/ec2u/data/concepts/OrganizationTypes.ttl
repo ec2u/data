@@ -6,6 +6,8 @@
 
 </concepts/organizations> a skos:ConceptScheme ;
     dct:title "EC2U Organization Types"@en ;
+    dct:alternative "Organizations"@en ;
+    dct:publisher <https://ec2u.eu/> ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 

@@ -35,8 +35,8 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.universities._Universities.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 import static java.time.ZoneOffset.UTC;
@@ -50,7 +50,7 @@ public final class EventsIasiCityInOras implements Runnable {
             field(ID, iri("https://iasi.inoras.ro/evenimente")),
             field(TYPE, Schema.Organization),
 
-            field(owner, Iasi.Id),
+            field(partner, Iasi.Id),
 
             field(Schema.name,
                     literal("InOras / Events in Iasi", "en"),
@@ -73,7 +73,7 @@ public final class EventsIasiCityInOras implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .map(this::event)
@@ -88,8 +88,8 @@ public final class EventsIasiCityInOras implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<Frame> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://iasi.inoras.ro/feed/")
@@ -103,7 +103,7 @@ public final class EventsIasiCityInOras implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Iasi.Language),
 
-                field(owner, Iasi.Id),
+                field(partner, Iasi.Id),
                 field(publisher, Publisher)
 
         );

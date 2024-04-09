@@ -131,7 +131,7 @@ final class Documents_ {
 
                     field(RDF.TYPE, Document),
 
-                    field(Resources.owner, university.Id),
+                    field(Resources.partner, university.Id),
 
                     field(Schema.url, value(record, "URL (English)", Parsers::iri)),
                     field(Schema.url, value(record, "URL (Local)", Parsers::iri)),

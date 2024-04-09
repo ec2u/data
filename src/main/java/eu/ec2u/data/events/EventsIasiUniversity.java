@@ -30,8 +30,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.universities._Universities.Iasi;
 
 public final class EventsIasiUniversity implements Runnable {
@@ -43,7 +43,7 @@ public final class EventsIasiUniversity implements Runnable {
             field(ID, iri("https://www.uaic.ro/")),
             field(TYPE, Schema.Organization),
 
-            field(owner, Iasi.Id),
+            field(partner, Iasi.Id),
 
             field(Schema.name,
                     literal("University of Iasi / Events", "en"),
@@ -63,7 +63,7 @@ public final class EventsIasiUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(new Tribe("https://www.uaic.ro/")
                         .country(Iasi.Country)
@@ -73,7 +73,7 @@ public final class EventsIasiUniversity implements Runnable {
                 )
 
                 .map(event -> frame(event,
-                        field(owner, Iasi.Id),
+                        field(partner, Iasi.Id),
                         field(publisher, Publisher)
                 ))
 

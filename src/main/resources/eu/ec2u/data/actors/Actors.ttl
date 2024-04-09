@@ -5,7 +5,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-</actors/> a ec2u:Dataset ;
+</actors/> a void:Dataset ;
     dct:title "EC2U Knowledge Ecosystem Actors"@en ;
     dct:alternative "EC2U Actors"@en ;
     dct:description

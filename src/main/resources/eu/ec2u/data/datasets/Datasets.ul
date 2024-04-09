@@ -13,11 +13,13 @@ insert {
 
 } where {
 
-    ?dataset a ec2u:Dataset ;
+    ?dataset a void:Dataset ;
         dct:title ?title .
 
     optional { ?dataset dct:alternative ?alternative }
     optional { ?dataset dct:description ?description }
+
+    filter (lang(?title) = lang(?alternative))
 
     bind(coalesce(?alternative, ?title) as ?label)
 
@@ -29,7 +31,7 @@ insert {
 
 } where {
 
-    ?dataset a ec2u:Dataset ;
+    ?dataset a void:Dataset ;
         void:rootResource ?class .
 
     ?entity a ?class .
@@ -52,7 +54,7 @@ delete {
     {
         select ?dataset (count(distinct ?member) as ?entities) {
 
-            ?dataset a ec2u:Dataset .
+            ?dataset a void:Dataset .
 
             optional { ?dataset rdfs:member ?member }
 

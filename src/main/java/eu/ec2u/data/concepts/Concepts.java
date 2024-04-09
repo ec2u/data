@@ -24,7 +24,10 @@ import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
@@ -54,13 +57,7 @@ public final class Concepts extends Delegator {
 
 
     public static Shape ConceptScheme() {
-        return shape(SKOS.CONCEPT_SCHEME, Resource(),
-
-                property(DCTERMS.TITLE, required(localized())),
-                property(DCTERMS.ALTERNATIVE, optional(localized())),
-                property(DCTERMS.DESCRIPTION, optional(localized())),
-
-                property(VOID.ENTITIES, required(integer())),
+        return shape(SKOS.CONCEPT_SCHEME, Dataset(),
 
                 property(SKOS.HAS_TOP_CONCEPT, () -> multiple(Concept()))
 
@@ -82,7 +79,8 @@ public final class Concepts extends Delegator {
 
                 property(SKOS.BROADER, () -> multiple(Concept())),
                 property(SKOS.NARROWER, () -> multiple(Concept())),
-                property(SKOS.RELATED, () -> multiple(Concept()))
+                property(SKOS.RELATED, () -> multiple(Concept())),
+                property(SKOS.EXACT_MATCH, () -> multiple(Concept()))
 
         );
     }

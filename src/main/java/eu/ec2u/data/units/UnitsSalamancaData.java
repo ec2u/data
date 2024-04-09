@@ -44,7 +44,7 @@ import static com.metreeca.http.toolkits.Strings.split;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.concepts.OrganizationTypes.*;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.lang.String.format;
@@ -93,7 +93,7 @@ public final class UnitsSalamancaData implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> units(final Instant synced) {
+    private Xtream<JSONPath> units(final Instant updated) {
 
         final String url=vault
                 .get(APIUrl)
@@ -107,7 +107,7 @@ public final class UnitsSalamancaData implements Runnable {
                         "undefined API key <%s>", APIKey
                 )));
 
-        return Xtream.of(synced)
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<>()
                         .model(url)
@@ -138,7 +138,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(ID, EC2U.item(Units.Context, Salamanca, id)),
 
                     field(RDF.TYPE, Unit),
-                    field(owner, Salamanca.Id),
+                    field(partner, Salamanca.Id),
 
                     field(DCTERMS.TITLE, label),
                     field(DCTERMS.DESCRIPTION, json.string("topics")
@@ -220,7 +220,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                             field(RDFS.LABEL, literal(fullName, Salamanca.Language)),
 
-                            field(owner, Salamanca.Id),
+                            field(partner, Salamanca.Id),
 
                             field(FOAF.GIVEN_NAME, literal(givenName)),
                             field(FOAF.FAMILY_NAME, literal(familyName))
@@ -239,7 +239,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(ID, EC2U.item(Units.Context, Salamanca, name)),
 
                     field(RDF.TYPE, Unit),
-                    field(owner, Salamanca.Id),
+                    field(partner, Salamanca.Id),
 
                     field(DCTERMS.TITLE, title),
                     field(SKOS.PREF_LABEL, title),
@@ -264,7 +264,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(ID, EC2U.item(Units.Context, Salamanca, name)),
 
                     field(RDF.TYPE, Unit),
-                    field(owner, Salamanca.Id),
+                    field(partner, Salamanca.Id),
 
                     field(DCTERMS.TITLE, title),
                     field(SKOS.PREF_LABEL, title),

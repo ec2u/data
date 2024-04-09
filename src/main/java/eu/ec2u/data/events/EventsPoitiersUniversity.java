@@ -53,8 +53,8 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.synced;
-import static eu.ec2u.data.resources.Resources.owner;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities._Universities.Poitiers;
@@ -71,7 +71,7 @@ public final class EventsPoitiersUniversity implements Runnable {
             field(ID, iri("https://www.univ-poitiers.fr/c/actualites/")),
             field(TYPE, Organization),
 
-            field(owner, Poitiers.Id),
+            field(partner, Poitiers.Id),
 
             field(Schema.name,
 
@@ -123,7 +123,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(synced(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .map(this::event)
@@ -138,8 +138,8 @@ public final class EventsPoitiersUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<XPath> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://www.univ-poitiers.fr/feed/ec2u")
@@ -197,7 +197,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                         field(SKOS.PREF_LABEL, literal(category, Poitiers.Language))
                 ))),
 
-                field(owner, Poitiers.Id),
+                field(partner, Poitiers.Id),
                 field(publisher, Publisher),
                 field(location, location(item))
 

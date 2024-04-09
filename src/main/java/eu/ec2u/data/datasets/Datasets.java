@@ -36,7 +36,8 @@ import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.EC2U.create;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.localized;
@@ -45,15 +46,13 @@ public final class Datasets extends Delegator {
 
     public static final IRI Context=item("/datasets/");
 
-    private static final IRI Dataset=term("Dataset");
-
 
     public static Shape Datasets() {
         return Dataset(Dataset());
     }
 
     public static Shape Dataset() {
-        return shape(Dataset, Resource(),
+        return shape(VOID.DATASET, Resource(),
 
                 property(DCTERMS.TITLE, required(localized())),
                 property(DCTERMS.ALTERNATIVE, optional(localized())),
@@ -65,15 +64,16 @@ public final class Datasets extends Delegator {
 
                 property(DCTERMS.RIGHTS, required(string())),
                 property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
-                property(DCTERMS.LICENSE, optional(Resource())),
+                property(DCTERMS.LICENSE, multiple(Resource())),
 
+                property(DCTERMS.SOURCE, optional(Resource())),
                 property(DCTERMS.PUBLISHER, optional(Organization())),
 
-                property(VOID.ROOT_RESOURCE, multiple(id())),
                 property(VOID.ENTITIES, optional(integer())),
                 property(VOID.SUBSET, () -> multiple(Dataset())),
+                property(VOID.ROOT_RESOURCE, multiple(Resource())),
 
-                property(RDFS.ISDEFINEDBY, required(id()))
+                property(RDFS.ISDEFINEDBY, optional(Resource()))
 
         );
     }

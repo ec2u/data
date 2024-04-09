@@ -7,7 +7,7 @@
 @prefix schema: <https://schema.org/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-</programs/> a ec2u:Dataset ;
+</programs/> a void:Dataset ;
     dct:title "EC2U Degree and Occupational Programs"@en ;
     dct:alternative "EC2U Programs"@en ;
     dct:description "Degree and occupational programs offered by EC2U allied universities."@en ;
