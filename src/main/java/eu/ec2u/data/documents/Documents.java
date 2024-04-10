@@ -78,20 +78,22 @@ public final class Documents extends Delegator {
                 property(DCTERMS.TITLE, required(localized(), maxLength(1_000))),
                 property(DCTERMS.DESCRIPTION, optional(localized(), maxLength(10_000))),
 
-                property(DCTERMS.ISSUED, optional(date())),
-                property(DCTERMS.MODIFIED, optional(date())),
-                property(DCTERMS.VALID, optional(string(), pattern(ValidPattern.pattern()))),
-
                 property(DCTERMS.CREATOR, optional(Person())),
                 property(DCTERMS.CONTRIBUTOR, multiple(Person())),
                 property(DCTERMS.PUBLISHER, optional(Organization())),
 
-                property(DCTERMS.LICENSE, optional(string())),
-                property(DCTERMS.RIGHTS, optional(string())),
+                property(DCTERMS.CREATED, optional(date())),
+                property(DCTERMS.ISSUED, optional(date())),
+                property(DCTERMS.MODIFIED, optional(date())),
+                property(DCTERMS.VALID, optional(string(), pattern(ValidPattern.pattern()))),
 
-                property(DCTERMS.TYPE, multiple(Concept())),
-                property(DCTERMS.SUBJECT, multiple(Concept())),
-                property(DCTERMS.AUDIENCE, multiple(Concept())),
+                property(DCTERMS.RIGHTS, optional(string())),
+                property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
+                property(DCTERMS.LICENSE, optional(Resource())),
+
+                property(DCTERMS.TYPE, multiple(Concept(), scheme(Types))),
+                property(DCTERMS.SUBJECT, multiple(Concept(), scheme(Topics))),
+                property(DCTERMS.AUDIENCE, multiple(Concept(), scheme(Audiences))),
 
                 property(DCTERMS.RELATION, () -> shape(multiple(Document())))
 

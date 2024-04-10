@@ -4,9 +4,10 @@ EC2U assets are described using a controlled subset
 of
 the [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) data model.
 
-| prefix | namespace                 | definition                                                                                                                |
-|--------|---------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| dct:   | http://purl.org/dc/terms/ | [Dublin Core](https://www.dublincore.org) [DCMI Terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) |
+| prefix | namespace                   | definition                                                                                                                |
+|--------|-----------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| ec2u:  | https://data.ec2u.eu/terms/ | EC2U Knowledge Hub vocabulary                                                                                             |
+| dct:   | http://purl.org/dc/terms/   | [Dublin Core](https://www.dublincore.org) [DCMI Terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) |
 
 ![dataset data model](index/assets.svg#75)
 

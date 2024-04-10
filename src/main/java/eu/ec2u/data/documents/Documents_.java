@@ -25,7 +25,7 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.resources.Resources_;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.feeds.CSVProcessor;
@@ -52,6 +52,8 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.concepts.Concepts_.concept;
 import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.data.persons.Persons_.person;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources_.url;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
@@ -131,7 +133,7 @@ final class Documents_ {
 
                     field(RDF.TYPE, Document),
 
-                    field(Resources.partner, university.Id),
+                    field(partner, university.Id),
 
                     field(Schema.url, value(record, "URL (English)", Parsers::iri)),
                     field(Schema.url, value(record, "URL (Local)", Parsers::iri)),
@@ -164,6 +166,10 @@ final class Documents_ {
                             .map(v -> literal(v, university.Language))
                     ),
 
+                    field(DCTERMS.CREATED, value(record, "Created", Parsers::localDate)
+                            .map(Values::literal)
+                    ),
+
                     field(DCTERMS.ISSUED, value(record, "Issued", Parsers::localDate)
                             .map(Values::literal)
                     ),
@@ -186,12 +192,17 @@ final class Documents_ {
                             person(person, university)
                     )),
 
-                    field(DCTERMS.LICENSE, value(record, "License", this::license)
-                            .map(Values::literal)
+                    field(DCTERMS.RIGHTS, value(record, "Rights")
+                            .map(Frame::literal)
                     ),
 
-                    field(DCTERMS.RIGHTS, value(record, "Rights")
-                            .map(Values::literal)
+                    field(DCTERMS.ACCESS_RIGHTS, value(record, "License", this::license)
+                            .map(license -> url(license).isEmpty() ? literal(license, "en") : null) // !!! language
+                    ),
+
+                    field(DCTERMS.LICENSE, value(record, "License", this::license)
+                            .flatMap(Resources_::url)
+                            .map(Frame::iri)
                     ),
 
                     field(DCTERMS.TYPE, value(record, "Type", type ->

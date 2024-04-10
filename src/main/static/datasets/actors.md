@@ -1,8 +1,12 @@
 # Data Model
 
-![actor data model](index/actors.svg#25)
-
 EC2U knowledge ecosystem actors are described using a [dedicated custom vocabulary](https://docs.google.com/spreadsheets/d/1CG0OjnmbGkxVWNF7xLAvzcic-KFCZIkujns_pMwphWU/edit?usp=sharing).
+
+| prefix | namespace                   | definition                    |
+|--------|-----------------------------|-------------------------------|
+| ec2u:  | https://data.ec2u.eu/terms/ | EC2U Knowledge Hub vocabulary |
+
+![actor data model](index/actors.svg#25)
 
 # Sources
 
