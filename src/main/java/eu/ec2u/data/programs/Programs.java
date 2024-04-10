@@ -63,7 +63,7 @@ public final class Programs extends Delegator {
                 property(timeToComplete, optional(duration())),
                 property(programPrerequisites, optional(localized())),
 
-                property(programType, multiple(Concept(), scheme(Offerings.Types))),
+                property(programType, optional(Concept(), scheme(Offerings.Types))),
 
                 property(hasCourse, () -> multiple(Course()))
 

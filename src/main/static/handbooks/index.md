@@ -17,6 +17,6 @@
   - [Actors](/datasets/actors)
   - [Things](/datasets/things)
     - [Offerings](/datasets/offerings)
-      - [Programs](/datasets/programs)
-      - [Courses](/datasets/courses)
+      - [Programs](/datasets/offerings)
+      - [Courses](/datasets/offerings)
     - [Events](/datasets/events)

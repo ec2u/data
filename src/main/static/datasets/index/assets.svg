@@ -72,7 +72,7 @@
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="64">dct:modified : date [0..1]
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="75">dct:rights : string [1]
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="75">dct:rights : string [0..1]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="86">dct:accessRights : text
                             [0..1]

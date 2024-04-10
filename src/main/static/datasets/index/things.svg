@@ -17,7 +17,7 @@
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
-        version="1.1" viewBox="250 -45 532 471" width="532" height="471">
+        version="1.1" viewBox="-61 -61 567 470" width="567" height="470">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -36,51 +36,49 @@
     </defs>
     <g id="things" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
         <title>things</title>
-        <rect fill="white" x="250" y="-45" width="532" height="471"/>
+        <rect fill="white" x="-61" y="-61" width="567" height="470"/>
         <g id="things_Layer_1">
             <title>Layer 1</title>
-            <g id="Group_316">
-                <g id="Graphic_318">
+            <g id="Group_358">
+                <g id="Graphic_360">
                     <a xl:href="https://schema.org/Thing">
-                        <rect x="278.27747" y="38.962507" width="194.3291" height="17.261063" fill="white"/>
-                        <rect x="278.27747" y="38.962507" width="194.3291" height="17.261063" stroke="black"
+                        <rect x="1.4786176" y="28.177166" width="194.3291" height="17.261063" fill="white"/>
+                        <rect x="1.4786176" y="28.177166" width="194.3291" height="17.261063" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(348.5497 42.09304)" fill="black">
+                        <text transform="translate(71.750834 31.307697)" fill="black">
                             <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
                                     fill="black" x="0" y="9">schema:Thing
                             </tspan>
                         </text>
                     </a>
                 </g>
-                <g id="Graphic_317">
-                    <rect x="278.27747" y="56.22357" width="194.3291" height="72" fill="white"/>
-                    <rect x="278.27747" y="56.22357" width="194.3291" height="72" stroke="black" stroke-linecap="round"
+                <g id="Graphic_359">
+                    <rect x="1.4786176" y="45.43823" width="194.3291" height="61" fill="white"/>
+                    <rect x="1.4786176" y="45.43823" width="194.3291" height="61" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(284.27747 59.22357)" fill="black">
+                    <text transform="translate(7.478618 48.43823)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:url : id [*]</tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:identifier : string
                             [*]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">schema:name : text [0..1]
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">schema:image : id [0..1]
-                        </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">schema:description : text
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">schema:description : text
                             [0..1]
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="64">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">
                             schema:disambiguatingDescription : text [0..1]
                         </tspan>
                     </text>
                 </g>
             </g>
-            <g id="Group_314">
-                <g id="Graphic_315">
+            <g id="Group_356">
+                <g id="Graphic_357">
                     <a xl:href="resources.svg">
-                        <rect x="337.3525" y="-16.313084" width="76.179" height="17" fill="white"/>
-                        <rect x="337.3525" y="-16.313084" width="76.179" height="17" stroke="black"
+                        <rect x="60.55367" y="-32.598425" width="76.179" height="17" fill="white"/>
+                        <rect x="60.55367" y="-32.598425" width="76.179" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(343.3525 -13.313084)" fill="#a5a5a5">
+                        <text transform="translate(66.55367 -29.598425)" fill="#a5a5a5">
                             <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
                                     fill="#a5a5a5" x="5.276268" y="9">rdfs:Resource
                             </tspan>
@@ -88,51 +86,52 @@
                     </a>
                 </g>
             </g>
-            <g id="Line_313">
-                <line x1="375.442" y1="38.962507" x2="375.442" y2="10.436916" marker-end="url(#UMLInheritance_Marker)"
-                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            <g id="Line_355">
+                <line x1="98.64317" y1="28.177166" x2="98.64317" y2="-5.8484255"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Group_310">
-                <g id="Graphic_312">
+            <g id="Group_352">
+                <g id="Graphic_354">
                     <a xl:href="https://schema.org/Organization">
-                        <rect x="619.2145" y="55.59304" width="134.61621" height="17" fill="white"/>
-                        <rect x="619.2145" y="55.59304" width="134.61621" height="17" stroke="black"
+                        <rect x="342.41563" y="39.307697" width="134.61621" height="17" fill="white"/>
+                        <rect x="342.41563" y="39.307697" width="134.61621" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(643.4452 58.59304)" fill="black">
+                        <text transform="translate(366.64634 42.307697)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 schema:Organization
                             </tspan>
                         </text>
                     </a>
                 </g>
-                <g id="Graphic_311">
-                    <rect x="619.2145" y="72.59304" width="134.61621" height="39" fill="white"/>
-                    <rect x="619.2145" y="72.59304" width="134.61621" height="39" stroke="black" stroke-linecap="round"
+                <g id="Graphic_353">
+                    <rect x="342.41563" y="56.3077" width="134.61621" height="39" fill="white"/>
+                    <rect x="342.41563" y="56.3077" width="134.61621" height="39" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(625.2145 75.59304)" fill="black">
+                    <text transform="translate(348.41563 59.3077)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:legalName : text
                             [0..1]
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:email : string
-                            [0..1]
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:email : string [*]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">schema:telephone : string
-                            [0..1]
+                            [*]
                         </tspan>
                     </text>
                 </g>
             </g>
-            <g id="Line_309">
-                <line x1="619.2145" y1="83.59301" x2="482.35657" y2="83.59304" marker-end="url(#UMLInheritance_Marker)"
-                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            <g id="Line_351">
+                <line x1="342.41563" y1="67.30767" x2="205.55772" y2="67.307695"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Group_307">
-                <g id="Graphic_308">
+            <g id="Group_349">
+                <g id="Graphic_350">
                     <a xl:href="agents.svg">
-                        <rect x="646.6715" y="-16.313084" width="79.70215" height="17" fill="white"/>
-                        <rect x="646.6715" y="-16.313084" width="79.70215" height="17" stroke="black"
+                        <rect x="369.87266" y="-32.598425" width="79.70215" height="17" fill="white"/>
+                        <rect x="369.87266" y="-32.598425" width="79.70215" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(652.6715 -13.313084)" fill="#a5a5a5">
+                        <text transform="translate(375.87266 -29.598425)" fill="#a5a5a5">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9">
                                 org:Organization
                             </tspan>
@@ -140,28 +139,29 @@
                     </a>
                 </g>
             </g>
-            <g id="Line_306">
-                <line x1="686.5226" y1="55.59304" x2="686.5226" y2="10.436916" marker-end="url(#UMLInheritance_Marker)"
-                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            <g id="Line_348">
+                <line x1="409.72373" y1="39.307697" x2="409.72373" y2="-5.8484255"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Group_303">
-                <g id="Graphic_305">
+            <g id="Group_345">
+                <g id="Graphic_347">
                     <a xl:href="https://schema.org/Place">
-                        <rect x="425.0832" y="304.5688" width="140.90918" height="17.261063" fill="white"/>
-                        <rect x="425.0832" y="304.5688" width="140.90918" height="17.261063" stroke="black"
+                        <rect x="148.28432" y="288.28347" width="140.90918" height="17.261063" fill="white"/>
+                        <rect x="148.28432" y="288.28347" width="140.90918" height="17.261063" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(467.11613 307.69934)" fill="black">
+                        <text transform="translate(190.31728 291.414)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 schema:Place
                             </tspan>
                         </text>
                     </a>
                 </g>
-                <g id="Graphic_304">
-                    <rect x="425.0832" y="321.82987" width="140.90918" height="28" fill="white"/>
-                    <rect x="425.0832" y="321.82987" width="140.90918" height="28" stroke="black" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(431.0832 324.82987)" fill="black">
+                <g id="Graphic_346">
+                    <rect x="148.28432" y="305.54453" width="140.90918" height="28" fill="white"/>
+                    <rect x="148.28432" y="305.54453" width="140.90918" height="28" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(154.28432 308.54453)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:latitude : decimal
                             [0..1]
                         </tspan>
@@ -171,12 +171,12 @@
                     </text>
                 </g>
             </g>
-            <g id="Group_300">
-                <g id="Graphic_302">
-                    <rect x="420.10197" y="182.67117" width="150.87158" height="83" fill="white"/>
-                    <rect x="420.10197" y="182.67117" width="150.87158" height="83" stroke="black"
+            <g id="Group_342">
+                <g id="Graphic_344">
+                    <rect x="143.30312" y="166.38583" width="150.87158" height="83" fill="white"/>
+                    <rect x="143.30312" y="166.38583" width="150.87158" height="83" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(426.10197 185.67117)" fill="black">
+                    <text transform="translate(149.30312 169.38583)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:addressCountry : id
                             [0..1]
                         </tspan>
@@ -200,12 +200,12 @@
                         </tspan>
                     </text>
                 </g>
-                <g id="Graphic_301">
+                <g id="Graphic_343">
                     <a xl:href="https://schema.org/PostalAddress">
-                        <rect x="420.10197" y="165.67117" width="150.87158" height="17" fill="white"/>
-                        <rect x="420.10197" y="165.67117" width="150.87158" height="17" stroke="black"
+                        <rect x="143.30312" y="149.38583" width="150.87158" height="17" fill="white"/>
+                        <rect x="143.30312" y="149.38583" width="150.87158" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(448.87004 168.67117)" fill="black">
+                        <text transform="translate(172.07119 152.38583)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 schema:PostalAddress
                             </tspan>
@@ -213,21 +213,21 @@
                     </a>
                 </g>
             </g>
-            <g id="Group_297">
-                <g id="Graphic_299">
-                    <rect x="441.3737" y="379.97664" width="108.32813" height="17" fill="white"/>
-                    <rect x="441.3737" y="379.97664" width="108.32813" height="17" stroke="black" stroke-linecap="round"
+            <g id="Group_339">
+                <g id="Graphic_341">
+                    <rect x="164.57485" y="363.6913" width="108.32813" height="17" fill="white"/>
+                    <rect x="164.57485" y="363.6913" width="108.32813" height="17" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(447.3737 382.97664)" fill="black">
+                    <text transform="translate(170.57485 366.6913)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:url : id [1]</tspan>
                     </text>
                 </g>
-                <g id="Graphic_298">
+                <g id="Graphic_340">
                     <a xl:href="https://schema.org/VirtualLocation">
-                        <rect x="441.3737" y="362.97664" width="108.32813" height="17" fill="white"/>
-                        <rect x="441.3737" y="362.97664" width="108.32813" height="17" stroke="black"
+                        <rect x="164.57485" y="346.6913" width="108.32812" height="17" fill="white"/>
+                        <rect x="164.57485" y="346.6913" width="108.32812" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(447.3737 365.97664)" fill="black">
+                        <text transform="translate(170.57485 349.6913)" fill="black">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                                 schema:VirtualLocation
                             </tspan>
@@ -235,93 +235,104 @@
                     </a>
                 </g>
             </g>
-            <g id="Line_296">
-                <line x1="495.53776" y1="304.5688" x2="495.53776" y2="272.52117" marker-end="url(#StickArrow_Marker)"
+            <g id="Line_338">
+                <line x1="218.73891" y1="288.28347" x2="218.73891" y2="256.23583" marker-end="url(#StickArrow_Marker)"
                         stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Graphic_295">
-                <rect x="449.39226" y="277.11604" width="92.29102" height="13" fill="white"/>
-                <text transform="translate(452.39226 278.11604)" fill="black">
+            <g id="Graphic_337">
+                <rect x="172.5934" y="260.8307" width="92.29102" height="13" fill="white"/>
+                <text transform="translate(175.5934 261.8307)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:address [0..1]</tspan>
                 </text>
             </g>
-            <g id="Line_294">
-                <line x1="686.5226" y1="111.59304" x2="686.5226" y2="148.83692" marker-end="url(#StickArrow_Marker)"
+            <g id="Line_336">
+                <line x1="409.72373" y1="95.3077" x2="409.72373" y2="132.55158" marker-end="url(#StickArrow_Marker)"
                         stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Graphic_293">
-                <rect x="642.5524" y="129.7755" width="87.94043" height="13" fill="white"/>
-                <text transform="translate(645.5524 130.7755)" fill="black">
+            <g id="Graphic_335">
+                <rect x="365.7535" y="113.49015" width="87.94043" height="13" fill="white"/>
+                <text transform="translate(368.7535 114.49015)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:location 0..1</tspan>
                 </text>
             </g>
-            <g id="Line_292">
-                <path d="M 686.5226 189.9294 L 686.5226 215.67117 L 577.82356 215.67117"
+            <g id="Line_334">
+                <path d="M 409.72373 173.64406 L 409.72373 199.38583 L 301.0247 199.38583"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Line_291">
-                <path d="M 686.5226 189.9294 L 686.5226 327.19934 L 572.84235 327.19934"
+            <g id="Line_333">
+                <path d="M 409.72373 173.64406 L 409.72373 310.914 L 296.0435 310.914"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Line_290">
-                <path d="M 686.5226 189.9294 L 686.5226 379.97664 L 556.5518 379.97664"
+            <g id="Line_332">
+                <path d="M 409.72373 173.64406 L 409.72373 363.6913 L 279.75298 363.6913"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Line_289">
-                <path d="M 420.10197 215.67112 L 375.442 215.67112 L 375.442 137.97357"
+            <g id="Line_331">
+                <path d="M 143.30312 199.38578 L 98.64317 199.38578 L 98.64317 116.18823"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Line_288">
-                <path d="M 441.3737 379.97662 L 375.442 379.97662 L 375.442 137.97357"
+            <g id="Line_330">
+                <path d="M 164.57485 363.6913 L 98.64317 363.6913 L 98.64317 116.18823"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Line_287">
-                <path d="M 425.0832 327.1993 L 375.442 327.1993 L 375.442 137.97357"
+            <g id="Line_329">
+                <path d="M 148.28432 310.91398 L 98.64317 310.91398 L 98.64317 116.18823"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
-            <g id="Group_284">
-                <g id="Graphic_286">
-                    <rect x="644.3732" y="155.68692" width="84.29883" height="17.242485" fill="white"/>
-                    <rect x="644.3732" y="155.68692" width="84.29883" height="17.242485" stroke="black"
+            <g id="Group_326">
+                <g id="Graphic_328">
+                    <rect x="367.5743" y="139.40158" width="84.29883" height="17.242485" fill="white"/>
+                    <rect x="367.5743" y="139.40158" width="84.29883" height="17.242485" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(666.1847 158.80816)" fill="black">
+                    <text transform="translate(389.38584 142.52282)" fill="black">
                         <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
                             ‹Location›
                         </tspan>
                     </text>
                 </g>
-                <g id="Graphic_285">
-                    <rect x="644.3732" y="172.9294" width="84.29883" height="17" fill="white"/>
-                    <rect x="644.3732" y="172.9294" width="84.29883" height="17" stroke="black" stroke-linecap="round"
+                <g id="Graphic_327">
+                    <rect x="367.5743" y="156.64406" width="84.29883" height="17" fill="white"/>
+                    <rect x="367.5743" y="156.64406" width="84.29883" height="17" stroke="black" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(650.3732 175.9294)" fill="black">
+                    <text transform="translate(373.5743 159.64406)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹Text› : string [0..1]
                         </tspan>
                     </text>
                 </g>
             </g>
-            <g id="Graphic_283">
-                <rect x="591.7772" y="209.17117" width="85.4707" height="13" fill="white"/>
-                <text transform="translate(594.7772 210.17117)" fill="black">
+            <g id="Graphic_325">
+                <rect x="304.9189" y="192.88583" width="85.4707" height="13" fill="white"/>
+                <text transform="translate(307.9189 193.88583)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹PostalAddress› 0..1</tspan>
                 </text>
             </g>
-            <g id="Graphic_282">
-                <rect x="626.2422" y="320.69934" width="49.822266" height="13" fill="white"/>
-                <text transform="translate(629.2422 321.69934)" fill="black">
+            <g id="Graphic_324">
+                <rect x="351.58897" y="304.414" width="49.822266" height="13" fill="white"/>
+                <text transform="translate(354.58897 305.414)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹Place› 0..1</tspan>
                 </text>
             </g>
-            <g id="Graphic_281">
-                <rect x="597.6955" y="373.47664" width="88.05469" height="13" fill="white"/>
-                <text transform="translate(600.6955 374.47664)" fill="black">
+            <g id="Graphic_323">
+                <rect x="314.2155" y="357.1913" width="88.05469" height="13" fill="white"/>
+                <text transform="translate(317.2155 358.1913)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹VirtualLocation› 0..1</tspan>
+                </text>
+            </g>
+            <g id="Line_322">
+                <path d="M 1.4786176 67.30766 L -6.6213824 67.30766 L -6.6213824 -24.098434 L 53.70367 -24.098434"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_321">
+                <rect x="-32.598425" y="-30.598434" width="82.75049" height="13" fill="white"/>
+                <text transform="translate(-29.598425 -29.598434)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:image :0..1</tspan>
                 </text>
             </g>
         </g>

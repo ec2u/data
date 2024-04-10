@@ -45,14 +45,12 @@ export const Course=immutable({
 
 	courseCode: optional(string),
 	inLanguage: multiple(string),
-	learningResourceType: optional(local),
 	numberOfCredits: optional(decimal),
 	timeRequired: optional(string),
 
 	teaches: optional(local),
 	assesses: optional(local),
 	coursePrerequisites: optional(local),
-	competencyRequired: optional(local),
 	educationalCredentialAwarded: optional(local),
 	occupationalCredentialAwarded: optional(local),
 
@@ -71,12 +69,19 @@ export const Course=immutable({
 		label: required(local)
 	}),
 
-	inProgram: multiple({
+	// learningResourceType: multiple({
+	// 	id: required(id),
+	// 	label: required(local)
+	// }),
+
+	about: multiple({
 		id: required(id),
 		label: required(local)
 	}),
 
-	about: multiple({
+	// competencyRequired: optional(local),
+
+	inProgram: multiple({
 		id: required(id),
 		label: required(local)
 	})
@@ -185,8 +190,7 @@ export function DataCourse() {
 			teaches,
 			assesses,
 			coursePrerequisites,
-			learningResourceType,
-			competencyRequired,
+			// competencyRequired,
 			educationalCredentialAwarded,
 			occupationalCredentialAwarded
 
@@ -196,8 +200,8 @@ export function DataCourse() {
 				"General Objectives": teaches,
 				"Learning Objectives and Intended Skills": assesses,
 				"Admission Requirements": coursePrerequisites,
-				// "Teaching Methods and Mode of Study": learningResourceType,
-				"Graduation Requirements": competencyRequired,
+				// !!! "Teaching Methods and Mode of Study": learningResourceType,
+				// "Graduation Requirements": competencyRequired,
 				"Educational Credential Awarded": educationalCredentialAwarded,
 				"Occupational Credential Awarded": occupationalCredentialAwarded
 			};
