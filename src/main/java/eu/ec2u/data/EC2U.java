@@ -111,24 +111,17 @@ public final class EC2U extends Delegator {
 
     public EC2U() {
         delegate(new Router()
-
                 .path("/", new Datasets())
-
-                .path("/resources/", new Resources())
-                .path("/assets/", new Resources())
-
+                .path("/resources/*", new Resources())
+                .path("/assets/*", new Resources())
                 .path("/concepts/*", new Concepts())
-
-                .path("/agents/", new Agents())
+                .path("/agents/*", new Agents())
                 .path("/universities/*", new Universities())
-
                 .path("/units/*", new Units())
                 .path("/programs/*", new Programs())
                 .path("/courses/*", new Courses())
                 .path("/documents/*", new Documents())
-
-                .path("/actors/", new Actors())
-
+                .path("/actors/*", new Actors())
                 .path("/events/*", new Events())
         );
     }

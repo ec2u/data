@@ -20,18 +20,21 @@ import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
+import com.metreeca.link.Shape;
 
+import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Frame.WILDCARD;
 import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.shape;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
 
 public final class Actors extends Delegator {
@@ -39,15 +42,25 @@ public final class Actors extends Delegator {
     public static final IRI Context=item("/actors/");
 
 
+    static final IRI Actor=EC2U.term("Actor");
+
+
+    private static Shape Actors() { return Dataset(Actor()); }
+
+    private static Shape Actor() {
+        return shape(Actor, Resource());
+    }
+
+
     public static void main(final String... args) {
-        exec(() -> create(Context, Actors.class));
+        exec(() -> create(Context, Actors.class, Actor()));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Actors() {
-        delegate(handler(new Driver(Resource()), new Worker()
+        delegate(handler(new Driver(Actors()), new Worker()
 
                 .get(new Relator(frame(
 

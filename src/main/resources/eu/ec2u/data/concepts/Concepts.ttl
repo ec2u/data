@@ -11,7 +11,6 @@
     dct:title "EC2U Classification Taxonomies"@en ;
     dct:alternative "EC2U Taxonomies"@en ;
     dct:description "Topic taxonomies and other concept schemes for classifying resources."@en ;
-    dct:issued "2024-04-10"^^xsd:date ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     void:rootResource skos:ConceptScheme ;
     rdfs:isDefinedBy </datasets/concepts> .
