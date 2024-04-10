@@ -20,11 +20,15 @@
 
 </concepts/event-topics> a skos:ConceptScheme ;
     dct:title "EC2U Local Event Topics"@en ;
-    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en .
+    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en ;
+    dct:publisher <https://ec2u.eu/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 
-</concepts/event-audience> a skos:ConceptScheme ;
-    dct:title "EC2U Local Event Audience"@en ;
-    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en .
+</concepts/event-audiences> a skos:ConceptScheme ;
+    dct:title "EC2U Local Event Audiences"@en ;
+    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en ;
+    dct:publisher <https://ec2u.eu/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 
 
 
@@ -42,11 +46,3 @@ schema:EventMovedOnline rdfs:label "Moved Online"@en .
 schema:EventPostponed rdfs:label "Postponed"@en .
 schema:EventRescheduled rdfs:label "Rescheduled"@en .
 schema:EventCancelled rdfs:label "Cancelled"@en .
-
-
-
-
-
-
-
-

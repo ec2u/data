@@ -51,7 +51,7 @@ public final class Events extends Delegator {
     public static final IRI Context=item("/events/");
 
     public static final IRI Topics=iri(Concepts.Context, "/event-topics");
-    public static final IRI Audience=iri(Concepts.Context, "/event-audience");
+    public static final IRI Audiences=iri(Concepts.Context, "/event-audiences");
 
 
     public static final IRI Event=schema("Event");
@@ -122,7 +122,7 @@ public final class Events extends Delegator {
                 )),
 
                 property(about, multiple(Concept(), scheme(Topics))),
-                property(audience, multiple(Concept(), scheme(Audience))),
+                property(audience, multiple(Concept(), scheme(Audiences))),
 
                 property(eventAttendanceMode, optional(Resource(), in(values(EventAttendanceModeEnumeration.values())))),
                 property(eventStatus, optional(Resource(), in(values(EventStatusType.values()))))

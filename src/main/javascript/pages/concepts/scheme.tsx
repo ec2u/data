@@ -56,7 +56,7 @@ export const Scheme=immutable({
 		label: required(local)
 	}),
 
-	entities: required(integer),
+	extent: required(integer),
 
 	hasTopConcept: multiple({
 
@@ -85,7 +85,7 @@ export function DataScheme() {
 			rights,
 			license,
 
-			entities
+			extent
 
 		}) => <>
 
@@ -104,7 +104,7 @@ export function DataScheme() {
 
 			<ToolInfo>{{
 
-				"Concepts": toIntegerString(entities)
+				"Concepts": toIntegerString(extent)
 
 			}}</ToolInfo>
 
