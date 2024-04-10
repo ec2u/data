@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2024 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
+        xmlns="http://www.w3.org/2000/svg" viewBox="85 142 379 204" width="379" height="204">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
+                color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
+                color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="assets" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
+        <title>assets</title>
+        <rect fill="white" x="85" y="142" width="379" height="204"/>
+        <g id="assets_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_140">
+                <g id="Graphic_141">
+                    <a xl:href="resources.svg">
+                        <rect x="175.74803" y="160.15748" width="65.626465" height="17" fill="white"/>
+                        <rect x="175.74803" y="160.15748" width="65.626465" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(181.74803 163.15748)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
+                                    fill="#a5a5a5" x="0" y="9">rdfs:Resource
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Group_135">
+                <g id="Graphic_176">
+                    <rect x="147.36893" y="226.76378" width="122.43457" height="105" fill="white"/>
+                    <rect x="147.36893" y="226.76378" width="122.43457" height="105" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(153.36893 229.76378)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:title : text [1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">dct:alternative : text
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">dct:description : text
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">dct:created : date [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">dct:issued : date [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="64">dct:modified : date [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="75">dct:rights : string [1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="86">dct:accessRights : text
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="97">dct:extent : integer
+                            [0..1]
+                        </tspan>
+                    </text>
+                </g>
+                <g id="Graphic_136">
+                    <a xl:href="https://www.w3.org/TR/void/#dataset">
+                        <rect x="147.36893" y="209.76378" width="122.43457" height="17" fill="white"/>
+                        <rect x="147.36893" y="209.76378" width="122.43457" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(153.36893 212.76378)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="32.63159"
+                                    y="9">ec2u:Asset
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_134">
+                <path d="M 208.5862 209.76378 L 208.5862 198.76378 L 208.56127 188.15748 L 208.56127 186.90748"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_169">
+                <g id="Graphic_170">
+                    <a xl:href="agents.svg">
+                        <rect x="369.92126" y="262.26378" width="79.70215" height="17" fill="white"/>
+                        <rect x="369.92126" y="262.26378" width="79.70215" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(375.92126 265.26378)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9">
+                                org:Organization
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_177">
+                <line x1="269.8035" y1="270.76378" x2="363.07126" y2="270.76378" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_178">
+                <rect x="287.2865" y="264.26378" width="73.69775" height="13" fill="white"/>
+                <text transform="translate(290.2865 265.26378)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:publisher 0..1</tspan>
+                </text>
+            </g>
+            <g id="Line_179">
+                <path d="M 147.36893 270.76378 L 120.39796 270.76378 L 120.39796 168.65747 L 168.89803 168.65747"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_180">
+                <rect x="99.68937" y="156.65747" width="64.17041" height="24" fill="white"/>
+                <text transform="translate(102.68937 157.65747)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:source 0..1</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="9.97998" y="20">dct:license *</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

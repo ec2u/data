@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-77 68 426 292" width="426" height="292">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
+        xmlns="http://www.w3.org/2000/svg" viewBox="-77 68 426 292" width="426" height="292">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="documents" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <g id="documents" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
         <title>documents</title>
         <rect fill="white" x="-77" y="68" width="426" height="292"/>
         <g id="documents_Layer_1">
@@ -87,9 +87,9 @@
                         <rect x="26.311733" y="82.20473" width="65.626465" height="17" fill="white"/>
                         <rect x="26.311733" y="82.20473" width="65.626465" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(32.311733 85.20473)" fill="black">
+                        <text transform="translate(32.311733 85.20473)" fill="#a5a5a5">
                             <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
-                                    fill="black" x="0" y="9">rdsf:Resource
+                                    fill="#a5a5a5" x="0" y="9">rdsf:Resource
                             </tspan>
                         </text>
                     </a>
@@ -106,8 +106,8 @@
                         <rect x="254.73082" y="223.937" width="59.41699" height="17" fill="white"/>
                         <rect x="254.73082" y="223.937" width="59.41699" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(260.73082 226.937)" fill="black">
-                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                        <text transform="translate(260.73082 226.937)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9">
                                 foaf:Person
                             </tspan>
                         </text>
@@ -131,8 +131,8 @@
                         <rect x="254.73082" y="166.82326" width="79.70215" height="17" fill="white"/>
                         <rect x="254.73082" y="166.82326" width="79.70215" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(260.73082 169.82326)" fill="black">
-                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                        <text transform="translate(260.73082 169.82326)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9">
                                 org:Organization
                             </tspan>
                         </text>

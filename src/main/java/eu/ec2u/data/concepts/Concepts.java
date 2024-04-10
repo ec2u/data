@@ -23,6 +23,7 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
+import eu.ec2u.data.assets.Assets;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -39,6 +40,7 @@ import static com.metreeca.link.Shape.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.assets.Assets.Asset;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.localized;
@@ -57,7 +59,7 @@ public final class Concepts extends Delegator {
 
 
     public static Shape ConceptScheme() {
-        return shape(SKOS.CONCEPT_SCHEME, Dataset(),
+        return shape(SKOS.CONCEPT_SCHEME, Asset(),
 
                 property(SKOS.HAS_TOP_CONCEPT, () -> multiple(Concept()))
 

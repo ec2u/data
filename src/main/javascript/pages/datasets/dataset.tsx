@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Book, Books } from "@ec2u/data/pages/book";
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -27,7 +28,7 @@ import { useAsset } from "@metreeca/data/hooks/asset";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { DoneIcon, InfoIcon } from "@metreeca/view/widgets/icon";
+import { DoneIcon, EyeIcon, HelpCircleIcon, InfoIcon } from "@metreeca/view/widgets/icon";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
@@ -93,7 +94,7 @@ export function DataInfo() {
 			transform: "scale(0.75)"
 		}}
 
-    >{<InfoIcon/>}</button>;
+    >{<HelpCircleIcon/>}</button>;
 
 }
 
@@ -113,13 +114,13 @@ export function DataMeta() {
 
 	return <DataPage
 
-		name={dataset && toLocalString(dataset.alternative || dataset.title)}
+		name={[Books, dataset && toLocalString(dataset.alternative || dataset.title)]}
 
 		menu={(dataset?.id === "/" || dataset?.issued) && <button
 
             onClick={close}
 
-        ><DoneIcon/></button>}
+        ><EyeIcon/></button>}
 
 		tray={<ToolFrame as={({
 

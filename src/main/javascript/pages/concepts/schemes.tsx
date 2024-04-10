@@ -57,7 +57,7 @@ export const Schemes=immutable({
 		title: required(local),
 		alternative: required(local),
 
-		entities: required(integer)
+		extent: required(integer)
 
 	})
 
@@ -104,7 +104,7 @@ export function DataSchemes() {
 
 			comment,
 
-			entities
+			extent
 
 		}) =>
 
@@ -120,7 +120,7 @@ export function DataSchemes() {
 
 				}}</ToolLink>}
 
-				tags={`${entities} concepts`}
+				tags={`${extent} concepts`}
 
 			>{
 

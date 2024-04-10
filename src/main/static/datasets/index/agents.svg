@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="1171 -32 541 378" width="541" height="378">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
+        xmlns="http://www.w3.org/2000/svg" viewBox="1171 -32 541 378" width="541" height="378">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -41,7 +41,7 @@
             </g>
         </marker>
     </defs>
-    <g id="agents" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <g id="agents" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
         <title>agents</title>
         <rect fill="white" x="1171" y="-32" width="541" height="378"/>
         <g id="agents_Layer_1">
@@ -233,9 +233,9 @@
                         <rect x="1195.3733" y="-17.07874" width="76.179" height="17" fill="white"/>
                         <rect x="1195.3733" y="-17.07874" width="76.179" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(1201.3733 -14.07874)" fill="black">
+                        <text transform="translate(1201.3733 -14.07874)" fill="#a5a5a5">
                             <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
-                                    fill="black" x="5.276268" y="9">rdfs:Resource
+                                    fill="#a5a5a5" x="5.276268" y="9">rdfs:Resource
                             </tspan>
                         </text>
                     </a>
@@ -311,7 +311,7 @@
                 </g>
             </g>
             <g id="Line_94">
-                <path d="M 1261.4173 136.05905 L 1233.4628 136.05905 L 1233.4628 97.44291"
+                <path d="M 1261.4173 136.0691 L 1233.4628 136.0691 L 1233.4628 97.44291"
                         marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>

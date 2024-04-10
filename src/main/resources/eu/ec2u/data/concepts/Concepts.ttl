@@ -1,3 +1,6 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ec2u: </terms/> .
+
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -8,6 +11,7 @@
     dct:title "EC2U Classification Taxonomies"@en ;
     dct:alternative "EC2U Taxonomies"@en ;
     dct:description "Topic taxonomies and other concept schemes for classifying resources."@en ;
+    dct:issued "2024-04-10"^^xsd:date ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     void:rootResource skos:ConceptScheme ;
     rdfs:isDefinedBy </datasets/concepts> .
@@ -16,23 +20,17 @@
 ########################################################################################################################
 
 skos:ConceptScheme a owl:Class ;
-    rdfs:subClassOf void:Dataset .
+    rdfs:subClassOf ec2u:Asset .
 
 skos:Concept a owl:Class .
+
 
 skos:topConceptOf a owl:ObjectProperty ;
     rdfs:subPropertyOf skos:inScheme ;
     owl:inverseOf skos:hasTopConcept .
 
-
-skos:inScheme a owl:ObjectProperty ;
-    owl:inverseOf skos:hasConcept .
-
 skos:hasTopConcept a owl:ObjectProperty ;
-    rdfs:subPropertyOf void:rootResource .
-
-skos:hasConcept a owl:ObjectProperty ; # ;( standard extension
-    rdfs:subPropertyOf rdfs:member .
+    owl:inverseOf skos:topConceptOf .
 
 
 skos:broader a owl:ObjectProperty ;

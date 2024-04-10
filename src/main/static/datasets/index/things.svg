@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="250 -45 532 471" width="532" height="471">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
+        xmlns="http://www.w3.org/2000/svg" viewBox="250 -45 532 471" width="532" height="471">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="things" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <g id="things" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
         <title>things</title>
         <rect fill="white" x="250" y="-45" width="532" height="471"/>
         <g id="things_Layer_1">
@@ -80,9 +80,9 @@
                         <rect x="337.3525" y="-16.313084" width="76.179" height="17" fill="white"/>
                         <rect x="337.3525" y="-16.313084" width="76.179" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(343.3525 -13.313084)" fill="black">
+                        <text transform="translate(343.3525 -13.313084)" fill="#a5a5a5">
                             <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
-                                    fill="black" x="5.276268" y="9">rdfs:Resource
+                                    fill="#a5a5a5" x="5.276268" y="9">rdfs:Resource
                             </tspan>
                         </text>
                     </a>
@@ -132,8 +132,8 @@
                         <rect x="646.6715" y="-16.313084" width="79.70215" height="17" fill="white"/>
                         <rect x="646.6715" y="-16.313084" width="79.70215" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(652.6715 -13.313084)" fill="black">
-                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                        <text transform="translate(652.6715 -13.313084)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9">
                                 org:Organization
                             </tspan>
                         </text>

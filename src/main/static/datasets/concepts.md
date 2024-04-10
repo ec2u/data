@@ -12,12 +12,12 @@ the  [SKOS](https://www.w3.org/TR/skos-reference/) data model.
 
 ![concept data model](index/concepts.svg#75)
 
-## ConceptScheme
+## Concept Scheme
 
-| term                                                              | type                       | # | description                                 |
-|-------------------------------------------------------------------|----------------------------|---|---------------------------------------------|
-| [skos:ConceptScheme](https://www.w3.org/TR/skos-reference/#L2457) | [void:Dataset](./index.md) |   | EC2U Knowledge Hub classification taxonomy  |
-| [skos:hasTopConcept](https://www.w3.org/TR/skos-reference/#L2457) | [skos:Concept](#concept)   | * | links to top-level concepts in the taxonomy |
+| term                                                              | type                     | # | description                                 |
+|-------------------------------------------------------------------|--------------------------|---|---------------------------------------------|
+| [skos:ConceptScheme](https://www.w3.org/TR/skos-reference/#L2457) | [ec2u:Asset](assets.md)  |   | EC2U Knowledge Hub classification taxonomy  |
+| [skos:hasTopConcept](https://www.w3.org/TR/skos-reference/#L2457) | [skos:Concept](#concept) | * | links to top-level concepts in the taxonomy |
 
 ## Concept
 

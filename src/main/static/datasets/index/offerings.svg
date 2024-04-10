@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-519 391 609 438" width="609" height="438">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
+        xmlns="http://www.w3.org/2000/svg" viewBox="-519 391 609 438" width="609" height="438">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -41,7 +41,7 @@
             </g>
         </marker>
     </defs>
-    <g id="offerings" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <g id="offerings" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none">
         <title>offerings</title>
         <rect fill="white" x="-519" y="391" width="609" height="438"/>
         <g id="offerings_Layer_1">
@@ -112,9 +112,9 @@
                         <rect x="-419.74647" y="419.52756" width="72.498" height="17.261063" fill="white"/>
                         <rect x="-419.74647" y="419.52756" width="72.498" height="17.261063" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(-410.3898 422.6581)" fill="black">
+                        <text transform="translate(-410.3898 422.6581)" fill="#a5a5a5">
                             <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
-                                    fill="black" x="0" y="9">schema:Thing
+                                    fill="#a5a5a5" x="0" y="9">schema:Thing
                             </tspan>
                         </text>
                     </a>

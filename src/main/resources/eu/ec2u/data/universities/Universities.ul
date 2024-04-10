@@ -3,7 +3,6 @@ prefix ec2u: <https://data.ec2u.eu/terms/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix wdt: <http://www.wikidata.org/prop/direct/>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 prefix org: <http://www.w3.org/ns/org#>
 PREFIX void: <http://rdfs.org/ns/void#>

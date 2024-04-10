@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.datasets;
+package eu.ec2u.data.assets;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
@@ -28,78 +28,74 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.VOID;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Constraint.any;
 import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
-import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.create;
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.assets.Assets.Asset;
+import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.localized;
 
-public final class Datasets extends Delegator {
+public final class Assets extends Delegator {
 
-    public static final IRI Context=item("/datasets/");
+    private static final IRI Context=item("/assets/");
 
 
-    public static Shape Datasets() {
-        return Dataset(Dataset());
+    private static final IRI Asset=term("Asset");
+
+
+    public static Shape Assets() {
+        return Dataset(Asset());
     }
 
-    public static Shape Dataset() {
-        return shape(VOID.DATASET, Asset(),
+    public static Shape Asset() {
+        return shape(Asset, Resource(),
 
-                property(VOID.ENTITIES, optional(integer())),
-                property(VOID.ROOT_RESOURCE, multiple(Resource())),
+                property(DCTERMS.TITLE, required(localized())),
+                property(DCTERMS.ALTERNATIVE, optional(localized())),
+                property(DCTERMS.DESCRIPTION, optional(localized())),
 
-                property(RDFS.ISDEFINEDBY, optional(Resource()))
+                property(DCTERMS.CREATED, optional(date())),
+                property(DCTERMS.ISSUED, optional(date())),
+                property(DCTERMS.MODIFIED, optional(date())),
 
-        );
-    }
+                property(DCTERMS.RIGHTS, required(string())),
+                property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
+                property(DCTERMS.LICENSE, multiple(Resource())),
 
-    public static Shape Dataset(final Shape shape) {
+                property(DCTERMS.SOURCE, optional(Resource())),
+                property(DCTERMS.PUBLISHER, optional(Organization())),
 
-        if ( shape == null ) {
-            throw new NullPointerException("null shape");
-        }
-
-        return shape(Dataset(),
-
-                property("members", RDFS.MEMBER, shape)
+                property(DCTERMS.EXTENT, optional(integer()))
 
         );
     }
 
 
     public static void main(final String... args) {
-        exec(() -> create(Context, Datasets.class, Dataset()));
+        exec(() -> create(Context, Assets.class, Asset()));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Datasets() {
-        delegate(handler(new Driver(Datasets()), new Worker()
+    public Assets() {
+        delegate(handler(new Driver(Assets()), new Worker()
 
                 .get(new Relator(frame(
 
                         field(ID, iri()),
-                        field(RDFS.LABEL, literal("Datasets", "en")),
+                        field(RDFS.LABEL, literal("Assets", "en")),
 
                         field(RDFS.MEMBER, query(
 
                                 frame(
                                         field(ID, iri()),
                                         field(RDFS.LABEL, literal("", WILDCARD))
-                                ),
-
-                                filter(DCTERMS.ISSUED, any())
+                                )
 
                         ))
 
