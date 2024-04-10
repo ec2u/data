@@ -14,7 +14,7 @@ housekeeping properties.
 
 ## Resource
 
-> **⚠️** The resource data model is not intended to be used in isolation but only to provide base
+> **⚠️** The `rdfs:Resource` data model is not intended to be used in isolation but only to provide base
 > definitions factoring generic properties shared by the specialised models defined by each [dataset](./index.md).
 
 | term                                                                    | type                               | #    | definition                                                                                                                                  |

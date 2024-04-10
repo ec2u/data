@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Book, Books } from "@ec2u/data/pages/book";
+import { Books } from "@ec2u/data/pages/book";
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -28,7 +28,7 @@ import { useAsset } from "@metreeca/data/hooks/asset";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { DoneIcon, EyeIcon, HelpCircleIcon, InfoIcon } from "@metreeca/view/widgets/icon";
+import { EyeIcon, HelpCircleIcon } from "@metreeca/view/widgets/icon";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
@@ -59,7 +59,7 @@ export const Dataset=immutable({
 
 	issued: optional(date),
 
-	rights: required(string),
+	rights: optional(string),
 	accessRights: optional(local),
 
 	license: multiple({
@@ -142,7 +142,7 @@ export function DataMeta() {
 				"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
 				"Source": source && <ToolLink>{source}</ToolLink>,
 
-				"Rights": <span>{rights}</span>,
+				"Rights": rights && <span>{rights}</span>,
 
 				"License": license?.length && <ul>{license.map(license =>
 					<li key={license.id}><ToolLink>{license}</ToolLink></li>

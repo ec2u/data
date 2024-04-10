@@ -25,11 +25,11 @@ import com.metreeca.link.Shape;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.VOID;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
 import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.integer;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -62,7 +62,7 @@ public final class Assets extends Delegator {
                 property(DCTERMS.ISSUED, optional(date())),
                 property(DCTERMS.MODIFIED, optional(date())),
 
-                property(DCTERMS.RIGHTS, required(string())),
+                property(DCTERMS.RIGHTS, optional(string())),
                 property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
                 property(DCTERMS.LICENSE, multiple(Resource())),
 

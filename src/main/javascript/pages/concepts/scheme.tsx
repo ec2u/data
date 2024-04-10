@@ -48,7 +48,7 @@ export const Scheme=immutable({
 
 	source: optional(id),
 
-	rights: required(string),
+	rights: optional(string),
 	accessRights: optional(local),
 
 	license: multiple({
@@ -94,7 +94,7 @@ export function DataScheme() {
 				"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
 				"Source": source && <ToolLink>{source}</ToolLink>,
 
-				"Rights": <span>{rights}</span>,
+				"Rights": rights && <span>{rights}</span>,
 
 				"License": license?.length && <ul>{license.map(license =>
 					<li key={license.id}><ToolLink>{license}</ToolLink></li>

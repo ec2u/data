@@ -16,17 +16,26 @@
 
 package eu.ec2u.data.things;
 
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
-import static com.metreeca.link.Frame.iri;
+import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.decimal;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.localized;
 
@@ -35,7 +44,7 @@ import static eu.ec2u.data.resources.Resources.localized;
  *
  * @see <a href="https://schema.org/">Schema.org</a>
  */
-public final class Schema {
+public final class Schema extends Delegator {
 
     private static final String Namespace="https://schema.org/";
     private static final IRI Context=item("/things/");
@@ -91,7 +100,7 @@ public final class Schema {
                 property(url, multiple(id())),
                 property(identifier, multiple(string())),
                 property(name, optional(localized())),
-                property(image, optional(id())),
+                property(image, optional(Resource())),
                 property(description, optional(localized())),
                 property(disambiguatingDescription, optional(localized()))
 
@@ -110,8 +119,8 @@ public final class Schema {
         return shape(Organization, Thing(),
 
                 property(legalName, optional(localized())),
-                property(email, optional(string())),
-                property(telephone, optional(string())),
+                property(email, multiple(string())),
+                property(telephone, multiple(string())),
 
                 property(location, optional(Location()))
 
@@ -201,6 +210,27 @@ public final class Schema {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Schema() { }
+    public Schema() {
+        delegate(handler(new Driver(Dataset(Thing())), new Worker()
 
+                .get(new Relator(frame(
+
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("Schema Things", "en")),
+
+                        field(RDFS.MEMBER, query(
+
+                                frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", WILDCARD))
+
+                                )
+
+                        ))
+
+                )))
+
+        ));
+    }
 }
