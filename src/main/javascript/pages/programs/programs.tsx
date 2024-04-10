@@ -131,7 +131,7 @@ export function DataPrograms() {
 
 			}</ToolCard>
 
-		}>{programs}</ToolSheet>;
+		}>{programs}</ToolSheet>
 
 	</DataPage>;
 }

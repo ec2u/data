@@ -113,6 +113,7 @@ public final class Resources extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", WILDCARD)),
 
+                                                field(reverse(RDFS.MEMBER), iri()),
                                                 field(partner, iri())
 
                                         )

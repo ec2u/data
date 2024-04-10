@@ -16,6 +16,10 @@
 
 package eu.ec2u.data.offerings;
 
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.concepts.Concepts;
@@ -23,18 +27,23 @@ import eu.ec2u.data.concepts.ESCO;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.ISCED2011;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import static com.metreeca.link.Frame.iri;
+import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.decimal;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.localized;
 import static eu.ec2u.data.things.Schema.*;
 
-public final class Offerings {
+public final class Offerings extends Delegator {
 
     public static final IRI Context=item("/offerings/");
     public static final IRI Types=iri(Concepts.Context, "/offering-types");
@@ -85,6 +94,27 @@ public final class Offerings {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Offerings() { }
+    public Offerings() {
+        delegate(handler(new Driver(Dataset(LearningResource())), new Worker()
 
+                .get(new Relator(frame(
+
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("EC2U Knowledge Hub Resources", "en")),
+
+                        field(RDFS.MEMBER, query(
+
+                                frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", WILDCARD))
+
+                                )
+
+                        ))
+
+                )))
+
+        ));
+    }
 }

@@ -18,11 +18,13 @@ import { Universities } from "@ec2u/data/pages/universities/universities";
 import { ec2u } from "@ec2u/data/views";
 import { DataName } from "@ec2u/data/views/name";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, optional, required } from "@metreeca/core";
+import { immutable, optional, required } from "@metreeca/core";
+import { date } from "@metreeca/core/date";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
 import { year } from "@metreeca/core/year";
+import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
@@ -52,17 +54,6 @@ export const University=immutable({
 	city: optional({
 		id: required(id),
 		label: required(local)
-	}),
-
-	scope: multiple({
-
-		dataset: {
-			id: required(id),
-			label: required(local)
-		},
-
-		entities: required(integer)
-
 	})
 
 });
@@ -70,7 +61,29 @@ export const University=immutable({
 
 export function DataUniversity() {
 
+	const [route]=useRouter();
+
 	const [university]=useResource(University);
+
+	const [stats]=useResource(immutable({
+
+		id: required("/resources/"),
+
+		members: [{
+
+			"dataset": required({
+				id: required(id),
+				label: required(local),
+				issued: optional(date)
+			}),
+
+			"resources=count:": required(integer),
+
+			"?partner": [route]
+
+		}]
+
+	}));
 
 	return <DataPage name={[Universities, university]}
 
@@ -79,8 +92,7 @@ export function DataUniversity() {
 			inception,
 			students,
 			country,
-			city,
-			scope
+			city
 
 		}) => <>
 
@@ -98,16 +110,17 @@ export function DataUniversity() {
 
 			}}</ToolInfo>
 
-			<ToolInfo>{scope?.slice()
-				?.sort(({ entities: x }, { entities: y }) => x - y)
-				?.map(({ dataset, entities }) => ({
+			<ToolInfo>{stats?.members?.slice()
+				?.filter(({ dataset }) => dataset?.issued)
+				?.sort(({ resources: x }, { resources: y }) => x - y)
+				?.map(({ dataset, resources }) => ({
 
 					label: <ToolLink filter={[dataset, { partner: university }]}>{{
 						id: dataset.id,
 						label: ec2u(dataset.label)
 					}}</ToolLink>,
 
-					value: toIntegerString(entities)
+					value: toIntegerString(resources)
 
 				}))
 

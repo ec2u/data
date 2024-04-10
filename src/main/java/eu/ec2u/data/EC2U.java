@@ -31,6 +31,7 @@ import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
+import eu.ec2u.data.offerings.Offerings;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -123,6 +124,7 @@ public final class EC2U extends Delegator {
                 .path("/actors/*", new Actors())
                 .path("/things/*", new Schema())
                 .path("/events/*", new Events())
+                .path("/offerings/*", new Offerings())
                 .path("/programs/*", new Programs())
                 .path("/courses/*", new Courses())
         );

@@ -27,7 +27,7 @@
             </g>
         </marker>
     </defs>
-    <g id="overview" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
+    <g id="overview" stroke-opacity="1" stroke-dasharray="none" stroke="none" fill-opacity="1" fill="none">
         <title>overview</title>
         <rect fill="white" x="27" y="-6" width="316" height="598"/>
         <g id="overview_Layer_1">

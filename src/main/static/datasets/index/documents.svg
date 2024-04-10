@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
-        version="1.1" viewBox="-81 68 430 310" width="430" height="310">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-81 68 430 310" width="430" height="310">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="documents" stroke-dasharray="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke="none">
+    <g id="documents" stroke-opacity="1" stroke-dasharray="none" stroke="none" fill-opacity="1" fill="none">
         <title>documents</title>
         <rect fill="white" x="-81" y="68" width="430" height="310"/>
         <g id="documents_Layer_1">
@@ -122,8 +122,8 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_131">
-                <rect x="171.64652" y="226.36614" width="73.69775" height="13" fill="white"/>
-                <text transform="translate(174.64652 227.36614)" fill="black">
+                <rect x="171.64653" y="226.36614" width="73.69775" height="13" fill="white"/>
+                <text transform="translate(174.64653 227.36614)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">dct:publisher 0..1</tspan>
                 </text>
             </g>
@@ -147,8 +147,8 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_173">
-                <rect x="176.12794" y="174.09448" width="70.34473" height="24" fill="white"/>
-                <text transform="translate(179.12794 175.09448)" fill="black">
+                <rect x="176.12793" y="174.09448" width="70.34473" height="24" fill="white"/>
+                <text transform="translate(179.12793 175.09448)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="4.9658203" y="9">dct:creator 0..1</tspan>
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">dct:contributor *</tspan>
                 </text>
