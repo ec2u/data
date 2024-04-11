@@ -16,7 +16,7 @@ with [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-te
 
 | term                                                                                                              | type                                                 | # | definition                                                                                          |
 |-------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|---|-----------------------------------------------------------------------------------------------------|
-| **ec2u:Unit**                                                                                                     | [org:FormalOrganization](agents#formal-organization) |   | a [university](universities.md) organizational unit involved with or supporting research activities |
+| **ec2u:Unit**                                                                                                     | [org:OrganizationalUnit](agents#organizational-unit) |   | a [university](universities.md) organizational unit involved with or supporting research activities |
 | [org:classification](https://www.w3.org/TR/vocab-org/#org:classification)                                         | [skos:Concept](concepts.md#concept)                  | * | links to organization types in the [EC2U Organization Types](/concepts/organizations) taxonomy      |
 | [dct:subject](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/subject) | [skos:Concept](concepts.md#concept)                  | * | links to related research topics in the [EuroSciVoc](/concepts/euroscivoc) taxonomy                 |
 
