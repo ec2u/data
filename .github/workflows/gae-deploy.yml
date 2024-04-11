@@ -5,8 +5,9 @@ on:
   push:
 
     branches:
-      - 'work'
       - 'main'
+      - 'next'
+      - 'work'
 
 jobs:
 

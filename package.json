@@ -23,9 +23,9 @@
       "build": "vite build"
     },
     "dependencies": {
-      "@metreeca/core": "^0.0.12",
-      "@metreeca/data": "^0.0.12",
-      "@metreeca/view": "^0.0.12",
+      "@metreeca/core": "^0.3.0-0",
+      "@metreeca/data": "^0.3.0-0",
+      "@metreeca/view": "^0.3.0-0",
       "react": "^18.2.0",
       "react-dom": "^18.2.0"
     },
