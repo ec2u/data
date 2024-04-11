@@ -23,6 +23,7 @@ import { sortFrames } from "@metreeca/core/frame";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
@@ -30,7 +31,6 @@ import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
-import { string } from "../../../../../../../../Products/Tool/code/core/string";
 
 
 export const Scheme=immutable({

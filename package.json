@@ -1,40 +1,39 @@
 {
-    "private": true,
+  "private": true,
   "type": "module",
   "name": "@ec2u/data",
-    "version": "0.0.0",
-    "description": "EC2U Knowledge Hub",
-    "homepage": "https://github.com/ec2u/data",
-    "repository": "github:ec2u/data",
-    "bugs": {
-        "url": "https://github.com/ec2u/data/issues",
-        "email": "cc@ml.ec2u.eu"
-    },
-    "license": "Apache-2.0",
-    "author": {
-        "name": "EC2U Connect Centre",
-        "email": "cc@ml.ec2u.eu",
-        "url": "https://www.ec2u.eu/"
-    },
-    "scripts": {
-      "clean": "rm -rf node_modules",
-      "setup": "npm install",
-      "start": "vite --open --host",
-      "build": "vite build"
-    },
-    "dependencies": {
-      "@metreeca/core": "^0.3.0-0",
-      "@metreeca/data": "^0.3.0-0",
-      "@metreeca/view": "^0.3.0-0",
-      "react": "^18.2.0",
-      "react-dom": "^18.2.0"
-    },
-    "devDependencies": {
-      "@types/react": "^18.2.65",
-      "@types/react-dom": "^18.2.21",
-      "@vitejs/plugin-react": "^4.2.1",
-      "postcss-nesting": "^12.1.0",
-      "typescript": "^5.4.2",
-      "vite": "^5.1.6"
-    }
+  "description": "EC2U Knowledge Hub",
+  "homepage": "https://github.com/ec2u/data",
+  "repository": "github:ec2u/data",
+  "bugs": {
+    "url": "https://github.com/ec2u/data/issues",
+    "email": "cc@ml.ec2u.eu"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "EC2U Connect Centre",
+    "email": "cc@ml.ec2u.eu",
+    "url": "https://www.ec2u.eu/"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules",
+    "setup": "npm install",
+    "start": "vite --open --host",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@metreeca/core": "^0.3.0-0",
+    "@metreeca/data": "^0.3.0-0",
+    "@metreeca/view": "^0.3.0-0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.65",
+    "@types/react-dom": "^18.2.21",
+    "@vitejs/plugin-react": "^4.2.1",
+    "postcss-nesting": "^12.1.0",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6"
+  }
 }

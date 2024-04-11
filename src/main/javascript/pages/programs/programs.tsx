@@ -17,6 +17,7 @@
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { duration, toDurationString } from "@metreeca/core/duration";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -35,7 +36,6 @@ import { ToolCard } from "@metreeca/view/widgets/card";
 import { GraduationCap } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
-import { duration, toDurationString } from "../../../../../../../../Products/Tool/code/core/duration";
 
 
 export const Programs=immutable({

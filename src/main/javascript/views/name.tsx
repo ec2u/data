@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { Frame } from "@metreeca/core/frame";
+import { isLocal, local, toLocalString } from "@metreeca/core/local";
+import { isString } from "@metreeca/core/string";
 import * as React from "react";
-import { Frame } from "../../../../../../../Products/Tool/code/core/frame";
-import { isLocal, local, toLocalString } from "../../../../../../../Products/Tool/code/core/local";
-import { isString } from "../../../../../../../Products/Tool/code/core/string";
 
 export function DataName({
 
