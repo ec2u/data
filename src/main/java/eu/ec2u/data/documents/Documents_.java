@@ -34,10 +34,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.util.Values;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.FOAF;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -275,7 +272,7 @@ final class Documents_ {
 
                                 field(ID, EC2U.item(Organizations.Context, university, lower(id))),
 
-                                // !!! field(RDF.TYPE, _Publisher),
+                                field(RDF.TYPE, ORG.ORGANIZATION),
 
                                 field(SKOS.PREF_LABEL, nameEnglish.map(v -> literal(v, "en"))),
                                 field(SKOS.PREF_LABEL, nameLocal.map(v -> literal(v, university.Language))),
