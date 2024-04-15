@@ -66,6 +66,18 @@ ec2u:University a owl:Class ;
     org:identifier "uni-jena.de"^^<https://github.com/refeds/schac> ;
     rdfs:seeAlso wd:Q154561 .
 
+#</universities/linz> a ec2u:University ;
+#    skos:prefLabel
+#        "Johannes Kepler Universität Linz (JKU)"@de,
+#        "Johannes Kepler University Linz (JKU)"@en ;
+#    skos:altLabel "Linz"@de, "Linz"@en ;
+#    skos:definition
+#        """More than just a university: The Johannes Kepler University Linz (JKU) inspires passion among its 24,000 enrolled students to pursue higher education in the areas of law, business and economics, social sciences, engineering, natural sciences, and medicine. Be it AI, medical technology, sustainable polymers, or digitalization, researchers and scholars at the JKU are not only mindful about social impact, but also the welfare of both mankind and the environment. The JKU doesn’t just dream about the future, we are engaging our students and conducting groundbreaking research in an effort to actively create the future, as well as pursuing an ambitious goal to be climate-neutral by 2030. Welcome to the JKU, where dreams can take flight and soar!""" ;
+#    foaf:homepage <https://www.jku.at/en>, <https://www.jku.at> ;
+#    foaf:depiction </blobs/linz.png> ;
+#    org:identifier "jku.at"^^<https://github.com/refeds/schac> ;
+#    rdfs:seeAlso wd:QXXXX .
+
 </universities/pavia> a ec2u:University ;
     skos:prefLabel
         "University of Pavia"@en,
@@ -107,4 +119,5 @@ ec2u:University a owl:Class ;
     foaf:depiction </blobs/turku.png> ;
     org:identifier "utu.fi"^^<https://github.com/refeds/schac> ;
     rdfs:seeAlso wd:Q501841 .
+
 

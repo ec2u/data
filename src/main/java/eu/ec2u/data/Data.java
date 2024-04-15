@@ -120,14 +120,6 @@ public final class Data extends Delegator {
 
                 new CORS(),
 
-                new Publisher() // static assets published by GAE
-
-                        .fallback("/index.html"),
-
-                new Wrapper()
-
-                        .before(request -> request.base(EC2U.BASE)), // define canonical base
-
                 new Router()
 
                         .path("/graphs", new Graphs().query())
@@ -140,10 +132,18 @@ public final class Data extends Delegator {
 
                                 new SPARQL().query()
 
-                        ))
+                        )),
 
+                new Publisher() // static assets published by GAE
+
+                        .fallback("/index.html"),
+
+                new Wrapper() // after publisher
+
+                        .before(request -> request.base(EC2U.BASE)), // define canonical base
+
+                new Router()
                         .path("/cron/*", new Cron())
-
                         .path("/*", new EC2U())
 
         ));
