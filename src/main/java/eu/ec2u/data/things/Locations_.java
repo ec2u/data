@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.locations;
+package eu.ec2u.data.things;
 
 import com.metreeca.http.rdf.Frame;
 
-import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import static com.metreeca.http.rdf.Frame.frame;

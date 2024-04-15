@@ -101,26 +101,26 @@ public final class Resources extends Delegator {
     public Resources() {
         delegate(handler(new Driver(Resources()), new Worker()
 
-                        .get(new Relator(frame(
+                .get(new Relator(frame(
 
-                                field(ID, iri()),
-                                field(RDFS.LABEL, literal("EC2U Knowledge Hub Resources", "en")),
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("EC2U Knowledge Hub Resources", "en")),
 
-                                field(RDFS.MEMBER, query(
+                        field(RDFS.MEMBER, query(
 
-                                        frame(
+                                frame(
 
-                                                field(ID, iri()),
-                                                field(RDFS.LABEL, literal("", WILDCARD)),
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", WILDCARD)),
 
-                                                field(reverse(RDFS.MEMBER), iri()),
-                                                field(partner, iri())
+                                        field(reverse(RDFS.MEMBER), iri()),
+                                        field(partner, iri())
 
-                                        )
+                                )
 
-                                ))
+                        ))
 
-                        )))
+                )))
 
         ));
     }

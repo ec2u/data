@@ -25,7 +25,7 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.locations.Locations;
+import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;

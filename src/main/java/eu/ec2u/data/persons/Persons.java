@@ -19,7 +19,6 @@ package eu.ec2u.data.persons;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
@@ -27,8 +26,7 @@ import org.eclipse.rdf4j.model.vocabulary.ORG;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.term;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.agents.Agents.Agent;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 
@@ -53,20 +51,13 @@ public final class Persons extends Delegator {
     }
 
 
+    public static void main(final String... args) {
+        exec(() -> create(Context, Persons.class));
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Persons() { }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(final String... args) {
-        exec(Persons::create);
-    }
-
-
-    public static void create() {
-        EC2U.create(Context, Persons.class);
-    }
 
 }

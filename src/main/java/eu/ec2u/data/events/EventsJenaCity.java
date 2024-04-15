@@ -30,8 +30,8 @@ import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.locations.Locations;
 import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;

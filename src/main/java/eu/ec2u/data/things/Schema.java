@@ -54,7 +54,9 @@ public final class Schema extends Delegator {
      * Creates a term in the schema.org namespace.
      *
      * @param id the identifier of the term to be created
+     *
      * @return the schema.org term identified by {@code id}
+     *
      * @throws NullPointerException if {@code id} is null
      */
     public static IRI schema(final String id) {
@@ -92,6 +94,7 @@ public final class Schema extends Delegator {
      * Creates a thing shape.
      *
      * @return a thing shape including {@code labels} constraints for textual labels
+     *
      * @throws NullPointerException if {@code labels} is nul or contains null elements
      */
     public static Shape Thing() {

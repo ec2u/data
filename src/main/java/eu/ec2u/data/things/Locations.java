@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.locations;
+package eu.ec2u.data.things;
 
 import org.eclipse.rdf4j.model.IRI;
 
