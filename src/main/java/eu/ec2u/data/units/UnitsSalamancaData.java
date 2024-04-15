@@ -148,7 +148,7 @@ public final class UnitsSalamancaData implements Runnable {
 
 
                     field(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
-                            .flatMap(v -> split(v, ','))
+                            .flatMap(v -> split(v, "[,;]"))
                             .map(v -> frame(
                                     field(ID, EC2U.item(BranchScheme, v)),
                                     field(RDF.TYPE, SKOS.CONCEPT),
@@ -159,7 +159,7 @@ public final class UnitsSalamancaData implements Runnable {
                     ),
 
                     field(DCTERMS.SUBJECT, json.string("RIS3").stream()
-                            .flatMap(v -> split(v, ','))
+                            .flatMap(v -> split(v, "[,;]"))
                             .map(v -> frame(
                                     field(ID, EC2U.item(RIS3Scheme, v)),
                                     field(RDF.TYPE, SKOS.CONCEPT),
