@@ -21,6 +21,7 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
+import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import eu.ec2u.data.concepts.Concepts;
@@ -28,7 +29,9 @@ import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -145,6 +148,37 @@ public final class Events extends Delegator {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Events() {
+
+        final Frame ResourceModel=frame(
+                field(ID, iri()),
+                field(RDFS.LABEL, literal("", WILDCARD))
+        );
+
+        final Frame ThingModel=frame(
+
+                field(ID, iri()),
+
+                field(url, iri()),
+                field(name, literal("", WILDCARD)),
+                field(description, literal("", WILDCARD)),
+                field(disambiguatingDescription, literal("", WILDCARD))
+
+        );
+
+        final Frame PostalAddressModel=frame(ThingModel,
+
+                field(addressCountry, ResourceModel),
+                field(addressRegion, ResourceModel),
+                field(addressLocality, ResourceModel),
+
+                field(postalCode, literal("")),
+                field(streetAddress, literal("")),
+                field(email, literal("")),
+                field(telephone, literal(""))
+
+        );
+
+
         delegate(new Router()
 
                 .path("/", handler(new Driver(Events()), new Worker()
@@ -156,9 +190,40 @@ public final class Events extends Delegator {
 
                                 field(RDFS.MEMBER, query(
 
-                                        frame(
-                                                field(ID, iri()),
-                                                field(RDFS.LABEL, literal("", WILDCARD))
+                                        frame(ThingModel,
+
+                                                field(startDate, literal(OffsetDateTime.now())),
+                                                field(endDate, literal(OffsetDateTime.now())),
+
+                                                field(inLanguage, literal("*")),
+                                                field(isAccessibleForFree, literal(false)),
+
+                                                field(publisher),
+                                                field(organizer),
+
+                                                field(location, frame(
+
+                                                        field(XSD.STRING, literal("")),
+
+                                                        field(Place, frame(ThingModel,
+
+                                                                field(latitude, literal(Frame.decimal(0))),
+                                                                field(longitude, literal(Frame.decimal(0))),
+
+                                                                field(address, PostalAddressModel)
+
+                                                        )),
+
+                                                        field(PostalAddress, PostalAddressModel),
+                                                        field(VirtualLocation, ThingModel)
+
+                                                )),
+
+                                                field(about, ResourceModel),
+                                                field(audience, ResourceModel),
+                                                field(eventAttendanceMode, ResourceModel),
+                                                field(eventStatus, ResourceModel)
+
                                         )
 
                                 ))
