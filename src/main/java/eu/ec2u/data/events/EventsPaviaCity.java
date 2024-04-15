@@ -33,7 +33,6 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
@@ -44,6 +43,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
@@ -77,7 +77,7 @@ public final class EventsPaviaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final ZonedDateTime now=ZonedDateTime.now(UTC);
+    private final Instant now=Instant.now();
 
 
     @Override public void run() {
@@ -164,9 +164,9 @@ public final class EventsPaviaCity implements Runnable {
                                     .map(focus -> frame(
 
                                             field(ID, item(Events.Context, url.stringValue())),
+                                            field(TYPE, Event),
 
-                                            field(RDF.TYPE, Event),
-
+                                            field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
                                             field(partner, Pavia.Id),
 
                                             field(Schema.url, url),

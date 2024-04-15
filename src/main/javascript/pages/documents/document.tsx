@@ -145,13 +145,13 @@ export function DataDocument() {
 
 				"Title": <span>{toLocalString(label)}</span>,
 
-				"Web": url?.length && url.map(item =>
-					<a key={item} href={item}>{toIdString(item, { compact: true })}</a>
-				),
+				"Web": url?.length && <ul>{url.map(item =>
+					<li key={item}><a href={item}>{toIdString(item, { compact: true })}</a></li>
+				)}</ul>,
 
-				"Language": language?.length && language.map(item => <span
-					key={item}>{toLocalString(Languages[item])}</span>)
-
+				"Language": language?.length && <ul>{language.map(item =>
+					<li key={item}><span>{toLocalString(Languages[item])}</span></li>
+				)}</ul>
 			}}</ToolInfo>
 
 			<ToolInfo>{{

@@ -19,7 +19,6 @@ import { ec2u } from "@ec2u/data/views";
 import { DataName } from "@ec2u/data/views/name";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required } from "@metreeca/core";
-import { date } from "@metreeca/core/date";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -74,12 +73,12 @@ export function DataUniversity() {
 			"dataset": required({
 				id: required(id),
 				label: required(local),
-				issued: optional(date)
 			}),
 
 			"resources=count:": required(integer),
 
-			"?partner": [route]
+			"?partner": [route],
+			"?dataset.issued": []
 
 		}]
 
@@ -111,7 +110,6 @@ export function DataUniversity() {
 			}}</ToolInfo>
 
 			<ToolInfo>{stats?.members?.slice()
-				?.filter(({ dataset }) => dataset?.issued)
 				?.sort(({ resources: x }, { resources: y }) => x - y)
 				?.map(({ dataset, resources }) => ({
 

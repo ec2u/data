@@ -61,11 +61,11 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.lang.String.format;
-import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -95,10 +95,8 @@ public final class EventsTurkuUniversity implements Runnable {
 
 
     private static Literal instant(final String timestamp, final Instant instant) {
-        return literal(OffsetDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.TimeZone.getRules().getOffset(instant))
-                .truncatedTo(ChronoUnit.SECONDS)
-                .withOffsetSameInstant(UTC)
+        return literal(LocalDateTime.parse(timestamp, SQL_TIMESTAMP)
+                .toInstant(Turku.TimeZone.getRules().getOffset(instant))
         );
     }
 
@@ -228,19 +226,18 @@ public final class EventsTurkuUniversity implements Runnable {
                 field(Schema.description, description),
                 field(Schema.disambiguatingDescription, excerpt),
 
-                field(startDate, json.string("start_time").map(timestamp2 -> datetime(timestamp2, now))),
-                field(endDate, json.string("end_time").map(timestamp3 -> datetime(timestamp3, now))),
+                field(startDate, json.string("start_time").map(timestamp -> datetime(timestamp, now))),
+                field(endDate, json.string("end_time").map(timestamp -> datetime(timestamp, now))),
 
-                // field(DCTERMS.CREATED, json.string("published").map(timestamp -> instant(timestamp, now))),
-                // field(DCTERMS.MODIFIED, json.string("updated").map(timestamp1 -> instant(timestamp1, now))),
-
+                field(dateCreated, json.string("published").map(timestamp -> instant(timestamp, now))),
+                field(dateModified, json.string("updated").map(timestamp -> instant(timestamp, now))),
+                field(updated, json.string("updated").map(timestamp -> instant(timestamp, now)).orElseGet(() -> literal(now))),
 
                 field(partner, Turku.Id),
                 field(publisher, Publisher),
                 field(organizer, json.paths("additional_information.contact").optMap(this::organizer)),
 
                 field(location, json.path("location").flatMap(this::location))
-
 
         ));
 

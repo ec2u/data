@@ -50,6 +50,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities.Universities.University;
@@ -124,6 +125,9 @@ public final class EventsJenaUniversity implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Instant now=Instant.now();
+
 
     @Override public void run() {
         update(connection -> Xtream.from(Publishers)
@@ -243,22 +247,9 @@ public final class EventsJenaUniversity implements Runnable {
                         .map(text -> literal(text, Jena.Language))
                 ),
 
-                // .value(DCTERMS.CREATED, focus.value(dateCreated)
-                //         .flatMap(Values::literal)
-                //         .map(Literal::temporalAccessorValue)
-                //         .map(OffsetDateTime::from)
-                //         .map(v -> v.withOffsetSameInstant(UTC))
-                //         .map(Values::literal)
-                // )
-                //
-                // .value(DCTERMS.MODIFIED, focus.value(dateModified)
-                //         .flatMap(Values::literal)
-                //         .map(Literal::temporalAccessorValue)
-                //         .map(OffsetDateTime::from)
-                //         .map(v -> v.withOffsetSameInstant(UTC))
-                //         .map(Values::literal)
-                //         .orElseGet(() -> literal(now))
-                // )
+                field(dateCreated, focus.seq(dateCreated).value(asInstant()).map(Frame::literal)),
+                field(dateModified, focus.seq(dateModified).value(asInstant()).map(Frame::literal)),
+                field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
 
                 field(startDate, datetime(focus.seq(startDate).value(asString()))),
                 field(endDate, datetime(focus.seq(endDate).value(asString()))),

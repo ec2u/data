@@ -47,9 +47,9 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Poitiers;
-import static java.time.ZoneOffset.UTC;
 
 public final class EventsPoitiersCityGrand implements Runnable {
 
@@ -79,7 +79,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final OffsetDateTime now=Instant.now().atOffset(UTC);
+    private final Instant now=Instant.now();
 
 
     @Override public void run() {
@@ -140,7 +140,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
                     field(ID, iri(Events.Context, md5(url))),
 
-                    field(RDF.TYPE, Events.Event),
+                    field(RDF.TYPE, Event),
 
                     field(Schema.url, iri(url)),
                     field(Schema.name, name),
@@ -151,8 +151,8 @@ public final class EventsPoitiersCityGrand implements Runnable {
                     field(startDate, datetime(item, "ev:startdate")),
                     field(endDate, datetime(item, "ev:enddate")),
 
-                    // field(DCTERMS.CREATED, pubDate),
-                    // field(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now))),
+                    field(dateCreated, pubDate),
+                    field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
                     field(Schema.about, category(item)),
 

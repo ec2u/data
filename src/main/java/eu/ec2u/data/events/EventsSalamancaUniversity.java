@@ -33,6 +33,7 @@ import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.*;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -46,9 +47,10 @@ import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.time.ZoneOffset.UTC;
@@ -134,40 +136,40 @@ public final class EventsSalamancaUniversity implements Runnable {
                             .map(Uid::getValue)
                             .filter(not(String::isEmpty));
 
-                    final Optional<Value> label=Optional.ofNullable(event.getSummary())
+                    final Optional<Literal> label=Optional.ofNullable(event.getSummary())
                             .map(Summary::getValue)
                             .filter(not(String::isEmpty))
                             .map(value -> literal(value, Salamanca.Language));
 
-                    final Optional<Value> description=Optional.ofNullable(event.getDescription())
+                    final Optional<Literal> description=Optional.ofNullable(event.getDescription())
                             .map(Description::getValue)
                             .filter(not(String::isEmpty))
                             .map(Untag::untag)
                             .map(value -> literal(value, Salamanca.Language));
 
-                    final Optional<Value> disambiguatingDescription=description
+                    final Optional<Literal> disambiguatingDescription=description
                             .map(Value::stringValue)
                             .map(text -> Strings.clip(text, TextLength))
                             .map(value -> literal(value, Salamanca.Language));
 
 
-                    final Optional<Value> created=Optional.ofNullable(event.getCreated())
+                    final Optional<Literal> created=Optional.ofNullable(event.getCreated())
                             .map(Created::getDateTime)
                             .map(Date::toInstant)
                             .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
                             .map(Frame::literal);
 
-                    final Optional<Value> lastModified=Optional.ofNullable(event.getLastModified())
+                    final Optional<Literal> lastModified=Optional.ofNullable(event.getLastModified())
                             .map(LastModified::getDateTime)
                             .map(Date::toInstant)
                             .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
                             .map(Frame::literal);
 
-                    final Optional<Value> startDate=Optional.ofNullable(event.getStartDate())
+                    final Optional<Literal> startDate=Optional.ofNullable(event.getStartDate())
                             .map(start -> toOffsetDateTime(start.getDate(), start.getTimeZone()))
                             .map(Frame::literal);
 
-                    final Optional<Value> endDate=Optional.ofNullable(event.getEndDate())
+                    final Optional<Literal> endDate=Optional.ofNullable(event.getEndDate())
                             .map(end -> toOffsetDateTime(end.getDate(), end.getTimeZone()))
                             .map(Frame::literal);
 
@@ -178,7 +180,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                                     .orElseGet(Identifiers::md5)
                             )),
 
-                            field(RDF.TYPE, Events.Event),
+                            field(RDF.TYPE, Event),
 
                             field(Schema.url, url),
                             field(Schema.name, label),
@@ -188,8 +190,9 @@ public final class EventsSalamancaUniversity implements Runnable {
                             field(Events.startDate, startDate),
                             field(Events.endDate, endDate),
 
-                            // field(DCTERMS.CREATED, created),
-                            // field(DCTERMS.MODIFIED, lastModified.orElseGet(() -> literal(now))),
+                            field(dateCreated, created),
+                            field(dateModified, lastModified),
+                            field(updated, literal(lastModified.map(Literal::temporalAccessorValue).map(Instant::from).orElse(now))),
 
                             field(partner, Salamanca.Id),
                             field(publisher, Publisher)

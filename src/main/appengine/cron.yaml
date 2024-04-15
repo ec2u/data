@@ -42,14 +42,6 @@ cron:
     url: /cron/offerings/jena
     schedule: every day 00:00
 
-  #  - description: "offerings › pavia - nightly crawling"
-  #    url: /cron/offerings/pavia
-  #    schedule: every day 00:00
-
-  #  - description: "offerings › poitiers - nightly crawling"
-  #    url: /cron/offerings/poitiers
-  #    schedule: every day 00:00
-
   - description: "offerings › salamanca - nightly crawling"
     url: /cron/offerings/salamanca
     schedule: every day 00:00
@@ -114,10 +106,6 @@ cron:
 
   - description: "events › jena › city - nightly crawling"
     url: /cron/events/jena/city
-    schedule: every day 00:00
-
-  - description: "events › pavia › university - nightly crawling"
-    url: /cron/events/pavia/university
     schedule: every day 00:00
 
   - description: "events › pavia › borromeo - nightly crawling"

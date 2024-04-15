@@ -38,6 +38,7 @@ import org.eclipse.rdf4j.model.vocabulary.XSD;
 import javax.json.JsonValue;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -45,6 +46,7 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static com.metreeca.http.rdf.Values.guarded;
 import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.*;
 
@@ -54,6 +56,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities._Universities.Turku;
 import static java.time.ZoneOffset.UTC;
@@ -92,6 +95,9 @@ public final class EventsTurkuCity implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Instant now=Instant.now();
+
 
     @Override public void run() {
         update(connection -> {
@@ -213,15 +219,28 @@ public final class EventsTurkuCity implements Runnable {
                                     .map(Schema::schema)
                             ),
 
-                            field(startDate, json.string("start_time").map(v -> literal(v, XSD.DATETIME))),
-                            field(endDate, json.string("end_time").map(v -> literal(v, XSD.DATETIME))),
+                            field(startDate, json.string("start_time")
+                                    .map(guarded(OffsetDateTime::parse))
+                                    .map(Frame::literal)),
+
+                            field(endDate, json.string("end_time")
+                                    .map(guarded(OffsetDateTime::parse))
+                                    .map(Frame::literal)),
 
                             // field(DCTERMS.ISSUED, json.string("date_published").map(v -> literal(v, XSD.DATETIME))),
-                            // field(DCTERMS.CREATED, json.string("created_time").map(v -> literal(v, XSD.DATETIME))),
-                            // field(DCTERMS.MODIFIED, json.string("last_modified_time")
-                            //         .map(v -> literal(v, XSD.DATETIME))
-                            //         .orElseGet(() -> literal(now))
-                            // ),
+
+                            field(dateCreated, json.string("created_time").map(v -> literal(v, XSD.DATETIME))),
+                            field(dateModified, json.string("last_modified_time")
+                                    .map(guarded(OffsetDateTime::parse))
+                                    .map(Frame::literal)
+                            ),
+
+                            field(updated, literal(json.string("last_modified_time")
+                                    .or(() -> json.string("created_time"))
+                                    .map(guarded(OffsetDateTime::parse))
+                                    .map(Instant::from)
+                                    .orElse(now)
+                            )),
 
                             // !!! keywords
                             // !!! in_language

@@ -36,6 +36,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.universities._Universities.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 
@@ -43,7 +44,7 @@ public final class EventsIasiCityCultura implements Runnable {
 
     public static final IRI Context=iri(Events.Context, "/iasi/cultura");
 
-    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("https://culturainiasi.ro/evenimente-culturale/")),
             field(TYPE, Schema.Organization),
@@ -66,6 +67,9 @@ public final class EventsIasiCityCultura implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Instant now=Instant.now();
+
 
     @Override public void run() {
         update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
@@ -99,6 +103,7 @@ public final class EventsIasiCityCultura implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Iasi.Language),
 
+                field(updated, literal(now)),
                 field(partner, Iasi.Id),
                 field(publisher, Publisher)
 

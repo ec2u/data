@@ -48,6 +48,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.universities._Universities.Coimbra;
 import static java.lang.String.format;
 
@@ -81,6 +82,9 @@ public final class EventsCoimbraCity implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Instant now=Instant.now();
+
 
     @Override public void run() {
         update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
@@ -170,7 +174,9 @@ public final class EventsCoimbraCity implements Runnable {
                             field(Schema.about, topics(json)),
 
                             field(publisher, Publisher),
-                            field(Schema.location, location(json))
+                            field(Schema.location, location(json)),
+
+                            field(updated, literal(now))
 
                     );
 

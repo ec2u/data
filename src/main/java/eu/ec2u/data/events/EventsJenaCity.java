@@ -64,6 +64,7 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities._Universities.Jena;
@@ -220,11 +221,9 @@ public final class EventsJenaCity implements Runnable {
 
                     field(RDF.TYPE, Event),
 
-
-                    // .value(DCTERMS.CREATED, frame.value(dateCreated).map(this::datetime))
-                    // .value(DCTERMS.MODIFIED, frame.value(dateModified).map(this::datetime)
-                    //         .orElseGet(() -> literal(now.atOffset(ZoneOffset.UTC)))
-                    // )
+                    field(dateCreated, focus.seq(dateModified).value(asInstant()).map(Frame::literal)),
+                    field(dateModified, focus.seq(dateModified).value(asInstant()).map(Frame::literal)),
+                    field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
 
                     field(partner, Jena.Id),
 
@@ -240,7 +239,7 @@ public final class EventsJenaCity implements Runnable {
                     field(publisher, Publisher),
 
                     field(organizer, thing(focus.seq(organizer), Organizations.Context)),
-                    field(Schema.location, thing(focus.seq(location), Locations.Context)),
+                    field(location, thing(focus.seq(location), Locations.Context)),
 
                     field(Schema.about, focus.seq(schema("keywords")).value(asString()).stream()
                             .flatMap(keywords -> Arrays.stream(keywords.split(",")))

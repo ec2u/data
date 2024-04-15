@@ -37,6 +37,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import java.text.ParsePosition;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Locale;
@@ -47,10 +48,10 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 import static java.time.temporal.ChronoField.*;
@@ -174,8 +175,8 @@ public final class EventsSalamancaCityTO implements Runnable {
                             .map(Frame::literal)
                     ),
 
-                    // field(DCTERMS.CREATED, pubDate),
-                    // field(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now.atOffset(UTC)))),
+                    field(dateCreated, pubDate),
+                    field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
                     field(partner, Salamanca.Id),
                     field(publisher, Publisher)

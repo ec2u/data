@@ -29,7 +29,6 @@ import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 
 import static com.metreeca.link.Frame.*;
 
@@ -37,9 +36,9 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.universities._Universities.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
-import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiCityInOras implements Runnable {
 
@@ -69,7 +68,7 @@ public final class EventsIasiCityInOras implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final ZonedDateTime now=ZonedDateTime.now(UTC);
+    private final Instant now=Instant.now();
 
 
     @Override public void run() {
@@ -103,6 +102,7 @@ public final class EventsIasiCityInOras implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Iasi.Language),
 
+                field(updated, literal(now)),
                 field(partner, Iasi.Id),
                 field(publisher, Publisher)
 

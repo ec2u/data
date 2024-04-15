@@ -35,15 +35,18 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.dateCreated;
 import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities._Universities.Salamanca;
 
@@ -74,6 +77,9 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Instant now=Instant.now();
+
 
     @Override public void run() {
         update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
@@ -139,8 +145,8 @@ public final class EventsSalamancaCitySACIS implements Runnable {
                     field(Schema.description, description),
                     field(Schema.disambiguatingDescription, disambiguatingDescription),
 
-                    // field(DCTERMS.CREATED, pubDate),
-                    // field(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now.atOffset(UTC)))),
+                    field(dateCreated, pubDate),
+                    field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
                     field(partner, Salamanca.Id),
                     field(publisher, Publisher)

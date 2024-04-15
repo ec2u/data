@@ -48,6 +48,7 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.location;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
@@ -62,10 +63,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
 
     private static Literal instant(final String timestamp) {
-        return literal(ZonedDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), UTC)
-                .truncatedTo(ChronoUnit.SECONDS)
-        );
+        return literal(LocalDateTime.parse(timestamp, SQL_TIMESTAMP).toInstant(UTC));
     }
 
     private static Literal datetime(final String timestamp, final ZoneId zone, final Instant instant) {
@@ -211,8 +209,9 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 field(RDF.TYPE, Event),
 
-                // !!! created event.string("date_utc")
-                // !!! updated event.string("modified_utc")
+                field(dateCreated, event.string("date_utc").map(Tribe::instant)),
+                field(dateModified, event.string("modified_utc").map(Tribe::instant)),
+                field(updated, event.string("modified_utc").map(Tribe::instant).orElseGet(() -> literal(now))),
 
                 field(Schema.about, event.paths("categories.*").optMap(this::category)),
 

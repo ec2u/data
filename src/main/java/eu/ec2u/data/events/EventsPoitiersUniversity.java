@@ -40,7 +40,7 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
@@ -55,10 +55,10 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities._Universities.Poitiers;
-import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 import static java.util.function.Predicate.not;
 
@@ -119,7 +119,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final ZonedDateTime now=ZonedDateTime.now(UTC);
+    private final Instant now=Instant.now();
 
 
     @Override public void run() {
@@ -175,7 +175,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                         link.map(Value::stringValue).map(Identifiers::md5).orElseGet(Identifiers::md5)
                 )),
 
-                field(RDF.TYPE, Events.Event),
+                field(RDF.TYPE, Event),
 
 
                 field(Schema.url, link),
@@ -187,8 +187,8 @@ public final class EventsPoitiersUniversity implements Runnable {
                 field(startDate, startDate(item)),
                 field(endDate, endDate(item)),
 
-                // field(DCTERMS.CREATED, pubDate),
-                // field(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now))),
+                field(dateCreated, pubDate),
+                field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
                 field(Schema.about, item.strings("category").map(category -> frame(
                         field(ID, item(Topics, category)),

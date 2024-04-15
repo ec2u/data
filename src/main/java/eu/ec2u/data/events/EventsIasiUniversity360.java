@@ -23,6 +23,7 @@ import com.metreeca.http.xml.formats.XML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
@@ -67,6 +68,9 @@ public final class EventsIasiUniversity360 implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Instant now=Instant.now();
+
+
     @Override public void run() {
         update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
@@ -99,6 +103,7 @@ public final class EventsIasiUniversity360 implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Iasi.Language),
 
+                field(Resources.updated, literal(now)),
                 field(partner, Iasi.Id),
                 field(publisher, Publisher)
 
