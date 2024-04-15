@@ -448,7 +448,7 @@
 
                         <goals>
                             <goal>deploy</goal>
-                            <goal>deployCron</goal>
+                            <!--<goal>deployCron</goal>-->
                         </goals>
 
                     </execution>
