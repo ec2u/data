@@ -1,3 +1,4 @@
+@prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix ec2u: </terms/> .
 
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -66,17 +67,17 @@ ec2u:University a owl:Class ;
     org:identifier "uni-jena.de"^^<https://github.com/refeds/schac> ;
     rdfs:seeAlso wd:Q154561 .
 
-#</universities/linz> a ec2u:University ;
-#    skos:prefLabel
-#        "Johannes Kepler Universität Linz (JKU)"@de,
-#        "Johannes Kepler University Linz (JKU)"@en ;
-#    skos:altLabel "Linz"@de, "Linz"@en ;
-#    skos:definition
-#        """More than just a university: The Johannes Kepler University Linz (JKU) inspires passion among its 24,000 enrolled students to pursue higher education in the areas of law, business and economics, social sciences, engineering, natural sciences, and medicine. Be it AI, medical technology, sustainable polymers, or digitalization, researchers and scholars at the JKU are not only mindful about social impact, but also the welfare of both mankind and the environment. The JKU doesn’t just dream about the future, we are engaging our students and conducting groundbreaking research in an effort to actively create the future, as well as pursuing an ambitious goal to be climate-neutral by 2030. Welcome to the JKU, where dreams can take flight and soar!""" ;
-#    foaf:homepage <https://www.jku.at/en>, <https://www.jku.at> ;
-#    foaf:depiction </blobs/linz.png> ;
-#    org:identifier "jku.at"^^<https://github.com/refeds/schac> ;
-#    rdfs:seeAlso wd:QXXXX .
+</universities/linz> a ec2u:University ;
+    skos:prefLabel
+        "Johannes Kepler Universität Linz (JKU)"@de,
+        "Johannes Kepler University Linz (JKU)"@en ;
+    skos:altLabel "Linz"@de, "Linz"@en ;
+    skos:definition
+        "The Johannes Kepler University Linz (JKU), with 24,000 students, offers diverse programs in law, business, social sciences, engineering, natural sciences, and medicine. It prioritizes impactful research in AI, medical tech, and sustainable polymers, with a focus on social and environmental responsibility. The university aims for climate neutrality by 2030 and actively engages students in groundbreaking endeavors, fostering a passion for shaping the future."@en ;
+    foaf:homepage <https://www.jku.at/en>, <https://www.jku.at> ;
+    foaf:depiction </blobs/linz.png> ;
+    org:identifier "jku.at"^^<https://github.com/refeds/schac> ;
+    rdfs:seeAlso wd:Q682739 .
 
 </universities/pavia> a ec2u:University ;
     skos:prefLabel
@@ -114,7 +115,7 @@ ec2u:University a owl:Class ;
     skos:prefLabel "University of Turku"@en, "Turun Yliopisto"@fi ;
     skos:altLabel "Turku"@fi, "Turku"@en ;
     skos:definition
-        "The University of Turku (UTU) is an international research university and an active academic community of 25,000 students and staff members from over 100 different countries.  The University’s main campus is located in the historical city centre of Turku – close to the unique nature and archipelago of Southwest Finland. As one of the leading universities in Finland, the University of Turku offers study and research opportunities in seven faculties and seven special units. Thanks to the outstanding services, compact campus and active academic society, international students and scholars feel at home from the very beginning of their stay at the University of Turku, Finland!"@en ;
+        "The University of Turku (UTU) is a renowned research institution with a diverse community of 25,000 individuals from over 100 countries. Situated in Turku's historic city center, it offers study and research options across seven faculties and special units. With its convenient campus, exceptional services, and vibrant academic environment, UTU ensures that international students and scholars feel welcomed and supported throughout their time in Finland."@en ;
     foaf:homepage <https://www.utu.fi/en>, <https://www.utu.fi/fi> ;
     foaf:depiction </blobs/turku.png> ;
     org:identifier "utu.fi"^^<https://github.com/refeds/schac> ;

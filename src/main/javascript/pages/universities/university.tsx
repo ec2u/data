@@ -138,9 +138,9 @@ export function DataUniversity() {
 
 		}) => <>
 
-			<img className={"right"} src={depiction} alt={`Image of ${toLocalString(label)}`}/>
-
 			<DataName>{{ label, title: prefLabel }}</DataName>
+
+			<img className={"right"} src={depiction} alt={`Image of ${toLocalString(label)}`}/>
 
 			<p>{toLocalString(definition)}</p>
 

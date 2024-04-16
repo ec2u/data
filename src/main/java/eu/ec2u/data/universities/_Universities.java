@@ -50,6 +50,14 @@ public enum _Universities {
             ZoneId.of("Europe/Berlin")
     ),
 
+    Linz(
+            item("/universities/linz"),
+            wd("Q41329"),
+            wd("Q40"),
+            "de",
+            ZoneId.of("Europe/Vienna")
+    ),
+
     Pavia(
             item("/universities/pavia"),
             wd("Q6259"),
