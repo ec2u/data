@@ -1,0 +1,36 @@
+{
+  "code": "HUMFT2001",
+  "name": {
+    "fi": "Perehtyminen jatko-opiskeluun",
+    "en": "Orientation to Doctoral Studies"
+  },
+  "credits": 1.0,
+  "teachingLanguages": [
+    {
+      "codeKey": "FI"
+    },
+    {
+      "codeKey": "EN"
+    }
+  ],
+  "accomplishmentMethods": {
+    "fi": "Osallstuminen Welcome Day -tapahtumaan joka järjestetään tammikuussa ja syyskuussa sekä päivän yhteydessä annettavien tehtävien suorittaminen. Vaihtoehtona osallistuminen ihmistieteiden yhteiseen Orientation to Doctoral Studies -tapahtumaan sekä vastaavat tehtävät (HOPS; ohjaussuunnitelma jne.).",
+    "en": "Participating Welcome Day organized in January and September or the Orientation to Doctoral Studies plus composing \r\nresearch plan, personal study plan, supervision plan."
+  },
+  "executionMethods": {
+    "fi": "",
+    "en": ""
+  },
+  "teaches": {
+    "fi": "Jatko-opintojen alussa laaditaan tutkimussuunnitelma ja siihen liittyvä aikataulusuunnitelma, joita päivitetään säännöllisesti. Lisäksi laaditaan henkilökohtainen opintosuunnitelma (HOPS), joka sisältää suunnitelman siitä, miten jatko-opintoihin kuuluvat 40-60 op suoritetaan. Samalla sovitaan ohjauksesta ja allekirjoitetaan ohjaussuunnitelma.",
+    "en": "At the beginning of the doctoral studies, a scheduled research plan is made, and the document should be updated regularly. The student will also draw up a personal study plan (HOPS) introducing a plan for completing the required 40-60 ECTS credits of doctoral studies. The supervision plan will be written out and signed as well."
+  },
+  "assesses": {
+    "fi": "Perehtyminen jatko-opiskeluun ja tutkimustyön käytänteisiin sekä oman tutkimuksen suunnittelu, aloittaminen ja seuranta. Integroituminen omaan paikalliseen tiedeyhteisöön (pääaine, laitos, tohtoriohjelma), tieteellisen keskustelun ja kirjoittamisen aloittaminen, ohjaussuhteen periaatteiden hahmottaminen.",
+    "en": "Orientation to doctoral studies, introduction to research practices and planning, establishing and managing the student’s own studies; integration into the immediate academic community (major, school, doctoral programme), practicing research based writing and discussions, understanding the principles of supervision relationship."
+  },
+  "coursePrerequisites": {
+    "fi": "",
+    "en": ""
+  }
+}

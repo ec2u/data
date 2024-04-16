@@ -1,0 +1,258 @@
+{
+  "code": "DIGI1820",
+  "name": {
+    "fi": "Master's Degree Programme in Digital Health and Life Sciences (MSc/MSc (Tech)), 2018-2020",
+    "en": "Master's Degree Programme in Digital Health and Life Sciences (MSc/MSc (Tech)), 2018-2020"
+  },
+  "credits": 120.0,
+  "duration": "P2Y",
+  "hasCourse": [
+    {
+      "codeKey": "BIOI2250"
+    },
+    {
+      "codeKey": "BIOI2241"
+    },
+    {
+      "codeKey": "TKO_3103"
+    },
+    {
+      "codeKey": "BIDL0002"
+    },
+    {
+      "codeKey": "DTEK0044"
+    },
+    {
+      "codeKey": "DTEK8110"
+    },
+    {
+      "codeKey": "KIEN2024"
+    },
+    {
+      "codeKey": "KIFF0003"
+    },
+    {
+      "codeKey": "KABI4003"
+    },
+    {
+      "codeKey": "BIMA3211"
+    },
+    {
+      "codeKey": "BIMA3212"
+    },
+    {
+      "codeKey": "DTEK1075"
+    },
+    {
+      "codeKey": "DTEK8025"
+    },
+    {
+      "codeKey": "ÅA__5338"
+    },
+    {
+      "codeKey": "ÅA__5343"
+    },
+    {
+      "codeKey": "HOIT6701"
+    },
+    {
+      "codeKey": "DTEK0043"
+    },
+    {
+      "codeKey": "TKO_3110"
+    },
+    {
+      "codeKey": "DTEK8103"
+    },
+    {
+      "codeKey": "DTEK0042"
+    },
+    {
+      "codeKey": "DTEK8080"
+    },
+    {
+      "codeKey": "TKO_3108"
+    },
+    {
+      "codeKey": "TKO_2096"
+    },
+    {
+      "codeKey": "TKO_3120"
+    },
+    {
+      "codeKey": "DTEK8095"
+    },
+    {
+      "codeKey": "DTEK8081"
+    },
+    {
+      "codeKey": "DTEK8097"
+    },
+    {
+      "codeKey": "TKO_8612"
+    },
+    {
+      "codeKey": "BIOI4463"
+    },
+    {
+      "codeKey": "BIOI4464"
+    },
+    {
+      "codeKey": "BIOI4280"
+    },
+    {
+      "codeKey": "BIOI4270"
+    },
+    {
+      "codeKey": "BIOI4440"
+    },
+    {
+      "codeKey": "BIOI4450"
+    },
+    {
+      "codeKey": "BIOI4240"
+    },
+    {
+      "codeKey": "TKO_8963"
+    },
+    {
+      "codeKey": "TKO_8964"
+    },
+    {
+      "codeKey": "TKO_8965"
+    },
+    {
+      "codeKey": "BKEM1051"
+    },
+    {
+      "codeKey": "BKEM1052"
+    },
+    {
+      "codeKey": "BKEM1053"
+    },
+    {
+      "codeKey": "KABI5073"
+    },
+    {
+      "codeKey": "SYST1110"
+    },
+    {
+      "codeKey": "SYST1010"
+    },
+    {
+      "codeKey": "SYST1131"
+    },
+    {
+      "codeKey": "SYST1011"
+    },
+    {
+      "codeKey": "SYST1130"
+    },
+    {
+      "codeKey": "SYST1180"
+    },
+    {
+      "codeKey": "BKEM1050"
+    },
+    {
+      "codeKey": "TKO_5330"
+    },
+    {
+      "codeKey": "DTEK8093"
+    },
+    {
+      "codeKey": "DTEK8094"
+    },
+    {
+      "codeKey": "DTEK0045"
+    },
+    {
+      "codeKey": "DTEK1002"
+    },
+    {
+      "codeKey": "BIOI0011"
+    },
+    {
+      "codeKey": "BIOI0004"
+    },
+    {
+      "codeKey": "BIOI0005"
+    },
+    {
+      "codeKey": "SYST1203"
+    },
+    {
+      "codeKey": "SYST1204"
+    },
+    {
+      "codeKey": "SYST1205"
+    },
+    {
+      "codeKey": "DTEK8076"
+    },
+    {
+      "codeKey": "BIOI2260"
+    },
+    {
+      "codeKey": "BIOI2290"
+    },
+    {
+      "codeKey": "BIOI2291"
+    },
+    {
+      "codeKey": "BIOI4303"
+    },
+    {
+      "codeKey": "BIOI0006"
+    },
+    {
+      "codeKey": "BIOI4380"
+    },
+    {
+      "codeKey": "BIOI0007"
+    },
+    {
+      "codeKey": "BIOI0008"
+    },
+    {
+      "codeKey": "BIOI0009"
+    },
+    {
+      "codeKey": "DTEK2017"
+    },
+    {
+      "codeKey": "DTEK2018"
+    },
+    {
+      "codeKey": "BIOI4460"
+    },
+    {
+      "codeKey": "SYST1152"
+    },
+    {
+      "codeKey": "SYST1140"
+    },
+    {
+      "codeKey": "BIMA5105"
+    },
+    {
+      "codeKey": "BIMA2105"
+    },
+    {
+      "codeKey": "BKEM1012"
+    },
+    {
+      "codeKey": "KABI4006"
+    },
+    {
+      "codeKey": "KABI4001"
+    },
+    {
+      "codeKey": "KABI4004"
+    },
+    {
+      "codeKey": "KABI4005"
+    }
+  ],
+  "educationLevel": 7
+}
