@@ -121,11 +121,11 @@ public final class Events extends Delegator {
                 property(location, multiple(Location())),
 
                 property(organizer, multiple(Organization(),
-                        property(about, multiple(Concept(), scheme(OrganizationTypes.Scheme)))
+                        property(about, multiple(Concept(), scheme(OrganizationTypes.OrganizationTypes)))
                 )),
 
                 property(publisher, optional(Organization(),
-                        property(about, multiple(Concept(), scheme(OrganizationTypes.Scheme)))
+                        property(about, multiple(Concept(), scheme(OrganizationTypes.OrganizationTypes)))
                 )),
 
                 property(about, multiple(Concept(), scheme(Topics))),

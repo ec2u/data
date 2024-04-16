@@ -254,7 +254,7 @@ public final class Units_ {
                                 +"}\n"
                         );
 
-                        query.setBinding("scheme", OrganizationTypes.Scheme);
+                        query.setBinding("scheme", OrganizationTypes.OrganizationTypes);
                         query.setBinding("value", literal(key));
 
                         try ( final TupleQueryResult evaluate=query.evaluate() ) {
@@ -361,9 +361,9 @@ public final class Units_ {
                     .map(v -> literal(v, language))
 
                     .map(label -> frame(
-                            field(ID, EC2U.item(Scheme, label.stringValue())),
+                            field(ID, EC2U.item(ResearchTopics, label.stringValue())),
                             field(RDF.TYPE, SKOS.CONCEPT),
-                            field(SKOS.TOP_CONCEPT_OF, Scheme),
+                            field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
                             field(SKOS.PREF_LABEL, label)
                     ));
         }

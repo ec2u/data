@@ -35,34 +35,34 @@ import static eu.ec2u.data.EC2U.update;
  */
 public final class OrganizationTypes implements Runnable {
 
-    public static final IRI Scheme=iri(Concepts.Context, "/organizations");
-    public static final IRI Unit=iri(Scheme, "/university-unit");
+    public static final IRI OrganizationTypes=iri(Concepts.Context, "/organizations");
+    public static final IRI UnitTypes=iri(OrganizationTypes, "/university-unit");
 
 
-    public static final IRI University=iri(Scheme, "/university");
-    public static final IRI College=iri(Scheme, "/college");
-    public static final IRI Association=iri(Scheme, "/association");
-    public static final IRI City=iri(Scheme, "/city");
-    public static final IRI Other=iri(Scheme, "/other");
+    public static final IRI University=iri(OrganizationTypes, "/university");
+    public static final IRI College=iri(OrganizationTypes, "/college");
+    public static final IRI Association=iri(OrganizationTypes, "/association");
+    public static final IRI City=iri(OrganizationTypes, "/city");
+    public static final IRI Other=iri(OrganizationTypes, "/other");
 
-    public static final IRI Area=iri(Unit, "/area");
-    public static final IRI Network=iri(Unit, "/network");
-    public static final IRI Institute=iri(Unit, "/institute");
-    public static final IRI InstituteVirtual=iri(Unit, "/institute/virtual");
-    public static final IRI Centre=iri(Unit, "/centre");
-    public static final IRI CentreResearch=iri(Unit, "/centre/research");
-    public static final IRI CentreTransfer=iri(Unit, "/centre/transfer");
-    public static final IRI Department=iri(Unit, "/department");
-    public static final IRI Laboratory=iri(Unit, "/laboratory");
-    public static final IRI Group=iri(Unit, "/group");
-    public static final IRI GroupRecognized=iri(Unit, "/group/recognized");
-    public static final IRI GroupInformal=iri(Unit, "/group/informal");
-    public static final IRI GroupStudent=iri(Unit, "/group-student");
-    public static final IRI Facility=iri(Unit, "/facility");
-    public static final IRI FacilityLibrary=iri(Unit, "/facility/library");
-    public static final IRI FacilityCollection=iri(Unit, "/facility/collection");
-    public static final IRI FacilityInstrument=iri(Unit, "/facility/instrument");
-    public static final IRI FacilityStation=iri(Unit, "/facility/station");
+    public static final IRI Area=iri(UnitTypes, "/area");
+    public static final IRI Network=iri(UnitTypes, "/network");
+    public static final IRI Institute=iri(UnitTypes, "/institute");
+    public static final IRI InstituteVirtual=iri(UnitTypes, "/institute/virtual");
+    public static final IRI Centre=iri(UnitTypes, "/centre");
+    public static final IRI CentreResearch=iri(UnitTypes, "/centre/research");
+    public static final IRI CentreTransfer=iri(UnitTypes, "/centre/transfer");
+    public static final IRI Department=iri(UnitTypes, "/department");
+    public static final IRI Laboratory=iri(UnitTypes, "/laboratory");
+    public static final IRI Group=iri(UnitTypes, "/group");
+    public static final IRI GroupRecognized=iri(UnitTypes, "/group/recognized");
+    public static final IRI GroupInformal=iri(UnitTypes, "/group/informal");
+    public static final IRI GroupStudent=iri(UnitTypes, "/group-student");
+    public static final IRI Facility=iri(UnitTypes, "/facility");
+    public static final IRI FacilityLibrary=iri(UnitTypes, "/facility/library");
+    public static final IRI FacilityCollection=iri(UnitTypes, "/facility/collection");
+    public static final IRI FacilityInstrument=iri(UnitTypes, "/facility/instrument");
+    public static final IRI FacilityStation=iri(UnitTypes, "/facility/station");
 
 
     public static void main(final String... args) {
@@ -78,7 +78,7 @@ public final class OrganizationTypes implements Runnable {
                 .of(rdf(resource(this, ".ttl"), BASE))
 
                 .forEach(new Upload()
-                        .contexts(Scheme)
+                        .contexts(OrganizationTypes)
                         .clear(true)
                 )
 
