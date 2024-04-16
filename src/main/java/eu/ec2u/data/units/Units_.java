@@ -33,6 +33,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
@@ -138,12 +139,33 @@ public final class Units_ {
                     field(SKOS.ALT_LABEL, acronym.map(v -> literal(v, "en"))), // !!! no language
                     field(SKOS.ALT_LABEL, acronym.map(v -> literal(v, university.Language))), // !!! no language
 
-                    field(FOAF.HOMEPAGE, value(record, "Factsheet", Parsers::iri)),
-                    field(FOAF.HOMEPAGE, value(record, "Homepage", Parsers::iri)),
+                    field(FOAF.HOMEPAGE, value(record, "Factsheet", Parsers::uri).map(Values::literal)),
 
-                    field(FOAF.MBOX, value(record, "Email", Parsers::email)
-                            .map(Frame::literal)
-                    ),
+                    field(FOAF.HOMEPAGE, value(record, "Factsheet (English)", Parsers::uri).map(uri -> frame(
+                            field(ID, iri(uri)),
+                            field(DCTERMS.LANGUAGE, literal("en"))
+                    ))),
+
+                    field(FOAF.HOMEPAGE, value(record, "Factsheet (Local)", Parsers::uri).map(uri -> frame(
+                            field(ID, iri(uri)),
+                            field(DCTERMS.LANGUAGE, literal(university.Language))
+                    ))),
+
+
+                    field(FOAF.HOMEPAGE, value(record, "Homepage", Parsers::uri).map(Values::literal)),
+
+                    field(FOAF.HOMEPAGE, value(record, "Homepage (English)", Parsers::uri).map(uri -> frame(
+                            field(ID, iri(uri)),
+                            field(DCTERMS.LANGUAGE, literal("en"))
+                    ))),
+
+                    field(FOAF.HOMEPAGE, value(record, "Homepage (Local)", Parsers::uri).map(uri -> frame(
+                            field(ID, iri(uri)),
+                            field(DCTERMS.LANGUAGE, literal(university.Language))
+                    ))),
+
+
+                    field(FOAF.MBOX, value(record, "Email", Parsers::email).map(Frame::literal)),
 
                     field(reverse(ORG.HEAD_OF), value(record, "Head", person -> person(person, university)))
 
