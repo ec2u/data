@@ -25,7 +25,6 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.resources.Resources_;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities._Universities;
 import eu.ec2u.work.feeds.CSVProcessor;
@@ -50,7 +49,7 @@ import static eu.ec2u.data.concepts.Concepts_.concept;
 import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.data.persons.Persons_.person;
 import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.resources.Resources_.url;
+import static eu.ec2u.work.feeds.Parsers.url;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
@@ -132,8 +131,8 @@ final class Documents_ {
 
                     field(partner, university.Id),
 
-                    field(Schema.url, value(record, "URL (English)", Parsers::iri)),
-                    field(Schema.url, value(record, "URL (Local)", Parsers::iri)),
+                    field(Schema.url, value(record, "URL (English)", Parsers::uri).map(Frame::iri)),
+                    field(Schema.url, value(record, "URL (Local)", Parsers::uri).map(Frame::iri)),
 
                     field(DCTERMS.IDENTIFIER, value(record, "Identifier")
                             .map(Values::literal)
@@ -198,7 +197,7 @@ final class Documents_ {
                     ),
 
                     field(DCTERMS.LICENSE, value(record, "License", this::license)
-                            .flatMap(Resources_::url)
+                            .flatMap(Parsers::url)
                             .map(Frame::iri)
                     ),
 
@@ -249,7 +248,7 @@ final class Documents_ {
 
         private Optional<Frame> publisher(final CSVRecord record) {
 
-            final Optional<IRI> home=value(record, "Home", Parsers::iri);
+            final Optional<IRI> home=value(record, "Home", Parsers::uri).map(Frame::iri);
             final Optional<String> nameEnglish=value(record, "Publisher (English)");
             final Optional<String> nameLocal=value(record, "Publisher (Local)");
 

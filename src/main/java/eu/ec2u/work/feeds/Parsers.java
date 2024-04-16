@@ -17,36 +17,45 @@
 package eu.ec2u.work.feeds;
 
 
-import com.metreeca.link.Frame;
-
-import org.eclipse.rdf4j.model.IRI;
-
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.metreeca.http.rdf.Values.guarded;
 
+import static java.lang.String.format;
+
 public final class Parsers {
 
     private static final Pattern URIPattern=Pattern.compile("^https?://\\S+$");
+    private static final Pattern FuzzyURLPattern=Pattern.compile("\\bhttps?:\\S+|\\bwww\\.\\S+");
     private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
 
 
     private Parsers() { }
 
 
-    public static Optional<IRI> iri(final String iri) {
-        return Optional.of(iri)
-                .filter(URIPattern.asMatchPredicate())
-                .map(Frame::iri);
-    }
-
     public static Optional<URI> uri(final String uri) {
         return Optional.of(uri)
                 .filter(URIPattern.asMatchPredicate())
                 .map(URI::create);
+    }
+
+    public static Optional<String> url(final String text) {
+
+        if ( text == null ) {
+            throw new NullPointerException("null text");
+        }
+
+        return Optional.of(text)
+                .map(FuzzyURLPattern::matcher)
+                .filter(Matcher::find)
+                .map(Matcher::group)
+                .map(url -> url.replace("[", "%5B")) // !!! generalize
+                .map(url -> url.replace("]", "%5D"))
+                .map(url -> url.startsWith("http") ? url : format("https://%s", url));
     }
 
     public static Optional<String> email(final String email) {

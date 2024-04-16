@@ -27,7 +27,6 @@ import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.resources.Resources_;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -215,9 +214,9 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 field(Schema.about, event.paths("categories.*").optMap(this::category)),
 
-                field(Schema.url, event.string("url").flatMap(Resources_::url).map(Frame::iri)),
+                field(Schema.url, event.string("url").flatMap(Parsers::url).map(Frame::iri)),
                 field(Schema.name, title),
-                field(Schema.image, event.string("image.url").flatMap(Resources_::url).map(Frame::iri)),
+                field(Schema.image, event.string("image.url").flatMap(Parsers::url).map(Frame::iri)),
                 field(Schema.description, description),
                 field(Schema.disambiguatingDescription, excerpt),
 
@@ -261,7 +260,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 field(RDF.TYPE, Schema.Organization),
 
-                field(Schema.url, organizer.string("website").flatMap(Resources_::url).map(Frame::iri)),
+                field(Schema.url, organizer.string("website").flatMap(Parsers::url).map(Frame::iri)),
                 field(Schema.name, organizer.string("organizer").map(XPath::decode).map(text -> literal(text, language))),
                 field(Schema.email, organizer.string("email").map(Frame::literal)),
                 field(Schema.telephone, organizer.string("phone").map(Frame::literal))
@@ -305,7 +304,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                             field(Schema.addressLocality, addressLocality),
                             field(Schema.streetAddress, streetAddress),
 
-                            field(Schema.url, location.string("website").flatMap(Resources_::url).map(Frame::iri)),
+                            field(Schema.url, location.string("website").flatMap(Parsers::url).map(Frame::iri)),
                             field(Schema.email, location.string("email").map(Frame::literal)),
                             field(Schema.telephone, location.string("phone").map(Frame::literal))
 

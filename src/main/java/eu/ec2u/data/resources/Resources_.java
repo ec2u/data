@@ -19,14 +19,10 @@ package eu.ec2u.data.resources;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.link.Frame.literal;
 
-import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 
 public final class Resources_ {
@@ -42,27 +38,6 @@ public final class Resources_ {
                 .map(Literal.class::cast)
                 .filter(not(v -> v.stringValue().isBlank()))
                 .map(v -> literal(v.stringValue(), v.getLanguage().orElse(language)));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static final Pattern FuzzyURLPattern=Pattern.compile("\\bhttps?:\\S+|\\bwww\\.\\S+");
-
-
-    public static Optional<String> url(final String text) {
-
-        if ( text == null ) {
-            throw new NullPointerException("null text");
-        }
-
-        return Optional.of(text)
-                .map(FuzzyURLPattern::matcher)
-                .filter(Matcher::find)
-                .map(Matcher::group)
-                .map(url -> url.replace("[", "%5B")) // !!! generalize
-                .map(url -> url.replace("]", "%5D"))
-                .map(url -> url.startsWith("http") ? url : format("https://%s", url));
     }
 
 

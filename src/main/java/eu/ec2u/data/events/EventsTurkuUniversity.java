@@ -29,9 +29,9 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.resources.Resources_;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work.feeds.Parsers;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -218,7 +218,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 field(Schema.url, json.string("additional_information.link.url")
                         .or(() -> json.string("source_link"))
-                        .flatMap(Resources_::url)
+                        .flatMap(Parsers::url)
                         .map(Frame::iri)
                 ),
 
@@ -250,7 +250,7 @@ public final class EventsTurkuUniversity implements Runnable {
         return json.string("url").map(id -> {
 
             final Optional<String> name=json.string("free_text");
-            final Optional<Value> url=json.string("url").flatMap(Resources_::url).map(Frame::iri);
+            final Optional<Value> url=json.string("url").flatMap(Parsers::url).map(Frame::iri);
             final Optional<Value> addressCountry=Optional.ofNullable(Turku.Country);
             final Optional<Value> addressLocality=Optional.ofNullable(Turku.City);
             final Optional<Value> postalCode=json.string("postal_code").map(Frame::literal);
