@@ -16,7 +16,6 @@
 
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { ec2u } from "@ec2u/data/views";
-import { DataName } from "@ec2u/data/views/name";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
@@ -84,7 +83,7 @@ export function DataUniversity() {
 
 	}));
 
-	return <DataPage name={[Universities, university]}
+	return <DataPage name={[Universities, {}]}
 
 		tray={<ToolFrame as={({
 
@@ -138,9 +137,9 @@ export function DataUniversity() {
 
 		}) => <>
 
-			<DataName>{{ label, title: prefLabel }}</DataName>
-
 			<img className={"right"} src={depiction} alt={`Image of ${toLocalString(label)}`}/>
+
+			<dfn>{toLocalString(prefLabel)}</dfn>
 
 			<p>{toLocalString(definition)}</p>
 

@@ -52,6 +52,7 @@ export const Schemes=immutable({
 	members: multiple({
 
 		id: required(id),
+		label: optional(local),
 		comment: optional(local),
 
 		title: required(local),
@@ -74,7 +75,7 @@ export function DataSchemes() {
 		tray={< >
 
 			<ToolKeywords placeholder={"Name"}>{
-				useKeywords(schemes, "title")
+				useKeywords(schemes, "label")
 			}</ToolKeywords>
 
 			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
@@ -84,6 +85,15 @@ export function DataSchemes() {
 			<ToolOptions placeholder={"Publisher"} as={license => toValueString(license)}>{
 				useOptions(schemes, "publisher", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
+
+			<div className={"info"} style={{
+
+				marginTop: "auto",
+				fontSize: "80%"
+
+			}}>This service uses the <a href={"https://esco.ec.europa.eu/en/classification"}>ESCO</a>
+				{" "} classification of the European Commission.
+			</div>
 
 		</>}
 

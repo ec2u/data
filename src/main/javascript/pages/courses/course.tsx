@@ -21,13 +21,15 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
-import { toEntryString } from "@metreeca/core/entry";
+import { entryCompare } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
+import { ToolLabel } from "@metreeca/view/layouts/label";
+import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
@@ -38,8 +40,8 @@ export const Course=immutable({
 
 	id: required("/courses/{code}"),
 
-	label: required(local),
-	comment: optional(local),
+	name: required(local),
+	description: optional(local),
 
 	url: multiple(id),
 
@@ -94,11 +96,10 @@ export function DataCourse() {
 	const [course]=useResource(Course);
 
 
-	return <DataPage name={[Courses, course]}
+	return <DataPage name={[Courses, {}]}
 
 		tray={<ToolFrame as={({
 
-				label,
 			partner,
 				provider,
 
@@ -121,40 +122,30 @@ export function DataCourse() {
 			<ToolInfo>{{
 
 				"University": partner && <ToolLink>{partner}</ToolLink>,
-				"Provider": provider && <span>{toFrameString(provider)}</span>,
-
-				"Programs": inProgram?.length && <ul>{[...inProgram]
-					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
-					.map(program => <li key={program.id}><ToolLink>{program}</ToolLink></li>)
-				}</ul>
-
+				"Provider": provider && <span>{toFrameString(provider)}</span>
 
 			}}</ToolInfo>
 
 			<ToolInfo>{{
 
 				"Code": courseCode && <span>{courseCode}</span>,
-				"Name": <span>{toLocalString(label)}</span>
-
-
-			}}</ToolInfo>
-
-			<ToolInfo>{{
-
-				"Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
-					{educationalCredentialAwarded && <span>{toLocalString(educationalCredentialAwarded)}</span>}
-					{occupationalCredentialAwarded && <span>{toLocalString(occupationalCredentialAwarded)}</span>}
-                </>,
 
 				"Level": educationalLevel && <ToolLink>{educationalLevel}</ToolLink>,
+
 				"Language": inLanguage?.length && <ul>{inLanguage
 					.map(tag => toLocalString(Languages[tag]))
 					.filter(language => language)
 					.sort((x, y) => x.localeCompare(y))
 					.map(language => <li key={language}>{language}</li>)
 				}</ul>,
+
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>
+				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
+
+				"Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
+					{educationalCredentialAwarded && <span>{toLocalString(educationalCredentialAwarded)}</span>}
+					{occupationalCredentialAwarded && <span>{toLocalString(occupationalCredentialAwarded)}</span>}
+                </>
 
 			}}</ToolInfo>
 
@@ -185,43 +176,69 @@ export function DataCourse() {
 
 		<ToolFrame placeholder={Courses[icon]} as={({
 
-			comment,
+			name,
+			description,
 
 			teaches,
 			assesses,
 			coursePrerequisites,
 			// competencyRequired,
 			educationalCredentialAwarded,
-			occupationalCredentialAwarded
+			occupationalCredentialAwarded,
+
+			about,
+			inProgram
 
 		}) => {
 
-			const details={
-				"General Objectives": teaches,
-				"Learning Objectives and Intended Skills": assesses,
-				"Admission Requirements": coursePrerequisites,
-				// !!! "Teaching Methods and Mode of Study": learningResourceType,
-				// "Graduation Requirements": competencyRequired,
-				"Educational Credential Awarded": educationalCredentialAwarded,
-				"Occupational Credential Awarded": occupationalCredentialAwarded
-			};
-
-			const detailed=Object.values(details).some(v => v);
-
 			return <>
 
-				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
+				<dfn>{toLocalString(name)}</dfn>
 
-				<hr/>
+				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
-				{detailed && <dl>{Object.entries(details).map(([term, data]) => data && <Fragment key={term}>
+				<ToolPanel stack>{Object.entries({
 
-                    <dt>{term}</dt>
-                    <dd><ToolMark>{toLocalString(data)}</ToolMark></dd>
+					"General Objectives": teaches,
+					"Learning Objectives and Intended Skills": assesses,
+					"Admission Requirements": coursePrerequisites,
+					// !!! "Teaching Methods and Mode of Study": learningResourceType,
+					// "Graduation Requirements": competencyRequired,
+					"Educational Credential Awarded": educationalCredentialAwarded,
+					"Occupational Credential Awarded": occupationalCredentialAwarded
 
-                </Fragment>)
+				}).map(([
 
-				}</dl>}
+					term,
+					data
+
+				]) => data && <ToolLabel key={term} name={term}>
+
+                    <ToolMark>{toLocalString(data)}</ToolMark>
+
+                </ToolLabel>)
+
+				}</ToolPanel>
+
+				<ToolPanel>
+
+					{about && <ToolLabel name={"Subjects"}>{
+
+						<ul>{about.slice().sort(entryCompare).map(about =>
+							<li key={about.id}><ToolLink>{about}</ToolLink></li>
+						)}</ul>
+
+					}</ToolLabel>}
+
+					{inProgram && <ToolLabel name={"Programs"}>{
+
+						<ul>{inProgram.slice().sort(entryCompare).map(program =>
+							<li key={program.id}><ToolLink>{program}</ToolLink></li>
+						)}</ul>
+
+					}</ToolLabel>}
+
+				</ToolPanel>
 
 
 			</>;

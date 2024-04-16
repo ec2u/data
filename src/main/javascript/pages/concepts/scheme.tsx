@@ -16,16 +16,17 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
-import { DataName } from "@ec2u/data/views/name";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
-import { sortFrames } from "@metreeca/core/frame";
+import { entryCompare } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
+import { ToolLabel } from "@metreeca/view/layouts/label";
+import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
@@ -39,6 +40,7 @@ export const Scheme=immutable({
 	label: required(local),
 
 	title: required(local),
+	alternative: optional(local),
 	description: optional(local),
 
 	publisher: optional({
@@ -75,9 +77,29 @@ export function DataScheme() {
 	const [scheme]=useResource(Scheme);
 
 
-	return <DataPage name={[Schemes, scheme]}
+	return <DataPage name={[Schemes, toLocalString(scheme?.alternative ?? {})]}
 
 		tray={<ToolFrame as={({
+
+
+			extent
+
+		}) => <>
+
+			<ToolInfo>{{
+
+				"Concepts": toIntegerString(extent)
+
+			}}</ToolInfo>
+
+		</>}>{scheme}</ToolFrame>}
+
+	>
+
+		<ToolFrame placeholder={Schemes[icon]} as={({
+
+			title,
+			description,
 
 			publisher,
 			source,
@@ -85,9 +107,13 @@ export function DataScheme() {
 			rights,
 			license,
 
-			extent
+			hasTopConcept
 
 		}) => <>
+
+			<dfn>{toLocalString(title)}</dfn>
+
+			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
 			<ToolInfo>{{
 
@@ -102,44 +128,15 @@ export function DataScheme() {
 
 			}}</ToolInfo>
 
-			<ToolInfo>{{
+			<ToolPanel>
 
-				"Concepts": toIntegerString(extent)
+				{hasTopConcept && <ToolLabel name={"Top Concepts"}>
+                    <ul>{hasTopConcept.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+					)}</ul>
+                </ToolLabel>}
 
-			}}</ToolInfo>
-
-		</>}>{scheme}</ToolFrame>}
-
-	>
-
-		<DataName>{{ label: scheme?.label, title: scheme?.title }}</DataName>
-
-		<ToolFrame placeholder={Schemes[icon]} as={({
-
-			description,
-
-			hasTopConcept
-
-		}) => <>
-
-			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
-
-			{hasTopConcept?.length && <>
-
-                <hr/>
-
-                <dl>
-
-                    <dt>Top Concepts</dt>
-                    <dd>
-                        <ul>{sortFrames(hasTopConcept).map(entry =>
-							<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
-						)}</ul>
-                    </dd>
-
-                </dl>
-
-            </>}
+			</ToolPanel>
 
 		</>}>{scheme}</ToolFrame>
 

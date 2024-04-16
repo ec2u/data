@@ -20,12 +20,15 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
+import { entryCompare } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
-import { id } from "@metreeca/core/id";
+import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
+import { ToolLabel } from "@metreeca/view/layouts/label";
+import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
@@ -36,13 +39,11 @@ export const Program=immutable({
 
 	id: required("/programs/{code}"),
 
-	label: required(local),
-	comment: optional(local),
+	name: required(local),
+	description: optional(local),
 
 	identifier: optional(string),
 	url: multiple(string),
-
-	description: required(local),
 
 	numberOfCredits: optional(decimal),
 	timeToComplete: optional(string),
@@ -51,27 +52,27 @@ export const Program=immutable({
 	occupationalCredentialAwarded: optional(local),
 
 	partner: optional({
-		id: optional(id),
+		id: required(id),
 		label: required(local)
 	}),
 
 	educationalLevel: optional({
-		id: optional(id),
+		id: required(id),
 		label: required(local)
 	}),
 
 	provider: optional({
-		id: optional(id),
+		id: required(id),
 		label: required(local)
 	}),
 
 	hasCourse: multiple({
-		id: optional(id),
+		id: required(id),
 		label: required(local)
 	}),
 
 	about: multiple({
-		id: optional(id),
+		id: required(id),
 		label: required(local)
 	})
 
@@ -82,11 +83,10 @@ export function DataProgram() {
 
 	const [program]=useResource(Program);
 
-	return <DataPage name={[Programs, program]}
+	return <DataPage name={[Programs, {}]}
 
 		tray={<ToolFrame as={({
 
-			label,
 			partner,
 			provider,
 
@@ -112,42 +112,27 @@ export function DataProgram() {
 			<ToolInfo>{{
 
 				"Code": identifier && <span>{identifier}</span>,
-				"Name": <span>{toLocalString(label)}</span>
-
 
 			}}</ToolInfo>
 
 			<ToolInfo>{{
+
+				"Level": educationalLevel && <ToolLink>{educationalLevel}</ToolLink>,
+				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
+				"Duration": timeToComplete && <span>{toDurationString(duration.decode(timeToComplete))}</span>,
 
 				"Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
 					{educationalCredentialAwarded && <span>{toLocalString(educationalCredentialAwarded)}</span>}
 					{occupationalCredentialAwarded && <span>{toLocalString(occupationalCredentialAwarded)}</span>}
-                </>,
-
-				"Level": educationalLevel && <span>{toFrameString(educationalLevel)}</span>,
-				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeToComplete && <span>{toDurationString(duration.decode(timeToComplete))}</span>
+                </>
 
 			}}</ToolInfo>
 
 			<ToolInfo>{{
 
-				"Subjects": about && about.map(subject => <ToolLink key={subject.id}>{subject}</ToolLink>)
-
-			}}</ToolInfo>
-
-			<ToolInfo>{{
-
-				"Info": url && url.map(item => {
-
-					const url=new URL(item);
-
-					const host=url.host;
-					const lang=url.pathname.match(/\b[a-z]{2}\b/i);
-
-					return <a key={item} href={item}>{lang ? `${host} (${lang[0].toLowerCase()})` : host}</a>;
-
-				})
+				"Info": url?.length && <ul>{url.map(item =>
+					<li key={item}><a href={item}>{toIdString(item, { compact: true })}</a></li>
+				)}</ul>
 
 			}}</ToolInfo>
 
@@ -157,49 +142,40 @@ export function DataProgram() {
 
 		<ToolFrame placeholder={Programs[icon]} as={({
 
+			name,
 				description,
 
-				educationalCredentialAwarded,
-				occupationalCredentialAwarded,
-
-				hasCourse
+			hasCourse,
+			about
 
 			}
 		) => {
 
-			const details={
-				"Educational Credential Awarded": educationalCredentialAwarded,
-				"Occupational Credential Awarded": occupationalCredentialAwarded
-			};
-
-			const detailed=Object.values(details).some(v => v);
-
-
 			return <>
+
+				<dfn>{toLocalString(name)}</dfn>
 
 				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
-				<hr/>
+				<ToolPanel>
 
-				{detailed && <dl>{Object.entries(details).map(([term, data]) => data && <Fragment key={term}>
+					{hasCourse && <ToolLabel name={"Courses"}>
 
-                    <dt>{term}</dt>
-                    <dd><ToolMark>{toLocalString(data)}</ToolMark></dd>
+                        <ul>{hasCourse.slice().sort(entryCompare).map(course =>
+							<li key={course.id}><ToolLink>{course}</ToolLink></li>
+						)}</ul>
 
-                </Fragment>)
+                    </ToolLabel>}
 
-				}</dl>}
+					{about && <ToolLabel name={"Subjects"}>
 
-				{hasCourse?.length && <>
+                        <ul>{about.slice().sort(entryCompare).map(course =>
+							<li key={course.id}><ToolLink>{course}</ToolLink></li>
+						)}</ul>
 
-                    <h1>Courses</h1>
+                    </ToolLabel>}
 
-                    <ul>{[...hasCourse]
-						.sort((x, y) => toFrameString(x).localeCompare(toFrameString(y)))
-						.map(course => <li key={course.id}><ToolLink>{course}</ToolLink></li>)
-					}</ul>
-
-                </>}
+				</ToolPanel>
 
 			</>;
 		}
