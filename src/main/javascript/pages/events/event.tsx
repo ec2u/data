@@ -21,7 +21,7 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
-import { toEntryString } from "@metreeca/core/entry";
+import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
@@ -38,7 +38,6 @@ import React from "react";
 export const Event=immutable({
 
 	id: required("/events/{code}"),
-	label: required(local),
 
 	url: multiple(id),
 	name: required(local),
@@ -123,12 +122,11 @@ export function DataEvent() {
 
 	const [event]=useResource(Event);
 
-	return <DataPage name={[Events, event]}
+	return <DataPage name={[Events, {}]}
 
 		tray={<ToolFrame as={({
 
 			url,
-			name,
 
 			startDate,
 			endDate,
@@ -157,8 +155,6 @@ export function DataEvent() {
 			}}</ToolInfo>
 
 			<ToolInfo>{{
-
-				"Title": <span title={toLocalString(name)}>{toLocalString(name)}</span>,
 
 				"Topics": about?.length && <ul>{[...about]
 					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
@@ -221,19 +217,18 @@ export function DataEvent() {
 					toIdString(item, { compact: true })
 				}</a>),
 
-				"Organizer": organizer && [...organizer]
-					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
-					.map(({ id, label, url }) => url
+				"Organizer": organizer && organizer.slice().sort(entryCompare).map(({
+						id, label, url
+					}) => url
 						? <a key={id} href={url}>{toLocalString(label)}</a>
 						: <span key={id}>{toLocalString(label)}</span>
-					),
+				),
 
 				"Publisher": publisher && [publisher].map(({ id, label, url }) =>
 					<a key={id} href={url || id}>{toLocalString(label)}</a>
 				),
 
-				"Source": publisher?.about?.length && <ul>{[...publisher.about]
-					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+				"Source": publisher?.about && <ul>{publisher.about.slice().sort(entryCompare)
 					.map(about => <li key={about.id}>
 						<ToolLink>{about}</ToolLink>
 					</li>)
@@ -261,6 +256,9 @@ export function DataEvent() {
 				margin: "0 0 1rem 2rem"
 
 			}}/>}
+
+			<dfn>{toLocalString(name)}</dfn>
+
 
 			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 

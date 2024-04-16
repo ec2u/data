@@ -19,11 +19,13 @@ import { Events } from "@ec2u/data/pages/events/events";
 import { Units } from "@ec2u/data/pages/units/units";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, repeatable, required } from "@metreeca/core";
-import { toEntryString } from "@metreeca/core/entry";
+import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
 import { Local, local, toLocalString } from "@metreeca/core/local";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
+import { ToolLabel } from "@metreeca/view/layouts/label";
+import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
@@ -35,6 +37,7 @@ export const Unit=immutable({
 	id: required("/units/{code}"),
 
 	comment: optional(local),
+	label: optional(local),
 
 	prefLabel: required(local),
 	altLabel: optional(local),
@@ -88,11 +91,10 @@ export function DataUnit() {
 
 	return <DataPage
 
-		name={[Units, unit && toUnitLabel(unit)]}
+		name={[Units, ""]}
 
 		tray={<ToolFrame as={({
 
-			prefLabel,
 			altLabel,
 
 			homepage,
@@ -100,15 +102,13 @@ export function DataUnit() {
 			partner,
 			classification,
 
-			hasHead,
-
-			subject
+			hasHead
 
 		}) => <>
 
 			<ToolInfo>{{
 
-				"Owner": partner && <ToolLink>{partner}</ToolLink>,
+				"University": partner && <ToolLink>{partner}</ToolLink>,
 
 				"Type": classification?.length && <ul>{classification.map(type =>
 					<li key={type.id}><ToolLink>{type}</ToolLink></li>
@@ -119,28 +119,20 @@ export function DataUnit() {
 			<ToolInfo>{{
 
 				"Acronym": altLabel && <span>{toLocalString(altLabel)}</span>,
-				"Name": <span>{toLocalString(prefLabel)}</span>,
 
 				"Head": hasHead?.length === 1 ? <span>{toEntryString(hasHead[0])}</span> : hasHead?.length &&
                     <ul>{[...hasHead]
-					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
-					.map(head => <li key={head.id}>{toEntryString(head)}</li>)
-				}</ul>,
-
-				"Topics": subject && subject.length && <ul>{[...subject]
-					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
-					.map(subject => <li key={subject.id}>
-						<ToolLink filter={[Units, { partner, subject }]}>{subject}</ToolLink>
-					</li>)
-				}</ul>
+						.sort(entryCompare)
+						.map(head => <li key={head.id}>{toEntryString(head)}</li>)
+					}</ul>
 
 			}}</ToolInfo>
 
 			<ToolInfo>{{
 
-				"Info": homepage && homepage.length && homepage.map(url =>
-					<a key={url} href={url}>{toIdString(url, { compact: true })}</a>
-				)
+				"Info": homepage?.length && <ul>{homepage.map(url =>
+					<li key={url}><a href={url}>{toIdString(url, { compact: true })}</a></li>
+				)}</ul>
 
 			}}</ToolInfo>
 
@@ -149,55 +141,48 @@ export function DataUnit() {
 
 		<ToolFrame placeholder={Events[icon]} as={({
 
+			label,
 			comment,
 
+			prefLabel,
+
 			partner,
+
 			unitOf,
-			hasUnit
+			hasUnit,
+			subject
 
 		}) => {
 
-			const parents=unitOf.filter(unit => !partner || unit.id !== partner.id);
+			const parent=unitOf.filter(unit => !partner || unit.id !== partner.id);
 
 			return <>
 
+				<strong>{toLocalString(prefLabel)}</strong>
+
 				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
 
-				{(parents?.length || hasUnit?.length) && <>
+				{(parent.length || hasUnit || subject) && <ToolPanel>
 
-                    <hr/>
+					{parent.length > 0 && <ToolLabel name={"Parent Organizations"} wide>
+                        <ul>{parent.slice().sort(entryCompare).map(parent =>
+							<li key={parent.id}><ToolLink>{parent}</ToolLink></li>
+						)}</ul>
+                    </ToolLabel>}
 
-                    <dl>
+					{hasUnit && <ToolLabel name={"Organizational Units"} wide>
+                        <ul>{hasUnit.slice().sort(entryCompare).map(unit =>
+							<li key={unit.id}><ToolLink>{unit}</ToolLink></li>
+						)}</ul>
+                    </ToolLabel>}
 
-						{parents?.length > 0 && <>
+					{subject && <ToolLabel name={"Topics"} wide>
+                        <ul>{subject.slice().sort(entryCompare).map(subject =>
+							<li key={subject.id}><ToolLink>{subject}</ToolLink></li>
+						)}</ul>
+                    </ToolLabel>}
 
-                            <dt>Parent Organizations</dt>
-
-                            <dt>
-                                <ul>{parents
-									.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
-									.map(parent => <li key={parent.id}><ToolLink>{parent}</ToolLink></li>)
-								}</ul>
-                            </dt>
-
-                        </>}
-
-						{hasUnit && <>
-
-                            <dt>Organizational Units</dt>
-
-                            <dt>
-                                <ul>{hasUnit
-									.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
-									.map(unit => <li key={unit.id}><ToolLink>{unit}</ToolLink></li>)
-								}</ul>
-                            </dt>
-
-                        </>}
-
-                    </dl>
-
-                </>}
+                </ToolPanel>}
 
 			</>;
 		}}>{unit}</ToolFrame>

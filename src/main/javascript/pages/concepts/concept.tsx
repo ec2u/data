@@ -18,11 +18,13 @@
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
-import { sortFrames } from "@metreeca/core/frame";
+import { entryCompare } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
+import { ToolLabel } from "@metreeca/view/layouts/label";
+import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import React from "react";
@@ -69,10 +71,11 @@ export function DataConcept() {
 	const [concept]=useResource(Concept);
 
 
-	return <DataPage name={[Schemes, concept?.inScheme, concept]}>
+	return <DataPage name={[Schemes, concept?.inScheme, {}]}>
 
 		<ToolFrame placeholder={Schemes[icon]} as={({
 
+			prefLabel,
 			definition,
 
 			broader,
@@ -81,51 +84,31 @@ export function DataConcept() {
 
 		}) => <>
 
+			<dfn>{toLocalString(prefLabel)}</dfn>
+
 			{definition && <p>{toLocalString(definition)}</p>}
 
-			{(broader?.length || narrower?.length || related?.length) && <>
+			<ToolPanel>
 
-                <hr/>
+				{broader && <ToolLabel name={"Broader Concepts"}>
+                    <ul>{broader.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+					)}</ul>
+                </ToolLabel>}
 
-                <dl>
+				{narrower && <ToolLabel name={"Narrower Concepts"}>
+                    <ul>{narrower.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+					)}</ul>
+                </ToolLabel>}
 
-					{broader?.length && <>
+				{related && <ToolLabel name={"Related Concepts"}>
+                    <ul>{related.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+					)}</ul>
+                </ToolLabel>}
 
-                        <dt>Broader Concepts</dt>
-                        <dd>
-                            <ul>{sortFrames(broader).map(entry =>
-								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
-							)}</ul>
-                        </dd>
-
-                    </>}
-
-					{narrower?.length && <>
-
-                        <dt>Narrower Concepts</dt>
-                        <dd>
-                            <ul>{sortFrames(narrower).map(entry =>
-								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
-							)}</ul>
-                        </dd>
-
-                    </>}
-
-					{related?.length && <>
-
-                        <dt>Narrower Concepts</dt>
-                        <dd>
-                            <ul>{sortFrames(related).map(entry =>
-								<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
-							)}</ul>
-                        </dd>
-
-                    </>}
-
-                </dl>
-
-            </>}
-
+			</ToolPanel>
 		</>}>{concept}</ToolFrame>
 
 	</DataPage>;

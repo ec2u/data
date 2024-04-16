@@ -39,8 +39,8 @@ export const Document=immutable({
 
 	id: required("/documents/{code}"),
 
-	label: required(local),
-	comment: optional(local),
+	title: required(local),
+	description: optional(local),
 
 	url: multiple(string),
 
@@ -103,11 +103,9 @@ export function DataDocument() {
 
 	const [document]=useResource(Document);
 
-	return <DataPage name={[Documents, document]}
+	return <DataPage name={[Documents, {}]}
 
 		tray={<ToolFrame as={({
-
-			label,
 
 			url,
 
@@ -142,8 +140,6 @@ export function DataDocument() {
 			<ToolInfo>{{
 
 				"Code": identifier && <span>{identifier}</span>,
-
-				"Title": <span>{toLocalString(label)}</span>,
 
 				"Web": url?.length && <ul>{url.map(item =>
 					<li key={item}><a href={item}>{toIdString(item, { compact: true })}</a></li>
@@ -216,19 +212,18 @@ export function DataDocument() {
 
 		<ToolFrame placeholder={Events[icon]} as={({
 
-			comment,
+			title,
+			description,
 
 			relation
 
 		}) => <>
 
-			{comment && <ToolMark>{
+			<dfn>{toLocalString(title)}</dfn>
 
-				comment && toLocalString(comment)
+			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
-			}</ToolMark>}
-
-			{relation?.length && <>
+			{relation && <>
 
                 <h1>Related Documents</h1>
 

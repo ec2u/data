@@ -13,19 +13,14 @@ insert {
 
 } where {
 
-    ?organization a org:Organization ;
-        skos:prefLabel ?pref .
+    ?organization a org:Organization .
 
-    bind (lang(?pref) as ?lang)
-
+    optional { ?organization skos:prefLabel ?pref }
     optional {
         ?organization skos:altLabel ?alt
-        filter (lang(?alt) = ?lang)
+        filter (lang(?alt) = lang(?pref))
     }
-    optional {
-        ?organization skos:definition ?definition
-        filter (lang(?definition) = ?lang)
-    }
+    optional { ?organization skos:definition ?definition }
 
     bind(coalesce(?alt, ?pref) as ?label)
 

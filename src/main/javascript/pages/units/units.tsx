@@ -18,7 +18,8 @@ import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { toUnitLabel } from "@ec2u/data/pages/units/unit";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
-import { entry, toEntryString } from "@metreeca/core/entry";
+import { entry } from "@metreeca/core/entry";
+import { toFrameString } from "@metreeca/core/frame";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { useCollection } from "@metreeca/data/models/collection";
@@ -56,18 +57,7 @@ export const Units=immutable({
 		prefLabel: required(local),
 		altLabel: optional(local),
 
-		unitOf: multiple({
-			id: required(id),
-			label: required(local)
-		}),
-
-		classification: multiple({
-			id: required(id),
-			label: required(local)
-		}),
-
-		subject: multiple({
-			id: required(id),
+		partner: optional({
 			label: required(local)
 		})
 
@@ -119,8 +109,7 @@ export function DataUnits() {
 			prefLabel,
 			altLabel,
 
-			unitOf,
-			classification
+			partner
 
 		}) =>
 
@@ -128,17 +117,7 @@ export function DataUnits() {
 
 				title={<ToolLink>{{ id, label: toUnitLabel({ prefLabel, altLabel }) }}</ToolLink>}
 
-				tags={<>
-
-					{unitOf?.length && unitOf.map((organization, index) =>
-						<div key={index}>{toEntryString(organization)}</div>
-					)}
-
-					{classification?.length && classification.map((type, index) =>
-						<div key={index}>{toEntryString(type)}</div>
-					)}
-
-				</>}
+				tags={partner && <div>{partner && toFrameString(partner) || "EC2U Alliance"}</div>}
 
 			>{
 
