@@ -17,6 +17,7 @@
 package eu.ec2u.data.concepts;
 
 import com.metreeca.http.rdf.actions.Retrieve;
+import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
@@ -31,6 +32,7 @@ import java.util.stream.Stream;
 import static com.metreeca.http.rdf.Values.*;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.http.toolkits.Resources.text;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
@@ -43,9 +45,8 @@ import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
  * European Science Vocabulary (EuroSciVoc).
  *
  * <p>European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati
- * Manual
- * taxonomy. It was extended with fields of science categories extracted from CORDIS content through a semi-automatic
- * process developed with Natural Language Processing (NLP) techniques</p>
+ * Manual taxonomy. It was extended with fields of science categories extracted from CORDIS content through a
+ * semi-automatic process developed with Natural Language Processing (NLP) techniques</p>
  *
  * @see <a
  * href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/euroscivoc">European
@@ -74,49 +75,59 @@ public final class EuroSciVoc implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> Xtream.of(URL)
+        update(connection -> {
 
-                .map(new Retrieve()
-                        .format(TURTLE)
-                )
+            Xtream.of(URL)
 
-                .flatMap(model -> Stream.of(
+                    .map(new Retrieve()
+                            .format(TURTLE)
+                    )
 
-                        rdf(resource(this, ".ttl"), BASE),
+                    .flatMap(model -> Stream.of(
 
-                        model.stream()
+                            rdf(resource(this, ".ttl"), BASE),
 
-                                .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT_SCHEME)
-                                        .or(pattern(null, RDF.TYPE, SKOS.CONCEPT))
-                                )
+                            model.stream()
 
-                                .filter(statement -> statement.getSubject().stringValue().startsWith(External))
+                                    .filter(pattern(null, RDF.TYPE, SKOS.CONCEPT_SCHEME)
+                                            .or(pattern(null, RDF.TYPE, SKOS.CONCEPT))
+                                    )
 
-                                .map(statement -> statement(
-                                        rewrite((IRI)statement.getSubject(), External, Internal),
-                                        OWL.SAMEAS,
-                                        statement.getSubject()
-                                ))
+                                    .filter(statement -> statement.getSubject().stringValue().startsWith(External))
 
-                                .collect(toList()),
+                                    .map(statement -> statement(
+                                            rewrite((IRI)statement.getSubject(), External, Internal),
+                                            OWL.SAMEAS,
+                                            statement.getSubject()
+                                    ))
 
-                        model.stream()
+                                    .collect(toList()),
 
-                                .map(statement -> rewrite(statement, External, Internal))
-                                .map(statement -> replace(statement, Root, Scheme))
+                            model.stream()
 
+                                    .map(statement -> rewrite(statement, External, Internal))
+                                    .map(statement -> replace(statement, Root, Scheme))
 
-                                .collect(toList())
+                                    .collect(toList())
 
-                ))
+                    ))
 
-                .forEach(new Upload()
-                        .contexts(Scheme)
-                        .langs(Resources.Languages)
-                        .clear(true)
-                )
+                    .forEach(new Upload()
+                            .contexts(Scheme)
+                            .langs(Resources.Languages)
+                            .clear(true)
+                    );
 
-        );
+            Stream.of(text(resource(this, ".ul")))
+
+                    .forEach(new Update()
+                            .dflt(Scheme)
+                            .insert(Scheme)
+                            .remove(Scheme)
+                            .clear(false)
+                    );
+
+        });
     }
 
 }

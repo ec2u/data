@@ -9,6 +9,7 @@ insert {
 
         skos:inScheme ?scheme ;
 
+        skos:notation ?notation ;
         skos:prefLabel ?prefLabel ;
         skos:altLabel ?altLabel ;
         skos:definition ?definition ;
@@ -29,6 +30,7 @@ insert {
 
     optional { ?concept_ skos:topConceptOf/^owl:sameAs ?topConceptOf }
 
+    optional { ?concept_ skos:notation ?notation }
     optional { ?concept_ skos:prefLabel ?prefLabel }
     optional { ?concept_ skos:altLabel ?altLabel }
     optional { ?concept_ skos:definition ?definition }

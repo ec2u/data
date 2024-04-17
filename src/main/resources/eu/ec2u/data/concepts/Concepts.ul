@@ -2,6 +2,7 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix void: <http://rdfs.org/ns/void#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 delete {
 
@@ -31,14 +32,30 @@ delete {
 insert {
 
     ?concept
-        rdfs:label ?pref ;
+        rdfs:label ?label ;
         rdfs:comment ?definition.
 
 } where {
 
     ?concept a skos:Concept .
 
+    optional {
+
+        ?concept skos:notation ?notation
+
+        filter (DATATYPE(?notation) = xsd:string)
+
+    }
+
     optional { ?concept skos:prefLabel ?pref } # !!! clip
     optional { ?concept skos:definition ?definition } # !!! clip
+
+    bind (
+        if(bound(?notation),
+            strlang (concat(?notation, ' - ', str(?pref)), lang(?pref)),
+            ?pref
+        )
+        as ?label
+    )
 
 } # complete concept entry

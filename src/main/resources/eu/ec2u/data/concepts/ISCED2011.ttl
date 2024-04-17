@@ -23,42 +23,52 @@
 
 </concepts/isced-2011/0> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "0 - Early childhood education"@en .
+    skos:notation '0' ;
+    skos:prefLabel "Early childhood education"@en .
 
 </concepts/isced-2011/1> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "1 - Primary education"@en .
+    skos:notation '1' ;
+    skos:prefLabel "Primary education"@en .
 
 </concepts/isced-2011/2> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "2 - Lower secondary education"@en .
+    skos:notation '2' ;
+    skos:prefLabel "Lower secondary education"@en .
 
 </concepts/isced-2011/3> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "3 - Upper secondary education"@en .
+    skos:notation '3' ;
+    skos:prefLabel "Upper secondary education"@en .
 
 </concepts/isced-2011/4> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "4 - Post-secondary non-tertiary education"@en .
+    skos:notation '4' ;
+    skos:prefLabel "Post-secondary non-tertiary education"@en .
 
 </concepts/isced-2011/5> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "5 - Short-cycle tertiary education"@en .
+    skos:notation '5' ;
+    skos:prefLabel "Short-cycle tertiary education"@en .
 
 </concepts/isced-2011/6> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "6 - Bachelor’s or equivalent level"@en .
+    skos:notation '6' ;
+    skos:prefLabel "Bachelor’s or equivalent level"@en .
 
 </concepts/isced-2011/7> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "7 - Master’s or equivalent level"@en .
+    skos:notation '7' ;
+    skos:prefLabel "Master’s or equivalent level"@en .
 
 </concepts/isced-2011/8> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "8 - Doctoral or equivalent level"@en .
+    skos:notation '8' ;
+    skos:prefLabel "Doctoral or equivalent level"@en .
 
 </concepts/isced-2011/9> a skos:Concept ;
     skos:topConceptOf </concepts/isced-2011> ;
-    skos:prefLabel "9 - Not elsewhere classified"@en .
+    skos:notation '9' ;
+    skos:prefLabel "Not elsewhere classified"@en .
 
 

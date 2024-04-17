@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
-        version="1.1" viewBox="54 92 641 349" width="641" height="349">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="54 92 641 349" width="641" height="349">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="events" stroke="none" stroke-dasharray="none" fill-opacity="1" fill="none" stroke-opacity="1">
+    <g id="events" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
         <title>events</title>
         <rect fill="white" x="54" y="92" width="641" height="349"/>
         <g id="events_Layer_1">
@@ -99,8 +99,8 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_239">
-                <rect x="218.74823" y="319.53912" width="77.22656" height="13" fill="white"/>
-                <text transform="translate(221.74823 320.53912)" fill="black">
+                <rect x="218.74823" y="318.49133" width="77.22656" height="13" fill="white"/>
+                <text transform="translate(221.74823 319.49133)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:location *</tspan>
                 </text>
             </g>
@@ -186,8 +186,8 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_227">
-                <rect x="104.9889" y="309.13147" width="92.74365" height="24" fill="white"/>
-                <text transform="translate(107.9889 310.13147)" fill="black">
+                <rect x="104.9889" y="307.50296" width="92.74365" height="24" fill="white"/>
+                <text transform="translate(107.9889 308.50296)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:publisher 0..1</tspan>
                     <tspan font-family="Roboto" font-size="9" fill="black" x="5.097656" y="20">schema:organizer *
                     </tspan>

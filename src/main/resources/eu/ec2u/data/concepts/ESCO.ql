@@ -1,6 +1,7 @@
 prefix esco: <http://data.europa.eu/esco/model#>
 prefix dct: <http://purl.org/dc/terms/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 construct {
 
@@ -9,6 +10,7 @@ construct {
 
     ?concept a skos:Concept ;
         skos:inScheme ?scheme ;
+        skos:notation ?notation ;
         skos:prefLabel ?prefLabel ;
         skos:altLabel ?altLabel ;
         skos:definition ?definition ;
@@ -24,8 +26,7 @@ construct {
     }
 
     ?concept a skos:Concept ;
-        skos:broader?/skos:broader?/skos:broader?/skos:topConceptOf ?scheme ; # depth-limited
-        skos:prefLabel ?prefLabel ;
+        skos:broader?/skos:broader?/skos:broader?/skos:topConceptOf ?scheme . # depth-limited
 
     optional {
 
@@ -35,6 +36,12 @@ construct {
 
     }
 
+    optional {
+        ?concept skos:notation ?notation
+        filter (datatype(?notation) = xsd:string)
+    }
+
+    optional { ?concept skos:prefLabel ?prefLabel }
     optional { ?concept skos:altLabel ?altLabel }
 
     optional {
@@ -51,7 +58,7 @@ construct {
 
     optional {
 
-        ?concept dct:dct
+        ?concept dct:description
                 [
                     esco:language ?l ;
                     esco:nodeLiteral ?t

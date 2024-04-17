@@ -52,7 +52,7 @@ export const Schemes=immutable({
 	members: multiple({
 
 		id: required(id),
-		label: optional(local),
+		label: required(local),
 		comment: optional(local),
 
 		title: required(local),

@@ -26,6 +26,7 @@ the  [SKOS](https://www.w3.org/TR/skos-reference/) data model.
 | [skos:Concept](https://www.w3.org/TR/skos-reference/#L2039)      | [rdfs:Resource](resources.md)        |      | Concept included in a [classification taxonomy](#conceptscheme)                               |
 | [skos:inScheme](https://www.w3.org/TR/skos-reference/#L2457)     | [skos:ConceptScheme](#conceptscheme) | 1    | link to the taxonomy the concept belongs to                                                   |
 | [skos:topConceptOf](https://www.w3.org/TR/skos-reference/#L2457) | [skos:ConceptScheme](#conceptscheme) | 0..1 | link to the taxonomy the concept belongs to as a top-level concept                            |
+| [skos:notation](https://www.w3.org/TR/skos-reference/#notations) | string                               | *    | unique codes                                                                                  |
 | [skos:prefLabel](https://www.w3.org/TR/skos-reference/#L1304)    | text                                 | 1    | complete name                                                                                 |
 | [skos:altLabel](https://www.w3.org/TR/skos-reference/#L1304)     | text                                 | *    | shortened / informal / alternative name                                                       |
 | [skos:hiddenLabel](https://www.w3.org/TR/skos-reference/#L1304)  | text                                 | *    | other names included to support indexing and search operations, but **not** otherwise visible |
