@@ -16,7 +16,4 @@
 * add to package
 * request link and download
 * unpack to `data/esco.ttl`
-
-"This service uses the ESCO classification of the European Commission."
-
-https://esco.ec.europa.eu/nb/node/173
+* run ESCO

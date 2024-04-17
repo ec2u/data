@@ -19,10 +19,13 @@ package eu.ec2u.data.universities;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Set;
 
 import static com.metreeca.http.open.actions.Wikidata.wd;
 
 import static eu.ec2u.data.EC2U.item;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public enum _Universities {
 
@@ -105,5 +108,9 @@ public enum _Universities {
         this.Language=language;
         this.TimeZone=zone;
     }
+
+    public static final Set<String> Languages=Arrays.stream(values())
+            .map(universities -> universities.Language)
+            .collect(toUnmodifiableSet());
 
 }
