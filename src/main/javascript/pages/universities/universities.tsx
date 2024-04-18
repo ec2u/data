@@ -100,7 +100,7 @@ export function DataUniversities() {
 
 	>
 
-		<ToolSheet placeholder={Universities[icon]} as={({
+		<ToolSheet placeholder={Universities[icon]} sorted={"city.label"} as={({
 
 			id,
 			prefLabel,

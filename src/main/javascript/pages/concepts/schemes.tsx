@@ -89,7 +89,7 @@ export function DataSchemes() {
 			<div className={"info"} style={{
 
 				marginTop: "auto",
-				fontSize: "80%"
+				fontSize: "90%"
 
 			}}>This service uses the <a href={"https://esco.ec.europa.eu/en/classification"}>ESCO</a>
 				{" "} classification of the European Commission.

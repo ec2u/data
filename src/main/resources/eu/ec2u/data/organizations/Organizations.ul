@@ -9,19 +9,16 @@ insert {
         rdfs:label ?label ;
         rdfs:comment ?definition ;
 
-        skos:hiddenLabel ?pref, ?alt.
+        skos:hiddenLabel ?label, ?pref, ?alt.
 
 } where {
 
     ?organization a org:Organization .
 
     optional { ?organization skos:prefLabel ?pref }
-    optional {
-        ?organization skos:altLabel ?alt
-        filter (lang(?alt) = lang(?pref))
-    }
+    optional { ?organization skos:altLabel ?alt }
     optional { ?organization skos:definition ?definition }
 
-    bind(coalesce(?alt, ?pref) as ?label)
+    bind(if(!bound(?alt) || !bound(?pref) || lang(?alt) = lang(?pref), coalesce(?alt, ?pref), 1/0) as ?label)
 
 } # complete entry

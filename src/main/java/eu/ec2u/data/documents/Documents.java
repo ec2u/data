@@ -28,14 +28,12 @@ import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.util.regex.Pattern;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
@@ -128,9 +126,7 @@ public final class Documents extends Delegator {
                                                 field(partner, iri()),
                                                 field(DCTERMS.TYPE, iri())
 
-                                        ),
-
-                                        filter(RDF.TYPE, Document)
+                                        )
 
                                 ))
 
