@@ -29,7 +29,7 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.universities._Universities.Jena;
+import static eu.ec2u.data.universities.University.Jena;
 import static java.lang.String.format;
 
 public final class UnitsJena implements Runnable {

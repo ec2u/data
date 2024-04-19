@@ -45,7 +45,7 @@ import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.universities._Universities.Pavia;
+import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.time.ZoneOffset.UTC;
 
@@ -58,11 +58,11 @@ public final class EventsPaviaCity implements Runnable {
             field(ID, iri("http://www.vivipavia.it/site/home/eventi.html")),
             field(TYPE, Organization),
 
-            field(partner, Pavia.Id),
+            field(partner, Pavia.id),
 
             field(Schema.name,
                     literal("City of Pavia / ViviPavia", "en"),
-                    literal("Comune di Pavia / ViviPavia", Pavia.Language)
+                    literal("Comune di Pavia / ViviPavia", Pavia.language)
             ),
 
             field(Schema.about, OrganizationTypes.City)
@@ -167,7 +167,7 @@ public final class EventsPaviaCity implements Runnable {
                                             field(TYPE, Event),
 
                                             field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
-                                            field(partner, Pavia.Id),
+                                            field(partner, Pavia.id),
 
                                             field(Schema.url, url),
                                             field(Schema.name, focus.seq(Schema.name).value()),

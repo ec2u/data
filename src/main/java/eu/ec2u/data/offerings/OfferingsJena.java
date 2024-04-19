@@ -55,7 +55,7 @@ import static eu.ec2u.data.offerings.Offerings.educationalCredentialAwarded;
 import static eu.ec2u.data.offerings.Offerings.educationalLevel;
 import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
 import static eu.ec2u.data.things.Schema.schema;
-import static eu.ec2u.data.universities._Universities.Jena;
+import static eu.ec2u.data.universities.University.Jena;
 import static java.util.Map.entry;
 
 public final class OfferingsJena implements Runnable {
@@ -158,7 +158,7 @@ public final class OfferingsJena implements Runnable {
                 field(ID, item(Programs.Context, Jena, url.stringValue())),
 
                 field(RDF.TYPE, EducationalOccupationalProgram),
-                field(Resources.partner, Jena.Id),
+                field(Resources.partner, Jena.id),
 
                 field(Schema.url, url),
 

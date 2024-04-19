@@ -64,7 +64,7 @@ import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
-import static eu.ec2u.data.universities._Universities.Turku;
+import static eu.ec2u.data.universities.University.Turku;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
@@ -79,11 +79,11 @@ public final class EventsTurkuUniversity implements Runnable {
             field(ID, iri("https://www.utu.fi/event-search/")),
             field(TYPE, Organization),
 
-            field(partner, Turku.Id),
+            field(partner, Turku.id),
 
             field(Schema.name,
                     literal("University of Turku / News", "en"),
-                    literal("Turun yliopisto / Ajankohtaista", Turku.Language)
+                    literal("Turun yliopisto / Ajankohtaista", Turku.language)
             ),
 
             field(Schema.about, OrganizationTypes.University)
@@ -96,13 +96,13 @@ public final class EventsTurkuUniversity implements Runnable {
 
     private static Literal instant(final String timestamp, final Instant instant) {
         return literal(LocalDateTime.parse(timestamp, SQL_TIMESTAMP)
-                .toInstant(Turku.TimeZone.getRules().getOffset(instant))
+                .toInstant(Turku.zone.getRules().getOffset(instant))
         );
     }
 
     private static Literal datetime(final String timestamp, final Instant instant) {
         return literal(OffsetDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.TimeZone.getRules().getOffset(instant))
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.zone.getRules().getOffset(instant))
                 .truncatedTo(ChronoUnit.SECONDS)
         );
     }
@@ -233,7 +233,7 @@ public final class EventsTurkuUniversity implements Runnable {
                 field(dateModified, json.string("updated").map(timestamp -> instant(timestamp, now))),
                 field(updated, json.string("updated").map(timestamp -> instant(timestamp, now)).orElseGet(() -> literal(now))),
 
-                field(partner, Turku.Id),
+                field(partner, Turku.id),
                 field(publisher, Publisher),
                 field(organizer, json.paths("additional_information.contact").optMap(this::organizer)),
 
@@ -251,8 +251,8 @@ public final class EventsTurkuUniversity implements Runnable {
 
             final Optional<String> name=json.string("free_text");
             final Optional<Value> url=json.string("url").flatMap(Parsers::url).map(Frame::iri);
-            final Optional<Value> addressCountry=Optional.ofNullable(Turku.Country);
-            final Optional<Value> addressLocality=Optional.ofNullable(Turku.City);
+            final Optional<Value> addressCountry=Optional.ofNullable(Turku.country);
+            final Optional<Value> addressLocality=Optional.ofNullable(Turku.city);
             final Optional<Value> postalCode=json.string("postal_code").map(Frame::literal);
             final Optional<Value> streetAddress=json.string("street").map(Frame::literal);
 
@@ -276,7 +276,7 @@ public final class EventsTurkuUniversity implements Runnable {
                     field(RDF.TYPE, Schema.Place),
 
                     field(Schema.url, url),
-                    field(Schema.name, name.map(text -> literal(text, Turku.Language))),
+                    field(Schema.name, name.map(text -> literal(text, Turku.language))),
 
                     field(Schema.address, frame(
 
@@ -313,7 +313,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 field(RDF.TYPE, Organization),
 
-                field(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.Language))),
+                field(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.language))),
                 field(Schema.email, json.string("email").map(Frame::literal))
 
         ));

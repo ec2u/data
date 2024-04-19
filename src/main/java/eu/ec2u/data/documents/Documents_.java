@@ -26,7 +26,7 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.data.universities._Universities;
+import eu.ec2u.data.universities.University;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVRecord;
@@ -67,13 +67,13 @@ final class Documents_ {
 
         private final String source;
         private final IRI context;
-        private final _Universities university;
+        private final University university;
 
 
         private final Vault vault=service(vault());
 
 
-        CSVLoader(final String source, final IRI context, final _Universities university) {
+        CSVLoader(final String source, final IRI context, final University university) {
 
             if ( source == null ) {
                 throw new NullPointerException("null source");
@@ -129,7 +129,7 @@ final class Documents_ {
 
                     field(RDF.TYPE, Document),
 
-                    field(partner, university.Id),
+                    field(partner, university.id),
 
                     field(Schema.url, value(record, "URL (English)", Parsers::uri).map(Frame::iri)),
                     field(Schema.url, value(record, "URL (Local)", Parsers::uri).map(Frame::iri)),
@@ -143,7 +143,7 @@ final class Documents_ {
                     ),
 
                     field(DCTERMS.LANGUAGE, titleLocal
-                            .map(v -> literal(university.Language))
+                            .map(v -> literal(university.language))
                     ),
 
                     field(DCTERMS.TITLE, titleEnglish
@@ -151,7 +151,7 @@ final class Documents_ {
                     ),
 
                     field(DCTERMS.TITLE, titleLocal
-                            .map(v -> literal(v, university.Language))
+                            .map(v -> literal(v, university.language))
                     ),
 
                     field(DCTERMS.DESCRIPTION, value(record, "Description (English)")
@@ -159,7 +159,7 @@ final class Documents_ {
                     ),
 
                     field(DCTERMS.DESCRIPTION, value(record, "Description (Local)")
-                            .map(v -> literal(v, university.Language))
+                            .map(v -> literal(v, university.language))
                     ),
 
                     field(DCTERMS.CREATED, value(record, "Created", Parsers::localDate)
@@ -274,7 +274,7 @@ final class Documents_ {
                                 field(RDF.TYPE, ORG.ORGANIZATION),
 
                                 field(SKOS.PREF_LABEL, nameEnglish.map(v -> literal(v, "en"))),
-                                field(SKOS.PREF_LABEL, nameLocal.map(v -> literal(v, university.Language))),
+                                field(SKOS.PREF_LABEL, nameLocal.map(v -> literal(v, university.language))),
 
                                 field(FOAF.HOMEPAGE, home)
 

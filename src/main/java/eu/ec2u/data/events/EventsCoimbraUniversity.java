@@ -32,7 +32,7 @@ import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.universities._Universities.Coimbra;
+import static eu.ec2u.data.universities.University.Coimbra;
 
 public final class EventsCoimbraUniversity implements Runnable {
 
@@ -43,11 +43,11 @@ public final class EventsCoimbraUniversity implements Runnable {
             field(ID, iri("https://agenda.uc.pt/")),
             field(TYPE, Organization),
 
-            field(partner, Coimbra.Id),
+            field(partner, Coimbra.id),
 
             field(Schema.name,
                     literal("University of Coimbra / Agenda UC", "en"),
-                    literal("Universidade de Coimbra / Agenda UC", Coimbra.Language)
+                    literal("Universidade de Coimbra / Agenda UC", Coimbra.language)
             ),
 
             field(Schema.about, OrganizationTypes.University)
@@ -68,14 +68,14 @@ public final class EventsCoimbraUniversity implements Runnable {
                 .of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(new Tribe("https://agenda.uc.pt/")
-                        .country(Coimbra.Country)
-                        .locality(Coimbra.City)
-                        .language(Coimbra.Language)
-                        .zone(Coimbra.TimeZone)
+                        .country(Coimbra.country)
+                        .locality(Coimbra.city)
+                        .language(Coimbra.language)
+                        .zone(Coimbra.zone)
                 )
 
                 .map(event -> frame(event,
-                        field(partner, Coimbra.Id),
+                        field(partner, Coimbra.id),
                         field(publisher, Publisher)
                 ))
 

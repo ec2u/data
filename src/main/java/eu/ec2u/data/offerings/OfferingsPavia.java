@@ -55,7 +55,7 @@ import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.*;
 import static eu.ec2u.data.resources.Resources_.localized;
-import static eu.ec2u.data.universities._Universities.Pavia;
+import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -140,9 +140,9 @@ public final class OfferingsPavia implements Runnable {
                 field(ID, item(Programs.Context, Pavia, program.stringValue())),
 
                 field(RDF.TYPE, EducationalOccupationalProgram),
-                field(Resources.partner, Pavia.Id),
+                field(Resources.partner, Pavia.id),
 
-                field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.Language)),
+                field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.language)),
 
                 field(Schema.url, focus.seq(VCARD4.URL).values()
                         .map(Value::stringValue)
@@ -156,8 +156,8 @@ public final class OfferingsPavia implements Runnable {
 
                 field(educationalCredentialAwarded, focus.seq(VIVO.termType).values()),
 
-                field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.Language)), // !!!
-                field(programPrerequisites, localized(focus.seq(HEMO.enrollmentRequirementsDescription).values(), Pavia.Language)),
+                field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.language)), // !!!
+                field(programPrerequisites, localized(focus.seq(HEMO.enrollmentRequirementsDescription).values(), Pavia.language)),
 
                 field(hasCourse, focus.seq(VIVO.conceptAssociatedWith).values().map(course ->
                         item(Courses.Context, Pavia, course.stringValue()))
@@ -191,28 +191,28 @@ public final class OfferingsPavia implements Runnable {
                 field(ID, item(Courses.Context, Pavia, course.stringValue())),
 
                 field(RDF.TYPE, Course),
-                field(Resources.partner, Pavia.Id),
+                field(Resources.partner, Pavia.id),
 
-                field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.Language)),
+                field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.language)),
 
                 field(courseCode, focus.seq(VIVO.identifier).values()),
 
                 field(Schema.inLanguage, literal(focus.seq(HEMO.courseTeachingLanguage).value()
                         .map(Value::stringValue)
                         .flatMap(Languages::languageCode)
-                        .orElse(Pavia.Language)
+                        .orElse(Pavia.language)
                 )),
 
-                field(teaches, localized(focus.seq(HEMO.courseContentsDescription).values(), Pavia.Language)),
-                field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.Language)),
-                field(coursePrerequisites, localized(focus.seq(HEMO.coursePrerequisitesDescription).values(), Pavia.Language)),
+                field(teaches, localized(focus.seq(HEMO.courseContentsDescription).values(), Pavia.language)),
+                field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.language)),
+                field(coursePrerequisites, localized(focus.seq(HEMO.coursePrerequisitesDescription).values(), Pavia.language)),
 
                 // field(competencyRequired,
                 //         localized(focus.seq(HEMO.courseAssessmentMethodsDescription).values(), Pavia.Language)
                 // ),
 
                 field(learningResourceType,
-                        localized(focus.seq(HEMO.courseTeachingMethodsDescription).values(), Pavia.Language)
+                        localized(focus.seq(HEMO.courseTeachingMethodsDescription).values(), Pavia.language)
                 ),
 
 

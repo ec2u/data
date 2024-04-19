@@ -21,7 +21,7 @@ import org.eclipse.rdf4j.model.IRI;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.universities._Universities.Salamanca;
+import static eu.ec2u.data.universities.University.Salamanca;
 
 public final class DocumentsSalamanca implements Runnable {
 

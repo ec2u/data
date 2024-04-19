@@ -46,7 +46,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.concepts.OrganizationTypes.*;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.data.universities._Universities.Salamanca;
+import static eu.ec2u.data.universities.University.Salamanca;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.function.Predicate.not;
@@ -128,7 +128,7 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Optional<Literal> label=json.string("name")
                     .filter(not(String::isEmpty))
-                    .map(name -> literal(name, Salamanca.Language));
+                    .map(name -> literal(name, Salamanca.language));
 
             final Optional<Frame> department=department(json);
             final Optional<Frame> institute=institute(json);
@@ -138,12 +138,12 @@ public final class UnitsSalamancaData implements Runnable {
                     field(ID, EC2U.item(Units.Context, Salamanca, id)),
 
                     field(RDF.TYPE, Unit),
-                    field(partner, Salamanca.Id),
+                    field(partner, Salamanca.id),
 
                     field(DCTERMS.TITLE, label),
                     field(DCTERMS.DESCRIPTION, json.string("topics")
                             .filter(not(String::isEmpty))
-                            .map(topics -> literal(topics, Salamanca.Language))
+                            .map(topics -> literal(topics, Salamanca.language))
                     ),
 
 
@@ -153,7 +153,7 @@ public final class UnitsSalamancaData implements Runnable {
                                     field(ID, EC2U.item(BranchScheme, v)),
                                     field(RDF.TYPE, SKOS.CONCEPT),
                                     field(SKOS.TOP_CONCEPT_OF, BranchScheme),
-                                    field(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
+                                    field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
 
                             ))
                     ),
@@ -164,7 +164,7 @@ public final class UnitsSalamancaData implements Runnable {
                                     field(ID, EC2U.item(RIS3Scheme, v)),
                                     field(RDF.TYPE, SKOS.CONCEPT),
                                     field(SKOS.TOP_CONCEPT_OF, RIS3Scheme),
-                                    field(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
+                                    field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
                             ))
                     ),
 
@@ -176,20 +176,20 @@ public final class UnitsSalamancaData implements Runnable {
                     field(SKOS.PREF_LABEL, label),
                     field(SKOS.ALT_LABEL, json.string("acronym")
                             .filter(not(String::isEmpty))
-                            .map(value -> literal(value, Salamanca.Language))),
+                            .map(value -> literal(value, Salamanca.language))),
 
                     field(ORG.CLASSIFICATION, GroupRecognized),
 
                     field(reverse(ORG.HEAD_OF), head(json)),
 
                     field(ORG.UNIT_OF, department.orElseGet(
-                            () -> frame(field(ID, Salamanca.Id))
+                            () -> frame(field(ID, Salamanca.id))
                     )),
 
                     field(ORG.UNIT_OF, department),
                     field(ORG.UNIT_OF, institute),
 
-                    field(ORG.UNIT_OF, Optional.of(frame(field(ID, Salamanca.Id)))
+                    field(ORG.UNIT_OF, Optional.of(frame(field(ID, Salamanca.id)))
                             .filter(frame -> department.isEmpty() && institute.isEmpty())
                     )
 
@@ -218,9 +218,9 @@ public final class UnitsSalamancaData implements Runnable {
 
                             field(RDF.TYPE, Persons.Person),
 
-                            field(RDFS.LABEL, literal(fullName, Salamanca.Language)),
+                            field(RDFS.LABEL, literal(fullName, Salamanca.language)),
 
-                            field(partner, Salamanca.Id),
+                            field(partner, Salamanca.id),
 
                             field(FOAF.GIVEN_NAME, literal(givenName)),
                             field(FOAF.FAMILY_NAME, literal(familyName))
@@ -232,14 +232,14 @@ public final class UnitsSalamancaData implements Runnable {
     private Optional<Frame> department(final JSONPath json) {
         return json.string("department").map(name -> {
 
-            final Literal title=literal(name, Salamanca.Language);
+            final Literal title=literal(name, Salamanca.language);
 
             return frame(
 
                     field(ID, EC2U.item(Units.Context, Salamanca, name)),
 
                     field(RDF.TYPE, Unit),
-                    field(partner, Salamanca.Id),
+                    field(partner, Salamanca.id),
 
                     field(DCTERMS.TITLE, title),
                     field(SKOS.PREF_LABEL, title),
@@ -248,7 +248,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Frame::iri)),
 
                     field(ORG.CLASSIFICATION, Department),
-                    field(ORG.UNIT_OF, Salamanca.Id)
+                    field(ORG.UNIT_OF, Salamanca.id)
 
             );
         });
@@ -257,14 +257,14 @@ public final class UnitsSalamancaData implements Runnable {
     private Optional<Frame> institute(final JSONPath json) {
         return json.string("institute").map(name -> {
 
-            final Literal title=literal(name, Salamanca.Language);
+            final Literal title=literal(name, Salamanca.language);
 
             return frame(
 
                     field(ID, EC2U.item(Units.Context, Salamanca, name)),
 
                     field(RDF.TYPE, Unit),
-                    field(partner, Salamanca.Id),
+                    field(partner, Salamanca.id),
 
                     field(DCTERMS.TITLE, title),
                     field(SKOS.PREF_LABEL, title),
@@ -275,7 +275,7 @@ public final class UnitsSalamancaData implements Runnable {
                     ),
 
                     field(ORG.CLASSIFICATION, Institute),
-                    field(ORG.UNIT_OF, Salamanca.Id)
+                    field(ORG.UNIT_OF, Salamanca.id)
 
             );
         });

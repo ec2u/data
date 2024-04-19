@@ -21,11 +21,13 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
-import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.ORG;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.WGS84;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
@@ -49,11 +51,8 @@ public final class Universities extends Delegator {
 
     private static final IRI inception=term("inception");
     private static final IRI students=term("students");
-
     private static final IRI country=term("country");
     private static final IRI city=term("city");
-
-    private static final IRI scope=term("scope");
 
 
     public static Shape Universities() {
@@ -74,14 +73,7 @@ public final class Universities extends Delegator {
                 property(WGS84.LAT, required(decimal())),
                 property(WGS84.LONG, required(decimal())),
 
-                property(ORG.SUB_ORGANIZATION_OF, hasValue((iri("https://ec2u.eu/")))),
-
-                property(scope, multiple(
-
-                        property("dataset", reverse(VOID.SUBSET), required(Dataset())),
-                        property(VOID.ENTITIES, required(integer()))
-
-                ))
+                property(ORG.SUB_ORGANIZATION_OF, hasValue((iri("https://ec2u.eu/"))))
 
         );
     }
@@ -125,18 +117,7 @@ public final class Universities extends Delegator {
                         .get(new Relator(frame(
 
                                 field(ID, iri()),
-                                field(RDFS.LABEL, literal("", WILDCARD)),
-
-                                field(scope, frame(
-
-                                        field(reverse(VOID.SUBSET), frame(
-                                                field(ID, literal("")),
-                                                field(RDFS.LABEL, literal(""))
-                                        )),
-
-                                        field(VOID.ENTITIES, literal(Frame.integer(0)))
-
-                                ))
+                                field(RDFS.LABEL, literal("", WILDCARD))
 
                         )))
 

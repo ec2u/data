@@ -52,7 +52,7 @@ import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.universities._Universities.Salamanca;
+import static eu.ec2u.data.universities.University.Salamanca;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
 import static net.fortuna.ical4j.model.Component.VEVENT;
@@ -67,11 +67,11 @@ public final class EventsSalamancaUniversity implements Runnable {
             field(ID, iri("https://sac.usal.es/programacion/")),
             field(TYPE, Organization),
 
-            field(partner, Salamanca.Id),
+            field(partner, Salamanca.id),
 
             field(Schema.name,
                     literal("University of Salamanca / Cultural Activities Service", "en"),
-                    literal("Universidad de Salamanca / Servicio de Actividades Culturales", Salamanca.Language)
+                    literal("Universidad de Salamanca / Servicio de Actividades Culturales", Salamanca.language)
             ),
 
             field(Schema.about, OrganizationTypes.University)
@@ -139,18 +139,18 @@ public final class EventsSalamancaUniversity implements Runnable {
                     final Optional<Literal> label=Optional.ofNullable(event.getSummary())
                             .map(Summary::getValue)
                             .filter(not(String::isEmpty))
-                            .map(value -> literal(value, Salamanca.Language));
+                            .map(value -> literal(value, Salamanca.language));
 
                     final Optional<Literal> description=Optional.ofNullable(event.getDescription())
                             .map(Description::getValue)
                             .filter(not(String::isEmpty))
                             .map(Untag::untag)
-                            .map(value -> literal(value, Salamanca.Language));
+                            .map(value -> literal(value, Salamanca.language));
 
                     final Optional<Literal> disambiguatingDescription=description
                             .map(Value::stringValue)
                             .map(text -> Strings.clip(text, TextLength))
-                            .map(value -> literal(value, Salamanca.Language));
+                            .map(value -> literal(value, Salamanca.language));
 
 
                     final Optional<Literal> created=Optional.ofNullable(event.getCreated())
@@ -194,7 +194,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                             field(dateModified, lastModified),
                             field(updated, literal(lastModified.map(Literal::temporalAccessorValue).map(Instant::from).orElse(now))),
 
-                            field(partner, Salamanca.Id),
+                            field(partner, Salamanca.id),
                             field(publisher, Publisher)
 
                     );
@@ -208,7 +208,7 @@ public final class EventsSalamancaUniversity implements Runnable {
     private OffsetDateTime toOffsetDateTime(final Date date, final TimeZone zone) {
         return OffsetDateTime.ofInstant(date.toInstant(), zone != null
                 ? ZoneOffset.ofTotalSeconds(zone.getOffset(now.toEpochMilli()))
-                : Salamanca.TimeZone.getRules().getOffset(now)
+                : Salamanca.zone.getRules().getOffset(now)
         );
     }
 

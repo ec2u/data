@@ -49,7 +49,7 @@ import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.universities._Universities.Poitiers;
+import static eu.ec2u.data.universities.University.Poitiers;
 
 public final class EventsPoitiersCityGrand implements Runnable {
 
@@ -60,11 +60,11 @@ public final class EventsPoitiersCityGrand implements Runnable {
             field(ID, iri("https://sortir.grandpoitiers.fr/")),
             field(TYPE, Organization),
 
-            field(partner, Poitiers.Id),
+            field(partner, Poitiers.id),
 
             field(Schema.name,
                     literal("Grand Poitiers / Events", "en"),
-                    literal("Grand Poitiers / Sortir", Poitiers.Language)
+                    literal("Grand Poitiers / Sortir", Poitiers.language)
             ),
 
             field(Schema.about, OrganizationTypes.City)
@@ -120,17 +120,17 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             final Optional<Literal> name=item.string("title")
                     .map(XPath::decode)
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Poitiers.language));
 
             final Optional<Literal> description=item.string("description")
                     .map(XPath::decode)
                     .map(Untag::untag)
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Poitiers.language));
 
             final Optional<Literal> disambiguatingDescription=description
                     .map(Value::stringValue)
                     .map(Strings::clip)
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Poitiers.language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
                     .map(Frame::literal);
@@ -156,7 +156,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
                     field(Schema.about, category(item)),
 
-                    field(partner, Poitiers.Id),
+                    field(partner, Poitiers.id),
                     field(publisher, Publisher)
 
             );
@@ -170,14 +170,14 @@ public final class EventsPoitiersCityGrand implements Runnable {
         return xml.string(xpath)
                 .map(OffsetDateTime::parse)
                 .map(OffsetDateTime::toLocalDateTime)
-                .map(v -> v.atOffset(Poitiers.TimeZone.getRules().getOffset(v)))
+                .map(v -> v.atOffset(Poitiers.zone.getRules().getOffset(v)))
                 .map(Frame::literal);
     }
 
     private Optional<Frame> category(final XPath item) {
         return item.string("category").map(category -> {
 
-            final Literal label=literal(category, Poitiers.Language);
+            final Literal label=literal(category, Poitiers.language);
 
             return frame(
 

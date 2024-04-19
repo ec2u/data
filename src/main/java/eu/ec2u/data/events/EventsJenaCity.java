@@ -67,7 +67,7 @@ import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.things.Schema.schema;
-import static eu.ec2u.data.universities._Universities.Jena;
+import static eu.ec2u.data.universities.University.Jena;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.util.function.Predicate.not;
 
@@ -80,11 +80,11 @@ public final class EventsJenaCity implements Runnable {
             field(ID, iri("https://www.jena-veranstaltungen.de/veranstaltungen")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Jena.Id),
+            field(partner, Jena.id),
 
             field(Schema.name,
                     literal("City of Jena / Event Calendar", "en"),
-                    literal("Stadt Jena / Veranstaltungskalender", Jena.Language)
+                    literal("Stadt Jena / Veranstaltungskalender", Jena.language)
             ),
 
             field(Schema.about, OrganizationTypes.City)
@@ -203,15 +203,15 @@ public final class EventsJenaCity implements Runnable {
 
             final Optional<Literal> name=focus.seq(Schema.name).value()
                     .map(Value::stringValue)
-                    .map(text -> literal(text, Jena.Language));
+                    .map(text -> literal(text, Jena.language));
 
             final Optional<Literal> description=focus.seq(Schema.description).value()
                     .map(Value::stringValue)
                     .map(Untag::untag)
-                    .map(text -> literal(text, Jena.Language));
+                    .map(text -> literal(text, Jena.language));
 
             final Optional<Literal> disambiguatingDescription=description
-                    .map(literal -> literal(clip(literal.stringValue()), Jena.Language));
+                    .map(literal -> literal(clip(literal.stringValue()), Jena.language));
 
             // repeating events are described multiple times with different start dates
 
@@ -225,7 +225,7 @@ public final class EventsJenaCity implements Runnable {
                     field(dateModified, focus.seq(dateModified).value(asInstant()).map(Frame::literal)),
                     field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
 
-                    field(partner, Jena.Id),
+                    field(partner, Jena.id),
 
                     field(Schema.url, url),
                     field(Schema.name, name),
@@ -251,7 +251,7 @@ public final class EventsJenaCity implements Runnable {
 
                                     field(RDF.TYPE, SKOS.CONCEPT),
                                     field(SKOS.TOP_CONCEPT_OF, Events.Topics),
-                                    field(SKOS.PREF_LABEL, literal(keyword, Jena.Language))
+                                    field(SKOS.PREF_LABEL, literal(keyword, Jena.language))
 
                             ))
                     )
@@ -279,7 +279,7 @@ public final class EventsJenaCity implements Runnable {
                         field(RDF.TYPE, focus.seq(RDF.TYPE).value()),
 
                         field(Schema.url, focus.seq(Schema.url).value().map(v -> iri(v.stringValue()))),
-                        field(Schema.name, focus.seq(Schema.name).value().map(v -> literal(v.stringValue(), Jena.Language)))
+                        field(Schema.name, focus.seq(Schema.name).value().map(v -> literal(v.stringValue(), Jena.language)))
 
                 ));
     }

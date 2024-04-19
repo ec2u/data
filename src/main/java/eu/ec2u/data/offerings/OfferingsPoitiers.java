@@ -55,7 +55,7 @@ import static eu.ec2u.data.courses.Courses.courseCode;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.hasCourse;
 import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.universities._Universities.Poitiers;
+import static eu.ec2u.data.universities.University.Poitiers;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 
@@ -199,10 +199,10 @@ public final class OfferingsPoitiers implements Runnable {
                 field(ID, item(Programs.Context, Poitiers, code)),
 
                 field(RDF.TYPE, Programs.EducationalOccupationalProgram),
-                field(partner, Poitiers.Id),
+                field(partner, Poitiers.id),
 
                 field(Schema.name, json.string("name")
-                        .map(name -> literal(format("%s - %s", code, name), Poitiers.Language))
+                        .map(name -> literal(format("%s - %s", code, name), Poitiers.language))
                 ),
 
                 field(Schema.identifier, literal(code)),
@@ -223,8 +223,8 @@ public final class OfferingsPoitiers implements Runnable {
                                 field(ID, item(Organizations.Context, Poitiers, name)),
 
                                 field(RDF.TYPE, Schema.Organization),
-                                field(partner, Poitiers.Id),
-                                field(Schema.name, literal(name, Poitiers.Language))
+                                field(partner, Poitiers.id),
+                                field(Schema.name, literal(name, Poitiers.language))
 
                         ))
                 ),
@@ -236,7 +236,7 @@ public final class OfferingsPoitiers implements Runnable {
 
                                 field(RDF.TYPE, SKOS.CONCEPT),
                                 field(SKOS.TOP_CONCEPT_OF, Types),
-                                field(SKOS.PREF_LABEL, literal(name, Poitiers.Language))
+                                field(SKOS.PREF_LABEL, literal(name, Poitiers.language))
 
                         ))
                 ),
@@ -273,10 +273,10 @@ public final class OfferingsPoitiers implements Runnable {
                             field(ID, item(Courses.Context, Poitiers, code)),
 
                             field(RDF.TYPE, Course),
-                            field(partner, Poitiers.Id),
+                            field(partner, Poitiers.id),
 
                             field(Schema.name, json.string("name")
-                                    .map(name -> literal(format("%s - %s", code, name), Poitiers.Language))
+                                    .map(name -> literal(format("%s - %s", code, name), Poitiers.language))
                             ),
 
                             field(courseCode, literal(code)),

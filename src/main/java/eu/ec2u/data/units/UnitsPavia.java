@@ -44,7 +44,7 @@ import static eu.ec2u.data.concepts.OrganizationTypes.Centre;
 import static eu.ec2u.data.concepts.OrganizationTypes.Department;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.data.universities._Universities.Pavia;
+import static eu.ec2u.data.universities.University.Pavia;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
@@ -124,19 +124,19 @@ public final class UnitsPavia implements Runnable {
 
         final Optional<Literal> label=focus.seq(RDFS.LABEL).value(asString())
                 .filter(not(String::isEmpty))
-                .map(name -> literal(name, Pavia.Language));
+                .map(name -> literal(name, Pavia.language));
 
         return frame(
 
                 field(ID, EC2U.item(Units.Context, focus.value(asIRI()).orElseThrow().stringValue())), // !!! review
 
                 field(RDF.TYPE, Unit),
-                field(partner, Pavia.Id),
+                field(partner, Pavia.id),
 
                 field(DCTERMS.TITLE, label),
                 field(SKOS.PREF_LABEL, label),
 
-                field(ORG.UNIT_OF, Pavia.Id),
+                field(ORG.UNIT_OF, Pavia.id),
 
                 field(ORG.CLASSIFICATION, focus.seq(RDF.TYPE).values()
                         .map(Types::get)

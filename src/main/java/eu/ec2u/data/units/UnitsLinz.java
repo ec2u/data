@@ -29,7 +29,7 @@ import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.universities._Universities.Linz;
+import static eu.ec2u.data.universities.University.Linz;
 import static java.lang.String.format;
 
 public final class UnitsLinz implements Runnable {

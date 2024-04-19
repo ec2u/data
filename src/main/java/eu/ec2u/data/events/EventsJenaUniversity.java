@@ -54,7 +54,7 @@ import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities.Universities.University;
-import static eu.ec2u.data.universities._Universities.Jena;
+import static eu.ec2u.data.universities.University.Jena;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.util.stream.Collectors.toList;
 
@@ -70,7 +70,7 @@ public final class EventsJenaUniversity implements Runnable {
                             field(ID, iri("https://www.uni-jena.de/veranstaltungskalender")),
                             field(Schema.name,
                                     literal("Jena University / Events", "en"),
-                                    literal("Universität Jena / Veranstaltungen", Jena.Language)
+                                    literal("Universität Jena / Veranstaltungen", Jena.language)
                             )
                     ),
 
@@ -78,7 +78,7 @@ public final class EventsJenaUniversity implements Runnable {
                             field(ID, iri("https://www.uni-jena.de/international/veranstaltungskalender")),
                             field(Schema.name,
                                     literal("Jena University / International / Events", "en"),
-                                    literal("Universität Jena / International / Veranstaltungen", Jena.Language)
+                                    literal("Universität Jena / International / Veranstaltungen", Jena.language)
                             )
                     ),
 
@@ -86,7 +86,7 @@ public final class EventsJenaUniversity implements Runnable {
                             field(ID, iri("https://www.uni-jena.de/kalenderstudiuminternational")),
                             field(Schema.name,
                                     literal("Jena University / Calendar Studies international / Events", "en"),
-                                    literal("Universität Jena / Kalender Studium international / Veranstaltungen", Jena.Language)
+                                    literal("Universität Jena / Kalender Studium international / Veranstaltungen", Jena.language)
                             )
                     ),
 
@@ -94,7 +94,7 @@ public final class EventsJenaUniversity implements Runnable {
                             field(ID, iri("https://www.uni-jena.de/ec2u-veranstaltungen")),
                             field(Schema.name,
                                     literal("Jena University / EC2U / Events", "en"),
-                                    literal("Universität Jena / EC2U / Veranstaltungen", Jena.Language)
+                                    literal("Universität Jena / EC2U / Veranstaltungen", Jena.language)
                             )
                     ),
 
@@ -102,7 +102,7 @@ public final class EventsJenaUniversity implements Runnable {
                             field(ID, iri("https://www.uni-jena.de/promotion-events")),
                             field(Schema.name,
                                     literal("Jena University / Academic Career / Events", "en"),
-                                    literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", Jena.Language)
+                                    literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", Jena.language)
                             )
                     )
 
@@ -111,7 +111,7 @@ public final class EventsJenaUniversity implements Runnable {
             .map(frame -> frame(frame,
 
                     field(RDF.TYPE, Organization),
-                    field(partner, Jena.Id),
+                    field(partner, Jena.id),
                     field(Schema.about, University)
 
             ))
@@ -227,7 +227,7 @@ public final class EventsJenaUniversity implements Runnable {
 
         final Optional<Literal> brief=focus.seq(Schema.disambiguatingDescription).value(asString())
                 .or(() -> focus.seq(Schema.description).value(asString()))
-                .map(text -> literal(text, Jena.Language));
+                .map(text -> literal(text, Jena.language));
 
         return frame(
 
@@ -235,7 +235,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 field(RDF.TYPE, Event),
 
-                field(partner, Jena.Id),
+                field(partner, Jena.id),
 
                 field(Schema.url, focus.seq(Schema.url).value()),
                 field(Schema.name, label),
@@ -244,7 +244,7 @@ public final class EventsJenaUniversity implements Runnable {
                 field(Schema.disambiguatingDescription, brief),
                 field(Schema.description, focus.seq(Schema.description).value(asString())
                         .or(() -> focus.seq(Schema.disambiguatingDescription).value(asString()))
-                        .map(text -> literal(text, Jena.Language))
+                        .map(text -> literal(text, Jena.language))
                 ),
 
                 field(dateCreated, focus.seq(dateCreated).value(asInstant()).map(Frame::literal)),
@@ -267,7 +267,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 field(Events.publisher, publisher),
 
-                field(organizer, Organizations_.organization(focus.seq(organizer), Jena.Language))
+                field(organizer, Organizations_.organization(focus.seq(organizer), Jena.language))
 
                 // !!! restore after https://github.com/ec2u/data/issues/41 is resolved
                 //

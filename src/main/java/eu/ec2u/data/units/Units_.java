@@ -25,7 +25,7 @@ import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.universities._Universities;
+import eu.ec2u.data.universities.University;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVFormat;
@@ -60,7 +60,7 @@ public final class Units_ {
 
     static final class CSVLoader extends CSVProcessor<Frame> {
 
-        private final _Universities university;
+        private final University university;
 
         private final Map<String, Value> sectors=new HashMap<>();
         private final Map<String, Value> types=new HashMap<>();
@@ -69,7 +69,7 @@ public final class Units_ {
         private final Graph graph=service(graph());
 
 
-        CSVLoader(final _Universities university) {
+        CSVLoader(final University university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");
@@ -84,14 +84,14 @@ public final class Units_ {
             final Optional<String> acronym=value(record, "Acronym");
 
             final Optional<Literal> nameEnglish=value(record, "Name (English)").map(v -> literal(v, "en"));
-            final Optional<Literal> nameLocal=value(record, "Name (Local)").map(v -> literal(v, university.Language));
+            final Optional<Literal> nameLocal=value(record, "Name (Local)").map(v -> literal(v, university.language));
 
             return id(record).map(id -> frame(
 
                     field(ID, id),
 
                     field(RDF.TYPE, Unit),
-                    field(Resources.partner, university.Id),
+                    field(Resources.partner, university.id),
 
                     field(DCTERMS.SUBJECT, value(record, "Sector")
                             .flatMap(this::sector)
@@ -105,7 +105,7 @@ public final class Units_ {
 
                     field(ORG.UNIT_OF, value(record, "Parent")
                             .map(parent -> parents(parent, records))
-                            .orElseGet(() -> Stream.of(university.Id))
+                            .orElseGet(() -> Stream.of(university.id))
                     ),
 
                     field(ORG.UNIT_OF, value(record, "VI")
@@ -120,7 +120,7 @@ public final class Units_ {
                     ),
 
                     field(DCTERMS.DESCRIPTION, value(record, "Description (Local)")
-                            .map(v -> literal(v, university.Language))
+                            .map(v -> literal(v, university.language))
                     ),
 
                     field(DCTERMS.SUBJECT, Stream.concat(
@@ -129,7 +129,7 @@ public final class Units_ {
                                     .flatMap(topics -> topics(topics, "en")),
 
                             value(record, "Topics (Local)").stream()
-                                    .flatMap(topics -> topics(topics, university.Language))
+                                    .flatMap(topics -> topics(topics, university.language))
 
                     )),
 
@@ -137,7 +137,7 @@ public final class Units_ {
                     field(SKOS.PREF_LABEL, nameLocal),
 
                     field(SKOS.ALT_LABEL, acronym.map(v -> literal(v, "en"))), // !!! no language
-                    field(SKOS.ALT_LABEL, acronym.map(v -> literal(v, university.Language))), // !!! no language
+                    field(SKOS.ALT_LABEL, acronym.map(v -> literal(v, university.language))), // !!! no language
 
                     field(FOAF.HOMEPAGE, value(record, "Factsheet", Parsers::uri).map(Values::literal)),
 
@@ -148,7 +148,7 @@ public final class Units_ {
 
                     field(FOAF.HOMEPAGE, value(record, "Factsheet (Local)", Parsers::uri).map(uri -> frame(
                             field(ID, iri(uri)),
-                            field(DCTERMS.LANGUAGE, literal(university.Language))
+                            field(DCTERMS.LANGUAGE, literal(university.language))
                     ))),
 
 
@@ -161,7 +161,7 @@ public final class Units_ {
 
                     field(FOAF.HOMEPAGE, value(record, "Homepage (Local)", Parsers::uri).map(uri -> frame(
                             field(ID, iri(uri)),
-                            field(DCTERMS.LANGUAGE, literal(university.Language))
+                            field(DCTERMS.LANGUAGE, literal(university.language))
                     ))),
 
 
@@ -310,7 +310,7 @@ public final class Units_ {
                     })
                     .collect(toList());
 
-            return parents.isEmpty() ? Stream.of(university.Id) : parents.stream();
+            return parents.isEmpty() ? Stream.of(university.id) : parents.stream();
         }
 
         private Optional<Value> vi(final String code) {

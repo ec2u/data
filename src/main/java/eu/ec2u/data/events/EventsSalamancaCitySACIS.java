@@ -48,7 +48,7 @@ import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.universities._Universities.Salamanca;
+import static eu.ec2u.data.universities.University.Salamanca;
 
 public final class EventsSalamancaCitySACIS implements Runnable {
 
@@ -59,11 +59,11 @@ public final class EventsSalamancaCitySACIS implements Runnable {
             field(ID, iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda-salamanca/")),
             field(TYPE, Organization),
 
-            field(partner, Salamanca.Id),
+            field(partner, Salamanca.id),
 
             field(Schema.name,
                     literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en"),
-                    literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.Language)
+                    literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.language)
             ),
 
             field(Schema.about, OrganizationTypes.City)
@@ -119,16 +119,16 @@ public final class EventsSalamancaCitySACIS implements Runnable {
         return item.link("link").map(url -> {
 
             final Optional<Literal> name=item.string("title")
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> description=item.string("description")
                     .map(Untag::untag)
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> disambiguatingDescription=description
                     .map(Value::stringValue)
                     .map(Strings::clip)
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
                     .map(Frame::literal);
@@ -148,7 +148,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
                     field(dateCreated, pubDate),
                     field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
-                    field(partner, Salamanca.Id),
+                    field(partner, Salamanca.id),
                     field(publisher, Publisher)
             );
 

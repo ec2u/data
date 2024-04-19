@@ -21,13 +21,14 @@ import org.eclipse.rdf4j.model.IRI;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.http.open.actions.Wikidata.wd;
 
 import static eu.ec2u.data.EC2U.item;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
-public enum _Universities {
+public enum University {
 
     Coimbra(
             item("/universities/coimbra"),
@@ -94,23 +95,34 @@ public enum _Universities {
     );
 
 
-    public final IRI Id;
-    public final IRI City;
-    public final IRI Country;
-    public final String Language;
-    public final ZoneId TimeZone;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static final Set<String> Languages=Stream
 
-    _Universities(final IRI id, final IRI city, final IRI country, final String language, final ZoneId zone) {
-        this.Id=id;
-        this.City=city;
-        this.Country=country;
-        this.Language=language;
-        this.TimeZone=zone;
-    }
+            .concat(
 
-    public static final Set<String> Languages=Arrays.stream(values())
-            .map(universities -> universities.Language)
+                    Arrays.stream(values()).map(universities -> universities.language),
+                    Stream.of("en")
+            )
+
             .collect(toUnmodifiableSet());
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public final IRI id;
+    public final IRI city;
+    public final IRI country;
+    public final String language;
+    public final ZoneId zone;
+
+
+    University(final IRI id, final IRI city, final IRI country, final String language, final ZoneId zone) {
+        this.id=id;
+        this.city=city;
+        this.country=country;
+        this.language=language;
+        this.zone=zone;
+    }
 
 }

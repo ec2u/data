@@ -21,7 +21,7 @@ import org.eclipse.rdf4j.model.IRI;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.universities._Universities.Iasi;
+import static eu.ec2u.data.universities.University.Iasi;
 
 public final class DocumentsIasi implements Runnable {
 

@@ -29,7 +29,7 @@ import static com.metreeca.http.rdf.Values.iri;
 import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.universities._Universities.Iasi;
+import static eu.ec2u.data.universities.University.Iasi;
 import static java.lang.String.format;
 
 public final class UnitsIasi implements Runnable {

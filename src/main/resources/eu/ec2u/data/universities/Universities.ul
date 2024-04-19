@@ -42,7 +42,7 @@ insert {
 
     optional {
         ?city wgs84:lat ?lat ;
-            wgs84:long ?long
+            wgs84:long ?long .
     }
 
     bind (xsd:integer(?students_) as ?students)

@@ -45,7 +45,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.universities._Universities.*;
+import static eu.ec2u.data.universities.University.*;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
@@ -215,13 +215,13 @@ public final class Actors_ implements Runnable {
     private Optional<IRI> university(final CSVRecord record) {
         return Optional.ofNullable(Map.ofEntries(
 
-                entry("coimbra", Coimbra.Id),
-                entry("iasi", Iasi.Id),
-                entry("jena", Jena.Id),
-                entry("pavia", Pavia.Id),
-                entry("poitiers", Poitiers.Id),
-                entry("salamanca", Salamanca.Id),
-                entry("turku", Turku.Id)
+                entry("coimbra", Coimbra.id),
+                entry("iasi", Iasi.id),
+                entry("jena", Jena.id),
+                entry("pavia", Pavia.id),
+                entry("poitiers", Poitiers.id),
+                entry("salamanca", Salamanca.id),
+                entry("turku", Turku.id)
 
         ).get(normalize(record.get(col("FO")))));
     }

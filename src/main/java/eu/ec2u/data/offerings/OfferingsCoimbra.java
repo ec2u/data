@@ -64,7 +64,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
-import static eu.ec2u.data.universities._Universities.Coimbra;
+import static eu.ec2u.data.universities.University.Coimbra;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
@@ -285,7 +285,7 @@ public final class OfferingsCoimbra implements Runnable {
                 field(ID, item(Programs.Context, Coimbra, String.valueOf(id))),
                 field(RDF.TYPE, EducationalOccupationalProgram),
 
-                field(Resources.partner, Coimbra.Id),
+                field(Resources.partner, Coimbra.id),
 
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.url, json.string("urlPT").map(Frame::iri)),
@@ -317,7 +317,7 @@ public final class OfferingsCoimbra implements Runnable {
                 field(ID, item(Courses.Context, Coimbra, String.valueOf(id))),
                 field(RDF.TYPE, Course),
 
-                field(Resources.partner, Coimbra.Id),
+                field(Resources.partner, Coimbra.id),
 
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.url, json.string("urlPT").map(Frame::iri)),
@@ -338,7 +338,7 @@ public final class OfferingsCoimbra implements Runnable {
                         .optMap(v -> v.string("designacao"))
                         .map(NotLettersPattern::split)
                         .flatMap(Arrays::stream)
-                        .map(name -> Languages.languageCode(name).orElse(Coimbra.Language))
+                        .map(name -> Languages.languageCode(name).orElse(Coimbra.language))
                         .map(Frame::literal)
                 ),
 
@@ -394,7 +394,7 @@ public final class OfferingsCoimbra implements Runnable {
 
                 .map(v -> literal(v, d.string("locSigla")
                         .map(lang -> lang.toLowerCase(Locale.ROOT))
-                        .orElse(Coimbra.Language)
+                        .orElse(Coimbra.language)
                 ));
     }
 

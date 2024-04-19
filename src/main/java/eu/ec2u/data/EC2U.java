@@ -40,7 +40,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
-import eu.ec2u.data.universities._Universities;
+import eu.ec2u.data.universities.University;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.common.exception.ValidationException;
 import org.eclipse.rdf4j.model.IRI;
@@ -107,8 +107,8 @@ public final class EC2U extends Delegator {
         return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(name)));
     }
 
-    public static IRI item(final IRI dataset, final _Universities university, final String name) {
-        return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(university.Id+"@"+name)));
+    public static IRI item(final IRI dataset, final University university, final String name) {
+        return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(university.id+"@"+name)));
     }
 
 

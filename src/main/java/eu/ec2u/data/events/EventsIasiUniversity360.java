@@ -37,7 +37,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.universities._Universities.Iasi;
+import static eu.ec2u.data.universities.University.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 
 public final class EventsIasiUniversity360 implements Runnable {
@@ -49,11 +49,11 @@ public final class EventsIasiUniversity360 implements Runnable {
             field(ID, iri("https://360.uaic.ro/blog/category/evenimente/")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Iasi.Id),
+            field(partner, Iasi.id),
 
             field(Schema.name,
                     literal("University of Iasi / 360 Events", "en"),
-                    literal("Universitatea din Iași / 360 Evenimente", Iasi.Language)
+                    literal("Universitatea din Iași / 360 Evenimente", Iasi.language)
             ),
 
             field(Schema.about, OrganizationTypes.University)
@@ -101,10 +101,10 @@ public final class EventsIasiUniversity360 implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return frame(WordPress(frame, Iasi.Language),
+        return frame(WordPress(frame, Iasi.language),
 
                 field(Resources.updated, literal(now)),
-                field(partner, Iasi.Id),
+                field(partner, Iasi.id),
                 field(publisher, Publisher)
 
         );

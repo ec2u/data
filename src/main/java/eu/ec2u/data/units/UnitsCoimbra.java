@@ -29,7 +29,7 @@ import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.universities._Universities.Coimbra;
+import static eu.ec2u.data.universities.University.Coimbra;
 import static java.lang.String.format;
 
 public final class UnitsCoimbra implements Runnable {

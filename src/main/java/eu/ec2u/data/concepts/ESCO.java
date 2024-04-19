@@ -23,7 +23,7 @@ import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.services.Logger;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.universities._Universities;
+import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
@@ -178,7 +178,7 @@ public final class ESCO implements Runnable {
 
             final String lang=((Literal)object).getLanguage().orElse("");
 
-            return lang.isEmpty() || lang.equals("en") || _Universities.Languages.contains(lang);
+            return lang.isEmpty() || University.Languages.contains(lang);
 
         } else {
 

@@ -21,7 +21,7 @@ import org.eclipse.rdf4j.model.IRI;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.universities._Universities.Coimbra;
+import static eu.ec2u.data.universities.University.Coimbra;
 
 public final class DocumentsCoimbra implements Runnable {
 

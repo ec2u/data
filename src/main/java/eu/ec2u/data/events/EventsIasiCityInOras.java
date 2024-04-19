@@ -37,7 +37,7 @@ import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
-import static eu.ec2u.data.universities._Universities.Iasi;
+import static eu.ec2u.data.universities.University.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 
 public final class EventsIasiCityInOras implements Runnable {
@@ -49,11 +49,11 @@ public final class EventsIasiCityInOras implements Runnable {
             field(ID, iri("https://iasi.inoras.ro/evenimente")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Iasi.Id),
+            field(partner, Iasi.id),
 
             field(Schema.name,
                     literal("InOras / Events in Iasi", "en"),
-                    literal("InOras / Evenimente in Iași", Iasi.Language)
+                    literal("InOras / Evenimente in Iași", Iasi.language)
             ),
 
             field(Schema.about, OrganizationTypes.City)
@@ -100,10 +100,10 @@ public final class EventsIasiCityInOras implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return frame(WordPress(frame, Iasi.Language),
+        return frame(WordPress(frame, Iasi.language),
 
                 field(updated, literal(now)),
-                field(partner, Iasi.Id),
+                field(partner, Iasi.id),
                 field(publisher, Publisher)
 
         );

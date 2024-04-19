@@ -32,7 +32,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.universities._Universities.Iasi;
+import static eu.ec2u.data.universities.University.Iasi;
 
 public final class EventsIasiUniversity implements Runnable {
 
@@ -43,11 +43,11 @@ public final class EventsIasiUniversity implements Runnable {
             field(ID, iri("https://www.uaic.ro/")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Iasi.Id),
+            field(partner, Iasi.id),
 
             field(Schema.name,
                     literal("University of Iasi / Events", "en"),
-                    literal("Universitatea din Iași / Evenimente", Iasi.Language)
+                    literal("Universitatea din Iași / Evenimente", Iasi.language)
             ),
 
             field(Schema.about, OrganizationTypes.University)
@@ -66,14 +66,14 @@ public final class EventsIasiUniversity implements Runnable {
         update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(new Tribe("https://www.uaic.ro/")
-                        .country(Iasi.Country)
-                        .locality(Iasi.City)
-                        .language(Iasi.Language)
-                        .zone(Iasi.TimeZone)
+                        .country(Iasi.country)
+                        .locality(Iasi.city)
+                        .language(Iasi.language)
+                        .zone(Iasi.zone)
                 )
 
                 .map(event -> frame(event,
-                        field(partner, Iasi.Id),
+                        field(partner, Iasi.id),
                         field(publisher, Publisher)
                 ))
 

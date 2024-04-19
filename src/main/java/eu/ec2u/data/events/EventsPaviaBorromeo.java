@@ -32,7 +32,7 @@ import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.universities._Universities.Pavia;
+import static eu.ec2u.data.universities.University.Pavia;
 
 public final class EventsPaviaBorromeo implements Runnable {
 
@@ -43,11 +43,11 @@ public final class EventsPaviaBorromeo implements Runnable {
             field(ID, iri("http://www.collegioborromeo.it/it/eventi/")),
             field(TYPE, Organization),
 
-            field(partner, Pavia.Id),
+            field(partner, Pavia.id),
 
             field(Schema.name,
                     literal("Almo Collegio Borromeo / Calendar", "en"),
-                    literal("Almo Collegio Borromeo / Calendario", Pavia.Language)
+                    literal("Almo Collegio Borromeo / Calendario", Pavia.language)
             ),
 
             field(Schema.about, OrganizationTypes.College)
@@ -67,14 +67,14 @@ public final class EventsPaviaBorromeo implements Runnable {
                 .of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(new Tribe("http://www.collegioborromeo.it/it/")
-                        .country(Pavia.Country)
-                        .locality(Pavia.City)
-                        .language(Pavia.Language)
-                        .zone(Pavia.TimeZone)
+                        .country(Pavia.country)
+                        .locality(Pavia.city)
+                        .language(Pavia.language)
+                        .zone(Pavia.zone)
                 )
 
                 .map(event -> frame(event,
-                        field(partner, Pavia.Id),
+                        field(partner, Pavia.id),
                         field(publisher, Publisher)
                 ))
 

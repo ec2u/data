@@ -37,7 +37,7 @@ import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
-import static eu.ec2u.data.universities._Universities.Iasi;
+import static eu.ec2u.data.universities.University.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 
 public final class EventsIasiCityCultura implements Runnable {
@@ -49,10 +49,10 @@ public final class EventsIasiCityCultura implements Runnable {
             field(ID, iri("https://culturainiasi.ro/evenimente-culturale/")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Iasi.Id),
+            field(partner, Iasi.id),
 
             field(Schema.name,
-                    literal("Iaşul Cultural / Evenimente in Iași", Iasi.Language),
+                    literal("Iaşul Cultural / Evenimente in Iași", Iasi.language),
                     literal("Culture in Iasi / Events in Iasi", "en")
             ),
 
@@ -101,10 +101,10 @@ public final class EventsIasiCityCultura implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return frame(WordPress(frame, Iasi.Language),
+        return frame(WordPress(frame, Iasi.language),
 
                 field(updated, literal(now)),
-                field(partner, Iasi.Id),
+                field(partner, Iasi.id),
                 field(publisher, Publisher)
 
         );

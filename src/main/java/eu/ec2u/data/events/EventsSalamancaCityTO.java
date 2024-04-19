@@ -53,7 +53,7 @@ import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.universities._Universities.Salamanca;
+import static eu.ec2u.data.universities.University.Salamanca;
 import static java.time.temporal.ChronoField.*;
 
 public final class EventsSalamancaCityTO implements Runnable {
@@ -65,11 +65,11 @@ public final class EventsSalamancaCityTO implements Runnable {
             field(ID, iri("https://salamanca.es/en/calendar")),
             field(TYPE, Organization),
 
-            field(partner, Salamanca.Id),
+            field(partner, Salamanca.id),
 
             field(Schema.name,
                     literal("Salamanca Municipal Tourist Office", "en"),
-                    literal("Oficina de Turismo de Salamanca", Salamanca.Language)
+                    literal("Oficina de Turismo de Salamanca", Salamanca.language)
             ),
 
             field(Schema.about, OrganizationTypes.City)
@@ -143,16 +143,16 @@ public final class EventsSalamancaCityTO implements Runnable {
         return item.link("link").map(url -> {
 
             final Optional<Literal> name=item.string("title")
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> description=item.string("description")
                     .map(Untag::untag)
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> disambiguatingDescription=description
                     .map(Value::stringValue)
                     .map(Strings::clip)
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
                     .map(Frame::literal);
@@ -171,14 +171,14 @@ public final class EventsSalamancaCityTO implements Runnable {
 
                     field(startDate, item.string("title")
                             .map(guarded(v -> FeedDateTime.parse(v, new ParsePosition(0))))
-                            .map(v -> LocalDateTime.from(v).atOffset(Salamanca.TimeZone.getRules().getOffset(now)))
+                            .map(v -> LocalDateTime.from(v).atOffset(Salamanca.zone.getRules().getOffset(now)))
                             .map(Frame::literal)
                     ),
 
                     field(dateCreated, pubDate),
                     field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
-                    field(partner, Salamanca.Id),
+                    field(partner, Salamanca.id),
                     field(publisher, Publisher)
 
             );

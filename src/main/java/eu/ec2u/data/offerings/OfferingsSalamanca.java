@@ -49,7 +49,7 @@ import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.offerings.Offerings.numberOfCredits;
 import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
 import static eu.ec2u.data.programs.Programs.hasCourse;
-import static eu.ec2u.data.universities._Universities.Salamanca;
+import static eu.ec2u.data.universities.University.Salamanca;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 
@@ -145,12 +145,12 @@ public final class OfferingsSalamanca implements Runnable {
                         field(ID, item(Programs.Context, Salamanca, code)),
 
                         field(RDF.TYPE, EducationalOccupationalProgram),
-                        field(Resources.partner, Salamanca.Id),
+                        field(Resources.partner, Salamanca.id),
 
                         field(Schema.url, json.string("programUrl").map(Frame::iri)),
                         field(Schema.identifier, literal(code)),
 
-                        field(Schema.name, json.strings("programName").map(v -> literal(v, Salamanca.Language)))
+                        field(Schema.name, json.strings("programName").map(v -> literal(v, Salamanca.language)))
 
                 ));
     }
@@ -184,14 +184,14 @@ public final class OfferingsSalamanca implements Runnable {
                 field(ID, item(Courses.Context, Salamanca, code)),
 
                 field(RDF.TYPE, Course),
-                field(Resources.partner, Salamanca.Id),
+                field(Resources.partner, Salamanca.id),
 
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.identifier, literal(code)),
 
                 field(Schema.name, Stream.concat(
                         json.strings("nameInEnglish").map(v -> literal(v, "en")),
-                        json.strings("nameInSpanish").map(v -> literal(v, Salamanca.Language))
+                        json.strings("nameInSpanish").map(v -> literal(v, Salamanca.language))
                 )),
 
                 field(courseCode, literal(code)),

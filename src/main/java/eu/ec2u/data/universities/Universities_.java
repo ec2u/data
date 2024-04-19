@@ -42,11 +42,11 @@ public final class Universities_ implements Runnable {
 
                         "?item wdt:P463 wd:Q105627243", // <member of> <EC2U>
 
-                        "values ?item "+stream(_Universities.values())
+                        "values ?item "+stream(University.values())
 
                                 .flatMap(university -> Stream.of(
-                                        university.City,
-                                        university.Country
+                                        university.city,
+                                        university.country
                                 ))
 
                                 .map(iri -> format("<%s>", iri))

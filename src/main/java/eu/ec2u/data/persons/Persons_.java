@@ -19,7 +19,7 @@ package eu.ec2u.data.persons;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data.universities._Universities;
+import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
@@ -39,7 +39,7 @@ public final class Persons_ {
     private static final Pattern PersonPattern=Pattern.compile("([^,]+),([^(]+)(?:\\(([^)]+)\\))?");
 
 
-    public static Optional<Frame> person(final String string, final _Universities _university) {
+    public static Optional<Frame> person(final String string, final University _university) {
         return Optional.of(string)
 
                 .map(PersonPattern::matcher)
@@ -56,8 +56,8 @@ public final class Persons_ {
 
                             field(ID, item(Persons.Context, _university, fullName)),
 
-                            field(RDFS.LABEL, literal(fullName, _university.Language)), // !!! no language
-                            field(partner, _university.Id),
+                            field(RDFS.LABEL, literal(fullName, _university.language)), // !!! no language
+                            field(partner, _university.id),
 
                             field(FOAF.TITLE, title.map(Frame::literal)),
                             field(FOAF.GIVEN_NAME, literal(givenName)),

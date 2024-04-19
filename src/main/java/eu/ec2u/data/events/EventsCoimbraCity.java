@@ -49,7 +49,7 @@ import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
-import static eu.ec2u.data.universities._Universities.Coimbra;
+import static eu.ec2u.data.universities.University.Coimbra;
 import static java.lang.String.format;
 
 public final class EventsCoimbraCity implements Runnable {
@@ -61,11 +61,11 @@ public final class EventsCoimbraCity implements Runnable {
             field(ID, iri("https://www.coimbragenda.pt/")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Coimbra.Id),
+            field(partner, Coimbra.id),
 
             field(Schema.name,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
-                    literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.Language)
+                    literal("Câmara Municipal de Coimbra / CoimbrAgenda", Coimbra.language)
             ),
 
             field(Schema.about, OrganizationTypes.City)
@@ -135,14 +135,14 @@ public final class EventsCoimbraCity implements Runnable {
                                     .map(subtitle -> format("%s - %s", title, subtitle))
                                     .orElse(title)
                             )
-                            .map(text -> literal(text, Coimbra.Language));
+                            .map(text -> literal(text, Coimbra.language));
 
                     final Optional<Literal> description=json
                             .string("languageObjects.*.description")
-                            .map(text -> literal(text, Coimbra.Language));
+                            .map(text -> literal(text, Coimbra.language));
 
                     final Optional<Literal> disambiguatingDescription=description
-                            .map(literal -> literal(clip(literal.stringValue()), Coimbra.Language));
+                            .map(literal -> literal(clip(literal.stringValue()), Coimbra.language));
 
                     return frame(
 
@@ -150,7 +150,7 @@ public final class EventsCoimbraCity implements Runnable {
 
                             field(RDF.TYPE, Event),
 
-                            field(partner, Coimbra.Id),
+                            field(partner, Coimbra.id),
 
                             field(Schema.url, iri(url)),
                             field(Schema.name, name),
@@ -192,7 +192,7 @@ public final class EventsCoimbraCity implements Runnable {
                 .map(OffsetDateTime::toLocalDate)
                 .flatMap(_date -> json.integer(hour)
                         .map(integer -> LocalTime.of(integer.intValue()/60, 0))
-                        .map(time -> LocalDateTime.of(_date, time).atZone(Coimbra.TimeZone))
+                        .map(time -> LocalDateTime.of(_date, time).atZone(Coimbra.zone))
                 )
                 .map(Frame::literal);
     }
@@ -201,7 +201,7 @@ public final class EventsCoimbraCity implements Runnable {
         return Xtream.from(json.paths("categories.*")).optMap(category -> category.string("_id").map(id -> {
 
             final Optional<Literal> label=category.string("codename")
-                    .map(text -> literal(text, Coimbra.Language));
+                    .map(text -> literal(text, Coimbra.language));
 
             return frame(
 
@@ -226,7 +226,7 @@ public final class EventsCoimbraCity implements Runnable {
                         field(ID, item(Locations.Context, name)),
                         field(TYPE, Schema.Place),
 
-                        field(Schema.name, literal(name, Coimbra.Language)),
+                        field(Schema.name, literal(name, Coimbra.language)),
                         field(Schema.longitude, json.decimal("place.longitude").map(Frame::literal)),
                         field(Schema.latitude, json.decimal("place.latitude").map(Frame::literal))
 

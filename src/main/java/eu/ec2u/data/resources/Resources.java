@@ -22,7 +22,6 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
-import eu.ec2u.data.universities._Universities;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
@@ -57,7 +56,7 @@ public final class Resources extends Delegator {
 
             .concat(
                     Stream.of("en"),
-                    stream(_Universities.values()).map(u -> u.Language)
+                    stream(eu.ec2u.data.universities.University.values()).map(u -> u.language)
             )
 
             .collect(toUnmodifiableSet());

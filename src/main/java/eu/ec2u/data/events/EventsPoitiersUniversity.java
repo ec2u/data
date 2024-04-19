@@ -58,7 +58,7 @@ import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
-import static eu.ec2u.data.universities._Universities.Poitiers;
+import static eu.ec2u.data.universities.University.Poitiers;
 import static java.time.temporal.ChronoField.*;
 import static java.util.function.Predicate.not;
 
@@ -71,12 +71,12 @@ public final class EventsPoitiersUniversity implements Runnable {
             field(ID, iri("https://www.univ-poitiers.fr/c/actualites/")),
             field(TYPE, Organization),
 
-            field(partner, Poitiers.Id),
+            field(partner, Poitiers.id),
 
             field(Schema.name,
 
                     literal("University of Poitiers / News and Events", "en"),
-                    literal("Université de Poitiers / Actualités et événements", Poitiers.Language)
+                    literal("Université de Poitiers / Actualités et événements", Poitiers.language)
             ),
 
             field(Schema.about, OrganizationTypes.University)
@@ -159,7 +159,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         final Optional<Value> label=item.string("title")
                 .map(text -> Strings.clip(text, TextLength))
-                .map(text -> literal(text, Poitiers.Language));
+                .map(text -> literal(text, Poitiers.language));
 
         final Optional<String> description=item.string("content:encoded")
                 .map(Untag::untag)
@@ -167,7 +167,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         final Optional<Value> brief=description
                 .map(text -> Strings.clip(text, TextLength))
-                .map(text -> literal(text, Poitiers.Language));
+                .map(text -> literal(text, Poitiers.language));
 
         return frame(
 
@@ -182,7 +182,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                 field(Schema.name, label),
                 field(Schema.image, item.link("image").map(Frame::iri)),
                 field(Schema.disambiguatingDescription, brief),
-                field(Schema.description, description.map(value -> literal(value, Poitiers.Language))),
+                field(Schema.description, description.map(value -> literal(value, Poitiers.language))),
 
                 field(startDate, startDate(item)),
                 field(endDate, endDate(item)),
@@ -194,10 +194,10 @@ public final class EventsPoitiersUniversity implements Runnable {
                         field(ID, item(Topics, category)),
                         field(RDF.TYPE, SKOS.CONCEPT),
                         field(SKOS.TOP_CONCEPT_OF, Topics),
-                        field(SKOS.PREF_LABEL, literal(category, Poitiers.Language))
+                        field(SKOS.PREF_LABEL, literal(category, Poitiers.language))
                 ))),
 
-                field(partner, Poitiers.Id),
+                field(partner, Poitiers.id),
                 field(publisher, Publisher),
                 field(location, location(item))
 
@@ -222,7 +222,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return dateFrom
                 .map(date -> date.atTime(hourFrom))
-                .map(dateTime -> dateTime.atZone(Poitiers.TimeZone))
+                .map(dateTime -> dateTime.atZone(Poitiers.zone))
                 .map(Frame::literal);
     }
 
@@ -240,7 +240,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return dateTo
                 .map(date -> date.atTime(hourTo))
-                .map(dateTime -> dateTime.atZone(Poitiers.TimeZone))
+                .map(dateTime -> dateTime.atZone(Poitiers.zone))
                 .map(Frame::literal);
     }
 
@@ -254,12 +254,12 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                         field(RDF.TYPE, Schema.Place),
 
-                        field(Schema.name, literal(name, Poitiers.Language)),
+                        field(Schema.name, literal(name, Poitiers.language)),
 
                         field(Schema.description, item.string("place/place_address")
                                 .filter(not(String::isEmpty))
                                 .map(Untag::untag)
-                                .map(value -> literal(value, Poitiers.Language))
+                                .map(value -> literal(value, Poitiers.language))
                         )
                 ));
     }
