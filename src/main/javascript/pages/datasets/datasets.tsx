@@ -30,12 +30,12 @@ import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolKeywords } from "@metreeca/view/lenses/keywords";
 import { ToolOptions } from "@metreeca/view/lenses/options";
 import { ToolSheet } from "@metreeca/view/lenses/sheet";
 import { ToolCard } from "@metreeca/view/widgets/card";
 import { Package } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 
@@ -77,9 +77,9 @@ export function DataDatasets() {
 
 		tray={< >
 
-			<ToolKeywords placeholder={"Name"}>{
+			<ToolSearch placeholder={"Name"}>{
 				useKeywords(datasets, "label")
-			}</ToolKeywords>
+			}</ToolSearch>
 
 			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
 				useOptions(datasets, "license", { type: entry({ id: "", label: required(local) }) })

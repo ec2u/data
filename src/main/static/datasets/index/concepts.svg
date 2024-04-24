@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
-        version="1.1" viewBox="549 365 331 347" width="331" height="347">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
+        xmlns="http://www.w3.org/2000/svg" viewBox="549 365 331 347" width="331" height="347">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -41,7 +41,7 @@
             </g>
         </marker>
     </defs>
-    <g id="concepts" fill="none" fill-opacity="1" stroke="none" stroke-dasharray="none" stroke-opacity="1">
+    <g id="concepts" fill="none" stroke-dasharray="none" stroke="none" stroke-opacity="1" fill-opacity="1">
         <title>concepts</title>
         <rect fill="white" x="549" y="365" width="331" height="347"/>
         <g id="concepts_Layer_1">
@@ -113,16 +113,17 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_219">
-                <rect x="670.789" y="464.7882" width="98.2456" height="24" fill="white"/>
-                <text transform="translate(673.789 465.7882)" fill="black">
+                <rect x="670.789" y="464.18283" width="98.2456" height="24" fill="white"/>
+                <text transform="translate(673.789 465.18283)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="12.590332" y="9">skos:inScheme 1</tspan>
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">skos:topConceptOf 0..1</tspan>
                 </text>
             </g>
             <g id="Graphic_218">
-                <rect x="672.43914" y="516.39334" width="94.94531" height="13" fill="white"/>
-                <text transform="translate(675.43914 517.39334)" fill="black">
+                <rect x="672.43914" y="504.74253" width="94.94531" height="24" fill="white"/>
+                <text transform="translate(675.43914 505.74253)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">skos:hasTopConcept *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="15.033691" y="20">‹hasConcept› *</tspan>
                 </text>
             </g>
             <g id="Line_217">

@@ -18,6 +18,7 @@ the  [SKOS](https://www.w3.org/TR/skos-reference/) data model.
 |-------------------------------------------------------------------|--------------------------|---|---------------------------------------------|
 | [skos:ConceptScheme](https://www.w3.org/TR/skos-reference/#L2457) | [ec2u:Asset](assets.md)  |   | EC2U Knowledge Hub classification taxonomy  |
 | [skos:hasTopConcept](https://www.w3.org/TR/skos-reference/#L2457) | [skos:Concept](#concept) | * | links to top-level concepts in the taxonomy |
+| ‹hasConcept› = ^skos:inScheme                                     | [skos:Concept](#concept) | * | links to concepts in the taxonomy           |
 
 ## Concept
 

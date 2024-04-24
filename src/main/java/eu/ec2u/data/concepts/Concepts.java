@@ -57,7 +57,8 @@ public final class Concepts extends Delegator {
     public static Shape ConceptScheme() {
         return shape(SKOS.CONCEPT_SCHEME, Asset(),
 
-                property(SKOS.HAS_TOP_CONCEPT, () -> multiple(Concept()))
+                property(SKOS.HAS_TOP_CONCEPT, () -> multiple(Concept())),
+                property("hasConcept", reverse(SKOS.IN_SCHEME), () -> multiple(Concept()))
 
         );
     }

@@ -81,7 +81,6 @@ export function DataScheme() {
 
 		tray={<ToolFrame as={({
 
-
 			extent
 
 		}) => <>
@@ -141,5 +140,11 @@ export function DataScheme() {
 		</>}>{scheme}</ToolFrame>
 
 	</DataPage>;
+
+}
+
+
+function ToolConcepts() {
+
 
 }

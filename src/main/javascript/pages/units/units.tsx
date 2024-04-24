@@ -29,12 +29,12 @@ import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolKeywords } from "@metreeca/view/lenses/keywords";
 import { ToolOptions } from "@metreeca/view/lenses/options";
 import { ToolSheet } from "@metreeca/view/lenses/sheet";
 import { ToolCard } from "@metreeca/view/widgets/card";
 import { FlaskConical } from "@metreeca/view/widgets/icon";
 import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 
@@ -75,9 +75,9 @@ export function DataUnits() {
 
 		tray={<>
 
-			<ToolKeywords placeholder={"Name"}>{
+			<ToolSearch placeholder={"Name"}>{
 				useKeywords(units, "label")
-			}</ToolKeywords>
+			}</ToolSearch>
 
 			<ToolOptions placeholder={"University"}>{
 				useOptions(units, "partner", { type: entry({ id: "", label: required(local) }) })
