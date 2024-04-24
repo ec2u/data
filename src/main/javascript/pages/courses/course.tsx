@@ -157,16 +157,16 @@ export function DataCourse() {
 
 			<ToolInfo>{{
 
-				"Info": url && url.map(item => {
+				"Info": url && <ul>{url.map(item => {
 
 					const url=new URL(item);
 
 					const host=url.host;
 					const lang=url.pathname.match(/\b[a-z]{2}\b/i);
 
-					return <a key={item} href={item}>{lang ? `${host} (${lang[0].toLowerCase()})` : host}</a>;
+					return <li key={item}><a href={item}>{lang ? `${host} (${lang[0].toLowerCase()})` : host}</a></li>;
 
-				})
+				})}</ul>
 
 			}}</ToolInfo>
 
