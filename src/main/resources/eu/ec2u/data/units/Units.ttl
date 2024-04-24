@@ -21,7 +21,7 @@
     void:rootResource ec2u:Unit ;
     rdfs:isDefinedBy </datasets/units> .
 
-</concepts/research-topics/> a skos:ConceptScheme ;
+</concepts/research-topics> a skos:ConceptScheme ;
     dct:title "EC2U Research Unit Topics"@en ;
     dct:description "> **:warn:** To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" .
