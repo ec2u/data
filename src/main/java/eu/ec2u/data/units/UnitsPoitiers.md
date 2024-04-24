@@ -5,6 +5,7 @@
 # Integration
 
 * data loaded from a REST/JSON API provided by a national catalog
+* APi docs @ https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/console
 
 ## 2024-04-24
 

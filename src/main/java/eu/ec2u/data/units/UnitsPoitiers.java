@@ -20,7 +20,6 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
 import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
@@ -34,8 +33,6 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -53,8 +50,6 @@ public final class UnitsPoitiers implements Runnable {
 
     private static final IRI Context=iri(Units.Context, "/poitiers");
 
-    private static final String DataUrl="units-poitiers-url"; // vault label
-
 
     public static void main(final String... args) {
         exec(() -> new UnitsPoitiers().run());
@@ -63,21 +58,16 @@ public final class UnitsPoitiers implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Vault vault=service(vault());
-
-
     @Override public void run() {
 
         final String url="https://data.enseignementsup-recherche.gouv.fr"+
-                "/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records"+
+                "/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"+
                 "?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
 
         update(connection -> Xtream.of(url)
 
                 .flatMap(this::units)
                 .optMap(this::unit)
-
-                .peek(frame -> System.out.println(frame))
 
                 .flatMap(Frame::stream)
                 .batch(0)
@@ -96,7 +86,7 @@ public final class UnitsPoitiers implements Runnable {
                 .optMap(new GET<>(new JSON()))
                 .map(JSONPath::new)
 
-                .flatMap(json -> json.paths("results.*"));
+                .flatMap(json -> json.paths("*"));
     }
 
     private Optional<Frame> unit(final JSONPath json) {
