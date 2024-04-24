@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
 import com.metreeca.http.toolkits.Identifiers;
 import com.metreeca.http.toolkits.Strings;
@@ -46,7 +45,9 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.*;
 
@@ -59,6 +60,7 @@ import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities.University.Poitiers;
+import static java.lang.String.join;
 import static java.time.temporal.ChronoField.*;
 import static java.util.function.Predicate.not;
 
@@ -141,9 +143,10 @@ public final class EventsPoitiersUniversity implements Runnable {
     private Xtream<XPath> crawl(final Instant updated) {
         return Xtream.of(updated)
 
-                .flatMap(new Fill<Instant>()
-                        .model("https://www.univ-poitiers.fr/feed/ec2u")
-                )
+                .flatMap(instant -> Stream.of(
+                        "https://www.univ-poitiers.fr/feed",
+                        "https://www.univ-poitiers.fr/feed/ec2u"
+                ))
 
                 .optMap(new GET<>(new XML()))
 
@@ -248,20 +251,25 @@ public final class EventsPoitiersUniversity implements Runnable {
 
         return item.string("place/place_name").filter(not(String::isEmpty))
 
-                .map(name -> frame(
+                .map(name -> {
 
-                        field(ID, item(Locations.Context, name)),
+                    final Optional<String> address=item.string("place/place_address")
+                            .filter(not(String::isEmpty))
+                            .map(Untag::untag);
 
-                        field(RDF.TYPE, Schema.Place),
+                    return frame(
 
-                        field(Schema.name, literal(name, Poitiers.language)),
+                            field(ID, item(Locations.Context, md5(join("\0", name, address.orElse(""))))),
 
-                        field(Schema.description, item.string("place/place_address")
-                                .filter(not(String::isEmpty))
-                                .map(Untag::untag)
-                                .map(value -> literal(value, Poitiers.language))
-                        )
-                ));
+                            field(RDF.TYPE, Schema.Place),
+
+                            field(Schema.name, literal(name, Poitiers.language)),
+
+                            field(Schema.description, address
+                                    .map(value -> literal(value, Poitiers.language))
+                            )
+                    );
+                });
     }
 
 }
