@@ -7,11 +7,10 @@ insert {
 
 } where {
 
-    ?person a foaf:Person .
+    ?person a foaf:Person ;
+        foaf:givenName ?given ;
+        foaf:familyName ?family .
 
-    optional { ?person foaf:givenName ?given }
-    optional { ?person foaf:familiyName ?family }
-
-    bind (concat(?given, if(bound(?given) && bound(?family), ' ', 1/0), ?family) as ?label)
+    bind (strlang(concat(?given, ' ', ?family), '*') as ?label) # !!! no language
 
 }
