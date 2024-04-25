@@ -17,7 +17,7 @@
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, optional, required } from "@metreeca/core";
+import { immutable, optional, required, virtual } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -69,10 +69,12 @@ export function DataUniversity() {
 
 		members: [{
 
-			"dataset": required({
+			dataset: required({
 				id: required(id),
 				label: required(local),
 			}),
+
+			resources: virtual(required(integer)),
 
 			"resources=count:": required(integer),
 

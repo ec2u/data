@@ -16,22 +16,23 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
+import { Concept, ToolConcepts } from "@ec2u/data/pages/concepts/skos";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, optional, required } from "@metreeca/core";
-import { entryCompare } from "@metreeca/core/entry";
+import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolLabel } from "@metreeca/view/layouts/label";
-import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolHint } from "@metreeca/view/widgets/hint";
 import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
+import { useState } from "react";
 
 
 export const Scheme=immutable({
@@ -60,21 +61,26 @@ export const Scheme=immutable({
 
 	extent: required(integer),
 
-	hasTopConcept: multiple({
-
-		id: required(id),
-		label: required(id),
-
-		prefLabel: required(local),
-		definition: optional(local)
-
-	})
+	hasConcept: virtual(multiple(Concept)),
+	hasTopConcept: virtual(multiple(Concept))
 
 });
 
+
 export function DataScheme() {
 
-	const [scheme]=useResource(Scheme);
+	const [keywords, setKeywords]=useState("");
+
+	const [scheme]=useResource({
+
+		...Scheme,
+
+		...(keywords
+				? { hasConcept: multiple({ ...Concept, "~label": keywords }) }
+				: { hasTopConcept: multiple(Concept) }
+		)
+
+	});
 
 
 	return <DataPage name={[Schemes, toLocalString(scheme?.alternative ?? {})]}
@@ -106,6 +112,7 @@ export function DataScheme() {
 			rights,
 			license,
 
+			hasConcept,
 			hasTopConcept
 
 		}) => <>
@@ -121,21 +128,24 @@ export function DataScheme() {
 
 				"Rights": rights && <span>{rights}</span>,
 
-				"License": license?.length && <ul>{license.map(license =>
+				"License": license && <ul>{license.map(license =>
 					<li key={license.id}><ToolLink>{license}</ToolLink></li>
 				)}</ul>
 
 			}}</ToolInfo>
 
-			<ToolPanel>
+			{
+				keywords || hasTopConcept && hasTopConcept.some(concept => concept.narrower)
+					? <div style={{ marginTop: "1.5em", marginBottom: "1em" }}>
+						<ToolSearch placeholder={"Concepts"}>{[keywords, setKeywords]}</ToolSearch>
+					</div>
+					: <hr/>
+			}
 
-				{hasTopConcept && <ToolLabel name={"Top Concepts"}>
-                    <ul>{hasTopConcept.slice().sort(entryCompare).map(entry =>
-						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
-					)}</ul>
-                </ToolLabel>}
-
-			</ToolPanel>
+			{hasConcept ? <ToolConcepts>{hasConcept}</ToolConcepts>
+				: hasTopConcept ? <ToolConcepts>{hasTopConcept}</ToolConcepts>
+					: <div><ToolHint>{Schemes[icon]} No Matches</ToolHint></div>
+			}
 
 		</>}>{scheme}</ToolFrame>
 
@@ -144,7 +154,4 @@ export function DataScheme() {
 }
 
 
-function ToolConcepts() {
 
-
-}
