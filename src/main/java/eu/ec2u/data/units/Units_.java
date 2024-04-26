@@ -81,7 +81,7 @@ public final class Units_ {
 
         @Override protected Optional<Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
 
-            final Optional<String> acronym=value(record, "Acronym");
+            final Optional<Literal> acronym=value(record, "Acronym").map(Values::literal);
 
             final Optional<Literal> nameEnglish=value(record, "Name (English)").map(v -> literal(v, "en"));
             final Optional<Literal> nameLocal=value(record, "Name (Local)").map(v -> literal(v, university.language));
@@ -112,17 +112,6 @@ public final class Units_ {
                             .flatMap(this::vi)
                     ),
 
-                    field(DCTERMS.TITLE, nameEnglish),
-                    field(DCTERMS.TITLE, nameLocal),
-
-                    field(DCTERMS.DESCRIPTION, value(record, "Description (English)")
-                            .map(v -> literal(v, "en"))
-                    ),
-
-                    field(DCTERMS.DESCRIPTION, value(record, "Description (Local)")
-                            .map(v -> literal(v, university.language))
-                    ),
-
                     field(DCTERMS.SUBJECT, Stream.concat(
 
                             value(record, "Topics (English)").stream()
@@ -136,8 +125,16 @@ public final class Units_ {
                     field(SKOS.PREF_LABEL, nameEnglish),
                     field(SKOS.PREF_LABEL, nameLocal),
 
-                    field(SKOS.ALT_LABEL, acronym.map(v -> literal(v, "en"))), // !!! no language
-                    field(SKOS.ALT_LABEL, acronym.map(v -> literal(v, university.language))), // !!! no language
+                    field(SKOS.ALT_LABEL, acronym),
+                    field(SKOS.ALT_LABEL, acronym),
+
+                    field(SKOS.DEFINITION, value(record, "Description (English)")
+                            .map(v -> literal(v, "en"))
+                    ),
+
+                    field(SKOS.DEFINITION, value(record, "Description (Local)")
+                            .map(v -> literal(v, university.language))
+                    ),
 
                     field(FOAF.HOMEPAGE, value(record, "Factsheet", Parsers::uri).map(Values::literal)),
 
