@@ -36,7 +36,7 @@ public final class Languages {
     private static final Pattern TagPattern=Pattern.compile("[a-z]{2}");
 
 
-    private static final Map<String, String> NameToCode=Resources.Languages.stream()
+    private static final Map<String, String> NameToCode=Resources.locales().stream()
             .map(Locale::forLanguageTag)
             .flatMap(target -> locales()
                     .map(source -> entry(source, target))
@@ -50,7 +50,7 @@ public final class Languages {
     private static final Map<String, Object> CodeToNames=locales()
             .collect(toMap(
                     Locale::getLanguage,
-                    locale -> Resources.Languages.stream()
+                    locale -> Resources.locales().stream()
                             .map(Locale::forLanguageTag)
                             .collect(toMap(
                                     Locale::getLanguage,

@@ -39,7 +39,7 @@ import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.offerings.Offerings.LearningResource;
-import static eu.ec2u.data.resources.Resources.localized;
+import static eu.ec2u.data.resources.Resources.locales;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.schema;
 
@@ -61,7 +61,7 @@ public final class Programs extends Delegator {
         return shape(EducationalOccupationalProgram, LearningResource(),
 
                 property(timeToComplete, optional(duration())),
-                property(programPrerequisites, optional(localized())),
+                property(programPrerequisites, optional(text(locales()))),
 
                 property(programType, optional(Concept(), scheme(Offerings.Types))),
 

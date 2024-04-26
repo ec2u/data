@@ -89,8 +89,8 @@ public final class Units_ {
             return id(record).map(id -> frame(
 
                     field(ID, id),
+                    field(TYPE, Unit),
 
-                    field(RDF.TYPE, Unit),
                     field(Resources.partner, university.id),
 
                     field(DCTERMS.SUBJECT, value(record, "Sector")

@@ -23,7 +23,7 @@ import com.metreeca.link.Frame;
 import java.util.stream.Stream;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Languages;
+import static eu.ec2u.data.resources.Resources.locales;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
@@ -56,7 +56,7 @@ public final class Universities_ implements Runnable {
 
                 .sink(new WikidataMirror()
                         .contexts(Frame.iri(Universities.Context, "/wikidata"))
-                        .languages(Languages)
+                        .languages(locales())
                 );
     }
 }

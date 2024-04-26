@@ -19,6 +19,6 @@ insert {
     optional { ?organization skos:altLabel ?alt }
     optional { ?organization skos:definition ?definition }
 
-    bind(if(!bound(?alt) || !bound(?pref) || lang(?alt) = lang(?pref), coalesce(?alt, ?pref), 1/0) as ?label)
+    bind(if(coalesce(lang(?alt), '') = coalesce(lang(?pref), ''), coalesce(?alt, ?pref), 1/0) as ?label)
 
 } # complete entry

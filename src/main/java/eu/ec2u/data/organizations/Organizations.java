@@ -32,7 +32,7 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.agents.Agents.Agent;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.persons.Persons.Person;
-import static eu.ec2u.data.resources.Resources.localized;
+import static eu.ec2u.data.resources.Resources.locales;
 
 public final class Organizations {
 
@@ -46,9 +46,9 @@ public final class Organizations {
 
                 property(ORG.IDENTIFIER, multiple(datatype(LITERAL))),
 
-                property(SKOS.PREF_LABEL, required(localized())),
-                property(SKOS.ALT_LABEL, optional(localized())),
-                property(SKOS.DEFINITION, optional(localized())),
+                property(SKOS.PREF_LABEL, required(text(locales()))),
+                property(SKOS.ALT_LABEL, optional(text(locales()))),
+                property(SKOS.DEFINITION, optional(text(locales()))),
 
                 property(ORG.CLASSIFICATION, () -> multiple(Concept(), scheme(OrganizationTypes.OrganizationTypes))),
 

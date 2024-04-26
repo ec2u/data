@@ -37,7 +37,7 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.localized;
+import static eu.ec2u.data.resources.Resources.locales;
 
 /**
  * Schema.org RDF vocabulary.
@@ -102,10 +102,10 @@ public final class Schema extends Delegator {
 
                 property(url, multiple(id())),
                 property(identifier, multiple(string())),
-                property(name, optional(localized())),
+                property(name, optional(text(locales()))),
                 property(image, optional(Resource())),
-                property(description, optional(localized())),
-                property(disambiguatingDescription, optional(localized()))
+                property(description, optional(text(locales()))),
+                property(disambiguatingDescription, optional(text(locales())))
 
         );
     }
@@ -121,7 +121,7 @@ public final class Schema extends Delegator {
     public static Shape Organization() {
         return shape(Organization, Thing(),
 
-                property(legalName, optional(localized())),
+                property(legalName, optional(text(locales()))),
                 property(email, multiple(string())),
                 property(telephone, multiple(string())),
 

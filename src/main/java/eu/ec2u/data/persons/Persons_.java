@@ -21,7 +21,6 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -50,13 +49,11 @@ public final class Persons_ {
                     final String familyName=normalize(matcher.group(1));
                     final String givenName=normalize(matcher.group(2));
 
-                    final String fullName=format("%s %s", givenName, familyName);
-
                     return frame(
 
-                            field(ID, item(Persons.Context, _university, fullName)),
+                            field(ID, item(Persons.Context, _university, format("%s, %s", familyName, givenName))),
+                            field(TYPE, FOAF.PERSON),
 
-                            field(RDFS.LABEL, literal(fullName, _university.language)), // !!! no language
                             field(partner, _university.id),
 
                             field(FOAF.TITLE, title.map(Frame::literal)),

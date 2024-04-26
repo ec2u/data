@@ -37,7 +37,7 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.localized;
+import static eu.ec2u.data.resources.Resources.locales;
 
 public final class Assets extends Delegator {
 
@@ -54,16 +54,16 @@ public final class Assets extends Delegator {
     public static Shape Asset() {
         return shape(Asset, Resource(),
 
-                property(DCTERMS.TITLE, required(localized())),
-                property(DCTERMS.ALTERNATIVE, optional(localized())),
-                property(DCTERMS.DESCRIPTION, optional(localized())),
+                property(DCTERMS.TITLE, required(text(locales()))),
+                property(DCTERMS.ALTERNATIVE, optional(text(locales("")))),
+                property(DCTERMS.DESCRIPTION, optional(text(locales()))),
 
                 property(DCTERMS.CREATED, optional(date())),
                 property(DCTERMS.ISSUED, optional(date())),
                 property(DCTERMS.MODIFIED, optional(date())),
 
                 property(DCTERMS.RIGHTS, optional(string())),
-                property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
+                property(DCTERMS.ACCESS_RIGHTS, optional(text(locales()))),
                 property(DCTERMS.LICENSE, multiple(Resource())),
 
                 property(DCTERMS.SOURCE, optional(Resource())),

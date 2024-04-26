@@ -26,15 +26,14 @@ import org.eclipse.rdf4j.model.vocabulary.ORG;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.EC2U.create;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.agents.Agents.Agent;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 
 public final class Persons extends Delegator {
 
     public static final IRI Context=item("/persons/");
-
-    public static final IRI Person=term("Person");
 
 
     public static Shape Person() {

@@ -21,7 +21,6 @@ import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -38,6 +37,7 @@ import static com.metreeca.link.Frame.iri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.BASE;
 import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.resources.Resources.locales;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 
@@ -114,7 +114,7 @@ public final class EuroSciVoc implements Runnable {
 
                     .forEach(new Upload()
                             .contexts(Scheme)
-                            .langs(Resources.Languages)
+                            .langs(locales())
                             .clear(true)
                     );
 

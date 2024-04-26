@@ -26,7 +26,6 @@ import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
 import eu.ec2u.data.persons.Persons;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -43,6 +42,7 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.split;
 import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.OrganizationTypes.*;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.units.Units.Unit;
@@ -135,7 +135,7 @@ public final class UnitsSalamancaData implements Runnable {
 
             return frame(
 
-                    field(ID, EC2U.item(Units.Context, Salamanca, id)),
+                    field(ID, item(Units.Context, Salamanca, id)),
 
                     field(RDF.TYPE, Unit),
                     field(partner, Salamanca.id),
@@ -150,7 +150,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
                             .flatMap(v -> split(v, "[,;]"))
                             .map(v -> frame(
-                                    field(ID, EC2U.item(BranchScheme, v)),
+                                    field(ID, item(BranchScheme, v)),
                                     field(RDF.TYPE, SKOS.CONCEPT),
                                     field(SKOS.TOP_CONCEPT_OF, BranchScheme),
                                     field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
@@ -161,7 +161,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(DCTERMS.SUBJECT, json.string("RIS3").stream()
                             .flatMap(v -> split(v, "[,;]"))
                             .map(v -> frame(
-                                    field(ID, EC2U.item(RIS3Scheme, v)),
+                                    field(ID, item(RIS3Scheme, v)),
                                     field(RDF.TYPE, SKOS.CONCEPT),
                                     field(SKOS.TOP_CONCEPT_OF, RIS3Scheme),
                                     field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
@@ -210,15 +210,11 @@ public final class UnitsSalamancaData implements Runnable {
 
                     final String familyName=matcher.group(1);
                     final String givenName=matcher.group(2);
-                    final String fullName=format("%s %s", givenName, familyName);
 
                     return frame(
 
-                            field(ID, EC2U.item(Persons.Context, Salamanca, fullName)),
-
-                            field(RDF.TYPE, Persons.Person),
-
-                            field(RDFS.LABEL, literal(fullName, Salamanca.language)),
+                            field(ID, item(Persons.Context, Salamanca, format("%s, %s", familyName, givenName))),
+                            field(TYPE, FOAF.PERSON),
 
                             field(partner, Salamanca.id),
 
@@ -236,7 +232,7 @@ public final class UnitsSalamancaData implements Runnable {
 
             return frame(
 
-                    field(ID, EC2U.item(Units.Context, Salamanca, name)),
+                    field(ID, item(Units.Context, Salamanca, name)),
 
                     field(RDF.TYPE, Unit),
                     field(partner, Salamanca.id),
@@ -261,7 +257,7 @@ public final class UnitsSalamancaData implements Runnable {
 
             return frame(
 
-                    field(ID, EC2U.item(Units.Context, Salamanca, name)),
+                    field(ID, item(Units.Context, Salamanca, name)),
 
                     field(RDF.TYPE, Unit),
                     field(partner, Salamanca.id),

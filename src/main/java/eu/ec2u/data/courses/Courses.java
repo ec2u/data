@@ -39,7 +39,7 @@ import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.offerings.Offerings.LearningResource;
 import static eu.ec2u.data.programs.Programs.Program;
 import static eu.ec2u.data.programs.Programs.hasCourse;
-import static eu.ec2u.data.resources.Resources.localized;
+import static eu.ec2u.data.resources.Resources.locales;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.things.Schema.inLanguage;
 import static eu.ec2u.data.things.Schema.schema;
@@ -63,7 +63,7 @@ public final class Courses extends Delegator {
                 property(courseCode, optional(string())),
                 property(inLanguage, multiple(string(), pattern("[a-z]{2}"))),
                 property(timeRequired, optional(duration())),
-                property(coursePrerequisites, optional(localized())),
+                property(coursePrerequisites, optional(text(locales()))),
 
                 property("inProgram", reverse(hasCourse), () -> multiple(Program()))
 

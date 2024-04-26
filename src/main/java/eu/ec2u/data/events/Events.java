@@ -195,7 +195,7 @@ public final class Events extends Delegator {
                                                 field(startDate, literal(OffsetDateTime.now())),
                                                 field(endDate, literal(OffsetDateTime.now())),
 
-                                                field(inLanguage, literal("*")),
+                                                field(inLanguage, literal("")),
                                                 field(isAccessibleForFree, literal(false)),
 
                                                 field(publisher),

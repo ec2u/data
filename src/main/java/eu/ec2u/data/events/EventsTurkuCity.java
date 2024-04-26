@@ -26,7 +26,6 @@ import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
@@ -55,6 +54,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.locales;
 import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.*;
@@ -173,7 +173,7 @@ public final class EventsTurkuCity implements Runnable {
     private Xtream<Frame> event(final JsonValue value) {
         return Xtream.of(value).map(JSONPath::new).optMap(json -> json.entries("info_url")
 
-                .filter(entry -> Resources.Languages.contains(entry.getKey()))
+                .filter(entry -> locales().contains(entry.getKey()))
                 .flatMap(entry -> entry.getValue().strings(""))
                 .map(Strings::normalize)
                 .filter(not(String::isBlank))
@@ -185,13 +185,13 @@ public final class EventsTurkuCity implements Runnable {
                     final String id=json.string("@id").orElseThrow();
 
                     final Stream<Literal> shortDescription=json.entries("short_description")
-                            .filter(entry -> Resources.Languages.contains(entry.getKey()))
+                            .filter(entry -> locales().contains(entry.getKey()))
                             .map(this::local)
                             .flatMap(Optional::stream)
                             .map(this::normalize);
 
                     final Stream<Literal> fullDescription=json.entries("description")
-                            .filter(entry -> Resources.Languages.contains(entry.getKey()))
+                            .filter(entry -> locales().contains(entry.getKey()))
                             .map(this::local)
                             .flatMap(Optional::stream)
                             .map(l -> normalize(l, s -> EOLPattern.matcher(s).replaceAll("\n\n")));
@@ -270,7 +270,7 @@ public final class EventsTurkuCity implements Runnable {
                 .map(Stream::of)
 
                 .or(() -> json.path("location_extra_info").map(location -> location.entries("")
-                        .filter(entry -> Resources.Languages.contains(entry.getKey()))
+                        .filter(entry -> locales().contains(entry.getKey()))
                         .optMap(entry -> entry.getValue().string("")
                                 .map(Strings::normalize)
                                 .map(info -> frame(
@@ -349,7 +349,7 @@ public final class EventsTurkuCity implements Runnable {
 
     private Stream<Literal> local(final Stream<Entry<String, JSONPath>> values) {
         return values
-                .filter(entry -> Resources.Languages.contains(entry.getKey()))
+                .filter(entry -> locales().contains(entry.getKey()))
                 .map(this::local)
                 .flatMap(Optional::stream);
     }

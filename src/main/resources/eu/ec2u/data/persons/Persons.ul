@@ -11,6 +11,6 @@ insert {
         foaf:givenName ?given ;
         foaf:familyName ?family .
 
-    bind (strlang(concat(?given, ' ', ?family), '*') as ?label) # !!! no language
+    bind (concat(?given, ' ', ?family) as ?label)
 
 }

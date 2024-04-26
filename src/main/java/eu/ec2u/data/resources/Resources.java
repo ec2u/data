@@ -26,6 +26,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -52,7 +54,7 @@ public final class Resources extends Delegator {
     public static final IRI updated=term("updated");
 
 
-    public static final Set<String> Languages=Stream
+    private static final Set<String> locales=Stream
 
             .concat(
                     Stream.of("en"),
@@ -60,6 +62,20 @@ public final class Resources extends Delegator {
             )
 
             .collect(toUnmodifiableSet());
+
+
+    public static Set<String> locales() {
+        return locales;
+    }
+
+    public static Set<String> locales(final String... locales) {
+
+        if ( locales == null || Arrays.stream(locales).anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null locales");
+        }
+
+        return Stream.concat(Resources.locales.stream(), Stream.of(locales)).collect(toUnmodifiableSet());
+    }
 
 
     public static Shape Resources() { return Dataset(Resource()); }
@@ -70,8 +86,8 @@ public final class Resources extends Delegator {
                 property("id", ID, required(id())),
 
                 property(RDF.TYPE, multiple(id())),
-                property(RDFS.LABEL, optional(localized(), maxLength(1_000))), // !!! 1000
-                property(RDFS.COMMENT, optional(localized(), maxLength(10_000))), // !!! 1_000
+                property(RDFS.LABEL, optional(text(locales("")), maxLength(1_000))), // !!! 1000
+                property(RDFS.COMMENT, optional(text(locales()), maxLength(10_000))), // !!! 1_000
 
                 property(RDFS.SEEALSO, multiple(id())),
                 property(RDFS.ISDEFINEDBY, optional(id())),
@@ -82,11 +98,6 @@ public final class Resources extends Delegator {
                 property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
 
         );
-    }
-
-
-    public static Shape localized() {
-        return text(/* !!! Languages*/);
     }
 
 

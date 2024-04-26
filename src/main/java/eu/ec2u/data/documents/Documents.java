@@ -73,8 +73,8 @@ public final class Documents extends Delegator {
                 property(DCTERMS.IDENTIFIER, optional(string())),
                 property(DCTERMS.LANGUAGE, multiple(string())),
 
-                property(DCTERMS.TITLE, required(localized(), maxLength(1_000))),
-                property(DCTERMS.DESCRIPTION, optional(localized(), maxLength(10_000))),
+                property(DCTERMS.TITLE, required(text(locales()), maxLength(1_000))),
+                property(DCTERMS.DESCRIPTION, optional(text(locales()), maxLength(10_000))),
 
                 property(DCTERMS.CREATOR, optional(Person())),
                 property(DCTERMS.CONTRIBUTOR, multiple(Person())),
@@ -86,7 +86,7 @@ public final class Documents extends Delegator {
                 property(DCTERMS.VALID, optional(string(), pattern(ValidPattern.pattern()))),
 
                 property(DCTERMS.RIGHTS, optional(string())),
-                property(DCTERMS.ACCESS_RIGHTS, optional(localized())),
+                property(DCTERMS.ACCESS_RIGHTS, optional(text(locales()))),
                 property(DCTERMS.LICENSE, optional(Resource())),
 
                 property(DCTERMS.TYPE, multiple(Concept(), scheme(Types))),

@@ -40,7 +40,7 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.localized;
+import static eu.ec2u.data.resources.Resources.locales;
 import static eu.ec2u.data.things.Schema.*;
 
 public final class Offerings extends Delegator {
@@ -68,12 +68,12 @@ public final class Offerings extends Delegator {
     public static Shape LearningResource() {
         return shape(LearningResource, Thing(),
 
-                property(teaches, optional(localized())),
-                property(assesses, optional(localized())),
+                property(teaches, optional(text(locales()))),
+                property(assesses, optional(text(locales()))),
 
                 property(numberOfCredits, optional(decimal(), minInclusive(0))),
-                property(educationalCredentialAwarded, optional(localized())),
-                property(occupationalCredentialAwarded, optional(localized())),
+                property(educationalCredentialAwarded, optional(text(locales()))),
+                property(occupationalCredentialAwarded, optional(text(locales()))),
 
                 property(provider, optional(Organization())),
 

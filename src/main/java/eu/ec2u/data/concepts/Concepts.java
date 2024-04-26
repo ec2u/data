@@ -39,7 +39,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.assets.Assets.Asset;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.localized;
+import static eu.ec2u.data.resources.Resources.locales;
 
 public final class Concepts extends Delegator {
 
@@ -68,9 +68,9 @@ public final class Concepts extends Delegator {
 
                 property(SKOS.NOTATION, multiple(datatype(LITERAL))),
 
-                property(SKOS.PREF_LABEL, required(localized())),
-                property(SKOS.ALT_LABEL, multiple(localized())),
-                property(SKOS.DEFINITION, optional(localized())),
+                property(SKOS.PREF_LABEL, required(text(locales()))),
+                property(SKOS.ALT_LABEL, multiple(text(locales()))),
+                property(SKOS.DEFINITION, optional(text(locales()))),
 
                 property(SKOS.IN_SCHEME, required(ConceptScheme())),
                 property(SKOS.TOP_CONCEPT_OF, optional(ConceptScheme())),
