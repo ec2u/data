@@ -94,7 +94,7 @@ public final class Datasets extends Delegator {
 
                                 frame(
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", WILDCARD))
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
                                 ),
 
                                 filter(DCTERMS.ISSUED, any())

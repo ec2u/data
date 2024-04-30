@@ -26,8 +26,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -57,7 +55,7 @@ public final class Resources extends Delegator {
     private static final Set<String> locales=Stream
 
             .concat(
-                    Stream.of("en"),
+                    Stream.of(NOT_LOCALE, "en"),
                     stream(eu.ec2u.data.universities.University.values()).map(u -> u.language)
             )
 
@@ -66,15 +64,6 @@ public final class Resources extends Delegator {
 
     public static Set<String> locales() {
         return locales;
-    }
-
-    public static Set<String> locales(final String... locales) {
-
-        if ( locales == null || Arrays.stream(locales).anyMatch(Objects::isNull) ) {
-            throw new NullPointerException("null locales");
-        }
-
-        return Stream.concat(Resources.locales.stream(), Stream.of(locales)).collect(toUnmodifiableSet());
     }
 
 
@@ -86,7 +75,7 @@ public final class Resources extends Delegator {
                 property("id", ID, required(id())),
 
                 property(RDF.TYPE, multiple(id())),
-                property(RDFS.LABEL, optional(text(locales("")), maxLength(1_000))), // !!! 1000
+                property(RDFS.LABEL, optional(text(locales()), maxLength(1_000))), // !!! 1000
                 property(RDFS.COMMENT, optional(text(locales()), maxLength(10_000))), // !!! 1_000
 
                 property(RDFS.SEEALSO, multiple(id())),
@@ -121,7 +110,7 @@ public final class Resources extends Delegator {
                                 frame(
 
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", WILDCARD)),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
                                         field(reverse(RDFS.MEMBER), iri()),
                                         field(partner, iri())

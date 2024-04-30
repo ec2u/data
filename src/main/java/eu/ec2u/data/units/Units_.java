@@ -81,7 +81,7 @@ public final class Units_ {
 
         @Override protected Optional<Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
 
-            final Optional<Literal> acronym=value(record, "Acronym").map(Values::literal);
+            final Optional<Literal> acronym=value(record, "Acronym").map(v -> literal(v, NOT_LOCALE));
 
             final Optional<Literal> nameEnglish=value(record, "Name (English)").map(v -> literal(v, "en"));
             final Optional<Literal> nameLocal=value(record, "Name (Local)").map(v -> literal(v, university.language));

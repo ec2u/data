@@ -321,7 +321,7 @@ public final class EventsTurkuCity implements Runnable {
                 //
                 //                 .value(RDF.TYPE, PostalAddress)
                 //
-                //                 .refocus(item(Locations.Context, skolemize(frame,  // !!! wildcard
+                //                 .refocus(item(Locations.Context, skolemize(frame,  // !!! NOT_LOCALE
                 //                         addressCountry,
                 //                         addressRegion,
                 //                         addressLocality,

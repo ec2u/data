@@ -55,7 +55,7 @@ public final class Assets extends Delegator {
         return shape(Asset, Resource(),
 
                 property(DCTERMS.TITLE, required(text(locales()))),
-                property(DCTERMS.ALTERNATIVE, optional(text(locales("")))),
+                property(DCTERMS.ALTERNATIVE, optional(text(locales()))),
                 property(DCTERMS.DESCRIPTION, optional(text(locales()))),
 
                 property(DCTERMS.CREATED, optional(date())),
@@ -94,7 +94,7 @@ public final class Assets extends Delegator {
 
                                 frame(
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", WILDCARD))
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
                                 )
 
                         ))

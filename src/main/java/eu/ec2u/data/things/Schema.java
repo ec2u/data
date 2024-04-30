@@ -226,7 +226,7 @@ public final class Schema extends Delegator {
                                 frame(
 
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", WILDCARD))
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
 
                                 )
 

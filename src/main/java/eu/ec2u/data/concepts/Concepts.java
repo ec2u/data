@@ -108,13 +108,13 @@ public final class Concepts extends Delegator {
                                 .get(new Relator(frame(
 
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", WILDCARD)),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
                                         field(RDFS.MEMBER, query(
 
                                                 frame(
                                                         field(ID, iri()),
-                                                        field(RDFS.LABEL, literal("", WILDCARD))
+                                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
                                                 )
 
                                         ))
@@ -127,11 +127,11 @@ public final class Concepts extends Delegator {
                                 .get(new Relator(frame(
 
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", WILDCARD)),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
                                         field(SKOS.HAS_TOP_CONCEPT, frame(
                                                 field(ID, iri()),
-                                                field(RDFS.LABEL, literal("", WILDCARD))
+                                                field(RDFS.LABEL, literal("", ANY_LOCALE))
                                         ))
 
                                 )))
@@ -143,7 +143,7 @@ public final class Concepts extends Delegator {
                                 .get(new Relator(frame(
 
                                         field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", WILDCARD))
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
 
                                 )))
 

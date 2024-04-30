@@ -47,7 +47,7 @@ public final class Organizations {
                 property(ORG.IDENTIFIER, multiple(datatype(LITERAL))),
 
                 property(SKOS.PREF_LABEL, required(text(locales()))),
-                property(SKOS.ALT_LABEL, optional(text(locales("")))),
+                property(SKOS.ALT_LABEL, optional(text(locales()))),
                 property(SKOS.DEFINITION, optional(text(locales()))),
 
                 property(ORG.CLASSIFICATION, () -> multiple(Concept(), scheme(OrganizationTypes.OrganizationTypes))),

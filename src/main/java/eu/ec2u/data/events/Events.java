@@ -151,7 +151,7 @@ public final class Events extends Delegator {
 
         final Frame ResourceModel=frame(
                 field(ID, iri()),
-                field(RDFS.LABEL, literal("", WILDCARD))
+                field(RDFS.LABEL, literal("", ANY_LOCALE))
         );
 
         final Frame ThingModel=frame(
@@ -159,9 +159,9 @@ public final class Events extends Delegator {
                 field(ID, iri()),
 
                 field(url, iri()),
-                field(name, literal("", WILDCARD)),
-                field(description, literal("", WILDCARD)),
-                field(disambiguatingDescription, literal("", WILDCARD))
+                field(name, literal("", ANY_LOCALE)),
+                field(description, literal("", ANY_LOCALE)),
+                field(disambiguatingDescription, literal("", ANY_LOCALE))
 
         );
 
@@ -178,6 +178,42 @@ public final class Events extends Delegator {
 
         );
 
+        final Frame EventModel=frame(ThingModel,
+
+                field(startDate, literal(OffsetDateTime.now())),
+                field(endDate, literal(OffsetDateTime.now())),
+
+                field(inLanguage, literal("")),
+                field(isAccessibleForFree, literal(false)),
+
+                field(publisher),
+                field(organizer),
+
+                field(location, frame(
+
+                        field(XSD.STRING, literal("")),
+
+                        field(Place, frame(ThingModel,
+
+                                field(latitude, literal(Frame.decimal(0))),
+                                field(longitude, literal(Frame.decimal(0))),
+
+                                field(address, PostalAddressModel)
+
+                        )),
+
+                        field(PostalAddress, PostalAddressModel),
+                        field(VirtualLocation, ThingModel)
+
+                )),
+
+                field(about, ResourceModel),
+                field(audience, ResourceModel),
+                field(eventAttendanceMode, ResourceModel),
+                field(eventStatus, ResourceModel)
+
+        );
+
 
         delegate(new Router()
 
@@ -186,47 +222,9 @@ public final class Events extends Delegator {
                         .get(new Relator(frame(
 
                                 field(ID, iri()),
-                                field(RDFS.LABEL, literal("", WILDCARD)),
+                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                field(RDFS.MEMBER, query(
-
-                                        frame(ThingModel,
-
-                                                field(startDate, literal(OffsetDateTime.now())),
-                                                field(endDate, literal(OffsetDateTime.now())),
-
-                                                field(inLanguage, literal("")),
-                                                field(isAccessibleForFree, literal(false)),
-
-                                                field(publisher),
-                                                field(organizer),
-
-                                                field(location, frame(
-
-                                                        field(XSD.STRING, literal("")),
-
-                                                        field(Place, frame(ThingModel,
-
-                                                                field(latitude, literal(Frame.decimal(0))),
-                                                                field(longitude, literal(Frame.decimal(0))),
-
-                                                                field(address, PostalAddressModel)
-
-                                                        )),
-
-                                                        field(PostalAddress, PostalAddressModel),
-                                                        field(VirtualLocation, ThingModel)
-
-                                                )),
-
-                                                field(about, ResourceModel),
-                                                field(audience, ResourceModel),
-                                                field(eventAttendanceMode, ResourceModel),
-                                                field(eventStatus, ResourceModel)
-
-                                        )
-
-                                ))
+                                field(RDFS.MEMBER, query(EventModel))
 
                         )))
 
@@ -234,11 +232,7 @@ public final class Events extends Delegator {
 
                 .path("/{code}", handler(new Driver(Event()), new Worker()
 
-                        .get(new Relator(frame(
-
-                                field(ID, iri())
-
-                        )))
+                        .get(new Relator(EventModel))
 
                 ))
         );

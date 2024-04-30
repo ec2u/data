@@ -79,14 +79,14 @@ public final class Units extends Delegator {
                         .get(new Relator(frame(
 
                                 field(ID, iri()),
-                                field(RDFS.LABEL, literal("", WILDCARD)),
+                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
                                 field(RDFS.MEMBER, query(
 
                                         frame(
 
                                                 field(ID, iri()),
-                                                field(RDFS.LABEL, literal("", WILDCARD)),
+                                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
                                                 field(partner, iri()),
                                                 field(ORG.CLASSIFICATION, iri())
@@ -105,7 +105,7 @@ public final class Units extends Delegator {
 
                                 field(ID, iri()),
 
-                                field(RDFS.LABEL, literal("", WILDCARD)),
+                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
                                 field(partner, iri()),
                                 field(ORG.CLASSIFICATION, iri())
