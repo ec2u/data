@@ -23,7 +23,7 @@ import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
 import { entryCompare } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
-import { id } from "@metreeca/core/id";
+import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
@@ -140,33 +140,15 @@ export function DataCourse() {
 				}</ul>,
 
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
-
-				"Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
-					{educationalCredentialAwarded && <span>{toLocalString(educationalCredentialAwarded)}</span>}
-					{occupationalCredentialAwarded && <span>{toLocalString(occupationalCredentialAwarded)}</span>}
-                </>
+				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>
 
 			}}</ToolInfo>
 
 			<ToolInfo>{{
 
-				"Subjects": about && about.map(subject => <ToolLink key={subject.id}>{subject}</ToolLink>)
-
-			}}</ToolInfo>
-
-			<ToolInfo>{{
-
-				"Info": url && <ul>{url.map(item => {
-
-					const url=new URL(item);
-
-					const host=url.host;
-					const lang=url.pathname.match(/\b[a-z]{2}\b/i);
-
-					return <li key={item}><a href={item}>{lang ? `${host} (${lang[0].toLowerCase()})` : host}</a></li>;
-
-				})}</ul>
+				"Info": url?.length && <ul>{url.map(item =>
+					<li key={item}><a href={item}>{toIdString(item, { compact: true })}</a></li>
+				)}</ul>
 
 			}}</ToolInfo>
 
@@ -179,15 +161,15 @@ export function DataCourse() {
 			name,
 			description,
 
+			inProgram,
+			about,
+
 			teaches,
 			assesses,
 			coursePrerequisites,
 			// competencyRequired,
 			educationalCredentialAwarded,
-			occupationalCredentialAwarded,
-
-			about,
-			inProgram
+			occupationalCredentialAwarded
 
 		}) => {
 
@@ -197,15 +179,36 @@ export function DataCourse() {
 
 				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
+
+				<ToolPanel>
+
+					{inProgram && <ToolLabel name={"Programs"}>{
+
+						<ul>{inProgram.slice().sort(entryCompare).map(program =>
+							<li key={program.id}><ToolLink>{program}</ToolLink></li>
+						)}</ul>
+
+					}</ToolLabel>}
+
+					{about && <ToolLabel name={"Subjects"}>{
+
+						<ul>{about.slice().sort(entryCompare).map(about =>
+							<li key={about.id}><ToolLink>{about}</ToolLink></li>
+						)}</ul>
+
+					}</ToolLabel>}
+
+				</ToolPanel>
+
 				<ToolPanel stack>{Object.entries({
 
+					"Educational Credential Awarded": educationalCredentialAwarded,
+					"Occupational Credential Awarded": occupationalCredentialAwarded,
 					"General Objectives": teaches,
 					"Learning Objectives and Intended Skills": assesses,
 					"Admission Requirements": coursePrerequisites,
 					// !!! "Teaching Methods and Mode of Study": learningResourceType,
 					// "Graduation Requirements": competencyRequired,
-					"Educational Credential Awarded": educationalCredentialAwarded,
-					"Occupational Credential Awarded": occupationalCredentialAwarded
 
 				}).map(([
 
@@ -219,27 +222,6 @@ export function DataCourse() {
                 </ToolLabel>)
 
 				}</ToolPanel>
-
-				<ToolPanel>
-
-					{about && <ToolLabel name={"Subjects"}>{
-
-						<ul>{about.slice().sort(entryCompare).map(about =>
-							<li key={about.id}><ToolLink>{about}</ToolLink></li>
-						)}</ul>
-
-					}</ToolLabel>}
-
-					{inProgram && <ToolLabel name={"Programs"}>{
-
-						<ul>{inProgram.slice().sort(entryCompare).map(program =>
-							<li key={program.id}><ToolLink>{program}</ToolLink></li>
-						)}</ul>
-
-					}</ToolLabel>}
-
-				</ToolPanel>
-
 
 			</>;
 

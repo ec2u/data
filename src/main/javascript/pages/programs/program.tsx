@@ -48,6 +48,9 @@ export const Program=immutable({
 	numberOfCredits: optional(decimal),
 	timeToComplete: optional(string),
 
+	teaches: optional(local),
+	assesses: optional(local),
+	programPrerequisites: optional(local),
 	educationalCredentialAwarded: optional(local),
 	occupationalCredentialAwarded: optional(local),
 
@@ -113,18 +116,9 @@ export function DataProgram() {
 
 				"Code": identifier && <span>{identifier}</span>,
 
-			}}</ToolInfo>
-
-			<ToolInfo>{{
-
 				"Level": educationalLevel && <ToolLink>{educationalLevel}</ToolLink>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
 				"Duration": timeToComplete && <span>{toDurationString(duration.decode(timeToComplete))}</span>,
-
-				"Awards": (educationalCredentialAwarded || occupationalCredentialAwarded) && <>
-					{educationalCredentialAwarded && <span>{toLocalString(educationalCredentialAwarded)}</span>}
-					{occupationalCredentialAwarded && <span>{toLocalString(occupationalCredentialAwarded)}</span>}
-                </>
 
 			}}</ToolInfo>
 
@@ -146,7 +140,14 @@ export function DataProgram() {
 				description,
 
 			hasCourse,
-			about
+			about,
+
+			teaches,
+			assesses,
+			programPrerequisites,
+			// competencyRequired,
+			educationalCredentialAwarded,
+			occupationalCredentialAwarded
 
 			}
 		) => {
@@ -176,6 +177,29 @@ export function DataProgram() {
                     </ToolLabel>}
 
 				</ToolPanel>
+
+				<ToolPanel stack>{Object.entries({
+
+					"Educational Credential Awarded": educationalCredentialAwarded,
+					"Occupational Credential Awarded": occupationalCredentialAwarded,
+					"General Objectives": teaches,
+					"Learning Objectives and Intended Skills": assesses,
+					"Admission Requirements": programPrerequisites
+					// !!! "Teaching Methods and Mode of Study": learningResourceType,
+					// "Graduation Requirements": competencyRequired,
+
+				}).map(([
+
+					term,
+					data
+
+				]) => data && <ToolLabel key={term} name={term}>
+
+                    <ToolMark>{toLocalString(data)}</ToolMark>
+
+                </ToolLabel>)
+
+				}</ToolPanel>
 
 			</>;
 		}
