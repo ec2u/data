@@ -55,6 +55,7 @@ import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.*;
 import static eu.ec2u.data.resources.Resources_.localized;
+import static eu.ec2u.data.things.Schema.identifier;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.lang.String.format;
@@ -195,6 +196,7 @@ public final class OfferingsPavia implements Runnable {
 
                 field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.language)),
 
+                field(identifier, focus.seq(VIVO.identifier).values()),
                 field(courseCode, focus.seq(VIVO.identifier).values()),
 
                 field(Schema.inLanguage, literal(focus.seq(HEMO.courseTeachingLanguage).value()

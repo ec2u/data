@@ -6,6 +6,15 @@
 
 * data extracted from dedicated REST/JSON API
 
+## Inbox
+
+* Lifelong Learning, our API already sends this information in the "categoriaCursoTipo" field with the value "
+  FORMACAO_LONGO_VIDA".
+
+## 2024-05-03
+
+* Ingest offerings identifiers
+
 ## 2023-03-07
 
 * Classify entries as programs/courses according to the `cicloTipo` field:

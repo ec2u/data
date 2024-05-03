@@ -63,7 +63,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.offerings.Offerings.*;
-import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
+import static eu.ec2u.data.programs.Programs.*;
 import static eu.ec2u.data.universities.University.Coimbra;
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -176,14 +176,14 @@ public final class OfferingsCoimbra implements Runnable {
                 .flatMap(this::offerings)
                 .batch(0)
 
-                .flatMap(offers -> Xtream.from(
+                .flatMap(offerings -> Xtream.from(
 
-                        Xtream.from(offers)
+                        Xtream.from(offerings)
 
                                 .filter(OfferingsCoimbra::isProgram)
                                 .optMap(this::program),
 
-                        Xtream.from(offers)
+                        Xtream.from(offerings)
 
                                 .filter(not(OfferingsCoimbra::isProgram))
                                 .optMap(this::course)
@@ -287,6 +287,8 @@ public final class OfferingsCoimbra implements Runnable {
 
                 field(Resources.partner, Coimbra.id),
 
+                field(Schema.identifier, literal(id.toString())),
+
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.url, json.string("urlPT").map(Frame::iri)),
 
@@ -306,6 +308,34 @@ public final class OfferingsCoimbra implements Runnable {
 
                 field(educationalCredentialAwarded, json.paths("qualificoesAtribuidas.*")
                         .optMap(this::localized)
+                ),
+
+                field(timeToComplete, json.string("duracaoEN")
+                        .map(Strings::lower)
+                        .map(DurationPattern::matcher)
+                        .filter(Matcher::matches)
+                        .flatMap((matcher -> Optional.ofNullable(ValueToDuration.get(matcher.group("unit")))
+                                .flatMap(function -> Optional.ofNullable(matcher.group("value"))
+                                        .map(lenient(Integer::parseInt))
+                                        .map(function)
+                                )))
+                        .map(v -> literal(v, XSD.DURATION))
+                ),
+
+                field(teaches, json.paths("objetivosCurso.*")
+                        .optMap(this::localized)
+                ),
+
+                field(assesses, json.paths("objetivosAprendizagem.*")
+                        .optMap(this::localized)
+                ),
+
+                field(programPrerequisites, json.paths("condicoesAcesso.*")
+                        .optMap(this::localized)
+                ),
+
+                field(competencyRequired, json.paths("regrasDeAvaliacao.*")
+                        .optMap(this::localized)
                 )
 
         ));
@@ -319,14 +349,15 @@ public final class OfferingsCoimbra implements Runnable {
 
                 field(Resources.partner, Coimbra.id),
 
+                field(Schema.identifier, literal(id.toString())),
+                field(courseCode, literal(id.toString())),
+
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.url, json.string("urlPT").map(Frame::iri)),
 
                 field(Schema.name, json.paths("designacoes.*")
                         .optMap(this::localized)
                 ),
-
-                field(courseCode, literal(id.toString())),
 
                 field(educationalLevel, Optional.ofNullable(TypesToISCEDLevel.get(format("%s/%s",
                         json.string("cicloTipo").orElse("*"),

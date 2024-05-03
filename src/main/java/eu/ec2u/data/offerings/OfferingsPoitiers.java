@@ -55,6 +55,7 @@ import static eu.ec2u.data.courses.Courses.courseCode;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.hasCourse;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.things.Schema.identifier;
 import static eu.ec2u.data.universities.University.Poitiers;
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -205,7 +206,7 @@ public final class OfferingsPoitiers implements Runnable {
                         .map(name -> literal(format("%s - %s", code, name), Poitiers.language))
                 ),
 
-                field(Schema.identifier, literal(code)),
+                field(identifier, literal(code)),
 
                 field(educationalLevel, json.integer("levelISCED")
                         .map(BigInteger::intValue)
@@ -279,6 +280,7 @@ public final class OfferingsPoitiers implements Runnable {
                                     .map(name -> literal(format("%s - %s", code, name), Poitiers.language))
                             ),
 
+                            field(identifier, literal(code)),
                             field(courseCode, literal(code)),
 
                             field(educationalLevel, level),
