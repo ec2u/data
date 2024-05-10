@@ -108,6 +108,10 @@ cron:
     url: /cron/events/jena/city
     schedule: every day 00:00
 
+  - description: "events › linz › city - nightly crawling"
+    url: /cron/events/linz/city
+    schedule: every day 00:00
+
   - description: "events › pavia › borromeo - nightly crawling"
     url: /cron/events/pavia/borromeo
     schedule: every day 00:00
@@ -119,10 +123,6 @@ cron:
   - description: "events › poitiers › university - nightly crawling"
     url: /cron/events/poitiers/university
     schedule: every day 00:00
-
-  #  - description: "events › poitiers > city - nightly crawling"
-  #    url: /cron/events/poitiers/city
-  #    schedule: every day 00:00
 
   - description: "events › poitiers > city › grand - nightly crawling"
     url: /cron/events/poitiers/city/grand
@@ -143,11 +143,3 @@ cron:
   - description: "events › turku › university - nightly crawling"
     url: /cron/events/turku/university
     schedule: every day 00:00
-
-  #  - description: "events › turku › city - nightly crawling"
-  #    url: /cron/events/turku/city
-  #    schedule: every day 00:00
-
-  #  - description: "events › turku › tyy - nightly crawling"
-  #    url: /cron/events/turku/tyy
-  #    schedule: every day 00:00

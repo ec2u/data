@@ -48,7 +48,10 @@ import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
@@ -75,7 +78,7 @@ public final class EventsJenaCity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/jena/city");
 
-    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("https://www.jena-veranstaltungen.de/veranstaltungen")),
             field(TYPE, Schema.Organization),
@@ -177,25 +180,26 @@ public final class EventsJenaCity implements Runnable {
                         .string("//script[@type='application/ld+json']")
                 )
 
-                .flatMap(json -> {
+                .map(json -> {
 
                     try ( final StringReader reader=new StringReader(json) ) {
 
-                        final Collection<Statement> model=normalize(rdf(reader, "", new JSONLDParser()));
-
-                        return focus(Set.of(Event), model)
-                                .seq(reverse(RDF.TYPE))
-                                .split();
+                        return rdf(reader, "", new JSONLDParser());
 
                     } catch ( final FormatException e ) {
 
                         service(logger()).warning(JSONLD.class, e.getMessage());
 
-                        return Stream.empty();
+                        return Set.<Statement>of();
 
                     }
 
-                });
+                })
+
+                .flatMap(model -> focus(Set.of(Event), normalize(model))
+                        .seq(reverse(RDF.TYPE))
+                        .split()
+                );
     }
 
     private Optional<Frame> event(final Focus focus) {

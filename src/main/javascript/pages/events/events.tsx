@@ -17,6 +17,7 @@
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
 import { date } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
 import { entry, toEntryString } from "@metreeca/core/entry";
@@ -89,6 +90,10 @@ export function DataEvents() {
 			<ToolRange placeholder={"Date"}>{
 				useRange(events, "startDate", { type: date.cast(dateTime) })
 			}</ToolRange>
+
+			<ToolOptions placeholder={"Free"} compact>{
+				useOptions(events, "isAccessibleForFree", { type: boolean })
+			}</ToolOptions>
 
 			<ToolOptions placeholder={"Topic"} compact>{
 				useOptions(events, "about", { type: entry({ id: "", label: required(local) }), size: 10 })
