@@ -39,11 +39,13 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import java.io.StringReader;
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -51,6 +53,7 @@ import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.xml.XPath.decode;
 import static com.metreeca.http.xml.formats.HTML.html;
 import static com.metreeca.link.Frame.*;
 
@@ -148,7 +151,7 @@ public final class EventsLinzCity implements Runnable {
                         )
 
                         .value("lower", date -> date)
-                        .value("upper", date -> date.plusMonths(3))
+                        .value("upper", date -> date.plusMonths(1))
 
                 )
 
@@ -221,11 +224,11 @@ public final class EventsLinzCity implements Runnable {
                 field(url, id),
                 field(image, focus.seq(image).value(asIRI())),
                 field(name, focus.seq(name).value(asString()).map(s -> literal(s, "en"))),
-                field(description, focus.seq(description).value(asString()).map(s -> literal(s, "en"))),
+                field(description, focus.seq(description).value(asString()).map(s -> literal(decode(s), "en"))),
                 // field(Schema.disambiguatingDescription),
 
-                field(startDate, focus.seq(startDate).value(asString()).map(this::datetime)),
-                field(endDate, focus.seq(endDate).value(asString()).map(this::datetime)),
+                field(startDate, focus.seq(startDate).value(asString()).flatMap(this::datetime)),
+                field(endDate, focus.seq(endDate).value(asString()).flatMap(this::datetime)),
                 field(isAccessibleForFree, focus.seq(isAccessibleForFree).value(asBoolean()).map(Frame::literal)),
 
                 field(publisher, Publisher),
@@ -238,8 +241,17 @@ public final class EventsLinzCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Literal datetime(final String date) {
-        return literal(ZonedDateTime.from(DateTimeFormat.parse(date)));
+    private Optional<Literal> datetime(final String date) {
+        try {
+
+            return Optional.of(literal(LocalDateTime.parse(date, DateTimeFormat).atZone(Linz.zone)));
+
+        } catch ( final DateTimeException e ) {
+
+            logger.warning(this, format("malformed date <%s>", date));
+
+            return Optional.empty();
+        }
     }
 
     private Stream<Frame> location(final Focus focus) {
