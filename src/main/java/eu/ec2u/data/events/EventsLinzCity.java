@@ -42,7 +42,7 @@ import java.io.StringReader;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -225,7 +225,7 @@ public final class EventsLinzCity implements Runnable {
 
                 field(url, id),
                 field(image, focus.seq(image).value(asIRI())),
-                field(name, focus.seq(name).value(asString()).map(s -> literal(s, "en"))),
+                field(name, focus.seq(name).value(asString()).map(s -> literal(decode(s), "en"))),
                 field(description, focus.seq(description).value(asString()).map(s -> literal(decode(s), "en"))),
                 // field(Schema.disambiguatingDescription),
 
@@ -246,7 +246,10 @@ public final class EventsLinzCity implements Runnable {
     private Optional<Literal> datetime(final String date) {
         try {
 
-            return Optional.of(literal(LocalDateTime.parse(date, DateTimeFormat).atZone(Linz.zone)));
+            return Optional.of(literal(DateTimeFormat.parseBest(date,
+                    OffsetDateTime::from,
+                    temporal -> LocalDate.from(temporal).atStartOfDay().atZone(Linz.zone)
+            )));
 
         } catch ( final DateTimeException e ) {
 
@@ -276,7 +279,7 @@ public final class EventsLinzCity implements Runnable {
                                         field(ID, item(Locations.Context, Linz, name)),
                                         field(TYPE, Place),
 
-                                        field(Schema.name, literal(name, Linz.language)),
+                                        field(Schema.name, literal(decode(name), Linz.language)),
 
                                         field(address, location
 
@@ -288,7 +291,7 @@ public final class EventsLinzCity implements Runnable {
                                                         field(ID, item(Locations.Context, Linz, address)),
                                                         field(TYPE, PostalAddress),
 
-                                                        field(streetAddress, literal(address))
+                                                        field(streetAddress, literal(decode(address)))
 
                                                 ))
 
