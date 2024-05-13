@@ -146,12 +146,13 @@ public final class EventsLinzCity implements Runnable {
 
                         .model(Root
                                 +"/en/leisure/discover-linz/events/event-calendar/load"
-                                +"?FromDate={lower}"
+                                +"?Category2[HN]=HN" // only "highlight" events
+                                +"&FromDate={lower}"
                                 +"&ToDate={upper}"
                         )
 
                         .value("lower", date -> date)
-                        .value("upper", date -> date.plusMonths(1))
+                        .value("upper", date -> date.plusMonths(3))
 
                 )
 
@@ -169,6 +170,7 @@ public final class EventsLinzCity implements Runnable {
 
                 .map(XPath::new).flatMap(html -> html
                         .links("/html/body/li/a[@class='event-search-result-inner']/@href")
+                        .map(url -> url.substring(0, url.indexOf('?'))) // ;( remove malformed query string
                 );
     }
 
