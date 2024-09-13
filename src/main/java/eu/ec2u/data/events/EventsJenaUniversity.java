@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,21 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.work.Work;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.*;
-import java.time.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -49,7 +58,6 @@ import static eu.ec2u.data.EC2U.University.Jena;
 import static eu.ec2u.data.events.Events.Event;
 import static eu.ec2u.data.events.Events.synced;
 import static eu.ec2u.work.validation.Validators.validate;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
@@ -62,27 +70,27 @@ public final class EventsJenaUniversity implements Runnable {
 
             .of(
 
-                    frame(iri("https://www.uni-jena.de/veranstaltungskalender")).values(RDFS.LABEL,
+                    frame(iri("https://www.uni-jena.de/16965/kommende-veranstaltungen")).values(RDFS.LABEL,
                             literal("Jena University / Events", "en"),
                             literal("Universität Jena / Veranstaltungen", "de")
                     ),
 
-                    frame(iri("https://www.uni-jena.de/international/veranstaltungskalender")).values(RDFS.LABEL,
+                    frame(iri("https://www.uni-jena.de/17425/veranstaltungskalender")).values(RDFS.LABEL,
                             literal("Jena University / International / Events", "en"),
                             literal("Universität Jena / International / Veranstaltungen", "de")
                     ),
 
-                    frame(iri("https://www.uni-jena.de/kalenderstudiuminternational")).values(RDFS.LABEL,
+                    frame(iri("https://www.uni-jena.de/81092/kalender-studium-international")).values(RDFS.LABEL,
                             literal("Jena University / Calendar Studies international / Events", "en"),
                             literal("Universität Jena / Kalender Studium international / Veranstaltungen", "de")
                     ),
 
-                    frame(iri("https://www.uni-jena.de/ec2u-veranstaltungen")).values(RDFS.LABEL,
+                    frame(iri("https://www.uni-jena.de/81092/kalender-studium-international")).values(RDFS.LABEL,
                             literal("Jena University / EC2U / Events", "en"),
                             literal("Universität Jena / EC2U / Veranstaltungen", "de")
                     ),
 
-                    frame(iri("https://www.uni-jena.de/promotion-events")).values(RDFS.LABEL,
+                    frame(iri("https://www.uni-jena.de/17210/veranstaltungen")).values(RDFS.LABEL,
                             literal("Jena University / Academic Career / Events", "en"),
                             literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", "de")
                     )
@@ -142,14 +150,14 @@ public final class EventsJenaUniversity implements Runnable {
 
                                 // ;( pagination links are disabled under javascript control: test for page links
 
-                                .link("//div[contains(@class, 'entry_wrapper')]/div[@class='title']/a/@href")
+                                .link("//ul[contains(@class, 'entries')]//a[contains(@class, 'entry')]")
                                 .isPresent()
 
                         )
 
                         .map(XPath::new)
                         .flatMap(xpath -> xpath
-                                .links("//div[@class='pagination']//li[last()]/a/@href")
+                                .links("//nav[@class='pagination']//a[@data-direction='next']/@href")
                         )
                 )
 
@@ -158,7 +166,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .optMap(new GET<>(new HTML()))
 
                 .map(XPath::new).flatMap(xpath -> xpath
-                        .links("//div[contains(@class, 'entry_wrapper')]/div[@class='title']/a/@href")
+                        .links("//ul[contains(@class, 'entries')]//a[contains(@class, 'entry')]/@href")
                 )
 
 
