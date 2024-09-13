@@ -67,7 +67,7 @@ public final class EventsJenaUniversity implements Runnable {
             .of(
 
                     frame(
-                            field(ID, iri("https://www.uni-jena.de/veranstaltungskalender")),
+                            field(ID, iri("https://www.uni-jena.de/16965/kommende-veranstaltungen")),
                             field(Schema.name,
                                     literal("Jena University / Events", "en"),
                                     literal("Universität Jena / Veranstaltungen", Jena.language)
@@ -75,7 +75,7 @@ public final class EventsJenaUniversity implements Runnable {
                     ),
 
                     frame(
-                            field(ID, iri("https://www.uni-jena.de/international/veranstaltungskalender")),
+                            field(ID, iri("https://www.uni-jena.de/17425/veranstaltungskalender")),
                             field(Schema.name,
                                     literal("Jena University / International / Events", "en"),
                                     literal("Universität Jena / International / Veranstaltungen", Jena.language)
@@ -83,7 +83,7 @@ public final class EventsJenaUniversity implements Runnable {
                     ),
 
                     frame(
-                            field(ID, iri("https://www.uni-jena.de/kalenderstudiuminternational")),
+                            field(ID, iri("https://www.uni-jena.de/81092/kalender-studium-international")),
                             field(Schema.name,
                                     literal("Jena University / Calendar Studies international / Events", "en"),
                                     literal("Universität Jena / Kalender Studium international / Veranstaltungen", Jena.language)
@@ -91,7 +91,7 @@ public final class EventsJenaUniversity implements Runnable {
                     ),
 
                     frame(
-                            field(ID, iri("https://www.uni-jena.de/ec2u-veranstaltungen")),
+                            field(ID, iri("https://www.uni-jena.de/120659/ec2u-veranstaltungen")),
                             field(Schema.name,
                                     literal("Jena University / EC2U / Events", "en"),
                                     literal("Universität Jena / EC2U / Veranstaltungen", Jena.language)
@@ -99,7 +99,7 @@ public final class EventsJenaUniversity implements Runnable {
                     ),
 
                     frame(
-                            field(ID, iri("https://www.uni-jena.de/promotion-events")),
+                            field(ID, iri("https://www.uni-jena.de/17210/veranstaltungen")),
                             field(Schema.name,
                                     literal("Jena University / Academic Career / Events", "en"),
                                     literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", Jena.language)

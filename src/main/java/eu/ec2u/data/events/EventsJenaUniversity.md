@@ -1,14 +1,14 @@
 # Site
 
-* https://www.uni-jena.de/veranstaltungskalender
+* https://www.uni-jena.de/16965/kommende-veranstaltungen
   * general university events
-* https://www.uni-jena.de/international/veranstaltungskalender
+* https://www.uni-jena.de/17425/veranstaltungskalender
   * International Office
-* https://www.uni-jena.de/kalenderstudiuminternational
+* https://www.uni-jena.de/81092/kalender-studium-international
   * International Office Calendar (specifically for incoming students)
-* https://www.uni-jena.de/ec2u-veranstaltungen
+* https://www.uni-jena.de/120659/ec2u-veranstaltungen
   * EC2U-specific
-* https://www.uni-jena.de/promotion-events
+* https://www.uni-jena.de/17210/veranstaltungen
   * Graduate Academy
 
 # API
