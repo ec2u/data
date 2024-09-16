@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 import { immutable } from "@metreeca/core";
 import { useRoute } from "@metreeca/view/nests/router";
-import * as React from "react";
 import { useEffect } from "react";
 
 
@@ -34,8 +33,8 @@ export function DataActors() {
 
     const [, setRoute]=useRoute();
 
-    useEffect(() => { window.open("https://tinyurl.com/24f693ej", "_blank");}, []);
     useEffect(() => { setRoute({ route: "/" }); }, []);
+    useEffect(() => { window.open("https://tinyurl.com/2asqm4py", "_self");}, []);
 
     return null;
 
