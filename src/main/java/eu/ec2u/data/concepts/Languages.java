@@ -19,8 +19,8 @@ package eu.ec2u.data.concepts;
 import com.metreeca.http.toolkits.Strings;
 
 import eu.ec2u.data.resources.Resources;
+import jakarta.json.Json;
 
-import javax.json.Json;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;

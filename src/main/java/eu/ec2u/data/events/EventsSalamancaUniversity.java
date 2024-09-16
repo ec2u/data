@@ -28,8 +28,6 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.*;
 import org.eclipse.rdf4j.model.IRI;
@@ -37,9 +35,9 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalQueries;
 import java.util.Optional;
 
 import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
@@ -121,9 +119,7 @@ public final class EventsSalamancaUniversity implements Runnable {
     }
 
     private Optional<Frame> event(final VEvent event) {
-        return Optional
-
-                .ofNullable(event.getLocation())
+        return event.getLocation()
                 .map(Location::getValue)
                 .filter(not(String::isEmpty))
                 .map(s -> s.startsWith("sac.usal.es/") ? String.format("https://%s", s) : s)
@@ -132,16 +128,16 @@ public final class EventsSalamancaUniversity implements Runnable {
 
                 .map(url -> {
 
-                    final Optional<String> uid=Optional.ofNullable(event.getUid())
+                    final Optional<String> uid=event.getUid()
                             .map(Uid::getValue)
                             .filter(not(String::isEmpty));
 
-                    final Optional<Literal> label=Optional.ofNullable(event.getSummary())
+                    final Optional<Literal> label=event.getSummary()
                             .map(Summary::getValue)
                             .filter(not(String::isEmpty))
                             .map(value -> literal(value, Salamanca.language));
 
-                    final Optional<Literal> description=Optional.ofNullable(event.getDescription())
+                    final Optional<Literal> description=event.getDescription()
                             .map(Description::getValue)
                             .filter(not(String::isEmpty))
                             .map(Untag::untag)
@@ -152,25 +148,22 @@ public final class EventsSalamancaUniversity implements Runnable {
                             .map(text -> Strings.clip(text, TextLength))
                             .map(value -> literal(value, Salamanca.language));
 
-
-                    final Optional<Literal> created=Optional.ofNullable(event.getCreated())
-                            .map(Created::getDateTime)
-                            .map(Date::toInstant)
+                    final Optional<Literal> created=event.getCreated()
+                            .map(Created::getDate)
                             .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
                             .map(Frame::literal);
 
-                    final Optional<Literal> lastModified=Optional.ofNullable(event.getLastModified())
-                            .map(LastModified::getDateTime)
-                            .map(Date::toInstant)
+                    final Optional<Literal> lastModified=event.getLastModified()
+                            .map(LastModified::getDate)
                             .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
                             .map(Frame::literal);
 
-                    final Optional<Literal> startDate=Optional.ofNullable(event.getStartDate())
-                            .map(start -> toOffsetDateTime(start.getDate(), start.getTimeZone()))
+                    final Optional<Literal> startDate=event.getDateTimeStart()
+                            .map(start -> toOffsetDateTime(start.getDate()))
                             .map(Frame::literal);
 
-                    final Optional<Literal> endDate=Optional.ofNullable(event.getEndDate())
-                            .map(end -> toOffsetDateTime(end.getDate(), end.getTimeZone()))
+                    final Optional<Literal> endDate=event.getDateTimeEnd()
+                            .map(end -> toOffsetDateTime(end.getDate()))
                             .map(Frame::literal);
 
                     return frame(
@@ -205,10 +198,15 @@ public final class EventsSalamancaUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private OffsetDateTime toOffsetDateTime(final Date date, final TimeZone zone) {
-        return OffsetDateTime.ofInstant(date.toInstant(), zone != null
-                ? ZoneOffset.ofTotalSeconds(zone.getOffset(now.toEpochMilli()))
-                : Salamanca.zone.getRules().getOffset(now)
+    private OffsetDateTime toOffsetDateTime(final TemporalAccessor temporal) {
+
+        final LocalDate date=TemporalQueries.localDate().queryFrom(temporal);
+        final LocalTime time=TemporalQueries.localTime().queryFrom(temporal);
+        final ZoneOffset offset=TemporalQueries.offset().queryFrom(temporal);
+
+        return OffsetDateTime.of(
+                LocalDateTime.of(date, time != null ? time : LocalTime.of(0, 0)),
+                offset != null ? offset : Salamanca.zone.getRules().getOffset(now)
         );
     }
 

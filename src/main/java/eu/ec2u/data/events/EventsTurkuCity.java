@@ -28,13 +28,13 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import jakarta.json.JsonValue;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
-import javax.json.JsonValue;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;

@@ -32,13 +32,13 @@ import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.Parsers;
+import jakarta.json.Json;
+import jakarta.json.JsonReader;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import javax.json.Json;
-import javax.json.JsonReader;
 import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;

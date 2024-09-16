@@ -34,6 +34,7 @@ import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.focus.Focus;
+import jakarta.json.Json;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
@@ -43,7 +44,6 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import javax.json.Json;
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
