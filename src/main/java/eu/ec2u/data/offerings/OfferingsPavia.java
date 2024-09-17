@@ -30,6 +30,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
@@ -54,12 +55,12 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.*;
-import static eu.ec2u.data.resources.Resources_.localized;
 import static eu.ec2u.data.things.Schema.identifier;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.lang.String.format;
 import static java.util.Map.entry;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toSet;
 
 public final class OfferingsPavia implements Runnable {
@@ -167,6 +168,7 @@ public final class OfferingsPavia implements Runnable {
         ));
     }
 
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Set<Frame> courses(final Instant updated) {
@@ -230,6 +232,19 @@ public final class OfferingsPavia implements Runnable {
                 ))
 
         );
+    }
+
+    private Stream<Literal> localized(final Stream<Value> values, final String language) {
+
+        if ( values == null ) {
+            throw new NullPointerException("null values");
+        }
+
+        return values
+                .filter(Value::isLiteral)
+                .map(Literal.class::cast)
+                .filter(not(v -> v.stringValue().isBlank()))
+                .map(v -> literal(v.stringValue(), v.getLanguage().orElse(language)));
     }
 
 
