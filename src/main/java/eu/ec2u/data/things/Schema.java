@@ -125,7 +125,7 @@ public final class Schema extends Delegator {
                 property(email, multiple(string())),
                 property(telephone, multiple(string())),
 
-                property(location, optional(Location()))
+                property(location, composite(optional(Location())))
 
         );
     }
@@ -150,7 +150,7 @@ public final class Schema extends Delegator {
 
 
     public static Shape Location() {
-        return composite(
+        return shape(
 
                 property("Text", XSD.STRING, optional(string())),
 
