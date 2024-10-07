@@ -163,7 +163,6 @@ public final class EventsTurkuUniversity implements Runnable {
 
                         return Optional.of(reader.readArray());
 
-
                     } catch ( final Exception e ) {
 
                         service(logger()).error(this, "unable to parse message body", e);

@@ -20,6 +20,7 @@ import com.metreeca.http.actions.Fetch;
 import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.Parse;
 import com.metreeca.http.actions.Query;
+import com.metreeca.http.formats.Text;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.formats.JSON;
 import com.metreeca.http.rdf4j.actions.Upload;
@@ -39,8 +40,6 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
@@ -243,7 +242,7 @@ public final class OfferingsCoimbra implements Runnable {
                         .method(POST)
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .header("Accept", JSON.MIME)
-                        .input(() -> new ByteArrayInputStream(query(Map.ofEntries(
+                        .body(new Text(), query(Map.ofEntries(
                                 entry("applicationId", List.of(id)),
                                 entry("accessToken", List.of(token)),
                                 entry("obterInformacaoFichaCurso", List.of("true")),
@@ -252,7 +251,7 @@ public final class OfferingsCoimbra implements Runnable {
                                         format("%s/%s", year, year.plusYears(1)),
                                         format("%s/%s", year.plusYears(1), year.plusYears(2))
                                 ))
-                        )).getBytes(StandardCharsets.UTF_8)))
+                        )))
                 ))
 
                 .optMap(new Fetch())

@@ -44,9 +44,7 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
-import java.io.ByteArrayInputStream;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
@@ -133,18 +131,15 @@ public final class EventsJenaCity implements Runnable {
                                 .method(POST)
                                 .base("https://www.jena-veranstaltungen.de/")
                                 .query("ndssolr=search")
-                                .header("Content-Type", JSON.MIME)
                                 .header("Accept", JSON.MIME)
-                                .input(() -> new ByteArrayInputStream(Json.createObjectBuilder() // !!! review
+                                .body(new JSON(), Json.createObjectBuilder()
                                         .add("q", "*")
                                         .add("selectedFilter", Json.createArrayBuilder()
                                                 .add("tx_ndsdestinationdataevent_domain_model_event")
                                         )
                                         .add("page", page)
                                         .build()
-                                        .toString()
-                                        .getBytes(StandardCharsets.UTF_8)
-                                ))
+                                )
                         )
 
                         .optMap(new Fetch())
