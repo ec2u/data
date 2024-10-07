@@ -42,6 +42,8 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import java.io.StringReader;
@@ -177,9 +179,13 @@ public final class EventsJenaCity implements Runnable {
 
                 .map(json -> {
 
+                    final RDFParser parser=new JSONLDParser();
+
+                    parser.set(JSONLDSettings.SECURE_MODE, false); // ;( retrieve http://schema.org/ links
+
                     try ( final StringReader reader=new StringReader(json) ) {
 
-                        return rdf(reader, "", new JSONLDParser());
+                        return rdf(reader, "", parser);
 
                     } catch ( final FormatException e ) {
 
