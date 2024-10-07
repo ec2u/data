@@ -16,76 +16,80 @@
 
 package eu.ec2u.data.offerings;
 
-import com.metreeca.http.rdf.Values;
+import com.metreeca.http.actions.Fill;
+import com.metreeca.http.actions.GET;
+import com.metreeca.http.json.JSONPath;
+import com.metreeca.http.json.formats.JSON;
 import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
-import eu.ec2u.data.concepts.Languages;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.work.focus.Focus;
+import eu.ec2u.work.feeds.Parsers;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.VCARD4;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.time.Instant;
-import java.util.Collection;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.courses.Courses.*;
-import static eu.ec2u.data.offerings.Offerings.*;
-import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
-import static eu.ec2u.data.programs.Programs.programPrerequisites;
-import static eu.ec2u.data.things.Schema.identifier;
 import static eu.ec2u.data.universities.University.Pavia;
-import static eu.ec2u.work.focus.Focus.focus;
-import static java.lang.String.format;
 import static java.util.Map.entry;
-import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toSet;
 
 public final class OfferingsPavia implements Runnable {
 
     private static final IRI Context=iri(Offerings.Context, "/pavia");
 
+    private static final String APIUrl="https://studentionline.unipv.it/e3rest/api/offerta-service-v1/offerte/";
 
-    private static final Map<String, IRI> DegreeToLevel=Map.ofEntries(
 
-            entry("Bachelor’s Degree", ISCED2011.Level6),
-            entry("Laurea", ISCED2011.Level6),
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            entry("Laurea Magistrale", ISCED2011.Level7),
-            entry("Master’s Degree", ISCED2011.Level7),
-            entry("Laurea Magistrale Ciclo Unico 6 anni", ISCED2011.Level7),
-            entry("Single-Cycle Master’s Degree", ISCED2011.Level7),
-            entry("Laurea Magistrale Ciclo Unico 5 anni", ISCED2011.Level7),
+    private static final int Limit=100;
 
-            entry("Corso di Dottorato", ISCED2011.Level8),
+    // https://ec2u.atlassian.net/wiki/spaces/infrastructure/pages/345407519/Knowledge+Hub+-+Offerings+-+Degree+Programs#Pavia
 
-            entry("Scuola di Specializzazione", ISCED2011.Level9)
+    private static final Map<String, IRI> CodeToLevel=Map.ofEntries(
+
+            entry("L2", ISCED2011.Level6), // Corso di Laurea
+
+            entry("LC5", ISCED2011.Level7), // Laurea Ciclo Unico 5 anni
+            entry("LC6", ISCED2011.Level7), // Laurea Ciclo Unico 6 anni
+            entry("LM", ISCED2011.Level7), // Corso di Laurea Magistrale
+            entry("LM5", ISCED2011.Level7), // Laurea Magistrale Ciclo Unico 5 anni
+            entry("LM6", ISCED2011.Level7), // Laurea Magistrale Ciclo Unico 6 anni
+            entry("M1", ISCED2011.Level7), // Master di Primo Livello
+            entry("M2", ISCED2011.Level7), // Master di Secondo Livello
+            entry("CPA", ISCED2011.Level7), // Corso di Perfezionamento
+
+            entry("D1", ISCED2011.Level8), // Corso di Dottorato di ricerca
+            entry("SP2", ISCED2011.Level8), // Scuola di Specializzazione (2 anni)
+            entry("SP3", ISCED2011.Level8), // Scuola di Specializzazione (3 anni)
+            entry("SP4", ISCED2011.Level8), // Scuola di Specializzazione (4 anni)
+            entry("SP5", ISCED2011.Level8), // Scuola di Specializzazione (5 anni)
+            entry("SP6", ISCED2011.Level8), // Scuola di Specializzazione (6 anni)
+
+            entry("FI", ISCED2011.Level9), // Formazione iniziale insegnanti
+            entry("PAS", ISCED2011.Level9), // Percorso Abilitante Speciale
+            entry("CS", ISCED2011.Level9) // Corso Singolo
 
     );
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(final String... args) {
         exec(() -> new OfferingsPavia().run());
@@ -94,18 +98,25 @@ public final class OfferingsPavia implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Graph graph=new Graph(repository("vivo-unipv"));
-
-
     @Override public void run() {
-        update(connection -> Xtream.of(Instant.EPOCH)
+        update(connection -> Xtream.of(Instant.now())
 
-                .flatMap(instant -> Stream.of(
-                        programs(instant),
-                        courses(instant)
+                .map(now -> LocalDate.ofInstant(now, Pavia.zone))
+
+                .map(date -> date.getMonth().compareTo(Month.JULY) >= 0
+                        ? Year.from(date)
+                        : Year.from(date).minusYears(1)
+                )
+
+                .flatMap(this::programs)
+
+                .flatMap(program -> Stream.concat(
+
+                        program(program).stream(),
+                        courses(program).flatMap(course -> course(course).stream())
+
                 ))
 
-                .flatMap(Collection::stream)
                 .flatMap(Frame::stream)
                 .batch(0)
 
@@ -120,179 +131,151 @@ public final class OfferingsPavia implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Set<Frame> programs(final Instant updated) {
-        return graph.query(connection -> Xtream.of(updated)
+    private Xtream<JSONPath> programs(final Year year) {
+        return Xtream.of(0)
 
-                .flatMap(instant -> programs(connection, instant))
-                .optMap(this::program)
+                .scan(start -> Xtream.of(start)
 
-                .collect(toSet())
-        );
+                        .flatMap(new Fill<>()
+                                .model(APIUrl+"?aaOffId={year}&start={start}&limit={limit}")
+                                .value("year", year)
+                                .value("start", start)
+                                .value("limit", Limit)
+                        )
+
+                        .optMap(new GET<>(new JSON()))
+
+                        .map(JSONPath::new)
+                        .map(json -> {
+
+                            final List<JSONPath> list=json.paths("*").toList();
+
+                            return entry(
+                                    list.size() < Limit ? Stream.empty() : Stream.of(start+Limit),
+                                    list.stream()
+                            );
+
+                        })
+                );
     }
 
-    private Stream<Focus> programs(final RepositoryConnection connection, final Instant updated) {
-        return focus(Set.of(VIVO.AcademicDegree), connection)
-                .seq(reverse(RDF.TYPE))
-                .cache()
-                .split();
+    private Xtream<JSONPath> courses(final JSONPath program) {
+        return program.integers("aaOffId")
+
+                .flatMap(aaOffId -> program.integers("cdsOffId")
+
+                        .flatMap(cdsOffId -> Xtream.of(0)
+
+                                .scan(start -> Xtream.of(start)
+
+                                        .flatMap(new Fill<>()
+                                                .model(APIUrl+"{year}/{program}/attivita?start={start}&limit={limit}")
+                                                .value("year", aaOffId)
+                                                .value("program", cdsOffId)
+                                                .value("start", start)
+                                                .value("limit", Limit)
+                                        )
+
+                                        .optMap(new GET<>(new JSON()))
+
+                                        .map(JSONPath::new)
+                                        .map(json -> {
+
+                                            final List<JSONPath> list=json.paths("*").toList();
+
+                                            return entry(
+                                                    list.size() < Limit ? Stream.empty() : Stream.of(start+Limit),
+                                                    list.stream()
+                                            );
+
+                                        })
+                                )
+                        )
+                );
     }
 
-    private Optional<Frame> program(final Focus focus) {
-        return focus.value().map(program -> frame(
+    private Optional<Frame> program(final JSONPath program) {
+        return program.string("cdsCod").map(code -> frame(
 
-                field(ID, item(Programs.Context, Pavia, program.stringValue())),
+                // !!!  "logisticaExistsFlg": 1,
+                //      offertaExistsFlg": 1,
+                //      "statoAttCod": { "value": "A" },
 
-                field(RDF.TYPE, EducationalOccupationalProgram),
+                field(ID, item(Programs.Context, Pavia, code)),
+                field(TYPE, Programs.EducationalOccupationalProgram),
+
                 field(Resources.university, Pavia.id),
 
-                field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.language)),
+                field(Schema.identifier, literal(code)),
+                field(Schema.name, program.string("cdsDes").map(v -> literal(v, Pavia.language))),
 
-                field(Schema.url, focus.seq(VCARD4.URL).values()
-                        .map(Value::stringValue)
-                        .filter(AbsoluteIRIPattern.asMatchPredicate())
-                        .map(Values::iri)
-                ),
+                field(Offerings.educationalLevel, program.string("tipoCorsoCod").map(CodeToLevel::get))
 
-                field(educationalLevel,
-                        focus.seq(VIVO.termType).value().map(Value::stringValue).map(DegreeToLevel::get)
-                ),
-
-                field(educationalCredentialAwarded, focus.seq(VIVO.termType).values()),
-
-                field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.language)), // !!!
-                field(programPrerequisites, localized(focus.seq(HEMO.enrollmentRequirementsDescription).values(), Pavia.language))
-
-                // !!! review integrity
-
-                // field(hasCourse, focus.seq(VIVO.conceptAssociatedWith).values().map(course ->
-                //         item(Courses.Context, Pavia, course.stringValue()))
-                // )
+                // !!!  "dipCod": "688916",
+                //      "dipDes": "DIPARTIMENTO DI FISICA",
 
         ));
     }
 
+    private Optional<Frame> course(final JSONPath course) {
+        return course.string("chiaveAdContestualizzata.adCod").map(code -> {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            final Optional<String> courseNameEN=course.string("adDesEng");
+            final Optional<String> courseNameIT=course.string("chiaveAdContestualizzata.adDes")
+                    .filter(it -> courseNameEN.filter(it::equals).isEmpty());
 
-    private Set<Frame> courses(final Instant updated) {
-        return graph.query(connection -> Xtream.of(updated)
+            final Optional<String> programNameEN=course.string("cdsDesEng");
+            final Optional<String> programNameIT=course.string("chiaveAdContestualizzata.cdsDes")
+                    .filter(it -> programNameEN.filter(it::equals).isEmpty());
 
-                .flatMap(instant -> courses(connection, instant))
-                .optMap(this::course)
+            return frame(
 
-                .collect(toSet())
-        );
-    }
+                    // !!! "adWebViewFlg": 1,
 
-    private Stream<Focus> courses(final RepositoryConnection connection, final Instant updated) {
-        return focus(Set.of(VIVO.Course), connection)
-                .seq(reverse(RDF.TYPE))
-                .cache()
-                .split();
-    }
+                    field(ID, item(Courses.Context, Pavia, code)),
+                    field(TYPE, Courses.Course),
 
-    private Optional<Frame> course(final Focus focus) {
-        return focus.value().map(course -> frame(
+                    field(Resources.university, Pavia.id),
 
-                field(ID, item(Courses.Context, Pavia, course.stringValue())),
+                    field(Courses.courseCode, literal(code)),
 
-                field(RDF.TYPE, Course),
-                field(Resources.university, Pavia.id),
+                    field(Schema.name, courseNameEN.map(v -> literal(v, "en"))),
+                    field(Schema.name, courseNameIT.map(v -> literal(v, Pavia.language))),
 
-                field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.language)),
+                    field(Schema.inLanguage, course.strings("linguaInsDes")
+                            .flatMap(Parsers::languages)
+                            .map(Frame::literal)
+                    ),
 
-                field(identifier, focus.seq(VIVO.identifier).values()),
-                field(courseCode, focus.seq(VIVO.identifier).values()),
+                    field(Schema.url, course.string("urlSitoWeb")
+                            .flatMap(Parsers::url)
+                            .map(Frame::iri)
+                    ),
 
-                field(Schema.inLanguage, literal(focus.seq(HEMO.courseTeachingLanguage).value()
-                        .map(Value::stringValue)
-                        .flatMap(Languages::languageCode)
-                        .orElse(Pavia.language)
-                )),
+                    field(Schema.url, course.string("urlCorsoMoodle")
+                            .flatMap(Parsers::url)
+                            .map(Frame::iri)
+                    ),
 
-                field(teaches, localized(focus.seq(HEMO.courseContentsDescription).values(), Pavia.language)),
-                field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.language)),
-                field(coursePrerequisites, localized(focus.seq(HEMO.coursePrerequisitesDescription).values(), Pavia.language)),
+                    field(reverse(Programs.hasCourse), course.string("chiaveAdContestualizzata.cdsCod")
+                            .map(programCode -> frame(
 
-                // !!! review schema
+                                    field(ID, item(Programs.Context, Pavia, programCode)),
+                                    field(TYPE, Programs.EducationalOccupationalProgram),
 
-                // field(competencyRequired,
-                //         localized(focus.seq(HEMO.courseAssessmentMethodsDescription).values(), Pavia.Language)
-                // ),
+                                    field(Resources.university, Pavia.id),
 
-                // !!! review schema
+                                    field(Schema.identifier, literal(programCode)),
 
-                // field(learningResourceType,
-                //         localized(focus.seq(HEMO.courseTeachingMethodsDescription).values(), Pavia.language)
-                // ),
+                                    field(Schema.name, programNameEN.map(v -> literal(v, "en"))),
+                                    field(Schema.name, programNameIT.map(v -> literal(v, Pavia.language)))
 
+                            ))
+                    )
 
-                field(numberOfCredits, focus.seq(VIVO.hasValue).value()
-                        .flatMap(Values::integer)
-                        .map(Offerings_::ects)
-                        .map(Frame::literal)
-                ),
+            );
 
-                field(timeRequired, focus.seq(VIVO.dateTimeValue, RDFS.LABEL).value()
-                        .flatMap(Values::integer)
-                        .map(hours -> literal(format("PT%dH", hours), XSD.DURATION))
-                ))
-
-        );
-    }
-
-    private Stream<Literal> localized(final Stream<Value> values, final String language) {
-
-        if ( values == null ) {
-            throw new NullPointerException("null values");
-        }
-
-        return values
-                .filter(Value::isLiteral)
-                .map(Literal.class::cast)
-                .filter(not(v -> v.stringValue().isBlank()))
-                .map(v -> literal(v.stringValue(), v.getLanguage().orElse(language)));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * VIVO RDF vocabulary.
-     *
-     * @see <a href="https://bioportal.bioontology.org/ontologies/VIVO/">VIVO Ontology for Researcher Discovery</a>
-     */
-    private static final class VIVO {
-
-        private static final String Namespace="http://vivoweb.org/ontology/core#";
-
-
-        private static final IRI AcademicDegree=iri(Namespace, "AcademicDegree");
-        private static final IRI Course=iri(Namespace, "Course");
-
-        private static final IRI conceptAssociatedWith=iri(Namespace, "conceptAssociatedWith");
-        private static final IRI termType=iri(Namespace, "termType");
-
-        private static final IRI identifier=iri(Namespace, "identifier");
-        private static final IRI hasValue=iri(Namespace, "hasValue");
-        private static final IRI dateTimeValue=iri(Namespace, "dateTimeValue");
-
-    }
-
-    private static final class HEMO {
-
-        private static final String Namespace="http://data.cineca.it/education/HEMO#";
-
-
-        private static final IRI enrollmentRequirementsDescription=iri(Namespace, "enrollmentRequirementsDescription");
-
-        private static final IRI courseTeachingLanguage=iri(Namespace, "courseTeachingLanguage");
-        private static final IRI courseContentsDescription=iri(Namespace, "courseContentsDescription");
-        private static final IRI courseObjectiveDescription=iri(Namespace, "courseObjectiveDescription");
-        private static final IRI coursePrerequisitesDescription=iri(Namespace, "coursePrerequisitesDescription");
-        private static final IRI courseTeachingMethodsDescription=iri(Namespace, "courseTeachingMethodsDescription");
-        private static final IRI courseAssessmentMethodsDescription=iri(Namespace, "courseAssessmentMethodsDescription");
-
+        });
     }
 
 }
