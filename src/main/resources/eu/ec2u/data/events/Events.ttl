@@ -1,42 +1,48 @@
-@prefix ec2u:	</terms/> .
+@prefix ec2u: </terms/> .
 @prefix schema: <https://schema.org/> .
-@prefix dct:	<http://purl.org/dc/terms/> .
-@prefix owl:	<http://www.w3.org/2002/07/owl#> .
-@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void: <http://rdfs.org/ns/void#> .
 
-</events/> a ec2u:Dataset ;
-	dct:title "EC2U Events"@en ;
-	dct:alternative "EC2U Academic and Public Local Events"@en ;
-	dct:description "Information about events at EC2U allied universities and associated local communities, dynamically collected from academic, public and commercial sources."@en ;
-	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-	dct:available "2022-01-01"^^xsd:date ;
-	void:rootResource ec2u:Event .
+</events/> a void:Dataset ;
+    dct:title "EC2U Academic and Public Local Events"@en ;
+    dct:alternative "EC2U Events"@en ;
+    dct:description
+        "Information about events at EC2U allied universities and associated local communities, dynamically collected from academic, public and commercial sources."@en ;
+    dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:issued "2022-01-01"^^xsd:date ;
+    void:rootResource schema:Event ;
+    rdfs:isDefinedBy </datasets/events> .
 
 </concepts/event-topics> a skos:ConceptScheme ;
-	dct:title "EC2U Local Event Topics"@en .
+    dct:title "EC2U Local Event Topics"@en ;
+    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en ;
+    dct:publisher <https://ec2u.eu/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" .
+
+</concepts/event-audiences> a skos:ConceptScheme ;
+    dct:title "EC2U Local Event Audiences"@en ;
+    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en ;
+    dct:publisher <https://ec2u.eu/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" .
+
 
 
 ########################################################################################################################
 
-ec2u:Event a owl:Class ;
-	rdfs:subClassOf ec2u:Resource, schema:Event .
-
 schema:Event a owl:Class ;
-	rdfs:subClassOf schema:Thing .
+    rdfs:subClassOf schema:Thing .
 
-schema:Organization a owl:Class ;
-	rdfs:subClassOf schema:Thing .
+schema:MixedEventAttendanceMode rdfs:label "Mixed"@en .
+schema:OfflineEventAttendanceMode rdfs:label "Offline"@en .
+schema:OnlineEventAttendanceMode rdfs:label "Online"@en .
 
-schema:Place a owl:Class ;
-	rdfs:subClassOf schema:Thing .
-
-schema:PostalAddress a owl:Class ;
-	rdfs:subClassOf schema:ContactPoint .
-
-schema:ContactPoint a owl:Class ;
-	rdfs:subClassOf schema:Thing .
-
-schema:VirtualLocation a owl:Class ;
-	rdfs:subClassOf schema:Thing .
+schema:EventScheduled rdfs:label "Scheduled"@en .
+schema:EventMovedOnline rdfs:label "Moved Online"@en .
+schema:EventPostponed rdfs:label "Postponed"@en .
+schema:EventRescheduled rdfs:label "Rescheduled"@en .
+schema:EventCancelled rdfs:label "Cancelled"@en .

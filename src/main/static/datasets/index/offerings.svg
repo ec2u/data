@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2024 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1"
+        xmlns="http://www.w3.org/2000/svg" viewBox="-519 391 609 438" width="609" height="438">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
+                color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
+                color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker_2"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-25 -10 26 20" markerWidth="26"
+                markerHeight="20" color="black">
+            <g>
+                <path d="M -24 0 L 0 0 M 0 9 L -24 0 L 0 -9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="offerings" fill="none" stroke-dasharray="none" stroke="none" stroke-opacity="1" fill-opacity="1">
+        <title>offerings</title>
+        <rect fill="white" x="-519" y="391" width="609" height="438"/>
+        <g id="offerings_Layer_1">
+            <title>Layer 1</title>
+            <g id="Line_491">
+                <path d="M -276.60122 510.0091 L -255.50122 510.0091 L -255.50122 552.9189 L -99.9978 552.9189"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_364">
+                <line x1="-276.60122" y1="510.0091" x2="-99.9978" y2="510.0091" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_480">
+                <path d="M -276.60122 510.0091 L -255.50122 510.0091 L -255.50122 488.5542 L -99.9978 488.5542"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_482">
+                <path d="M -276.60122 510.0091 L -255.50122 510.0091 L -255.50122 428.02755 L -99.9978 428.02755"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_483">
+                <path d="M -276.60122 510.0091 L -255.50122 510.0091 L -255.50122 531.464 L -99.9978 531.464"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_391">
+                <g id="Graphic_392">
+                    <a xl:href="https://schema.org/Course">
+                        <rect x="-325.6932" y="722.3386" width="173.87256" height="17" fill="white"/>
+                        <rect x="-325.6932" y="722.3386" width="173.87256" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-270.15145 725.3386)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                schema:Course
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_393">
+                    <rect x="-325.6932" y="739.3386" width="173.87256" height="61" fill="white"/>
+                    <rect x="-325.6932" y="739.3386" width="173.87256" height="61" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-319.6932 742.3386)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">/schema:identifier =
+                            schema:courseCode
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:courseCode : string
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">schema:inLanguage : string
+                            [*]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">schema:timeRequired :
+                            duration [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">schema:coursePrerequisites :
+                            text [0..1]
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_387">
+                <g id="Graphic_388">
+                    <a xl:href="things.svg">
+                        <rect x="-419.74647" y="419.52756" width="72.498" height="17.261063" fill="white"/>
+                        <rect x="-419.74647" y="419.52756" width="72.498" height="17.261063" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-410.3898 422.6581)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
+                                    fill="#a5a5a5" x="0" y="9">schema:Thing
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_382">
+                <path d="M -357.47006 625.189 L -383.49747 625.189 L -383.49747 558.7591"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_353">
+                <g id="Graphic_354">
+                    <a xl:href="agents.svg">
+                        <rect x="-93.1478" y="419.52756" width="79.70215" height="17" fill="white"/>
+                        <rect x="-93.1478" y="419.52756" width="79.70215" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-87.1478 422.52756)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9">
+                                org:Organization
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Group_346">
+                <g id="Graphic_347">
+                    <a xl:href="https://schema.org/EducationalOccupationalProgram">
+                        <rect x="-357.47006" y="597.189" width="237.70752" height="17" fill="white"/>
+                        <rect x="-357.47006" y="597.189" width="237.70752" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-323.8043 600.189)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                schema:EducationalOccupationalProgram
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_348">
+                    <rect x="-357.47006" y="614.189" width="237.70752" height="39" fill="white"/>
+                    <rect x="-357.47006" y="614.189" width="237.70752" height="39" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-351.47006 617.189)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">/schema:programType = schema:
+                            learningResourceType
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:timeToComplete :
+                            duration [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">schema:programPrerequisites
+                            : text [0..1]
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_339">
+                <path d="M -238.6163 660.039 L -238.6163 661.289 L -238.75692 714.2386 L -238.75692 715.4886"
+                        marker-end="url(#StickArrow_Marker)" marker-start="url(#StickArrow_Marker_2)" stroke="black"
+                        stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_338">
+                <rect x="-282.7931" y="697.8275" width="88.125" height="13" fill="white"/>
+                <text transform="translate(-279.7931 698.8275)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:hasCourse *</tspan>
+                </text>
+            </g>
+            <g id="Graphic_363">
+                <rect x="-172.4439" y="503.5091" width="68.47705" height="13" fill="white"/>
+                <text transform="translate(-169.4439 504.5091)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:about *</tspan>
+                </text>
+            </g>
+            <g id="Group_417">
+                <g id="Graphic_479">
+                    <a xl:href="https://schema.org/LearningResource">
+                        <rect x="-490.3937" y="471.0091" width="213.79248" height="17" fill="white"/>
+                        <rect x="-490.3937" y="471.0091" width="213.79248" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-437.33267 474.0091)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                schema:LearningResource
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_419">
+                    <rect x="-490.3937" y="488.0091" width="213.79248" height="61" fill="white"/>
+                    <rect x="-490.3937" y="488.0091" width="213.79248" height="61" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-484.3937 491.0091)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:teaches : text
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:assesses : text
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">schema:numberOfCredits :
+                            decimal [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">
+                            schema:educationalCredentialAwarded : text [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">
+                            schema:occupationalCredentialAwarded : text [0..1]
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_421">
+                <line x1="-383.49747" y1="471.0091" x2="-383.49747" y2="446.5386"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_450">
+                <a xl:href="concepts.svg">
+                    <rect x="-93.1478" y="480.0542" width="139.32275" height="17" fill="white"/>
+                    <rect x="-93.1478" y="480.0542" width="139.32275" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-87.1478 483.0542)" fill="#a5a5a5">
+                        <tspan font-family="Roboto" font-size="9" fill="#a5a5a5" x="0" y="9">
+                            /concepts/offering-types/{code}
+                        </tspan>
+                    </text>
+                </a>
+            </g>
+            <g id="Graphic_451">
+                <a xl:href="concepts.svg">
+                    <rect x="-93.1478" y="522.964" width="154.83545" height="17" fill="white"/>
+                    <rect x="-93.1478" y="522.964" width="154.83545" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-87.1478 525.964)" fill="#a5a5a5">
+                        <tspan font-family="Roboto" font-size="9" fill="#a5a5a5" x="0" y="9">
+                            /concepts/esco-occupations/{code}
+                        </tspan>
+                    </text>
+                </a>
+            </g>
+            <g id="Graphic_452">
+                <a xl:href="concepts.svg">
+                    <rect x="-93.1478" y="447.91377" width="128.26172" height="17" fill="white"/>
+                    <rect x="-93.1478" y="447.91377" width="128.26172" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-87.1478 450.91377)" fill="#a5a5a5">
+                        <tspan font-family="Roboto" font-size="9" fill="#a5a5a5" x="0" y="9">
+                            /concepts/isced-2011/{code}
+                        </tspan>
+                    </text>
+                </a>
+            </g>
+            <g id="Graphic_453">
+                <a xl:href="concepts.svg">
+                    <rect x="-93.1478" y="501.5091" width="127.4707" height="17" fill="white"/>
+                    <rect x="-93.1478" y="501.5091" width="127.4707" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-87.1478 504.5091)" fill="#a5a5a5">
+                        <tspan font-family="Roboto" font-size="9" fill="#a5a5a5" x="0" y="9">
+                            /concepts/euroscivoc/{code}
+                        </tspan>
+                    </text>
+                </a>
+            </g>
+            <g id="Graphic_413">
+                <rect x="-235.58753" y="524.964" width="132.54932" height="13" fill="white"/>
+                <text transform="translate(-232.58753 525.964)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:occupationalCategory *
+                    </tspan>
+                </text>
+            </g>
+            <g id="Graphic_458">
+                <rect x="-188.75374" y="421.52755" width="88.41943" height="13" fill="white"/>
+                <text transform="translate(-185.75374 422.52755)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:provider 0..1</tspan>
+                </text>
+            </g>
+            <g id="Graphic_465">
+                <rect x="-268.06672" y="662.9636" width="58.85742" height="13" fill="white"/>
+                <text transform="translate(-265.06672 663.9636)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹inProgram› *</tspan>
+                </text>
+            </g>
+            <g id="Line_466">
+                <path d="M -325.6932 761.3386 L -383.49747 761.3386 L -383.49747 558.7591"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_481">
+                <rect x="-239.58205" y="482.0542" width="133.78418" height="13" fill="white"/>
+                <text transform="translate(-236.58205 483.0542)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:learningResourceType *
+                    </tspan>
+                </text>
+            </g>
+            <g id="Line_373">
+                <path d="M -276.60122 510.0091 L -255.50122 510.0091 L -255.50122 456.41377 L -99.9978 456.41377"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_365">
+                <rect x="-226.95648" y="449.91377" width="122.77148" height="13" fill="white"/>
+                <text transform="translate(-223.95648 450.91377)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:educationalLevel 0..1
+                    </tspan>
+                </text>
+            </g>
+            <g id="Graphic_487">
+                <rect x="-233.71928" y="546.4189" width="129.86426" height="13" fill="white"/>
+                <text transform="translate(-230.71928 547.4189)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:competencyRequired *
+                    </tspan>
+                </text>
+            </g>
+            <g id="Graphic_493">
+                <a xl:href="concepts.svg">
+                    <rect x="-93.1478" y="544.4189" width="125.72607" height="17" fill="white"/>
+                    <rect x="-93.1478" y="544.4189" width="125.72607" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-87.1478 547.4189)" fill="#a5a5a5">
+                        <tspan font-family="Roboto" font-size="9" fill="#a5a5a5" x="0" y="9">
+                            /concepts/esco-skills/{code}
+                        </tspan>
+                    </text>
+                </a>
+            </g>
+        </g>
+    </g>
+</svg>

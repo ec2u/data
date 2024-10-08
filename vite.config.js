@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ export default defineConfig(({ mode }) => ({ // https://vitejs.dev/config/
 
     resolve: {
         alias: {
-            "@metreeca": resolve(src, "@metreeca"),
             "@ec2u/data": resolve(src)
         }
     },

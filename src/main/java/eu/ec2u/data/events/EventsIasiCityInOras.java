@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,45 +16,49 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.formats.XML;
 import com.metreeca.link.Frame;
-import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.Set;
 
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.EC2U.University.Iasi;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.universities.University.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
-import static eu.ec2u.work.validation.Validators.validate;
-
-import static java.time.ZoneOffset.UTC;
 
 public final class EventsIasiCityInOras implements Runnable {
 
     public static final IRI Context=iri(Events.Context, "/iasi/in-oras");
 
-    private static final Frame Publisher=frame(iri("https://iasi.inoras.ro/evenimente"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
-            .values(RDFS.LABEL,
-                    literal("InOras / Evenimente in Iași", "ro"),
-                    literal("InOras / Events in Iasi", "en")
-            );
+    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+
+            field(ID, iri("https://iasi.inoras.ro/evenimente")),
+            field(TYPE, Schema.Organization),
+
+            field(partner, Iasi.id),
+
+            field(Schema.name,
+                    literal("InOras / Events in Iasi", "en"),
+                    literal("InOras / Evenimente in Iași", Iasi.language)
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
@@ -64,25 +68,27 @@ public final class EventsIasiCityInOras implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final ZonedDateTime now=ZonedDateTime.now(UTC);
+    private final Instant now=Instant.now();
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .map(this::event)
 
-                .pipe(events -> validate(Event(), Set.of(Event), events))
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                .forEach(new Events.Updater(Context));
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<Frame> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://iasi.inoras.ro/feed/")
@@ -94,12 +100,13 @@ public final class EventsIasiCityInOras implements Runnable {
     }
 
     private Frame event(final Frame frame) {
-        return WordPress(frame, Iasi.Language)
+        return frame(WordPress(frame, Iasi.language),
 
-                .value(Resources.university, Iasi.Id)
+                field(updated, literal(now)),
+                field(partner, Iasi.id),
+                field(publisher, Publisher)
 
-                .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)));
+        );
     }
 
 }

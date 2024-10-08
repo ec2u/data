@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,12 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.services.Vault;
-import com.metreeca.rdf4j.actions.Upload;
-
-import eu.ec2u.data.documents.Documents.CSVLoader;
 import org.eclipse.rdf4j.model.IRI;
 
-import java.util.Set;
-
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.link.Values.iri;
+import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Turku;
-import static eu.ec2u.data.documents.Documents.Document;
-import static eu.ec2u.work.validation.Validators.validate;
-import static java.lang.String.format;
+import static eu.ec2u.data.universities.University.Turku;
 
 public final class DocumentsTurku implements Runnable {
 
@@ -49,27 +37,8 @@ public final class DocumentsTurku implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Vault vault=service(vault());
-
-
     @Override public void run() {
-
-        final String url=vault
-                .get(DataUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined data URL <%s>", DataUrl
-                )));
-
-        Xtream.of(url)
-
-                .flatMap(new CSVLoader(Turku))
-
-                .pipe(documents -> validate(Document(), Set.of(Document), documents))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                );
+        new Documents_.CSVLoader(DataUrl, Context, Turku).run();
     }
 
 }

@@ -4,7 +4,7 @@ title: Create a New Dataset
 
 - define dedicated ontology
   - declare dataset individual
-    - e.g. `</universities/> a ec2u:Dataset`
+      - e.g. `</universities/> a void:Dataset`
   - declare top-level dataset classes as subclasses of `ec2u:Resource`
     - e.g. `ec2u:University rdfs:subClassOf ec2u:Resource`
   - associate top-level dataset classes to the dataset using the `void:rootResources` property

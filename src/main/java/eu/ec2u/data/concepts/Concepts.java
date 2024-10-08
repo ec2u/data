@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,84 +16,81 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.http.handlers.*;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf4j.actions.Update;
-import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.impl.LinkedHashModel;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.stream.Stream;
-
-import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Shape.required;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.link.shapes.Lang.lang;
-import static com.metreeca.link.shapes.Link.link;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.resources.Resources.Languages;
-import static eu.ec2u.data.resources.Resources.*;
+import static eu.ec2u.data.assets.Assets.Asset;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.locales;
 
 public final class Concepts extends Delegator {
 
     public static final IRI Context=item("/concepts/");
 
+    public static final IRI Concept=item("Concept");
+    public static final IRI ConceptScheme=item("ConceptScheme");
 
-    private static Shape ConceptScheme() {
-        return relate(link(RDFS.ISDEFINEDBY, Resource(),
 
-                filter(clazz(SKOS.CONCEPT_SCHEME)),
-
-                field(DCTERMS.EXTENT, required(), datatype(XSD.INTEGER)),
-
-                detail(
-
-                        field(SKOS.HAS_TOP_CONCEPT, Reference())
-
-                )
-
-        ));
+    public static Shape Concepts() {
+        return Dataset(ConceptScheme());
     }
 
-    private static Shape Concept() {
-        return relate(link(RDFS.ISDEFINEDBY, Resource(),
 
-                filter(clazz(SKOS.CONCEPT)),
+    public static Shape ConceptScheme() {
+        return shape(SKOS.CONCEPT_SCHEME, Asset(),
 
-                field(SKOS.PREF_LABEL, multilingual()),
-                field(SKOS.ALT_LABEL, lang(Languages)),
-                field(SKOS.DEFINITION, multilingual()),
+                property(SKOS.HAS_TOP_CONCEPT, () -> multiple(Concept())),
+                property("hasConcept", reverse(SKOS.IN_SCHEME), () -> multiple(Concept()))
 
-                field(SKOS.IN_SCHEME, required(), Reference()),
-                field(SKOS.TOP_CONCEPT_OF, optional(), Reference()),
+        );
+    }
 
-                detail(
+    public static Shape Concept() {
+        return shape(SKOS.CONCEPT, Resource(),
 
-                        field(SKOS.BROADER_TRANSITIVE, Reference(),
-                                field(SKOS.BROADER, Reference())
-                        ),
+                property(SKOS.NOTATION, multiple(datatype(LITERAL))),
 
-                        field(SKOS.BROADER, Reference()),
-                        field(SKOS.NARROWER, Reference()),
-                        field(SKOS.RELATED, Reference())
+                property(SKOS.PREF_LABEL, required(text(locales()))),
+                property(SKOS.ALT_LABEL, multiple(text(locales()))),
+                property(SKOS.DEFINITION, optional(text(locales()))),
 
-                )
+                property(SKOS.IN_SCHEME, required(ConceptScheme())),
+                property(SKOS.TOP_CONCEPT_OF, optional(ConceptScheme())),
 
-        ));
+                property(SKOS.BROADER_TRANSITIVE, () -> multiple(Concept())),
+                property(SKOS.NARROWER_TRANSITIVE, () -> multiple(Concept())),
+
+                property(SKOS.BROADER, () -> multiple(Concept())),
+                property(SKOS.NARROWER, () -> multiple(Concept())),
+                property(SKOS.RELATED, () -> multiple(Concept())),
+                property(SKOS.EXACT_MATCH, () -> multiple(Concept())),
+
+                property(OWL.SAMEAS, optional(id()))
+
+        );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Concepts.class, ConceptScheme(), Concept()));
     }
 
 
@@ -106,82 +103,53 @@ public final class Concepts extends Delegator {
 
                 new Router()
 
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
+                        .path("/", handler(new Driver(Concepts()), new Worker()
 
-                        .path("/{scheme}", new Worker()
-                                .get(new Relator())
-                        )
+                                .get(new Relator(frame(
 
-                        .path("/{scheme}/*", handler(
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                new Driver(Concept()),
+                                        field(RDFS.MEMBER, query(
 
-                                new Worker()
-                                        .get(new Relator())
+                                                frame(
+                                                        field(ID, iri()),
+                                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
+                                                )
+
+                                        ))
+                                )))
+
+                        ))
+
+                        .path("/{scheme}", handler(new Driver(ConceptScheme()), new Worker()
+
+                                .get(new Relator(frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE)),
+
+                                        field(SKOS.HAS_TOP_CONCEPT, frame(
+                                                field(ID, iri()),
+                                                field(RDFS.LABEL, literal("", ANY_LOCALE))
+                                        ))
+
+                                )))
+
+                        ))
+
+                        .path("/{scheme}/*", handler(new Driver(Concept()), new Worker()
+
+                                .get(new Relator(frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
+
+                                )))
 
                         ))
 
         ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(
-
-                            rdf(Concepts.class, ".ttl", EC2U.Base),
-
-                            skos(rdf("https://www.w3.org/2009/08/skos-reference/skos.rdf"))
-
-                    )
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-
-
-        private Model skos(final Model skos) {
-
-            final Model patched=new LinkedHashModel(skos);
-
-            patched.remove(null, RDFS.SUBPROPERTYOF, RDFS.LABEL);
-
-            return patched;
-        }
-
-    }
-
-    public static final class Updater implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Updater().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(text(Concepts.class, ".ul"))
-
-                    .forEach(new Update()
-                            .base(EC2U.Base)
-                            .insert(iri(Context, "/~"))
-                            .clear(true)
-                    );
-        }
-
     }
 
 }

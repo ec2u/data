@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,51 +16,58 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
+import com.metreeca.http.rdf.actions.Localize;
+import com.metreeca.http.rdf.actions.Microdata;
+import com.metreeca.http.rdf.actions.Normalize;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
-import com.metreeca.rdf.actions.*;
-import com.metreeca.rdf.actions.Normalize.DateToDateTime;
-import com.metreeca.rdf.actions.Normalize.StringToDate;
-import com.metreeca.xml.codecs.HTML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.locations.Locations;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.link.shifts.Alt.alt;
-import static com.metreeca.link.shifts.Seq.seq;
-import static com.metreeca.link.shifts.Step.step;
+import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.EC2U.University.Pavia;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
-
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.universities.University.Pavia;
+import static eu.ec2u.work.focus.Focus.focus;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/pavia/city");
 
-    private static final Frame Publisher=frame(iri("http://www.vivipavia.it/site/home/eventi.html"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
-            .values(RDFS.LABEL,
-                    literal("Comune di Pavia / ViviPavia", "it"),
-                    literal("City of Pavia / ViviPavia", "en")
-            );
+    private static final Frame Publisher=Frame.frame(
+
+            field(ID, iri("http://www.vivipavia.it/site/home/eventi.html")),
+            field(TYPE, Organization),
+
+            field(partner, Pavia.id),
+
+            field(Schema.name,
+                    literal("City of Pavia / ViviPavia", "en"),
+                    literal("Comune di Pavia / ViviPavia", Pavia.language)
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
@@ -70,25 +77,28 @@ public final class EventsPaviaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final ZonedDateTime now=ZonedDateTime.now(UTC);
+    private final Instant now=Instant.now();
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
-                .map(this::event)
+                .flatMap(this::event)
 
-                .pipe(events -> validate(Event(), Set.of(Event), events))
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                .forEach(new Events.Updater(Context));
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<IRI> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
@@ -106,83 +116,101 @@ public final class EventsPaviaCity implements Runnable {
                 )
 
                 .optMap(new GET<>(new HTML()))
+
                 .flatMap(new Microdata())
                 .batch(0)
 
-                .flatMap(model -> frame(Schema.Event, model)
-                        .strings(seq(inverse(RDF.TYPE), Schema.url))
-                )
-
-                .flatMap(url -> Xtream.of(url)
-
-                        .optMap(new GET<>(new HTML()))
-                        .flatMap(new Microdata())
-
-                        .map(new Normalize(
-                                new StringToDate(),
-                                new DateToDateTime()
-                        ))
-
-                        .map(new Localize("it"))
-
-                        .batch(0)
-
-                        .flatMap(model -> frame(Schema.Event, model)
-                                .values(inverse(RDF.TYPE))
-                                .map(event -> frame(event, model)
-                                        .value(DCTERMS.SOURCE, iri(url))
-                                )
-                        )
-
+                .flatMap(model -> focus(Set.of(Event), model)
+                        .seq(reverse(RDF.TYPE), Schema.url)
+                        .values(asIRI())
                 );
     }
 
-    private Frame event(final Frame frame) {
-        return frame(iri(Events.Context, frame.skolemize(DCTERMS.SOURCE)))
+    private Xtream<Frame> event(final IRI url) {
+        return Xtream.of(url.stringValue())
 
-                .values(RDF.TYPE, Events.Event)
+                .optMap(new GET<>(new HTML()))
 
-                .value(Resources.university, Pavia.Id)
+                .flatMap(document -> {
 
-                .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(DCTERMS.SOURCE, frame.value(DCTERMS.SOURCE))
-                .value(DCTERMS.MODIFIED, frame.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
+                    // final Optional<Value> description=Optional.of(document)
+                    //
+                    //         .map(d -> document.getElementsByTagName("body").item(0))
+                    //
+                    //         .flatMap(new Extract())
+                    //         .map(new Untag())
+                    //
+                    //         .map(s -> literal(s, Pavia.Language));
 
-                .values(Schema.name, frame.values(Schema.name))
-                .values(Schema.description, frame.values(Schema.description))
-                .values(Schema.disambiguatingDescription, frame.values(Schema.disambiguatingDescription))
-                .values(Schema.image, frame.values(Schema.image))
-                .values(Schema.url, frame.values(DCTERMS.SOURCE))
 
-                .value(Schema.startDate, frame.value(Schema.startDate))
-                .value(Schema.endDate, frame.value(Schema.endDate))
+                    return Xtream.of(document)
 
-                .value(Schema.eventStatus, frame.value(Schema.eventStatus))
+                            .flatMap(new Microdata())
 
-                .frame(Schema.location, frame.frame(Schema.location).map(this::location));
+                            .map(new Normalize(
+                                    new Normalize.StringToDate(),
+                                    new Normalize.DateToDateTime()
+                            ))
+
+                            .map(new Localize("it"))
+
+                            .batch(0)
+
+                            .flatMap(model -> focus(Set.of(Event), model)
+
+                                    .seq(reverse(RDF.TYPE))
+                                    .split()
+
+                                    .map(focus -> frame(
+
+                                            field(ID, item(Events.Context, url.stringValue())),
+                                            field(TYPE, Event),
+
+                                            field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
+                                            field(partner, Pavia.id),
+
+                                            field(Schema.url, url),
+                                            field(Schema.name, focus.seq(Schema.name).value()),
+                                            field(Schema.description, focus.seq(Schema.description).value()/*.or(() -> description)*/),
+                                            field(Schema.disambiguatingDescription, focus.seq(Schema.disambiguatingDescription).value()),
+                                            field(Schema.image, focus.seq(Schema.image).values()),
+
+                                            field(startDate, focus.seq(startDate).value()),
+                                            field(endDate, focus.seq(endDate).value()),
+
+                                            field(eventStatus, focus.seq(eventStatus).value()),
+
+                                            field(publisher, Publisher)
+                                            // field(location, focus.frame(location).map(this::location))
+
+                                    ))
+                            );
+
+                });
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Frame location(final Frame location) {
-        return frame(item(Locations.Context, location.skolemize(
-                seq(Schema.name), seq(step(Schema.address), alt(Schema.name, Schema.streetAddress,
-                        Schema.addressLocality)))))
-
-                .value(RDF.TYPE, Schema.Place)
-
-                .value(Schema.name, location.value(alt(seq(Schema.name), seq(Schema.address, Schema.name))))
-                .frame(Schema.address, location.frame(Schema.address).map(this::address));
-    }
-
-    private Frame address(final Frame address) {
-        return frame(iri(Locations.Context, address.skolemize(Schema.streetAddress, Schema.addressLocality)))
-
-                .value(RDF.TYPE, Schema.PostalAddress)
-
-                .value(Schema.streetAddress, address.value(Schema.streetAddress))
-                .value(Schema.addressLocality, address.value(Schema.addressLocality));
-    }
+    // private Frame location(final Frame location) {
+    //     return frame(item(Locations.Context, location.skolemize(
+    //             seq(Schema.name),
+    //             seq(step(Schema.address), alt(Schema.name, Schema.streetAddress, Schema.addressLocality))
+    //     )))
+    //
+    //             .value(RDF.TYPE, Schema.Place)
+    //
+    //             .value(Schema.name, location.value(alt(seq(Schema.name), seq(Schema.address, Schema.name))))
+    //             .frame(Schema.address, location.frame(Schema.address).map(this::address));
+    // }
+    //
+    // private Frame address(final Frame address) {
+    //     return frame(iri(Locations.Context, address.skolemize(Schema.streetAddress, Schema.addressLocality)))
+    //
+    //             .value(RDF.TYPE, Schema.PostalAddress)
+    //
+    //             .value(Schema.streetAddress, address.value(Schema.streetAddress))
+    //             .value(Schema.addressLocality, address.value(Schema.addressLocality));
+    // }
 
 }

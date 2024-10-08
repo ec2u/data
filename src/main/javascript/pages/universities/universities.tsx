@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,104 +14,118 @@
  * limitations under the License.
  */
 
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataMeta } from "@ec2u/data/tiles/meta";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { string } from "@metreeca/core/value";
-import { useQuery } from "@metreeca/view/hooks/query";
-import { useRoute } from "@metreeca/view/nests/router";
-import { Landmark } from "@metreeca/view/tiles/icon";
-import { NodeCount } from "@metreeca/view/tiles/lenses/count";
-import { NodeItems } from "@metreeca/view/tiles/lenses/items";
-import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
-import { NodeRange } from "@metreeca/view/tiles/lenses/range";
+import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, required } from "@metreeca/core";
+import { toEntryString } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
+import { integer } from "@metreeca/core/integer";
+import { local, toLocalString } from "@metreeca/core/local";
+import { year } from "@metreeca/core/year";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useRange } from "@metreeca/data/models/range";
+import { useStats } from "@metreeca/data/models/stats";
+import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolRange } from "@metreeca/view/lenses/range";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
+import { Landmark } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
-import { useEffect } from "react";
 
-
-export const UniversitiesIcon=<Landmark/>;
 
 export const Universities=immutable({
 
-    id: "/universities/",
+	[icon]: <Landmark/>,
 
-    label: {
-        "en": "Universities"
-    },
+	id: required("/universities/"),
 
-    contains: [{
+	label: required({
+		en: "Universities",
+		it: "Università"
+	}),
 
-        id: "",
-        image: "",
+	members: multiple({
 
-        label: {},
-        comment: {},
+		id: required(id),
 
-        country: {
-            id: "",
-            label: {}
-        }
+		prefLabel: required(local),
+		comment: required(local),
+		depiction: required(id),
 
-    }]
+		country: required({
+				id: required(id),
+				label: required(local)
+			}
+		)
 
+	})
 });
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function DataUniversities() {
 
-    const [route, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ /*".order": "label"*/ }, sessionStorage); // !!! broken multilingual sorting
+	const universities=useCollection(Universities, "members");
 
+	return <DataPage name={Universities} menu={<DataInfo/>}
 
-    useEffect(() => { setRoute({ title: string(Universities) }); }, []);
+		tray={<>
 
+			<ToolSearch placeholder={"Name"}>{
+				useKeywords(universities, "prefLabel")
+			}</ToolSearch>
 
-    return <DataPage item={string(Universities)}
+			<ToolRange placeholder={"Inception"}>{
+				useRange(universities, "inception", { type: year })
+			}</ToolRange>
 
-        menu={<DataMeta>{route}</DataMeta>}
+			<ToolRange placeholder={"Students"}>{
+				useRange(universities, "students", { type: integer })
+			}</ToolRange>
 
-        pane={<DataPane
+		</>}
 
-            header={<NodeKeywords state={[query, setQuery]}/>}
-            footer={<NodeCount state={[query, setQuery]}/>}
+		info={<>
 
-        >
+			<ToolCount>{useStats(universities)}</ToolCount>
+			<ToolClear>{universities}</ToolClear>
 
-            <NodeRange path={"inception"} type={"dateTime"} as={"gYear"} placeholder={"Inception"} state={[query, setQuery]}/>
-            <NodeRange path={"students"} type={"decimal"} as={"integer"} placeholder={"Students"} state={[query, setQuery]}/>
+		</>}
 
-        </DataPane>}
+	>
 
-        deps={[JSON.stringify(query)]}
+		<ToolSheet placeholder={Universities[icon]} sorted={"city.label"} as={({
 
-    >
+			id,
+			prefLabel,
+			comment,
+			depiction,
 
-        <NodeItems model={Universities} placeholder={UniversitiesIcon} state={[query, setQuery]}>{({
+			country
 
-            id,
-            label,
-            comment,
-            image,
+		}) =>
 
-            country
+			<ToolCard key={id} side={"end"}
 
-        }) =>
+				title={<ToolLink>{{ id, label: prefLabel }}</ToolLink>}
+				image={depiction}
 
-            <DataCard key={id} compact
+				tags={<span>{toEntryString(country)}</span>}
 
-                name={<a href={id}>{string(label)}</a>}
-                icon={image}
-                tags={<span>{string(country.label)}</span>}
+			>{
 
-            >
-                {string(comment)}
+				toLocalString(comment)
 
-            </DataCard>
+			}</ToolCard>
 
-        }</NodeItems>
+		}>{universities}</ToolSheet>
 
-    </DataPage>;
+	</DataPage>;
 
 }

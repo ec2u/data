@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +16,38 @@
 
 package eu.ec2u.data.things;
 
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
-import java.util.stream.Stream;
-
-import static com.metreeca.link.Shape.multiple;
-import static com.metreeca.link.Shape.optional;
-import static com.metreeca.link.Values.IRIType;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.And.and;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.hidden;
-import static com.metreeca.link.shapes.Or.or;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.decimal;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.resources.Resources.Reference;
-import static eu.ec2u.data.resources.Resources.multilingual;
+import static eu.ec2u.data.EC2U.create;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.locales;
 
 /**
  * Schema.org RDF vocabulary.
  *
  * @see <a href="https://schema.org/">Schema.org</a>
  */
-public final class Schema {
+public final class Schema extends Delegator {
 
-    public static final String Namespace="https://schema.org/";
-
-    private static final IRI Context=EC2U.item("/things");
+    private static final String Namespace="https://schema.org/";
+    private static final IRI Context=item("/things/");
 
 
     /**
@@ -63,7 +59,7 @@ public final class Schema {
      *
      * @throws NullPointerException if {@code id} is null
      */
-    public static IRI term(final String id) {
+    public static IRI schema(final String id) {
 
         if ( id == null ) {
             throw new NullPointerException("null id");
@@ -73,16 +69,25 @@ public final class Schema {
     }
 
 
+    //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final IRI about=schema("about");
+    public static final IRI inLanguage=schema("inLanguage");
+    public static final IRI email=schema("email");
+    public static final IRI telephone=schema("telephone");
+    public static final IRI location=schema("location");
+
+
     //// Things ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI Thing=term("Thing");
+    public static final IRI Thing=schema("Thing");
 
-    public static final IRI identifier=term("identifier");
-    public static final IRI url=term("url");
-    public static final IRI name=term("name");
-    public static final IRI image=term("image");
-    public static final IRI description=term("description");
-    public static final IRI disambiguatingDescription=term("disambiguatingDescription");
+    public static final IRI identifier=schema("identifier");
+    public static final IRI url=schema("url");
+    public static final IRI name=schema("name");
+    public static final IRI image=schema("image");
+    public static final IRI description=schema("description");
+    public static final IRI disambiguatingDescription=schema("disambiguatingDescription");
 
 
     /**
@@ -93,17 +98,14 @@ public final class Schema {
      * @throws NullPointerException if {@code labels} is nul or contains null elements
      */
     public static Shape Thing() {
-        return and(Reference(),
+        return shape(Thing, Resource(),
 
-                hidden(field(RDF.TYPE, all(Thing))),
-
-                field(identifier, optional(), datatype(XSD.STRING)),
-                field(url, multiple(), datatype(IRIType)),
-                field(name, multilingual()),
-                field(image, multiple(), datatype(IRIType)),
-                field("fullDescription", description, multilingual()), // ;( dct:description
-                field(disambiguatingDescription, multilingual()),
-                field(about, multiple(), Reference())
+                property(url, multiple(id())),
+                property(identifier, multiple(string())),
+                property(name, optional(text(locales()))),
+                property(image, optional(Resource())),
+                property(description, optional(text(locales()))),
+                property(disambiguatingDescription, optional(text(locales())))
 
         );
     }
@@ -111,101 +113,19 @@ public final class Schema {
 
     //// Organizations /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI Organization=term("Organization");
+    public static final IRI Organization=schema("Organization");
 
-    public static final IRI legalName=term("legalName");
+    public static final IRI legalName=schema("legalName");
 
 
     public static Shape Organization() {
-        return and(Thing(),
+        return shape(Organization, Thing(),
 
-                hidden(field(RDF.TYPE, all(Organization))),
+                property(legalName, optional(text(locales()))),
+                property(email, multiple(string())),
+                property(telephone, multiple(string())),
 
-                field(legalName, multilingual()),
-                field(Schema.email, datatype(XSD.STRING)),
-                field(Schema.telephone, datatype(XSD.STRING))
-        );
-    }
-
-
-    //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI inLanguage=term("inLanguage");
-    public static final IRI numberOfCredits=term("numberOfCredits");
-    public static final IRI educationalCredentialAwarded=term("educationalCredentialAwarded");
-    public static final IRI occupationalCredentialAwarded=term("occupationalCredentialAwarded");
-    public static final IRI educationalLevel=term("educationalLevel");
-
-
-    //// Programs //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI EducationalOccupationalProgram=term("EducationalOccupationalProgram");
-
-    public static final IRI programType=term("programType");
-    public static final IRI occupationalCategory=term("occupationalCategory");
-    public static final IRI timeToComplete=term("timeToComplete");
-    public static final IRI programPrerequisites=term("programPrerequisites");
-    public static final IRI hasCourse=term("hasCourse");
-
-
-    //// Courses ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI Course=term("Course");
-
-    public static final IRI courseCode=term("courseCode");
-    public static final IRI coursePrerequisites=term("coursePrerequisites");
-
-
-    //// Learning Resource /////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI LearningResource=term("LearningResource");
-
-    public static final IRI assesses=term("assesses");
-    public static final IRI competencyRequired=term("competencyRequired");
-    public static final IRI learningResourceType=term("learningResourceType");
-    public static final IRI teaches=term("teaches");
-
-
-    //// Creative Work /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI provider=term("provider");
-    public static final IRI dateCreated=term("dateCreated");
-    public static final IRI dateModified=term("dateModified");
-    public static final IRI about=term("about");
-    public static final IRI timeRequired=term("timeRequired");
-
-
-    //// Events ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public enum EventStatus {EventScheduled, EventMovedOnline, EventPostponed, EventRescheduled, EventCancelled}
-
-    public static final IRI Event=term("Event");
-
-    public static final IRI organizer=term("organizer");
-    public static final IRI isAccessibleForFree=term("isAccessibleForFree");
-    public static final IRI eventStatus=term("eventStatus");
-    public static final IRI location=term("location");
-    public static final IRI eventAttendanceMode=term("eventAttendanceMode");
-    public static final IRI startDate=term("startDate");
-    public static final IRI endDate=term("endDate");
-
-
-    public static Shape Event() {
-        return and(Thing(),
-
-                hidden(field(RDF.TYPE, all(Event))),
-
-                field(eventStatus, optional(), datatype(IRIType)),
-
-                field(startDate, optional(), datatype(XSD.DATETIME)),
-                field(endDate, optional(), datatype(XSD.DATETIME)),
-
-                field(inLanguage, multiple(), datatype(XSD.STRING)),
-                field(isAccessibleForFree, optional(), datatype(XSD.BOOLEAN)),
-                field(eventAttendanceMode, multiple(), datatype(IRIType)),
-
-                field(location, multiple(), Location()),
-                field(organizer, multiple(), Organization())
+                property(location, composite(optional(Location())))
 
         );
     }
@@ -213,87 +133,65 @@ public final class Schema {
 
     //// Locations /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final IRI Place=term("Place");
-    public static final IRI PostalAddress=term("PostalAddress");
-    public static final IRI VirtualLocation=term("VirtualLocation");
+    public static final IRI Place=schema("Place");
+    public static final IRI PostalAddress=schema("PostalAddress");
+    public static final IRI VirtualLocation=schema("VirtualLocation");
 
 
-    public static final IRI address=term("address");
+    public static final IRI address=schema("address");
+    public static final IRI latitude=schema("latitude");
+    public static final IRI longitude=schema("longitude");
 
-    public static final IRI latitude=term("latitude");
-    public static final IRI longitude=term("longitude");
-
-    public static final IRI addressCountry=term("addressCountry");
-    public static final IRI addressRegion=term("addressRegion");
-    public static final IRI addressLocality=term("addressLocality");
-
-    public static final IRI postalCode=term("postalCode");
-    public static final IRI streetAddress=term("streetAddress");
+    public static final IRI addressCountry=schema("addressCountry");
+    public static final IRI addressRegion=schema("addressRegion");
+    public static final IRI addressLocality=schema("addressLocality");
+    public static final IRI postalCode=schema("postalCode");
+    public static final IRI streetAddress=schema("streetAddress");
 
 
     public static Shape Location() {
-        return or(
+        return shape(
 
-                Place(),
-                PostalAddress(),
-                VirtualLocation()
+                property("Text", XSD.STRING, optional(string())),
+
+                property(Place, optional(Place())),
+                property(PostalAddress, optional(PostalAddress())),
+                property(VirtualLocation, optional(VirtualLocation()))
 
         );
     }
 
     public static Shape Place() {
-        return and(Thing(),
+        return shape(Place, Thing(),
 
-                hidden(field(RDF.TYPE, all(Place))),
+                property(address, optional(PostalAddress())),
 
-                field(address, optional(), PostalAddress()),
-
-                field(latitude, optional(), datatype(XSD.DECIMAL)),
-                field(longitude, optional(), datatype(XSD.DECIMAL))
+                property(latitude, optional(decimal())),
+                property(longitude, optional(decimal()))
 
         );
     }
 
     public static Shape PostalAddress() {
-        return and(ContactPoint(),
+        return shape(PostalAddress, Thing(),
 
-                hidden(field(RDF.TYPE, all(PostalAddress))),
+                property(addressCountry, optional(Resource())),
+                property(addressRegion, optional(Resource())),
+                property(addressLocality, optional(Resource())),
 
-                field(addressCountry, optional(), or(Reference(), datatype(XSD.STRING))),
-                field(addressRegion, optional(), or(Reference(), datatype(XSD.STRING))),
-                field(addressLocality, optional(), or(Reference(), datatype(XSD.STRING))),
-                field(postalCode, optional(), datatype(XSD.STRING)),
-                field(streetAddress, optional(), datatype(XSD.STRING))
+                property(postalCode, optional(string())),
+                property(streetAddress, optional(string())),
+
+                property(email, optional(string())),
+                property(telephone, optional(string()))
 
         );
     }
 
     public static Shape VirtualLocation() {
-        return and(Thing(),
+        return shape(VirtualLocation, Thing(),
 
-                hidden(field(RDF.TYPE, all(VirtualLocation)))
-
-        );
-    }
-
-
-    //// ContactPoints /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final IRI ContactPoint=term("ContactPoint");
-
-
-    public static final IRI email=term("email");
-    public static final IRI telephone=term("telephone");
-    public static final IRI faxNumber=term("faxNumber");
-
-
-    public static Shape ContactPoint() {
-        return and(Thing(),
-
-                hidden(field(RDF.TYPE, all(ContactPoint))),
-
-                field(email, optional(), datatype(XSD.STRING)),
-                field(telephone, optional(), datatype(XSD.STRING))
+                property(url, required())
 
         );
     }
@@ -301,27 +199,41 @@ public final class Schema {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Schema() { }
+    public static void main(final String... args) {
+        exec(() -> create(Context, Schema.class,
+                Thing(),
+                Organization(),
+                Location(),
+                Place(),
+                PostalAddress(),
+                VirtualLocation()
+        ));
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final class Loader implements Runnable {
+    public Schema() {
+        delegate(handler(new Driver(Dataset(Thing())), new Worker()
 
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
+                .get(new Relator(frame(
 
-        @Override public void run() {
-            Stream
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("Schema Things", "en")),
 
-                    .of(rdf(Schema.class, ".ttl", EC2U.Base))
+                        field(RDFS.MEMBER, query(
 
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
+                                frame(
+
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
+
+                                )
+
+                        ))
+
+                )))
+
+        ));
     }
-
 }

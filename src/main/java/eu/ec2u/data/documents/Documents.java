@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,344 +16,139 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.core.toolkits.Strings;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.link.Frame;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.link.Values;
-import com.metreeca.rdf4j.actions.Upload;
 
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.EC2U.University;
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.work.feeds.CSVProcessor;
-import eu.ec2u.work.feeds.Parsers;
-import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
-import static com.metreeca.core.toolkits.Strings.lower;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.EC2U.create;
+import static eu.ec2u.data.EC2U.term;
+import static eu.ec2u.data.concepts.Concepts.Concept;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.organizations.Organizations.Organization;
+import static eu.ec2u.data.persons.Persons.Person;
 import static eu.ec2u.data.resources.Resources.*;
-import static eu.ec2u.work.feeds.Parsers.concept;
-import static eu.ec2u.work.feeds.Parsers.person;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
-
 
 public final class Documents extends Delegator {
 
     public static final IRI Context=EC2U.item("/documents/");
 
-    private static final IRI Types=iri(Concepts.Context, "/document-types");
-    private static final IRI Topics=iri(Concepts.Context, "/document-topics");
-    private static final IRI Audiences=iri(Concepts.Context, "/document-audiences");
+    public static final IRI Types=iri(Concepts.Context, "/document-types");
+    public static final IRI Topics=iri(Concepts.Context, "/document-topics");
+    public static final IRI Audiences=iri(Concepts.Context, "/document-audiences");
 
 
-    public static final IRI Document=EC2U.term("Document");
+    public static final IRI Document=term("Document");
 
+
+    public static final Pattern ValidPattern=Pattern.compile("\\d{4}(?:/\\d{4})?");
+
+
+    public static Shape Documents() {
+        return Dataset(Document());
+    }
 
     public static Shape Document() {
-        return relate(Resource(),
+        return shape(Document, Resource(),
 
-                hidden(field(RDF.TYPE, all(Document))),
+                property(Schema.url, multiple(id())),
 
-                field(Schema.url, multiple(), datatype(IRIType)),
+                property(DCTERMS.IDENTIFIER, optional(string())),
+                property(DCTERMS.LANGUAGE, multiple(string())),
 
-                field(DCTERMS.IDENTIFIER, optional(), datatype(XSD.STRING)),
-                field(DCTERMS.LANGUAGE, multiple(), datatype(XSD.STRING)),
+                property(DCTERMS.TITLE, required(text(locales()), maxLength(1_000))),
+                property(DCTERMS.DESCRIPTION, optional(text(locales()), maxLength(10_000))),
 
-                field(DCTERMS.VALID, optional(), datatype(XSD.STRING)),
+                property(DCTERMS.CREATOR, optional(Person())),
+                property(DCTERMS.CONTRIBUTOR, multiple(Person())),
+                property(DCTERMS.PUBLISHER, optional(Organization())),
 
-                field(DCTERMS.CREATOR, multiple(), Reference()),
-                field(DCTERMS.CONTRIBUTOR, multiple(), Reference()),
+                property(DCTERMS.CREATED, optional(date())),
+                property(DCTERMS.ISSUED, optional(date())),
+                property(DCTERMS.MODIFIED, optional(date())),
+                property(DCTERMS.VALID, optional(string(), pattern(ValidPattern.pattern()))),
 
-                field(DCTERMS.LICENSE, optional(), datatype(XSD.STRING)),
-                field(DCTERMS.RIGHTS, optional(), datatype(XSD.STRING)),
+                property(DCTERMS.RIGHTS, optional(string())),
+                property(DCTERMS.ACCESS_RIGHTS, optional(text(locales()))),
+                property(DCTERMS.LICENSE, optional(Resource())),
 
-                field(DCTERMS.AUDIENCE, multiple(), Reference()),
-                field(DCTERMS.RELATION, multiple(), Reference())
+                property(DCTERMS.TYPE, multiple(Concept(), scheme(Types))),
+                property(DCTERMS.SUBJECT, multiple(Concept(), scheme(Topics))),
+                property(DCTERMS.AUDIENCE, multiple(Concept(), scheme(Audiences))),
+
+                property(DCTERMS.RELATION, () -> shape(multiple(Document())))
 
         );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Documents.class));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Documents() {
-        delegate(handler(
+        delegate(new Router()
 
-                new Driver(Document(),
+                .path("/", handler(new Driver(Documents()), new Worker()
 
-                        filter(clazz(Document))
+                        .get(new Relator(frame(
 
-                ),
+                                field(ID, iri()),
+                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                new Router()
+                                field(RDFS.MEMBER, query(
 
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
+                                        frame(
 
-                        .path("/{id}", new Worker()
-                                .get(new Relator())
-                        )
+                                                field(ID, iri()),
+                                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-        ));
-    }
+                                                field(partner, iri()),
+                                                field(DCTERMS.TYPE, iri())
 
+                                        )
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                ))
 
-    public static final class Loader implements Runnable {
+                        )))
 
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
+                ))
 
-        @Override public void run() {
-            Stream
+                .path("/{code}", handler(new Driver(Document()), new Worker()
 
-                    .of(rdf(Documents.class, ".ttl", Base))
+                        .get(new Relator(frame(
 
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
+                                field(ID, iri()),
 
-    }
+                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
+                                field(partner, iri()),
+                                field(DCTERMS.TYPE, iri())
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        )))
 
-    static final class CSVLoader extends CSVProcessor<Frame> {
-
-        private static final Pattern ValidPattern=Pattern.compile("\\d{4}(?:/\\d{4})?");
-
-
-        private final University university;
-
-        CSVLoader(final University university) {
-
-            if ( university == null ) {
-                throw new NullPointerException("null university");
-            }
-
-            this.university=university;
-        }
-
-
-        @Override protected Optional<Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
-
-            final Optional<String> titleEnglish=value(record, "Title (English)");
-            final Optional<String> titleLocal=value(record, "Title (Local)");
-
-            return id(record).map(id -> frame(id)
-
-                    .values(RDF.TYPE, Document)
-                    .value(Resources.university, university.Id)
-
-                    .value(Schema.url, value(record, "URL (English)", Parsers::url))
-                    .value(Schema.url, value(record, "URL (Local)", Parsers::url))
-
-                    .value(DCTERMS.IDENTIFIER, value(record, "Identifier")
-                            .map(Values::literal)
-                    )
-
-                    .value(DCTERMS.LANGUAGE, titleEnglish
-                            .map(v -> literal("en"))
-                    )
-
-                    .value(DCTERMS.LANGUAGE, titleLocal
-                            .map(v -> literal(university.Language))
-                    )
-
-                    .value(DCTERMS.TITLE, titleEnglish
-                            .map(v -> literal(v, "en"))
-                    )
-
-                    .value(DCTERMS.TITLE, titleLocal
-                            .map(v -> literal(v, university.Language))
-                    )
-
-                    .value(DCTERMS.DESCRIPTION, value(record, "Description (English)")
-                            .map(v -> literal(v, "en"))
-                    )
-
-                    .value(DCTERMS.DESCRIPTION, value(record, "Description (Local)")
-                            .map(v -> literal(v, university.Language))
-                    )
-
-                    .value(DCTERMS.ISSUED, value(record, "Issued", Parsers::localDate)
-                            .map(v -> v.atStartOfDay(ZoneId.of("UTC"))) // ;( ec2u:Resource requires xsd:dateTime
-                            .map(Values::literal)
-                    )
-
-                    .value(DCTERMS.MODIFIED, value(record, "Modified", Parsers::localDate)
-                            .map(v -> v.atStartOfDay(ZoneId.of("UTC"))) // ;( ec2u:Resource requires xsd:dateTime
-                            .map(Values::literal)
-                    )
-
-                    .value(DCTERMS.VALID, value(record, "Valid", this::valid)
-                            .map(Values::literal)
-                    )
-
-                    .frame(DCTERMS.PUBLISHER, publisher(record))
-
-                    .frame(DCTERMS.CREATOR, value(record, "Contact", person -> person(person, university)))
-                    .frames(DCTERMS.CONTRIBUTOR, values(record, "Contributor", person -> person(person, university)))
-
-                    .value(DCTERMS.LICENSE, value(record, "License", this::license)
-                            .map(Values::literal)
-                    )
-
-                    .value(DCTERMS.RIGHTS, value(record, "Rights")
-                            .map(Values::literal)
-                    )
-
-                    .frame(DCTERMS.TYPE, value(record, "Type", type ->
-                            concept(Types, type, "en")
-                    ))
-
-                    .frames(DCTERMS.SUBJECT, values(record, "Subject", subject ->
-                            concept(Topics, subject, "en")
-                    ))
-
-                    .frames(DCTERMS.AUDIENCE, values(record, "Audience", audience ->
-                            concept(Audiences, audience, "en")
-                    ))
-
-                    .values(DCTERMS.RELATION, values(record, "Related", related ->
-                            related(related, records)
-                    ))
-
-            );
-        }
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private Optional<IRI> id(final CSVRecord record) {
-
-            final Optional<String> identifier=value(record, "Identifier");
-            final Optional<String> titleEnglish=value(record, "Title (English)");
-            final Optional<String> titleLocal=value(record, "Title (Local)");
-
-            if ( titleEnglish.isEmpty() && titleLocal.isEmpty() ) {
-
-                warning(record, "no english/local title provided");
-
-                return Optional.empty();
-
-            } else {
-
-                return Optional.of(EC2U.item(Context, university, identifier
-                        .or(() -> titleEnglish)
-                        .or(() -> titleLocal)
-                        .orElse("") // unexpected
-                ));
-
-            }
-        }
-
-        private Optional<Frame> publisher(final CSVRecord record) {
-
-            final Optional<IRI> home=value(record, "Home", Parsers::url);
-            final Optional<String> nameEnglish=value(record, "Publisher (English)");
-            final Optional<String> nameLocal=value(record, "Publisher (Local)");
-
-            return home.map(Value::stringValue)
-
-                    .or(() -> nameEnglish)
-                    .or(() -> nameLocal)
-
-                    .map(id -> {
-
-                        if ( nameEnglish.isEmpty() && nameLocal.isEmpty() ) {
-
-                            warning(record, "no english/local publisher name provided");
-
-                            return null;
-
-                        }
-
-                        return frame(EC2U.item(Organizations.Context, university, lower(id)))
-
-                                .value(RDF.TYPE, Publisher)
-
-                                .value(SKOS.PREF_LABEL, nameEnglish.map(v -> literal(v, "en")))
-                                .value(SKOS.PREF_LABEL, nameLocal.map(v -> literal(v, university.Language)))
-
-                                .value(FOAF.HOMEPAGE, home);
-
-                    });
-
-
-        }
-
-        private Optional<IRI> related(final String reference, final Collection<CSVRecord> records) {
-
-            final Collection<IRI> matches=records.stream()
-
-                    .filter(record -> value(record, "Identifier").filter(reference::equalsIgnoreCase)
-                            .or(() -> value(record, "Title (English)").filter(reference::equalsIgnoreCase))
-                            .or(() -> value(record, "Title (Local)").filter(reference::equalsIgnoreCase))
-                            .isPresent()
-                    )
-
-                    .map(this::id)
-                    .flatMap(Optional::stream)
-
-                    .collect(toList());
-
-            if ( matches.isEmpty() ) {
-                warning(format("no matches for reference <%s>", reference));
-            }
-
-            if ( matches.size() > 1 ) {
-                warning(format("multiple matches for reference <%s>", reference));
-            }
-
-            return matches.stream().findFirst();
-        }
-
-
-        private Optional<String> valid(final String value) {
-            return Optional.of(value)
-                    .filter(ValidPattern.asMatchPredicate());
-        }
-
-        private Optional<String> license(final String value) {
-            return Optional.of(value)
-                    .map(Strings::title);
-        }
-
+                ))
+        );
     }
 
 }

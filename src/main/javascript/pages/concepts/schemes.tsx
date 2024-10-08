@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,100 +14,133 @@
  * limitations under the License.
  */
 
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataMeta } from "@ec2u/data/tiles/meta";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/core/value";
-import { useQuery } from "@metreeca/view/hooks/query";
-import { useRoute } from "@metreeca/view/nests/router";
-import { GraduationCap } from "@metreeca/view/tiles/icon";
-import { NodeCount } from "@metreeca/view/tiles/lenses/count";
-import { NodeItems } from "@metreeca/view/tiles/lenses/items";
-import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
+import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { entry } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
+import { integer } from "@metreeca/core/integer";
+import { local, toLocalString } from "@metreeca/core/local";
+import { toValueString } from "@metreeca/core/value";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useOptions } from "@metreeca/data/models/options";
+import { useStats } from "@metreeca/data/models/stats";
+import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolOptions } from "@metreeca/view/lenses/options";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
+import { GraduationCap } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
-import { useEffect } from "react";
 
-
-export const SchemesIcon=<GraduationCap/>;
 
 export const Schemes=immutable({
 
-    id: "/concepts/",
-    label: { "en": "Taxonomies" },
+	[icon]: <GraduationCap/>,
 
-    contains: multiple({
+	id: required("/concepts/"),
 
-        id: "",
-        label: {},
-        comment: {},
+	label: required({
+		"en": "Taxonomies"
+	}),
 
-        extent: 0,
+	members: multiple({
 
-        university: {
-            id: "",
-            label: {}
-        }
+		id: required(id),
+		label: required(local),
+		comment: optional(local),
 
-    })
+		title: required(local),
+		alternative: required(local),
+
+		extent: required(integer)
+
+	})
 
 });
 
 
 export function DataSchemes() {
 
-    const [route, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
+	const schemes=useCollection(Schemes, "members");
 
 
-    useEffect(() => { setRoute({ title: string(Schemes) }); }, []);
+	return <DataPage name={Schemes} menu={<DataInfo/>}
+
+		tray={< >
+
+			<ToolSearch placeholder={"Name"}>{
+				useKeywords(schemes, "label")
+			}</ToolSearch>
+
+			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
+				useOptions(schemes, "license", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Publisher"} as={license => toValueString(license)}>{
+				useOptions(schemes, "publisher", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
+
+			<div className={"info"} style={{
+
+				marginTop: "auto",
+				fontSize: "90%"
+
+			}}>This service uses the <a href={"https://esco.ec.europa.eu/en/classification"}>ESCO</a>
+				{" "} classification of the European Commission.
+			</div>
+
+		</>}
+
+		info={<>
+
+			<ToolCount>{useStats(schemes)}</ToolCount>
+			<ToolClear>{schemes}</ToolClear>
+
+		</>}
+	>
+
+		<ToolSheet placeholder={Schemes[icon]} as={({
+
+			id,
+
+			title,
+			alternative,
+
+			comment,
+
+			extent
+
+		}) =>
 
 
-    return <DataPage item={string(Schemes)}
+			<ToolCard key={id} side={"end"}
 
-        menu={<DataMeta>{route}</DataMeta>}
+				title={<ToolLink>{{
 
-        pane={<DataPane
+					id,
+					label: alternative
+						? `${toLocalString(alternative)} / ${toLocalString(title)}`
+						: toLocalString(title)
 
-            header={<NodeKeywords state={[query, setQuery]}/>}
-            footer={<NodeCount state={[query, setQuery]}/>}
+				}}</ToolLink>}
 
-        >
+				tags={`${extent} concepts`}
 
+			>{
 
-        </DataPane>}
+				comment && <ToolMark>{toLocalString(comment)}</ToolMark>
 
-        deps={[JSON.stringify(query)]}
+			}</ToolCard>
 
-    >
+		}>{schemes}</ToolSheet>
 
-        <NodeItems model={Schemes} placeholder={SchemesIcon} state={[query, setQuery]}>{({
-
-            id,
-
-            label,
-            comment,
-
-            extent
-
-        }) =>
-
-            <DataCard key={id} compact
-
-                name={<a href={id}>{string(label)}</a>}
-
-                tags={`${extent} concepts`}
-
-            >
-
-                {string(comment)}
-
-            </DataCard>
-
-        }</NodeItems>
-
-    </DataPage>;
+	</DataPage>;
 
 }
 

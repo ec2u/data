@@ -36,7 +36,7 @@ GET https://www.coimbraconvento.pt/pt/agenda/
 <script type="application/ld+json">
 [
 	{
-  "@context": "http://schema.org",
+  "@context": "https://schema.org",
   "@type": "DanceEvent",
   "name": "A Voz do Mundo II",
     "image": "http://www.coimbraconvento.pt/fotos/eventos/01_72722528662cbe9d1274ba.jpg",
@@ -61,7 +61,7 @@ GET https://www.coimbraconvento.pt/pt/agenda/
 ```json
 [
     {
-        "@context": "http://schema.org",
+        "@context": "https://schema.org",
         "@type": "DanceEvent",
         "name": "A Voz do Mundo II",
         "image": "http://www.coimbraconvento.pt/fotos/eventos/01_72722528662cbe9d1274ba.jpg",
@@ -78,7 +78,7 @@ GET https://www.coimbraconvento.pt/pt/agenda/
     }
 ,
     {
-        "@context": "http://schema.org",
+        "@context": "https://schema.org",
         "@type": "DanceEvent",
         "name": "Actants, Tomás Quintais",
         "image": "http://www.coimbraconvento.pt/fotos/eventos/01_86246381862c44109819df.jpg",
@@ -95,7 +95,7 @@ GET https://www.coimbraconvento.pt/pt/agenda/
     }
 ,
     {
-        "@context": "http://schema.org",
+        "@context": "https://schema.org",
         "@type": "DanceEvent",
         "name": "Cantus Discantus II, Tomás Quintais",
         "image": "http://www.coimbraconvento.pt/fotos/eventos/01_147167616762cbea650c7af.jpg",

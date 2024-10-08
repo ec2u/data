@@ -8,7 +8,7 @@
 
 ## RSS
 
-* search for: `application/rss+xml` /`rss`
+* search for: `application/rss+xml`/`rss`
 
 ## HTML Microdata
 
@@ -16,7 +16,7 @@
 
 ## JSON-LD Metadata
 
-* search for `ld+json`
+* search for `ld+json`/`json`
 
 ## iCal
 

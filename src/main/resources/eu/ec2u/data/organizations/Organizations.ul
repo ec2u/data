@@ -1,0 +1,24 @@
+prefix org: <http://www.w3.org/ns/org#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+insert {
+
+    ?organization
+
+        rdfs:label ?label ;
+        rdfs:comment ?definition ;
+
+        skos:hiddenLabel ?label, ?pref, ?alt.
+
+} where {
+
+    ?organization a org:Organization .
+
+    optional { ?organization skos:prefLabel ?pref }
+    optional { ?organization skos:altLabel ?alt }
+    optional { ?organization skos:definition ?definition }
+
+    bind(if(coalesce(lang(?alt), '') = coalesce(lang(?pref), ''), coalesce(?alt, ?pref), 1/0) as ?label)
+
+} # complete entry

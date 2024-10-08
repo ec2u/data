@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,51 +16,59 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.core.toolkits.Strings;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
+import com.metreeca.http.toolkits.Strings;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
+import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.http.xml.formats.XML;
 import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
-import com.metreeca.xml.XPath;
-import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.codecs.XML;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.Set;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.EC2U.University.Salamanca;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
-
-import static java.time.ZoneOffset.UTC;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.dateCreated;
+import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.universities.University.Salamanca;
 
 public final class EventsSalamancaCitySACIS implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/salamanca/city/sacis");
 
-    private static final Frame Publisher=frame(iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda"
-            +"-salamanca/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
-            .values(RDFS.LABEL,
+    private static final Frame Publisher=Frame.frame(
+
+            field(ID, iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda-salamanca/")),
+            field(TYPE, Organization),
+
+            field(partner, Salamanca.id),
+
+            field(Schema.name,
                     literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en"),
-                    literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.Language)
-            );
+                    literal("SACIS - Salamanca Sociedad Cooperativa de Iniciativa Social", Salamanca.language)
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
@@ -74,21 +82,24 @@ public final class EventsSalamancaCitySACIS implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .pipe(events -> validate(Event(), Set.of(Event), events))
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                .forEach(new Events.Updater(Context));
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<XPath> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://www.salamanca.com/events/feed/")
@@ -108,36 +119,38 @@ public final class EventsSalamancaCitySACIS implements Runnable {
         return item.link("link").map(url -> {
 
             final Optional<Literal> name=item.string("title")
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> description=item.string("description")
                     .map(Untag::untag)
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> disambiguatingDescription=description
                     .map(Value::stringValue)
                     .map(Strings::clip)
-                    .map(text -> literal(text, Salamanca.Language));
+                    .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
-                    .map(Values::literal);
+                    .map(Frame::literal);
 
 
-            return frame(iri(Events.Context, md5(url)))
+            return frame(
 
-                    .values(RDF.TYPE, Events.Event)
+                    field(ID, iri(Events.Context, md5(url))),
 
-                    .value(Resources.university, Salamanca.Id)
+                    field(RDF.TYPE, Events.Event),
 
-                    .value(DCTERMS.SOURCE, iri(url))
-                    .frame(DCTERMS.PUBLISHER, Publisher)
-                    .value(DCTERMS.CREATED, pubDate)
-                    .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now.atOffset(UTC))))
+                    field(Schema.url, iri(url)),
+                    field(Schema.name, name),
+                    field(Schema.description, description),
+                    field(Schema.disambiguatingDescription, disambiguatingDescription),
 
-                    .value(Schema.url, iri(url))
-                    .value(Schema.name, name)
-                    .value(Schema.description, description)
-                    .value(Schema.disambiguatingDescription, disambiguatingDescription);
+                    field(dateCreated, pubDate),
+                    field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
+
+                    field(partner, Salamanca.id),
+                    field(publisher, Publisher)
+            );
 
         });
     }

@@ -2,25 +2,32 @@ This dataset is mainly intended to support event search on the [My Mobile Tutor]
 
 # Data Model
 
+EC2U events are described using a controlled subset of the [schema:Event](https://schema.org/Event) data model.
+
+| prefix  | namespace           | definition                                   |
+|---------|---------------------|----------------------------------------------|
+| schema: | https://schema.org/ | [Schema.org](https://schema.org/) vocabulary |
+
 ![event data model](index/events.svg)
-
-EC2U events are described using a controlled subset of the [schema:Event](https://schema.org/Event) data model, with the
-following major deviations:
-
-* only events of interest to the academic population are included, so properties like `schema:typicalAgeRange` or
-  `schema:audience` are not included.
 
 ## Minimal Model
 
-The following properties are strongly suggested as a minimal description for events published from local sources:
-
-| property                                     | description          | notes                                                        |
-| -------------------------------------------- | -------------------- | ------------------------------------------------------------ |
-| all [ec2u:Resource](/datasets/resources) properties | inherited properties |                                                              |
-| all [schema:Thing](things.md) properties     | inherited properties |                                                              |
-| `schema:startDate`                           | start date/time      | ISO 8601 offset format (`yyyy-MM-ddThh:mm:ss+hh:mm`) strongly suggested; other formats will be automatically converted assuming the local time zone of  the publishing university; missing time is normalized to `00:00:00` |
-| `schema:endDate`                             | end date/time        | ISO 8601 offset format (`yyyy-MM-ddThh:mm:ss+hh:mm`) strongly suggested; other formats will be automatically converted assuming the local time zone of  the publishing university; missing time is normalized to `00:00:00` |
-| `schema:location`                            | location             | reference to a location described with a least a name        |
+| property                                                             | type                                                                                       | #    | description                                                                                               |
+|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------|------|-----------------------------------------------------------------------------------------------------------|
+| **[schema:Event](https://schema.org/Event)**                         | [schema:Thing](things.md#thing)                                                            |      | academic or public local event                                                                            |
+| [schema:url](https://schema.org/url)                                 | id                                                                                         | 1..* | links to public web pages describing the event                                                            |
+| [schema:startDate](https://schema.org/startDate)                     | dateTime                                                                                   | 0..1 | start date and time of the event                                                                          |
+| [schema:endDate](https://schema.org/endDate)                         | dateTime                                                                                   | 0..1 | end date and time of the event                                                                            |
+| [schema:duration](https://schema.org/duration)                       | duration                                                                                   | 0..1 | event duration                                                                                            |
+| [schema:inLanguage](https://schema.org/inLanguage)                   | string                                                                                     | 0..1 | 2-letters [IETF BCP 47](http://tools.ietf.org/html/bcp47) code of the main event language (e.g. `en` )    |
+| [schema:isAccessibleForFree](https://schema.org/isAccessibleForFree) | boolean                                                                                    | 0..1 | flag signalling whether the event is accessible for free                                                  |
+| [schema:eventAttendanceMode](https://schema.org/eventAttendanceMode) | [schema:EventAttendanceModeEnumeration](https://schema.org/EventAttendanceModeEnumeration) | 0..1 | event attendance mode                                                                                     |
+| [schema:eventStatus](https://schema.org/eventStatus)                 | [schema:EventStatusType](https://schema.org/EventStatusType)                               | 0..1 | event status                                                                                              |
+| [schema:publisher](https://schema.org/publisher)                     | [schema:Organization](things.md#organization)                                              | 0..1 | link to the organisation publishing                                                                       |
+| [schema:organizer](https://schema.org/organizer)                     | [schema:Organization](things.md#organization)                                              | *    | link to the organisations organising the event                                                            |
+| [schema:location](https://schema.org/location)                       | [Location](things.md#location)                                                             | *    | link to the event locations                                                                               |
+| [schema:about](https://schema.org/about)                             | [skos:Concept](concepts.md#concept)                                                        | *    | event topics as links to entries in the [EC2U Event Topics](/concepts/event-topics) taxonomy              |
+| [schema:audience](https://schema.org/audience)                       | [skos:Concept](concepts.md#concept)                                                        | *    | target event audiences as links to entries in the [EC2U Event Audiences](/concepts/event-topics) taxonomy |
 
 # Licensing
 
@@ -34,16 +41,3 @@ The following properties are strongly suggested as a minimal description for eve
 * Stale events are removed nightly just before source crawling; events are considered stale if either:
   * the latest between `schema:starDate` and `schema:endDate` timestamp is in the past
   * no date info is provided and the event was crawled more than a month in the past
-
----
-# QA Queries
-
-| stats          | URL                                                          |
-| -------------- | ------------------------------------------------------------ |
-| global         | `https://data.ec2u.eu/events/?.stats`                        |
-| by university  | `https://data.ec2u.eu/events/?.terms=university`             |
-| by publisher   | `https://data.ec2u.eu/events/?.terms=publisher`              |
-| filtering      | stats queries may be filtered by adding the following parameters to the base URL |
-| by last update | `https://data.ec2u.eu/events/?.stats&>modified=2022-06-01T00:00:00Z` |
-| by end date    | `https://data.ec2u.eu/events/?.stats&>endDate=2022-06-01T00:00:00Z` |
-

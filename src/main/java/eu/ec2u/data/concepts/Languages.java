@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,17 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.core.toolkits.Strings;
+import com.metreeca.http.toolkits.Strings;
 
 import eu.ec2u.data.resources.Resources;
+import jakarta.json.Json;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
-import javax.json.Json;
 
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.toMap;
@@ -34,7 +36,7 @@ public final class Languages {
     private static final Pattern TagPattern=Pattern.compile("[a-z]{2}");
 
 
-    private static final Map<String, String> NameToCode=Resources.Languages.stream()
+    private static final Map<String, String> NameToCode=Resources.locales().stream()
             .map(Locale::forLanguageTag)
             .flatMap(target -> locales()
                     .map(source -> entry(source, target))
@@ -48,7 +50,7 @@ public final class Languages {
     private static final Map<String, Object> CodeToNames=locales()
             .collect(toMap(
                     Locale::getLanguage,
-                    locale -> Resources.Languages.stream()
+                    locale -> Resources.locales().stream()
                             .map(Locale::forLanguageTag)
                             .collect(toMap(
                                     Locale::getLanguage,

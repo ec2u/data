@@ -1,0 +1,27 @@
+@prefix ec2u: </terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+
+</assets/> a void:Dataset ;
+    dct:title "EC2U Knowledge Sharing Assets"@en ;
+    dct:alternative "EC2U Assets"@en ;
+    dct:description "Knowledge sharing assets managed by the EC2U Knowledge Hub."@en ;
+    dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    void:rootResource ec2u:Asset ;
+    rdfs:isDefinedBy </datasets/assets> .
+
+
+########################################################################################################################
+
+ec2u:Asset a owl:Class .
+
+
+#### Standard Licenses #################################################################################################
+
+<http://creativecommons.org/licenses/by-nc-nd/4.0/>
+    rdfs:label "CC BY-NC-ND 4.0"@en ;
+    rdfs:comment "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"@en .

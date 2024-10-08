@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,91 +16,93 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
 import com.metreeca.http.actions.Fetch;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.Query;
-import com.metreeca.json.JSONPath;
-import com.metreeca.json.codecs.JSON;
+import com.metreeca.http.json.JSONPath;
+import com.metreeca.http.json.formats.JSON;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
+import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
-import com.metreeca.xml.XPath;
-import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.locations.Locations;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.data.universities.Universities;
-import eu.ec2u.work.Work;
+import eu.ec2u.work.feeds.Parsers;
+import jakarta.json.Json;
+import jakarta.json.JsonReader;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import javax.json.Json;
-import javax.json.JsonReader;
 import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.core.toolkits.Formats.SQL_TIMESTAMP;
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.core.toolkits.Strings.TextLength;
-import static com.metreeca.core.toolkits.Strings.clip;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.http.toolkits.Formats.SQL_TIMESTAMP;
+import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.http.toolkits.Strings.TextLength;
+import static com.metreeca.http.toolkits.Strings.clip;
+import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.EC2U.University.Turku;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.things.Schema.location;
+import static eu.ec2u.data.universities.University.Turku;
 import static java.lang.String.format;
-import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public final class EventsTurkuUniversity implements Runnable {
 
-    private static final IRI Context=iri(Events.Context, "/turku/university");
+    private static final IRI Context=iri(Events.Context, "/turku/city");
 
-    private static final Frame Publisher=frame(iri("https://www.utu.fi/event-search/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Universities.University)
-            .values(RDFS.LABEL,
+    private static final com.metreeca.link.Frame Publisher=frame(
+
+            field(ID, iri("https://www.utu.fi/event-search/")),
+            field(TYPE, Organization),
+
+            field(partner, Turku.id),
+
+            field(Schema.name,
                     literal("University of Turku / News", "en"),
-                    literal("Turun yliopisto / Ajankohtaista", Turku.Language)
-            );
+                    literal("Turun yliopisto / Ajankohtaista", Turku.language)
+            ),
 
-    private static final String APIKey="key-events-turku-university"; // vault label
+            field(Schema.about, OrganizationTypes.University)
+
+    );
+
+
+    private static final String APIKey="events-turku-university-key"; // vault label
 
 
     private static Literal instant(final String timestamp, final Instant instant) {
-        return literal(OffsetDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.TimeZone.getRules().getOffset(instant))
-                .truncatedTo(ChronoUnit.SECONDS)
-                .withOffsetSameInstant(UTC)
+        return literal(LocalDateTime.parse(timestamp, SQL_TIMESTAMP)
+                .toInstant(Turku.zone.getRules().getOffset(instant))
         );
     }
 
     private static Literal datetime(final String timestamp, final Instant instant) {
         return literal(OffsetDateTime
-                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.TimeZone.getRules().getOffset(instant))
+                .of(LocalDateTime.parse(timestamp, SQL_TIMESTAMP), Turku.zone.getRules().getOffset(instant))
                 .truncatedTo(ChronoUnit.SECONDS)
         );
     }
@@ -114,32 +116,24 @@ public final class EventsTurkuUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-
-        final ZonedDateTime now=ZonedDateTime.now(UTC);
-
-        Xtream.of(synced(Context, Publisher.focus()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .map(event -> event
+                .flatMap(com.metreeca.link.Frame::stream)
+                .batch(0)
 
-                        .value(Resources.university, Turku.Id)
+                .forEach(new Events_.Loader(Context))
 
-                        .frame(DCTERMS.PUBLISHER, Publisher)
-                        .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
-                )
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<JSONPath> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://api-ext.utu.fi/events/v1/public")
@@ -168,7 +162,6 @@ public final class EventsTurkuUniversity implements Runnable {
                     ) {
 
                         return Optional.of(reader.readArray());
-
 
                     } catch ( final Exception e ) {
 
@@ -216,31 +209,36 @@ public final class EventsTurkuUniversity implements Runnable {
                 )
                 .collect(toList());
 
-        return json.integer("id").map(id -> frame(iri(Events.Context, md5(Publisher.focus().stringValue()+id)))
+        return json.integer("id").map(id -> frame(
 
-                .value(RDF.TYPE, Events.Event)
+                field(ID, iri(Events.Context, md5(Publisher.id().orElseThrow().stringValue()+id))),
 
-                .value(DCTERMS.SOURCE, json.string("source_link").flatMap(Work::url).map(Values::iri))
-                .value(DCTERMS.CREATED, json.string("published").map(timestamp -> instant(timestamp, now)))
-                .value(DCTERMS.MODIFIED, json.string("updated").map(timestamp -> instant(timestamp, now)))
+                field(RDF.TYPE, Event),
 
-                .value(Schema.url, json.string("additional_information.link.url")
+                field(Schema.url, json.string("additional_information.link.url")
                         .or(() -> json.string("source_link"))
-                        .flatMap(Work::url)
-                        .map(Values::iri)
-                )
+                        .flatMap(Parsers::url)
+                        .map(Frame::iri)
+                ),
 
-                .values(Schema.name, title)
-                .values(Schema.description, description)
-                .values(Schema.disambiguatingDescription, excerpt)
+                field(Schema.name, title),
+                field(Schema.description, description),
+                field(Schema.disambiguatingDescription, excerpt),
 
-                .value(Schema.startDate, json.string("start_time").map(timestamp2 -> datetime(timestamp2, now)))
-                .value(Schema.endDate, json.string("end_time").map(timestamp3 -> datetime(timestamp3, now)))
+                field(startDate, json.string("start_time").map(timestamp -> datetime(timestamp, now))),
+                field(endDate, json.string("end_time").map(timestamp -> datetime(timestamp, now))),
 
-                .frame(Schema.location, json.path("location").flatMap(this::location))
-                .frames(Schema.organizer, json.paths("additional_information.contact").optMap(this::organizer))
+                field(dateCreated, json.string("published").map(timestamp -> instant(timestamp, now))),
+                field(dateModified, json.string("updated").map(timestamp -> instant(timestamp, now))),
+                field(updated, json.string("updated").map(timestamp -> instant(timestamp, now)).orElseGet(() -> literal(now))),
 
-        );
+                field(partner, Turku.id),
+                field(publisher, Publisher),
+                field(organizer, json.paths("additional_information.contact").optMap(this::organizer)),
+
+                field(location, json.path("location").flatMap(this::location))
+
+        ));
 
     }
 
@@ -251,33 +249,37 @@ public final class EventsTurkuUniversity implements Runnable {
         return json.string("url").map(id -> {
 
             final Optional<String> name=json.string("free_text");
-            final Optional<Value> url=json.string("url").flatMap(Work::url).map(Values::iri);
-            final Optional<Value> addressCountry=Optional.ofNullable(Turku.Country);
-            final Optional<Value> addressLocality=Optional.ofNullable(Turku.City);
-            final Optional<Value> postalCode=json.string("postal_code").map(Values::literal);
-            final Optional<Value> streetAddress=json.string("street").map(Values::literal);
+            final Optional<Value> url=json.string("url").flatMap(Parsers::url).map(Frame::iri);
+            final Optional<Value> addressCountry=Optional.ofNullable(Turku.country);
+            final Optional<Value> addressLocality=Optional.ofNullable(Turku.city);
+            final Optional<Value> postalCode=json.string("postal_code").map(Frame::literal);
+            final Optional<Value> streetAddress=json.string("street").map(Frame::literal);
 
             // the same URL may be used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
 
-            return frame(item(Locations.Context, Xtream
+            return frame(
 
-                    .of(
-                            Optional.of(id).map(Values::literal), name.map(Values::literal),
-                            url, addressCountry, addressLocality, postalCode, streetAddress
-                    )
+                    field(ID, item(Locations.Context, Xtream
 
-                    .optMap(value -> value)
-                    .map(Value::stringValue)
-                    .collect(joining("\n"))
+                            .of(
+                                    Optional.of(id).map(Frame::literal), name.map(Frame::literal),
+                                    url, addressCountry, addressLocality, postalCode, streetAddress
+                            )
 
-            ))
+                            .optMap(value -> value)
+                            .map(Value::stringValue)
+                            .collect(joining("\n"))
 
-                    .value(RDF.TYPE, Schema.Place)
+                    )),
 
-                    .value(Schema.url, url)
-                    .value(Schema.name, name.map(text -> literal(text, Turku.Language)))
+                    field(RDF.TYPE, Schema.Place),
 
-                    .frame(Schema.address, frame(item(Locations.Context, Xtream
+                    field(Schema.url, url),
+                    field(Schema.name, name.map(text -> literal(text, Turku.language))),
+
+                    field(Schema.address, frame(
+
+                            field(ID, item(Locations.Context, Xtream
 
                                     .of(url, addressCountry, addressLocality, postalCode, streetAddress)
 
@@ -285,30 +287,35 @@ public final class EventsTurkuUniversity implements Runnable {
                                     .map(Value::stringValue)
                                     .collect(joining("\n"))
 
-                            ))
+                            )),
 
-                                    .value(RDF.TYPE, Schema.PostalAddress)
+                            field(RDF.TYPE, Schema.PostalAddress),
 
-                                    .value(Schema.addressCountry, addressCountry)
-                                    .value(Schema.addressLocality, addressLocality)
-                                    .value(Schema.postalCode, postalCode)
-                                    .value(Schema.streetAddress, streetAddress)
+                            field(Schema.addressCountry, addressCountry),
+                            field(Schema.addressLocality, addressLocality),
+                            field(Schema.postalCode, postalCode),
+                            field(Schema.streetAddress, streetAddress),
 
-                                    .value(Schema.url, url)
-                    );
+                            field(Schema.url, url)
+
+                    ))
+
+            );
 
         });
     }
 
     private Optional<Frame> organizer(final JSONPath json) {
-        return json.string("url").map(id -> frame(item(Organizations.Context, id))
+        return json.string("url").map(id -> frame(
 
-                .value(RDF.TYPE, Schema.Organization)
+                field(ID, item(Organizations.Context, id)),
 
-                .value(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.Language)))
-                .value(Schema.email, json.string("email").map(Values::literal))
+                field(RDF.TYPE, Organization),
 
-        );
+                field(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.language))),
+                field(Schema.email, json.string("email").map(Frame::literal))
+
+        ));
     }
 
 }

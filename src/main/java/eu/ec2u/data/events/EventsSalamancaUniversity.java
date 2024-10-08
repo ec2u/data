@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,58 +16,65 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.core.toolkits.Identifiers;
-import com.metreeca.core.toolkits.Strings;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.ical.codecs.iCal;
+import com.metreeca.http.ical.formats.iCal;
+import com.metreeca.http.toolkits.Identifiers;
+import com.metreeca.http.toolkits.Strings;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
-import com.metreeca.xml.actions.Untag;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.data.universities.Universities;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.*;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.*;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalQueries;
 import java.util.Optional;
-import java.util.Set;
 
-import static com.metreeca.core.toolkits.Identifiers.AbsoluteIRIPattern;
-import static com.metreeca.core.toolkits.Strings.TextLength;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
+import static com.metreeca.http.toolkits.Strings.TextLength;
+import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.EC2U.University.Salamanca;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
-import static net.fortuna.ical4j.model.Component.VEVENT;
-
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.universities.University.Salamanca;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
+import static net.fortuna.ical4j.model.Component.VEVENT;
 
 public final class EventsSalamancaUniversity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/salamanca/university");
 
-    private static final Frame Publisher=frame(iri("https://sac.usal.es/programacion/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Universities.University)
-            .values(RDFS.LABEL,
+
+    private static final Frame Publisher=Frame.frame(
+
+            field(ID, iri("https://sac.usal.es/programacion/")),
+            field(TYPE, Organization),
+
+            field(partner, Salamanca.id),
+
+            field(Schema.name,
                     literal("University of Salamanca / Cultural Activities Service", "en"),
-                    literal("Universidad de Salamanca / Servicio de Actividades Culturales", "es")
-            );
+                    literal("Universidad de Salamanca / Servicio de Actividades Culturales", Salamanca.language)
+            ),
+
+            field(Schema.about, OrganizationTypes.University)
+
+    );
 
 
     public static void main(final String... args) {
@@ -81,21 +88,24 @@ public final class EventsSalamancaUniversity implements Runnable {
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
-                .map(this::event)
+                .optMap(this::event)
 
-                .pipe(events -> validate(Event(), Set.of(Event), events))
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                .forEach(new Events.Updater(Context));
+                .forEach(new Events_.Loader(Context))
+
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<VEvent> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<VEvent> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://calendar.google.com/calendar/ical"
@@ -108,89 +118,95 @@ public final class EventsSalamancaUniversity implements Runnable {
                 .flatMap(calendar -> calendar.getComponents(VEVENT).stream().map(VEvent.class::cast));
     }
 
-    private Frame event(final VEvent event) {
-
-        final Optional<String> uid=Optional.ofNullable(event.getUid())
-                .map(Uid::getValue)
-                .filter(not(String::isEmpty));
-
-
-        final Optional<IRI> url=Optional.ofNullable(event.getLocation())
+    private Optional<Frame> event(final VEvent event) {
+        return event.getLocation()
                 .map(Location::getValue)
                 .filter(not(String::isEmpty))
                 .map(s -> s.startsWith("sac.usal.es/") ? String.format("https://%s", s) : s)
                 .filter(AbsoluteIRIPattern.asMatchPredicate())
-                .map(Values::iri);
+                .map(Frame::iri)
 
-        final Optional<Value> label=Optional.ofNullable(event.getSummary())
-                .map(Summary::getValue)
-                .filter(not(String::isEmpty))
-                .map(value -> literal(value, Salamanca.Language));
+                .map(url -> {
 
-        final Optional<Value> description=Optional.ofNullable(event.getDescription())
-                .map(Description::getValue)
-                .filter(not(String::isEmpty))
-                .map(Untag::untag)
-                .map(value -> literal(value, Salamanca.Language));
+                    final Optional<String> uid=event.getUid()
+                            .map(Uid::getValue)
+                            .filter(not(String::isEmpty));
 
-        final Optional<Value> disambiguatingDescription=description
-                .map(Value::stringValue)
-                .map(text -> Strings.clip(text, TextLength))
-                .map(value -> literal(value, Salamanca.Language));
+                    final Optional<Literal> label=event.getSummary()
+                            .map(Summary::getValue)
+                            .filter(not(String::isEmpty))
+                            .map(value -> literal(value, Salamanca.language));
 
+                    final Optional<Literal> description=event.getDescription()
+                            .map(Description::getValue)
+                            .filter(not(String::isEmpty))
+                            .map(Untag::untag)
+                            .map(value -> literal(value, Salamanca.language));
 
-        final Optional<Value> created=Optional.ofNullable(event.getCreated())
-                .map(Created::getDateTime)
-                .map(Date::toInstant)
-                .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
-                .map(Values::literal);
+                    final Optional<Literal> disambiguatingDescription=description
+                            .map(Value::stringValue)
+                            .map(text -> Strings.clip(text, TextLength))
+                            .map(value -> literal(value, Salamanca.language));
 
-        final Optional<Value> lastModified=Optional.ofNullable(event.getLastModified())
-                .map(LastModified::getDateTime)
-                .map(Date::toInstant)
-                .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
-                .map(Values::literal);
+                    final Optional<Literal> created=event.getCreated()
+                            .map(Created::getDate)
+                            .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
+                            .map(Frame::literal);
 
-        final Optional<Value> startDate=Optional.ofNullable(event.getStartDate())
-                .map(start -> toOffsetDateTime(start.getDate(), start.getTimeZone()))
-                .map(Values::literal);
+                    final Optional<Literal> lastModified=event.getLastModified()
+                            .map(LastModified::getDate)
+                            .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
+                            .map(Frame::literal);
 
-        final Optional<Value> endDate=Optional.ofNullable(event.getEndDate())
-                .map(end -> toOffsetDateTime(end.getDate(), end.getTimeZone()))
-                .map(Values::literal);
+                    final Optional<Literal> startDate=event.getDateTimeStart()
+                            .map(start -> toOffsetDateTime(start.getDate()))
+                            .map(Frame::literal);
 
-        return frame(iri(Events.Context, url.map(Value::stringValue).or(() -> uid)
-                .map(Identifiers::md5)
-                .orElseGet(Identifiers::md5)
-        ))
+                    final Optional<Literal> endDate=event.getDateTimeEnd()
+                            .map(end -> toOffsetDateTime(end.getDate()))
+                            .map(Frame::literal);
 
-                .values(RDF.TYPE, Events.Event)
+                    return frame(
 
-                .value(Resources.university, Salamanca.Id)
+                            field(ID, iri(Events.Context, Optional.of(url).map(Value::stringValue).or(() -> uid)
+                                    .map(Identifiers::md5)
+                                    .orElseGet(Identifiers::md5)
+                            )),
 
-                .frame(DCTERMS.PUBLISHER, Publisher)
-                .value(DCTERMS.SOURCE, url)
+                            field(RDF.TYPE, Event),
 
-                .value(DCTERMS.CREATED, created)
-                .value(DCTERMS.MODIFIED, lastModified.orElseGet(() -> literal(now)))
+                            field(Schema.url, url),
+                            field(Schema.name, label),
+                            field(Schema.disambiguatingDescription, disambiguatingDescription),
+                            field(Schema.description, description),
 
-                .value(Schema.url, url)
-                .value(Schema.name, label)
-                .value(Schema.disambiguatingDescription, disambiguatingDescription)
-                .value(Schema.description, description)
+                            field(Events.startDate, startDate),
+                            field(Events.endDate, endDate),
 
-                .value(Schema.startDate, startDate)
-                .value(Schema.endDate, endDate);
+                            field(dateCreated, created),
+                            field(dateModified, lastModified),
+                            field(updated, literal(lastModified.map(Literal::temporalAccessorValue).map(Instant::from).orElse(now))),
 
+                            field(partner, Salamanca.id),
+                            field(publisher, Publisher)
+
+                    );
+
+                });
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private OffsetDateTime toOffsetDateTime(final Date date, final TimeZone zone) {
-        return OffsetDateTime.ofInstant(date.toInstant(), zone != null
-                ? ZoneOffset.ofTotalSeconds(zone.getOffset(now.toEpochMilli()))
-                : Salamanca.TimeZone.getRules().getOffset(now)
+    private OffsetDateTime toOffsetDateTime(final TemporalAccessor temporal) {
+
+        final LocalDate date=TemporalQueries.localDate().queryFrom(temporal);
+        final LocalTime time=TemporalQueries.localTime().queryFrom(temporal);
+        final ZoneOffset offset=TemporalQueries.offset().queryFrom(temporal);
+
+        return OffsetDateTime.of(
+                LocalDateTime.of(date, time != null ? time : LocalTime.of(0, 0)),
+                offset != null ? offset : Salamanca.zone.getRules().getOffset(now)
         );
     }
 

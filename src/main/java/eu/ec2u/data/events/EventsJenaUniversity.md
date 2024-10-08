@@ -1,15 +1,23 @@
 # Site
 
-* https://www.uni-jena.de/veranstaltungskalender
-  * general university events
-* https://www.uni-jena.de/international/veranstaltungskalender
-  * International Office
-* https://www.uni-jena.de/kalenderstudiuminternational
-  * International Office Calendar (specifically for incoming students)
-* https://www.uni-jena.de/ec2u-veranstaltungen
-  * EC2U-specific
-* https://www.uni-jena.de/promotion-events
-  * Graduate Academy
+* general university events
+  * https://www.uni-jena.de/16965/kommende-veranstaltungen
+  * https://www.uni-jena.de/en/16965/events
+* International Office
+  * https://www.uni-jena.de/17425/veranstaltungskalender
+  * https://www.uni-jena.de/en/17425/upcoming-events
+* International Office Calendar (specifically for incoming students)
+  * https://www.uni-jena.de/81092/kalender-studium-international
+  * https://www.uni-jena.de/en/81092/calendar-studium-international
+* EC2U-specific
+  * https://www.uni-jena.de/120659/ec2u-veranstaltungen
+  * https://www.uni-jena.de/en/120659/ec2u-veranstaltungen
+* Graduate Academy
+  * https://www.uni-jena.de/17210/veranstaltungen
+  * https://www.uni-jena.de/en/17210/events
+
+Both German and English endpoints are scanned, generating independent events. Matching and merging localised
+descriptions of the same events was deemed too complex and brittle.
 
 # API
 
@@ -20,10 +28,14 @@
 # Integration
 
 * no structured event index
-  * event URLs are scraped crawling from the entry page and looking for links in `<div class="entry_wrapper">` body
-    elements
+  * event URLs are scraped crawling from the entry page
 * data extracted from schema.org-based event description embedded into each page as
   a `<script type="application/ld+json">` HTML head element
+
+## 2024-10-08
+
+* fix XPath expressions for page link scraping
+* add English event publishers
 
 ## 2023-01-10
 
@@ -42,6 +54,7 @@
 # Samples
 
 ```xml
+
 <div class="entry_wrapper unijena">
     <div class="date">
         <time datetime="2022-06-13T16:00:00+02:00">13. Jun 2022</time>
@@ -56,7 +69,8 @@
         </div>
     </div>
     <div class="title">
-        <a href="https://www.uni-jena.de/kommende-veranstaltungen/praktikum-im-ausland-eu-praktikum-thueringen" hreflang="de">
+      <a href="https://www.uni-jena.de/kommende-veranstaltungen/praktikum-im-ausland-eu-praktikum-thueringen"
+              hreflang="de">
             Praktikum im Ausland - internationale Berufserfahrung sammeln
         </a>
         <div class="edge_wrapper">
@@ -68,7 +82,10 @@
     </div>
     <div class="additional">
         <div class="icons">
-            <img loading="lazy" decoding="async" title="Der Zugang zu dieser Veranstaltung ist barrierefrei." alt="Der Zugang zu dieser Veranstaltung ist barrierefrei." src="/skin/_global/_images/blocks/event_overview_accessible.png" srcset="/skin/_global/_images/blocks/event_overview_accessible.svg">
+          <img loading="lazy" decoding="async" title="Der Zugang zu dieser Veranstaltung ist barrierefrei."
+                  alt="Der Zugang zu dieser Veranstaltung ist barrierefrei."
+                  src="/skin/_global/_images/blocks/event_overview_accessible.png"
+                  srcset="/skin/_global/_images/blocks/event_overview_accessible.svg">
         </div>
     </div>
 </div>
@@ -88,39 +105,39 @@
 
 ```json
 {
-    "@context": "https:\/\/schema.org",
-    "@type": "Event",
-    "name": "Polymict crystalline impact breccias from the Nördlinger Ries impact structure, Germany - shock effects and mixing of target rocks",
-    "description": "Prof. Dr. Claudia Trepmann (LMU München, Department für Geo– und Umweltwissenschaften)",
-    "url": "https:\/\/www.uni-jena.de\/kommende-veranstaltungen\/polymict-crystalline-impact-breccias-from-the-noerdlinger-ries-impact-structure-germany-shock-effects-and-mixing-of-target-rocks",
-    "inLanguage": "de-DE",
-    "startDate": "2022-05-19T16:15:00+0200",
-    "endDate": "2022-05-19T17:15:00+0200",
-    "location": [
-        {
-            "@type": "Place",
-            "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "jena",
-                "postalCode": "07749",
-                "streetAddress": "Burgweg 11"
-            }
-        }
-    ],
-    "organizer": [
-        {
-            "@type": "Organization",
-            "legalName": "Institut für Geowissenschaften"
-        }
-    ],
-    "speaker": [
-        {
-            "@type": "Person",
-            "givenName": "Claudia",
-            "familyName": "Trepmann"
-        }
-    ],
-    "isAccessibleForFree": false
+  "@context": "https:\/\/schema.org",
+  "@type": "Event",
+  "name": "Polymict crystalline impact breccias from the Nördlinger Ries impact structure, Germany - shock effects and mixing of target rocks",
+  "description": "Prof. Dr. Claudia Trepmann (LMU München, Department für Geo– und Umweltwissenschaften)",
+  "url": "https:\/\/www.uni-jena.de\/kommende-veranstaltungen\/polymict-crystalline-impact-breccias-from-the-noerdlinger-ries-impact-structure-germany-shock-effects-and-mixing-of-target-rocks",
+  "inLanguage": "de-DE",
+  "startDate": "2022-05-19T16:15:00+0200",
+  "endDate": "2022-05-19T17:15:00+0200",
+  "location": [
+    {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "jena",
+        "postalCode": "07749",
+        "streetAddress": "Burgweg 11"
+      }
+    }
+  ],
+  "organizer": [
+    {
+      "@type": "Organization",
+      "legalName": "Institut für Geowissenschaften"
+    }
+  ],
+  "speaker": [
+    {
+      "@type": "Person",
+      "givenName": "Claudia",
+      "familyName": "Trepmann"
+    }
+  ],
+  "isAccessibleForFree": false
 }
 ```
 

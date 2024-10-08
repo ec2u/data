@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,20 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.services.Vault;
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.services.Vault;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import org.eclipse.rdf4j.model.IRI;
 
-import java.util.Set;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.link.Frame.iri;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.link.Values.iri;
-
-import static eu.ec2u.data.EC2U.University.Turku;
-import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.work.validation.Validators.validate;
-
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.universities.University.Turku;
 import static java.lang.String.format;
 
 public final class UnitsTurku implements Runnable {
@@ -60,16 +57,20 @@ public final class UnitsTurku implements Runnable {
                         "undefined data URL <%s>", DataUrl
                 )));
 
-        Xtream.of(url)
+        update(connection -> Xtream.of(url)
 
-                .flatMap(new Units.CSVLoader(Turku))
+                .flatMap(new Units_.CSVLoader(Turku))
 
-                .pipe(units -> validate(Unit(), Set.of(Unit), units))
+                .flatMap(Frame::stream)
+                .batch(0)
 
                 .forEach(new Upload()
                         .contexts(Context)
                         .clear(true)
-                );
+                )
+
+        );
+
     }
 
 }

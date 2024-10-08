@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,102 +14,77 @@
  * limitations under the License.
  */
 
-import { Actors, DataActors } from "@ec2u/data/pages/actors";
+import { Actors, DataActors } from "@ec2u/data/pages/actors/actors";
+import { Book, DataBook } from "@ec2u/data/pages/book";
 import { Concept, DataConcept } from "@ec2u/data/pages/concepts/concept";
 import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
 import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { Course, DataCourse } from "@ec2u/data/pages/courses/course";
 import { Courses, DataCourses } from "@ec2u/data/pages/courses/courses";
-import { DataDataset, Dataset } from "@ec2u/data/pages/datasets/dataset";
+import { DataMeta, Dataset } from "@ec2u/data/pages/datasets/dataset";
 import { DataDatasets, Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataDocument, Document } from "@ec2u/data/pages/documents/document";
 import { DataDocuments, Documents } from "@ec2u/data/pages/documents/documents";
 import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
-import DataNone from "@ec2u/data/pages/none";
 import { DataProgram, Program } from "@ec2u/data/pages/programs/program";
 import { DataPrograms, Programs } from "@ec2u/data/pages/programs/programs";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
 import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
-import "@metreeca/view/index.css";
-import { NodeFetcher } from "@metreeca/view/nests/fetcher";
-import { NodeGraph } from "@metreeca/view/nests/graph";
-import { NodeRouter } from "@metreeca/view/nests/router";
-import "@metreeca/view/skins/quicksand.css";
+import DataWild, { Wild } from "@ec2u/data/pages/wild";
+import { ToolContext } from "@metreeca/data/contexts/context";
+import { ToolRouter } from "@metreeca/data/contexts/router";
+import "@metreeca/view/styles/quicksand.css";
 import * as React from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 
 
-render((
+createRoot(document.body.firstElementChild!).render((
 
-    <React.StrictMode>
+	<React.StrictMode>
 
-        <NodeFetcher fetcher={(input, init) => {
+		<ToolContext>
 
-            const headers=new Headers(init?.headers || {});
+			<ToolRouter>{{
 
-            const tags=navigator.languages;
-            const size=tags.length+1;
+				[Datasets.id]: DataDatasets,
 
-            headers.set("Accept", "application/json");
-            headers.set("Accept-Language", [
+				[Universities.id]: DataUniversities,
+				[(University.id)]: DataUniversity,
 
-                ...tags.map((tag, index) => `${tag};q=${((size-index)/size).toFixed(1)}`),
+				[Units.id]: DataUnits,
+				[Unit.id]: DataUnit,
 
-                `*;q=${(1/size).toFixed(1)}`
+				[Programs.id]: DataPrograms,
+				[Program.id]: DataProgram,
 
-            ].join(", "));
+				[Courses.id]: DataCourses,
+				[Course.id]: DataCourse,
 
-            return fetch(input, { ...init, headers });
+				[Documents.id]: DataDocuments,
+				[Document.id]: DataDocument,
 
-        }}>
+				[Actors.id]: DataActors,
 
-            <NodeGraph>
+				[Events.id]: DataEvents,
+				[Event.id]: DataEvent,
 
-                <NodeRouter>{{
+				[Schemes.id]: DataSchemes,
+				[Scheme.id]: DataScheme,
+				[Concept.id]: DataConcept,
 
-                    [Datasets.id]: DataDatasets,
+				[Dataset.id]: DataMeta,
+				[Book.id]: DataBook,
+				[Wild.id]: DataWild
 
-                    // !!! to be reviewed after metreeca/java supports resource access to collections
+			}}</ToolRouter>
 
-                    [Dataset.id.replace(/\/[^/]*$/, "")]: DataDataset,
-                    [Dataset.id]: DataDataset,
+		</ToolContext>
 
-                    [Universities.id]: DataUniversities,
-                    [University.id]: DataUniversity,
+	</React.StrictMode>
 
-                    [Units.id]: DataUnits,
-                    [Unit.id]: DataUnit,
+));
 
-                    [Programs.id]: DataPrograms,
-                    [Program.id]: DataProgram,
-
-                    [Courses.id]: DataCourses,
-                    [Course.id]: DataCourse,
-
-                    [Documents.id]: DataDocuments,
-                    [Document.id]: DataDocument,
-
-                    [Actors.id]: DataActors,
-
-                    [Events.id]: DataEvents,
-                    [Event.id]: DataEvent,
-
-                    [Schemes.id]: DataSchemes,
-                    [Scheme.id]: DataScheme,
-                    [Concept.id]: DataConcept,
-
-                    "*": DataNone
-
-                }}</NodeRouter>
-
-            </NodeGraph>
-
-        </NodeFetcher>
-
-    </React.StrictMode>
-
-), document.body.firstElementChild);

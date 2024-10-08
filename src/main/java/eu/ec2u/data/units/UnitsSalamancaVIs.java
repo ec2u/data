@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,26 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.csv.codecs.CSV;
 import com.metreeca.http.actions.GET;
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.http.csv.formats.CSV;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.link.Frame;
 
 import org.apache.commons.csv.CSVFormat;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Locale;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.statement;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
-
 import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
 
 public final class UnitsSalamancaVIs implements Runnable {
 
@@ -60,9 +58,12 @@ public final class UnitsSalamancaVIs implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        Stream
+        Xtream
 
-                .of(associations())
+                .from(associations())
+
+                .flatMap(Frame::stream)
+                .batch(0)
 
                 .forEach(new Upload()
                         .contexts(Context)
@@ -73,7 +74,7 @@ public final class UnitsSalamancaVIs implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private List<Statement> associations() {
+    private Stream<Frame> associations() {
 
         final String url=service(vault())
                 .get(DataUrl)
@@ -95,11 +96,16 @@ public final class UnitsSalamancaVIs implements Runnable {
                     final IRI vi=iri(Units.Context, "/"+record.get("VI").toLowerCase(Locale.ROOT));
                     final IRI unit=iri(record.get("Unit"));
 
-                    return statement(unit, ORG.UNIT_OF, vi);
+                    return frame(
 
-                })
+                            field(ID, unit),
+                            field(TYPE, ORG.ORGANIZATIONAL_UNIT),
 
-                .collect(toList());
+                            field(ORG.UNIT_OF, vi)
+
+                    );
+
+                });
 
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,107 +14,125 @@
  * limitations under the License.
  */
 
-import { University } from "@ec2u/data/pages/universities/university";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataMeta } from "@ec2u/data/tiles/meta";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/core/value";
-import { useQuery } from "@metreeca/view/hooks/query";
-import { useRoute } from "@metreeca/view/nests/router";
-import { GraduationCap } from "@metreeca/view/tiles/icon";
-import { NodeCount } from "@metreeca/view/tiles/lenses/count";
-import { NodeItems } from "@metreeca/view/tiles/lenses/items";
-import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
-import { NodeOptions } from "@metreeca/view/tiles/lenses/options";
-import { NodeRange } from "@metreeca/view/tiles/lenses/range";
+import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { duration, toDurationString } from "@metreeca/core/duration";
+import { entry, toEntryString } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useOptions } from "@metreeca/data/models/options";
+import { useStats } from "@metreeca/data/models/stats";
+import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolOptions } from "@metreeca/view/lenses/options";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
+import { GraduationCap } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
-import { useEffect } from "react";
 
-
-export const ProgramIcon=<GraduationCap/>;
 
 export const Programs=immutable({
 
-    id: "/programs/",
-    label: { "en": "Programs" },
+	[icon]: <GraduationCap/>,
 
-    contains: multiple({
+	id: required("/programs/"),
 
-        id: "",
-        label: {},
-        comment: {},
+	label: required({
+		"en": "Programs"
+	}),
 
-        university: {
-            id: "",
-            label: {}
-        }
+	members: multiple({
 
-    })
+		id: required(id),
+		label: required(local),
+		comment: optional(local),
+
+		partner: optional({
+				id: required(id),
+				label: required(local)
+			}
+		)
+
+	})
 
 });
 
 
 export function DataPrograms() {
 
-    const [route, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ ".order": ["label"] }, sessionStorage);
+	const programs=useCollection(Programs, "members");
 
 
-    useEffect(() => { setRoute({ title: string(Programs) }); }, []);
+	return <DataPage name={Programs} menu={<DataInfo/>}
+
+		tray={< >
+
+			<ToolSearch placeholder={"Name"}>{
+				useKeywords(programs, "label")
+			}</ToolSearch>
 
 
-    return <DataPage item={string(Programs)}
+			<ToolOptions placeholder={"University"}>{
+				useOptions(programs, "partner", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
 
-        menu={<DataMeta>{route}</DataMeta>}
+			<ToolOptions placeholder={"Level"}>{
+				useOptions(programs, "educationalLevel", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
 
-        pane={<DataPane
+			<ToolOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
+				useOptions(programs, "timeToComplete", { type: string }) // !!! duration >> range
+			}</ToolOptions>
 
-            header={<NodeKeywords state={[query, setQuery]}/>}
-            footer={<NodeCount state={[query, setQuery]}/>}
+			<ToolOptions placeholder={"Title Awarded"} compact>{
+				useOptions(programs, "educationalCredentialAwarded", { type: local, size: 10 })
+			}</ToolOptions>
 
-        >
+			<ToolOptions placeholder={"Provider"} compact>{
+				useOptions(programs, "provider", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
 
-            <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
-            <NodeOptions path={"provider"} type={"anyURI"} placeholder={"Provider"} state={[query, setQuery]}/>
-            <NodeOptions path={"educationalLevel"} type={"anyURI"} placeholder={"Level"} state={[query, setQuery]}/>
-            <NodeOptions path={"timeToComplete"} type={"string"} placeholder={"Time to Complete"} state={[query, setQuery]}/>
-            <NodeRange path={"numberOfCredits"} type={"decimal"} placeholder={"Credits"} state={[query, setQuery]}/>
-            {/*<NodeOptions path={"educationalCredentialAwarded"} type={"anyURI"} placeholder={"Title Awarded"} state={[query, setQuery]}/>*/}
+		</>}
 
-        </DataPane>}
+		info={<>
 
-        deps={[JSON.stringify(query)]}
+			<ToolCount>{useStats(programs)}</ToolCount>
+			<ToolClear>{programs}</ToolClear>
 
-    >
+		</>}
 
-        <NodeItems model={Programs} placeholder={ProgramIcon} state={[query, setQuery]}>{({
+	>
 
-            id,
+		<ToolSheet placeholder={Programs[icon]} as={({
 
-            label,
-            comment,
+			id,
+			label,
+			comment,
 
-            university
+			partner
 
-        }) =>
+		}) =>
 
-            <DataCard key={id} compact
+			<ToolCard key={id} side={"end"}
 
-                name={<a href={id}>{string(label)}</a>}
+				title={<ToolLink>{{ id, label }}</ToolLink>}
+				tags={partner && toEntryString(partner)}
 
-                tags={string(university)}
+			>{
 
-            >
+				comment && toLocalString(comment)
 
-                {string(comment)}
+			}</ToolCard>
 
-            </DataCard>
+		}>{programs}</ToolSheet>
 
-        }</NodeItems>
-
-    </DataPage>;
-
+	</DataPage>;
 }
 
