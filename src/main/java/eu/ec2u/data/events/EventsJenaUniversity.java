@@ -31,6 +31,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import java.io.StringReader;
@@ -105,7 +107,6 @@ public final class EventsJenaUniversity implements Runnable {
                                     literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", Jena.language)
                             )
                     )
-
             )
 
             .map(frame -> frame(frame,
@@ -186,7 +187,6 @@ public final class EventsJenaUniversity implements Runnable {
                         .links("//ul[contains(@class, 'entries')]//a[contains(@class, 'entry')]/@href")
                 )
 
-
                 // extract JSON-LD
 
                 .optMap(new GET<>(new HTML()))
@@ -199,7 +199,11 @@ public final class EventsJenaUniversity implements Runnable {
 
                     try ( final StringReader reader=new StringReader(json) ) {
 
-                        final Collection<Statement> model=normalize(rdf(reader, "", new JSONLDParser()));
+                        final RDFParser parser=new JSONLDParser();
+
+                        parser.set(JSONLDSettings.SECURE_MODE, false); // ; ( enable retrieval of external resources
+
+                        final Collection<Statement> model=normalize(rdf(reader, "", parser));
 
                         return focus(Set.of(Event), model)
                                 .seq(reverse(RDF.TYPE))
