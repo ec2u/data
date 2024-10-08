@@ -17,6 +17,7 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.http.FormatException;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
@@ -164,18 +165,16 @@ public final class EventsJenaUniversity implements Runnable {
 
                         .optMap(new GET<>(new HTML()))
 
-                        .filter(document -> new XPath(document)
+                        .map(XPath::new)
 
-                                // ;( pagination links are disabled under javascript control: test for page links
-
-                                .link("//ul[contains(@class, 'entries')]//a[contains(@class, 'entry')]")
-                                .isPresent()
-
+                        .flatMap(xpath -> xpath
+                                .strings("//div[@class='pagination']//button[@name='page'][not(@disabled)]/@value")
                         )
 
-                        .map(XPath::new)
-                        .flatMap(xpath -> xpath
-                                .links("//nav[@class='pagination']//a[@data-direction='next']/@href")
+                        .flatMap(new Fill<>()
+                                .model("{base}?block=body-0&page={page}")
+                                .value("base", publisher.id().orElseThrow().stringValue())
+                                .value("page")
                         )
                 )
 
@@ -184,7 +183,7 @@ public final class EventsJenaUniversity implements Runnable {
                 .optMap(new GET<>(new HTML()))
 
                 .map(XPath::new).flatMap(xpath -> xpath
-                        .links("//ul[contains(@class, 'entries')]//a[contains(@class, 'entry')]/@href")
+                        .links("//ol/li[@class]/a/@href")
                 )
 
                 // extract JSON-LD
