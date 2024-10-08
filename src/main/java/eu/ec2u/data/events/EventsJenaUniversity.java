@@ -72,42 +72,83 @@ public final class EventsJenaUniversity implements Runnable {
                     frame(
                             field(ID, iri("https://www.uni-jena.de/16965/kommende-veranstaltungen")),
                             field(Schema.name,
-                                    literal("Jena University / Events", "en"),
-                                    literal("Universität Jena / Veranstaltungen", Jena.language)
+                                    literal("Jena University / Events (German)", "en"),
+                                    literal("Universität Jena / Veranstaltungen (Deutsch)", Jena.language)
+                            )
+                    ),
+
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/en/16965/events")),
+                            field(Schema.name,
+                                    literal("Jena University / Events (English)", "en"),
+                                    literal("Universität Jena / Veranstaltungen (Englisch)", Jena.language)
                             )
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/17425/veranstaltungskalender")),
                             field(Schema.name,
-                                    literal("Jena University / International / Events", "en"),
-                                    literal("Universität Jena / International / Veranstaltungen", Jena.language)
+                                    literal("Jena University / International / Events (German)", "en"),
+                                    literal("Universität Jena / International / Veranstaltungen (Deutsch)", Jena.language)
+                            )
+                    ),
+
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/en/17425/upcoming-events")),
+                            field(Schema.name,
+                                    literal("Jena University / International / Events (English)", "en"),
+                                    literal("Universität Jena / International / Veranstaltungen (Englisch)", Jena.language)
                             )
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/81092/kalender-studium-international")),
                             field(Schema.name,
-                                    literal("Jena University / Calendar Studies international / Events", "en"),
-                                    literal("Universität Jena / Kalender Studium international / Veranstaltungen", Jena.language)
+                                    literal("Jena University / Calendar Studies international / Events (German)", "en"),
+                                    literal("Universität Jena / Kalender Studium international / Veranstaltungen (Deutsch)", Jena.language)
+                            )
+                    ),
+
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/en/81092/calendar-studium-international")),
+                            field(Schema.name,
+                                    literal("Jena University / Calendar Studies international / Events (English)", "en"),
+                                    literal("Universität Jena / Kalender Studium international / Veranstaltungen (Englisch)", Jena.language)
                             )
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/120659/ec2u-veranstaltungen")),
                             field(Schema.name,
-                                    literal("Jena University / EC2U / Events", "en"),
-                                    literal("Universität Jena / EC2U / Veranstaltungen", Jena.language)
+                                    literal("Jena University / EC2U / Events (German)", "en"),
+                                    literal("Universität Jena / EC2U / Veranstaltungen (Deutsch)", Jena.language)
+                            )
+                    ),
+
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/en/120659/ec2u-veranstaltungen")),
+                            field(Schema.name,
+                                    literal("Jena University / EC2U / Events (English)", "en"),
+                                    literal("Universität Jena / EC2U / Veranstaltungen (Englisch)", Jena.language)
                             )
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/17210/veranstaltungen")),
                             field(Schema.name,
-                                    literal("Jena University / Academic Career / Events", "en"),
-                                    literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen", Jena.language)
+                                    literal("Jena University / Academic Career / Events (German)", "en"),
+                                    literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen (Deutsch)", Jena.language)
+                            )
+                    ),
+
+                    frame(
+                            field(ID, iri("https://www.uni-jena.de/en/17210/events")),
+                            field(Schema.name,
+                                    literal("Jena University / Academic Career / Events (English)", "en"),
+                                    literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen (Englisch)", Jena.language)
                             )
                     )
+
             )
 
             .map(frame -> frame(frame,
