@@ -51,7 +51,7 @@ import static java.lang.String.format;
 
 public final class OfferingsPaviaUGov implements Runnable {
 
-    private static final IRI Context=iri(Offerings.Context, "/pavia/ugov");
+    private static final IRI Context=iri(Offerings.Context, "/pavia/ugov"); // !!!
 
     private static final String APIUrl="offerings-pavia-url";
     private static final String APIUsr="offerings-pavia-usr";
@@ -75,6 +75,7 @@ public final class OfferingsPaviaUGov implements Runnable {
         }
     }
 
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Vault vault=service(vault());
@@ -86,9 +87,15 @@ public final class OfferingsPaviaUGov implements Runnable {
 
                 .flatMap(instant -> work(instant))
 
+                .flatMap(xpath -> xpath.paths("//ns2:regdid[ns2:aaRegdidId=2024]")) // !!! parameterize
+                .flatMap(xpath -> xpath.paths("ns2:pds/ns2:af"))
+
                 .forEach(xpath -> {
 
-                    System.out.println(xpath.string("//ns2:tipoCorsoDes"));
+                    System.out.println(("---"));
+
+                    System.out.println(xpath.string("ns2:afGenDes"));
+                    System.out.println(xpath.string("ns2:annoCorso"));
 
 
                     // try {
