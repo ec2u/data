@@ -200,16 +200,18 @@ public final class Units_ {
 
                     .of(sectors.computeIfAbsent(sector, key -> graph.query(connection -> {
 
-                        final TupleQuery query=connection.prepareTupleQuery(""
-                                +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-                                +"\n"
-                                +"select ?concept {\n"
-                                +"\n"
-                                +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
-                                +"\n"
-                                +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
-                                +"\n"
-                                +"}\n"
+                        final TupleQuery query=connection.prepareTupleQuery("""
+                                \
+                                prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+                                select ?concept {
+
+                                    ?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label.\s
+
+                                    filter (lcase(str(?label)) = lcase(str($value)))
+
+                                }
+                                """
                         );
 
                         query.setBinding("scheme", EuroSciVoc.Scheme);

@@ -25,7 +25,6 @@ import com.metreeca.http.services.Vault;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.persons.Persons;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -42,9 +41,11 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.split;
 import static com.metreeca.link.Frame.*;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.OrganizationTypes.*;
 import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.units.Units.ResearchTopics;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.University.Salamanca;
 import static java.lang.String.format;
@@ -58,15 +59,12 @@ public final class UnitsSalamancaData implements Runnable {
     private static final String APIUrl="units-salamanca-url"; // vault label
     private static final String APIKey="units-salamanca-key"; // vault label
 
-    private static final IRI BranchScheme=iri(Units.ResearchTopics, "/salamanca-branch");
-    private static final IRI RIS3Scheme=iri(Units.ResearchTopics, "/salamanca-ris3");
-
 
     private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new UnitsSalamancaData().run());
+        exec(() -> new UnitsSalamancaData().run());
     }
 
 
@@ -147,23 +145,23 @@ public final class UnitsSalamancaData implements Runnable {
                     ),
 
 
-                    field(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
+                    field(DCTERMS.SUBJECT, json.string("knowledge_branch").stream() // !!! EuroSciVoc
                             .flatMap(v -> split(v, "[,;]"))
                             .map(v -> frame(
-                                    field(ID, item(BranchScheme, v)),
+                                    field(ID, item(ResearchTopics, Salamanca, "branch: "+v)),
                                     field(RDF.TYPE, SKOS.CONCEPT),
-                                    field(SKOS.TOP_CONCEPT_OF, BranchScheme),
+                                    field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
                                     field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
 
                             ))
                     ),
 
-                    field(DCTERMS.SUBJECT, json.string("RIS3").stream()
+                    field(DCTERMS.SUBJECT, json.string("RIS3").stream() // !!! EuroSciVoc
                             .flatMap(v -> split(v, "[,;]"))
                             .map(v -> frame(
-                                    field(ID, item(RIS3Scheme, v)),
+                                    field(ID, item(ResearchTopics, Salamanca, "ris3"+v)),
                                     field(RDF.TYPE, SKOS.CONCEPT),
-                                    field(SKOS.TOP_CONCEPT_OF, RIS3Scheme),
+                                    field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
                                     field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
                             ))
                     ),
