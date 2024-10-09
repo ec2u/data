@@ -31,6 +31,8 @@ import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import java.io.StringReader;
@@ -134,7 +136,11 @@ public final class OfferingsJena implements Runnable {
 
                     try ( final StringReader reader=new StringReader(json) ) {
 
-                        final Collection<Statement> model=normalize(rdf(reader, SiteURL, new JSONLDParser()));
+                        final RDFParser parser=new JSONLDParser();
+
+                        parser.set(JSONLDSettings.SECURE_MODE, false); // ;( load external resources
+
+                        final Collection<Statement> model=normalize(rdf(reader, SiteURL, parser));
 
                         return Focus.focus(Set.of(schema("AboutPage")), model)
                                 .seq(reverse(RDF.TYPE))
