@@ -111,7 +111,7 @@ public final class EventsJenaCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .flatMap(Frame::stream)
+                .flatMap(f -> f.stream(true))
                 .batch(0)
 
                 .forEach(new Events_.Loader(Context))

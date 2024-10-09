@@ -27,6 +27,14 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 
 
+#### ;( include to prevent SHACL validaton errors during bootstrap #####################################################
+
+</concepts/organizations> a skos:ConceptScheme .
+
+</concepts/organizations/university-unit/institute/virtual> a skos:Concept ;
+    skos:inScheme </concepts/organizations> .
+
+
 ########################################################################################################################
 
 ec2u:Unit a owl:Class ;
