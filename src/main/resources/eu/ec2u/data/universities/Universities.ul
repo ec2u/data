@@ -35,15 +35,21 @@ insert {
     ?university a ec2u:University ;
         rdfs:seeAlso ?wikidata .
 
-    optional { ?wikidata wdt:P131 ?city }
     optional { ?wikidata wdt:P17 ?country }
-    optional { ?wikidata wdt:P2196 ?students_ }
-    optional { ?wikidata wdt:P571 ?inception_ }
 
     optional {
-        ?city wgs84:lat ?lat ;
-            wgs84:long ?long .
+
+        ?wikidata wdt:P131|wdt:P159 ?city
+
+        optional {
+            ?city wgs84:lat ?lat ;
+                wgs84:long ?long .
+        }
+
     }
+
+    optional { ?wikidata wdt:P2196 ?students_ }
+    optional { ?wikidata wdt:P571 ?inception_ }
 
     bind (xsd:integer(?students_) as ?students)
     bind (strdt(str(year(?inception_)), xsd:gYear) as ?inception)
