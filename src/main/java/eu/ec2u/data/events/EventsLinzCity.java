@@ -36,6 +36,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 
 import java.io.StringReader;
@@ -187,7 +189,11 @@ public final class EventsLinzCity implements Runnable {
 
                     try ( final StringReader reader=new StringReader(json) ) {
 
-                        return rdf(reader, "", new JSONLDParser());
+                        final RDFParser parser=new JSONLDParser();
+
+                        parser.set(JSONLDSettings.SECURE_MODE, false); // ;( retrieve http://schema.org/ links
+
+                        return rdf(reader, "", parser);
 
                     } catch ( final FormatException e ) {
 
