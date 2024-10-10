@@ -198,15 +198,6 @@
 
         <finalName>ec2u-${project.artifactId}-${project.version}</finalName>
 
-        <resources>
-
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-
-        </resources>
-
         <plugins>
 
             <plugin> <!-- https://maven.apache.org/enforcer/maven-enforcer-plugin/ -->
