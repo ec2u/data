@@ -76,10 +76,6 @@ cron:
     schedule: every day 00:00
 
 
-  - description: "events › coimbra › university - nightly crawling"
-    url: /cron/events/coimbra/university
-    schedule: every day 00:00
-
   - description: "events › coimbra › city - nightly crawling"
     url: /cron/events/coimbra/city
     schedule: every day 00:00
