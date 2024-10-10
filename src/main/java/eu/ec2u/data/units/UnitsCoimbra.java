@@ -62,8 +62,8 @@ public final class UnitsCoimbra implements Runnable {
 
     private static final IRI Context=iri(Units.Context, "/coimbra");
 
-    private static final String APIUrl="units-coimbra-url-next"; // !!! main
-    private static final String APIKey="units-coimbra-key-next"; // !!! main
+    private static final String APIUrl="units-coimbra-url";
+    private static final String APIKey="units-coimbra-key";
 
 
     public static void main(final String... args) {
