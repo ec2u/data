@@ -1,3 +1,4 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix org: <http://www.w3.org/ns/org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -5,6 +6,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 </concepts/isced-2011> a skos:ConceptScheme ;
+    dct:issued "2024-01-01"^^xsd:date ;
     dct:title "International Standard Classification of Education 2011"@en ;
     dct:alternative "ISCED 2011"@en ;
     dct:description

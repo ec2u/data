@@ -1,3 +1,4 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix org: <http://www.w3.org/ns/org#> .
@@ -6,6 +7,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 </concepts/esco-occupations> a skos:ConceptScheme ;
+    dct:issued "2024-01-01"^^xsd:date ;
     dct:title "European Occupations Classification"@en ;
     dct:alternative "ESCO Occupations"@en ;
     dct:description
@@ -18,6 +20,7 @@
     owl:sameAs <http://data.europa.eu/esco/concept-scheme/occupations> .
 
 </concepts/esco-skills> a skos:ConceptScheme ;
+    dct:issued "2024-01-01"^^xsd:date ;
     dct:title "European Skills Classification"@en ;
     dct:alternative "ESCO Skills"@en ;
     dct:description

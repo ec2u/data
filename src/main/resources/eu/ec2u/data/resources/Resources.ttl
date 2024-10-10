@@ -12,15 +12,3 @@
     dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
     rdfs:isDefinedBy </datasets/resources> .
 
-
-########################################################################################################################
-
-[] js:register '''
-
-    function clip(text, length) {
-        return text.replace(/^\\s*(.*\\.)\\s*\\n.*$/, function($0, $1) {
-			return !$1 ? $0 : $1.length <= length ? $1: $1.substring(0, length-4)+" […]"
-        })
-    }
-
-''' .

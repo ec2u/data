@@ -16,6 +16,7 @@
     rdfs:isDefinedBy </datasets/offerings> .
 
 </concepts/offering-types> a skos:ConceptScheme ;
+    dct:issued "2024-01-01"^^xsd:date ;
     dct:title "EC2U Offering Types"@en ;
     dct:description "> **:warn:** To be migrated to a standardized taxonomy"@en .
 
