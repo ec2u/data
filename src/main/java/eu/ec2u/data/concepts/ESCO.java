@@ -99,6 +99,8 @@ public final class ESCO implements Runnable {
                                             .graph(esco)
                                     )
 
+                                    .filter(this::included)
+
                                     .collect(toList())
                     )
 
@@ -140,7 +142,7 @@ public final class ESCO implements Runnable {
 
                             @Override public void handleStatement(final Statement statement) {
 
-                                if ( included(statement) && model.add(statement) && model.size()%BatchSize == 0 ) {
+                                if ( model.add(statement) && model.size()%BatchSize == 0 ) {
                                     logger.info(ESCO.class, format("parsed <%,d> statements", model.size()));
                                 }
 

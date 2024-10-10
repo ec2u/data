@@ -5,8 +5,12 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 construct {
 
-    ?scheme skos:hasTopConcept ?topConcept .
-    ?topConcept skos:topConceptOf ?scheme .
+    ?scheme a skos:ConceptScheme ;
+        skos:hasTopConcept ?topConcept .
+
+    ?topConcept a skos:Concept ;
+        skos:topConceptOf ?scheme ;
+        skos:inScheme ?scheme .
 
     ?concept a skos:Concept ;
         skos:inScheme ?scheme ;
@@ -16,7 +20,9 @@ construct {
         skos:definition ?definition ;
         skos:broader ?broader .
 
-    ?broader skos:narrower ?concept .
+    ?broader a skos:Concept ;
+        skos:inScheme ?scheme ;
+        skos:narrower ?concept .
 
 } where {
 
