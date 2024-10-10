@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,80 +16,90 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.core.toolkits.Strings;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
+import com.metreeca.http.toolkits.Strings;
+import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
+import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.http.xml.formats.XML;
 import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
-import com.metreeca.xml.XPath;
-import com.metreeca.xml.actions.Untag;
-import com.metreeca.xml.codecs.XML;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.EC2U;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.Set;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.EC2U.University.Poitiers;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
-
-import static java.time.ZoneOffset.UTC;
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.*;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.universities.University.Poitiers;
 
 public final class EventsPoitiersCityGrand implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/poitiers/city/grand");
 
-    private static final Frame Publisher=frame(iri("https://sortir.grandpoitiers.fr/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Events.City)
-            .values(RDFS.LABEL,
+    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+
+            field(ID, iri("https://sortir.grandpoitiers.fr/")),
+            field(TYPE, Organization),
+
+            field(partner, Poitiers.id),
+
+            field(Schema.name,
                     literal("Grand Poitiers / Events", "en"),
-                    literal("Grand Poitiers / Sortir", Poitiers.Language)
-            );
+                    literal("Grand Poitiers / Sortir", Poitiers.language)
+            ),
+
+            field(Schema.about, OrganizationTypes.City)
+
+    );
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new EventsPoitiersCityGrand().run());
+        exec(() -> new EventsPoitiersCityGrand().run());
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final OffsetDateTime now=Instant.now().atOffset(UTC);
+    private final Instant now=Instant.now();
 
 
     @Override public void run() {
-        Xtream.of(synced(Context, Publisher.focus()))
+        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .pipe(events -> validate(Event(), Set.of(Event), events))
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                .forEach(new Events.Updater(Context));
+                .forEach(new Events_.Loader(Context))
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> crawl(final Instant synced) {
-        return Xtream.of(synced)
+    private Xtream<XPath> crawl(final Instant updated) {
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://sortir.grandpoitiers.fr/agenda/rss")
@@ -110,44 +120,46 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
             final Optional<Literal> name=item.string("title")
                     .map(XPath::decode)
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Poitiers.language));
 
             final Optional<Literal> description=item.string("description")
                     .map(XPath::decode)
                     .map(Untag::untag)
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Poitiers.language));
 
             final Optional<Literal> disambiguatingDescription=description
                     .map(Value::stringValue)
                     .map(Strings::clip)
-                    .map(text -> literal(text, Poitiers.Language));
+                    .map(text -> literal(text, Poitiers.language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
-                    .map(Values::literal);
+                    .map(Frame::literal);
 
 
-            return frame(iri(Events.Context, md5(url)))
+            return frame(
 
-                    .values(RDF.TYPE, Events.Event)
+                    field(ID, iri(Events.Context, md5(url))),
 
-                    .frame(DCTERMS.SUBJECT, category(item))
+                    field(RDF.TYPE, Event),
 
-                    .value(Resources.university, Poitiers.Id)
+                    field(Schema.url, iri(url)),
+                    field(Schema.name, name),
+                    field(Schema.image, item.link("enclosure/@url").map(Frame::iri)),
+                    field(Schema.description, description),
+                    field(Schema.disambiguatingDescription, disambiguatingDescription),
 
-                    .value(DCTERMS.SOURCE, iri(url))
-                    .frame(DCTERMS.PUBLISHER, Publisher)
-                    .value(DCTERMS.CREATED, pubDate)
-                    .value(DCTERMS.MODIFIED, pubDate.orElseGet(() -> literal(now)))
+                    field(startDate, datetime(item, "ev:startdate")),
+                    field(endDate, datetime(item, "ev:enddate")),
 
-                    .value(Schema.url, iri(url))
-                    .value(Schema.name, name)
-                    .value(Schema.image, item.link("enclosure/@url").map(Values::iri))
-                    .value(Schema.description, description)
-                    .value(Schema.disambiguatingDescription, disambiguatingDescription)
+                    field(dateCreated, pubDate),
+                    field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
-                    .value(Schema.startDate, datetime(item, "ev:startdate"))
-                    .value(Schema.endDate, datetime(item, "ev:enddate"));
+                    field(Schema.about, category(item)),
 
+                    field(partner, Poitiers.id),
+                    field(publisher, Publisher)
+
+            );
         });
     }
 
@@ -158,20 +170,24 @@ public final class EventsPoitiersCityGrand implements Runnable {
         return xml.string(xpath)
                 .map(OffsetDateTime::parse)
                 .map(OffsetDateTime::toLocalDateTime)
-                .map(v -> v.atOffset(Poitiers.TimeZone.getRules().getOffset(v)))
-                .map(Values::literal);
+                .map(v -> v.atOffset(Poitiers.zone.getRules().getOffset(v)))
+                .map(Frame::literal);
     }
 
     private Optional<Frame> category(final XPath item) {
         return item.string("category").map(category -> {
 
-            final Literal label=literal(category, Poitiers.Language);
+            final Literal label=literal(category, Poitiers.language);
 
-            return frame(EC2U.item(Events.Scheme, category))
-                    .value(RDF.TYPE, SKOS.CONCEPT)
-                    .value(SKOS.TOP_CONCEPT_OF, Events.Scheme)
-                    .value(RDFS.LABEL, label)
-                    .value(SKOS.PREF_LABEL, label);
+            return frame(
+
+                    field(ID, EC2U.item(Events.Topics, category)),
+
+                    field(RDF.TYPE, SKOS.CONCEPT),
+                    field(SKOS.TOP_CONCEPT_OF, Events.Topics),
+                    field(SKOS.PREF_LABEL, label)
+
+            );
 
         });
     }

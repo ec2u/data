@@ -1,10 +1,5 @@
-@prefix ec2u: <https://data.ec2u.eu/terms/> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ec2u: <https://data.ec2u.eu/terms/> .
 
-ec2u:Person a owl:Class ;
-	rdfs:subClassOf ec2u:Resource, foaf:Person .
-
-foaf:Person a owl:Class ;
-    	rdfs:subClassOf foaf:Agent .
+foaf:Person rdfs:subClassOf foaf:Agent .

@@ -16,22 +16,26 @@
 
 package eu.ec2u.work.focus;
 
-import com.metreeca.core.services.Logger;
-import com.metreeca.link.Values;
+import com.metreeca.http.rdf.Values;
+import com.metreeca.http.services.Logger;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.link.Frame.forward;
+import static com.metreeca.link.Frame.reverse;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 final class FocusConnection implements Focus {
 
@@ -132,7 +136,7 @@ final class FocusConnection implements Focus {
             throw new NullPointerException("null step");
         }
 
-        return new FocusConnection(recto(step).collect(toSet()), connection, cache);
+        return new FocusConnection(shift(values, step), connection, cache);
     }
 
     @Override public Focus seq(final IRI... steps) {
@@ -141,27 +145,21 @@ final class FocusConnection implements Focus {
             throw new NullPointerException("null steps");
         }
 
-        Stream<Value> next=values.stream();
+        Set<Value> next=values;
 
-        for (final IRI step : steps) { next=recto(step); }
+        for (final IRI step : steps) { next=shift(next, step); }
 
-        return new FocusConnection(next.collect(toSet()), connection, cache);
-    }
-
-
-    @Override public Focus inv(final IRI step) {
-
-        if ( step == null ) {
-            throw new NullPointerException("null step");
-        }
-
-        return new FocusConnection(verso(step).collect(toSet()), connection, cache);
+        return new FocusConnection(next, connection, cache);
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<Value> recto(final IRI step) {
+    private Set<Value> shift(final Collection<Value> values, final IRI step) {
+        return forward(step) ? recto(values, step) : verso(values, reverse(step));
+    }
+
+    private Set<Value> recto(final Collection<Value> values, final IRI step) {
         return values.stream()
 
                 .filter(Value::isResource)
@@ -181,10 +179,11 @@ final class FocusConnection implements Focus {
 
                 )
 
-                .map(Statement::getObject);
+                .map(Statement::getObject)
+                .collect(toUnmodifiableSet());
     }
 
-    private Stream<Resource> verso(final IRI step) {
+    private Set<Value> verso(final Collection<Value> values, final IRI step) {
         return values.stream()
 
                 .flatMap(value -> Optional.ofNullable(cache.get(value))
@@ -201,7 +200,8 @@ final class FocusConnection implements Focus {
 
                 )
 
-                .map(Statement::getSubject);
+                .map(Statement::getSubject)
+                .collect(toUnmodifiableSet());
     }
 
 }

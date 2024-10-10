@@ -1,0 +1,42 @@
+@prefix ec2u: </terms/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void:	<http://rdfs.org/ns/void#> .
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf:	<http://xmlns.com/foaf/0.1/> .
+
+</documents/> a void:Dataset ;
+	dct:title "EC2U Official Documents"@en ;
+	dct:alternative "EC2U Documents"@en ;
+    dct:description "Official documents published by Alliance partners."@en ;
+	dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+	dct:issued "2023-07-15"^^xsd:date ;
+	void:rootResource ec2u:Document ;
+    rdfs:isDefinedBy </datasets/documents> .
+
+</concepts/document-types> a skos:ConceptScheme ;
+	dct:issued "2024-01-01"^^xsd:date ;
+	dct:title "EC2U Document Types"@en ;
+	dct:publisher <https://ec2u.eu/> ;
+	dct:rights "Copyright © 2022-2024 EC2U Alliance" .
+
+</concepts/document-topics> a skos:ConceptScheme ;
+	dct:issued "2024-01-01"^^xsd:date ;
+	dct:title "EC2U Document Topics"@en ;
+	dct:publisher <https://ec2u.eu/> ;
+	dct:rights "Copyright © 2022-2024 EC2U Alliance" .
+
+</concepts/document-audiences> a skos:ConceptScheme ;
+	dct:issued "2024-01-01"^^xsd:date ;
+	dct:title "EC2U Document Audiences"@en ;
+	dct:publisher <https://ec2u.eu/> ;
+	dct:rights "Copyright © 2022-2024 EC2U Alliance" .
+
+
+########################################################################################################################
+
+ec2u:Document a owl:Class .

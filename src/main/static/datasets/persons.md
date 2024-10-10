@@ -1,8 +1,4 @@
----
-title: Datasets › Persons
----
-
-> ❗️Work in progress
+> **⚠️** **Work in progress…**
 
 The [EC2U Persons Dataset](http://data.ec2u.eu/persons/) provides identifying and background information about academic
 and research staff at EC2U partner universities.

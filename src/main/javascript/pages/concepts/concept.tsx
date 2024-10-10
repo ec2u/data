@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,164 +14,151 @@
  * limitations under the License.
  */
 
-import { SchemesIcon } from "@ec2u/data/pages/concepts/schemes";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLabel } from "@metreeca/view/tiles/layouts/label";
-import { NodelPanel } from "@metreeca/view/tiles/layouts/panel";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import * as React from "react";
-import { useEffect } from "react";
 
+import { Schemes } from "@ec2u/data/pages/concepts/schemes";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { entryCompare } from "@metreeca/core/entry";
+import { id, toIdString } from "@metreeca/core/id";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string, stringCompare } from "@metreeca/core/string";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolLabel } from "@metreeca/view/layouts/label";
+import { ToolPanel } from "@metreeca/view/layouts/panel";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ChevronDown } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React from "react";
 
 export const Concept=immutable({
 
-    id: "/concepts/{scheme}/*",
-    label: { "en": "COncept" },
-    comment: { "en": "" },
+	id: required("/concepts/{scheme}/*"),
+	label: required(local),
 
-    inScheme: {
-        id: "",
-        label: { "en": "" }
-    },
+	notation: multiple(string),
 
-    broaderTransitive: multiple({
+	prefLabel: required(local),
+	// altLabel: multiple(local),
+	definition: optional(local),
 
-        id: "",
-        label: { "en": "" }
+	inScheme: {
+		id: required(id),
+		label: required(local)
+	},
 
-    }),
+	broaderTransitive: multiple({
+		id: required(id),
+		label: required(local),
+		broader: optional(id)
+	}),
 
-    broader: multiple({
+	narrower: multiple({
+		id: required(id),
+		label: required(local)
+	}),
 
-        id: "",
-        label: { "en": "" }
+	related: multiple({
+		id: required(id),
+		label: required(local)
+	}),
 
-    }),
-
-    narrower: multiple({
-
-        id: "",
-        label: { "en": "" }
-
-    }),
-
-    related: multiple({
-
-        id: "",
-        label: { "en": "" }
-
-    })
+	sameAs: optional(id)
 
 });
 
 
 export function DataConcept() {
 
-    const [route, setRoute]=useRoute();
-
-    const entry=useEntry(route, Concept);
+	const [concept]=useResource(Concept);
 
 
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+	return <DataPage name={[Schemes, concept?.inScheme, {}]}
 
+		tray={<ToolFrame as={({
 
-    return <DataPage item={entry({ value: string })}
+			broaderTransitive
 
-        menu={entry({ fetch: <NodeSpin/> })}
+		}) => <>
 
-        pane={<DataPane
+			{broaderTransitive && sort(broaderTransitive).map(broader =>
+				<div key={broader.id}><ToolLink icon={<ChevronDown/>}>{broader}</ToolLink></div>
+			)}
 
-            header={entry({
+		</>}>{concept}</ToolFrame>}
 
-                value: ({ inScheme }) => <DataBack>{inScheme}</DataBack>
+	>
 
-            })}
+		<ToolFrame placeholder={Schemes[icon]} as={({
 
-        >{entry({
+			notation,
 
-            value: event => <DataConceptInfo>{event}</DataConceptInfo>
+			prefLabel,
+			definition,
 
-        })}</DataPane>}
+			narrower,
+			related,
 
-    >{entry({
+			sameAs
 
-        fetch: <NodeHint>{SchemesIcon}</NodeHint>,
+		}) => <>
 
-        value: course => <DataConceptBody>{course}</DataConceptBody>,
+			<dfn>{toLocalString(prefLabel)}</dfn>
 
-        error: error => <span>{error.status}</span> // !!! report
+			{definition && <ToolMark>{toLocalString(definition)}</ToolMark>}
 
-    })}</DataPage>;
+			<ToolPanel>
+
+				{notation && <ToolLabel name={"Codes"}>
+                    <ul>{notation.slice().sort(stringCompare).map(notation =>
+						<li key={notation}>{notation}</li>
+					)}</ul>
+                </ToolLabel>}
+
+				{sameAs && <ToolLabel name={"URI"}>
+                    <a href={sameAs}>{toIdString(sameAs)}</a>
+                </ToolLabel>}
+
+			</ToolPanel>
+
+			<ToolPanel>
+
+				{narrower && <ToolLabel name={"Narrower Concepts"}>
+                    <ul>{narrower.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+					)}</ul>
+                </ToolLabel>}
+
+				{related && <ToolLabel name={"Related Concepts"}>
+                    <ul>{related.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+					)}</ul>
+                </ToolLabel>}
+
+			</ToolPanel>
+
+		</>}>{concept}</ToolFrame>
+
+	</DataPage>;
 
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function sort(concepts: NonNullable<typeof Concept.broaderTransitive>) {
 
-function DataConceptInfo({
+	const links: { [id: string]: undefined | string }=concepts.reduce((index, concept) => ({
 
-    children: {
+		[concept.id]: concept.broader, ...index
 
-    }
+	}), {});
 
-}: {
 
-    children: typeof Concept
+	return concepts?.slice().sort((x, y) => depth(x.id) - depth(y.id));
 
-}) {
 
-    return <>
-
-    </>;
-}
-
-function DataConceptBody({
-
-    children: {
-
-        comment,
-
-        broader,
-        narrower,
-        related
-
-    }
-
-}: {
-
-    children: typeof Concept
-
-}) {
-
-    return <DataCard>
-
-        <NodelPanel>
-
-            {broader?.length && <NodeLabel name={"Broader"}>{[...broader]
-
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
-
-            }</NodeLabel>}
-
-            {narrower?.length && <NodeLabel name={"Narrower"}>{[...narrower]
-
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
-
-            }</NodeLabel>}
-
-        </NodelPanel>
-
-    </DataCard>;
+	function depth(concept: undefined | string): number {
+		return concept === undefined ? 0 : depth(links[concept]) + 1;
+	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,19 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.http.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
 
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.BASE;
+import static eu.ec2u.data.EC2U.update;
 
 public final class ISCED2011 implements Runnable {
 
@@ -53,14 +55,16 @@ public final class ISCED2011 implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        Stream
+        update(connection -> Stream
 
-                .of(rdf(this, ".ttl", EC2U.Base))
+                .of(rdf(resource(this, ".ttl"), BASE))
 
                 .forEach(new Upload()
                         .contexts(Scheme)
                         .clear(true)
-                );
+                )
+
+        );
     }
 
 }

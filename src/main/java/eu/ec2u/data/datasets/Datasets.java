@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,134 +18,92 @@ package eu.ec2u.data.datasets;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf4j.actions.Update;
-import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.VOID;
 
-import java.util.stream.Stream;
-
-import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Shape.optional;
-import static com.metreeca.link.Shape.required;
-import static com.metreeca.link.Values.IRIType;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.filter;
-import static com.metreeca.link.shapes.Guard.relate;
-import static com.metreeca.link.shapes.MinCount.minCount;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.link.Constraint.any;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.filter;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.integer;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.create;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.assets.Assets.Asset;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.multilingual;
 
 public final class Datasets extends Delegator {
 
-    private static final IRI Context=EC2U.item("/");
-
-    public static final IRI Dataset=EC2U.term("Dataset");
+    public static final IRI Context=item("/datasets/");
 
 
-    public static Shape Dataset() { // !!! private
-        return relate(Resource(),
+    public static Shape Datasets() {
+        return Dataset(Dataset());
+    }
 
-                field(RDFS.LABEL, multilingual()),
-                field(RDFS.COMMENT, multilingual()),
+    public static Shape Dataset() {
+        return shape(VOID.DATASET, Asset(),
 
-                field(DCTERMS.TITLE, multilingual()),
-                field(DCTERMS.ALTERNATIVE, multilingual()),
-                field(DCTERMS.DESCRIPTION, multilingual()),
+                property(VOID.ENTITIES, optional(integer())),
+                property(VOID.ROOT_RESOURCE, multiple(Resource())),
 
-                field(DCTERMS.LICENSE, optional(), datatype(IRIType),
-                        field(RDFS.LABEL, multilingual())
-                ),
-
-                field(DCTERMS.RIGHTS, required(), datatype(XSD.STRING)),
-                field(DCTERMS.ACCESS_RIGHTS, optional(), multilingual()),
-
-                field(VOID.ENTITIES, optional(), datatype(XSD.INTEGER)),
-
-                field(RDFS.ISDEFINEDBY, optional(), datatype(IRIType))
+                property(RDFS.ISDEFINEDBY, optional(Resource()))
 
         );
+    }
+
+    public static Shape Dataset(final Shape shape) {
+
+        if ( shape == null ) {
+            throw new NullPointerException("null shape");
+        }
+
+        return shape(Dataset(),
+
+                property("members", RDFS.MEMBER, shape)
+
+        );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Datasets.class, Dataset()));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Datasets() {
-        delegate(handler(
+        delegate(handler(new Driver(Datasets()), new Worker()
 
-                new Driver(Dataset(),
+                .get(new Relator(frame(
 
-                        filter(
-                                clazz(Dataset),
-                                field(DCTERMS.AVAILABLE, minCount(1)) // only published datasets
-                        )
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("Datasets", "en")),
 
-                ),
+                        field(RDFS.MEMBER, query(
 
-                new Worker()
+                                frame(
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
+                                ),
 
-                        .get(new Relator())
+                                filter(DCTERMS.ISSUED, any())
+
+                        ))
+
+                )))
 
         ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(
-                            rdf(Datasets.class, ".ttl", EC2U.Base),
-
-                            rdf("http://rdfs.org/ns/void.ttl"),
-                            rdf("http://www.w3.org/ns/dcat.ttl")
-
-                    )
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-    }
-
-    public static final class Updater implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Updater().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(text(Datasets.class, ".ul"))
-
-                    .forEach(new Update()
-                            .base(EC2U.Base)
-                            .insert(iri(Context, "/~"))
-                            .clear(true)
-                    );
-        }
-
     }
 
 }

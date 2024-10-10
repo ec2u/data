@@ -1,17 +1,25 @@
-# Site
+# Sites
 
 * https://www.univ-poitiers.fr/c/actualites/
   * University of Poitiers / News and Events
   * Université de Poitiers / Actualités et événements
+* https://www.univ-poitiers.fr/flux-rss/
 
 # API
 
+* https://www.univ-poitiers.fr/feed
 * https://www.univ-poitiers.fr/feed/ec2u
-  * WordPress RSS feed with custom fields
+
+WordPress RSS feeds with custom fields
 
 # Integration
 
 * custom RSS adapter
+
+## 2024-04-24
+
+* extend to https://www.univ-poitiers.fr/feed
+* fix location IRI generation
 
 ## 2022-05-30
 

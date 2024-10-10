@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,3 +14,18 @@
  * limitations under the License.
  */
 
+:root {
+
+}
+
+tool-page > main > section > dfn {
+
+    display: block;
+
+    margin-top: -0.1em;
+    margin-bottom: 1em;
+
+    font-size: 1.1em;
+    font-weight: bolder;
+
+}

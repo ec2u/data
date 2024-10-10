@@ -1,0 +1,25 @@
+/*
+ * Copyright © 2013-2023 Metreeca srl. All rights reserved.
+ */
+
+data-logo {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin-left: -0.1em;
+
+    & > a {
+
+        display: contents;
+
+        & > span {
+            margin-left: 0.5em;
+            font-weight: 200;
+            color: var(--tool--color-label);
+        }
+
+    }
+
+}

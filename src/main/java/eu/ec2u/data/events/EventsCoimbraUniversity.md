@@ -6,6 +6,8 @@
 
 # API
 
+**Currently OOO**
+
 * RSS
   * https://agenda.uc.pt/wp-json/tribe/events/v1/events/
   * WordPress

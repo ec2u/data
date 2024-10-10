@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,231 +14,179 @@
  * limitations under the License.
  */
 
-import { Units, UnitsIcon } from "@ec2u/data/pages/units/units";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, optional, repeatable, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import * as React from "react";
-import { useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
+import { Events } from "@ec2u/data/pages/events/events";
+import { Units } from "@ec2u/data/pages/units/units";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, repeatable, required } from "@metreeca/core";
+import { entryCompare, toEntryString } from "@metreeca/core/entry";
+import { id, toIdString } from "@metreeca/core/id";
+import { Local, local, toLocalString } from "@metreeca/core/local";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolLabel } from "@metreeca/view/layouts/label";
+import { ToolPanel } from "@metreeca/view/layouts/panel";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React from "react";
 
 export const Unit=immutable({
 
-	id: "/units/{code}",
+	id: required("/units/{code}"),
 
-	label: { "en": "Unit" },
-	comment: { "en": "" },
+	comment: optional(local),
+	label: optional(local),
 
-	university: {
-		id: "",
-		label: { "en": "" }
-	},
+	prefLabel: required(local),
+	altLabel: optional(local),
 
-	subject: multiple({
-		id: "",
-		label: { "en": "" }
+	homepage: multiple(id),
+
+	partner: optional({
+		id: required(id),
+		label: required(local)
 	}),
 
-	homepage: multiple(""),
-
-	prefLabel: { "en": "" },
-	altLabel: optional({ "en": "" }),
-
-	classification: optional({
-		id: "",
-		label: { "en": "" }
-	}),
-
-	head: multiple({
-		id: "",
-		label: { "en": "" }
+	hasHead: multiple({
+		id: required(id),
+		label: required(local)
 	}),
 
 	unitOf: repeatable({
-		id: "",
-		label: { "en": "" }
+		id: required(id),
+		label: required(local)
 	}),
 
 	hasUnit: multiple({
-		id: "",
-		label: { "en": "" }
+		id: required(id),
+		label: required(local)
+	}),
+
+	classification: multiple({
+		id: required(id),
+		label: required(local)
+	}),
+
+	subject: multiple({
+		id: required(id),
+		label: required(local)
 	})
 
 });
 
 
+export function toUnitLabel({ altLabel, prefLabel }: { prefLabel: Local, altLabel?: Local }) {
+	return altLabel
+		? `${toLocalString(altLabel)} - ${toLocalString(prefLabel)}`
+		: toLocalString(prefLabel);
+}
+
+
 export function DataUnit() {
 
-	const [route, setRoute]=useRoute();
+	const [unit]=useResource(Unit);
 
-	const entry=useEntry(route, Unit);
 
+	return <DataPage
 
-	useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+		name={[Units, ""]}
 
+		tray={<ToolFrame as={({
 
-	return <DataPage item={entry({
-		value: ({ altLabel, prefLabel }) =>
-			altLabel ? `${string(altLabel)} - ${string(prefLabel)}` : string(prefLabel)
-	})}
+			altLabel,
 
-		menu={entry({ fetch: <NodeSpin/> })}
+			homepage,
 
-		pane={<DataPane
+			partner,
+			classification,
 
-			header={<DataBack>{Units}</DataBack>}
+			hasHead
 
-		>{entry({
+		}) => <>
 
-			value: unit => <DataUnitInfo>{unit}</DataUnitInfo>
+			<ToolInfo>{{
 
-		})}</DataPane>}
+				"University": partner && <ToolLink>{partner}</ToolLink>,
 
-	>{entry({
+				"Type": classification?.length && <ul>{classification.map(type =>
+					<li key={type.id}><ToolLink>{type}</ToolLink></li>
+				)}</ul>
 
-		fetch: <NodeHint>{UnitsIcon}</NodeHint>,
+			}}</ToolInfo>
 
-		value: value => <DataUnitBody>{value}</DataUnitBody>,
+			<ToolInfo>{{
 
-		error: error => <span>{error.status}</span> // !!! report
+				"Acronym": altLabel && <span>{toLocalString(altLabel)}</span>,
 
-	})}</DataPage>;
+				"Head": hasHead?.length === 1 ? <span>{toEntryString(hasHead[0])}</span> : hasHead?.length &&
+                    <ul>{[...hasHead]
+						.sort(entryCompare)
+						.map(head => <li key={head.id}>{toEntryString(head)}</li>)
+					}</ul>
 
-}
+			}}</ToolInfo>
 
+			<ToolInfo>{{
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				"Info": homepage?.length && <ul>{homepage.map(url =>
+					<li key={url}><a href={url}>{toIdString(url, { compact: true })}</a></li>
+				)}</ul>
 
-function DataUnitInfo({
+			}}</ToolInfo>
 
-	children: {
+		</>}>{unit}</ToolFrame>}
+	>
 
-		university,
+		<ToolFrame placeholder={Events[icon]} as={({
 
-		subject,
+			label,
+			comment,
 
-		label,
-		altLabel,
+			prefLabel,
 
-		homepage,
+			partner,
 
-		classification,
-		head,
+			unitOf,
+			hasUnit,
+			subject
 
-		unitOf
+		}) => {
 
-	}
+			const parent=unitOf.filter(unit => !partner || unit.id !== partner.id);
 
-}: {
+			return <>
 
-	children: typeof Unit
+				<strong>{toLocalString(prefLabel)}</strong>
 
-}) {
+				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
 
-	return <>
+				{(parent.length || hasUnit || subject) && <ToolPanel>
 
-		<DataInfo>{{
+					{parent.length > 0 && <ToolLabel name={"Parent Organizations"} wide>
+                        <ul>{parent.slice().sort(entryCompare).map(parent =>
+							<li key={parent.id}><ToolLink>{parent}</ToolLink></li>
+						)}</ul>
+                    </ToolLabel>}
 
-			"University": university && <NodeLink>{university}</NodeLink>,
+					{hasUnit && <ToolLabel name={"Organizational Units"} wide>
+                        <ul>{hasUnit.slice().sort(entryCompare).map(unit =>
+							<li key={unit.id}><ToolLink>{unit}</ToolLink></li>
+						)}</ul>
+                    </ToolLabel>}
 
-			"Parent": unitOf && unitOf.some(unit => !university || unit.id !== university.id) && <ul>{unitOf
-				.filter(unit => !university || unit.id !== university.id)
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(unit => <li key={unit.id}><NodeLink>{unit}</NodeLink></li>)
-			}</ul>,
+					{subject && <ToolLabel name={"Topics"} wide>
+                        <ul>{subject.slice().sort(entryCompare).map(subject =>
+							<li key={subject.id}><ToolLink>{subject}</ToolLink></li>
+						)}</ul>
+                    </ToolLabel>}
 
-			"Type": classification && <NodeLink>{classification}</NodeLink>
+                </ToolPanel>}
 
-		}}</DataInfo>
+			</>;
+		}}>{unit}</ToolFrame>
 
-		<DataInfo>{{
-
-			"Acronym": altLabel && <span>{string(altLabel)}</span>,
-			"Name": <span>{string(label)}</span>,
-
-			"Head": head?.length === 1 ? <span>{string(head[0])}</span> : head?.length && <ul>{[...head]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(head => <li key={head.id}>{string(head)}</li>)
-			}</ul>,
-
-			"Topics": subject && subject.length && <ul>{[...subject]
-				.sort((x, y) => string(x).localeCompare(string(y)))
-				.map(subject => <li key={subject.id}>
-					<NodeLink search={[Units, { university, subject }]}>{subject}</NodeLink>
-				</li>)
-			}</ul>
-
-		}}</DataInfo>
-
-		<DataInfo>{{
-
-			"Info": homepage && homepage.length && homepage.map(url =>
-				<a key={url} href={url}>{new URL(url).host}</a>
-			)
-
-		}}</DataInfo>
-
-	</>;
-}
-
-function DataUnitBody({
-
-	children: {
-
-		comment,
-
-		hasUnit
-
-	}
-
-}: {
-
-	children: typeof Unit
-
-}) {
-
-	return <DataCard>
-
-		<ReactMarkdown
-
-			remarkPlugins={[remarkGfm]}
-
-		>{
-
-			string(comment)
-
-		}</ReactMarkdown>
-
-
-		{hasUnit && <>
-
-			{comment && <hr/>}
-
-            <dl>
-
-                <dt>Organizational Units</dt>
-
-                <dt>
-                    <ul>{hasUnit.map(unit =>
-						<li key={unit.id}><NodeLink>{unit}</NodeLink></li>
-					)}</ul>
-                </dt>
-
-            </dl>
-
-        </>}
-
-	</DataCard>;
+	</DataPage>;
 
 }

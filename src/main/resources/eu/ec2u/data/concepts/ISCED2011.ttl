@@ -1,51 +1,76 @@
-@prefix dct:	<http://purl.org/dc/terms/> .
-@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 </concepts/isced-2011> a skos:ConceptScheme ;
-	dct:title "ISCED 2011"@en;
-	dct:description "ISCED 2011 Education Levels."@en .
+    dct:issued "2024-01-01"^^xsd:date ;
+    dct:title "International Standard Classification of Education 2011"@en ;
+    dct:alternative "ISCED 2011"@en ;
+    dct:description
+        "The ISCED 2011 classification was adopted by the UNESCO General Conference at its 36th session in November 2011. Initially developed by UNESCO in the 1970s, and first revised in 1997, the ISCED classification serves as an instrument to compile and present education statistics both nationally and internationally."@en ;
+    dct:source
+        <https://uis.unesco.org/sites/default/files/documents/international-standard-classification-of-education-isced-2011-en.pdf> ;
+    dct:publisher <http://www.uis.unesco.org/> ;
+    dct:rights "Copyright © 2012 UNESCO Institute for Statistics" .
+
+<http://www.uis.unesco.org/> a org:FormalOrganization ;
+    skos:prefLabel "UNESCO Institute for Statistics"@en ;
+    foaf:homepage <http://www.uis.unesco.org/> .
 
 
 ########################################################################################################################
 
 </concepts/isced-2011/0> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "0 - Early childhood education"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '0' ;
+    skos:prefLabel "Early childhood education"@en .
 
 </concepts/isced-2011/1> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "1 - Primary education"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '1' ;
+    skos:prefLabel "Primary education"@en .
 
 </concepts/isced-2011/2> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "2 - Lower secondary education"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '2' ;
+    skos:prefLabel "Lower secondary education"@en .
 
 </concepts/isced-2011/3> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "3 - Upper secondary education"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '3' ;
+    skos:prefLabel "Upper secondary education"@en .
 
 </concepts/isced-2011/4> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "4 - Post-secondary non-tertiary education"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '4' ;
+    skos:prefLabel "Post-secondary non-tertiary education"@en .
 
 </concepts/isced-2011/5> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "5 - Short-cycle tertiary education"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '5' ;
+    skos:prefLabel "Short-cycle tertiary education"@en .
 
 </concepts/isced-2011/6> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "6 - Bachelor’s or equivalent level"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '6' ;
+    skos:prefLabel "Bachelor’s or equivalent level"@en .
 
 </concepts/isced-2011/7> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "7 - Master’s or equivalent level"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '7' ;
+    skos:prefLabel "Master’s or equivalent level"@en .
 
 </concepts/isced-2011/8> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "8 - Doctoral or equivalent level"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '8' ;
+    skos:prefLabel "Doctoral or equivalent level"@en .
 
 </concepts/isced-2011/9> a skos:Concept ;
-	skos:topConceptOf </concepts/isced-2011>  ;
-	skos:prefLabel "9 - Not elsewhere classified"@en .
+    skos:topConceptOf </concepts/isced-2011> ;
+    skos:notation '9' ;
+    skos:prefLabel "Not elsewhere classified"@en .
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,127 +14,144 @@
  * limitations under the License.
  */
 
-import { Schemes, SchemesIcon } from "@ec2u/data/pages/concepts/schemes";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLabel } from "@metreeca/view/tiles/layouts/label";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
+
+import { Schemes } from "@ec2u/data/pages/concepts/schemes";
+import { Concept, ToolConcepts } from "@ec2u/data/pages/concepts/skos";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
+import { id } from "@metreeca/core/id";
+import { integer, toIntegerString } from "@metreeca/core/integer";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolHint } from "@metreeca/view/widgets/hint";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
-import { useEffect } from "react";
+import { useState } from "react";
 
 
 export const Scheme=immutable({
 
-    id: "/concepts/{scheme}",
+	id: required("/concepts/{scheme}"),
+	label: required(local),
 
-    label: { "en": "Taxonomy" },
-    comment: { "en": "" },
+	title: required(local),
+	alternative: optional(local),
+	description: optional(local),
 
-    hasTopConcept: multiple({
+	publisher: optional({
+		id: required(id),
+		label: required(local)
+	}),
 
-        id: "",
-        label: { "en": "" },
+	source: optional(id),
 
-        prefLabel: { "en": "" },
-        altLabel: { "en": "" },
-        definition: { "en": "" }
+	rights: optional(string),
+	accessRights: optional(local),
 
-    })
+	license: multiple({
+		id: required(id),
+		label: required(local)
+	}),
+
+	extent: required(integer),
+
+	hasConcept: virtual(multiple(Concept)),
+	hasTopConcept: virtual(multiple(Concept))
 
 });
 
 
 export function DataScheme() {
 
-    const [route, setRoute]=useRoute();
+	const [keywords, setKeywords]=useState("");
 
-    const entry=useEntry(route, Scheme);
+	const [scheme]=useResource({
+
+		...Scheme,
+
+		...(keywords
+				? { hasConcept: multiple({ ...Concept, "~label": keywords }) }
+				: { hasTopConcept: multiple(Concept) }
+		)
+
+	});
 
 
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+	return <DataPage name={[Schemes, toLocalString(scheme?.alternative ?? {})]}
 
+		tray={<ToolFrame as={({
 
-    return <DataPage item={entry({ value: string })}
+			extent
 
-        menu={entry({ fetch: <NodeSpin/> })}
+		}) => <>
 
-        pane={<DataPane
+			<ToolInfo>{{
 
-            header={<DataBack>{Schemes}</DataBack>}
+				"Concepts": toIntegerString(extent)
 
-        >{entry({
+			}}</ToolInfo>
 
-            value: event => <DataSchemeInfo>{event}</DataSchemeInfo>
+		</>}>{scheme}</ToolFrame>}
 
-        })}</DataPane>}
+	>
 
-    >{entry({
+		<ToolFrame placeholder={Schemes[icon]} as={({
 
-        fetch: <NodeHint>{SchemesIcon}</NodeHint>,
+			title,
+			description,
 
-        value: course => <DataSchemaBody>{course}</DataSchemaBody>,
+			publisher,
+			source,
 
-        error: error => <span>{error.status}</span> // !!! report
+			rights,
+			license,
 
-    })}</DataPage>;
+			hasConcept,
+			hasTopConcept
+
+		}) => <>
+
+			<dfn>{toLocalString(title)}</dfn>
+
+			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+
+			<ToolInfo>{{
+
+				"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
+				"Source": source && <ToolLink>{source}</ToolLink>,
+
+				"Rights": rights && <span>{rights}</span>,
+
+				"License": license && <ul>{license.map(license =>
+					<li key={license.id}><ToolLink>{license}</ToolLink></li>
+				)}</ul>
+
+			}}</ToolInfo>
+
+			{
+				keywords || hasTopConcept && hasTopConcept.some(concept => concept.narrower)
+					? <div style={{ marginTop: "1.5em", marginBottom: "1em" }}>
+						<ToolSearch placeholder={"Concepts"}>{[keywords, setKeywords]}</ToolSearch>
+					</div>
+					: <hr/>
+			}
+
+			{hasConcept ? <ToolConcepts>{hasConcept}</ToolConcepts>
+				: hasTopConcept ? <ToolConcepts>{hasTopConcept}</ToolConcepts>
+					: <div><ToolHint>{Schemes[icon]} No Matches</ToolHint></div>
+			}
+
+		</>}>{scheme}</ToolFrame>
+
+	</DataPage>;
 
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function DataSchemeInfo({
-
-    children: {}
-
-}: {
-
-    children: typeof Scheme
-
-}) {
-
-    return <>
-
-    </>;
-}
-
-function DataSchemaBody({
-
-    children: {
-
-        comment,
-
-        hasTopConcept
-
-    }
-
-}: {
-
-    children: typeof Scheme
-
-}) {
-
-    return <DataCard>
-
-        {comment && <p>{string(comment)}</p>}
-
-        {comment && hasTopConcept?.length && <hr/>}
-
-        {hasTopConcept?.length && <NodeLabel name={"Top Concepts"}>{[...hasTopConcept]
-
-            .sort((x, y) => string(x).localeCompare(string(y)))
-            .map(concept => <NodeLink key={concept.id}>{concept}</NodeLink>)
-
-        }</NodeLabel>}
-
-    </DataCard>;
-
-}

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,152 +18,110 @@ package eu.ec2u.data.resources;
 
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Worker;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.EC2U;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Shape.multiple;
-import static com.metreeca.link.Shape.optional;
-import static com.metreeca.link.Values.IRIType;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.And.and;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Datatype.datatype;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.filter;
-import static com.metreeca.link.shapes.Guard.hidden;
-import static com.metreeca.link.shapes.Localized.localized;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.universities.Universities.University;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 
 public final class Resources extends Delegator {
 
-    private static final IRI Context=item("/resources/");
+    public static final IRI Context=item("/resources/");
+
+    public static final IRI Resource=term("Resource");
+
+    public static final IRI partner=term("partner");
+    public static final IRI updated=term("updated");
 
 
-    public static final IRI Resource=EC2U.term("Resource");
-    public static final IRI Publisher=EC2U.term("Publisher");
-
-    public static final IRI university=EC2U.term("university");
-
-
-    public static final Set<String> Languages=Stream
+    private static final Set<String> locales=Stream
 
             .concat(
-                    Stream.of("en"),
-                    stream(EC2U.University.values()).map(u -> u.Language)
+                    Stream.of(NOT_LOCALE, "en"),
+                    stream(eu.ec2u.data.universities.University.values()).map(u -> u.language)
             )
 
             .collect(toUnmodifiableSet());
 
 
-    public static Shape Reference() {
-        return and(
-
-                datatype(IRIType),
-
-                field(RDFS.LABEL, multilingual())
-
-        );
+    public static Set<String> locales() {
+        return locales;
     }
+
+
+    public static Shape Resources() { return Dataset(Resource()); }
 
     public static Shape Resource() {
-        return and(Reference(),
+        return shape(
 
-                hidden(field(RDF.TYPE, all(Resource))),
+                property("id", ID, required(id())),
 
-                field(RDFS.COMMENT, multilingual()),
+                property(RDF.TYPE, multiple(id())),
+                property(RDFS.LABEL, optional(text(locales()), maxLength(1_000))), // !!! 1000
+                property(RDFS.COMMENT, optional(text(locales()), maxLength(10_000))), // !!! 1_000
 
-                field(university, optional(),
-                        field(RDFS.LABEL, multilingual())
-                ),
+                property(RDFS.SEEALSO, multiple(id())),
+                property(RDFS.ISDEFINEDBY, optional(id())),
 
-                field(DCTERMS.TITLE, multilingual()),
-                field(DCTERMS.DESCRIPTION, multilingual()),
+                property(partner, () -> optional(University())),
+                property(updated, () -> optional(instant())),
 
-                field(DCTERMS.PUBLISHER, optional(), Publisher()),
-                field(DCTERMS.SOURCE, optional(), datatype(IRIType)),
-
-                field(DCTERMS.CREATED, optional(), datatype(XSD.DATETIME)),
-                field(DCTERMS.ISSUED, optional(), datatype(XSD.DATETIME)),
-                field(DCTERMS.MODIFIED, optional(), datatype(XSD.DATETIME)),
-
-                field(DCTERMS.TYPE, multiple(), Reference()),
-                field(DCTERMS.SUBJECT, multiple(), Reference())
-
-        );
-    }
-
-    public static Shape Publisher() {
-        return and(Reference(),
-
-                field(DCTERMS.COVERAGE, optional(), datatype(IRIType)),
-
-                field(SKOS.PREF_LABEL, multilingual()),
-                field(FOAF.HOMEPAGE, optional(), datatype(IRIType))
+                property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
 
         );
     }
 
 
-    public static Shape multilingual() {
-        return localized(Languages);
+    public static void main(final String... args) {
+        exec(() -> create(Context, Resources.class, Resource()));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Resources() {
-        delegate(handler(
+        delegate(handler(new Driver(Resources()), new Worker()
 
-                new Driver(Resource(),
+                .get(new Relator(frame(
 
-                        filter(clazz(Resource)),
+                        field(ID, iri()),
+                        field(RDFS.LABEL, literal("EC2U Knowledge Hub Resources", "en")),
 
-                        field(RDF.TYPE, Reference()),
-                        field(DCTERMS.SUBJECT, Reference())
+                        field(RDFS.MEMBER, query(
 
-                ),
+                                frame(
 
-                new Worker()
-                        .get(new Relator())
+                                        field(ID, iri()),
+                                        field(RDFS.LABEL, literal("", ANY_LOCALE)),
+
+                                        field(reverse(RDFS.MEMBER), iri()),
+                                        field(partner, iri())
+
+                                )
+
+                        ))
+
+                )))
 
         ));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(rdf(Resources.class, ".ttl", EC2U.Base))
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
     }
 
 }

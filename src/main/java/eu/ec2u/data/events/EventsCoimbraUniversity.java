@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,41 +16,43 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
+import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.universities.Universities;
+import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.Tribe;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.time.ZonedDateTime;
-import java.util.Set;
-
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
+import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.University.Coimbra;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.synced;
-import static eu.ec2u.work.validation.Validators.validate;
-
-import static java.time.ZoneOffset.UTC;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.universities.University.Coimbra;
 
 public final class EventsCoimbraUniversity implements Runnable {
 
     public static final IRI Context=iri(Events.Context, "/coimbra/university");
 
-    private static final Frame Publisher=frame(iri("https://agenda.uc.pt/"))
-            .value(RDF.TYPE, Resources.Publisher)
-            .value(DCTERMS.COVERAGE, Universities.University)
-            .values(RDFS.LABEL,
+    private static final Frame Publisher=frame(
+
+            field(ID, iri("https://agenda.uc.pt/")),
+            field(TYPE, Organization),
+
+            field(partner, Coimbra.id),
+
+            field(Schema.name,
                     literal("University of Coimbra / Agenda UC", "en"),
-                    literal("Universidade de Coimbra / Agenda UC", Coimbra.Language)
-            );
+                    literal("Universidade de Coimbra / Agenda UC", Coimbra.language)
+            ),
+
+            field(Schema.about, OrganizationTypes.University)
+
+    );
 
 
     public static void main(final String... args) {
@@ -61,30 +63,28 @@ public final class EventsCoimbraUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
+        update(connection -> Xtream
 
-        final ZonedDateTime now=ZonedDateTime.now(UTC);
-
-        Xtream.of(synced(Context, Publisher.focus()))
+                .of(updated(Context, Publisher.id().orElseThrow()))
 
                 .flatMap(new Tribe("https://agenda.uc.pt/")
-                        .country(Coimbra.Country)
-                        .locality(Coimbra.City)
-                        .language(Coimbra.Language)
-                        .zone(Coimbra.TimeZone)
+                        .country(Coimbra.country)
+                        .locality(Coimbra.city)
+                        .language(Coimbra.language)
+                        .zone(Coimbra.zone)
                 )
 
-                .map(event -> event
+                .map(event -> frame(event,
+                        field(partner, Coimbra.id),
+                        field(publisher, Publisher)
+                ))
 
-                        .value(Resources.university, Coimbra.Id)
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                        .frame(DCTERMS.PUBLISHER, Publisher)
-                        .value(DCTERMS.MODIFIED, event.value(DCTERMS.MODIFIED).orElseGet(() -> literal(now)))
+                .forEach(new Events_.Loader(Context))
 
-                )
-
-                .pipe(events -> validate(Event(), Set.of(Event), events))
-
-                .forEach(new Events.Updater(Context));
+        );
     }
 
 }

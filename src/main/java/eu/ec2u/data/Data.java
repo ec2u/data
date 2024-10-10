@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,57 +16,42 @@
 
 package eu.ec2u.data;
 
-import com.metreeca.core.Locator;
-import com.metreeca.core.services.Cache.FileCache;
-import com.metreeca.gcp.GCPServer;
-import com.metreeca.gcp.services.GCPVault;
+import com.metreeca.http.Locator;
 import com.metreeca.http.Request;
+import com.metreeca.http.gcp.GCPServer;
+import com.metreeca.http.gcp.services.GCPVault;
 import com.metreeca.http.handlers.*;
+import com.metreeca.http.rdf4j.handlers.Graphs;
+import com.metreeca.http.rdf4j.handlers.SPARQL;
+import com.metreeca.http.rdf4j.services.Graph;
+import com.metreeca.http.services.Cache.FileCache;
 import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
-import com.metreeca.rdf4j.handlers.Graphs;
-import com.metreeca.rdf4j.handlers.SPARQL;
-import com.metreeca.rdf4j.services.Graph;
-import com.metreeca.rdf4j.services.GraphEngine;
 
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.douments.Documents;
-import eu.ec2u.data.events.Events;
-import eu.ec2u.data.offers.Offers;
-import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.units.Units;
-import eu.ec2u.data.universities.Universities;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
-import java.util.Map;
 
-import static com.metreeca.core.Locator.path;
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Cache.cache;
-import static com.metreeca.core.services.Logger.Level.debug;
-import static com.metreeca.core.services.Vault.vault;
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.http.Locator.path;
+import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.SeeOther;
+import static com.metreeca.http.jsonld.formats.JSONLD.codec;
+import static com.metreeca.http.jsonld.formats.JSONLD.store;
+import static com.metreeca.http.rdf4j.services.Graph.graph;
+import static com.metreeca.http.services.Cache.cache;
 import static com.metreeca.http.services.Fetcher.fetcher;
-import static com.metreeca.jsonld.codecs.JSONLD.keywords;
-import static com.metreeca.jsonld.services.Engine.engine;
-import static com.metreeca.link.shapes.Link.link;
-import static com.metreeca.rdf4j.services.Graph.graph;
+import static com.metreeca.http.services.Logger.Level.debug;
+import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.link.json.JSON.json;
+import static com.metreeca.link.rdf4j.RDF4J.rdf4j;
 
-import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
-import static java.util.Map.entry;
 
-public final class Data implements Runnable {
+public final class Data extends Delegator {
 
     private static final boolean Production=GCPServer.production();
 
@@ -93,15 +78,18 @@ public final class Data implements Runnable {
                 .set(vault(), GCPVault::new)
 
                 .set(path(), () -> Paths.get(Production ? "/tmp" : "data"))
-                .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
+                .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
 
-                .set(graph(), () -> new Graph(repository(GraphDBRepository)))
-                .set(engine(), GraphEngine::new)
+                .set(graph(), () -> new Graph(service(Data::repository)))
+                .set(store(), () -> rdf4j(service(Data::repository)))
+                .set(codec(), () -> json().pretty(true));
 
-                .set(keywords(), () -> Map.ofEntries(
-                        entry("@id", "id")
-                ));
+    }
+
+
+    private static Repository repository() {
+        return repository(GraphDBRepository);
     }
 
     public static Repository repository(final String name) {
@@ -116,80 +104,49 @@ public final class Data implements Runnable {
     }
 
 
-    public static void exec(final Runnable... tasks) {
-        services(new Locator()).exec(tasks).clear();
+    public static void main(final String... args) {
+        new GCPServer().delegate(locator -> services(locator).get(Data::new)).start();
     }
 
-    public static void main(final String... args) {
-        new Data().run();
+    public static void exec(final Runnable... tasks) {
+        services(new Locator()).exec(tasks).clear();
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override public void run() {
-        new GCPServer().delegate(locator -> services(locator)
+    public Data() {
+        delegate(handler(
 
-                .get(() -> handler(
+                new CORS(),
 
-                        new CORS(),
+                new Router()
 
-                        new Publisher() // static assets published by GAE
+                        .path("/graphs", new Graphs().query())
 
-                                .fallback("/index.html"),
+                        .path("/sparql", handler(Request::route,
 
-                        new Wrapper()
+                                (request, forward) -> request.reply(SeeOther, URI.create(format(
+                                        "https://apps.metreeca.com/self/#endpoint=%s", request.item()
+                                ))),
 
-                                .before(request -> request.base(EC2U.Base)), // define canonical base
+                                new SPARQL().query()
 
-                        new Router()
+                        )),
 
-                                .path("/graphs", new Graphs().query())
+                new Publisher() // static assets published by GAE
 
-                                .path("/sparql", handler(Request::route,
+                        .fallback("/index.html"),
 
-                                        (request, forward) -> request.reply(SeeOther, URI.create(format(
-                                                "https://apps.metreeca.com/self/#endpoint=%s", request.item()
-                                        ))),
+                new Wrapper() // after publisher
 
-                                        new SPARQL().query()
+                        .before(request -> request.base(EC2U.BASE)), // define canonical base
 
-                                ))
+                new Router()
+                        .path("/cron/*", new Cron())
+                        .path("/*", new EC2U())
 
-                                .path("/cron/*", new Cron())
-                                .path("/resources/", new Resources())
-
-                                .path("/*", new Router()
-
-                                        .path("/", new Datasets())
-
-                                        // !!! to be removed after metreeca/java supports resource access to collections
-
-                                        .path("/datasets", handler(
-                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
-                                                new Worker().get(new Relator())
-                                        ))
-
-                                        .path("/datasets/{id}", handler(
-                                                new Driver(link(RDFS.ISDEFINEDBY, Dataset())),
-                                                new Worker().get(new Relator())
-                                        ))
-
-                                        .path("/universities/*", new Universities())
-                                        .path("/units/*", new Units())
-                                        .path("/offers/*", new Offers())
-                                        .path("/programs/*", new Offers.Programs())
-                                        .path("/courses/*", new Offers.Courses())
-                                        .path("/documents/*", new Documents())
-                                        .path("/persons/*", new Persons())
-                                        .path("/events/*", new Events())
-                                        .path("/concepts/*", new Concepts())
-
-                                )
-
-                ))
-
-        ).start();
+        ));
     }
 
 }

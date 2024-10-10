@@ -1,27 +1,47 @@
-@prefix ec2u:	</terms/> .
-@prefix dct:	<http://purl.org/dc/terms/> .
-@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
-@prefix owl:	<http://www.w3.org/2002/07/owl#> .
-@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ec2u: </terms/> .
 
-</concepts/> a ec2u:Dataset ;
-	dct:title "EC2U Taxonomies"@en  ;
-	dct:alternative "EC2U Classification Taxonomies"@en ;
-	dct:description "Topic taxonomies and other concept schemes for classifying resources."@en ;
-	dct:rights "Copyright © 2022-2023 EC2U Alliance" ;
-	void:rootResource skos:ConceptScheme .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+</concepts/> a void:Dataset ;
+    dct:title "EC2U Classification Taxonomies"@en ;
+    dct:alternative "EC2U Taxonomies"@en ;
+    dct:description "Topic taxonomies and other concept schemes for classifying resources."@en ;
+    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    void:rootResource skos:ConceptScheme ;
+    rdfs:isDefinedBy </datasets/concepts> .
 
 
 ########################################################################################################################
 
-ec2u:ConceptScheme a owl:Class ;
-	rdfs:subclassOf ec2u:Resource, skos:ConceptScheme .
+skos:ConceptScheme a owl:Class ;
+    rdfs:subClassOf ec2u:Asset .
 
-ec2u:Concept a owl:Class ;
-	rdfs:subclassOf ec2u:Resource, skos:Concept .
+skos:Concept a owl:Class .
 
-skos:prefLabel a owl:DataProperty ;
-	rdfs:subPropertyOf dct:title .
 
-skos:definition a owl:DataProperty ;
-	rdfs:subPropertyOf dct:description .
+skos:topConceptOf a owl:ObjectProperty ;
+    rdfs:subPropertyOf skos:inScheme ;
+    owl:inverseOf skos:hasTopConcept .
+
+skos:hasTopConcept a owl:ObjectProperty ;
+    owl:inverseOf skos:topConceptOf .
+
+
+skos:broader a owl:ObjectProperty ;
+    rdfs:subPropertyOf skos:broaderTransitive ;
+    owl:inverseOf skos:narrower .
+
+skos:broaderTransitive a owl:ObjectProperty, owl:TransitiveProperty .
+
+skos:narrower a owl:ObjectProperty ;
+    rdfs:subPropertyOf skos:narrowerTransitive ;
+    owl:inverseOf skos:broader .
+
+skos:narrowerTransitive a owl:ObjectProperty, owl:TransitiveProperty .
+
+skos:related a owl:ObjectProperty, owl:SymmetricProperty .

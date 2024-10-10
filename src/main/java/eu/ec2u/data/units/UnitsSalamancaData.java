@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,40 +16,38 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.core.actions.Fill;
-import com.metreeca.core.services.Vault;
+import com.metreeca.http.actions.Fill;
 import com.metreeca.http.actions.GET;
-import com.metreeca.json.JSONPath;
-import com.metreeca.json.codecs.JSON;
+import com.metreeca.http.json.JSONPath;
+import com.metreeca.http.json.formats.JSON;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.services.Vault;
+import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
-import com.metreeca.link.Values;
-import com.metreeca.rdf4j.actions.Upload;
 
-import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
-import eu.ec2u.data.concepts.UnitTypes;
 import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Base64;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Vault.vault;
-import static com.metreeca.core.toolkits.Strings.split;
-import static com.metreeca.link.Frame.frame;
-import static com.metreeca.link.Values.*;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.http.toolkits.Strings.split;
+import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.EC2U.University.Salamanca;
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.concepts.OrganizationTypes.*;
+import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.units.Units.ResearchTopics;
 import static eu.ec2u.data.units.Units.Unit;
-import static eu.ec2u.work.validation.Validators.validate;
-
+import static eu.ec2u.data.universities.University.Salamanca;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.function.Predicate.not;
@@ -61,15 +59,12 @@ public final class UnitsSalamancaData implements Runnable {
     private static final String APIUrl="units-salamanca-url"; // vault label
     private static final String APIKey="units-salamanca-key"; // vault label
 
-    private static final IRI BranchScheme=iri(Units.Scheme, "/salamanca-branch");
-    private static final IRI RIS3Scheme=iri(Units.Scheme, "/salamanca-ris3");
-
 
     private static final Pattern HeadPattern=Pattern.compile("\\s*(.*)\\s*,\\s*(.*)\\s*");
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new UnitsSalamancaData().run());
+        exec(() -> new UnitsSalamancaData().run());
     }
 
 
@@ -84,7 +79,8 @@ public final class UnitsSalamancaData implements Runnable {
                 .flatMap(this::units)
                 .optMap(this::unit)
 
-                .pipe(units -> validate(Unit(), Set.of(Unit), units))
+                .flatMap(Frame::stream)
+                .batch(0)
 
                 .forEach(new Upload()
                         .contexts(Context)
@@ -95,7 +91,7 @@ public final class UnitsSalamancaData implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> units(final Instant synced) {
+    private Xtream<JSONPath> units(final Instant updated) {
 
         final String url=vault
                 .get(APIUrl)
@@ -109,7 +105,7 @@ public final class UnitsSalamancaData implements Runnable {
                         "undefined API key <%s>", APIKey
                 )));
 
-        return Xtream.of(synced)
+        return Xtream.of(updated)
 
                 .flatMap(new Fill<>()
                         .model(url)
@@ -130,65 +126,72 @@ public final class UnitsSalamancaData implements Runnable {
 
             final Optional<Literal> label=json.string("name")
                     .filter(not(String::isEmpty))
-                    .map(name -> literal(name, Salamanca.Language));
+                    .map(name -> literal(name, Salamanca.language));
 
             final Optional<Frame> department=department(json);
             final Optional<Frame> institute=institute(json);
 
-            return frame(EC2U.item(Units.Context, Salamanca, id))
+            return frame(
 
-                    .values(RDF.TYPE, Unit)
-                    .value(Resources.university, Salamanca.Id)
+                    field(ID, item(Units.Context, Salamanca, id)),
 
-                    .value(DCTERMS.TITLE, label)
-                    .value(DCTERMS.DESCRIPTION, json.string("topics")
+                    field(RDF.TYPE, Unit),
+                    field(partner, Salamanca.id),
+
+                    field(DCTERMS.TITLE, label),
+                    field(DCTERMS.DESCRIPTION, json.string("topics")
                             .filter(not(String::isEmpty))
-                            .map(topics -> literal(topics, Salamanca.Language))
-                    )
+                            .map(topics -> literal(topics, Salamanca.language))
+                    ),
 
 
-                    .frames(DCTERMS.SUBJECT, json.string("knowledge_branch").stream()
-                            .flatMap(v -> split(v, ','))
-                            .map(v -> frame(EC2U.item(BranchScheme, v))
-                                    .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
+                    field(DCTERMS.SUBJECT, json.string("knowledge_branch").stream() // !!! EuroSciVoc
+                            .flatMap(v -> split(v, "[,;]"))
+                            .map(v -> frame(
+                                    field(ID, item(ResearchTopics, Salamanca, "branch: "+v)),
+                                    field(RDF.TYPE, SKOS.CONCEPT),
+                                    field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
+                                    field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
 
-                            )
-                    )
+                            ))
+                    ),
 
-                    .frames(DCTERMS.SUBJECT, json.string("RIS3").stream()
-                            .flatMap(v -> split(v, ','))
-                            .map(v -> frame(EC2U.item(RIS3Scheme, v))
-                                    .value(RDF.TYPE, SKOS.CONCEPT)
-                                    .value(SKOS.PREF_LABEL, literal(v, Salamanca.Language))
+                    field(DCTERMS.SUBJECT, json.string("RIS3").stream() // !!! EuroSciVoc
+                            .flatMap(v -> split(v, "[,;]"))
+                            .map(v -> frame(
+                                    field(ID, item(ResearchTopics, Salamanca, "ris3"+v)),
+                                    field(RDF.TYPE, SKOS.CONCEPT),
+                                    field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
+                                    field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
+                            ))
+                    ),
 
-                            )
-                    )
-
-                    .value(FOAF.HOMEPAGE, json.string("group_scientific_portal_url")
+                    field(FOAF.HOMEPAGE, json.string("group_scientific_portal_url")
                             .filter(not(String::isEmpty))
-                            .map(Values::iri)
-                    )
+                            .map(Frame::iri)
+                    ),
 
-                    .value(SKOS.PREF_LABEL, label)
-                    .value(SKOS.ALT_LABEL, json.string("acronym")
+                    field(SKOS.PREF_LABEL, label),
+                    field(SKOS.ALT_LABEL, json.string("acronym")
                             .filter(not(String::isEmpty))
-                            .map(value -> literal(value, Salamanca.Language)))
+                            .map(value -> literal(value, Salamanca.language))),
 
-                    .value(ORG.CLASSIFICATION, UnitTypes.GroupRecognized)
+                    field(ORG.CLASSIFICATION, GroupRecognized),
 
-                    .frame(inverse(ORG.HEAD_OF), head(json))
+                    field(reverse(ORG.HEAD_OF), head(json)),
 
-                    .frame(ORG.UNIT_OF, department.orElseGet(
-                            () -> frame(Salamanca.Id)
-                    ))
+                    field(ORG.UNIT_OF, department.orElseGet(
+                            () -> frame(field(ID, Salamanca.id))
+                    )),
 
-                    .frame(ORG.UNIT_OF, department)
-                    .frame(ORG.UNIT_OF, institute)
+                    field(ORG.UNIT_OF, department),
+                    field(ORG.UNIT_OF, institute),
 
-                    .frame(ORG.UNIT_OF, Optional.of(frame(Salamanca.Id))
+                    field(ORG.UNIT_OF, Optional.of(frame(field(ID, Salamanca.id)))
                             .filter(frame -> department.isEmpty() && institute.isEmpty())
-                    );
+                    )
+
+            );
 
         });
     }
@@ -205,62 +208,70 @@ public final class UnitsSalamancaData implements Runnable {
 
                     final String familyName=matcher.group(1);
                     final String givenName=matcher.group(2);
-                    final String fullName=format("%s %s", givenName, familyName);
 
-                    return frame(EC2U.item(Persons.Context, Salamanca, fullName))
+                    return frame(
 
-                            .value(RDF.TYPE, Persons.Person)
+                            field(ID, item(Persons.Context, Salamanca, format("%s, %s", familyName, givenName))),
+                            field(TYPE, FOAF.PERSON),
 
-                            .value(RDFS.LABEL, literal(fullName, Salamanca.Language))
+                            field(partner, Salamanca.id),
 
-                            .value(Resources.university, Salamanca.Id)
+                            field(FOAF.GIVEN_NAME, literal(givenName)),
+                            field(FOAF.FAMILY_NAME, literal(familyName))
 
-                            .value(FOAF.GIVEN_NAME, literal(givenName))
-                            .value(FOAF.FAMILY_NAME, literal(familyName));
-
+                    );
                 });
     }
 
     private Optional<Frame> department(final JSONPath json) {
         return json.string("department").map(name -> {
 
-            final Literal title=literal(name, Salamanca.Language);
+            final Literal title=literal(name, Salamanca.language);
 
-            return frame(EC2U.item(Units.Context, Salamanca, name))
+            return frame(
 
-                    .values(RDF.TYPE, Unit)
-                    .value(Resources.university, Salamanca.Id)
+                    field(ID, item(Units.Context, Salamanca, name)),
 
-                    .value(DCTERMS.TITLE, title)
-                    .value(SKOS.PREF_LABEL, title)
+                    field(RDF.TYPE, Unit),
+                    field(partner, Salamanca.id),
 
-                    .value(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Values::iri))
-                    .value(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Values::iri))
+                    field(DCTERMS.TITLE, title),
+                    field(SKOS.PREF_LABEL, title),
 
-                    .value(ORG.CLASSIFICATION, UnitTypes.Department)
-                    .frame(ORG.UNIT_OF, frame(Salamanca.Id));
+                    field(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Frame::iri)),
+                    field(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Frame::iri)),
+
+                    field(ORG.CLASSIFICATION, Department),
+                    field(ORG.UNIT_OF, Salamanca.id)
+
+            );
         });
     }
 
     private Optional<Frame> institute(final JSONPath json) {
         return json.string("institute").map(name -> {
 
-            final Literal title=literal(name, Salamanca.Language);
+            final Literal title=literal(name, Salamanca.language);
 
-            return frame(EC2U.item(Units.Context, Salamanca, name))
+            return frame(
 
-                    .values(RDF.TYPE, Unit)
-                    .value(Resources.university, Salamanca.Id)
+                    field(ID, item(Units.Context, Salamanca, name)),
 
-                    .value(DCTERMS.TITLE, title)
-                    .value(SKOS.PREF_LABEL, title)
+                    field(RDF.TYPE, Unit),
+                    field(partner, Salamanca.id),
 
-                    .values(FOAF.HOMEPAGE, json.string("institute_webusal_url").stream()
+                    field(DCTERMS.TITLE, title),
+                    field(SKOS.PREF_LABEL, title),
+
+                    field(FOAF.HOMEPAGE, json.string("institute_webusal_url").stream()
                             .flatMap(v -> split(v, ','))
-                            .map(Values::iri))
+                            .map(Frame::iri)
+                    ),
 
-                    .value(ORG.CLASSIFICATION, UnitTypes.Institute)
-                    .frame(ORG.UNIT_OF, frame(Salamanca.Id));
+                    field(ORG.CLASSIFICATION, Institute),
+                    field(ORG.UNIT_OF, Salamanca.id)
+
+            );
         });
     }
 

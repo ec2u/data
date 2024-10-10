@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,35 +16,37 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.rdf.actions.Retrieve;
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.http.rdf.actions.Retrieve;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.EC2U;
-import eu.ec2u.data.resources.Resources;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.link.Values.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.http.rdf.Values.*;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
-
-import static java.util.function.Predicate.not;
+import static eu.ec2u.data.EC2U.BASE;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.resources.Resources.locales;
 import static java.util.stream.Collectors.toList;
+import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
 
 
 /**
  * International Standard Classification of Education (ISCED-F 2013)
  *
- * @see <a href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa
- * .eu/resource/dataset/international-education-classification">...</a>
+ * @see <a
+ * href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/international-education-classification">...</a>
  */
-final class ISCEDF2013 implements Runnable {
+public final class ISCEDF2013 implements Runnable {
 
     public static final IRI Scheme=iri(Concepts.Context, "/isced-f-2013");
 
@@ -52,8 +54,6 @@ final class ISCEDF2013 implements Runnable {
 
     private static final String External="http://data.europa.eu/snb/isced-f/";
     private static final String Internal=Scheme+"/";
-
-    private static final Set<IRI> DCTTemporal=Set.of(DCTERMS.CREATED, DCTERMS.ISSUED, DCTERMS.MODIFIED);
 
     private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
             +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fcellar"
@@ -69,16 +69,15 @@ final class ISCEDF2013 implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        Xtream.of(URL)
+        update(connection -> Xtream.of(URL)
 
                 .map(new Retrieve()
                         .format(RDFXML)
                 )
 
-
                 .flatMap(model -> Stream.of(
 
-                        rdf(this, ".ttl", EC2U.Base),
+                        rdf(resource(this, ".ttl"), BASE),
 
                         model.stream()
 
@@ -101,40 +100,17 @@ final class ISCEDF2013 implements Runnable {
                                 .map(statement -> rewrite(statement, External, Internal))
                                 .map(statement -> replace(statement, Root, Scheme))
 
-                                // remove original title
-
-                                .filter(not(pattern(null, null, literal("International Standard Classification of "
-                                        + "Education: Fields of Education and Training 2013", "en"))))
-
-                                // migrate dct: temporal properties to xsd:dateTime to comply with Resource data model
-
-                                .map(statement -> {
-
-                                    final IRI predicate=statement.getPredicate();
-                                    final Resource subject=statement.getSubject();
-                                    final Value object=statement.getObject();
-
-                                    return DCTTemporal.contains(predicate) && literal(object)
-                                            .map(Literal::getDatatype)
-                                            .filter(XSD.DATE::equals)
-                                            .isPresent()
-
-                                            ? statement(subject, predicate,
-                                            literal(String.format("%sT00:00:00Z", object.stringValue()), XSD.DATETIME)
-                                    )
-
-                                            : statement;
-                                })
-
                                 .collect(toList())
 
                 ))
 
                 .forEach(new Upload()
                         .contexts(Scheme)
-                        .langs(Resources.Languages)
+                        .langs(locales())
                         .clear(true)
-                );
+                )
+
+        );
     }
 
 }

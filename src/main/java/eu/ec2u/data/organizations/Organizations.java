@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,55 +16,82 @@
 
 package eu.ec2u.data.organizations;
 
-import com.metreeca.rdf4j.actions.Upload;
+import com.metreeca.link.Shape;
 
-import eu.ec2u.data.EC2U;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.ORG;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import java.util.stream.Stream;
-
-import static com.metreeca.rdf.codecs.RDF.rdf;
+import static com.metreeca.link.Frame.LITERAL;
+import static com.metreeca.link.Frame.reverse;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.Base;
+import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.agents.Agents.Agent;
+import static eu.ec2u.data.concepts.Concepts.Concept;
+import static eu.ec2u.data.persons.Persons.Person;
+import static eu.ec2u.data.resources.Resources.locales;
 
 public final class Organizations {
 
-    public static final IRI Context=EC2U.item("/organizations/");
+    public static final IRI Context=item("/organizations/");
 
-    public static final IRI Organization=EC2U.term("Organization");
+    public static final IRI Organization=term("Organization");
+
+
+    public static Shape Organization() {
+        return shape(ORG.ORGANIZATION, Agent(),
+
+                property(ORG.IDENTIFIER, multiple(datatype(LITERAL))),
+
+                property(SKOS.PREF_LABEL, required(text(locales()))),
+                property(SKOS.ALT_LABEL, optional(text(locales()))),
+                property(SKOS.DEFINITION, optional(text(locales()))),
+
+                property(ORG.CLASSIFICATION, () -> multiple(Concept(), scheme(OrganizationTypes.OrganizationTypes))),
+
+                property(ORG.SUB_ORGANIZATION_OF, () -> multiple(Organization())),
+                property(ORG.HAS_SUB_ORGANIZATION, () -> multiple(Organization())),
+
+                property(ORG.HAS_UNIT, () -> multiple(OrganizationalUnit())),
+
+                property("hasHead", reverse(ORG.HEAD_OF), multiple(Person())),
+                property(ORG.HAS_MEMBER, multiple(Person()))
+
+        );
+    }
+
+    public static Shape FormalOrganization() {
+        return shape(ORG.FORMAL_ORGANIZATION, Organization());
+    }
+
+    public static Shape OrganizationalCollaboration() {
+        return shape(ORG.ORGANIZATIONAL_COLLABORATION, Organization());
+    }
+
+    public static Shape OrganizationalUnit() {
+        return shape(ORG.ORGANIZATIONAL_UNIT, Organization(),
+
+                property(ORG.UNIT_OF, repeatable(Organization()))
+
+        );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Organizations.class,
+                Organization(),
+                FormalOrganization(),
+                OrganizationalCollaboration(),
+                OrganizationalUnit()
+        ));
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Organizations() { }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final class Loader implements Runnable {
-
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
-
-        @Override public void run() {
-            Stream
-
-                    .of(
-                            rdf(Organizations.class, ".ttl", Base),
-
-                            rdf("https://www.w3.org/ns/org")
-
-                    )
-
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .langs(Resources.Languages)
-                            .clear(true)
-                    );
-        }
-    }
 
 }

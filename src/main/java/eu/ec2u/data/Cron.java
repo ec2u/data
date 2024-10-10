@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,30 @@
 
 package eu.ec2u.data;
 
-import com.metreeca.core.services.Logger;
 import com.metreeca.http.Handler;
 import com.metreeca.http.handlers.Delegator;
 import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.services.Logger;
 
 import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.douments.*;
+import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
-import eu.ec2u.data.offers.*;
+import eu.ec2u.data.offerings.*;
 import eu.ec2u.data.units.*;
-import eu.ec2u.data.universities.Universities;
+import eu.ec2u.data.universities.Universities_;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.core.services.Logger.time;
-import static com.metreeca.gcp.GCPServer.cron;
+import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.BadGateway;
 import static com.metreeca.http.Response.OK;
+import static com.metreeca.http.gcp.GCPServer.cron;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Logger.time;
 
 import static java.lang.String.format;
 
 
+@SuppressWarnings("OverlyCoupledClass")
 public final class Cron extends Delegator {
 
     private final Logger logger=service(logger());
@@ -49,7 +48,7 @@ public final class Cron extends Delegator {
     public Cron() {
         delegate(cron(new Router()
 
-                .path("/universities/", execute(new Universities.Updater()))
+                .path("/universities/", execute(new Universities_()))
 
                 .path("/units/coimbra", execute(new UnitsCoimbra()))
                 .path("/units/iasi", execute(new UnitsIasi()))
@@ -59,11 +58,11 @@ public final class Cron extends Delegator {
                 .path("/units/salamanca", execute(new UnitsSalamanca()))
                 .path("/units/turku", execute(new UnitsTurku()))
 
-                .path("/offers/coimbra", execute(new OffersCoimbra()))
-                .path("/offers/jena", execute(new OffersJena()))
-                .path("/offers/pavia", execute(new OffersPavia()))
-                .path("/offers/poitiers", execute(new OffersPoitiers()))
-                .path("/offers/salamanca", execute(new OffersSalamanca()))
+                .path("/offerings/coimbra", execute(new OfferingsCoimbra()))
+                .path("/offerings/jena", execute(new OfferingsJena()))
+                .path("/offerings/pavia", execute(new OfferingsPavia()))
+                .path("/offerings/poitiers", execute(new OfferingsPoitiers()))
+                .path("/offerings/salamanca", execute(new OfferingsSalamanca()))
 
                 .path("/documents/coimbra", execute(new DocumentsCoimbra()))
                 .path("/documents/iasi", execute(new DocumentsIasi()))
@@ -81,21 +80,15 @@ public final class Cron extends Delegator {
                 .path("/events/iasi/city/in-oras", execute(new EventsIasiCityInOras()))
                 .path("/events/jena/university", execute(new EventsJenaUniversity()))
                 .path("/events/jena/city", execute(new EventsJenaCity()))
-                .path("/events/pavia/university", execute(new EventsPaviaUniversity()))
+                .path("/events/linz/city", execute(new EventsLinzCity()))
                 .path("/events/pavia/borromeo", execute(new EventsPaviaBorromeo()))
-                .path("/events/pavia/city", execute(new EventsPaviaCity()))
                 .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
-                .path("/events/poitiers/city", execute(new EventsPoitiersCity()))
                 .path("/events/poitiers/city/grand", execute(new EventsPoitiersCityGrand()))
                 .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
                 .path("/events/salamanca/city/sacis", execute(new EventsSalamancaCitySACIS()))
                 .path("/events/salamanca/city/to", execute(new EventsSalamancaCityTO()))
                 .path("/events/turku/university", execute(new EventsTurkuUniversity()))
                 .path("/events/turku/city", execute(new EventsTurkuCity()))
-                .path("/events/turku/tyy", execute(new EventsTurkuTYY()))
-
-                .path("/concepts/", execute(new Concepts.Updater()))
-                .path("/datasets/", execute(new Datasets.Updater()))
 
         ));
     }

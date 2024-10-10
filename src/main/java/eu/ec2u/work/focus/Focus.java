@@ -16,26 +16,19 @@
 
 package eu.ec2u.work.focus;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface Focus {
-
-    public static Focus focus() {
-        return FocusEmpty.Instance;
-    }
-
-    public static Focus focus(final Collection<Value> values) {
-
-        if ( values == null || values.stream().anyMatch(Objects::isNull) ) {
-            throw new NullPointerException("null values");
-        }
-
-        return new FocusStatic(new LinkedHashSet<>(values));
-    }
 
     public static Focus focus(final Collection<Value> values, final Collection<Statement> statements) {
 
@@ -71,9 +64,32 @@ public interface Focus {
     public Stream<Focus> split();
 
 
+    public default boolean isEmpty() {
+        return value().isEmpty();
+    }
+
+
     public default Optional<Value> value() { return values().findFirst(); }
 
     public Stream<Value> values();
+
+
+    public default <T> Optional<T> value(final Function<Value, T> converter) {
+
+        if ( converter == null ) {
+            throw new NullPointerException("null converter");
+        }
+
+        return value().map(guard(converter));
+    }
+
+    public default <T> Stream<T> values(final Function<Value, T> converter) {
+
+        if ( converter == null ) {
+            throw new NullPointerException("null converter");
+        }
+        return values().map(guard(converter)).filter(Objects::nonNull);
+    }
 
 
     public Focus seq(final IRI step);
@@ -81,5 +97,22 @@ public interface Focus {
     public Focus seq(final IRI... steps);
 
 
-    public Focus inv(final IRI step);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static <T> Function<Value, T> guard(final Function<Value, T> converter) {
+        return value -> {
+
+            try {
+
+                return converter.apply(value);
+
+            } catch ( final RuntimeException ignored ) {
+
+                return null;
+
+            }
+
+        };
+    }
+
 }

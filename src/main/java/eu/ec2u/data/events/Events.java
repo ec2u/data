@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,194 +16,226 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.core.Xtream;
-import com.metreeca.http.handlers.*;
-import com.metreeca.jsonld.handlers.Driver;
-import com.metreeca.jsonld.handlers.Relator;
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.handlers.Worker;
+import com.metreeca.http.jsonld.handlers.Driver;
+import com.metreeca.http.jsonld.handlers.Relator;
+import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
-import com.metreeca.rdf4j.actions.Update;
-import com.metreeca.rdf4j.actions.*;
 
-import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.XSD;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Collection;
+import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-import static com.metreeca.core.Locator.service;
-import static com.metreeca.core.services.Logger.logger;
-import static com.metreeca.core.services.Logger.time;
-import static com.metreeca.core.toolkits.Lambdas.task;
-import static com.metreeca.core.toolkits.Resources.text;
 import static com.metreeca.http.Handler.handler;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.link.Values.literal;
-import static com.metreeca.link.shapes.All.all;
-import static com.metreeca.link.shapes.Clazz.clazz;
-import static com.metreeca.link.shapes.Field.field;
-import static com.metreeca.link.shapes.Guard.*;
-import static com.metreeca.rdf.codecs.RDF.rdf;
-import static com.metreeca.rdf4j.services.Graph.graph;
+import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.query;
+import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.create;
+import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.concepts.Concepts.Concept;
+import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toSet;
+import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.things.Schema.*;
 
 public final class Events extends Delegator {
 
-    public static final IRI Context=EC2U.item("/events/");
-    public static final IRI Scheme=iri(Concepts.Context, "/event-topics");
+    public static final IRI Context=item("/events/");
 
-    public static final IRI Event=EC2U.term("Event");
-
-    static final IRI College=EC2U.term("College");
-    static final IRI Association=EC2U.term("Association");
-    static final IRI City=EC2U.term("City");
+    public static final IRI Topics=iri(Concepts.Context, "/event-topics");
+    public static final IRI Audiences=iri(Concepts.Context, "/event-audiences");
 
 
-    static Instant synced(final IRI context, final Value publisher) {
-        return Xtream
+    public static final IRI Event=schema("Event");
 
-                .of("prefix ec2u: </terms/>\n"
-                        +"prefix dct: <http://purl.org/dc/terms/>\n\n"
-                        +"select (max(?modified) as ?synced) where {\n"
-                        +"\n"
-                        +"\t?event a ec2u:Event;\n"
-                        +"\t\tdct:publisher ?publisher;\n"
-                        +"\t\tdct:modified ?modified.\n"
-                        +"\n"
-                        +"}"
-                )
+    public static final IRI dateCreated=schema("dateCreated");
+    public static final IRI dateModified=schema("dateModified");
 
-                .flatMap(new TupleQuery()
-                        .base(EC2U.Base)
-                        .binding("publisher", publisher)
-                        .dflt(context)
-                )
+    public static final IRI startDate=schema("startDate");
+    public static final IRI endDate=schema("endDate");
+    public static final IRI duration=schema("duration");
 
-                .optMap(bindings -> literal(bindings.getValue("synced")))
+    public static final IRI isAccessibleForFree=schema("isAccessibleForFree");
 
-                .map(Literal::temporalAccessorValue)
-                .map(Instant::from)
+    public static final IRI organizer=schema("organizer");
+    public static final IRI publisher=schema("publisher");
 
-                .findFirst()
+    public static final IRI audience=schema("audience");
 
-                .orElseGet(() -> Instant.now().minus(Duration.ofDays(30)));
+    public static final IRI eventAttendanceMode=schema("eventAttendanceMode");
+    public static final IRI eventStatus=schema("eventStatus");
+
+
+    public enum EventAttendanceModeEnumeration {
+        MixedEventAttendanceMode,
+        OfflineEventAttendanceMode,
+        OnlineEventAttendanceMode
+    }
+
+    public enum EventStatusType {
+        EventScheduled,
+        EventMovedOnline,
+        EventPostponed,
+        EventRescheduled,
+        EventCancelled
     }
 
 
-    static Shape Event() {
-        return relate(Resource(), Schema.Event(),
+    private static Set<IRI> values(final Enum<?>[] values) {
+        return Arrays
+                .stream(values)
+                .map(Enum::name)
+                .map(Schema::schema)
+                .collect(Collectors.toSet());
+    }
 
-                hidden(field(RDF.TYPE, all(Event))),
 
-                field(DCTERMS.MODIFIED, required()), // housekeeping timestamp
-                field("fullDescription", Schema.description) // prevent clashes with dct:description
+    public static Shape Events() {
+        return Dataset(Event());
+    }
+
+    public static Shape Event() {
+        return shape(Event, Thing(),
+
+                property(url, repeatable()),
+
+                property(startDate, optional(dateTime())),
+                property(endDate, optional(dateTime())),
+                property(duration, optional(duration())),
+
+                property(inLanguage, multiple(string())),
+                property(isAccessibleForFree, optional(bool())),
+
+                property(location, composite(multiple(Location()))),
+
+                property(organizer, multiple(Organization(),
+                        property(about, multiple(Concept(), scheme(OrganizationTypes.OrganizationTypes)))
+                )),
+
+                property(publisher, optional(Organization(),
+                        property(about, multiple(Concept(), scheme(OrganizationTypes.OrganizationTypes)))
+                )),
+
+                property(about, multiple(Concept(), scheme(Topics))),
+                property(audience, multiple(Concept(), scheme(Audiences))),
+
+                property(eventAttendanceMode, optional(Resource(), in(values(EventAttendanceModeEnumeration.values())))),
+                property(eventStatus, optional(Resource(), in(values(EventStatusType.values())))),
+
+                property(updated, Shape::required)
 
         );
+    }
+
+
+    public static void main(final String... args) {
+        exec(() -> create(Context, Events.class, Event()));
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Events() {
-        delegate(handler(
 
-                new Driver(Event(),
+        final Frame ResourceModel=frame(
+                field(ID, iri()),
+                field(RDFS.LABEL, literal("", ANY_LOCALE))
+        );
 
-                        filter(clazz(Event))
+        final Frame ThingModel=frame(
 
-                ),
+                field(ID, iri()),
 
-                new Router()
+                field(url, iri()),
+                field(name, literal("", ANY_LOCALE)),
+                field(description, literal("", ANY_LOCALE)),
+                field(disambiguatingDescription, literal("", ANY_LOCALE))
 
-                        .path("/", new Worker()
-                                .get(new Relator())
-                        )
+        );
 
-                        .path("/{id}", new Worker()
-                                .get(new Relator())
-                        )
+        final Frame PostalAddressModel=frame(ThingModel,
 
-        ));
-    }
+                field(addressCountry, ResourceModel),
+                field(addressRegion, ResourceModel),
+                field(addressLocality, ResourceModel),
+
+                field(postalCode, literal("")),
+                field(streetAddress, literal("")),
+                field(email, literal("")),
+                field(telephone, literal(""))
+
+        );
+
+        final Frame EventModel=frame(ThingModel,
+
+                field(startDate, literal(OffsetDateTime.now())),
+                field(endDate, literal(OffsetDateTime.now())),
+
+                field(inLanguage, literal("")),
+                field(isAccessibleForFree, literal(false)),
+
+                field(publisher),
+                field(organizer),
+
+                field(location, frame(
+
+                        field(XSD.STRING, literal("")),
+
+                        field(Place, frame(ThingModel,
+
+                                field(latitude, literal(Frame.decimal(0))),
+                                field(longitude, literal(Frame.decimal(0))),
+
+                                field(address, PostalAddressModel)
+
+                        )),
+
+                        field(PostalAddress, PostalAddressModel),
+                        field(VirtualLocation, ThingModel)
+
+                )),
+
+                field(about, ResourceModel),
+                field(audience, ResourceModel),
+                field(eventAttendanceMode, ResourceModel),
+                field(eventStatus, ResourceModel)
+
+        );
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        delegate(new Router()
 
-    public static final class Loader implements Runnable {
+                .path("/", handler(new Driver(Events()), new Worker()
 
-        public static void main(final String... args) {
-            exec(() -> new Loader().run());
-        }
+                        .get(new Relator(frame(
 
-        @Override public void run() {
-            Stream
+                                field(ID, iri()),
+                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                    .of(rdf(Events.class, ".ttl", EC2U.Base))
+                                field(RDFS.MEMBER, query(EventModel))
 
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-        }
-    }
+                        )))
 
-    public static final class Updater implements Consumer<Collection<Statement>> {
+                ))
 
-        private final IRI context;
+                .path("/{code}", handler(new Driver(Event()), new Worker()
 
-        public Updater(final IRI context) { this.context=context; }
+                        .get(new Relator(EventModel))
 
-        @Override public void accept(final Collection<Statement> model) {
-
-            final Set<org.eclipse.rdf4j.model.Resource> resources=model.stream()
-                    .map(Statement::getSubject)
-                    .collect(toSet());
-
-            time(() -> {
-
-                service(graph()).update(task(connection -> {
-
-                    resources.forEach(subject ->
-                            connection.remove(subject, null, null, context)
-                    );
-
-                    connection.add(model, context);
-
-                }));
-
-            }).apply(elapsed -> service(logger()).info(Events.class, format(
-                    "updated <%d> resources in <%s> in <%d> ms", resources.size(), context, elapsed
-            )));
-
-            // ;( SPARQL update won't take effect if executed inside the previous txn
-
-            time(() -> Stream.of(text(Events.class, ".ul"))
-
-                    .forEach(new Update()
-                            .base(EC2U.Base)
-                            .dflt(context)
-                            .insert(context)
-                            .remove(context)
-                    )
-
-            ).apply(elapsed -> service(logger()).info(Events.class, format(
-                    "purged stale events  from <%s> in <%d> ms", context, elapsed
-            )));
-
-        }
-
+                ))
+        );
     }
 
 }

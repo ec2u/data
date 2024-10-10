@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,114 +14,119 @@
  * limitations under the License.
  */
 
-import { University } from "@ec2u/data/pages/universities/university";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataMeta } from "@ec2u/data/tiles/meta";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { multiple, optional, string } from "@metreeca/core/value";
-import { useQuery } from "@metreeca/view/hooks/query";
-import { useRoute } from "@metreeca/view/nests/router";
-import { FlaskConical } from "@metreeca/view/tiles/icon";
-import { NodeCount } from "@metreeca/view/tiles/lenses/count";
-import { NodeItems } from "@metreeca/view/tiles/lenses/items";
-import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
-import { NodeOptions } from "@metreeca/view/tiles/lenses/options";
+import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
+import { toUnitLabel } from "@ec2u/data/pages/units/unit";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { entry } from "@metreeca/core/entry";
+import { toFrameString } from "@metreeca/core/frame";
+import { id } from "@metreeca/core/id";
+import { local, toLocalString } from "@metreeca/core/local";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useOptions } from "@metreeca/data/models/options";
+import { useStats } from "@metreeca/data/models/stats";
+import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolOptions } from "@metreeca/view/lenses/options";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
+import { FlaskConical } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
-import { useEffect } from "react";
 
-
-export const UnitsIcon=<FlaskConical/>;
 
 export const Units=immutable({
 
-    id: "/units/",
-    label: { "en": "Units" },
+	[icon]: <FlaskConical/>,
 
-    contains: multiple({
+	id: required("/units/"),
 
-        id: "",
-        label: { "en": "" },
-        comment: { "en": "" },
+	label: required({
+		"en": "Units"
+	}),
 
-        classification: {
-            id: "",
-            label: { "en": "" }
-        },
+	members: multiple({
 
-        prefLabel: { "en": "" },
-        altLabel: optional({ "en": "" }),
+		id: required(id),
+		label: required(local),
+		comment: optional(local),
 
-        university: {
-            id: "",
-            label: { "en": "" }
-        }
+		prefLabel: required(local),
+		altLabel: optional(local),
 
-    })
+		partner: optional({
+			label: required(local)
+		})
+
+	})
+
 });
 
 
 export function DataUnits() {
 
-    const [route, setRoute]=useRoute();
-    const [query, setQuery]=useQuery({ ".order": "label" }, sessionStorage);
+	const units=useCollection(Units, "members");
 
 
-    useEffect(() => { setRoute({ title: string(Units) }); }, []);
+	return <DataPage name={Units} menu={<DataInfo/>}
 
+		tray={<>
 
-    return <DataPage item={string(Units)}
+			<ToolSearch placeholder={"Name"}>{
+				useKeywords(units, "label")
+			}</ToolSearch>
 
-        menu={<DataMeta>{route}</DataMeta>}
+			<ToolOptions placeholder={"University"}>{
+				useOptions(units, "partner", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
 
-        pane={<DataPane
+			<ToolOptions placeholder={"Type"} compact>{
+				useOptions(units, "classification", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
 
-            header={<NodeKeywords state={[query, setQuery]}/>}
-            footer={<NodeCount state={[query, setQuery]}/>}
+			<ToolOptions placeholder={"Topic"} compact>{
+				useOptions(units, "subject", { type: entry({ id: "", label: required(local) }), size: 10 })
+			}</ToolOptions>
 
-        >
+		</>}
 
-            <NodeOptions path={"university"} type={"anyURI"} placeholder={"University"} state={[query, setQuery]}/>
-            <NodeOptions path={"type"} type={"anyURI"} placeholder={"Type"} state={[query, setQuery]}/>
-            <NodeOptions path={"subject"} type={"string"} placeholder={"Topic"} state={[query, setQuery]}/>
+		info={<>
 
-        </DataPane>}
+			<ToolCount>{useStats(units)}</ToolCount>
+			<ToolClear>{units}</ToolClear>
 
-        deps={[JSON.stringify(query)]}
+		</>}
+	>
 
-    >
+		<ToolSheet placeholder={Units[icon]} as={({
 
-        <NodeItems model={Units} placeholder={UnitsIcon} state={[query, setQuery]}>{({
+			id,
+			comment,
 
-            id,
-            comment,
+			prefLabel,
+			altLabel,
 
-            classification,
+			partner
 
-            university,
-            prefLabel,
-            altLabel
+		}) =>
 
-        }) =>
+			<ToolCard key={id} side={"end"}
 
-            <DataCard key={id} compact
+				title={<ToolLink>{{ id, label: toUnitLabel({ prefLabel, altLabel }) }}</ToolLink>}
 
-                name={<a href={id}>{altLabel ? `${string(altLabel)} - ${string(prefLabel)}` : string(prefLabel)}</a>}
+				tags={partner && <div>{partner && toFrameString(partner) || "EC2U Alliance"}</div>}
 
-                tags={<>
-                    <span>{string(university) || "EC2U Alliance"}</span>
-                    {classification && <><br/><span>{string(classification)}</span></>}
-                </>}
+			>{
 
-            >
+				comment && toLocalString(comment)
 
-                {string(comment)}
+			}</ToolCard>
 
-            </DataCard>
+		}>{units}</ToolSheet>
 
-        }</NodeItems>
-
-    </DataPage>;
+	</DataPage>;
 
 }

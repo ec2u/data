@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,46 +14,55 @@
  * limitations under the License.
  */
 
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataMeta } from "@ec2u/data/tiles/meta";
-import { DataPage, ec2u } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { optional, string } from "@metreeca/core/value";
-import { useQuery } from "@metreeca/view/hooks/query";
-import { useRoute } from "@metreeca/view/nests/router";
-import { Package } from "@metreeca/view/tiles/icon";
-import { NodeCount } from "@metreeca/view/tiles/lenses/count";
-import { NodeItems } from "@metreeca/view/tiles/lenses/items";
-import { NodeKeywords } from "@metreeca/view/tiles/lenses/keywords";
-import { NodeOptions } from "@metreeca/view/tiles/lenses/options";
-import { NodeLink } from "@metreeca/view/tiles/link";
+import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
+import { ec2u } from "@ec2u/data/views";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { entry } from "@metreeca/core/entry";
+import { id } from "@metreeca/core/id";
+import { integer, toIntegerString } from "@metreeca/core/integer";
+import { local, toLocalString } from "@metreeca/core/local";
+import { toValueString } from "@metreeca/core/value";
+import { useCollection } from "@metreeca/data/models/collection";
+import { useKeywords } from "@metreeca/data/models/keywords";
+import { useOptions } from "@metreeca/data/models/options";
+import { useStats } from "@metreeca/data/models/stats";
+import { icon } from "@metreeca/view";
+import { ToolClear } from "@metreeca/view/lenses/clear";
+import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolOptions } from "@metreeca/view/lenses/options";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
+import { Package } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
-import { useEffect } from "react";
 
-
-export const DatasetsIcon=<Package/>;
 
 export const Datasets=immutable({
 
-    id: "/",
+	[icon]: <Package/>,
 
-    label: {
-        "en": "Knowledge Hub"
-    },
+	id: required("/"),
 
-    contains: [{
+	label: required({
+		"": "European Campus of City-Universities"
+	}),
 
-        id: "",
-        label: { en: "" },
-        comment: optional({ en: "" }),
+	isDefinedBy: optional(id),
 
-        alternative: optional({ en: "" }),
-        description: optional({ en: "" }),
+	members: multiple({
 
-        entities: ""
+		id: required(id),
+		label: required(local),
+		comment: optional(local),
 
-    }]
+		title: required(local),
+		alternative: optional(local),
+
+		entities: optional(integer)
+
+	})
 
 });
 
@@ -62,67 +71,57 @@ export const Datasets=immutable({
 
 export function DataDatasets() {
 
-    const [route, setRoute]=useRoute();
+	const datasets=useCollection(Datasets, "members");
 
-    const [query, setQuery]=useQuery({
+	return <DataPage name={Datasets} menu={<DataInfo/>}
 
-        ".order": ["entities", "label"],
-        ".limit": 100
+		tray={< >
 
-    }, sessionStorage);
+			<ToolSearch placeholder={"Name"}>{
+				useKeywords(datasets, "label")
+			}</ToolSearch>
 
+			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
+				useOptions(datasets, "license", { type: entry({ id: "", label: required(local) }) })
+			}</ToolOptions>
 
-    useEffect(() => { setRoute({ title: string(Datasets) }); }, []);
+		</>}
 
+		info={<>
 
-    return (
+			<ToolCount>{useStats(datasets)}</ToolCount>
+			<ToolClear>{datasets}</ToolClear>
 
-        <DataPage item={string(Datasets)}
+		</>}
 
-            menu={<DataMeta>{route}</DataMeta>}
+	>
 
-            pane={<DataPane
+		<ToolSheet placeholder={Datasets[icon]} sorted={"entities"} as={({
 
-                header={<NodeKeywords state={[query, setQuery]}/>}
-                footer={<NodeCount state={[query, setQuery]}/>}
+			id,
 
-            >
+			title,
+			alternative,
+			comment,
 
-                <NodeOptions path={"license"} type={"anyURI"} placeholder={"License"} state={[query, setQuery]}/>
+			entities
 
-            </DataPane>}
+		}) =>
 
-            deps={[JSON.stringify(query)]}
+			<ToolCard key={id} size={7.5}
 
-        >
+				title={<ToolLink>{{ id, label: ec2u(title) }}</ToolLink>}
 
-            <NodeItems model={Datasets} placeholder={DatasetsIcon} state={[query, setQuery]}>{({
+				tags={entities ? `${toIntegerString(entities)}` : null}
+				image={alternative && <span>{ec2u(toLocalString(alternative))}</span>}
 
-                id,
-                label,
-                comment,
+			>{
 
-                alternative,
+				comment && toLocalString(ec2u(comment))
 
-                entities
+			}</ToolCard>
 
-            }) =>
+		}>{datasets}</ToolSheet>
 
-                <DataCard key={id} compact
-
-                    name={<NodeLink>{{ id, label: ec2u(label) }}</NodeLink>}
-
-                    tags={`${string(entities)} entities`}
-
-                >{
-
-                    string(alternative || comment)
-
-                }</DataCard>
-
-            }</NodeItems>
-
-        </DataPage>
-
-    );
+	</DataPage>;
 }

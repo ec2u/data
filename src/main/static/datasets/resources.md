@@ -1,32 +1,34 @@
-The resource data model is *abstract*, that is is not intended to be used in isolation but only to provide a base definition factoring generic properties shared by the specialized models defined by each [dataset](./index.md).
-
 # Data Model
 
-![resource data model](index/resources.svg)
+EC2U resources are described using a controlled subset
+of the [RDF Schema 1.1 (RDFS)](https://www.w3.org/TR/rdf11-schema/) data model, extended with some internal
+housekeeping properties.
 
-EC2U resources are described using a controlled subset of
-the [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) data model.
+| prefix | namespace                                   | description                                                                                                    |
+|--------|---------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| ec2u:  | https://data.ec2u.eu/terms/                 | EC2U Knowledge Hub vocabulary                                                                                  |
+| rdf:   | http://www.w3.org/1999/02/22-rdf-syntax-ns# | [Resource Description Framework 1.1 (RDF)](https://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/) vocabulary |
+| rdfs:  | http://www.w3.org/2000/01/rdf-schema#       | [RDF Schema 1.1 (RDFS)](https://www.w3.org/TR/rdf11-schema/) vocabulary                                        |
 
-All generic human-readable labels and descriptions are localized either in English or in one of the local EC2U partner
-languages.
+![resource data model](index/resources.svg#75)
 
-## ec2u:Resource
+## Resource
 
-| property                                                     | description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [rdf:type](https://www.w3.org/TR/rdf-schema/#ch_type)        | a reference to the data model of the resource                |
-| [dct:title](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/title/) | the human-readable, localized name of the resource           |
-| [dct:description](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/description/) | a human-readable, localized description of the resource      |
-| [dct:publisher](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/publisher/) | a link to the entity responsible for making the resource available |
-| [dct:source](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/source/) | a link to a related resource from which the described resource is derived |
-| [dct:issued](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/issued/) | the date of formal issuance of the resource                  |
-| [dct:created](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/created/) | the date of creation of the resource                         |
-| [dct:modified](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/modified/) | the latest date on which the resource was changed            |
-| [dct:type](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/type/) | a link to a classification for the resource; must reference one the SKOS concepts managed by the *Knowledge Hub* |
-| [dct:subject](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/subject/) | a link to a topic for the resource; must reference one the SKOS [concepts](https://data.ec2u.eu/concepts/) managed by the *Knowledge Hub* |
-| ec2u:university                                              | a link to an EC2U partner [university](universities.md) associated with the resource |
+> **⚠️** The `rdfs:Resource` data model is not intended to be used in isolation but only to provide base
+> definitions factoring generic properties shared by the specialised models defined by each [dataset](./index.md).
 
-> ❓Replace `ec2u:university` with `dct:coverage` ?
->
-> ❓Convert `ec2u:Coverage` to concept scheme?
+| term                                                                    | type                               | #    | definition                                                                                                                                  |
+|-------------------------------------------------------------------------|------------------------------------|------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| ***[rdfs:Resource](https://www.w3.org/TR/rdf-schema/#ch_resource)***    |                                    |      | a resource included in the EC2U Knowledge Hub                                                                                               |
+| [rdf:type](https://www.w3.org/TR/rdf-schema/#ch_type)                   | id                                 | *    | links to RDF classes the resource is an instance of                                                                                         |
+| [rdfs:label](https://www.w3.org/TR/rdf-schema/#ch_label)                | text {maxLength(100)}              | 0..1 | human readable label for the resource; should uniquely identify the entity even out of context and optimally not exceed 50 characters       |
+| [rdfs:comment](https://www.w3.org/TR/rdf-schema/#ch_comment)            | text {maxLength(1000)}             | 0..1 | human readable description of the resource; should uniquely describe the entity even out of context and optimally not exceed 500 characters |
+| [rdfs:seeAlso](https://www.w3.org/TR/rdf-schema/#ch_seealso)            | id                                 | *    | links to other resource describing the same subject                                                                                         |
+| [rdfs:isDefinedBy](https://www.w3.org/TR/rdf-schema/#ch_isdefinedby)    | id                                 | 0..1 | link to a human or machine-readable specification providing a formal definition of the resource or its data model                           |
+| ‹dataset› = ^[rdfs:member](https://www.w3.org/TR/rdf-schema/#ch_member) | [void:Dataset](./index.md)         | *    | links to the EC2U Knowledge Hub datasets the resource belongs to                                                                            |
+| ec2u:partner                                                            | [ec2u:University](universities.md) | 0..1 | link to  a EC2U partner associated with the resource                                                                                        |
+| ec2u:updated                                                            | instant                            | 0..1 | timestamp of the last known update to the resource description                                                                              |
 
+> *ℹ️*  Human-readable labels and descriptions are localised either in English or in one of the local EC2U
+> partner
+> languages.

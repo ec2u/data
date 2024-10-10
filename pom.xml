@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.ec2u</groupId>
-    <artifactId>ec2u-data</artifactId>
+    <artifactId>data</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 
@@ -61,13 +61,13 @@
         <main>eu.ec2u.data.Data</main>
         <revision>main</revision>
 
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <maven.version>3.6</maven.version>
 
-        <node.version>16.13.0</node.version>
+        <node.version>18.0.0</node.version>
         <npm.version>8.6.0</npm.version>
 
-        <gae.project>${project.artifactId}</gae.project>
+        <gae.project>ec2u-${project.artifactId}</gae.project>
         <gae.version>${revision}</gae.version>
         <gae.promote>true</gae.promote>
 
@@ -82,8 +82,8 @@
 
             <dependency>
                 <groupId>com.metreeca</groupId>
-                <artifactId>metreeca-java</artifactId>
-                <version>0.0.0-SNAPSHOT</version>
+                <artifactId>http</artifactId>
+                <version>0.3-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -96,48 +96,50 @@
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-jse</artifactId>
+            <artifactId>http-gcp</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-json</artifactId>
+            <artifactId>http-jsonld</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-jsonld</artifactId>
+            <artifactId>http-rdf</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-xml</artifactId>
+            <artifactId>http-xml</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-csv</artifactId>
+            <artifactId>http-csv</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-ical</artifactId>
+            <artifactId>http-ical</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-open</artifactId>
+            <artifactId>http-open</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-gcp</artifactId>
+            <artifactId>http-rdf4j</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>metreeca-rdf4j-jsonld</artifactId>
+            <artifactId>link-rdf4j</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
@@ -194,14 +196,7 @@
 
     <build>
 
-        <resources>
-
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-
-        </resources>
+        <finalName>ec2u-${project.artifactId}-${project.version}</finalName>
 
         <plugins>
 
@@ -209,7 +204,7 @@
 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M2</version>
+                <version>3.4.1</version>
 
                 <configuration>
                     <rules>
@@ -238,7 +233,7 @@
 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.3.2</version>
 
                 <configuration>
                     <filesets>
@@ -267,7 +262,7 @@
 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.9.0</version>
+                <version>3.13.0</version>
 
                 <configuration>
 
@@ -282,7 +277,7 @@
 
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.12.0</version>
+                <version>1.15.0</version>
 
                 <configuration>
 
@@ -346,7 +341,7 @@
 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.4.0</version>
 
                 <configuration>
 
@@ -370,7 +365,7 @@
 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.6.1</version>
 
                 <configuration>
                     <outputDirectory>${project.build.directory}/libs</outputDirectory>
@@ -396,7 +391,7 @@
 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.2.5</version>
 
             </plugin>
 
@@ -404,7 +399,7 @@
 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.10.0</version>
+                <version>3.12.1</version>
 
                 <configuration>
                     <skip>true</skip>
@@ -416,7 +411,7 @@
 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>3.1.1</version>
 
                 <configuration>
                     <skip>true</skip>
@@ -424,11 +419,13 @@
 
             </plugin>
 
-            <plugin> <!-- https://cloud.google.com/appengine/docs/standard/java/tools/maven-reference -->
+            <plugin> <!-- https://central.sonatype.com/artifact/com.google.cloud.tools/appengine-maven-plugin/versions -->
 
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>2.8.1</version>
+
+                <!-- https://cloud.google.com/appengine/docs/standard/java/tools/maven-reference -->
 
                 <configuration>
                     <projectId>${gae.project}</projectId>
@@ -444,7 +441,7 @@
 
                         <goals>
                             <goal>deploy</goal>
-                            <goal>deployCron</goal>
+                            <!--<goal>deployCron</goal>-->
                         </goals>
 
                     </execution>

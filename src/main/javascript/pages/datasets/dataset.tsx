@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,160 +14,175 @@
  * limitations under the License.
  */
 
-import { DatasetsIcon } from "@ec2u/data/pages/datasets/datasets";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage, ec2u } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { Dictionary, optional, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeMark } from "@metreeca/view/tiles/mark";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import "highlight.js/styles/github.css";
-import React, { useEffect } from "react";
+import { Books } from "@ec2u/data/pages/book";
+import { Datasets } from "@ec2u/data/pages/datasets/datasets";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { date } from "@metreeca/core/date";
+import { id } from "@metreeca/core/id";
+import { integer, toIntegerString } from "@metreeca/core/integer";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
+import { useRouter } from "@metreeca/data/contexts/router";
+import { useAsset } from "@metreeca/data/hooks/asset";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { EyeIcon, HelpCircleIcon } from "@metreeca/view/widgets/icon";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React from "react";
 
 
-const aliases: { [alias: string]: string }=immutable({
-
-    "/datasets": "/datasets/",
-    "/datasets/programs": "/datasets/offers",
-    "/datasets/courses": "/datasets/offers"
-
-});
-
-
-export const Dataset=immutable({
-
-    id: "/datasets/{code}",
-
-    label: { "en": "Dataset" },
-    comment: optional({ "en": "" }),
-
-    title: { "en": "Dataset" },
-    alternative: optional({ "en": "" }),
-    description: optional({ "en": "" }),
-
-    license: optional({
-        id: "",
-        label: { "en": "" }
-    }),
-
-    rights: optional(""),
-    accessRights: optional({ "en": "" }),
-
-    entities: 0,
-
-    isDefinedBy: ""
-
-});
-
-
-export function DataDataset() {
-
-    const [route, setRoute]=useRoute();
-
-    const entry=useEntry(route, Dataset);
-
-
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(ec2u(label)) }) }));
-
-
-    return <DataPage item={entry({ value: ({ title, alternative }) => string(alternative || title) })}
-
-        menu={entry({ fetch: <NodeSpin/> })}
-
-        pane={<DataPane
-
-            header={entry({
-                value: ({ id, label, isDefinedBy }) =>
-                    <DataBack>{{ id: isDefinedBy, label: ec2u(label) }}</DataBack>
-            })}
-
-        >{entry({
-
-            value: DataDatasetInfo
-
-        })}</DataPane>}
-
-    >{entry({
-
-        fetch: <NodeHint>{DatasetsIcon}</NodeHint>,
-
-        value: ({ id, description }) => DataDatasetBody({
-            description, definition: `${aliases[id] ?? id}${location.hash}`
-
-        }),
-
-        error: error => <span>{error.status}</span> // !!! report
-
-    })}</DataPage>;
-
+function toData(route: string) {
+	return route === "/datasets/" ? "/" : route.replace(/^\/datasets\/(?<name>\w*?)$/, "/$<name>/");
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function DataDatasetInfo({
+export const Dataset=immutable({
 
-    id,
+	id: "/datasets/*",
 
-    entities,
+	title: required(local),
+	alternative: optional(local),
+	description: optional(local),
 
-    license,
-    rights
+	publisher: optional({
+		id: required(id),
+		label: required(local)
+	}),
+
+	source: optional(id),
+
+	issued: optional(date),
+
+	rights: optional(string),
+	accessRights: optional(local),
+
+	license: multiple({
+		id: required(id),
+		label: required(local)
+	}),
+
+	entities: required(integer),
+
+	isDefinedBy: optional(id)
+
+});
 
 
-}: typeof Dataset) {
+export function DataInfo() {
 
-    return <>
+	const [route, setRoute]=useRouter();
 
-        <DataInfo>{{
+	const [resource]=useResource({ id: route, isDefinedBy: optional(id) });
 
-            "Entities": <span>{string(entities)}</span>
+	const isDefinedBy=resource?.isDefinedBy;
 
-        }}</DataInfo>
+	function open() {
+		isDefinedBy && setRoute(isDefinedBy);
+	}
 
-        <DataInfo>{{
+	return isDefinedBy && <button title={"View Dataset Docs"}
 
-            "License": license && <NodeLink>{license}</NodeLink>,
-            "Rights": rights && <span>{rights}</span>
+        onClick={open}
 
-        }}</DataInfo>
+        style={{
+			transform: "scale(0.75)"
+		}}
 
-        {<>
-
-            <hr/>
-
-            <nav><NodeMark toc>{aliases[id] ?? id}</NodeMark></nav>
-
-        </>}
-
-    </>;
+    >{<HelpCircleIcon/>}</button>;
 
 }
 
-function DataDatasetBody({
+export function DataMeta() {
 
-    description,
-    definition
+	const [route, setRoute]=useRouter();
 
-}: {
+	const [dataset]=useResource({ ...Dataset, id: toData(route) });
 
-    description?: Dictionary
-    definition?: string
-
-}) {
+	const model=useAsset(dataset?.isDefinedBy);
 
 
-    return <>
+	function close() {
+		dataset && setRoute(dataset.id);
+	}
 
-        {description && <NodeMark>{string(description)}</NodeMark>}
-        {definition && <NodeMark>{definition}</NodeMark>}
 
-    </>;
+	return <DataPage
+
+		name={[Books, dataset && toLocalString(dataset.alternative || dataset.title)]}
+
+		menu={(dataset?.id === "/" || dataset?.issued) && <button
+
+            onClick={close}
+
+        ><EyeIcon/></button>}
+
+		tray={<ToolFrame as={({
+
+			publisher,
+			source,
+
+			license,
+			rights,
+
+			entities,
+
+			isDefinedBy
+
+		}) => <>
+
+
+			<ToolInfo>{{
+
+				"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
+				"Source": source && <ToolLink>{source}</ToolLink>,
+
+				"Rights": rights && <span>{rights}</span>,
+
+				"License": license?.length && <ul>{license.map(license =>
+					<li key={license.id}><ToolLink>{license}</ToolLink></li>
+				)}</ul>
+
+			}}</ToolInfo>
+
+			<ToolInfo>{{
+
+				"Resources": toIntegerString(entities)
+
+			}}</ToolInfo>
+
+
+			{isDefinedBy && <>
+
+                <hr/>
+
+                <ToolMark meta={"toc"}>{model}</ToolMark>
+
+            </>}
+
+		</>}>{dataset}</ToolFrame>}
+
+	>
+
+		<ToolFrame placeholder={Datasets[icon]} as={({
+
+			description,
+
+			isDefinedBy
+
+		}) => <>
+
+			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+			{isDefinedBy && <ToolMark>{model}</ToolMark>}
+
+
+		</>}>{dataset}</ToolFrame>
+
+	</DataPage>;
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,244 +14,256 @@
  * limitations under the License.
  */
 
-import { Events, EventsIcon } from "@ec2u/data/pages/events/events";
-import { DataBack } from "@ec2u/data/tiles/back";
-import { DataCard } from "@ec2u/data/tiles/card";
-import { DataInfo } from "@ec2u/data/tiles/info";
-import { DataPage } from "@ec2u/data/tiles/page";
-import { DataPane } from "@ec2u/data/tiles/pane";
-import { immutable } from "@metreeca/core";
-import { toIRIString } from "@metreeca/core/_iri";
-import { multiple, optional, string } from "@metreeca/core/value";
-import { useEntry } from "@metreeca/view/nests/graph";
-import { useRoute } from "@metreeca/view/nests/router";
-import { NodeHint } from "@metreeca/view/tiles/hint";
-import { toLocaleDateString } from "@metreeca/view/tiles/inputs/date";
-import { toLocaleTimeString } from "@metreeca/view/tiles/inputs/time";
-import { NodeLink } from "@metreeca/view/tiles/link";
-import { NodeSpin } from "@metreeca/view/tiles/spin";
-import * as React from "react";
-import { useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Languages } from "@ec2u/data/languages";
+import { Events } from "@ec2u/data/pages/events/events";
+import { DataPage } from "@ec2u/data/views/page";
+import { immutable, multiple, optional, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
+import { toDateString } from "@metreeca/core/date";
+import { dateTime } from "@metreeca/core/dateTime";
+import { entryCompare, toEntryString } from "@metreeca/core/entry";
+import { id, toIdString } from "@metreeca/core/id";
+import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
+import { toTimeString } from "@metreeca/core/time";
+import { useResource } from "@metreeca/data/models/resource";
+import { icon } from "@metreeca/view";
+import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { ToolInfo } from "@metreeca/view/widgets/info";
+import { ToolLink } from "@metreeca/view/widgets/link";
+import { ToolMark } from "@metreeca/view/widgets/mark";
+import React from "react";
 
 
 export const Event=immutable({
 
-    id: "/events/{code}",
+	id: required("/events/{code}"),
 
-    image: "",
-    label: { "en": "Event" },
-    comment: {},
+	url: multiple(id),
+	name: required(local),
+	description: optional(local),
+	image: optional(id),
 
-    university: {
-        id: "",
-        label: {}
-    },
+	startDate: optional(dateTime),
+	endDate: optional(dateTime),
 
-    publisher: {
-        id: "",
-        label: {}
-    },
+	inLanguage: optional(string),
+	isAccessibleForFree: optional(boolean),
 
-    source: optional(""),
+	eventAttendanceMode: optional({
+		id: required(id),
+		label: required(local)
+	}),
 
+	eventStatus: optional({
+		id: required(id),
+		label: required(local)
+	}),
 
-    name: { "en": "" },
-    url: multiple(""),
+	about: multiple({
+		id: required(id),
+		label: required(local)
+	}),
 
-    fullDescription: optional(""),
+	audience: multiple({
+		id: required(id),
+		label: required(local)
+	}),
 
-    startDate: optional(""),
-    endDate: optional(""),
+	organizer: multiple({
+		id: required(id),
+		label: required(local),
+		url: optional(id)
+	}),
 
-    subject: multiple({
-        id: "",
-        label: { "en": "" }
-    }),
+	publisher: optional({
 
-    isAccessibleForFree: optional(false),
+		id: required(id),
+		label: required(local),
+		url: optional(id),
 
-    location: multiple({
-        id: "",
-        label: {},
-        url: optional("")
-    }),
+		about: multiple({
+			id: required(id),
+			label: required(local)
+		})
 
-    organizer: multiple({
-        id: "",
-        label: {},
-        url: optional("")
-    })
+	}),
+
+	location: multiple({
+
+		Text: optional(string),
+
+		Place: optional({
+			label: required(local),
+			url: optional(id)
+		}),
+
+		PostalAddress: optional({
+			label: required(local),
+			url: optional(id)
+		}),
+
+		VirtualLocation: optional({
+			label: required(local),
+			url: required(id)
+		})
+
+	}),
+
+	partner: optional({
+		id: required(id),
+		label: required(local)
+	})
 
 });
 
 
 export function DataEvent() {
 
-    const [route, setRoute]=useRoute();
+	const [event]=useResource(Event);
 
-    const entry=useEntry(route, Event);
+	return <DataPage name={[Events, {}]}
 
+		tray={<ToolFrame as={({
 
-    useEffect(() => setRoute({ title: entry({ value: ({ label }) => string(label) }) }));
+			url,
 
+			startDate,
+			endDate,
 
-    return <DataPage item={entry({ value: string })}
+			about,
+			audience,
 
-        menu={entry({ fetch: <NodeSpin/> })}
+			inLanguage,
+			isAccessibleForFree,
 
-        pane={<DataPane
+			eventAttendanceMode,
+			eventStatus,
 
-            header={<DataBack>{Events}</DataBack>}
+			organizer,
+			publisher,
+			location,
 
-        >{entry({
+			partner
 
-            value: event => <DataEventInfo>{event}</DataEventInfo>
+		}) => <>
 
-        })}</DataPane>}
+			<ToolInfo>{{
 
-    >{entry({
+				"University": partner && <ToolLink>{partner}</ToolLink>
 
-        fetch: <NodeHint>{EventsIcon}</NodeHint>,
+			}}</ToolInfo>
 
-        value: event => <DataEventBody>{event}</DataEventBody>,
+			<ToolInfo>{{
 
-        error: error => <span>{error.status}</span> // !!! report
+				"Topics": about?.length && <ul>{[...about]
+					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+					.map(about => <li key={about.id}>
+						<ToolLink filter={[Events, { partner, about }]}>{about}</ToolLink>
+					</li>)
+				}</ul>,
 
-    })}</DataPage>;
+				"Audience": audience?.length && <ul>{[...audience]
+					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
+					.map(audience => <li key={audience.id}>
+						<ToolLink filter={[Events, { partner, audience }]}>{audience}</ToolLink>
+					</li>)
+				}</ul>
 
-}
+			}}</ToolInfo>
 
+			<ToolInfo>{{
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				...(startDate && {
+					"Start Date": toDateString(new Date(startDate)),
+					"Start Time": toTimeString(new Date(startDate))
 
-function DataEventInfo({
+				}),
 
-    children: {
+				...(endDate && endDate !== startDate && {
 
-        university,
-        publisher,
-        source,
+					"End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toDateString(new Date(endDate)),
+					"End Time": toTimeString(new Date(endDate))
+				})
 
-        name,
-        url,
+			}}</ToolInfo>
 
-        startDate,
-        endDate,
 
-        subject,
+			<ToolInfo>{{
 
-        isAccessibleForFree,
-        location,
-        organizer
+				"Entry": isAccessibleForFree === true ? "Free" : isAccessibleForFree === false ? "Paid" : undefined,
+				"Language": inLanguage && toLocalString(Languages[inLanguage]),
 
-    }
+				"Attendance": eventAttendanceMode && toEntryString(eventAttendanceMode),
+				"Status": eventStatus && toEntryString(eventStatus),
 
-}: {
+				"Location": location && <ul>{location?.map(({ Text, Place, VirtualLocation }, index) =>
 
-    children: typeof Event
+					<li key={index}>{
 
-}) {
+						Text ? <span>{Text}</span>
+							: Place ? <span>{toLocalString(Place.label)}</span>
+								: VirtualLocation ? <a href={VirtualLocation.url}>{toLocalString(VirtualLocation.label)}</a>
+									: null
 
-    return <>
+					}</li>
+				)}</ul>
 
-        <DataInfo>{{
+			}}</ToolInfo>
 
-            "University": <NodeLink>{university}</NodeLink>,
-            "Source": source
-                ? <a href={source} title={string(publisher)}>{string(publisher)}</a>
-                : <span title={string(publisher)}>{string(publisher)}</span>
+			<ToolInfo>{{
 
-        }}</DataInfo>
+				"Info": url && url.map(item => <a key={item} href={item}>{
+					toIdString(item, { compact: true })
+				}</a>),
 
-        <DataInfo>{{
+				"Organizer": organizer && organizer.slice().sort(entryCompare).map(({
+						id, label, url
+					}) => url
+						? <a key={id} href={url}>{toLocalString(label)}</a>
+						: <span key={id}>{toLocalString(label)}</span>
+				),
 
-            "Title": <span title={string(name)}>{string(name)}</span>,
+				"Publisher": publisher && [publisher].map(({ id, label, url }) =>
+					<a key={id} href={url || id}>{toLocalString(label)}</a>
+				),
 
-            "Topics": subject && subject.length && <ul>{[...subject]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(subject => <li key={subject.id}>
-                    <NodeLink search={[Events, { university, subject }]}>{subject}</NodeLink>
-                </li>)
-            }</ul>
+				"Source": publisher?.about && <ul>{publisher.about.slice().sort(entryCompare)
+					.map(about => <li key={about.id}>
+						<ToolLink>{about}</ToolLink>
+					</li>)
+				}</ul>
 
-        }}</DataInfo>
+			}}</ToolInfo>
 
-        <DataInfo>{{
 
-            ...(startDate && {
-                "Start Date": toLocaleDateString(new Date(startDate)),
-                "Start Time": toLocaleTimeString(new Date(startDate))
+		</>}>{event}</ToolFrame>}
 
-            }),
+	>
 
-            ...(endDate && endDate !== startDate && {
+		<ToolFrame placeholder={Events[icon]} as={({
 
-                "End Date": endDate?.substring(0, 10) !== startDate?.substring(0, 10) && toLocaleDateString(new Date(endDate)),
-                "End Time": toLocaleTimeString(new Date(endDate))
+			name,
+			description,
+			image
 
-            })
+		}) => <>
 
-        }}</DataInfo>
+			{image && <img src={image} alt={`Image of ${toLocalString(name)}`} style={{
 
-        <DataInfo>{{
+				float: "right",
+				maxWidth: "33%",
+				margin: "0 0 1rem 2rem"
 
-            "Entry": isAccessibleForFree === true ? "Free"
-                : isAccessibleForFree === false ? "Paid"
-                    : undefined,
+			}}/>}
 
-            "Location": location && [...location]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(({ id, label, url }) => url
-                    ? <a key={id} href={url}>{string(label)}</a>
-                    : <span key={id}>{string(label)}</span>
-                ),
+			<dfn>{toLocalString(name)}</dfn>
 
-            "Organizer": organizer && [...organizer]
-                .sort((x, y) => string(x).localeCompare(string(y)))
-                .map(({ id, label, url }) => url
-                    ? <a key={id} href={url}>{string(label)}</a>
-                    : <span key={id}>{string(label)}</span>
-                ),
 
-            "Info": url && url.map(item => <a key={item} href={item}>{toIRIString(item)}</a>)
+			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
-        }}</DataInfo>
+		</>}>{event}</ToolFrame>
 
-    </>;
-
-}
-
-function DataEventBody({
-
-    children: {
-
-        image,
-        label,
-
-        fullDescription
-
-    }
-
-}: {
-
-    children: typeof Event
-
-}) {
-
-    return <DataCard icon={image && <img src={image} alt={`Image of ${string(label)}`}/>}>
-
-        <ReactMarkdown
-
-            remarkPlugins={[remarkGfm]}
-
-        >{
-
-            string(fullDescription)
-
-        }</ReactMarkdown>
-
-    </DataCard>;
+	</DataPage>;
 
 }

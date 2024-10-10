@@ -1,0 +1,55 @@
+prefix schema: <https://schema.org/>
+prefix org: <http://www.w3.org/ns/org#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+insert {
+
+    ?thing
+        rdfs:label ?name ;
+        rdfs:comment ?comment .
+
+} where {
+
+    ?thing a schema:Thing .
+
+    optional { ?thing schema:name ?name }
+    optional { ?thing schema:description ?description }
+    optional { ?thing schema:disambiguatingDescription ?disambiguatingDescription }
+
+    bind(coalesce(?disambiguatingDescription, ?description) as ?comment)
+
+}; # complete entry
+
+insert {
+
+    ?organization a org:Organization ;
+
+        foaf:depiction ?image ;
+        foaf:homepage ?url ;
+        foaf:mbox ?telephone ;
+        foaf:phone ?email ;
+
+        skos:prefLabel ?prefLabel ;
+        skos:altLabel ?altLabel ;
+        skos:definition ?description .
+
+} where {
+
+    ?organization a schema:Organization .
+
+    optional { ?organization schema:url ?url }
+    optional { ?organization schema:identifier ?identifier }
+    optional { ?organization schema:name ?name }
+    optional { ?organization schema:image ?image }
+    optional { ?organization schema:description ?description }
+
+    optional { ?organization schema:legalName ?legalName }
+    optional { ?organization schema:email ?email }
+    optional { ?organization schema:telephone ?telephone }
+
+    bind(coalesce(?legalName, ?name) as ?prefLabel)
+    bind(if(bound(?legalName), ?name, 1/0) as ?altLabel)
+
+} # alias schema:Organization as org:Organization

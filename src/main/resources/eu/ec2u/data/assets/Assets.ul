@@ -1,0 +1,28 @@
+prefix ec2u: <https://data.ec2u.eu/terms/>
+
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+
+insert {
+
+    ?dataset
+        rdfs:label ?label ;
+        rdfs:comment ?comment.
+
+} where {
+
+    ?dataset a ec2u:Asset ;
+        dct:title ?title .
+
+    optional {
+        ?dataset dct:alternative ?alternative
+        filter (lang(?alternative) = lang(?title))
+    }
+
+    optional { ?dataset dct:description ?description }
+
+    bind(coalesce(?alternative, ?title) as ?label) # !!! clip
+    bind(?description as ?comment) # !!! clip
+
+
+} # complete entry

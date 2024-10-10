@@ -1,6 +1,21 @@
-@prefix dct:	<http://purl.org/dc/terms/> .
-@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
-@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-</concepts/euroscivoc>  a skos:ConceptScheme ;
-	dct:description "European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati Manual taxonomy. It was extended with fields of science categories extracted from CORDIS content through a semi-automatic process developed with Natural Language Processing (NLP) techniques."@en .
+</concepts/euroscivoc> a skos:ConceptScheme ;
+    dct:issued "2024-01-01"^^xsd:date ;
+    dct:title "European Science Vocabulary"@en ;
+    dct:alternative "EuroSciVoc"@en ;
+    dct:description
+        "European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati Manual taxonomy. It was extended with fields of science categories extracted from CORDIS content through a semi-automatic process developed with Natural Language Processing (NLP) techniques."@en ;
+    dct:source
+        <https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/euroscivoc> ;
+    dct:publisher <https://op.europa.eu/> ;
+    dct:rights "Copyright © 2023 Publications Office of the European Union" .
+
+<https://op.europa.eu/> a org:FormalOrganization ;
+    skos:prefLabel "Publications Office of the European Union"@en ;
+    foaf:homepage <https://op.europa.eu/en/home> .

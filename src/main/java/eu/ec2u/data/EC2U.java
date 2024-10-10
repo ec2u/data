@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2023 EC2U Alliance
+ * Copyright © 2020-2024 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,120 +16,282 @@
 
 package eu.ec2u.data;
 
+import com.metreeca.http.handlers.Delegator;
+import com.metreeca.http.handlers.Router;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.services.Logger;
+import com.metreeca.link.Frame;
+import com.metreeca.link.Shape;
+import com.metreeca.link.Trace;
+
+import eu.ec2u.data.actors.Actors;
+import eu.ec2u.data.agents.Agents;
+import eu.ec2u.data.assets.Assets;
+import eu.ec2u.data.concepts.Concepts;
+import eu.ec2u.data.courses.Courses;
+import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.documents.Documents;
+import eu.ec2u.data.events.Events;
+import eu.ec2u.data.offerings.Offerings;
+import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.programs.Programs;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.things.Schema;
+import eu.ec2u.data.units.Units;
+import eu.ec2u.data.universities.Universities;
+import eu.ec2u.data.universities.University;
+import eu.ec2u.work.focus.Focus;
+import org.eclipse.rdf4j.common.exception.ValidationException;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.RDF4J;
+import org.eclipse.rdf4j.model.vocabulary.SHACL;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
-import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
-import static com.metreeca.core.toolkits.Identifiers.md5;
-import static com.metreeca.link.Values.iri;
-import static com.metreeca.open.actions.Wikidata.wd;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.rdf.formats.RDF.rdf;
+import static com.metreeca.http.rdf4j.services.Graph.graph;
+import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.services.Logger.time;
+import static com.metreeca.http.toolkits.Identifiers.md5;
+import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.link.Frame.iri;
+import static com.metreeca.link.Frame.literal;
 
-public final class EC2U {
+import static java.lang.String.format;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static org.eclipse.rdf4j.model.util.Statements.statement;
+import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
-    public static final String Base="https://data.ec2u.eu/";
+
+public final class EC2U extends Delegator {
+
+    public static final String BASE="https://data.ec2u.eu/";
+    private static final String TERMS=BASE+"terms/";
+
+    private static final IRI RULE=term("rule");
+    private static final IRI INFERENCES=item("~");
 
     private static final Pattern MD5Pattern=Pattern.compile("[a-f0-9]{32}");
 
 
     public static IRI item(final String name) {
-        return iri(Base, name);
+        return iri(BASE, name);
     }
+
+    public static IRI term(final String name) {
+        return iri(TERMS, name);
+    }
+
 
     public static IRI item(final IRI dataset, final String name) {
         return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(name)));
     }
 
     public static IRI item(final IRI dataset, final University university, final String name) {
-        return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(university.Id+"@"+name)));
+        return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(university.id+"@"+name)));
     }
 
-    public static IRI term(final String name) {
-        return iri(item("/terms/"), name);
+
+    public static void main(final String... args) {
+        Resources.main();
+        Assets.main();
+        Datasets.main();
+        Concepts.main();
+        Agents.main();
+        Organizations.main();
+        Universities.main();
+        Units.main();
+        Persons.main();
+        Documents.main();
+        Actors.main();
+        Schema.main();
+        Offerings.main();
+        Programs.main();
+        Courses.main();
+        Events.main();
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private EC2U() { }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public enum University {
-
-        Coimbra(
-                item("/universities/coimbra"),
-                wd("Q45412"),
-                wd("Q45"),
-                "pt",
-                ZoneId.of("Europe/Lisbon")
-        ),
-
-        Iasi(
-                item("/universities/iasi"),
-                wd("Q46852"),
-                wd("Q218"),
-                "ro",
-                ZoneId.of("Europe/Bucharest")
-        ),
-
-        Jena(
-                item("/universities/jena"),
-                wd("Q3150"),
-                wd("Q183"),
-                "de",
-                ZoneId.of("Europe/Berlin")
-        ),
-
-        Pavia(
-                item("/universities/pavia"),
-                wd("Q6259"),
-                wd("Q38"),
-                "it",
-                ZoneId.of("Europe/Rome")
-        ),
-
-        Poitiers(
-                item("/universities/poitiers"),
-                wd("Q6616"),
-                wd("Q142"),
-                "fr",
-                ZoneId.of("Europe/Paris")
-        ),
-
-        Salamanca(
-                item("/universities/salamanca"),
-                wd("Q15695"),
-                wd("Q29"),
-                "es",
-                ZoneId.of("Europe/Madrid")
-        ),
-
-        Turku(
-                item("/universities/turku"),
-                wd("Q38511"),
-                wd("Q38511"),
-                "fi",
-                ZoneId.of("Europe/Helsinki")
+    public EC2U() {
+        delegate(new Router()
+                .path("/", new Datasets())
+                .path("/resources/*", new Resources())
+                .path("/assets/*", new Resources())
+                .path("/concepts/*", new Concepts())
+                .path("/agents/*", new Agents())
+                .path("/universities/*", new Universities())
+                .path("/units/*", new Units())
+                .path("/documents/*", new Documents())
+                .path("/actors/*", new Actors())
+                .path("/things/*", new Schema())
+                .path("/events/*", new Events())
+                .path("/offerings/*", new Offerings())
+                .path("/programs/*", new Programs())
+                .path("/courses/*", new Courses())
         );
+    }
 
 
-        public final IRI Id;
-        public final IRI City;
-        public final IRI Country;
-        public final String Language;
-        public final ZoneId TimeZone;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void create(final IRI context, final Class<?> master, final Shape... shapes) {
+        update(connection -> {
+
+            try {
+
+                Stream
+
+                        .of(
+
+                                rdf(resource(master, ".ttl"), BASE),
+                                List.of(statement(context, RULE, literal(text(resource(master, ".ul"))), null))
+
+                        )
+
+                        .forEach(new Upload()
+                                .contexts(context)
+                                .clear(true)
+                        );
 
 
-        University(final IRI id, final IRI city, final IRI country, final String language, final ZoneId zone) {
-            this.Id=id;
-            this.City=city;
-            this.Country=country;
-            this.Language=language;
-            this.TimeZone=zone;
+                final Collection<Statement> shacl=Shape.encode(shapes);
+
+                shacl.stream()
+
+                        .filter(statement -> statement.getPredicate().equals(SHACL.TARGET_CLASS))
+
+                        .forEach(statement -> connection.remove(
+                                null, SHACL.TARGET_CLASS, statement.getObject(), RDF4J.SHACL_SHAPE_GRAPH
+                        ));
+
+                Stream
+
+                        .of(shacl)
+
+                        .forEach(new Upload()
+                                .contexts(RDF4J.SHACL_SHAPE_GRAPH)
+                        );
+
+                // !!! shape garbage collection
+
+            } catch ( final RepositoryException e ) {
+
+                if ( e.getCause() instanceof ValidationException ) {
+
+                    final Model model=((ValidationException)e.getCause()).validationReportAsModel();
+
+                    service(logger()).warning(EC2U.class, Trace.decode(model).toString());
+
+                } else {
+
+                    throw e;
+
+                }
+
+            }
+
+        });
+    }
+
+    public static void update(final Consumer<RepositoryConnection> task) {
+        service(graph()).update(connection -> {
+
+            task.accept(connection);
+
+            final Logger logger=service(logger());
+
+            time(() -> {
+
+                final SimpleDataset dataset=new SimpleDataset();
+
+                dataset.addDefaultRemoveGraph(INFERENCES);
+                dataset.setDefaultInsertGraph(INFERENCES);
+
+                final List<Update> updates;
+
+                try ( final RepositoryResult<Statement> statements=connection.getStatements(null, RULE, null) ) {
+                    updates=statements.stream()
+                            .map(Statement::getObject)
+                            .map(Value::stringValue)
+                            .filter(not(String::isBlank))
+                            .map(update -> connection.prepareUpdate(SPARQL, update, BASE))
+                            .peek(update -> update.setDataset(dataset))
+                            .collect(toList());
+                }
+
+                connection.clear(INFERENCES);
+
+                for (long current, previous=-1; (current=connection.size(INFERENCES)) > previous; previous=current) {
+
+                    logger.info(EC2U.class, format("inferred <%,d> statements", current));
+
+                    updates.forEach(Update::execute);
+                }
+
+            }).apply(elapsed -> logger.info(EC2U.class, format("updated <%s> in <%,d> ms", INFERENCES, elapsed)));
+
+            return null;
+
+        });
+    }
+
+
+    public static String skolemize(final Frame frame, final IRI... predicates) {
+
+        if ( frame == null ) {
+            throw new NullPointerException("null frame");
         }
 
+        if ( predicates == null || Arrays.stream(predicates).anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null predicates");
+        }
+
+        return skolemize(frame::values, predicates);
+    }
+
+    public static String skolemize(final Focus focus, final IRI... predicates) {
+
+        if ( focus == null ) {
+            throw new NullPointerException("null focus");
+        }
+
+        if ( predicates == null || Arrays.stream(predicates).anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null predicates");
+        }
+
+        return skolemize(predicate -> focus.seq(predicate).values(), predicates);
+    }
+
+
+    private static String skolemize(final Function<IRI, Stream<Value>> source, final IRI... predicates) {
+        return md5(Arrays.stream(predicates)
+                .flatMap(predicate -> source.apply(predicate)
+                        .map(value -> format("'%s':'%s'", predicate, value))
+                )
+                .collect(joining("\0"))
+        );
     }
 
 }

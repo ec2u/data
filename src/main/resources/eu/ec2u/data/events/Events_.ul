@@ -1,0 +1,47 @@
+prefix ec2u:	</terms/>
+prefix schema: <https://schema.org/>
+
+
+#### Purge Stale Events ################################################################################################
+
+delete {
+
+	?e ?p ?o.
+	?s ?q ?e.
+
+} where {
+
+    ?e a schema:Event .
+
+	optional { ?e schema:startDate ?start }
+	optional { ?e schema:endDate ?end }
+
+    optional { ?e ec2u:updated ?updated }
+
+	bind (coalesce(?end, ?start) as ?date)
+
+	bind (?date < now() as ?stale)
+    bind ((year(now())*12+month(now()))-(year(?updated)*12+month(?updated)) as ?delta)
+
+	filter ( ?stale || !bound(?date) && ?delta >= 1)
+
+	optional { ?e ?p ?o }
+	optional { ?s ?q ?e }
+
+};
+
+
+#### Purge Unreferenced Resources ######################################################################################
+
+delete {
+
+	?r ?p ?o.
+
+} where {
+
+	?r ?p ?o.
+
+    filter not exists { ?r a schema:Event }
+	filter not exists { ?s ?q ?r }
+
+}
