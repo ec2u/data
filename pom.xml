@@ -59,7 +59,7 @@
     <properties>
 
         <main>eu.ec2u.data.Data</main>
-        <revision>next</revision>
+        <revision>work</revision>
 
         <java.version>17</java.version>
         <maven.version>3.6</maven.version>
