@@ -331,11 +331,13 @@ public final class OfferingsCoimbra implements Runnable {
 
                 field(programPrerequisites, json.paths("condicoesAcesso.*")
                         .optMap(this::localized)
-                ),
-
-                field(competencyRequired, json.paths("regrasDeAvaliacao.*")
-                        .optMap(this::localized)
                 )
+
+                // !!! review schema
+
+                // field(competencyRequired, json.paths("regrasDeAvaliacao.*")
+                //         .optMap(this::localized)
+                // )
 
         ));
     }
@@ -372,9 +374,11 @@ public final class OfferingsCoimbra implements Runnable {
                         .map(Frame::literal)
                 ),
 
-                field(learningResourceType, json.paths("regimesEstudo.*")
-                        .optMap(this::localized)
-                ),
+                // !!! review schema
+
+                // field(learningResourceType, json.paths("regimesEstudo.*")
+                //         .optMap(this::localized)
+                // ),
 
                 field(numberOfCredits, json.string("ects")
                         .map(Offerings_::ects)
@@ -405,9 +409,11 @@ public final class OfferingsCoimbra implements Runnable {
                         .optMap(this::localized)
                 ),
 
-                field(competencyRequired, json.paths("regrasDeAvaliacao.*")
-                        .optMap(this::localized)
-                ),
+                // !!! review schema
+
+                // field(competencyRequired, json.paths("regrasDeAvaliacao.*")
+                //         .optMap(this::localized)
+                // ),
 
                 field(educationalCredentialAwarded, json.paths("qualificoesAtribuidas.*")
                         .optMap(this::localized)

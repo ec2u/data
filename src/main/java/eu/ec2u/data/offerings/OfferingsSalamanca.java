@@ -93,13 +93,14 @@ public final class OfferingsSalamanca implements Runnable {
                         Xtream.of(Instant.EPOCH)
 
                                 .flatMap(this::courses)
-                                .optMap(this::course),
+                                .optMap(this::course)
 
+                        // !!! review integrity
 
-                        Xtream.of(Instant.EPOCH)
-
-                                .flatMap(this::programsCourses)
-                                .optMap(this::programCourses)
+                        // Xtream.of(Instant.EPOCH)
+                        //
+                        //         .flatMap(this::programsCourses)
+                        //         .optMap(this::programCourses)
 
                 )
 

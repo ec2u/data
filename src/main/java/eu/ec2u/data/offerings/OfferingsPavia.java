@@ -54,7 +54,8 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.offerings.Offerings.*;
-import static eu.ec2u.data.programs.Programs.*;
+import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
+import static eu.ec2u.data.programs.Programs.programPrerequisites;
 import static eu.ec2u.data.things.Schema.identifier;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
@@ -159,11 +160,13 @@ public final class OfferingsPavia implements Runnable {
                 field(educationalCredentialAwarded, focus.seq(VIVO.termType).values()),
 
                 field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.language)), // !!!
-                field(programPrerequisites, localized(focus.seq(HEMO.enrollmentRequirementsDescription).values(), Pavia.language)),
+                field(programPrerequisites, localized(focus.seq(HEMO.enrollmentRequirementsDescription).values(), Pavia.language))
 
-                field(hasCourse, focus.seq(VIVO.conceptAssociatedWith).values().map(course ->
-                        item(Courses.Context, Pavia, course.stringValue()))
-                )
+                // !!! review integrity
+
+                // field(hasCourse, focus.seq(VIVO.conceptAssociatedWith).values().map(course ->
+                //         item(Courses.Context, Pavia, course.stringValue()))
+                // )
 
         ));
     }
@@ -211,13 +214,17 @@ public final class OfferingsPavia implements Runnable {
                 field(assesses, localized(focus.seq(HEMO.courseObjectiveDescription).values(), Pavia.language)),
                 field(coursePrerequisites, localized(focus.seq(HEMO.coursePrerequisitesDescription).values(), Pavia.language)),
 
+                // !!! review schema
+
                 // field(competencyRequired,
                 //         localized(focus.seq(HEMO.courseAssessmentMethodsDescription).values(), Pavia.Language)
                 // ),
 
-                field(learningResourceType,
-                        localized(focus.seq(HEMO.courseTeachingMethodsDescription).values(), Pavia.language)
-                ),
+                // !!! review schema
+
+                // field(learningResourceType,
+                //         localized(focus.seq(HEMO.courseTeachingMethodsDescription).values(), Pavia.language)
+                // ),
 
 
                 field(numberOfCredits, focus.seq(VIVO.hasValue).value()
