@@ -78,7 +78,7 @@ public final class ESCO implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Graph esco=new Graph(repository("data-esco"));
+    private final Graph esco=new Graph(repository("esco"));
     private final Logger logger=service(logger());
 
 
