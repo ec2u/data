@@ -78,7 +78,6 @@ import static com.metreeca.link.Frame.literal;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.model.util.Statements.statement;
 import static org.eclipse.rdf4j.query.QueryLanguage.SPARQL;
 
@@ -238,17 +237,25 @@ public final class EC2U extends Delegator {
                             .filter(not(String::isBlank))
                             .map(update -> connection.prepareUpdate(SPARQL, update, BASE))
                             .peek(update -> update.setDataset(dataset))
-                            .collect(toList());
+                            .toList();
                 }
 
                 connection.clear(INFERENCES);
 
-                for (long current, previous=-1; (current=connection.size(INFERENCES)) > previous; previous=current) {
+                long current=0, previous;
 
-                    logger.info(EC2U.class, format("inferred <%,d> statements", current));
+                do {
 
                     updates.forEach(Update::execute);
-                }
+
+                    previous=current;
+                    current=connection.size(INFERENCES);
+
+                    if ( current > previous ) {
+                        logger.info(EC2U.class, format("inferred <%,d> statements", current));
+                    }
+
+                } while ( current > previous );
 
             }).apply(elapsed -> logger.info(EC2U.class, format("updated <%s> in <%,d> ms", INFERENCES, elapsed)));
 
