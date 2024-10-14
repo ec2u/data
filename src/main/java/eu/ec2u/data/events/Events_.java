@@ -17,6 +17,8 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.http.rdf4j.actions.TupleQuery;
+import com.metreeca.http.rdf4j.services.Graph;
+import com.metreeca.http.services.Logger;
 import com.metreeca.http.work.Xtream;
 
 import org.eclipse.rdf4j.model.*;
@@ -83,6 +85,8 @@ final class Events_ {
     public static final class Loader implements Consumer<Collection<Statement>> {
 
         private final IRI context;
+        private final Logger logger=service(logger());
+        private final Graph graph=service(graph());
 
 
         public Loader(final IRI context) { this.context=context; }
@@ -96,7 +100,7 @@ final class Events_ {
 
             time(() -> {
 
-                service(graph()).update(connection -> {
+                graph.update(connection -> {
 
                     resources.forEach(subject ->
                             connection.remove(subject, null, null, context)
@@ -108,7 +112,7 @@ final class Events_ {
 
                 });
 
-            }).apply(elapsed -> service(logger()).info(Events.class, format(
+            }).apply(elapsed -> logger.info(Events.class, format(
                     "updated <%d> resources in <%s> in <%d> ms", resources.size(), context, elapsed
             )));
 

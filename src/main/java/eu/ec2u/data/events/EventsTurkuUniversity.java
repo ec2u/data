@@ -209,17 +209,17 @@ public final class EventsTurkuUniversity implements Runnable {
                 )
                 .collect(toList());
 
-        return json.integer("id").map(id -> frame(
+        final Optional<String> url=json.string("additional_information.link.url")
+                .or(() -> json.string("source_link"))
+                .flatMap(Parsers::url);
+
+        return json.integer("id").filter(id -> url.isPresent()).map(id -> frame(
 
                 field(ID, iri(Events.Context, md5(Publisher.id().orElseThrow().stringValue()+id))),
 
                 field(RDF.TYPE, Event),
 
-                // !!! https://teams.microsoft.com/l/meetup-join/19%3ameeting_NzY2ZjAyODMtZTE2Mi00M2ZmLTllMzYtODVjZmQ3NDhhYmRi%40thread.v2/0?context=%7b%22Tid%22%3a%22e7889bbd-7cd8-4eee-9d07-18d05f9f48c1%22%2c%22Oid%22%3a%2
-
-                field(Schema.url, json.string("additional_information.link.url")
-                        .or(() -> json.string("source_link"))
-                        .flatMap(Parsers::url)
+                field(Schema.url, url
                         .map(Frame::iri)
                 ),
 

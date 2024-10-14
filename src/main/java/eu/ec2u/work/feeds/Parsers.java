@@ -26,12 +26,14 @@ import java.util.regex.Pattern;
 import static com.metreeca.http.rdf.Values.guarded;
 
 import static java.lang.String.format;
+import static java.util.function.Predicate.not;
 
 public final class Parsers {
 
     private static final Pattern URIPattern=Pattern.compile("^https?://\\S+$");
     private static final Pattern FuzzyURLPattern=Pattern.compile("\\bhttps?:\\S+|\\bwww\\.\\S+");
     private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
+    private static final Pattern MalformedEscapePattern=Pattern.compile("%(?![0-9a-fA-F]{2})");
 
 
     private Parsers() { }
@@ -50,12 +52,16 @@ public final class Parsers {
         }
 
         return Optional.of(text)
+
                 .map(FuzzyURLPattern::matcher)
                 .filter(Matcher::find)
                 .map(Matcher::group)
+
                 .map(url -> url.replace("[", "%5B")) // !!! generalize
                 .map(url -> url.replace("]", "%5D"))
-                .map(url -> url.startsWith("http") ? url : format("https://%s", url));
+                .map(url -> url.startsWith("http") ? url : format("https://%s", url))
+
+                .filter(not(url -> MalformedEscapePattern.matcher(url).find()));
     }
 
     public static Optional<String> email(final String email) {
