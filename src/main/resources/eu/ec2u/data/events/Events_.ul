@@ -19,11 +19,9 @@ delete {
     optional { ?e ec2u:updated ?updated }
 
 	bind (coalesce(?end, ?start) as ?date)
+	bind ((year(now())*12+month(now()))-(year(?updated)*12+month(?updated)) as ?delta)
 
-	bind (?date < now() as ?stale)
-    bind ((year(now())*12+month(now()))-(year(?updated)*12+month(?updated)) as ?delta)
-
-	filter ( ?stale || !bound(?date) && ?delta >= 1)
+	filter (?date < now() || !bound(?date) && ?delta >= 1)
 
 	optional { ?e ?p ?o }
 	optional { ?s ?q ?e }
