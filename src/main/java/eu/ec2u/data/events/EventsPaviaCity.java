@@ -22,6 +22,8 @@ import com.metreeca.http.rdf.actions.Localize;
 import com.metreeca.http.rdf.actions.Microdata;
 import com.metreeca.http.rdf.actions.Normalize;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.actions.Extract;
+import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
@@ -29,11 +31,13 @@ import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.metreeca.link.Frame.*;
@@ -133,14 +137,14 @@ public final class EventsPaviaCity implements Runnable {
 
                 .flatMap(document -> {
 
-                    // final Optional<Value> description=Optional.of(document)
-                    //
-                    //         .map(d -> document.getElementsByTagName("body").item(0))
-                    //
-                    //         .flatMap(new Extract())
-                    //         .map(new Untag())
-                    //
-                    //         .map(s -> literal(s, Pavia.Language));
+                    final Optional<Value> description=Optional.of(document)
+
+                            .map(d -> document.getElementsByTagName("body").item(0))
+
+                            .flatMap(new Extract())
+                            .map(new Untag())
+
+                            .map(s -> literal(s, Pavia.language));
 
 
                     return Xtream.of(document)
@@ -171,7 +175,7 @@ public final class EventsPaviaCity implements Runnable {
 
                                             field(Schema.url, url),
                                             field(Schema.name, focus.seq(Schema.name).value()),
-                                            field(Schema.description, focus.seq(Schema.description).value()/*.or(() -> description)*/),
+                                            field(Schema.description, focus.seq(Schema.description).value().or(() -> description)),
                                             field(Schema.disambiguatingDescription, focus.seq(Schema.disambiguatingDescription).value()),
                                             field(Schema.image, focus.seq(Schema.image).values()),
 
