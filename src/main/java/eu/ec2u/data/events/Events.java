@@ -46,8 +46,7 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.resources.Resources.*;
 import static eu.ec2u.data.things.Schema.*;
 
 public final class Events extends Delegator {
@@ -180,14 +179,16 @@ public final class Events extends Delegator {
 
         final Frame EventModel=frame(ThingModel,
 
+                field(partner, iri()),
+
                 field(startDate, literal(OffsetDateTime.now())),
                 field(endDate, literal(OffsetDateTime.now())),
 
                 field(inLanguage, literal("")),
                 field(isAccessibleForFree, literal(false)),
 
-                field(publisher),
-                field(organizer),
+                field(publisher, ThingModel),
+                field(organizer, ThingModel),
 
                 field(location, frame(
 
