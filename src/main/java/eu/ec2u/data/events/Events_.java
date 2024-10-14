@@ -17,6 +17,9 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.http.rdf4j.actions.TupleQuery;
+import com.metreeca.http.rdf4j.actions.Update;
+import com.metreeca.http.rdf4j.services.Graph;
+import com.metreeca.http.services.Logger;
 import com.metreeca.http.work.Xtream;
 
 import org.eclipse.rdf4j.model.*;
@@ -26,12 +29,15 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
+import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.http.toolkits.Resources.text;
 
 import static eu.ec2u.data.EC2U.BASE;
 import static java.lang.String.format;
@@ -83,6 +89,8 @@ final class Events_ {
     public static final class Loader implements Consumer<Collection<Statement>> {
 
         private final IRI context;
+        private final Logger logger=service(logger());
+        private final Graph graph=service(graph());
 
 
         public Loader(final IRI context) { this.context=context; }
@@ -96,7 +104,7 @@ final class Events_ {
 
             time(() -> {
 
-                service(graph()).update(connection -> {
+                graph.update(connection -> {
 
                     resources.forEach(subject ->
                             connection.remove(subject, null, null, context)
@@ -108,24 +116,24 @@ final class Events_ {
 
                 });
 
-            }).apply(elapsed -> service(logger()).info(Events.class, format(
+            }).apply(elapsed -> logger.info(Events.class, format(
                     "updated <%d> resources in <%s> in <%d> ms", resources.size(), context, elapsed
             )));
 
             // ;( SPARQL update won't take effect if executed inside the previous txn
 
-            // time(() -> Stream.of(text(resource(Events_.class, ".ul")))
-            //
-            //         .forEach(new Update()
-            //                 .base(BASE)
-            //                 .dflt(context)
-            //                 .insert(context)
-            //                 .remove(context)
-            //         )
-            //
-            // ).apply(elapsed -> service(logger()).info(Events.class, format(
-            //         "purged stale events from <%s> in <%d> ms", context, elapsed
-            // )));
+            time(() -> Stream.of(text(resource(Events_.class, ".ul")))
+
+                    .forEach(new Update()
+                            .base(BASE)
+                            .dflt(context)
+                            .insert(context)
+                            .remove(context)
+                    )
+
+            ).apply(elapsed -> service(logger()).info(Events.class, format(
+                    "purged stale events from <%s> in <%d> ms", context, elapsed
+            )));
 
         }
 

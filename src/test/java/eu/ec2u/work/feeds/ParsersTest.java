@@ -42,6 +42,11 @@ final class ParsersTest {
                     .contains("https://utu.zoom.us/j/69048613177");
         }
 
+        @Test void malformedEscape() {
+            assertThat(url("https://example.com/%2"))
+                    .isEmpty();
+        }
+
         @Test void none() {
             assertThat(url("none"))
                     .isEmpty();

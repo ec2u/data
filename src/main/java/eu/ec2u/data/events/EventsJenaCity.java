@@ -111,7 +111,7 @@ public final class EventsJenaCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .flatMap(f -> f.stream(true))
+                .flatMap(Frame::stream)
                 .batch(0)
 
                 .forEach(new Events_.Loader(Context))
@@ -252,10 +252,10 @@ public final class EventsJenaCity implements Runnable {
                             .filter(not(keyword -> keyword.startsWith("ausgabekanal_")))
                             .map(keyword -> frame(
 
-                                    field(ID, item(Events.Topics, keyword)),
+                                    field(ID, item(Topics, keyword)),
 
                                     field(RDF.TYPE, SKOS.CONCEPT),
-                                    field(SKOS.TOP_CONCEPT_OF, Events.Topics),
+                                    field(SKOS.TOP_CONCEPT_OF, Topics),
                                     field(SKOS.PREF_LABEL, literal(keyword, Jena.language))
 
                             ))
