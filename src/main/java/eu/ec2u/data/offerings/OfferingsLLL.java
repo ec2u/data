@@ -61,7 +61,7 @@ import static java.util.function.Predicate.not;
 
 public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable {
 
-    private static final IRI Context=Frame.iri(Offerings.Context, "/lll");
+    private static final IRI Context=iri(Offerings.Context, "/lll");
 
     private static final String DataUrl="offerings-lll-url"; // vault label
 
@@ -194,7 +194,6 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
                 ),
 
 
-
                 field(Schema.about, value(record, "Narrow field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf").stream()
                         .flatMap(this::subjects) // !!! only if detailed field is not provided
                 ),
@@ -229,7 +228,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
         return university;
     }
 
-    private Optional<IRI> id(final CSVRecord record, final University university) {
+    private Optional<IRI> id(final CSVRecord record, final University university) { // !!! enforce uniqueness
 
         final Optional<String> identifier=value(record, "University Course code");
         final Optional<String> titleEnglish=value(record, "Course Title (in English)");
@@ -265,7 +264,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
     private static Literal duration(final BigDecimal value) {
 
         final int hours=value.intValue();
-        final int minutes=value.remainder(BigDecimal.ONE).movePointRight(value.scale()).abs().intValue();
+        final int minutes=value.remainder(BigDecimal.ONE).multiply(new BigDecimal(60)).intValue();
 
         return literal(
                 minutes == 0 ? format("PT%dH", hours) : format("PT%dH%dM", hours, minutes),
