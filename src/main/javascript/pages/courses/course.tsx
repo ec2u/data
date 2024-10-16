@@ -19,9 +19,10 @@ import { Languages } from "@ec2u/data/languages";
 import { Courses } from "@ec2u/data/pages/courses/courses";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
-import { entryCompare } from "@metreeca/core/entry";
+import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -41,7 +42,6 @@ export const Course=immutable({
 	id: required("/courses/{code}"),
 
 	name: required(local),
-	description: optional(local),
 
 	url: multiple(id),
 
@@ -49,6 +49,7 @@ export const Course=immutable({
 	inLanguage: multiple(string),
 	numberOfCredits: optional(decimal),
 	timeRequired: optional(string),
+	courseWorkload: optional(string),
 
 	teaches: optional(local),
 	assesses: optional(local),
@@ -71,10 +72,18 @@ export const Course=immutable({
 		label: required(local)
 	}),
 
+	audience: multiple(string),
+	isAccessibleForFree: optional(boolean),
+
 	// learningResourceType: multiple({
 	// 	id: required(id),
 	// 	label: required(local)
 	// }),
+
+	courseMode: optional({
+		id: required(id),
+		label: required(local)
+	}),
 
 	about: multiple({
 		id: required(id),
@@ -106,15 +115,13 @@ export function DataCourse() {
 				url,
 				courseCode,
 				educationalLevel,
+			audience,
 				inLanguage,
 				numberOfCredits,
 				timeRequired,
-				about,
-
-				educationalCredentialAwarded,
-				occupationalCredentialAwarded,
-
-				inProgram
+			courseWorkload,
+			courseMode,
+			isAccessibleForFree
 
 			}
 		) => <>
@@ -139,8 +146,24 @@ export function DataCourse() {
 					.map(language => <li key={language}>{language}</li>)
 				}</ul>,
 
+				"Attendance": courseMode && <span>{toEntryString(courseMode)}</span>,
+
+				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
+				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>
+
+			}}</ToolInfo>
+
+			<ToolInfo>{{
+
+				"Audience": audience?.length && <ul>{audience
+					.sort((x, y) => x.localeCompare(y))
+					.map(audience => <li key={audience}>{audience}</li>)
+				}</ul>,
+
+				"Fees": isAccessibleForFree === true ? "Free for Externals"
+					: isAccessibleForFree === false ? "Paid for Externals"
+						: undefined
 
 			}}</ToolInfo>
 
@@ -159,7 +182,6 @@ export function DataCourse() {
 		<ToolFrame placeholder={Courses[icon]} as={({
 
 			name,
-			description,
 
 			inProgram,
 			about,
@@ -177,28 +199,21 @@ export function DataCourse() {
 
 				<dfn>{toLocalString(name)}</dfn>
 
-				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+				{inProgram && <ToolLabel name={"Programs"}>{
 
+					<ul>{inProgram.slice().sort(entryCompare).map(program =>
+						<li key={program.id}><ToolLink>{program}</ToolLink></li>
+					)}</ul>
 
-				<ToolPanel>
+				}</ToolLabel>}
 
-					{inProgram && <ToolLabel name={"Programs"}>{
+				{about && <ToolLabel name={"Subjects"}>{
 
-						<ul>{inProgram.slice().sort(entryCompare).map(program =>
-							<li key={program.id}><ToolLink>{program}</ToolLink></li>
-						)}</ul>
+					<ul>{about.slice().sort(entryCompare).map(about =>
+						<li key={about.id}><ToolLink>{about}</ToolLink></li>
+					)}</ul>
 
-					}</ToolLabel>}
-
-					{about && <ToolLabel name={"Subjects"}>{
-
-						<ul>{about.slice().sort(entryCompare).map(about =>
-							<li key={about.id}><ToolLink>{about}</ToolLink></li>
-						)}</ul>
-
-					}</ToolLabel>}
-
-				</ToolPanel>
+				}</ToolLabel>}
 
 				<ToolPanel stack>{Object.entries({
 
@@ -206,7 +221,7 @@ export function DataCourse() {
 					"Occupational Credential Awarded": occupationalCredentialAwarded,
 					"General Objectives": teaches,
 					"Learning Objectives and Intended Skills": assesses,
-					"Admission Requirements": coursePrerequisites,
+					"Admission Requirements": coursePrerequisites
 					// !!! "Teaching Methods and Mode of Study": learningResourceType,
 					// "Graduation Requirements": competencyRequired,
 

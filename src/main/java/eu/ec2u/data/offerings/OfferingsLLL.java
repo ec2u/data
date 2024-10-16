@@ -198,7 +198,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
                         .flatMap(this::subjects) // !!! only if detailed field is not provided
                 ),
 
-                field(Schema.about, value(record, "If available write the Detailed field number classification of the course  according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf    ").stream()
+                field(Schema.about, value(record, "If available write the Detailed field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf    ").stream()
                         .flatMap(this::subjects)
                 ),
 
