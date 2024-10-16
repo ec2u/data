@@ -90,6 +90,10 @@ public final class Events extends Delegator {
             return getNamespace()+getLocalName();
         }
 
+        @Override public String toString() {
+            return stringValue();
+        }
+
     }
 
     public enum EventStatusType implements IRI {
@@ -112,6 +116,11 @@ public final class Events extends Delegator {
         @Override public String stringValue() {
             return getNamespace()+getLocalName();
         }
+
+        @Override public String toString() {
+            return stringValue();
+        }
+
     }
 
 
