@@ -206,8 +206,8 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
                         .map(Frame::literal)
                 ),
 
-                field(Schema.url, value(record, "Link to the course site/ description", Parsers::url)
-                        .map(Frame::literal)
+                field(Schema.url, value(record, "Link to the course site/description", Parsers::url)
+                        .map(Frame::iri)
                 )
 
         )));
