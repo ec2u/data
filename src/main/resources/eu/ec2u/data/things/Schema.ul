@@ -18,7 +18,7 @@ insert {
     optional { ?thing schema:description ?description }
     optional { ?thing schema:disambiguatingDescription ?disambiguatingDescription }
 
-    bind(coalesce(?disambiguatingDescription, ?description) as ?comment)
+    bind(substr(coalesce(?disambiguatingDescription, ?description), 0, 500) as ?comment)
 
 }; # complete entry
 
