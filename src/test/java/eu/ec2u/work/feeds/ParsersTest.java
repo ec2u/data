@@ -19,6 +19,10 @@ package eu.ec2u.work.feeds;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import static eu.ec2u.work.feeds.Parsers.decimal;
 import static eu.ec2u.work.feeds.Parsers.url;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,4 +58,34 @@ final class ParsersTest {
 
     }
 
+
+    @Nested
+    class Integers {
+
+        @Test void integer() {
+            assertThat(Parsers.integer("\t36 (lecture and tutorial recordings)/"))
+                    .contains(BigInteger.valueOf(36));
+        }
+
+        @Test void fractional() {
+            assertThat(Parsers.integer("\t36.5 (lecture and tutorial recordings)/"))
+                    .isEmpty();
+        }
+
+    }
+
+    @Nested
+    class Decimals {
+
+        @Test void integer() {
+            assertThat(decimal("\t36 (lecture and tutorial recordings)/"))
+                    .contains(new BigDecimal("36"));
+        }
+
+        @Test void fractional() {
+            assertThat(decimal("\t36.5 (lecture and tutorial recordings)/"))
+                    .contains(new BigDecimal("36.5"));
+        }
+
+    }
 }
