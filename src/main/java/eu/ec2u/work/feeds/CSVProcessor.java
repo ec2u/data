@@ -100,12 +100,12 @@ public abstract class CSVProcessor<V> implements Function<String, Xtream<V>> {
         final Collection<String> strings=value(record, label).stream()
                 .flatMap(Strings::split)
                 .map(Strings::normalize)
-                .collect(toList());
+                .toList();
 
         final Collection<R> values=strings.stream()
                 .map(parser)
                 .flatMap(Optional::stream)
-                .collect(toList());
+                .toList();
 
         if ( strings.size() != values.size() ) {
             warning(record, format("malformed %s value", label));
