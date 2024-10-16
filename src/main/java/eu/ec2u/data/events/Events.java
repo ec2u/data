@@ -75,18 +75,47 @@ public final class Events extends Delegator {
     public static final IRI eventStatus=schema("eventStatus");
 
 
-    public enum EventAttendanceModeEnumeration {
+    public enum EventAttendanceModeEnumeration implements IRI {
+
         MixedEventAttendanceMode,
         OfflineEventAttendanceMode,
-        OnlineEventAttendanceMode
+        OnlineEventAttendanceMode;
+
+
+        @Override public String getNamespace() {
+            return Namespace;
+        }
+
+        @Override public String getLocalName() {
+            return name();
+        }
+
+        @Override public String stringValue() {
+            return getNamespace()+getLocalName();
+        }
+
     }
 
-    public enum EventStatusType {
+    public enum EventStatusType implements IRI {
+
         EventScheduled,
         EventMovedOnline,
         EventPostponed,
         EventRescheduled,
-        EventCancelled
+        EventCancelled;
+
+
+        @Override public String getNamespace() {
+            return Namespace;
+        }
+
+        @Override public String getLocalName() {
+            return name();
+        }
+
+        @Override public String stringValue() {
+            return getNamespace()+getLocalName();
+        }
     }
 
 

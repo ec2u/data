@@ -46,8 +46,8 @@ import static eu.ec2u.data.resources.Resources.locales;
  */
 public final class Schema extends Delegator {
 
-    private static final String Namespace="https://schema.org/";
-    private static final IRI Context=item("/things/");
+    public static final String Namespace="https://schema.org/";
+    public static final IRI Context=item("/things/");
 
 
     /**
