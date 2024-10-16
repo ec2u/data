@@ -26,15 +26,11 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
@@ -119,15 +115,6 @@ public final class Events extends Delegator {
     }
 
 
-    private static Set<IRI> values(final Enum<?>[] values) {
-        return Arrays
-                .stream(values)
-                .map(Enum::name)
-                .map(Schema::schema)
-                .collect(Collectors.toSet());
-    }
-
-
     public static Shape Events() {
         return Dataset(Event());
     }
@@ -157,8 +144,8 @@ public final class Events extends Delegator {
                 property(about, multiple(Concept(), scheme(Topics))),
                 property(audience, multiple(Concept(), scheme(Audiences))),
 
-                property(eventAttendanceMode, optional(Resource(), in(values(EventAttendanceModeEnumeration.values())))),
-                property(eventStatus, optional(Resource(), in(values(EventStatusType.values())))),
+                property(eventAttendanceMode, optional(Resource(), in(EventAttendanceModeEnumeration.values()))),
+                property(eventStatus, optional(Resource(), in(EventStatusType.values()))),
 
                 property(updated, Shape::required)
 

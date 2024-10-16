@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.offerings;
 
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.services.Vault;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.http.work.Xtream;
@@ -24,6 +25,7 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.concepts.ISCEDF2013;
 import eu.ec2u.data.courses.Courses;
+import eu.ec2u.data.events.Events;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
@@ -50,10 +52,10 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.courses.Courses.Course;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.events.Events.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.things.Schema.schema;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 
@@ -62,11 +64,6 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
     private static final IRI Context=Frame.iri(Offerings.Context, "/lll");
 
     private static final String DataUrl="offerings-lll-url"; // vault label
-
-
-    private static final IRI courseMode=schema("courseMode");
-    private static final IRI courseWorkload=schema("courseWorkload");
-    private static final IRI instructor=schema("instructor");
 
 
     public static void main(final String... args) {
@@ -87,28 +84,19 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
                         "undefined data URL <%s>", DataUrl
                 )));
 
-
-        Xtream.of(url)
+        update(connection -> Xtream.of(url)
 
                 .flatMap(this)
 
-                .limit(3)
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                .forEach(frame -> System.out.println(frame));
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
 
-        // update(connection -> Xtream.of(url)
-        //
-        //         .flatMap(this)
-        //
-        //         .flatMap(Frame::stream)
-        //         .batch(0)
-        //
-        //         .forEach(new Upload()
-        //                 .contexts(Context)
-        //                 .clear(true)
-        //         )
-        //
-        // );
+        );
     }
 
     @Override protected Optional<Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
@@ -120,9 +108,11 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
                 field(ID, id),
 
-                field(RDF.TYPE, Course),
+                field(RDF.TYPE, Course, CourseInstance),
 
                 field(partner, university.id),
+
+                field(Events.audience, literal("Lifelong Learner")), // !!! review
 
                 // !!! Department (in English)
 
@@ -136,7 +126,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
                 // !!! Study degree course (in English)
 
-                field(Courses.courseCode, value(record, "University Course code").map(Frame::literal)),
+                field(courseCode, value(record, "University Course code").map(Frame::literal)),
 
                 field(Schema.name, titleOriginal
                         .filter(not(title -> title.equals(titleEnglish.orElse(""))))
