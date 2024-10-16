@@ -46,8 +46,7 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.resources.Resources.*;
 import static eu.ec2u.data.things.Schema.*;
 
 public final class Events extends Delegator {
@@ -66,8 +65,6 @@ public final class Events extends Delegator {
     public static final IRI startDate=schema("startDate");
     public static final IRI endDate=schema("endDate");
     public static final IRI duration=schema("duration");
-
-    public static final IRI isAccessibleForFree=schema("isAccessibleForFree");
 
     public static final IRI organizer=schema("organizer");
     public static final IRI publisher=schema("publisher");
@@ -179,6 +176,8 @@ public final class Events extends Delegator {
         );
 
         final Frame EventModel=frame(ThingModel,
+
+                field(partner, iri()), // !!!
 
                 field(startDate, literal(OffsetDateTime.now())),
                 field(endDate, literal(OffsetDateTime.now())),

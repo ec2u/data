@@ -298,7 +298,7 @@ public final class EventsJenaUniversity implements Runnable {
                 field(startDate, datetime(focus.seq(startDate).value(asString()))),
                 field(endDate, datetime(focus.seq(endDate).value(asString()))),
 
-                field(isAccessibleForFree, focus.seq(isAccessibleForFree).value(asBoolean()).map(Frame::literal)),
+                field(Schema.isAccessibleForFree, focus.seq(Schema.isAccessibleForFree).value(asBoolean()).map(Frame::literal)),
 
                 field(Schema.inLanguage, focus.seq(Schema.inLanguage).value(asString()) // retain only language
                         .map(tag -> tag.toLowerCase(Locale.ROOT).replaceAll("^([a-z]+).*$", "$1"))

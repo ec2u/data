@@ -223,7 +223,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 field(startDate, event.string("start_date").map(timestamp -> datetime(timestamp, zone, now))),
                 field(endDate, event.string("end_date").map(timestamp -> datetime(timestamp, zone, now))),
 
-                field(isAccessibleForFree, literal(event
+                field(Schema.isAccessibleForFree, literal(event
                         .string("cost").filter(v -> v.equalsIgnoreCase("livre")) // !!! localize
                         .isPresent()
                 )),
