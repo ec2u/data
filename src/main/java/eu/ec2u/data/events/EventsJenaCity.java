@@ -66,7 +66,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.things.Schema.schema;
@@ -83,7 +83,7 @@ public final class EventsJenaCity implements Runnable {
             field(ID, iri("https://www.jena-veranstaltungen.de/veranstaltungen")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Jena.id),
+            field(university, Jena.id),
 
             field(Schema.name,
                     literal("City of Jena / Event Calendar", "en"),
@@ -230,7 +230,7 @@ public final class EventsJenaCity implements Runnable {
                     field(dateModified, focus.seq(dateModified).value(asInstant()).map(Frame::literal)),
                     field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
 
-                    field(partner, Jena.id),
+                    field(university, Jena.id),
 
                     field(Schema.url, url),
                     field(Schema.name, name),

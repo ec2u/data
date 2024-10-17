@@ -47,7 +47,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.universities.University.Coimbra;
 import static java.lang.String.format;
@@ -61,7 +61,7 @@ public final class EventsCoimbraCity implements Runnable {
             field(ID, iri("https://www.coimbragenda.pt/")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Coimbra.id),
+            field(university, Coimbra.id),
 
             field(Schema.name,
                     literal("Coimbra City Council / CoimbrAgenda", "en"),
@@ -150,7 +150,7 @@ public final class EventsCoimbraCity implements Runnable {
 
                             field(RDF.TYPE, Event),
 
-                            field(partner, Coimbra.id),
+                            field(university, Coimbra.id),
 
                             field(Schema.url, iri(url)),
                             field(Schema.name, name),

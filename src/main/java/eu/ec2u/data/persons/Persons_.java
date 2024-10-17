@@ -30,7 +30,7 @@ import static com.metreeca.http.toolkits.Strings.normalize;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static java.lang.String.format;
 
 public final class Persons_ {
@@ -54,7 +54,7 @@ public final class Persons_ {
                             field(ID, item(Persons.Context, _university, format("%s, %s", familyName, givenName))),
                             field(TYPE, FOAF.PERSON),
 
-                            field(partner, _university.id),
+                            field(university, _university.id),
 
                             field(FOAF.TITLE, title.map(Frame::literal)),
                             field(FOAF.GIVEN_NAME, literal(givenName)),

@@ -55,7 +55,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.locales;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Turku;
@@ -74,7 +74,7 @@ public final class EventsTurkuCity implements Runnable {
             field(ID, iri("https://kalenteri.turku.fi/")),
             field(TYPE, Organization),
 
-            field(partner, Turku.id),
+            field(university, Turku.id),
 
             field(name,
                     literal("City of Turku / Event's Calendar", "en"),
@@ -246,7 +246,7 @@ public final class EventsTurkuCity implements Runnable {
                             // !!! in_language
                             // !!! audience
 
-                            field(partner, Turku.id),
+                            field(university, Turku.id),
                             field(publisher, Publisher),
 
                             field(location, location(json))

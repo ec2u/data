@@ -42,7 +42,7 @@ import static eu.ec2u.data.Data.repository;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.concepts.OrganizationTypes.Centre;
 import static eu.ec2u.data.concepts.OrganizationTypes.Department;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.University.Pavia;
 import static java.util.Map.entry;
@@ -131,7 +131,7 @@ public final class UnitsPavia implements Runnable {
                 field(ID, EC2U.item(Units.Context, focus.value(asIRI()).orElseThrow().stringValue())), // !!! review
 
                 field(RDF.TYPE, Unit),
-                field(partner, Pavia.id),
+                field(university, Pavia.id),
 
                 field(DCTERMS.TITLE, label),
                 field(SKOS.PREF_LABEL, label),

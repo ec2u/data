@@ -46,7 +46,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Poitiers;
@@ -60,7 +60,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
             field(ID, iri("https://sortir.grandpoitiers.fr/")),
             field(TYPE, Organization),
 
-            field(partner, Poitiers.id),
+            field(university, Poitiers.id),
 
             field(Schema.name,
                     literal("Grand Poitiers / Events", "en"),
@@ -156,7 +156,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
                     field(Schema.about, category(item)),
 
-                    field(partner, Poitiers.id),
+                    field(university, Poitiers.id),
                     field(publisher, Publisher)
 
             );

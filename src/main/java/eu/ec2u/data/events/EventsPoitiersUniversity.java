@@ -55,7 +55,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
@@ -73,7 +73,7 @@ public final class EventsPoitiersUniversity implements Runnable {
             field(ID, iri("https://www.univ-poitiers.fr/c/actualites/")),
             field(TYPE, Organization),
 
-            field(partner, Poitiers.id),
+            field(university, Poitiers.id),
 
             field(Schema.name,
 
@@ -200,7 +200,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                         field(SKOS.PREF_LABEL, literal(category, Poitiers.language))
                 ))),
 
-                field(partner, Poitiers.id),
+                field(university, Poitiers.id),
                 field(publisher, Publisher),
                 field(location, location(item))
 

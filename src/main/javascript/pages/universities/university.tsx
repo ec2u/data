@@ -78,7 +78,7 @@ export function DataUniversity() {
 
 			"resources=count:": required(integer),
 
-			"?partner": [route],
+			"?university": [route],
 			"?dataset.issued": []
 
 		}]
@@ -114,7 +114,7 @@ export function DataUniversity() {
 				?.sort(({ resources: x }, { resources: y }) => x - y)
 				?.map(({ dataset, resources }) => ({
 
-					label: <ToolLink filter={[dataset, { partner: university }]}>{{
+					label: <ToolLink filter={[dataset, { university }]}>{{
 						id: dataset.id,
 						label: ec2u(dataset.label)
 					}}</ToolLink>,

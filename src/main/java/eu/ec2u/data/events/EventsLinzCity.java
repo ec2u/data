@@ -63,7 +63,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Jena;
@@ -82,7 +82,7 @@ public final class EventsLinzCity implements Runnable {
             field(ID, iri("https://www.linztourismus.at/en/leisure/discover-linz/events/event-calendar/")),
             field(TYPE, Organization),
 
-            field(partner, Linz.id),
+            field(university, Linz.id),
 
             field(name,
                     literal("Linz Tourism Information", "en"),
@@ -227,7 +227,7 @@ public final class EventsLinzCity implements Runnable {
                 // field(dateModified),
                 field(updated, literal(now)),
 
-                field(partner, Linz.id),
+                field(university, Linz.id),
 
                 field(url, id),
                 field(image, focus.seq(image).value(asIRI())),

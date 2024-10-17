@@ -91,7 +91,7 @@ public final class Units_ {
                     field(ID, id),
                     field(TYPE, Unit),
 
-                    field(Resources.partner, university.id),
+                    field(Resources.university, university.id),
 
                     field(DCTERMS.SUBJECT, value(record, "Sector")
                             .flatMap(this::sector)

@@ -52,7 +52,7 @@ import static eu.ec2u.data.EC2U.skolemize;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.schema;
@@ -154,7 +154,7 @@ public final class EventsJenaUniversity implements Runnable {
             .map(frame -> frame(frame,
 
                     field(RDF.TYPE, Organization),
-                    field(partner, Jena.id),
+                    field(university, Jena.id),
                     field(Schema.about, University)
 
             ))
@@ -279,7 +279,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                 field(RDF.TYPE, Event),
 
-                field(partner, Jena.id),
+                field(university, Jena.id),
 
                 field(Schema.url, focus.seq(Schema.url).value()),
                 field(Schema.name, label),

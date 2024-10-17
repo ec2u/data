@@ -45,7 +45,7 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.dateCreated;
 import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
@@ -59,7 +59,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
             field(ID, iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda-salamanca/")),
             field(TYPE, Organization),
 
-            field(partner, Salamanca.id),
+            field(university, Salamanca.id),
 
             field(Schema.name,
                     literal("SACIS - Salamanca Cooperative Society of Social Initiative", "en"),
@@ -148,7 +148,7 @@ public final class EventsSalamancaCitySACIS implements Runnable {
                     field(dateCreated, pubDate),
                     field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
-                    field(partner, Salamanca.id),
+                    field(university, Salamanca.id),
                     field(publisher, Publisher)
             );
 

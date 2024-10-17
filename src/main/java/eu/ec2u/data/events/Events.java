@@ -202,7 +202,7 @@ public final class Events extends Delegator {
 
         final Frame EventModel=frame(ThingModel,
 
-                field(partner, iri()), // !!!
+                field(university, iri()), // !!!
 
                 field(startDate, literal(OffsetDateTime.now())),
                 field(endDate, literal(OffsetDateTime.now())),

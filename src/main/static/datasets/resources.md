@@ -26,9 +26,8 @@ housekeeping properties.
 | [rdfs:seeAlso](https://www.w3.org/TR/rdf-schema/#ch_seealso)            | id                                 | *    | links to other resource describing the same subject                                                                                         |
 | [rdfs:isDefinedBy](https://www.w3.org/TR/rdf-schema/#ch_isdefinedby)    | id                                 | 0..1 | link to a human or machine-readable specification providing a formal definition of the resource or its data model                           |
 | ‹dataset› = ^[rdfs:member](https://www.w3.org/TR/rdf-schema/#ch_member) | [void:Dataset](./index.md)         | *    | links to the EC2U Knowledge Hub datasets the resource belongs to                                                                            |
-| ec2u:partner                                                            | [ec2u:University](universities.md) | 0..1 | link to  a EC2U partner associated with the resource                                                                                        |
+| ec2u:university                                                         | [ec2u:University](universities.md) | 0..1 | link to a EC2U partner university associated with the resource                                                                              |
 | ec2u:updated                                                            | instant                            | 0..1 | timestamp of the last known update to the resource description                                                                              |
 
-> *ℹ️*  Human-readable labels and descriptions are localised either in English or in one of the local EC2U
-> partner
-> languages.
+> *ℹ️*  Human-readable labels and descriptions are localised either in English or in one of the local EC2U partner
+> university languages.

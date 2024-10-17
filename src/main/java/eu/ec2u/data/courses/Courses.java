@@ -115,7 +115,7 @@ public final class Courses extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                                field(partner, iri()),
+                                                field(university, iri()),
                                                 field(ORG.CLASSIFICATION, iri())
 
                                         )
@@ -133,7 +133,7 @@ public final class Courses extends Delegator {
                                 field(ID, iri()),
                                 field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                field(partner, iri())
+                                field(university, iri())
 
                         )))
 

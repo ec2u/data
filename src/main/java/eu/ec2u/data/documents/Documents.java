@@ -123,7 +123,7 @@ public final class Documents extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                                field(partner, iri()),
+                                                field(university, iri()),
                                                 field(DCTERMS.TYPE, iri())
 
                                         )
@@ -142,7 +142,7 @@ public final class Documents extends Delegator {
 
                                 field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                field(partner, iri()),
+                                field(university, iri()),
                                 field(DCTERMS.TYPE, iri())
 
                         )))

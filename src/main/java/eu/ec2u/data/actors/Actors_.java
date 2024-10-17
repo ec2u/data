@@ -163,7 +163,7 @@ public final class Actors_ implements Runnable {
                 field(RDF.TYPE, Actors.Actor),
                 field(RDFS.LABEL, literal("?", "en")), // !!! label
 
-                field(Resources.partner, university(record)), // !!! missing in the survey
+                field(Resources.university, university(record)), // !!! missing in the survey
 
                 field(term("Q1-1"), profile(record)),
                 field(term("Q1-2"), activityArea(record)),

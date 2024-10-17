@@ -164,7 +164,7 @@ public final class OfferingsJena implements Runnable {
                 field(ID, item(Programs.Context, Jena, url.stringValue())),
 
                 field(RDF.TYPE, EducationalOccupationalProgram),
-                field(Resources.partner, Jena.id),
+                field(Resources.university, Jena.id),
 
                 field(Schema.url, url),
 

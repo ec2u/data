@@ -60,7 +60,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
@@ -79,7 +79,7 @@ public final class EventsTurkuUniversity implements Runnable {
             field(ID, iri("https://www.utu.fi/event-search/")),
             field(TYPE, Organization),
 
-            field(partner, Turku.id),
+            field(university, Turku.id),
 
             field(Schema.name,
                     literal("University of Turku / News", "en"),
@@ -234,7 +234,7 @@ public final class EventsTurkuUniversity implements Runnable {
                 field(dateModified, json.string("updated").map(timestamp -> instant(timestamp, now))),
                 field(updated, json.string("updated").map(timestamp -> instant(timestamp, now)).orElseGet(() -> literal(now))),
 
-                field(partner, Turku.id),
+                field(university, Turku.id),
                 field(publisher, Publisher),
                 field(organizer, json.paths("additional_information.contact").optMap(this::organizer)),
 

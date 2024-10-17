@@ -50,7 +50,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
@@ -65,7 +65,7 @@ public final class EventsSalamancaCityTO implements Runnable {
             field(ID, iri("https://salamanca.es/en/calendar")),
             field(TYPE, Organization),
 
-            field(partner, Salamanca.id),
+            field(university, Salamanca.id),
 
             field(Schema.name,
                     literal("Salamanca Municipal Tourist Office", "en"),
@@ -178,7 +178,7 @@ public final class EventsSalamancaCityTO implements Runnable {
                     field(dateCreated, pubDate),
                     field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
-                    field(partner, Salamanca.id),
+                    field(university, Salamanca.id),
                     field(publisher, Publisher)
 
             );

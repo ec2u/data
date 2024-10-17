@@ -44,7 +44,7 @@ export const Unit=immutable({
 
 	homepage: multiple(id),
 
-	partner: optional({
+	university: optional({
 		id: required(id),
 		label: required(local)
 	}),
@@ -99,7 +99,7 @@ export function DataUnit() {
 
 			homepage,
 
-			partner,
+			university,
 			classification,
 
 			hasHead
@@ -108,7 +108,7 @@ export function DataUnit() {
 
 			<ToolInfo>{{
 
-				"University": partner && <ToolLink>{partner}</ToolLink>,
+				"University": university && <ToolLink>{university}</ToolLink>,
 
 				"Type": classification?.length && <ul>{classification.map(type =>
 					<li key={type.id}><ToolLink>{type}</ToolLink></li>
@@ -146,7 +146,7 @@ export function DataUnit() {
 
 			prefLabel,
 
-			partner,
+			university,
 
 			unitOf,
 			hasUnit,
@@ -154,7 +154,7 @@ export function DataUnit() {
 
 		}) => {
 
-			const parent=unitOf.filter(unit => !partner || unit.id !== partner.id);
+			const parent=unitOf.filter(unit => !university || unit.id !== university.id);
 
 			return <>
 

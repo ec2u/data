@@ -36,7 +36,7 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 
 public final class Agents extends Delegator {
 
@@ -79,7 +79,7 @@ public final class Agents extends Delegator {
                                         field(ID, iri()),
                                         field(RDFS.LABEL, literal("", "en")),
 
-                                        field(partner, iri())
+                                        field(university, iri())
 
                                 )
 

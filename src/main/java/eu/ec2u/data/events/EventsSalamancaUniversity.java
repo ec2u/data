@@ -47,7 +47,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
@@ -65,7 +65,7 @@ public final class EventsSalamancaUniversity implements Runnable {
             field(ID, iri("https://sac.usal.es/programacion/")),
             field(TYPE, Organization),
 
-            field(partner, Salamanca.id),
+            field(university, Salamanca.id),
 
             field(Schema.name,
                     literal("University of Salamanca / Cultural Activities Service", "en"),
@@ -187,7 +187,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                             field(dateModified, lastModified),
                             field(updated, literal(lastModified.map(Literal::temporalAccessorValue).map(Instant::from).orElse(now))),
 
-                            field(partner, Salamanca.id),
+                            field(university, Salamanca.id),
                             field(publisher, Publisher)
 
                     );

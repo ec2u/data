@@ -143,7 +143,7 @@ public final class OfferingsPavia implements Runnable {
                 field(ID, item(Programs.Context, Pavia, program.stringValue())),
 
                 field(RDF.TYPE, EducationalOccupationalProgram),
-                field(Resources.partner, Pavia.id),
+                field(Resources.university, Pavia.id),
 
                 field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.language)),
 
@@ -197,7 +197,7 @@ public final class OfferingsPavia implements Runnable {
                 field(ID, item(Courses.Context, Pavia, course.stringValue())),
 
                 field(RDF.TYPE, Course),
-                field(Resources.partner, Pavia.id),
+                field(Resources.university, Pavia.id),
 
                 field(Schema.name, localized(focus.seq(RDFS.LABEL).values(), Pavia.language)),
 

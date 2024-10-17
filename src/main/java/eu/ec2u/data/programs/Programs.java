@@ -40,7 +40,7 @@ import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.offerings.Offerings.LearningResource;
 import static eu.ec2u.data.resources.Resources.locales;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.schema;
 
 public final class Programs extends Delegator {
@@ -95,7 +95,7 @@ public final class Programs extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                                field(partner, iri()),
+                                                field(university, iri()),
                                                 field(programType, iri())
 
                                         )
@@ -113,7 +113,7 @@ public final class Programs extends Delegator {
                                 field(ID, iri()),
                                 field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                field(partner, iri()),
+                                field(university, iri()),
                                 field(programType, iri())
 
                         )))
