@@ -230,7 +230,6 @@ public final class EventsLinzCity implements Runnable {
                 field(image, focus.seq(image).value(asIRI())),
                 field(name, focus.seq(name).value(asString()).map(s -> literal(decode(s), "en"))),
                 field(description, focus.seq(description).value(asString()).map(s -> literal(decode(s), "en"))),
-                // field(Schema.disambiguatingDescription),
 
                 field(startDate, focus.seq(startDate).value(asString()).flatMap(this::datetime)),
                 field(endDate, focus.seq(endDate).value(asString()).flatMap(this::datetime)),
@@ -284,21 +283,7 @@ public final class EventsLinzCity implements Runnable {
 
                                         field(Schema.name, literal(decode(name), Linz.language)),
 
-                                        field(address, location
-
-                                                .seq(address, streetAddress)
-                                                .value(asString())
-
-                                                .map(address -> frame(
-
-                                                        field(ID, item(Locations.Context, Linz, address)),
-                                                        field(TYPE, PostalAddress),
-
-                                                        field(streetAddress, literal(decode(address)))
-
-                                                ))
-
-                                        )
+                                        field(address, address(location.seq(address)))
 
                                 ))
 
@@ -314,6 +299,31 @@ public final class EventsLinzCity implements Runnable {
                 })
 
                 .stream());
+    }
+
+    private Optional<Frame> address(final Focus address) {
+
+        return address.seq(streetAddress).value(asString()).map(street -> frame(
+
+                field(ID, item(Locations.Context, Linz, street)),
+                field(TYPE, PostalAddress),
+
+                field(streetAddress, literal(decode(street))),
+
+                field(addressLocality, address.seq(addressLocality)
+                        .value(asString())
+                        .map(XPath::decode)
+                        .map(Frame::literal)
+                ),
+
+                field(postalCode, address.seq(postalCode)
+                        .value(asString())
+                        .map(XPath::decode)
+                        .map(Frame::literal)
+                )
+
+        ));
+
     }
 
 }

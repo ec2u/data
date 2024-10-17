@@ -255,9 +255,15 @@ public final class EventsTurkuCity implements Runnable {
                         .optMap(entry -> entry.getValue().string("")
                                 .map(Strings::normalize)
                                 .map(info -> frame(
-                                        field(ID, item(Locations.Context, info)),
-                                        field(RDF.TYPE, Place),
-                                        field(name, literal(info, entry.getKey()))
+
+                                        field(ID, iri()),
+
+                                        field(Place, frame(
+                                                field(ID, item(Locations.Context, info)),
+                                                field(RDF.TYPE, Place),
+                                                field(name, literal(info, entry.getKey()))
+                                        ))
+
                                 ))
                         )
                 ))
