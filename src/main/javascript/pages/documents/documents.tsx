@@ -54,7 +54,7 @@ export const Documents=immutable({
 		label: required(local),
 		comment: optional(local),
 
-		partner: optional({
+		university: optional({
 				id: required(id),
 				label: required(local)
 			}
@@ -78,7 +78,7 @@ export function DataDocuments() {
 			}</ToolSearch>
 
 			<ToolOptions placeholder={"University"}>{
-				useOptions(documents, "partner")
+				useOptions(documents, "university")
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Type"} compact>{
@@ -118,7 +118,7 @@ export function DataDocuments() {
 			label,
 			comment,
 
-			partner
+			university
 
 		}) =>
 
@@ -126,7 +126,7 @@ export function DataDocuments() {
 			<ToolCard key={id} side={"end"}
 
 				title={<ToolLink>{{ id, label }}</ToolLink>}
-				tags={<span>{partner && toEntryString(partner) || "EC2U Alliance"}</span>}
+				tags={<span>{university && toEntryString(university) || "EC2U Alliance"}</span>}
 
 			>{
 

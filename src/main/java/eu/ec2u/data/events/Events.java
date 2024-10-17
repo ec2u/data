@@ -42,7 +42,8 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.*;
+import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.*;
 
 public final class Events extends Delegator {
@@ -54,9 +55,6 @@ public final class Events extends Delegator {
 
 
     public static final IRI Event=schema("Event");
-
-    public static final IRI dateCreated=schema("dateCreated");
-    public static final IRI dateModified=schema("dateModified");
 
     public static final IRI startDate=schema("startDate");
     public static final IRI endDate=schema("endDate");
@@ -133,7 +131,7 @@ public final class Events extends Delegator {
 
                 property(url, repeatable()),
 
-                property(startDate, optional(dateTime())),
+                property(startDate, required(dateTime())),
                 property(endDate, optional(dateTime())),
                 property(duration, optional(duration())),
 
@@ -154,9 +152,7 @@ public final class Events extends Delegator {
                 property(audience, multiple(Concept(), scheme(Audiences))),
 
                 property(eventAttendanceMode, optional(Resource(), in(EventAttendanceModeEnumeration.values()))),
-                property(eventStatus, optional(Resource(), in(EventStatusType.values()))),
-
-                property(updated, Shape::required)
+                property(eventStatus, optional(Resource(), in(EventStatusType.values())))
 
         );
     }
@@ -202,7 +198,7 @@ public final class Events extends Delegator {
 
         final Frame EventModel=frame(ThingModel,
 
-                field(partner, iri()), // !!!
+                field(university, iri()), // !!!
 
                 field(startDate, literal(OffsetDateTime.now())),
                 field(endDate, literal(OffsetDateTime.now())),

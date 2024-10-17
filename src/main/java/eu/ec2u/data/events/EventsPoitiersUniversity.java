@@ -39,7 +39,6 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
@@ -54,9 +53,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities.University.Poitiers;
@@ -73,7 +70,7 @@ public final class EventsPoitiersUniversity implements Runnable {
             field(ID, iri("https://www.univ-poitiers.fr/c/actualites/")),
             field(TYPE, Organization),
 
-            field(partner, Poitiers.id),
+            field(university, Poitiers.id),
 
             field(Schema.name,
 
@@ -121,14 +118,14 @@ public final class EventsPoitiersUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
 
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(Instant.now())
 
                 .flatMap(this::crawl)
                 .map(this::event)
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)
@@ -140,8 +137,8 @@ public final class EventsPoitiersUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<XPath> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(instant -> Stream.of(
                         "https://www.univ-poitiers.fr/feed",
@@ -190,9 +187,6 @@ public final class EventsPoitiersUniversity implements Runnable {
                 field(startDate, startDate(item)),
                 field(endDate, endDate(item)),
 
-                field(dateCreated, pubDate),
-                field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
-
                 field(Schema.about, item.strings("category").map(category -> frame(
                         field(ID, item(Topics, category)),
                         field(RDF.TYPE, SKOS.CONCEPT),
@@ -200,7 +194,7 @@ public final class EventsPoitiersUniversity implements Runnable {
                         field(SKOS.PREF_LABEL, literal(category, Poitiers.language))
                 ))),
 
-                field(partner, Poitiers.id),
+                field(university, Poitiers.id),
                 field(publisher, Publisher),
                 field(location, location(item))
 

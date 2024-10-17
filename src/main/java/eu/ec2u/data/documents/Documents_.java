@@ -25,6 +25,7 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.feeds.CSVProcessor;
@@ -48,7 +49,6 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.concepts.Concepts_.concept;
 import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.data.persons.Persons_.person;
-import static eu.ec2u.data.resources.Resources.partner;
 import static eu.ec2u.work.feeds.Parsers.url;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -129,7 +129,7 @@ final class Documents_ {
 
                     field(RDF.TYPE, Document),
 
-                    field(partner, university.id),
+                    field(Resources.university, university.id),
 
                     field(Schema.url, value(record, "URL (English)", Parsers::uri).map(Frame::iri)),
                     field(Schema.url, value(record, "URL (Local)", Parsers::uri).map(Frame::iri)),

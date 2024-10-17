@@ -24,13 +24,15 @@ import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.Tribe;
 import org.eclipse.rdf4j.model.IRI;
 
+import java.time.Instant;
+
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Coimbra;
 
@@ -43,7 +45,7 @@ public final class EventsCoimbraUniversity implements Runnable {
             field(ID, iri("https://agenda.uc.pt/")),
             field(TYPE, Organization),
 
-            field(partner, Coimbra.id),
+            field(university, Coimbra.id),
 
             field(Schema.name,
                     literal("University of Coimbra / Agenda UC", "en"),
@@ -65,7 +67,7 @@ public final class EventsCoimbraUniversity implements Runnable {
     @Override public void run() {
         update(connection -> Xtream
 
-                .of(updated(Context, Publisher.id().orElseThrow()))
+                .of(Instant.now())
 
                 .flatMap(new Tribe("https://agenda.uc.pt/")
                         .country(Coimbra.country)
@@ -75,9 +77,11 @@ public final class EventsCoimbraUniversity implements Runnable {
                 )
 
                 .map(event -> frame(event,
-                        field(partner, Coimbra.id),
+                        field(university, Coimbra.id),
                         field(publisher, Publisher)
                 ))
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)

@@ -44,7 +44,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.OrganizationTypes.*;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.units.Units.ResearchTopics;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.University.Salamanca;
@@ -136,7 +136,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(ID, item(Units.Context, Salamanca, id)),
 
                     field(RDF.TYPE, Unit),
-                    field(partner, Salamanca.id),
+                    field(university, Salamanca.id),
 
                     field(DCTERMS.TITLE, label),
                     field(DCTERMS.DESCRIPTION, json.string("topics")
@@ -214,7 +214,7 @@ public final class UnitsSalamancaData implements Runnable {
                             field(ID, item(Persons.Context, Salamanca, format("%s, %s", familyName, givenName))),
                             field(TYPE, FOAF.PERSON),
 
-                            field(partner, Salamanca.id),
+                            field(university, Salamanca.id),
 
                             field(FOAF.GIVEN_NAME, literal(givenName)),
                             field(FOAF.FAMILY_NAME, literal(familyName))
@@ -233,7 +233,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(ID, item(Units.Context, Salamanca, name)),
 
                     field(RDF.TYPE, Unit),
-                    field(partner, Salamanca.id),
+                    field(university, Salamanca.id),
 
                     field(DCTERMS.TITLE, title),
                     field(SKOS.PREF_LABEL, title),
@@ -258,7 +258,7 @@ public final class UnitsSalamancaData implements Runnable {
                     field(ID, item(Units.Context, Salamanca, name)),
 
                     field(RDF.TYPE, Unit),
-                    field(partner, Salamanca.id),
+                    field(university, Salamanca.id),
 
                     field(DCTERMS.TITLE, title),
                     field(SKOS.PREF_LABEL, title),

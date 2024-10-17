@@ -48,8 +48,7 @@ public final class Resources extends Delegator {
 
     public static final IRI Resource=term("Resource");
 
-    public static final IRI partner=term("partner");
-    public static final IRI updated=term("updated");
+    public static final IRI university=term("university");
 
 
     private static final Set<String> locales=Stream
@@ -81,8 +80,7 @@ public final class Resources extends Delegator {
                 property(RDFS.SEEALSO, multiple(id())),
                 property(RDFS.ISDEFINEDBY, optional(id())),
 
-                property(partner, () -> optional(University())),
-                property(updated, () -> optional(instant())),
+                property(university, () -> optional(University())),
 
                 property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
 
@@ -113,7 +111,7 @@ public final class Resources extends Delegator {
                                         field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
                                         field(reverse(RDFS.MEMBER), iri()),
-                                        field(partner, iri())
+                                        field(university, iri())
 
                                 )
 

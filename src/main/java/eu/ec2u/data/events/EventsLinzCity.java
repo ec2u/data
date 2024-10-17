@@ -63,8 +63,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Jena;
 import static eu.ec2u.data.universities.University.Linz;
@@ -82,7 +81,7 @@ public final class EventsLinzCity implements Runnable {
             field(ID, iri("https://www.linztourismus.at/en/leisure/discover-linz/events/event-calendar/")),
             field(TYPE, Organization),
 
-            field(partner, Linz.id),
+            field(university, Linz.id),
 
             field(name,
                     literal("Linz Tourism Information", "en"),
@@ -127,6 +126,8 @@ public final class EventsLinzCity implements Runnable {
                 .flatMap(this::crawl)
                 .flatMap(this::fetch)
                 .map(this::convert)
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)
@@ -223,11 +224,7 @@ public final class EventsLinzCity implements Runnable {
                 field(ID, item(Events.Context, Linz, id.stringValue())),
                 field(TYPE, Event),
 
-                // field(dateCreated),
-                // field(dateModified),
-                field(updated, literal(now)),
-
-                field(partner, Linz.id),
+                field(university, Linz.id),
 
                 field(url, id),
                 field(image, focus.seq(image).value(asIRI())),

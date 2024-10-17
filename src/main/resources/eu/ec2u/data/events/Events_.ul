@@ -1,4 +1,3 @@
-prefix ec2u:	</terms/>
 prefix schema: <https://schema.org/>
 
 
@@ -16,12 +15,9 @@ delete {
 	optional { ?e schema:startDate ?start }
 	optional { ?e schema:endDate ?end }
 
-    optional { ?e ec2u:updated ?updated }
-
 	bind (coalesce(?end, ?start) as ?date)
-	bind ((year(now())*12+month(now()))-(year(?updated)*12+month(?updated)) as ?delta)
 
-	filter (?date < now() || !bound(?date) && ?delta >= 1)
+	filter (?date < now())
 
 	optional { ?e ?p ?o }
 	optional { ?s ?q ?e }

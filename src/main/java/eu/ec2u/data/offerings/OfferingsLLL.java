@@ -27,6 +27,7 @@ import eu.ec2u.data.concepts.ISCEDF2013;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.feeds.CSVProcessor;
@@ -55,7 +56,6 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.events.Events.EventAttendanceModeEnumeration.*;
-import static eu.ec2u.data.resources.Resources.partner;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 
@@ -110,7 +110,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
                 field(RDF.TYPE, Course, CourseInstance),
 
-                field(partner, university.id),
+                field(Resources.university, university.id),
 
                 field(Events.audience, literal("Lifelong Learner")), // !!! review
 
@@ -158,7 +158,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
                                 field(ID, item(Persons.Context, university, format("%s, %s", surname, forename))),
                                 field(TYPE, FOAF.PERSON),
 
-                                field(partner, university.id),
+                                field(Resources.university, university.id),
 
                                 field(FOAF.GIVEN_NAME, literal(forename)),
                                 field(FOAF.FAMILY_NAME, literal(surname))

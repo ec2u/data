@@ -45,12 +45,11 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
+import static java.time.Instant.now;
 import static java.time.ZoneOffset.UTC;
 
 public final class EventsPaviaCity implements Runnable {
@@ -62,7 +61,7 @@ public final class EventsPaviaCity implements Runnable {
             field(ID, iri("http://www.vivipavia.it/site/home/eventi.html")),
             field(TYPE, Organization),
 
-            field(partner, Pavia.id),
+            field(university, Pavia.id),
 
             field(Schema.name,
                     literal("City of Pavia / ViviPavia", "en"),
@@ -81,14 +80,13 @@ public final class EventsPaviaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
-
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(now())
 
                 .flatMap(this::crawl)
                 .flatMap(this::event)
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)
@@ -101,8 +99,8 @@ public final class EventsPaviaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<IRI> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<IRI> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(new Fill<Instant>()
                         .model("http://www.vivipavia.it/site/cdq/listSearchArticle.jsp"
@@ -170,8 +168,7 @@ public final class EventsPaviaCity implements Runnable {
                                             field(ID, item(Events.Context, url.stringValue())),
                                             field(TYPE, Event),
 
-                                            field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
-                                            field(partner, Pavia.id),
+                                            field(university, Pavia.id),
 
                                             field(Schema.url, url),
                                             field(Schema.name, focus.seq(Schema.name).value()),

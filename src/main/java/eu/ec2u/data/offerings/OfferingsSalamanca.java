@@ -146,7 +146,7 @@ public final class OfferingsSalamanca implements Runnable {
                         field(ID, item(Programs.Context, Salamanca, code)),
 
                         field(RDF.TYPE, EducationalOccupationalProgram),
-                        field(Resources.partner, Salamanca.id),
+                        field(Resources.university, Salamanca.id),
 
                         field(Schema.url, json.string("programUrl").map(Frame::iri)),
                         field(Schema.identifier, literal(code)),
@@ -185,7 +185,7 @@ public final class OfferingsSalamanca implements Runnable {
                 field(ID, item(Courses.Context, Salamanca, code)),
 
                 field(RDF.TYPE, Course),
-                field(Resources.partner, Salamanca.id),
+                field(Resources.university, Salamanca.id),
 
                 field(Schema.url, json.string("urlEN").map(Frame::iri)),
                 field(Schema.identifier, literal(code)),

@@ -34,9 +34,8 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.universities.University.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
 
@@ -49,7 +48,7 @@ public final class EventsIasiCityInOras implements Runnable {
             field(ID, iri("https://iasi.inoras.ro/evenimente")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Iasi.id),
+            field(university, Iasi.id),
 
             field(Schema.name,
                     literal("InOras / Events in Iasi", "en"),
@@ -68,14 +67,13 @@ public final class EventsIasiCityInOras implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
-
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(Instant.now())
 
                 .flatMap(this::crawl)
                 .map(this::event)
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)
@@ -87,8 +85,8 @@ public final class EventsIasiCityInOras implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<Frame> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://iasi.inoras.ro/feed/")
@@ -102,8 +100,7 @@ public final class EventsIasiCityInOras implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Iasi.language),
 
-                field(updated, literal(now)),
-                field(partner, Iasi.id),
+                field(university, Iasi.id),
                 field(publisher, Publisher)
 
         );

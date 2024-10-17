@@ -25,12 +25,14 @@ import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.Tribe;
 import org.eclipse.rdf4j.model.IRI;
 
+import java.time.Instant;
+
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Pavia;
 
@@ -43,7 +45,7 @@ public final class EventsPaviaBorromeo implements Runnable {
             field(ID, iri("http://www.collegioborromeo.it/it/eventi/")),
             field(TYPE, Organization),
 
-            field(partner, Pavia.id),
+            field(university, Pavia.id),
 
             field(Schema.name,
                     literal("Almo Collegio Borromeo / Calendar", "en"),
@@ -64,7 +66,7 @@ public final class EventsPaviaBorromeo implements Runnable {
     @Override public void run() {
         update(connection -> Xtream
 
-                .of(updated(Context, Publisher.id().orElseThrow()))
+                .of(Instant.now())
 
                 .flatMap(new Tribe("http://www.collegioborromeo.it/it/")
                         .country(Pavia.country)
@@ -74,9 +76,11 @@ public final class EventsPaviaBorromeo implements Runnable {
                 )
 
                 .map(event -> frame(event,
-                        field(partner, Pavia.id),
+                        field(university, Pavia.id),
                         field(publisher, Publisher)
                 ))
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)

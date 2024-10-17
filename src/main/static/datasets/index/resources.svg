@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg"
-        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-108 137 345 232" width="345" height="232">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-108 137 358 232" width="358" height="232">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -34,26 +34,26 @@
             </g>
         </marker>
     </defs>
-    <g id="resources" fill-opacity="1" stroke-dasharray="none" fill="none" stroke="none" stroke-opacity="1">
+    <g id="resources" stroke="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke-dasharray="none">
         <title>resources</title>
-        <rect fill="white" x="-108" y="137" width="345" height="232"/>
+        <rect fill="white" x="-108" y="137" width="358" height="232"/>
         <g id="resources_Layer_1">
             <title>Layer 1</title>
             <g id="Group_223">
                 <g id="Graphic_225">
-                    <rect x="-79.29652" y="165.81481" width="120.4878" height="17.661808" fill="white"/>
-                    <rect x="-79.29652" y="165.81481" width="120.4878" height="17.661808" stroke="black"
+                    <rect x="-79.29652" y="165.81481" width="110.45068" height="17.661808" fill="white"/>
+                    <rect x="-79.29652" y="165.81481" width="110.45068" height="17.661808" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(-45.865854 169.14572)" fill="black">
+                    <text transform="translate(-50.88441 169.14572)" fill="black">
                         <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9" fill="black"
                                 x="0" y="9">rdfs:Resource
                         </tspan>
                     </text>
                 </g>
                 <g id="Graphic_224">
-                    <rect x="-79.29652" y="183.47662" width="120.4878" height="72" fill="white"/>
-                    <rect x="-79.29652" y="183.47662" width="120.4878" height="72" stroke="black" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width=".25"/>
+                    <rect x="-79.29652" y="183.47662" width="110.45068" height="61" fill="white"/>
+                    <rect x="-79.29652" y="183.47662" width="110.45068" height="61" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
                     <text transform="translate(-73.29652 186.47662)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">rdf:type : id [*]</tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">rdfs:label : text [0..1]
@@ -65,19 +65,16 @@
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">rdfs:isDefinedBy : id
                             [0..1]
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="64">ec2u:updated : instant
-                            [0..1]
-                        </tspan>
                     </text>
                 </g>
             </g>
             <g id="Group_219">
                 <g id="Graphic_220">
                     <a xl:href="universities.svg">
-                        <rect x="133.22835" y="202.14572" width="75.11865" height="17" fill="white"/>
-                        <rect x="133.22835" y="202.14572" width="75.11865" height="17" stroke="black"
+                        <rect x="145.98425" y="196.64572" width="75.11865" height="17" fill="white"/>
+                        <rect x="145.98425" y="196.64572" width="75.11865" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(139.22835 205.14572)" fill="#a5a5a5">
+                        <text transform="translate(151.98425 199.64572)" fill="#a5a5a5">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9">
                                 ec2u:University
                             </tspan>
@@ -86,22 +83,22 @@
                 </g>
             </g>
             <g id="Line_218">
-                <line x1="41.191275" y1="210.64572" x2="126.37835" y2="210.64572" marker-end="url(#StickArrow_Marker)"
+                <line x1="31.154166" y1="205.14572" x2="139.13425" y2="205.14572" marker-end="url(#StickArrow_Marker)"
                         stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_217">
-                <rect x="52.81059" y="204.14572" width="72.67383" height="13" fill="white"/>
-                <text transform="translate(55.81059 205.14572)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">ec2u:partner 0..1</tspan>
+                <rect x="49.96089" y="198.64572" width="82.05176" height="13" fill="white"/>
+                <text transform="translate(52.96089 199.64572)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">ec2u:university 0..1</tspan>
                 </text>
             </g>
             <g id="Group_229">
                 <g id="Graphic_230">
                     <a xl:href="datasets.svg">
-                        <rect x="-50.50135" y="323.1496" width="62.89746" height="17" fill="white"/>
-                        <rect x="-50.50135" y="323.1496" width="62.89746" height="17" stroke="black"
+                        <rect x="-55.519906" y="323.1496" width="62.89746" height="17" fill="white"/>
+                        <rect x="-55.519906" y="323.1496" width="62.89746" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-                        <text transform="translate(-44.50135 326.1496)" fill="#a5a5a5">
+                        <text transform="translate(-49.519906 326.1496)" fill="#a5a5a5">
                             <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9">
                                 void:Dataset
                             </tspan>
@@ -110,19 +107,19 @@
                 </g>
             </g>
             <g id="Line_231">
-                <line x1="-19.05262" y1="316.2996" x2="-19.05262" y2="262.32662" marker-end="url(#StickArrow_Marker)"
+                <line x1="-24.071176" y1="316.2996" x2="-24.071176" y2="251.32662" marker-end="url(#StickArrow_Marker)"
                         marker-start="url(#StickArrow_Marker_2)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_232">
-                <rect x="-50.423715" y="263.73016" width="62.74219" height="13" fill="white"/>
-                <text transform="translate(-47.423715 264.73016)" fill="black">
+                <rect x="-55.44227" y="255.1283" width="62.74219" height="13" fill="white"/>
+                <text transform="translate(-52.44227 256.1283)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">rdfs:member *</tspan>
                 </text>
             </g>
             <g id="Graphic_233">
-                <rect x="-42.67396" y="300.57376" width="47.242676" height="13" fill="white"/>
-                <text transform="translate(-39.67396 301.57376)" fill="black">
+                <rect x="-47.692514" y="297.9607" width="47.242676" height="13" fill="white"/>
+                <text transform="translate(-44.692514 298.9607)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">‹dataset› *</tspan>
                 </text>
             </g>

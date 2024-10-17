@@ -16,23 +16,20 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.rdf4j.actions.TupleQuery;
 import com.metreeca.http.rdf4j.actions.Update;
 import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.services.Logger;
-import com.metreeca.http.work.Xtream;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Values.literal;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Logger.time;
@@ -45,41 +42,6 @@ import static java.util.stream.Collectors.toSet;
 
 
 final class Events_ {
-
-    static Instant updated(final IRI context, final Value publisher) {
-        return Xtream
-
-                .of("prefix ec2u: </terms/>\n"
-                        +
-                        "PREFIX schema: <https://schema.org/>\n"+
-                        "\n"
-                        +"select (max(?updated) as ?instant) where {\n"
-                        +"\n"
-                        +"\t?event a schema:Event;\n"
-                        +"\t\tschema:publisher ?publisher;\n"
-                        +"\t\tec2u:updated ?updated.\n"
-                        +"\n"
-                        +"}"
-                )
-
-                .flatMap(new TupleQuery()
-                        .base(BASE)
-                        .binding("publisher", publisher)
-                        .dflt(context)
-                )
-
-                .optMap(bindings -> literal(bindings.getValue("instant")))
-
-                .map(Literal::temporalAccessorValue)
-                .map(Instant::from)
-
-                .findFirst()
-
-                .orElseGet(() -> Instant.now().minus(Duration.ofDays(30)));
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Events_() { }
 

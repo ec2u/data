@@ -34,11 +34,11 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.universities.University.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
+import static java.time.Instant.now;
 
 public final class EventsIasiCityCultura implements Runnable {
 
@@ -49,7 +49,7 @@ public final class EventsIasiCityCultura implements Runnable {
             field(ID, iri("https://culturainiasi.ro/evenimente-culturale/")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Iasi.id),
+            field(university, Iasi.id),
 
             field(Schema.name,
                     literal("Iaşul Cultural / Evenimente in Iași", Iasi.language),
@@ -68,14 +68,13 @@ public final class EventsIasiCityCultura implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
-
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(now())
 
                 .flatMap(this::crawl)
                 .map(this::event)
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)
@@ -88,8 +87,8 @@ public final class EventsIasiCityCultura implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<Frame> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://culturainiasi.ro/feed")
@@ -103,8 +102,7 @@ public final class EventsIasiCityCultura implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Iasi.language),
 
-                field(updated, literal(now)),
-                field(partner, Iasi.id),
+                field(university, Iasi.id),
                 field(publisher, Publisher)
 
         );

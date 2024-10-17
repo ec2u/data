@@ -38,7 +38,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.units.Units.ResearchTopics;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.University.Poitiers;
@@ -95,7 +95,7 @@ public final class UnitsPoitiers implements Runnable {
                 field(ID, item(Units.Context, Poitiers, id)),
                 field(TYPE, Unit),
 
-                field(partner, Poitiers.id),
+                field(university, Poitiers.id),
                 field(RDFS.ISDEFINEDBY, json.string("fiche_rnsr").map(Frame::iri)),
 
                 field(FOAF.HOMEPAGE, json.string("site_web").map(Frame::iri)),
@@ -174,7 +174,7 @@ public final class UnitsPoitiers implements Runnable {
                     field(ID, item(Persons.Context, Poitiers, join(", ", surname, forename))),
                     field(TYPE, FOAF.PERSON),
 
-                    field(partner, Poitiers.id),
+                    field(university, Poitiers.id),
 
                     field(FOAF.GIVEN_NAME, literal(forename)),
                     field(FOAF.FAMILY_NAME, literal(surname))

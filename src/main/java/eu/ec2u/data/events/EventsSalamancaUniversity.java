@@ -46,9 +46,7 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
 import static java.time.ZoneOffset.UTC;
@@ -65,7 +63,7 @@ public final class EventsSalamancaUniversity implements Runnable {
             field(ID, iri("https://sac.usal.es/programacion/")),
             field(TYPE, Organization),
 
-            field(partner, Salamanca.id),
+            field(university, Salamanca.id),
 
             field(Schema.name,
                     literal("University of Salamanca / Cultural Activities Service", "en"),
@@ -88,10 +86,12 @@ public final class EventsSalamancaUniversity implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(now)
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)
@@ -183,11 +183,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                             field(Events.startDate, startDate),
                             field(Events.endDate, endDate),
 
-                            field(dateCreated, created),
-                            field(dateModified, lastModified),
-                            field(updated, literal(lastModified.map(Literal::temporalAccessorValue).map(Instant::from).orElse(now))),
-
-                            field(partner, Salamanca.id),
+                            field(university, Salamanca.id),
                             field(publisher, Publisher)
 
                     );

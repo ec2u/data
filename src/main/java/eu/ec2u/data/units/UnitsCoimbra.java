@@ -145,7 +145,7 @@ public final class UnitsCoimbra implements Runnable {
                 field(ID, item(Units.Context, Coimbra, id)),
                 field(TYPE, Unit),
 
-                field(Resources.partner, Coimbra.id),
+                field(Resources.university, Coimbra.id),
 
                 field(FOAF.HOMEPAGE, json.string("web_url").map(Frame::iri)),
                 field(FOAF.MBOX, json.string("email").map(Frame::literal)),

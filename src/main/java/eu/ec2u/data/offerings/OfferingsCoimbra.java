@@ -284,7 +284,7 @@ public final class OfferingsCoimbra implements Runnable {
                 field(ID, item(Programs.Context, Coimbra, String.valueOf(id))),
                 field(RDF.TYPE, EducationalOccupationalProgram),
 
-                field(Resources.partner, Coimbra.id),
+                field(Resources.university, Coimbra.id),
 
                 field(Schema.identifier, literal(id.toString())),
 
@@ -348,7 +348,7 @@ public final class OfferingsCoimbra implements Runnable {
                 field(ID, item(Courses.Context, Coimbra, String.valueOf(id))),
                 field(RDF.TYPE, Course),
 
-                field(Resources.partner, Coimbra.id),
+                field(Resources.university, Coimbra.id),
 
                 field(Schema.identifier, literal(id.toString())),
                 field(courseCode, literal(id.toString())),

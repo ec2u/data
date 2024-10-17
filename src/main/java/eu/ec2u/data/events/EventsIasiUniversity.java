@@ -25,13 +25,15 @@ import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.Tribe;
 import org.eclipse.rdf4j.model.IRI;
 
+import java.time.Instant;
+
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.events.Events.startDate;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.universities.University.Iasi;
 
 public final class EventsIasiUniversity implements Runnable {
@@ -43,7 +45,7 @@ public final class EventsIasiUniversity implements Runnable {
             field(ID, iri("https://www.uaic.ro/")),
             field(TYPE, Schema.Organization),
 
-            field(partner, Iasi.id),
+            field(university, Iasi.id),
 
             field(Schema.name,
                     literal("University of Iasi / Events", "en"),
@@ -63,7 +65,7 @@ public final class EventsIasiUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(Instant.now())
 
                 .flatMap(new Tribe("https://www.uaic.ro/")
                         .country(Iasi.country)
@@ -73,9 +75,11 @@ public final class EventsIasiUniversity implements Runnable {
                 )
 
                 .map(event -> frame(event,
-                        field(partner, Iasi.id),
+                        field(university, Iasi.id),
                         field(publisher, Publisher)
                 ))
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)

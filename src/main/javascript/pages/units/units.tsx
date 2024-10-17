@@ -57,7 +57,7 @@ export const Units=immutable({
 		prefLabel: required(local),
 		altLabel: optional(local),
 
-		partner: optional({
+		university: optional({
 			label: required(local)
 		})
 
@@ -80,7 +80,7 @@ export function DataUnits() {
 			}</ToolSearch>
 
 			<ToolOptions placeholder={"University"}>{
-				useOptions(units, "partner", { type: entry({ id: "", label: required(local) }) })
+				useOptions(units, "university", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Type"} compact>{
@@ -109,7 +109,7 @@ export function DataUnits() {
 			prefLabel,
 			altLabel,
 
-			partner
+			university
 
 		}) =>
 
@@ -117,7 +117,7 @@ export function DataUnits() {
 
 				title={<ToolLink>{{ id, label: toUnitLabel({ prefLabel, altLabel }) }}</ToolLink>}
 
-				tags={partner && <div>{partner && toFrameString(partner) || "EC2U Alliance"}</div>}
+				tags={university && <div>{toFrameString(university) || "EC2U Alliance"}</div>}
 
 			>{
 

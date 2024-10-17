@@ -54,7 +54,7 @@ import static eu.ec2u.data.courses.Courses.Course;
 import static eu.ec2u.data.courses.Courses.courseCode;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.hasCourse;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.identifier;
 import static eu.ec2u.data.universities.University.Poitiers;
 import static java.lang.String.format;
@@ -200,7 +200,7 @@ public final class OfferingsPoitiers implements Runnable {
                 field(ID, item(Programs.Context, Poitiers, code)),
 
                 field(RDF.TYPE, Programs.EducationalOccupationalProgram),
-                field(partner, Poitiers.id),
+                field(university, Poitiers.id),
 
                 field(Schema.name, json.string("name")
                         .map(name -> literal(format("%s - %s", code, name), Poitiers.language))
@@ -224,7 +224,7 @@ public final class OfferingsPoitiers implements Runnable {
                                 field(ID, item(Organizations.Context, Poitiers, name)),
 
                                 field(RDF.TYPE, Schema.Organization),
-                                field(partner, Poitiers.id),
+                                field(university, Poitiers.id),
                                 field(Schema.name, literal(name, Poitiers.language))
 
                         ))
@@ -274,7 +274,7 @@ public final class OfferingsPoitiers implements Runnable {
                             field(ID, item(Courses.Context, Poitiers, code)),
 
                             field(RDF.TYPE, Course),
-                            field(partner, Poitiers.id),
+                            field(university, Poitiers.id),
 
                             field(Schema.name, json.string("name")
                                     .map(name -> literal(format("%s - %s", code, name), Poitiers.language))

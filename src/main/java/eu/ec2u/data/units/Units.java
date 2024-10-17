@@ -42,7 +42,7 @@ import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.OrganizationalUnit;
 import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.partner;
+import static eu.ec2u.data.resources.Resources.university;
 
 
 public final class Units extends Delegator {
@@ -88,7 +88,7 @@ public final class Units extends Delegator {
                                                 field(ID, iri()),
                                                 field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                                field(partner, iri()),
+                                                field(university, iri()),
                                                 field(ORG.CLASSIFICATION, iri())
 
                                         )
@@ -107,7 +107,7 @@ public final class Units extends Delegator {
 
                                 field(RDFS.LABEL, literal("", ANY_LOCALE)),
 
-                                field(partner, iri()),
+                                field(university, iri()),
                                 field(ORG.CLASSIFICATION, iri())
 
                         )))

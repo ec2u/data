@@ -45,11 +45,10 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
-import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Poitiers;
+import static java.time.Instant.now;
 
 public final class EventsPoitiersCityGrand implements Runnable {
 
@@ -60,7 +59,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
             field(ID, iri("https://sortir.grandpoitiers.fr/")),
             field(TYPE, Organization),
 
-            field(partner, Poitiers.id),
+            field(university, Poitiers.id),
 
             field(Schema.name,
                     literal("Grand Poitiers / Events", "en"),
@@ -79,14 +78,14 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
 
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(now())
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)
@@ -98,8 +97,8 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<XPath> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://sortir.grandpoitiers.fr/agenda/rss")
@@ -151,12 +150,9 @@ public final class EventsPoitiersCityGrand implements Runnable {
                     field(startDate, datetime(item, "ev:startdate")),
                     field(endDate, datetime(item, "ev:enddate")),
 
-                    field(dateCreated, pubDate),
-                    field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
-
                     field(Schema.about, category(item)),
 
-                    field(partner, Poitiers.id),
+                    field(university, Poitiers.id),
                     field(publisher, Publisher)
 
             );
