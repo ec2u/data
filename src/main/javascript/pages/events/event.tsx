@@ -21,7 +21,7 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
-import { entryCompare, toEntryString } from "@metreeca/core/entry";
+import { entryCompare, isEntry, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
@@ -33,7 +33,6 @@ import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import React from "react";
-
 
 export const Event=immutable({
 
@@ -95,12 +94,18 @@ export const Event=immutable({
 
 		Place: optional({
 			label: required(local),
-			url: optional(id)
+			url: optional(id),
+			address: optional({
+				streetAddress: optional(string),
+				postalCode: optional(string),
+				addressLocality: optional(string)
+			})
 		}),
 
 		PostalAddress: optional({
-			label: required(local),
-			url: optional(id)
+			streetAddress: optional(string),
+			postalCode: optional(string),
+			addressLocality: optional(string)
 		}),
 
 		VirtualLocation: optional({
@@ -116,6 +121,28 @@ export const Event=immutable({
 	})
 
 });
+
+
+type Place=Exclude<Exclude<typeof Event.location, undefined>[number]["Place"], undefined>
+type PostalAddress=Exclude<Exclude<typeof Event.location, undefined>[number]["PostalAddress"], undefined>
+
+function asPlace(place: Place) {
+	return <div>
+		<span>{toLocalString(place.label)}</span>
+		{place.address && asPostalAddress(place.address)}
+	</div>;
+}
+
+function asPostalAddress(address: PostalAddress) {
+	return <div>
+		{address.streetAddress && <span>{address.streetAddress}</span>}
+		{address.addressLocality && <span>{address.postalCode} {
+			isEntry(address.addressLocality)
+				? <ToolLink>{address.addressLocality}</ToolLink>
+				: address.addressLocality}</span>
+		}
+	</div>;
+}
 
 
 export function DataEvent() {
@@ -197,14 +224,16 @@ export function DataEvent() {
 				"Attendance": eventAttendanceMode && toEntryString(eventAttendanceMode),
 				"Status": eventStatus && toEntryString(eventStatus),
 
-				"Location": location && <ul>{location?.map(({ Text, Place, VirtualLocation }, index) =>
+				"Location": location && <ul>{location?.map(({ Text, Place, PostalAddress, VirtualLocation }, index) =>
 
 					<li key={index}>{
 
 						Text ? <span>{Text}</span>
-							: Place ? <span>{toLocalString(Place.label)}</span>
-								: VirtualLocation ? <a href={VirtualLocation.url}>{toLocalString(VirtualLocation.label)}</a>
-									: null
+							: Place ? asPlace(Place)
+								: PostalAddress ? asPostalAddress(PostalAddress)
+									: VirtualLocation ?
+										<a href={VirtualLocation.url}>{toLocalString(VirtualLocation.label)}</a>
+										: null
 
 					}</li>
 				)}</ul>

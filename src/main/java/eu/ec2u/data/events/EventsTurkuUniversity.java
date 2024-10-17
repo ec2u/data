@@ -257,29 +257,16 @@ public final class EventsTurkuUniversity implements Runnable {
 
             return frame(
 
-                    field(ID, item(Locations.Context, Xtream
+                    field(ID, iri()),
 
-                            .of(
-                                    Optional.of(id).map(Frame::literal), name.map(Frame::literal),
-                                    url, addressCountry, addressLocality, postalCode, streetAddress
-                            )
-
-                            .optMap(value -> value)
-                            .map(Value::stringValue)
-                            .collect(joining("\n"))
-
-                    )),
-
-                    field(RDF.TYPE, Schema.Place),
-
-                    field(Schema.url, url),
-                    field(Schema.name, name.map(text -> literal(text, Turku.language))),
-
-                    field(Schema.address, frame(
+                    field(Schema.Place, frame(
 
                             field(ID, item(Locations.Context, Xtream
 
-                                    .of(url, addressCountry, addressLocality, postalCode, streetAddress)
+                                    .of(
+                                            Optional.of(id).map(Frame::literal), name.map(Frame::literal),
+                                            url, addressCountry, addressLocality, postalCode, streetAddress
+                                    )
 
                                     .optMap(value -> value)
                                     .map(Value::stringValue)
@@ -287,14 +274,33 @@ public final class EventsTurkuUniversity implements Runnable {
 
                             )),
 
-                            field(RDF.TYPE, Schema.PostalAddress),
+                            field(RDF.TYPE, Schema.Place),
 
-                            field(Schema.addressCountry, addressCountry),
-                            field(Schema.addressLocality, addressLocality),
-                            field(Schema.postalCode, postalCode),
-                            field(Schema.streetAddress, streetAddress),
+                            field(Schema.url, url),
+                            field(Schema.name, name.map(text -> literal(text, Turku.language))),
 
-                            field(Schema.url, url)
+                            field(Schema.address, frame(
+
+                                    field(ID, item(Locations.Context, Xtream
+
+                                            .of(url, addressCountry, addressLocality, postalCode, streetAddress)
+
+                                            .optMap(value -> value)
+                                            .map(Value::stringValue)
+                                            .collect(joining("\n"))
+
+                                    )),
+
+                                    field(RDF.TYPE, Schema.PostalAddress),
+
+                                    field(Schema.addressCountry, addressCountry),
+                                    field(Schema.addressLocality, addressLocality),
+                                    field(Schema.postalCode, postalCode),
+                                    field(Schema.streetAddress, streetAddress),
+
+                                    field(Schema.url, url)
+
+                            ))
 
                     ))
 

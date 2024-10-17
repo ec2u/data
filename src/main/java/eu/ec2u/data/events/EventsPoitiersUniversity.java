@@ -54,8 +54,6 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities.University.Poitiers;
 import static java.lang.String.join;
 import static java.time.temporal.ChronoField.*;
@@ -68,7 +66,7 @@ public final class EventsPoitiersUniversity implements Runnable {
     private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
 
             field(ID, iri("https://www.univ-poitiers.fr/c/actualites/")),
-            field(TYPE, Organization),
+            field(TYPE, Schema.Organization),
 
             field(university, Poitiers.id),
 
@@ -196,7 +194,7 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                 field(university, Poitiers.id),
                 field(publisher, Publisher),
-                field(location, location(item))
+                field(Schema.location, location(item))
 
         );
     }
@@ -253,15 +251,21 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                     return frame(
 
-                            field(ID, item(Locations.Context, md5(join("\0", name, address.orElse(""))))),
+                            field(ID, iri()),
 
-                            field(RDF.TYPE, Schema.Place),
+                            field(Schema.Place, frame(
 
-                            field(Schema.name, literal(name, Poitiers.language)),
+                                    field(ID, item(Locations.Context, md5(join("\0", name, address.orElse(""))))),
+                                    field(TYPE, Schema.Place),
 
-                            field(Schema.description, address
-                                    .map(value -> literal(value, Poitiers.language))
-                            )
+                                    field(Schema.name, literal(name, Poitiers.language)),
+
+                                    field(Schema.description, address
+                                            .map(value -> literal(value, Poitiers.language))
+                                    )
+
+                            ))
+
                     );
                 });
     }

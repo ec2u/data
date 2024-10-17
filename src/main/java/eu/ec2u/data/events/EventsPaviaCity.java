@@ -29,7 +29,9 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -42,11 +44,10 @@ import java.util.Set;
 
 import static com.metreeca.link.Frame.*;
 
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.things.Schema.Organization;
+import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.time.Instant.now;
@@ -56,19 +57,19 @@ public final class EventsPaviaCity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/pavia/city");
 
-    private static final Frame Publisher=Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("http://www.vivipavia.it/site/home/eventi.html")),
             field(TYPE, Organization),
 
             field(university, Pavia.id),
 
-            field(Schema.name,
+            field(name,
                     literal("City of Pavia / ViviPavia", "en"),
                     literal("Comune di Pavia / ViviPavia", Pavia.language)
             ),
 
-            field(Schema.about, OrganizationTypes.City)
+            field(about, OrganizationTypes.City)
 
     );
 
@@ -123,7 +124,7 @@ public final class EventsPaviaCity implements Runnable {
                 .batch(0)
 
                 .flatMap(model -> focus(Set.of(Event), model)
-                        .seq(reverse(RDF.TYPE), Schema.url)
+                        .seq(reverse(RDF.TYPE), url)
                         .values(asIRI())
                 );
     }
@@ -171,18 +172,18 @@ public final class EventsPaviaCity implements Runnable {
                                             field(university, Pavia.id),
 
                                             field(Schema.url, url),
-                                            field(Schema.name, focus.seq(Schema.name).value()),
+                                            field(name, focus.seq(name).value()),
                                             field(Schema.description, focus.seq(Schema.description).value().or(() -> description)),
-                                            field(Schema.disambiguatingDescription, focus.seq(Schema.disambiguatingDescription).value()),
-                                            field(Schema.image, focus.seq(Schema.image).values()),
+                                            field(disambiguatingDescription, focus.seq(disambiguatingDescription).value()),
+                                            field(image, focus.seq(image).values()),
 
                                             field(startDate, focus.seq(startDate).value()),
                                             field(endDate, focus.seq(endDate).value()),
 
                                             field(eventStatus, focus.seq(eventStatus).value()),
 
-                                            field(publisher, Publisher)
-                                            // field(location, focus.frame(location).map(this::location))
+                                            field(publisher, Publisher),
+                                            field(location, location(focus.seq(location)))
 
                                     ))
                             );
@@ -193,25 +194,34 @@ public final class EventsPaviaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // private Frame location(final Frame location) {
-    //     return frame(item(Locations.Context, location.skolemize(
-    //             seq(Schema.name),
-    //             seq(step(Schema.address), alt(Schema.name, Schema.streetAddress, Schema.addressLocality))
-    //     )))
-    //
-    //             .value(RDF.TYPE, Schema.Place)
-    //
-    //             .value(Schema.name, location.value(alt(seq(Schema.name), seq(Schema.address, Schema.name))))
-    //             .frame(Schema.address, location.frame(Schema.address).map(this::address));
-    // }
-    //
-    // private Frame address(final Frame address) {
-    //     return frame(iri(Locations.Context, address.skolemize(Schema.streetAddress, Schema.addressLocality)))
-    //
-    //             .value(RDF.TYPE, Schema.PostalAddress)
-    //
-    //             .value(Schema.streetAddress, address.value(Schema.streetAddress))
-    //             .value(Schema.addressLocality, address.value(Schema.addressLocality));
-    // }
+    private Frame location(final Focus location) {
+        return frame(
+
+                field(ID, iri()),
+
+                field(Place, frame(
+
+                        field(ID, iri()),
+                        field(TYPE, Place),
+
+                        field(name, location.seq(name).value()),
+                        field(address, address(location.seq(address)))
+
+                ))
+        );
+    }
+
+    private Optional<Frame> address(final Focus address) {
+        return address.seq(streetAddress).value(asString()).map(sa -> frame(
+
+                field(ID, item(Locations.Context, Pavia, skolemize(address, streetAddress, postalCode, addressLocality))),
+                field(TYPE, PostalAddress),
+
+                field(streetAddress, address.seq(streetAddress).value()),
+                field(postalCode, address.seq(postalCode).value()),
+                field(addressLocality, address.seq(addressLocality).value())
+
+        ));
+    }
 
 }

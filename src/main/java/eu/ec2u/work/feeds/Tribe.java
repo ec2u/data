@@ -274,37 +274,42 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             return frame(
 
-                    field(ID, item(Locations.Context, id)),
+                    field(ID, iri()),
 
-                    field(RDF.TYPE, Schema.Place),
+                    field(Schema.Place, frame(
 
-                    field(Schema.url, location.string("url").map(Frame::iri)),
-                    field(Schema.name, (location.string("venue")).map(text -> literal(text, language))),
+                            field(ID, item(Locations.Context, id)),
 
-                    field(Schema.latitude, location.decimal("geo_lat").map(Frame::literal)),
-                    field(Schema.longitude, location.decimal("geo_lng").map(Frame::literal)),
+                            field(RDF.TYPE, Schema.Place),
 
-                    field(Schema.address, frame(
+                            field(Schema.url, location.string("url").map(Frame::iri)),
+                            field(Schema.name, (location.string("venue")).map(text -> literal(text, language))),
 
-                            field(ID, item(Locations.Context, Xtream
-                                    .of(addressCountry, addressLocality, streetAddress)
-                                    .optMap(identity())
-                                    .map(Value::stringValue)
-                                    .collect(joining("\n")))
-                            ),
+                            field(Schema.latitude, location.decimal("geo_lat").map(Frame::literal)),
+                            field(Schema.longitude, location.decimal("geo_lng").map(Frame::literal)),
 
-                            field(RDF.TYPE, Schema.PostalAddress),
+                            field(Schema.address, frame(
 
-                            field(Schema.addressCountry, addressCountry),
-                            field(Schema.addressLocality, addressLocality),
-                            field(Schema.streetAddress, streetAddress),
+                                    field(ID, item(Locations.Context, Xtream
+                                            .of(addressCountry, addressLocality, streetAddress)
+                                            .optMap(identity())
+                                            .map(Value::stringValue)
+                                            .collect(joining("\n")))
+                                    ),
 
-                            field(Schema.url, location.string("website").flatMap(Parsers::url).map(Frame::iri)),
-                            field(Schema.email, location.string("email").map(Frame::literal)),
-                            field(Schema.telephone, location.string("phone").map(Frame::literal))
+                                    field(RDF.TYPE, Schema.PostalAddress),
+
+                                    field(Schema.addressCountry, addressCountry),
+                                    field(Schema.addressLocality, addressLocality),
+                                    field(Schema.streetAddress, streetAddress),
+
+                                    field(Schema.url, location.string("website").flatMap(Parsers::url).map(Frame::iri)),
+                                    field(Schema.email, location.string("email").map(Frame::literal)),
+                                    field(Schema.telephone, location.string("phone").map(Frame::literal))
+
+                            ))
 
                     ))
-
             );
 
         });
