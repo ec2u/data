@@ -58,7 +58,8 @@ export const Events=immutable({
 		comment: optional(local),
 		image: optional(id),
 
-		startDate: optional(dateTime),
+		startDate: required(dateTime),
+		endDate: optional(dateTime),
 
 		university: optional({
 			id: required(id),
@@ -143,18 +144,18 @@ export function DataEvents() {
 				image,
 
 				startDate,
+				endDate,
 
 				university
 
 			}) =>
-
 
 				<ToolCard key={id} side={"end"} size={10}
 
 					title={<ToolLink>{{
 
 						id,
-						label: startDate ? `${startDate.substring(0, 10)} / ${toLocalString(label)}` : label
+						label: `${startDate.substring(0, 10)}${endDate && ` › ${endDate.substring(0, 10)}`} / ${toLocalString(label)}`
 
 					}}</ToolLink>}
 
