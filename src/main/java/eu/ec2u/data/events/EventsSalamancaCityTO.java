@@ -28,7 +28,6 @@ import com.metreeca.link.Frame;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
-import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
@@ -37,7 +36,6 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import java.text.ParsePosition;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Locale;
@@ -48,10 +46,9 @@ import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events.startDate;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
 import static java.time.temporal.ChronoField.*;
@@ -106,7 +103,7 @@ public final class EventsSalamancaCityTO implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(now)
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -122,8 +119,8 @@ public final class EventsSalamancaCityTO implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<XPath> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://www.salamanca.es/es/?option=com_jevents&task=modlatest.rss&format=feed&type=rss")
@@ -154,10 +151,6 @@ public final class EventsSalamancaCityTO implements Runnable {
                     .map(Strings::clip)
                     .map(text -> literal(text, Salamanca.language));
 
-            final Optional<Literal> pubDate=RSS.pubDate(item)
-                    .map(Frame::literal);
-
-
             return frame(
 
                     field(ID, iri(Events.Context, md5(url))),
@@ -174,9 +167,6 @@ public final class EventsSalamancaCityTO implements Runnable {
                             .map(v -> LocalDateTime.from(v).atOffset(Salamanca.zone.getRules().getOffset(now)))
                             .map(Frame::literal)
                     ),
-
-                    field(dateCreated, pubDate),
-                    field(updated, literal(RSS.pubDate(item).map(OffsetDateTime::toInstant).orElse(now))),
 
                     field(university, Salamanca.id),
                     field(publisher, Publisher)

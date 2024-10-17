@@ -33,7 +33,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -53,10 +52,8 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.locales;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Turku;
 import static java.time.ZoneOffset.UTC;
@@ -96,13 +93,10 @@ public final class EventsTurkuCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
-
     @Override public void run() {
         update(connection -> {
 
-            final List<Frame> events=Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+            final List<Frame> events=Xtream.of(Instant.now())
 
                     .flatMap(this::crawl)
                     .flatMap(this::event)
@@ -143,8 +137,8 @@ public final class EventsTurkuCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JsonValue> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<JsonValue> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://api.hel.fi/linkedevents/v1/event/"
@@ -226,21 +220,6 @@ public final class EventsTurkuCity implements Runnable {
                             field(endDate, json.string("end_time")
                                     .map(guarded(OffsetDateTime::parse))
                                     .map(Frame::literal)),
-
-                            // field(DCTERMS.ISSUED, json.string("date_published").map(v -> literal(v, XSD.DATETIME))),
-
-                            field(dateCreated, json.string("created_time").map(v -> literal(v, XSD.DATETIME))),
-                            field(dateModified, json.string("last_modified_time")
-                                    .map(guarded(OffsetDateTime::parse))
-                                    .map(Frame::literal)
-                            ),
-
-                            field(updated, literal(json.string("last_modified_time")
-                                    .or(() -> json.string("created_time"))
-                                    .map(guarded(OffsetDateTime::parse))
-                                    .map(Instant::from)
-                                    .orElse(now)
-                            )),
 
                             // !!! keywords
                             // !!! in_language

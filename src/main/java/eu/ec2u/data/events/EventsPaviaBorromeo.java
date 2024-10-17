@@ -25,11 +25,12 @@ import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.Tribe;
 import org.eclipse.rdf4j.model.IRI;
 
+import java.time.Instant;
+
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Pavia;
@@ -64,7 +65,7 @@ public final class EventsPaviaBorromeo implements Runnable {
     @Override public void run() {
         update(connection -> Xtream
 
-                .of(updated(Context, Publisher.id().orElseThrow()))
+                .of(Instant.now())
 
                 .flatMap(new Tribe("http://www.collegioborromeo.it/it/")
                         .country(Pavia.country)

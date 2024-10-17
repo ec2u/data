@@ -59,9 +59,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities.University.Turku;
@@ -116,7 +114,7 @@ public final class EventsTurkuUniversity implements Runnable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(Instant.now())
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -132,8 +130,8 @@ public final class EventsTurkuUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<JSONPath> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<JSONPath> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://api-ext.utu.fi/events/v1/public")
@@ -229,10 +227,6 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 field(startDate, json.string("start_time").map(timestamp -> datetime(timestamp, now))),
                 field(endDate, json.string("end_time").map(timestamp -> datetime(timestamp, now))),
-
-                field(dateCreated, json.string("published").map(timestamp -> instant(timestamp, now))),
-                field(dateModified, json.string("updated").map(timestamp -> instant(timestamp, now))),
-                field(updated, json.string("updated").map(timestamp -> instant(timestamp, now)).orElseGet(() -> literal(now))),
 
                 field(university, Turku.id),
                 field(publisher, Publisher),

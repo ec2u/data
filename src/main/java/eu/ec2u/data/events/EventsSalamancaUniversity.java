@@ -45,10 +45,9 @@ import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
+import static eu.ec2u.data.events.Events.Event;
+import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
 import static java.time.ZoneOffset.UTC;
@@ -88,7 +87,7 @@ public final class EventsSalamancaUniversity implements Runnable {
 
 
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(now)
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -182,10 +181,6 @@ public final class EventsSalamancaUniversity implements Runnable {
 
                             field(Events.startDate, startDate),
                             field(Events.endDate, endDate),
-
-                            field(dateCreated, created),
-                            field(dateModified, lastModified),
-                            field(updated, literal(lastModified.map(Literal::temporalAccessorValue).map(Instant::from).orElse(now))),
 
                             field(university, Salamanca.id),
                             field(publisher, Publisher)

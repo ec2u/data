@@ -65,9 +65,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities.University.Jena;
@@ -102,11 +100,8 @@ public final class EventsJenaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
-
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(Instant.now())
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
@@ -122,7 +117,7 @@ public final class EventsJenaCity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Focus> crawl(final Instant updated) {
+    private Xtream<Focus> crawl(final Instant now) {
         return Xtream.of(0)
 
                 // paginate through search results
@@ -225,10 +220,6 @@ public final class EventsJenaCity implements Runnable {
                     field(ID, iri(Events.Context, skolemize(focus, Schema.url, startDate))),
 
                     field(RDF.TYPE, Event),
-
-                    field(dateCreated, focus.seq(dateModified).value(asInstant()).map(Frame::literal)),
-                    field(dateModified, focus.seq(dateModified).value(asInstant()).map(Frame::literal)),
-                    field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
 
                     field(university, Jena.id),
 

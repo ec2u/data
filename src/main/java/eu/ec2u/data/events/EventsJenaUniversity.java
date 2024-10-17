@@ -51,9 +51,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.skolemize;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities.Universities.University;
@@ -169,15 +167,12 @@ public final class EventsJenaUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
-
     @Override public void run() {
         update(connection -> Xtream.from(Publishers)
 
-                .flatMap(publisher -> Xtream.of(updated(Context, publisher.id().orElseThrow()))
+                .flatMap(publisher -> Xtream.of(Instant.now())
 
-                        .flatMap(updated -> crawl(publisher, updated))
+                        .flatMap(updated -> crawl(publisher))
                         .map(frame -> event(publisher, frame))
 
                 )
@@ -195,7 +190,7 @@ public final class EventsJenaUniversity implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Focus> crawl(final Frame publisher, final Instant updated) {
+    private Xtream<Focus> crawl(final Frame publisher) {
         return Xtream
 
                 .of(publisher.id().orElseThrow().stringValue())
@@ -290,10 +285,6 @@ public final class EventsJenaUniversity implements Runnable {
                         .or(() -> focus.seq(Schema.disambiguatingDescription).value(asString()))
                         .map(text -> literal(text, Jena.language))
                 ),
-
-                field(dateCreated, focus.seq(dateCreated).value(asInstant()).map(Frame::literal)),
-                field(dateModified, focus.seq(dateModified).value(asInstant()).map(Frame::literal)),
-                field(updated, literal(focus.seq(dateModified).value(asInstant()).orElse(now))),
 
                 field(startDate, datetime(focus.seq(startDate).value(asString()))),
                 field(endDate, datetime(focus.seq(endDate).value(asString()))),

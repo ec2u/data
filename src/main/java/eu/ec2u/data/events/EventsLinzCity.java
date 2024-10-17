@@ -64,7 +64,6 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Jena;
 import static eu.ec2u.data.universities.University.Linz;
@@ -222,10 +221,6 @@ public final class EventsLinzCity implements Runnable {
 
                 field(ID, item(Events.Context, Linz, id.stringValue())),
                 field(TYPE, Event),
-
-                // field(dateCreated),
-                // field(dateModified),
-                field(updated, literal(now)),
 
                 field(university, Linz.id),
 

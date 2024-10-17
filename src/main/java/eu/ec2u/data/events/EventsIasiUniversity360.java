@@ -23,7 +23,6 @@ import com.metreeca.http.xml.formats.XML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
@@ -35,7 +34,6 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
-import static eu.ec2u.data.events.Events_.updated;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.universities.University.Iasi;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
@@ -68,11 +66,8 @@ public final class EventsIasiUniversity360 implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Instant now=Instant.now();
-
-
     @Override public void run() {
-        update(connection -> Xtream.of(updated(Context, Publisher.id().orElseThrow()))
+        update(connection -> Xtream.of(Instant.now())
 
                 .flatMap(this::crawl)
                 .map(this::event)
@@ -88,8 +83,8 @@ public final class EventsIasiUniversity360 implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Frame> crawl(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<Frame> crawl(final Instant now) {
+        return Xtream.of(now)
 
                 .flatMap(new Fill<Instant>()
                         .model("https://360.uaic.ro/feed")
@@ -103,7 +98,6 @@ public final class EventsIasiUniversity360 implements Runnable {
     private Frame event(final Frame frame) {
         return frame(WordPress(frame, Iasi.language),
 
-                field(Resources.updated, literal(now)),
                 field(university, Iasi.id),
                 field(publisher, Publisher)
 

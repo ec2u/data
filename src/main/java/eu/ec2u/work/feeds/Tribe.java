@@ -47,7 +47,6 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
-import static eu.ec2u.data.resources.Resources.updated;
 import static eu.ec2u.data.things.Schema.location;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
@@ -207,10 +206,6 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 field(ID, iri(Context, md5(id))),
 
                 field(RDF.TYPE, Event),
-
-                field(dateCreated, event.string("date_utc").map(Tribe::instant)),
-                field(dateModified, event.string("modified_utc").map(Tribe::instant)),
-                field(updated, event.string("modified_utc").map(Tribe::instant).orElseGet(() -> literal(now))),
 
                 field(Schema.about, event.paths("categories.*").optMap(this::category)),
 
