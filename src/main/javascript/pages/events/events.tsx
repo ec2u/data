@@ -130,7 +130,7 @@ export function DataEvents() {
 
 			sorted={{
 
-				startDate: "decreasing",
+				startDate: "increasing",
 				label: "increasing"
 
 			}}
