@@ -125,6 +125,8 @@ public final class EventsTurkuCity implements Runnable {
 
                     )
 
+                    .filter(frame -> frame.value(startDate).isPresent())
+
                     .flatMap(Frame::stream)
                     .batch(0)
 

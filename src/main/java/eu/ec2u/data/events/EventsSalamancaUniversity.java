@@ -45,8 +45,7 @@ import static com.metreeca.http.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.events.Events.Event;
-import static eu.ec2u.data.events.Events.publisher;
+import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
@@ -91,6 +90,8 @@ public final class EventsSalamancaUniversity implements Runnable {
 
                 .flatMap(this::crawl)
                 .optMap(this::event)
+
+                .filter(frame -> frame.value(startDate).isPresent())
 
                 .flatMap(Frame::stream)
                 .batch(0)

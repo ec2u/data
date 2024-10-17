@@ -125,6 +125,8 @@ public final class EventsPoitiersUniversity implements Runnable {
                 .flatMap(this::crawl)
                 .map(this::event)
 
+                .filter(frame -> frame.value(startDate).isPresent())
+
                 .flatMap(Frame::stream)
                 .batch(0)
 

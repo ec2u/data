@@ -127,6 +127,8 @@ public final class EventsLinzCity implements Runnable {
                 .flatMap(this::fetch)
                 .map(this::convert)
 
+                .filter(frame -> frame.value(startDate).isPresent())
+
                 .flatMap(Frame::stream)
                 .batch(0)
 

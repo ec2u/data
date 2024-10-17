@@ -119,7 +119,9 @@ public final class EventsTurkuUniversity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
-                .flatMap(com.metreeca.link.Frame::stream)
+                .filter(frame -> frame.value(startDate).isPresent())
+
+                .flatMap(Frame::stream)
                 .batch(0)
 
                 .forEach(new Events_.Loader(Context))

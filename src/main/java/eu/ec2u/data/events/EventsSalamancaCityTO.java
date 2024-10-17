@@ -108,6 +108,8 @@ public final class EventsSalamancaCityTO implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
+                .filter(frame -> frame.value(startDate).isPresent())
+
                 .flatMap(Frame::stream)
                 .batch(0)
 

@@ -131,7 +131,7 @@ public final class Events extends Delegator {
 
                 property(url, repeatable()),
 
-                property(startDate, optional(dateTime())),
+                property(startDate, required(dateTime())),
                 property(endDate, optional(dateTime())),
                 property(duration, optional(duration())),
 

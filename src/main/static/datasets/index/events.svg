@@ -60,7 +60,7 @@
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:url : id [1..*]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:startDate : dateTime
-                            [0..1]
+                            [1]
                         </tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">schema:endDate : dateTime
                             [0..1]

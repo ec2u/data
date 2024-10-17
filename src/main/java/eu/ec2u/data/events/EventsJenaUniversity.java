@@ -179,6 +179,8 @@ public final class EventsJenaUniversity implements Runnable {
 
                 .distinct(frame -> frame.id().orElse(RDF.NIL)) // events may be published multiple times by different publishers
 
+                .filter(frame -> frame.value(startDate).isPresent())
+
                 .flatMap(Frame::stream)
                 .batch(0)
 

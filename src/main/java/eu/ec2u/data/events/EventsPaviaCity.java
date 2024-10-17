@@ -86,6 +86,8 @@ public final class EventsPaviaCity implements Runnable {
                 .flatMap(this::crawl)
                 .flatMap(this::event)
 
+                .filter(frame -> frame.value(startDate).isPresent())
+
                 .flatMap(Frame::stream)
                 .batch(0)
 

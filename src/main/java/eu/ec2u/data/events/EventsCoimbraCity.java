@@ -88,6 +88,8 @@ public final class EventsCoimbraCity implements Runnable {
                 .flatMap(this::crawl)
                 .optMap(this::event)
 
+                .filter(frame -> frame.value(startDate).isPresent())
+
                 .flatMap(Frame::stream)
                 .batch(0)
 
@@ -152,12 +154,11 @@ public final class EventsCoimbraCity implements Runnable {
                             field(Schema.name, name),
 
                             field(Schema.image, json.string("profileImage._id")
-                                    .map(image -> iri(String.format("https://www.coimbragenda.pt/api/v1/file/%s", image)))
+                                    .map(image -> iri(format("https://www.coimbragenda.pt/api/v1/file/%s", image)))
                             ),
 
                             field(Schema.description, description),
                             field(Schema.disambiguatingDescription, disambiguatingDescription),
-
 
                             field(startDate, datetime(json, "startDate", "startHour")),
                             field(endDate, datetime(json, "endDate", "endHour")),
