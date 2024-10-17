@@ -18,6 +18,7 @@ import { Languages } from "@ec2u/data/languages";
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
 import { entry, toEntryString } from "@metreeca/core/entry";
@@ -88,24 +89,32 @@ export function DataCourses() {
 				useOptions(courses, "educationalLevel", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
-			<ToolRange placeholder={"Credits"}>{
-				useRange(courses, "numberOfCredits", { type: decimal })
-			}</ToolRange>
-
 			<ToolOptions placeholder={"Language"} compact as={value => toLocalString(Languages[value])}>{
 				useOptions(courses, "inLanguage", { type: string })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Attendance"} compact>{
+				useOptions(courses, "courseMode", { type: entry({ id: "", label: required(local) }) })
 			}</ToolOptions>
 
 			<ToolOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
 				useOptions(courses, "timeRequired", { type: string, size: 10 }) // !!! duration >> range
 			}</ToolOptions>
 
+			<ToolRange placeholder={"Credits"} compact>{
+				useRange(courses, "numberOfCredits", { type: decimal })
+			}</ToolRange>
+
 			<ToolOptions placeholder={"Title Awarded"} compact>{
 				useOptions(courses, "educationalCredentialAwarded", { type: local, size: 10 })
 			}</ToolOptions>
 
-			<ToolOptions placeholder={"Provider"} compact>{
-				useOptions(courses, "provider", { type: entry({ id: "", label: required(local) }), size: 10 })
+			<ToolOptions placeholder={"Audience"} compact>{
+				useOptions(courses, "audience", { type: string })
+			}</ToolOptions>
+
+			<ToolOptions placeholder={"Free for Externals"} compact>{
+				useOptions(courses, "isAccessibleForFree", { type: boolean })
 			}</ToolOptions>
 
 		</>}

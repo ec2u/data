@@ -166,7 +166,7 @@ public final class EventsCoimbraCity implements Runnable {
                             field(startDate, datetime(json, "startDate", "startHour")),
                             field(endDate, datetime(json, "endDate", "endHour")),
 
-                            field(isAccessibleForFree, json.string("languageObjects.*.priceList")
+                            field(Schema.isAccessibleForFree, json.string("languageObjects.*.priceList")
                                     .map(s -> FreePattern.matcher(s).find())
                                     .map(v -> literal(true))
                             ),
