@@ -26,15 +26,11 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.things.Schema;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.metreeca.http.Handler.handler;
 import static com.metreeca.link.Frame.*;
@@ -46,8 +42,7 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.updated;
+import static eu.ec2u.data.resources.Resources.*;
 import static eu.ec2u.data.things.Schema.*;
 
 public final class Events extends Delegator {
@@ -67,8 +62,6 @@ public final class Events extends Delegator {
     public static final IRI endDate=schema("endDate");
     public static final IRI duration=schema("duration");
 
-    public static final IRI isAccessibleForFree=schema("isAccessibleForFree");
-
     public static final IRI organizer=schema("organizer");
     public static final IRI publisher=schema("publisher");
 
@@ -78,27 +71,56 @@ public final class Events extends Delegator {
     public static final IRI eventStatus=schema("eventStatus");
 
 
-    public enum EventAttendanceModeEnumeration {
+    public enum EventAttendanceModeEnumeration implements IRI {
+
         MixedEventAttendanceMode,
         OfflineEventAttendanceMode,
-        OnlineEventAttendanceMode
+        OnlineEventAttendanceMode;
+
+
+        @Override public String getNamespace() {
+            return Namespace;
+        }
+
+        @Override public String getLocalName() {
+            return name();
+        }
+
+        @Override public String stringValue() {
+            return getNamespace()+getLocalName();
+        }
+
+        @Override public String toString() {
+            return stringValue();
+        }
+
     }
 
-    public enum EventStatusType {
+    public enum EventStatusType implements IRI {
+
         EventScheduled,
         EventMovedOnline,
         EventPostponed,
         EventRescheduled,
-        EventCancelled
-    }
+        EventCancelled;
 
 
-    private static Set<IRI> values(final Enum<?>[] values) {
-        return Arrays
-                .stream(values)
-                .map(Enum::name)
-                .map(Schema::schema)
-                .collect(Collectors.toSet());
+        @Override public String getNamespace() {
+            return Namespace;
+        }
+
+        @Override public String getLocalName() {
+            return name();
+        }
+
+        @Override public String stringValue() {
+            return getNamespace()+getLocalName();
+        }
+
+        @Override public String toString() {
+            return stringValue();
+        }
+
     }
 
 
@@ -131,8 +153,8 @@ public final class Events extends Delegator {
                 property(about, multiple(Concept(), scheme(Topics))),
                 property(audience, multiple(Concept(), scheme(Audiences))),
 
-                property(eventAttendanceMode, optional(Resource(), in(values(EventAttendanceModeEnumeration.values())))),
-                property(eventStatus, optional(Resource(), in(values(EventStatusType.values())))),
+                property(eventAttendanceMode, optional(Resource(), in(EventAttendanceModeEnumeration.values()))),
+                property(eventStatus, optional(Resource(), in(EventStatusType.values()))),
 
                 property(updated, Shape::required)
 
@@ -180,14 +202,16 @@ public final class Events extends Delegator {
 
         final Frame EventModel=frame(ThingModel,
 
+                field(partner, iri()), // !!!
+
                 field(startDate, literal(OffsetDateTime.now())),
                 field(endDate, literal(OffsetDateTime.now())),
 
                 field(inLanguage, literal("")),
                 field(isAccessibleForFree, literal(false)),
 
-                field(publisher),
-                field(organizer),
+                field(publisher, ThingModel),
+                field(organizer, ThingModel),
 
                 field(location, frame(
 

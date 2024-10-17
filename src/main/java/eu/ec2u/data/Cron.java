@@ -63,6 +63,7 @@ public final class Cron extends Delegator {
                 .path("/offerings/pavia", execute(new OfferingsPavia()))
                 .path("/offerings/poitiers", execute(new OfferingsPoitiers()))
                 .path("/offerings/salamanca", execute(new OfferingsSalamanca()))
+                .path("/offerings/lll", execute(new OfferingsLLL()))
 
                 .path("/documents/coimbra", execute(new DocumentsCoimbra()))
                 .path("/documents/iasi", execute(new DocumentsIasi()))

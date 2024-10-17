@@ -23,6 +23,7 @@ import com.metreeca.http.jsonld.handlers.Driver;
 import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
+import eu.ec2u.data.events.Events.EventAttendanceModeEnumeration;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
@@ -36,26 +37,31 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
+import static eu.ec2u.data.events.Events.audience;
 import static eu.ec2u.data.offerings.Offerings.LearningResource;
+import static eu.ec2u.data.persons.Persons.Person;
 import static eu.ec2u.data.programs.Programs.Program;
 import static eu.ec2u.data.programs.Programs.hasCourse;
-import static eu.ec2u.data.resources.Resources.locales;
-import static eu.ec2u.data.resources.Resources.partner;
-import static eu.ec2u.data.things.Schema.inLanguage;
-import static eu.ec2u.data.things.Schema.schema;
+import static eu.ec2u.data.resources.Resources.*;
+import static eu.ec2u.data.things.Schema.*;
 
 public final class Courses extends Delegator {
 
     public static final IRI Context=item("/courses/");
 
     public static final IRI Course=schema("Course");
+    public static final IRI CourseInstance=schema("CourseInstance");
 
     public static final IRI courseCode=schema("courseCode");
     public static final IRI timeRequired=schema("timeRequired");
     public static final IRI coursePrerequisites=schema("coursePrerequisites");
 
+    public static final IRI instructor=schema("instructor");
+    public static final IRI courseMode=schema("courseMode");
+    public static final IRI courseWorkload=schema("courseWorkload");
 
-    public static Shape Courses() { return Dataset(Course()); }
+
+    public static Shape Courses() { return Dataset(shape(Course(), CourseInstance())); }
 
     public static Shape Course() {
         return shape(Course, LearningResource(),
@@ -70,8 +76,23 @@ public final class Courses extends Delegator {
         );
     }
 
+    public static Shape CourseInstance() {
+        return shape(CourseInstance, Thing(),
+
+                property(audience, multiple(string())), // !!! review
+
+                property(isAccessibleForFree, optional(bool())),
+                property(courseWorkload, optional(duration())),
+
+                property(courseMode, optional(Resource(), in(EventAttendanceModeEnumeration.values()))),
+                property(instructor, optional(Person()))
+
+        );
+    }
+
+
     public static void main(final String... args) {
-        exec(() -> create(Context, Courses.class, Course()));
+        exec(() -> create(Context, Courses.class, Course(), CourseInstance()));
     }
 
 
@@ -105,7 +126,7 @@ public final class Courses extends Delegator {
 
                 ))
 
-                .path("/{code}", handler(new Driver(Course()), new Worker()
+                .path("/{code}", handler(new Driver(shape(Course(), CourseInstance())), new Worker()
 
                         .get(new Relator(frame(
 

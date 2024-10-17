@@ -42,8 +42,24 @@ cron:
     url: /cron/offerings/jena
     schedule: every day 00:00
 
+  - description: "offerings › pavia - nightly crawling"
+    url: /cron/offerings/pavie
+    schedule: every day 00:00
+
+  - description: "offerings › poitiers - nightly crawling"
+    url: /cron/offerings/poitiers
+    schedule: every day 00:00
+
   - description: "offerings › salamanca - nightly crawling"
     url: /cron/offerings/salamanca
+    schedule: every day 00:00
+
+  - description: "offerings › turku - nightly crawling"
+    url: /cron/offerings/turku
+    schedule: every day 00:00
+
+  - description: "offerings › LLL - nightly crawling"
+    url: /cron/offerings/lll
     schedule: every day 00:00
 
 
