@@ -206,8 +206,8 @@ public final class Events extends Delegator {
                 field(inLanguage, literal("")),
                 field(isAccessibleForFree, literal(false)),
 
-                field(publisher, ThingModel),
-                field(organizer, ThingModel),
+                field(publisher, frame(ThingModel, field(about, ResourceModel))),
+                field(organizer, frame(ThingModel, field(about, ResourceModel))),
 
                 field(location, frame(
 

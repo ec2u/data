@@ -71,11 +71,10 @@ export function DataUniversity() {
 
 			dataset: required({
 				id: required(id),
-				label: required(local),
+				label: required(local)
 			}),
 
 			resources: virtual(required(integer)),
-
 			"resources=count:": required(integer),
 
 			"?university": [route],
