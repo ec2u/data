@@ -47,6 +47,7 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.universities.University.Pavia;
 import static java.lang.String.format;
 
 public final class OfferingsPaviaUGov implements Runnable {
@@ -83,9 +84,9 @@ public final class OfferingsPaviaUGov implements Runnable {
 
     @Override public void run() {
 
-        Xtream.of(Instant.EPOCH)
+        Xtream.of(Instant.now())
 
-                .flatMap(instant -> work(instant))
+                .flatMap(this::work)
 
                 .flatMap(xpath -> xpath.paths("//ns2:regdid[ns2:aaRegdidId=2024]")) // !!! parameterize
                 .flatMap(xpath -> xpath.paths("ns2:pds/ns2:af"))
@@ -140,7 +141,7 @@ public final class OfferingsPaviaUGov implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<XPath> work(final Instant updated) {
+    private Xtream<XPath> work(final Instant now) {
 
         final String url=vault
                 .get(APIUrl)
@@ -161,12 +162,12 @@ public final class OfferingsPaviaUGov implements Runnable {
                 )));
 
 
-        final Year year=LocalDate.now().getMonth().compareTo(Month.JULY) >= 0
+        final Year year=LocalDate.ofInstant(now, Pavia.zone).getMonth().compareTo(Month.JULY) >= 0
                 ? Year.now()
                 : Year.now().minusYears(1);
 
 
-        return Xtream.of(updated)
+        return Xtream.of(now)
 
                 .flatMap(new Fill<>()
                         .model(url)
@@ -179,7 +180,7 @@ public final class OfferingsPaviaUGov implements Runnable {
                         .header("Accept", XML.MIME)
                         .header("Authorization", basic(usr, pwd))
 
-                        .body(new XML(), payload(year))
+                        .body(new XML(), payload(year, "32400"))
 
                 ))
 
@@ -193,7 +194,7 @@ public final class OfferingsPaviaUGov implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Document payload(final Year year) {
+    private Document payload(final Year year, final String code) {
         try {
 
             final String soap="http://schemas.xmlsoap.org/soap/envelope/";
@@ -233,7 +234,7 @@ public final class OfferingsPaviaUGov implements Runnable {
 
             final Element cdsCod=document.createElement("cdsCod");
 
-            cdsCod.setTextContent("32400");
+            cdsCod.setTextContent(code);
 
             parametriEsportazioneProgrammazioneDidattica.appendChild(cdsCod);
 
