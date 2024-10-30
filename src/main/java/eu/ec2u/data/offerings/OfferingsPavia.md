@@ -1,26 +1,23 @@
-# Sites
-
-*  https://unipv.unifind.cineca.it/insegnamenti
-
 # Integration
 
-* direct RDF extraction from a VIVO-based local knowledge hub (https://unipv.unifind.cineca.it/).
+* Data extracted from the
+  public [ESSE3 API](https://studentionline.unipv.it/e3rest/docs/?urls.primaryName=Offerta%20Api%20V1%20(https%3A%2F%2Fstudentionline.unipv.it%2Fe3rest%2Fapi%2Fofferta-service-v1))
 
-## Pending
+## 2024-10-30
 
-* performance improvements
-* `schema:about`
+* migration to ESSE3
 
-## 2023-03-07
+# Samples
 
-* Integrate programs/courses
+## Programs
 
-## 2022-09-27
+```http
+GET https://studentionline.unipv.it/e3rest/api/offerta-service-v1/offerte/?aaOffId=2024&start=0&limit=100
+```
 
-* initial integration
+## Courses
 
-# Feeds
+```http
+GET https://studentionline.unipv.it/e3rest/api/offerta-service-v1/offerte/2024/10138/attivita?start=0&limit=100
+```
 
-## RDF Dump
-
-* extracted from underlying VIVO instance

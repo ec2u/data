@@ -43,7 +43,7 @@ cron:
     schedule: every day 00:00
 
   - description: "offerings › pavia - nightly crawling"
-    url: /cron/offerings/pavie
+    url: /cron/offerings/pavia
     schedule: every day 00:00
 
   - description: "offerings › poitiers - nightly crawling"
