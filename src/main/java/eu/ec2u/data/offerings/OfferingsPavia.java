@@ -26,11 +26,15 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.courses.Courses;
+import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.data.universities.University;
 import eu.ec2u.work.feeds.Parsers;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.ORG;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -48,6 +52,7 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.universities.University.Pavia;
 import static java.util.Map.entry;
+import static java.util.function.Predicate.not;
 
 public final class OfferingsPavia implements Runnable {
 
@@ -209,10 +214,23 @@ public final class OfferingsPavia implements Runnable {
                 field(Schema.identifier, literal(code)),
                 field(Schema.name, program.string("cdsDes").map(v -> literal(v, Pavia.language))),
 
-                field(Offerings.educationalLevel, program.string("tipoCorsoCod").map(CodeToLevel::get))
+                field(Offerings.educationalLevel, program.string("tipoCorsoCod").map(CodeToLevel::get)),
 
-                // !!!  "dipCod": "688916",
-                //      "dipDes": "DIPARTIMENTO DI FISICA",
+                field(Offerings.provider, program.string("dipCod")
+                        .filter(not("NN"::equals))
+                        .map(dipCode -> frame(
+
+                                field(ID, item(Organizations.Context, Pavia, "Dipartimento/%s".formatted(dipCode))),
+                                field(TYPE, ORG.ORGANIZATIONAL_UNIT),
+
+                                field(Resources.university, Pavia.id),
+
+                                field(ORG.IDENTIFIER, literal(dipCode)),
+                                field(SKOS.PREF_LABEL, program.string("dipDes").map(v -> literal(v, Pavia.language))),
+
+                                field(ORG.UNIT_OF, University.Pavia.id)
+
+                        )))
 
         ));
     }
