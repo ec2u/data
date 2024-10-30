@@ -95,7 +95,7 @@ export function DataPrograms() {
 				useOptions(programs, "educationalCredentialAwarded", { type: local, size: 10 })
 			}</ToolOptions>
 
-			<ToolOptions placeholder={"Provider"} compact>{
+			<ToolOptions placeholder={"Provider"} compact as={value => toEntryString(value)}>{
 				useOptions(programs, "provider", { type: entry({ id: "", label: required(local) }), size: 10 })
 			}</ToolOptions>
 

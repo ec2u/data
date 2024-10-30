@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-7 -61 495 488" width="495" height="488">
+<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink"
+        xmlns="http://www.w3.org/2000/svg" viewBox="-7 -61 495 488" width="495" height="488">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="things" stroke="none" fill="none" fill-opacity="1" stroke-opacity="1" stroke-dasharray="none">
+    <g id="things" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1" stroke-opacity="1">
         <title>things</title>
         <rect fill="white" x="-7" y="-61" width="495" height="488"/>
         <g id="things_Layer_1">
@@ -239,8 +239,8 @@
                         stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_337">
-                <rect x="217.5934" y="278.56916" width="92.29102" height="13" fill="white"/>
-                <text transform="translate(220.5934 279.56916)" fill="black">
+                <rect x="217.5934" y="277.33578" width="92.29102" height="13" fill="white"/>
+                <text transform="translate(220.5934 278.33578)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:address [0..1]</tspan>
                 </text>
             </g>

@@ -26,6 +26,7 @@ import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.ESCO;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.ISCED2011;
+import eu.ec2u.data.organizations.Organizations;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
@@ -75,7 +76,7 @@ public final class Offerings extends Delegator {
                 property(educationalCredentialAwarded, optional(text(locales()))),
                 property(occupationalCredentialAwarded, optional(text(locales()))),
 
-                property(provider, optional(Organization())),
+                property(provider, optional(Organizations.Organization())),
 
                 property(educationalLevel, optional(Concept(), scheme(ISCED2011.Scheme))),
                 property(learningResourceType, multiple(Concept(), scheme(Types))),
