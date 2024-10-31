@@ -131,7 +131,10 @@ public final class Parsers {
                 .collect(toSet());
 
         return Arrays.stream(Locale.getAvailableLocales())
-                .filter(locale -> languages.contains(locale.getDisplayLanguage(locale).toUpperCase(Locale.ROOT))
+                .filter(locale
+                        -> languages.contains(locale.getLanguage().toUpperCase(Locale.ROOT))
+                        || languages.contains(locale.getISO3Language().toUpperCase(Locale.ROOT))
+                        || languages.contains(locale.getDisplayLanguage(locale).toUpperCase(Locale.ROOT))
                         || languages.contains(locale.getDisplayLanguage(ENGLISH).toUpperCase(Locale.ROOT))
                 )
                 .map(Locale::getLanguage)
