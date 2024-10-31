@@ -71,9 +71,9 @@ public final class Events extends Delegator {
 
     public enum EventAttendanceModeEnumeration implements IRI {
 
-        MixedEventAttendanceMode,
         OfflineEventAttendanceMode,
-        OnlineEventAttendanceMode;
+        OnlineEventAttendanceMode,
+        MixedEventAttendanceMode;
 
 
         @Override public String getNamespace() {
