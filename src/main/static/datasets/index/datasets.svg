@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="datasets" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1" stroke-opacity="1">
+    <g id="datasets" fill="none" stroke-dasharray="none" fill-opacity="1" stroke-opacity="1" stroke="none">
         <title>datasets</title>
         <rect fill="white" x="58" y="102" width="217" height="156"/>
         <g id="datasets_Layer_1">

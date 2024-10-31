@@ -41,7 +41,7 @@
             </g>
         </marker>
     </defs>
-    <g id="agents" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1" stroke-opacity="1">
+    <g id="agents" fill="none" stroke-dasharray="none" fill-opacity="1" stroke-opacity="1" stroke="none">
         <title>agents</title>
         <rect fill="white" x="1171" y="-32" width="541" height="378"/>
         <g id="agents_Layer_1">
