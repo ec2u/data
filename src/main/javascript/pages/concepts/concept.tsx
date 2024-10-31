@@ -16,18 +16,21 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
+import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, optional, required } from "@metreeca/core";
+import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
+import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string, stringCompare } from "@metreeca/core/string";
+import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolLabel } from "@metreeca/view/layouts/label";
 import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ChevronDown } from "@metreeca/view/widgets/icon";
+import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import React from "react";
@@ -71,23 +74,50 @@ export const Concept=immutable({
 
 export function DataConcept() {
 
+	const [route]=useRouter();
+
 	const [concept]=useResource(Concept);
+
+	const [stats]=useResource(immutable({
+
+		id: required("/resources/"),
+
+		members: [{
+
+			dataset: required({
+				id: required(id),
+				label: required(local)
+			}),
+
+			resources: virtual(required(integer)),
+			"resources=count:": required(integer),
+
+			"?concept": [route]
+
+		}]
+
+	}));
 
 
 	return <DataPage name={[Schemes, concept?.inScheme, {}]}
 
-		tray={<ToolFrame as={({
+		tray={<>
 
-			broaderTransitive
+			<ToolInfo>{stats?.members?.slice()
+				?.sort(({ resources: x }, { resources: y }) => x - y)
+				?.map(({ dataset, resources }) => ({
 
-		}) => <>
+					label: <ToolLink filter={["/resources/", { dataset, concept }]}>{{
+						label: ec2u(dataset.label)
+					}}</ToolLink>,
 
-			{broaderTransitive && sort(broaderTransitive).map(broader =>
-				<div key={broader.id}><ToolLink icon={<ChevronDown/>}>{broader}</ToolLink></div>
-			)}
+					value: toIntegerString(resources)
 
-		</>}>{concept}</ToolFrame>}
+				}))
 
+			}</ToolInfo>
+
+		</>}
 	>
 
 		<ToolFrame placeholder={Schemes[icon]} as={({
@@ -97,6 +127,7 @@ export function DataConcept() {
 			prefLabel,
 			definition,
 
+			broaderTransitive,
 			narrower,
 			related,
 
@@ -122,10 +153,16 @@ export function DataConcept() {
 
 			</ToolPanel>
 
-			<ToolPanel>
+			<ToolPanel stack>
+
+				{broaderTransitive && <ToolLabel name={"Broader Concepts"}>
+                    <ul style={{ listStyleType: "disclosure-open" }}>{sort(broaderTransitive).map(entry =>
+						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+					)}</ul>
+                </ToolLabel>}
 
 				{narrower && <ToolLabel name={"Narrower Concepts"}>
-                    <ul>{narrower.slice().sort(entryCompare).map(entry =>
+                    <ul style={{ listStyleType: "disclosure-closed" }}>{narrower.slice().sort(entryCompare).map(entry =>
 						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
 					)}</ul>
                 </ToolLabel>}

@@ -77,8 +77,7 @@ export function DataUniversity() {
 			resources: virtual(required(integer)),
 			"resources=count:": required(integer),
 
-			"?university": [route],
-			"?dataset.issued": []
+			"?university": [route]
 
 		}]
 
