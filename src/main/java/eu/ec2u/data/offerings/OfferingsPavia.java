@@ -29,7 +29,7 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.courses.Courses;
-import eu.ec2u.data.events.Events;
+import eu.ec2u.data.events.Events.EventAttendanceModeEnumeration;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
@@ -66,7 +66,7 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.events.Events.EventAttendanceModeEnumeration.OfflineEventAttendanceMode;
+import static eu.ec2u.data.events.Events.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.universities.University.Pavia;
 import static java.lang.String.format;
 import static java.util.Map.entry;
@@ -116,8 +116,10 @@ public final class OfferingsPavia implements Runnable {
 
     );
 
-    private static final Map<String, Events.EventAttendanceModeEnumeration> DidToMode=Map.ofEntries(
-            entry("Convenzionale", OfflineEventAttendanceMode)
+    private static final Map<String, EventAttendanceModeEnumeration> DidToMode=Map.ofEntries(
+            entry("Convenzionale", OfflineEventAttendanceMode),
+            entry("Teledidattica", OnlineEventAttendanceMode),
+            entry("Blend/modalità mista", MixedEventAttendanceMode)
     );
 
 
@@ -405,7 +407,7 @@ public final class OfferingsPavia implements Runnable {
                                     field(Courses.courseMode, af.string("ns2:modDid/ns2:modDidAf/ns2:modDidDes")
                                             .map(v -> {
 
-                                                final Events.EventAttendanceModeEnumeration mode=DidToMode.get(v);
+                                                final EventAttendanceModeEnumeration mode=DidToMode.get(v);
 
                                                 if ( mode == null ) {
                                                     logger.warning(this, format("unknown modDod <%s>", v));
