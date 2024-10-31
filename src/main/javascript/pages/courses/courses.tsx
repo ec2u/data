@@ -137,7 +137,6 @@ export function DataCourses() {
 
 		}) =>
 
-
 			<ToolCard key={id} side={"end"}
 
 				title={<ToolLink>{{ id, label }}</ToolLink>}

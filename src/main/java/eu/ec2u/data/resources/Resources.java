@@ -23,6 +23,7 @@ import com.metreeca.http.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
@@ -30,12 +31,16 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Handler.handler;
+import static com.metreeca.link.Constraint.any;
+import static com.metreeca.link.Expression.expression;
 import static com.metreeca.link.Frame.*;
+import static com.metreeca.link.Query.filter;
 import static com.metreeca.link.Query.query;
 import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.universities.Universities.University;
 import static java.util.Arrays.stream;
@@ -49,6 +54,7 @@ public final class Resources extends Delegator {
     public static final IRI Resource=term("Resource");
 
     public static final IRI university=term("university");
+    public static final IRI concept=term("concept");
 
 
     private static final Set<String> locales=Stream
@@ -81,6 +87,7 @@ public final class Resources extends Delegator {
                 property(RDFS.ISDEFINEDBY, optional(id())),
 
                 property(university, () -> optional(University())),
+                property(concept, () -> optional(Concept())),
 
                 property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
 
@@ -113,7 +120,9 @@ public final class Resources extends Delegator {
                                         field(reverse(RDFS.MEMBER), iri()),
                                         field(university, iri())
 
-                                )
+                                ),
+
+                                filter(expression(reverse(RDFS.MEMBER), DCTERMS.ISSUED), any())
 
                         ))
 

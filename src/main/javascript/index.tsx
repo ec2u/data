@@ -29,6 +29,7 @@ import { DataEvent, Event } from "@ec2u/data/pages/events/event";
 import { DataEvents, Events } from "@ec2u/data/pages/events/events";
 import { DataProgram, Program } from "@ec2u/data/pages/programs/program";
 import { DataPrograms, Programs } from "@ec2u/data/pages/programs/programs";
+import { DataResources, Resources } from "@ec2u/data/pages/resources/resources";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
@@ -42,49 +43,46 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 
 
-createRoot(document.body.firstElementChild!).render((
+createRoot(document.body.firstElementChild!).render(<React.StrictMode>
 
-	<React.StrictMode>
+	<ToolContext>
 
-		<ToolContext>
+		<ToolRouter>{{
 
-			<ToolRouter>{{
+			[Datasets.id]: DataDatasets,
+			[Resources.id]: DataResources,
 
-				[Datasets.id]: DataDatasets,
+			[Universities.id]: DataUniversities,
+			[University.id]: DataUniversity,
 
-				[Universities.id]: DataUniversities,
-				[(University.id)]: DataUniversity,
+			[Units.id]: DataUnits,
+			[Unit.id]: DataUnit,
 
-				[Units.id]: DataUnits,
-				[Unit.id]: DataUnit,
+			[Programs.id]: DataPrograms,
+			[Program.id]: DataProgram,
 
-				[Programs.id]: DataPrograms,
-				[Program.id]: DataProgram,
+			[Courses.id]: DataCourses,
+			[Course.id]: DataCourse,
 
-				[Courses.id]: DataCourses,
-				[Course.id]: DataCourse,
+			[Documents.id]: DataDocuments,
+			[Document.id]: DataDocument,
 
-				[Documents.id]: DataDocuments,
-				[Document.id]: DataDocument,
+			[Actors.id]: DataActors,
 
-				[Actors.id]: DataActors,
+			[Events.id]: DataEvents,
+			[Event.id]: DataEvent,
 
-				[Events.id]: DataEvents,
-				[Event.id]: DataEvent,
+			[Schemes.id]: DataSchemes,
+			[Scheme.id]: DataScheme,
+			[Concept.id]: DataConcept,
 
-				[Schemes.id]: DataSchemes,
-				[Scheme.id]: DataScheme,
-				[Concept.id]: DataConcept,
+			[Dataset.id]: DataMeta,
+			[Book.id]: DataBook,
+			[Wild.id]: DataWild
 
-				[Dataset.id]: DataMeta,
-				[Book.id]: DataBook,
-				[Wild.id]: DataWild
+		}}</ToolRouter>
 
-			}}</ToolRouter>
+	</ToolContext>
 
-		</ToolContext>
-
-	</React.StrictMode>
-
-));
+</React.StrictMode>);
 

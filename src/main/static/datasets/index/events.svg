@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="events" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1" stroke-opacity="1">
+    <g id="events" fill="none" stroke-dasharray="none" fill-opacity="1" stroke-opacity="1" stroke="none">
         <title>events</title>
         <rect fill="white" x="54" y="92" width="641" height="349"/>
         <g id="events_Layer_1">

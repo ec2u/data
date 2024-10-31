@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="assets" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1" stroke-opacity="1">
+    <g id="assets" fill="none" stroke-dasharray="none" fill-opacity="1" stroke-opacity="1" stroke="none">
         <title>assets</title>
         <rect fill="white" x="80" y="142" width="384" height="204"/>
         <g id="assets_Layer_1">
