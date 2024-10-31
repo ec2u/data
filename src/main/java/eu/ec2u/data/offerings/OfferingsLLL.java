@@ -242,11 +242,11 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
         } else {
 
-            return Optional.of(item(Courses.Context, university, identifier
+            return Optional.of(item(Courses.Context, university, "LLL/"+(identifier
                     .or(() -> titleEnglish)
                     .or(() -> titleLocal)
                     .orElse("") // unexpected
-            ));
+            )));
 
         }
     }
@@ -268,7 +268,8 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
         return literal(
                 minutes == 0 ? format("PT%dH", hours) : format("PT%dH%dM", hours, minutes),
-                XSD.DURATION);
+                XSD.DURATION
+        );
     }
 
 }
