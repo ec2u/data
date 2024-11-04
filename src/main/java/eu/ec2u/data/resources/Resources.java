@@ -87,7 +87,7 @@ public final class Resources extends Delegator {
                 property(RDFS.ISDEFINEDBY, optional(id())),
 
                 property(university, () -> optional(University())),
-                property(concept, () -> optional(Concept())),
+                property(concept, () -> multiple(Concept())),
 
                 property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
 
