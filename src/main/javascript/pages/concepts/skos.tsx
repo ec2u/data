@@ -17,6 +17,8 @@
 import { immutable, multiple, required } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
+import { numberCompare } from "@metreeca/core/number";
+import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolSpin } from "@metreeca/view/widgets/spin";
@@ -28,6 +30,8 @@ export const Concept=immutable({
 
 	id: required(id),
 	label: required(id),
+
+	notation: multiple(string),
 
 	narrower: multiple({
 		id: required(id)
@@ -69,9 +73,22 @@ export function ToolConcepts({
 
 }) {
 
+
+	function conceptCompare(x: typeof Concept, y: typeof Concept): number {
+
+		function min(strings: undefined | string[]): undefined | number {
+			return strings
+				?.map(parseInt)
+				.reduce((min, value) => value < min ? value : min);
+		}
+
+		return numberCompare(min(x.notation) || 0, min(y.notation) || 0) || entryCompare(x, y);
+
+	}
+
 	return <>
 
-		{concepts.slice().sort(entryCompare).map(concept =>
+		{concepts.slice().sort(conceptCompare).map(concept =>
 
 			<ToolTree key={concept.id} label={<ToolLink>{concept}</ToolLink>}>
 

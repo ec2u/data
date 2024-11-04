@@ -79,6 +79,12 @@ public abstract class CSVProcessor<V> implements Function<String, Xtream<V>> {
                 : Optional.empty();
     }
 
+    protected Stream<String> values(final CSVRecord record, final String label) {
+        return value(record, label).stream()
+                .flatMap(Strings::split)
+                .map(Strings::normalize);
+    }
+
     protected <R> Optional<R> value(final CSVRecord record, final String label,
             final Function<String, Optional<R>> parser
     ) {
@@ -97,9 +103,7 @@ public abstract class CSVProcessor<V> implements Function<String, Xtream<V>> {
             final Function<String, Optional<R>> parser
     ) {
 
-        final Collection<String> strings=value(record, label).stream()
-                .flatMap(Strings::split)
-                .map(Strings::normalize)
+        final Collection<String> strings=values(record, label)
                 .toList();
 
         final Collection<R> values=strings.stream()

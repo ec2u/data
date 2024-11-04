@@ -17,7 +17,6 @@
 package eu.ec2u.data.documents;
 
 import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.services.Logger;
 import com.metreeca.http.services.Vault;
 import com.metreeca.http.toolkits.Strings;
 import com.metreeca.http.work.Xtream;
@@ -40,7 +39,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.http.toolkits.Strings.lower;
 import static com.metreeca.link.Frame.*;
@@ -61,9 +59,6 @@ final class Documents_ {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static final class CSVLoader extends CSVProcessor<Frame> implements Runnable {
-
-        private static final Logger logger=service(logger());
-
 
         private final String source;
         private final IRI context;

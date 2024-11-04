@@ -24,6 +24,7 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.concepts.ISCEDF2013;
+import eu.ec2u.data.concepts.SDGs;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.persons.Persons;
@@ -172,7 +173,21 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
                         .flatMap(Parsers::languages)
                         .map(Frame::literal)),
 
-                // !!! SDG Number (if SDGs related)
+                field(Schema.about, values(record, "SDG Number (if SDGs related)", s -> {
+
+                            try {
+
+                                return Optional.of(Integer.valueOf(s));
+
+                            } catch ( final NumberFormatException e ) {
+
+                                return Optional.empty();
+
+                            }
+
+                        })
+                        .map(SDGs::goal)
+                ),
 
                 field(courseMode, value(record, "Teaching method (on-line/ in presence/ hybrid)")
                         .map(mode -> mode.toUpperCase(Locale.ROOT))
