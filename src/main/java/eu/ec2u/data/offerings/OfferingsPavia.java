@@ -28,6 +28,7 @@ import com.metreeca.http.xml.formats.XML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
+import eu.ec2u.data.concepts.SDGs;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.events.Events.EventAttendanceModeEnumeration;
 import eu.ec2u.data.organizations.Organizations;
@@ -51,9 +52,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.http.Locator.service;
@@ -398,6 +399,23 @@ public final class OfferingsPavia implements Runnable {
                                     field(Offerings.teaches, text(af, "CONTENUTI")),
                                     field(Offerings.assesses, text(af, "OBIETT_FORM")),
                                     field(Courses.coursePrerequisites, text(af, "PREREQ")),
+
+                                    field(Schema.about, af.strings("ns2:testi[1]/ns2:testo[ns2:tipoTestoCod='OB_SVIL_SOS']/ns2:contenuto")
+                                            .flatMap(text -> {
+
+                                                final Matcher matcher=Pattern.compile("\\b(\\d+)(?:\\.\\w+)*").matcher(text);
+                                                final Collection<Integer> matches=new ArrayList<>();
+
+                                                while ( matcher.find() ) {
+                                                    matches.add(Integer.valueOf(matcher.group(1)));
+                                                }
+
+                                                return matches.stream()
+                                                        .filter(v -> v >= 1 && v <= 17);
+
+                                            })
+                                            .map(SDGs::goal)
+                                    ),
 
                                     field(Schema.inLanguage, af.strings("ns2:linDid/ns2:linDidAf/ns2:linDidDes")
                                             .flatMap(Parsers::languages)
