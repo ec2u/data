@@ -46,6 +46,8 @@ public final class Xlations_ implements Runnable {
     private static final String source="*";
     private static final String target="en";
 
+    private static final int BatchSize=1_000;
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -70,6 +72,8 @@ public final class Xlations_ implements Runnable {
                         .binding("target", literal(target))
                 )
 
+                .parallel()
+
                 .map(bindings -> {
 
                     final Resource resource=(Resource)bindings.getValue("resource");
@@ -92,7 +96,7 @@ public final class Xlations_ implements Runnable {
 
                 })
 
-                .batch(0)
+                .batch(BatchSize)
 
                 .forEach(new Upload()
                         .contexts(Xlantions.Context)
