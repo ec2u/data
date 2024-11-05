@@ -16,31 +16,38 @@
 
 package eu.ec2u.data.xlations;
 
-import com.metreeca.http.Request;
-import com.metreeca.http.Response;
-import com.metreeca.http.json.formats.JSON;
 import com.metreeca.http.rdf4j.actions.TupleQuery;
-import com.metreeca.http.services.Fetcher;
+import com.metreeca.http.rdf4j.actions.Update;
+import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.http.services.Translator;
 import com.metreeca.http.work.Xtream;
 
-import eu.ec2u.data.documents.Documents;
-
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 
 import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.Request.POST;
-import static com.metreeca.http.services.Fetcher.fetcher;
+import static com.metreeca.http.rdf.Values.literal;
+import static com.metreeca.http.rdf.Values.statement;
+import static com.metreeca.http.services.Translator.translator;
 import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
-import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static java.util.Map.entry;
-import static javax.json.Json.createObjectBuilder;
-import static org.eclipse.rdf4j.model.util.Values.literal;
 
+/**
+ * Event logger.
+ *
+ * <p>Provides access to system-specific logging facilities.</p>
+ */
 public final class Xlations_ implements Runnable {
+
+    private static final String source="*";
+    private static final String target="en";
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(final String... args) {
         exec(() -> new Xlations_().run());
@@ -49,54 +56,59 @@ public final class Xlations_ implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Fetcher fetcher=service(fetcher());
+    private final Translator translator=service(translator());
 
 
     @Override public void run() {
+
+        // generate missing translations
+
         Xtream.of(text(resource(this, ".ql")))
 
                 .flatMap(new TupleQuery()
-                        .dflt(iri(Documents.Context, "/pavia"))
+                        .binding("source", literal(source))
+                        .binding("target", literal(target))
                 )
 
                 .map(bindings -> {
 
-                    final String text=bindings.getValue("text").stringValue();
+                    final Resource resource=(Resource)bindings.getValue("resource");
+                    final IRI property=(IRI)bindings.getValue("property");
+                    final Value local=bindings.getValue("text");
 
-                    final String source=bindings.getValue("source").stringValue();
-                    final String target=bindings.getValue("target").stringValue();
-
-                    return entry(literal(text, source), literal("", target));
+                    return statement(resource, property, local);
 
                 })
 
-                .map(e -> new Request()
-                        .method(POST)
-                        .base("http://localhost:6800/")
-                        .path("/translate")
-                        .header("Content-Type", JSON.MIME)
-                        .header("Accept", JSON.MIME)
-                        .input(() -> new ByteArrayInputStream(createObjectBuilder()
+                .optMap(statement -> {
 
-                                .add("q", e.getKey().stringValue())
-                                .add("source", e.getKey().getLanguage().orElse("auto"))
-                                .add("target", e.getValue().getLanguage().orElse("auto"))
+                    final Resource subject=statement.getSubject();
+                    final IRI predicate=statement.getPredicate();
+                    final Literal local=(Literal)statement.getObject();
 
-                                .build().toString().getBytes(StandardCharsets.UTF_8)
-                        ))
-                )
+                    return translator
+                            .translate(target, local.getLanguage().orElse(""), local.stringValue())
+                            .map(translation -> statement(subject, predicate, literal(translation, target)));
 
-                .map(fetcher)
+                })
 
-                .peek(response -> System.out.println(response.status()))
+                .batch(0)
 
-                // !!! report errors
+                .forEach(new Upload()
+                        .contexts(Xlantions.Context)
+                        .clear(false)
+                );
 
-                .filter(Response::success)
 
-                .map(response -> response.body(new JSON()).asJsonObject().getString("translatedText"))
+        // purge stale translations
 
-                .forEach(e -> System.out.println(e));
+        Xtream.of(text(resource(this, ".ul")))
+
+                .forEach(new Update()
+                        .binding("context", Xlantions.Context)
+                        .remove(Xlantions.Context)
+                        .clear(false)
+                );
 
     }
 

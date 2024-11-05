@@ -1,19 +1,23 @@
-select distinct (str(?x) as ?text) ?source ?target {
+prefix schema: <https://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
-    values ?source { "it"} # {"en" "pt" "ro" "de" "it" "fr" "es" "fi"}
-    values ?target { "en"} # {"en" "pt" "ro" "de" "it" "fr" "es" "fi"}
+select ?resource ?property ?text {
 
-    ?s ?p ?x
-    filter (lang(?x) = ?source )
-
-    optional {
-        ?s ?p ?y
-        filter (lang(?x) = ?target )
+    values ?type {
+        skos:Concept
+        schema:Event
     }
 
-    filter (!bound(?y))
+    ?resource a ?type ; ?property ?text .
+
+    filter langmatches(lang(?text), $source)
+
+    filter not exists {
+
+        ?resource ?property ?translation
+
+        filter langmatches(lang(?translation), $target)
+
+    }
 
 }
-
-
-limit 10

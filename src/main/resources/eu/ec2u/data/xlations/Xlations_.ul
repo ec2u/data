@@ -1,0 +1,19 @@
+delete {
+
+    ?resource ?predicate ?translation
+
+} where {
+
+    graph $context {
+        ?resource ?predicate ?translation
+    }
+
+    filter not exists {
+
+        ?resource ?predicate ?text
+
+        filter (langmatches(lang(?text), '*') && lang(?text) != lang(?translation))
+
+    }
+
+}

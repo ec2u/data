@@ -19,14 +19,18 @@ package eu.ec2u.data;
 import com.metreeca.http.Locator;
 import com.metreeca.http.Request;
 import com.metreeca.http.gcp.GCPServer;
+import com.metreeca.http.gcp.services.GCPTranslator;
 import com.metreeca.http.gcp.services.GCPVault;
 import com.metreeca.http.handlers.*;
 import com.metreeca.http.rdf4j.handlers.Graphs;
 import com.metreeca.http.rdf4j.handlers.SPARQL;
 import com.metreeca.http.rdf4j.services.Graph;
+import com.metreeca.http.rdf4j.services.GraphTranslator;
 import com.metreeca.http.services.Cache.FileCache;
 import com.metreeca.http.services.Fetcher.CacheFetcher;
 import com.metreeca.http.services.Fetcher.URLFetcher;
+import com.metreeca.http.services.Translator.CacheTranslator;
+import com.metreeca.http.services.Translator.ComboTranslator;
 
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
@@ -44,6 +48,7 @@ import static com.metreeca.http.rdf4j.services.Graph.graph;
 import static com.metreeca.http.services.Cache.cache;
 import static com.metreeca.http.services.Fetcher.fetcher;
 import static com.metreeca.http.services.Logger.Level.debug;
+import static com.metreeca.http.services.Translator.translator;
 import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.json.JSON.json;
 import static com.metreeca.link.rdf4j.RDF4J.rdf4j;
@@ -80,6 +85,11 @@ public final class Data extends Delegator {
                 .set(path(), () -> Paths.get(Production ? "/tmp" : "data"))
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
                 .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
+
+                .set(translator(), () -> new CacheTranslator(new ComboTranslator(
+                        new GraphTranslator(),
+                        new GCPTranslator()
+                )))
 
                 .set(graph(), () -> new Graph(service(Data::repository)))
                 .set(store(), () -> rdf4j(service(Data::repository)))

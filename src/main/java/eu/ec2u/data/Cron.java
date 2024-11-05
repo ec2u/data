@@ -27,6 +27,7 @@ import eu.ec2u.data.events.*;
 import eu.ec2u.data.offerings.*;
 import eu.ec2u.data.units.*;
 import eu.ec2u.data.universities.Universities_;
+import eu.ec2u.data.xlations.Xlations_;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.BadGateway;
@@ -89,6 +90,8 @@ public final class Cron extends Delegator {
                 .path("/events/salamanca/city/to", execute(new EventsSalamancaCityTO()))
                 .path("/events/turku/university", execute(new EventsTurkuUniversity()))
                 .path("/events/turku/city", execute(new EventsTurkuCity()))
+
+                .path("/xlations", execute(new Xlations_()))
 
         ));
     }
