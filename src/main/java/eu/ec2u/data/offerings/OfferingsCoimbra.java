@@ -210,23 +210,9 @@ public final class OfferingsCoimbra implements Runnable {
 
     private Xtream<JSONPath> offerings(final Instant updated) {
 
-        final String url=vault
-                .get(APIUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API URL <%s>", APIUrl
-                )));
-
-        final String id=vault
-                .get(APIId)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API ID <%s>", APIId
-                )));
-
-        final String token=service(vault())
-                .get(APIToken)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API key <%s>", APIToken
-                )));
+        final String url=vault.get(APIUrl);
+        final String id=vault.get(APIId);
+        final String token=service(vault()).get(APIToken);
 
         final Year year=LocalDate.now().getMonth().compareTo(Month.JULY) >= 0
                 ? Year.now()

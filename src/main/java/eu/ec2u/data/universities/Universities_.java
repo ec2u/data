@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.universities;
 
-import com.metreeca.http.open.actions.WikidataMirror;
+import com.metreeca.http.lod.actions.WikidataMirror;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.link.Frame;
 

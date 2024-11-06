@@ -101,11 +101,7 @@ public final class Actors_ implements Runnable {
 
     private Stream<Statement> fields() {
 
-        final String url=service(vault())
-                .get(DataTermsUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined data URL <%s>", DataTermsUrl
-                )));
+        final String url=service(vault()).get(DataTermsUrl);
 
         return Xtream.of(url)
 
@@ -138,11 +134,7 @@ public final class Actors_ implements Runnable {
 
     private Stream<CSVRecord> actors(final Instant now) {
 
-        final String url=service(vault())
-                .get(DataEntriesUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined data URL <%s>", DataEntriesUrl
-                )));
+        final String url=service(vault()).get(DataEntriesUrl);
 
 
         return Xtream.of(url)

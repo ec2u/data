@@ -100,17 +100,8 @@ public final class UnitsCoimbra implements Runnable {
 
     private Xtream<JSONPath> units(final Instant updated) {
 
-        final String url=vault
-                .get(APIUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API URL <%s>", APIUrl
-                )));
-
-        final String key=service(vault())
-                .get(APIKey)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API key <%s>", APIKey
-                )));
+        final String url=vault.get(APIUrl);
+        final String key=service(vault()).get(APIKey);
 
         return Xtream.of(updated)
 

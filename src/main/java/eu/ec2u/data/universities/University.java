@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.open.actions.Wikidata.wd;
+import static com.metreeca.http.lod.actions.Wikidata.wd;
 
 import static eu.ec2u.data.EC2U.item;
 import static java.util.stream.Collectors.toUnmodifiableSet;

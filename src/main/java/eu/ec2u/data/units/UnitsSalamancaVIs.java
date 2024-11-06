@@ -35,7 +35,6 @@ import static com.metreeca.http.services.Vault.vault;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
-import static java.lang.String.format;
 
 public final class UnitsSalamancaVIs implements Runnable {
 
@@ -76,11 +75,7 @@ public final class UnitsSalamancaVIs implements Runnable {
 
     private Stream<Frame> associations() {
 
-        final String url=service(vault())
-                .get(DataUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined data URL <%s>", DataUrl
-                )));
+        final String url=service(vault()).get(DataUrl);
 
 
         return Xtream.of(url)

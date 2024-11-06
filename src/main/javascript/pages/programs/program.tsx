@@ -118,7 +118,7 @@ export function DataProgram() {
 
 				"Level": educationalLevel && <ToolLink>{educationalLevel}</ToolLink>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeToComplete && <span>{toDurationString(duration.decode(timeToComplete))}</span>,
+				"Duration": timeToComplete && <span>{toDurationString(duration.decode(timeToComplete))}</span>
 
 			}}</ToolInfo>
 
@@ -156,7 +156,9 @@ export function DataProgram() {
 
 				<dfn>{toLocalString(name)}</dfn>
 
-				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+				{description && (!teaches || toLocalString(description) !== toLocalString(teaches))
+					&& <ToolMark>{toLocalString(description)}</ToolMark>
+				}
 
 				<ToolPanel>
 

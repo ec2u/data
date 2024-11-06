@@ -90,12 +90,7 @@ final class Documents_ {
 
         @Override public void run() {
 
-            final String url=vault
-                    .get(source)
-                    .orElseThrow(() -> new IllegalStateException(format(
-                            "undefined data URL <%s>", source
-                    )));
-
+            final String url=vault.get(source);
 
             update(connection -> Xtream.of(url)
 

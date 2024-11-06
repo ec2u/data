@@ -22,6 +22,7 @@ import com.metreeca.http.gcp.GCPServer;
 import com.metreeca.http.gcp.services.GCPTranslator;
 import com.metreeca.http.gcp.services.GCPVault;
 import com.metreeca.http.handlers.*;
+import com.metreeca.http.openai.services.OpenAnalyzer;
 import com.metreeca.http.rdf4j.handlers.Graphs;
 import com.metreeca.http.rdf4j.handlers.SPARQL;
 import com.metreeca.http.rdf4j.services.Graph;
@@ -42,6 +43,7 @@ import static com.metreeca.http.Handler.handler;
 import static com.metreeca.http.Locator.path;
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.Response.SeeOther;
+import static com.metreeca.http.json.services.Analyzer.analyzer;
 import static com.metreeca.http.jsonld.formats.JSONLD.codec;
 import static com.metreeca.http.jsonld.formats.JSONLD.store;
 import static com.metreeca.http.rdf4j.services.Graph.graph;
@@ -86,14 +88,16 @@ public final class Data extends Delegator {
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
                 .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
 
+                .set(graph(), () -> new Graph(service(Data::repository)))
+                .set(store(), () -> rdf4j(service(Data::repository)))
+                .set(codec(), () -> json().pretty(true))
+
+                .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
+
                 .set(translator(), () -> new CacheTranslator(new ComboTranslator(
                         new GraphTranslator(),
                         new GCPTranslator()
-                )))
-
-                .set(graph(), () -> new Graph(service(Data::repository)))
-                .set(store(), () -> rdf4j(service(Data::repository)))
-                .set(codec(), () -> json().pretty(true));
+                )));
 
     }
 
@@ -106,9 +110,7 @@ public final class Data extends Delegator {
 
         final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GraphDBServer, name));
 
-        repository.setUsernameAndPassword(GraphDBUsr, service(vault()).get(GraphDBPwd).orElseThrow(() ->
-                new IllegalStateException(format("undefined <%s> secret", GraphDBPwd))
-        ));
+        repository.setUsernameAndPassword(GraphDBUsr, service(vault()).get(GraphDBPwd));
 
         return repository;
     }
