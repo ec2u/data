@@ -199,21 +199,25 @@ export function DataCourse() {
 
 				<dfn>{toLocalString(name)}</dfn>
 
-				{inProgram && <ToolLabel name={"Programs"}>{
+				<ToolPanel>
 
-					<ul>{inProgram.slice().sort(entryCompare).map(program =>
-						<li key={program.id}><ToolLink>{program}</ToolLink></li>
-					)}</ul>
+					{inProgram && <ToolLabel name={"Programs"}>{
 
-				}</ToolLabel>}
+						<ul>{inProgram.slice().sort(entryCompare).map(program =>
+							<li key={program.id}><ToolLink>{program}</ToolLink></li>
+						)}</ul>
 
-				{about && <ToolLabel name={"Subjects"}>{
+					}</ToolLabel>}
 
-					<ul>{about.slice().sort(entryCompare).map(about =>
-						<li key={about.id}><ToolLink>{about}</ToolLink></li>
-					)}</ul>
+					{about && <ToolLabel name={"Subjects"}>{
 
-				}</ToolLabel>}
+						<ul>{about.slice().sort(entryCompare).map(about =>
+							<li key={about.id}><ToolLink>{about}</ToolLink></li>
+						)}</ul>
+
+					}</ToolLabel>}
+
+				</ToolPanel>
 
 				<ToolPanel stack>{Object.entries({
 
