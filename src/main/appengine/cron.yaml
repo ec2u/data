@@ -155,8 +155,3 @@ cron:
   - description: "events › turku › university - nightly crawling"
     url: /cron/events/turku/university
     schedule: every day 00:00
-
-
-  - description: "xlations - nightly generation"
-    url: /cron/xlations
-    schedule: every day 01:00

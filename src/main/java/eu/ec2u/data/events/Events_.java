@@ -25,6 +25,7 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -37,6 +38,7 @@ import static com.metreeca.http.toolkits.Resources.resource;
 import static com.metreeca.http.toolkits.Resources.text;
 
 import static eu.ec2u.data.EC2U.BASE;
+import static eu.ec2u.work.xlations.Xlations.translate;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 
@@ -51,6 +53,7 @@ final class Events_ {
     public static final class Loader implements Consumer<Collection<Statement>> {
 
         private final IRI context;
+
         private final Logger logger=service(logger());
         private final Graph graph=service(graph());
 
@@ -64,6 +67,8 @@ final class Events_ {
                     .map(Statement::getSubject)
                     .collect(toSet());
 
+            final List<Statement> translations=translate("en", model);
+
             time(() -> {
 
                 graph.update(connection -> {
@@ -73,6 +78,7 @@ final class Events_ {
                     );
 
                     connection.add(model, context);
+                    connection.add(translations, context);
 
                     return this;
 
