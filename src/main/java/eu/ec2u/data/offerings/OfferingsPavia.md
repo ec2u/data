@@ -1,13 +1,26 @@
 # Integration
 
-* Basic data extracted from the
-  public [ESSE3 API](https://studentionline.unipv.it/e3rest/docs/?urls.primaryName=Offerta%20Api%20V1%20(https%3A%2F%2Fstudentionline.unipv.it%2Fe3rest%2Fapi%2Fofferta-service-v1))
-* Extended data extracted from internal UGov APIs
+* Undergraduate programs and courses
+    * Basic data extracted from the
+      public [ESSE3 API](https://studentionline.unipv.it/e3rest/docs/?urls.primaryName=Offerta%20Api%20V1%20(https%3A%2F%2Fstudentionline.unipv.it%2Fe3rest%2Fapi%2Fofferta-service-v1))
+    * Extended data extracted from internal UGov APIs
+
+* Doctorate Programs
+    * Data extracted by LLM from https://phd.unipv.it/la-scuola-di-alta-formazione-dottorale-di-pavia-safd/ and linked
+      program pages
+
+* Specialisation Schools
+    * Data extracted by LLM from
+        * https://portale.unipv.it/it/didattica/post-laurea/scuole-di-specializzazione/scuole-di-specializzazione-di-area-sanitaria/scuole-di-specializzazione-laureati-medici
+        * https://portale.unipv.it/it/didattica/post-laurea/scuole-di-specializzazione/scuole-di-specializzazione-di-area-sanitaria/scuole-di-specializzazione-laureati-non-medici
+
+## 2024-11-07
+
+* Doctorate and specialisation schools integration
 
 ## 2024-10-31
 
 * UGov integration
-*
 
 ## 2024-10-30
 

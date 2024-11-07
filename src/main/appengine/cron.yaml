@@ -34,33 +34,45 @@ cron:
     schedule: every day 00:00
 
 
-  - description: "offerings › coimbra - nightly crawling"
+  - description: "offerings › coimbra - monthly crawling"
     url: /cron/offerings/coimbra
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
-  - description: "offerings › jena - nightly crawling"
+  - description: "offerings › jena - monthly crawling"
     url: /cron/offerings/jena
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
-  - description: "offerings › pavia - nightly crawling"
+  - description: "offerings › pavia - monthly crawling"
     url: /cron/offerings/pavia
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
-  - description: "offerings › poitiers - nightly crawling"
+  - description: "offerings › pavia - monthly crawling"
+    url: /cron/offerings/pavia
+    schedule: every 1 of month 00:00
+
+  - description: "offerings › pavia › doctorates - monthly crawling"
+    url: /cron/offerings/pavia/doctorates
+    schedule: every 1 of month 00:00
+
+  - description: "offerings › pavia › schools - monthly crawling"
+    url: /cron/offerings/pavia/schools
+    schedule: every 1 of month 00:00
+
+  - description: "offerings › poitiers - monthly crawling"
     url: /cron/offerings/poitiers
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
-  - description: "offerings › salamanca - nightly crawling"
+  - description: "offerings › salamanca - monthly crawling"
     url: /cron/offerings/salamanca
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
-  - description: "offerings › turku - nightly crawling"
+  - description: "offerings › turku - monthly crawling"
     url: /cron/offerings/turku
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
-  - description: "offerings › LLL - nightly crawling"
+  - description: "offerings › LLL - monthly crawling"
     url: /cron/offerings/lll
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
 
   - description: "documents › coimbra - nightly crawling"

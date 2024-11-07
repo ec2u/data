@@ -90,7 +90,8 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                 .forEach(new Upload()
                         .contexts(Context)
                         .clear(true)
-                ));
+                )
+        );
 
     }
 
@@ -109,7 +110,6 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         - name
                         - language as guessed from name as a 2-letter ISO tag
                         - URL
-                        Omit "Corso di dottorato in" from names.
                         Report as a JSON object
                         """, """
                         {
@@ -150,23 +150,28 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         """
                 ))
 
-                .map(JSONPath::new).flatMap(json -> json.paths("programs.*")).map(program -> frame(
+                .map(JSONPath::new).flatMap(json -> json.paths("programs.*")).map(program -> {
 
-                        field(ID, program.string("url").map(url -> item(Programs.Context, Pavia, url))),
-                        field(TYPE, Programs.EducationalOccupationalProgram),
+                    final String language=program.string("nameLanguage").orElse(Pavia.language);
 
-                        field(Resources.university, Pavia.id),
+                    return frame(
 
-                        field(Schema.name, program.string("name").map(name ->
-                                literal(name, program.string("nameLanguage").orElse(Pavia.language))
-                        )),
+                            field(ID, program.string("url").map(url -> item(Programs.Context, Pavia, url))),
+                            field(TYPE, Programs.EducationalOccupationalProgram),
 
-                        field(Schema.url, program.string("url").map(Frame::iri)),
+                            field(Resources.university, Pavia.id),
 
-                        field(Offerings.educationalLevel, ISCED2011.Level8),
-                        field(Offerings.educationalCredentialAwarded, literal("Dottorato di Ricerca", Pavia.language))
+                            field(Schema.name, program.string("name").map(name ->
+                                    literal((language.equals(Pavia.language) ? "Dottorato in" : "Doctorate in ")+name, language)
+                            )),
 
-                ))
+                            field(Schema.url, program.string("url").map(Frame::iri)),
+
+                            field(Offerings.educationalLevel, ISCED2011.Level8),
+                            field(Offerings.educationalCredentialAwarded, literal("Dottorato di Ricerca", Pavia.language))
+
+                    );
+                })
 
                 .toList();
     }
