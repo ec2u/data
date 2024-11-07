@@ -16,152 +16,259 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.http.actions.Fill;
-import com.metreeca.http.rdf4j.actions.GraphQuery;
+import com.metreeca.http.actions.GET;
+import com.metreeca.http.json.JSONPath;
+import com.metreeca.http.json.services.Analyzer;
 import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.rdf4j.services.Graph;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
-import eu.ec2u.data.Data;
-import eu.ec2u.data.EC2U;
-import eu.ec2u.work.focus.Focus;
+import eu.ec2u.data.concepts.OrganizationTypes;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.*;
 
-import java.time.Instant;
-import java.util.Map;
-import java.util.Objects;
+import java.net.URI;
+import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
+import java.util.regex.Pattern;
 
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.http.Locator.service;
+import static com.metreeca.http.json.services.Analyzer.analyzer;
+import static com.metreeca.http.rdf.Values.guarded;
+import static com.metreeca.link.Frame.iri;
 
-import static eu.ec2u.data.Data.repository;
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.concepts.OrganizationTypes.Centre;
-import static eu.ec2u.data.concepts.OrganizationTypes.Department;
-import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.University.Pavia;
+import static eu.ec2u.work.xlations.Xlations.translate;
 import static java.util.Map.entry;
-import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
 
     private static final IRI Context=iri(Units.Context, "/pavia");
 
-    private static final Map<IRI, IRI> Types=Map.ofEntries(
-            entry(VIVO.AcademicDepartment, Department),
-            entry(VIVO.Center, Centre)
-    );
 
+    //// !!! Factor ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final Pattern LanguagePattern=Pattern.compile("[a-zA-Z]{2}");
+
+    private static Optional<Locale> locale(final JSONPath json, final String language) {
+        return json.string(language)
+                .filter(LanguagePattern.asMatchPredicate())
+                .map(guarded(Locale::forLanguageTag));
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(final String... args) {
-        Data.exec(() -> new UnitsPavia().run());
+        exec(() -> new UnitsPavia().run());
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Analyzer analyzer=service(analyzer());
+
 
     @Override public void run() {
-        update(connection -> {
+        update(connection -> Xtream
 
-            Xtream.of(Instant.EPOCH)
+                .of(
+                        new Catalog(
+                                "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti",
+                                OrganizationTypes.Department
+                        ),
+                        new Catalog(
+                                "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo",
+                                OrganizationTypes.CentreService
+                        ),
+                        new Catalog(
+                                "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali",
+                                OrganizationTypes.CentreResearchInterdepartmental
+                        )
+                )
 
-                    .flatMap(this::units)
-                    .map(this::unit)
+                .flatMap(this::catalog)
+                .map(this::details)
 
+                .optMap(Unit::toFrame)
+                .flatMap(Frame::stream)
+                .batch(0)
 
-                    .flatMap(Frame::stream)
-                    .batch(0)
+                .map(model -> translate("en", model))
 
-                    .forEach(new Upload()
-                            .contexts(Context)
-                            .clear(true)
-                    );
-
-        });
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Xtream<Focus> units(final Instant updated) {
-        return Xtream.of(updated)
+    private Xtream<Unit> catalog(final Catalog catalog) {
+        return Xtream.of(catalog.url.toASCIIString())
 
-                .flatMap(new Fill<>()
+                .optMap(new GET<>(new HTML()))
+                .map(new Untag())
 
-                        .model("construct where {\n"
-                                +"\n"
-                                +"\t?s a <{type}>; ?p ?o\n"
-                                +"\n"
-                                +"}"
+                .optMap(analyzer.prompt("""
+                        Extract the following properties from the provided markdown document describing
+                        a list of university research units:
+
+                        - acronym (don't include if not explicitly defined in the document)
+                        - name (don't include acronym)
+                        - name language as a 2-letter ISO tag
+                        - URL
+
+                        Respond with a JSON object.
+                        """, """
+                        {
+                          "name": "units",
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "units": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "acronym": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "language": {
+                                      "type": "string",
+                                      "pattern": "^\\\\d{2}$"
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "language"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "units"
+                            ]
+                          }
+                        }
+                        """
+                ))
+
+                .map(JSONPath::new).flatMap(json -> json.paths("units.*")).map(json -> new Unit()
+
+                        .setUniversity(Pavia)
+
+                        .setAcronym(json.string("acronym")
+                                .orElse(null)
                         )
 
-                        .values("type", Types.keySet())
-
-                )
-
-                .flatMap(new GraphQuery()
-                        .graph(new Graph(repository("vivo-unipv")))
-                )
-
-                .batch(0)
-
-                .flatMap(model -> Types.keySet().stream()
-
-                        .flatMap(type -> Focus.focus(Set.of(type), model)
-                                .seq(reverse(RDF.TYPE))
-                                .split()
+                        .setName(json.string("name").flatMap(name -> locale(json, "language")
+                                                .map(locale -> entry(name, locale))
+                                        )
+                                        .orElse(null)
                         )
+
+                        .setUrl(json.string("url")
+                                .map(guarded(URI::create))
+                                .map(catalog.url::resolve)
+                                .orElse(null)
+                        )
+
+                        .setClassification(catalog.classification)
 
                 );
     }
 
-    private Frame unit(final Focus focus) {
+    private Unit details(final Unit unit) {
 
-        final Optional<Literal> label=focus.seq(RDFS.LABEL).value(asString())
-                .filter(not(String::isEmpty))
-                .map(name -> literal(name, Pavia.language));
+        return Optional.ofNullable(unit.getUrl())
 
-        return frame(
+                .map(URI::toASCIIString)
+                .flatMap(new GET<>(new HTML()))
+                .map(new Untag())
 
-                field(ID, EC2U.item(Units.Context, focus.value(asIRI()).orElseThrow().stringValue())), // !!! review
+                .flatMap(analyzer.prompt("""
+                        Extract the following properties from the provided markdown document
+                        describing a university research unit:
 
-                field(RDF.TYPE, Unit),
-                field(university, Pavia.id),
+                        - acronym (don't include if not explicitly defined in the document)
+                        - plain text summary of about 500 characters in the document language
+                        - full description as included in the document in markdown format
+                        - document language as a 2-letter ISO tag
 
-                field(DCTERMS.TITLE, label),
-                field(SKOS.PREF_LABEL, label),
+                        Remove personal email addresses.
+                        Respond with a JSON object.
+                        """, """
+                        {
+                          "name": "unit",
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "acronym": {
+                                "type": "string"
+                              },
+                              "summary": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "language": {
+                                "type": "string",
+                                "pattern": "^[a-zA-Z]{2}$"
+                              }
+                            },
+                            "required": []
+                          }
+                        }
+                        """
+                ))
 
-                field(ORG.UNIT_OF, Pavia.id),
+                .map(JSONPath::new).flatMap(json -> locale(json, "language").map(locale -> unit
 
-                field(ORG.CLASSIFICATION, focus.seq(RDF.TYPE).values()
-                        .map(Types::get)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                )
+                        .setAcronym(Optional.ofNullable(unit.getAcronym())
+                                .or(() -> json.string("acronym"))
+                                .orElse(null)
+                        )
 
-        );
+                        .setSummary(json.string("summary")
+                                .map(summary -> entry(summary, locale))
+                                .orElse(null)
+                        )
 
+                        .setDescription(json.string("description")
+                                .map(summary -> entry(summary, locale))
+                                .orElse(null)
+                        )
+
+                ))
+
+                .orElse(unit);
     }
 
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * VIVO RDF vocabulary.
-     *
-     * @see <a href="https://bioportal.bioontology.org/ontologies/VIVO/">VIVO Ontology for Researcher Discovery</a>
-     */
-    private static final class VIVO {
+    private record Catalog(
+            URI url,
+            IRI classification
+    ) {
 
-        private static final String Namespace="http://vivoweb.org/ontology/core#";
-
-        private static final IRI AcademicDepartment=iri(Namespace, "AcademicDepartment");
-        private static final IRI Center=iri(Namespace, "Center");
+        private Catalog(final String url, final IRI classification) {
+            this(URI.create(url), classification);
+        }
 
     }
 

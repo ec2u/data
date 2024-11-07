@@ -170,7 +170,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 )
 
-                .scan(page -> Xtream.of(page)
+                .crawl(page -> Xtream.of(page)
 
                         .optMap(new GET<>(new JSON()))
                         .map(JSONPath::new)

@@ -159,7 +159,7 @@ public final class EventsLinzCity implements Runnable {
 
                 )
 
-                .scan(url -> Xtream.of(url)
+                .crawl(url -> Xtream.of(url)
 
                         .optMap(new GET<>(new JSON()))
 

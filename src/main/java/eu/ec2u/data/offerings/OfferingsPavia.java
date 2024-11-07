@@ -182,7 +182,7 @@ public final class OfferingsPavia implements Runnable {
     private Xtream<JSONPath> programs(final Year year) {
         return Xtream.of(0)
 
-                .scan(start -> Xtream.of(start)
+                .crawl(start -> Xtream.of(start)
 
                         .flatMap(new Fill<>()
                                 .model(ESSE3Url+"?aaOffId={year}&start={start}&limit={limit}")
