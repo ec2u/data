@@ -67,7 +67,7 @@ final class Events_ {
                     .map(Statement::getSubject)
                     .collect(toSet());
 
-            final List<Statement> translations=translate("en", model);
+            final List<Statement> translated=translate("en", model);
 
             time(() -> {
 
@@ -77,8 +77,7 @@ final class Events_ {
                             connection.remove(subject, null, null, context)
                     );
 
-                    connection.add(model, context);
-                    connection.add(translations, context);
+                    connection.add(translated, context);
 
                     return this;
 

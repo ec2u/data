@@ -248,23 +248,9 @@ public final class OfferingsPavia implements Runnable {
 
     private Xtream<XPath> details(final JSONPath program) {
 
-        final String url=vault
-                .get(APIUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API URL <%s>", APIUrl
-                )));
-
-        final String usr=vault
-                .get(APIUsr)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API user <%s>", APIUsr
-                )));
-
-        final String pwd=service(vault())
-                .get(APIPwd)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API password <%s>", APIPwd
-                )));
+        final String url=vault.get(APIUrl);
+        final String usr=vault.get(APIUsr);
+        final String pwd=service(vault()).get(APIPwd);
 
         return program.integers("aaOffId")
                 .flatMap(aaOffId -> program.strings("cdsCod")

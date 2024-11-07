@@ -30,7 +30,6 @@ import static com.metreeca.http.services.Vault.vault;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.universities.University.Iasi;
-import static java.lang.String.format;
 
 public final class UnitsIasi implements Runnable {
 
@@ -51,11 +50,7 @@ public final class UnitsIasi implements Runnable {
 
     @Override public void run() {
 
-        final String url=vault
-                .get(DataUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined data URL <%s>", DataUrl
-                )));
+        final String url=vault.get(DataUrl);
 
         update(connection -> Xtream.of(url)
 

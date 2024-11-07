@@ -63,7 +63,6 @@ import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities.University.Turku;
-import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -141,12 +140,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 .optMap(new Query(request -> request
                         .header("Accept", JSON.MIME)
-                        .header("X-Api-Key", service(vault())
-                                .get(APIKey)
-                                .orElseThrow(() -> new IllegalStateException(format(
-                                        "undefined API key <%s>", APIKey
-                                )))
-                        )
+                        .header("X-Api-Key", service(vault()).get(APIKey))
                 ))
 
                 // ;( returns JSON array as top-level object: unable to GET using JSONFormat

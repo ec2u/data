@@ -50,7 +50,6 @@ import static eu.ec2u.data.offerings.Offerings.numberOfCredits;
 import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
 import static eu.ec2u.data.programs.Programs.hasCourse;
 import static eu.ec2u.data.universities.University.Salamanca;
-import static java.lang.String.format;
 import static java.util.Map.entry;
 
 public final class OfferingsSalamanca implements Runnable {
@@ -120,11 +119,7 @@ public final class OfferingsSalamanca implements Runnable {
 
     private Xtream<JSONPath> programs(final Instant updated) {
 
-        final String url=vault
-                .get(ProgramsURL)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API URL <%s>", ProgramsURL
-                )));
+        final String url=vault.get(ProgramsURL);
 
         return Xtream.of(updated)
 
@@ -161,11 +156,7 @@ public final class OfferingsSalamanca implements Runnable {
 
     private Xtream<JSONPath> courses(final Instant updated) {
 
-        final String url=vault
-                .get(CoursesURL)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API URL <%s>", CoursesURL
-                )));
+        final String url=vault.get(CoursesURL);
 
         return Xtream.of(updated)
 
@@ -215,11 +206,7 @@ public final class OfferingsSalamanca implements Runnable {
 
     private Xtream<JSONPath> programsCourses(final Instant updated) {
 
-        final String url=vault
-                .get(ProgramsCoursesURL)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined API URL <%s>", ProgramsCoursesURL
-                )));
+        final String url=vault.get(ProgramsCoursesURL);
 
         return Xtream.of(updated)
 

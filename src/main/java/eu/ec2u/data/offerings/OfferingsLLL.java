@@ -79,11 +79,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
     @Override public void run() {
 
-        final String url=vault
-                .get(DataUrl)
-                .orElseThrow(() -> new IllegalStateException(format(
-                        "undefined data URL <%s>", DataUrl
-                )));
+        final String url=vault.get(DataUrl);
 
         update(connection -> Xtream.of(url)
 

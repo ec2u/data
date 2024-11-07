@@ -51,34 +51,42 @@ public final class Xlations implements Runnable {
 
         final Translator translator=service(translator());
 
-        return Xtream.from(model)
+        return Xtream
 
-                // look for statements with tagged object
+                .from(
 
-                .filter(statement
-                        -> statement.getObject().isLiteral()
-                           && ((Literal)statement.getObject()).getLanguage().isPresent()
-                )
+                        model.stream(),
 
-                // retain statements that don't have a target language version
+                        Xtream.from(model)
 
-                .filter(statement -> model.stream().noneMatch(s
-                        -> s.getSubject().equals(statement.getSubject())
-                           && s.getPredicate().equals(statement.getPredicate())
-                           && s.getObject().isLiteral()
-                           && ((Literal)s.getObject()).getLanguage().filter(target::equals).isPresent()
-                ))
+                                // look for statements with tagged object
 
-                // select a source language
+                                .filter(statement
+                                        -> statement.getObject().isLiteral()
+                                           && ((Literal)statement.getObject()).getLanguage().isPresent()
+                                )
 
-                .distinct(statement -> entry(statement.getSubject(), statement.getPredicate()))
+                                // retain statements that don't have a target language version
 
-                // translate to target language
+                                .filter(statement -> model.stream().noneMatch(s
+                                        -> s.getSubject().equals(statement.getSubject())
+                                           && s.getPredicate().equals(statement.getPredicate())
+                                           && s.getObject().isLiteral()
+                                           && ((Literal)s.getObject()).getLanguage().filter(target::equals).isPresent()
+                                ))
 
-                .flatMap(statement -> translator
-                        .translate(target, ((Literal)statement.getObject()).getLanguage().orElse(""), statement.getObject().stringValue())
-                        .map(translation -> statement(statement.getSubject(), statement.getPredicate(), literal(translation, target)))
-                        .stream()
+                                // select a source language
+
+                                .distinct(statement -> entry(statement.getSubject(), statement.getPredicate()))
+
+                                // translate to target language
+
+                                .flatMap(statement -> translator
+                                        .translate(target, ((Literal)statement.getObject()).getLanguage().orElse(""), statement.getObject().stringValue())
+                                        .map(translation -> statement(statement.getSubject(), statement.getPredicate(), literal(translation, target)))
+                                        .stream()
+                                )
+
                 )
 
                 .toList();
