@@ -144,6 +144,10 @@ cron:
     url: /cron/events/pavia/city
     schedule: every day 00:00
 
+  - description: "events › pavia › university - nightly crawling"
+    url: /cron/events/pavia/university
+    schedule: every day 00:00
+
   - description: "events › poitiers › university - nightly crawling"
     url: /cron/events/poitiers/university
     schedule: every day 00:00
