@@ -110,6 +110,9 @@ public final class EventsPaviaUniversity implements Runnable {
         );
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private Optional<Frame> event(final String url) {
         return Optional.of(url)
 
@@ -135,7 +138,7 @@ public final class EventsPaviaUniversity implements Runnable {
                         - tags
                         - language as guessed from the description as a 2-letter ISO tag
 
-                        Don't include properties if not in the document.
+                        Don't include properties if not defined in the document.
                         Don't include empty properties.
                         Respond with a JSON object
                         """, """
