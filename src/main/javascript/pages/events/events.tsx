@@ -148,14 +148,17 @@ export function DataEvents() {
 
 				university
 
-			}) =>
+			}) => {
 
-				<ToolCard key={id} side={"end"} size={10}
+				const start=startDate.substring(0, 10);
+				const end=endDate?.substring(0, 10);
+
+				return <ToolCard key={id} side={"end"} size={10}
 
 					title={<ToolLink>{{
 
 						id,
-						label: `${startDate.substring(0, 10)}${endDate && ` › ${endDate.substring(0, 10)}`} / ${toLocalString(label)}`
+						label: `${start}${end && end !== start ? ` › ${end}` : ""} / ${toLocalString(label)}`
 
 					}}</ToolLink>}
 
@@ -166,7 +169,8 @@ export function DataEvents() {
 
 					comment && toLocalString(comment)
 
-				}</ToolCard>
+				}</ToolCard>;
+			}
 
 			}>{events}</ToolSheet>
 
