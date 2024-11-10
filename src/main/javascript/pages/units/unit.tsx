@@ -56,12 +56,14 @@ export const Unit=immutable({
 
 	unitOf: repeatable({
 		id: required(id),
-		label: required(local)
+		altLabel: required(local),
+		prefLabel: required(local)
 	}),
 
 	hasUnit: multiple({
 		id: required(id),
-		label: required(local)
+		altLabel: required(local),
+		prefLabel: required(local)
 	}),
 
 	classification: multiple({
@@ -141,9 +143,9 @@ export function DataUnit() {
 
 		<ToolFrame placeholder={Events[icon]} as={({
 
-			label,
 			comment,
 
+			altLabel,
 			prefLabel,
 
 			university,
@@ -158,22 +160,29 @@ export function DataUnit() {
 
 			return <>
 
-				<strong>{toLocalString(prefLabel)}</strong>
+				<dfn>{toUnitLabel({ altLabel, prefLabel })}</dfn>
 
 				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
 
 				{(parent.length || hasUnit || subject) && <ToolPanel>
 
 					{parent.length > 0 && <ToolLabel name={"Parent Organizations"} wide>
-                        <ul>{parent.slice().sort(entryCompare).map(parent =>
-							<li key={parent.id}><ToolLink>{parent}</ToolLink></li>
-						)}</ul>
+                        <ul>{parent.slice()
+							.map(parent => ({ id: parent.id, label: toUnitLabel(parent) }))
+							.sort(entryCompare)
+							.map(parent =>
+								<li key={parent.id}><ToolLink>{parent}</ToolLink>
+								</li>
+							)}</ul>
                     </ToolLabel>}
 
 					{hasUnit && <ToolLabel name={"Organizational Units"} wide>
-                        <ul>{hasUnit.slice().sort(entryCompare).map(unit =>
-							<li key={unit.id}><ToolLink>{unit}</ToolLink></li>
-						)}</ul>
+                        <ul>{hasUnit.slice()
+							.map(unit => ({ id: unit.id, label: toUnitLabel(unit) }))
+							.sort(entryCompare)
+							.map(unit =>
+								<li key={unit.id}><ToolLink>{unit}</ToolLink></li>
+							)}</ul>
                     </ToolLabel>}
 
 					{subject && <ToolLabel name={"Topics"} wide>
