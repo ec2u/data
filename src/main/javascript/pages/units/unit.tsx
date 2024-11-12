@@ -39,6 +39,8 @@ export const Unit=immutable({
 	label: required(local),
 	comment: optional(local),
 
+	definition: optional(local),
+
 	homepage: multiple(id),
 
 	university: optional({
@@ -130,6 +132,8 @@ export function DataUnit() {
 			comment,
 			label,
 
+			definition,
+
 			university,
 
 			unitOf,
@@ -139,12 +143,13 @@ export function DataUnit() {
 		}) => {
 
 			const parent=unitOf.filter(unit => !university || unit.id !== university.id);
+			const description=definition ?? comment;
 
 			return <>
 
 				<dfn>{toLocalString(label)}</dfn>
 
-				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
+				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
 				{(parent.length || hasUnit || subject) && <ToolPanel>
 
