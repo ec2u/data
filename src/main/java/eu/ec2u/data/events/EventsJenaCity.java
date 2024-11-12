@@ -124,7 +124,7 @@ public final class EventsJenaCity implements Runnable {
 
                 // paginate through search results
 
-                .scan(page -> Xtream
+                .crawl(page -> Xtream
 
                         .of(new Request()
                                 .method(POST)

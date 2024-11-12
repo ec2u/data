@@ -82,20 +82,32 @@
     skos:inScheme </concepts/organizations> ;
     skos:broader </concepts/organizations/university-unit> ;
     skos:prefLabel "Centre"@en ;
-    skos:altLabel "Center"@en ;
+    skos:hiddenLabel "Center"@en ;
     owl:sameAs vivo:Center .
 
 </concepts/organizations/university-unit/centre/research> a skos:Concept ;
     skos:inScheme </concepts/organizations> ;
     skos:broader </concepts/organizations/university-unit/centre> ;
     skos:prefLabel "Research Centre"@en ;
-    skos:altLabel "Research Center"@en .
+    skos:hiddenLabel "Research Center"@en .
+
+</concepts/organizations/university-unit/centre/research/interdepartmental> a skos:Concept ;
+    skos:inScheme </concepts/organizations> ;
+    skos:broader </concepts/organizations/university-unit/centre/research> ;
+    skos:prefLabel "Interdepartmental Research Center"@en ;
+    skos:hiddenLabel "Interdepartmental Research Center"@en .
 
 </concepts/organizations/university-unit/centre/transfer> a skos:Concept ;
     skos:inScheme </concepts/organizations> ;
     skos:broader </concepts/organizations/university-unit/centre> ;
     skos:prefLabel "Technology Transfer Centre"@en ;
-    skos:altLabel "Technology Transfer Center"@en .
+    skos:hiddenLabel "Technology Transfer Center"@en .
+
+</concepts/organizations/university-unit/centre/service> a skos:Concept ;
+    skos:inScheme </concepts/organizations> ;
+    skos:broader </concepts/organizations/university-unit/centre> ;
+    skos:prefLabel "Service Centre"@en ;
+    skos:hiddenLabel "Service Center"@en .
 
 </concepts/organizations/university-unit/group> a skos:Concept ;
     skos:inScheme </concepts/organizations> ;

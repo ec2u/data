@@ -15,7 +15,6 @@
  */
 
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
-import { toUnitLabel } from "@ec2u/data/pages/units/unit";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
@@ -53,9 +52,6 @@ export const Units=immutable({
 		id: required(id),
 		label: required(local),
 		comment: optional(local),
-
-		prefLabel: required(local),
-		altLabel: optional(local),
 
 		university: optional({
 			label: required(local)
@@ -105,9 +101,7 @@ export function DataUnits() {
 
 			id,
 			comment,
-
-			prefLabel,
-			altLabel,
+			label,
 
 			university
 
@@ -115,7 +109,7 @@ export function DataUnits() {
 
 			<ToolCard key={id} side={"end"}
 
-				title={<ToolLink>{{ id, label: toUnitLabel({ prefLabel, altLabel }) }}</ToolLink>}
+				title={<ToolLink>{{ id, label }}</ToolLink>}
 
 				tags={university && <div>{toFrameString(university) || "EC2U Alliance"}</div>}
 

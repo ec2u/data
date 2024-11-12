@@ -21,7 +21,7 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, repeatable, required } from "@metreeca/core";
 import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
-import { Local, local, toLocalString } from "@metreeca/core/local";
+import { local, toLocalString } from "@metreeca/core/local";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolLabel } from "@metreeca/view/layouts/label";
@@ -36,11 +36,8 @@ export const Unit=immutable({
 
 	id: required("/units/{code}"),
 
+	label: required(local),
 	comment: optional(local),
-	label: optional(local),
-
-	prefLabel: required(local),
-	altLabel: optional(local),
 
 	homepage: multiple(id),
 
@@ -77,13 +74,6 @@ export const Unit=immutable({
 });
 
 
-export function toUnitLabel({ altLabel, prefLabel }: { prefLabel: Local, altLabel?: Local }) {
-	return altLabel
-		? `${toLocalString(altLabel)} - ${toLocalString(prefLabel)}`
-		: toLocalString(prefLabel);
-}
-
-
 export function DataUnit() {
 
 	const [unit]=useResource(Unit);
@@ -94,8 +84,6 @@ export function DataUnit() {
 		name={[Units, ""]}
 
 		tray={<ToolFrame as={({
-
-			altLabel,
 
 			homepage,
 
@@ -118,8 +106,6 @@ export function DataUnit() {
 
 			<ToolInfo>{{
 
-				"Acronym": altLabel && <span>{toLocalString(altLabel)}</span>,
-
 				"Head": hasHead?.length === 1 ? <span>{toEntryString(hasHead[0])}</span> : hasHead?.length &&
                     <ul>{[...hasHead]
 						.sort(entryCompare)
@@ -141,10 +127,8 @@ export function DataUnit() {
 
 		<ToolFrame placeholder={Events[icon]} as={({
 
-			label,
 			comment,
-
-			prefLabel,
+			label,
 
 			university,
 
@@ -158,22 +142,27 @@ export function DataUnit() {
 
 			return <>
 
-				<strong>{toLocalString(prefLabel)}</strong>
+				<dfn>{toLocalString(label)}</dfn>
 
 				{comment && <ToolMark>{toLocalString(comment)}</ToolMark>}
 
 				{(parent.length || hasUnit || subject) && <ToolPanel>
 
 					{parent.length > 0 && <ToolLabel name={"Parent Organizations"} wide>
-                        <ul>{parent.slice().sort(entryCompare).map(parent =>
-							<li key={parent.id}><ToolLink>{parent}</ToolLink></li>
-						)}</ul>
+                        <ul>{parent.slice()
+							.sort(entryCompare)
+							.map(parent =>
+								<li key={parent.id}><ToolLink>{parent}</ToolLink>
+								</li>
+							)}</ul>
                     </ToolLabel>}
 
 					{hasUnit && <ToolLabel name={"Organizational Units"} wide>
-                        <ul>{hasUnit.slice().sort(entryCompare).map(unit =>
-							<li key={unit.id}><ToolLink>{unit}</ToolLink></li>
-						)}</ul>
+                        <ul>{hasUnit.slice()
+							.sort(entryCompare)
+							.map(unit =>
+								<li key={unit.id}><ToolLink>{unit}</ToolLink></li>
+							)}</ul>
                     </ToolLabel>}
 
 					{subject && <ToolLabel name={"Topics"} wide>

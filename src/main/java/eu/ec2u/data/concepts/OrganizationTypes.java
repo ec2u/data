@@ -51,7 +51,9 @@ public final class OrganizationTypes implements Runnable {
     public static final IRI InstituteVirtual=iri(UnitTypes, "/institute/virtual");
     public static final IRI Centre=iri(UnitTypes, "/centre");
     public static final IRI CentreResearch=iri(UnitTypes, "/centre/research");
+    public static final IRI CentreResearchInterdepartmental=iri(UnitTypes, "/centre/research/interdepartmental");
     public static final IRI CentreTransfer=iri(UnitTypes, "/centre/transfer");
+    public static final IRI CentreService=iri(UnitTypes, "/centre/service");
     public static final IRI Department=iri(UnitTypes, "/department");
     public static final IRI Laboratory=iri(UnitTypes, "/laboratory");
     public static final IRI Group=iri(UnitTypes, "/group");

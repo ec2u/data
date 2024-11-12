@@ -4,25 +4,39 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 insert {
 
-    ?organization
-
-        rdfs:label ?label ;
-        rdfs:comment ?definition ;
-
-        skos:hiddenLabel ?label, ?pref, ?alt.
+    ?organization rdfs:label ?label
 
 } where {
 
-    ?organization a org:Organization ;
-        skos:prefLabel ?pref .
+    ?organization a org:Organization .
+
+    filter not exists { ?organization rdfs:label ?label_ }
+
+    ?organization skos:prefLabel ?pref .
 
     optional {
         ?organization skos:altLabel ?alt
         filter (lang(?alt) = lang(?pref))
     }
 
-    bind(coalesce (?alt, ?pref) as ?label)
+    bind(coalesce(?alt, ?pref) as ?label)
 
-    optional { ?organization skos:definition ?definition }
+}; # generate label
 
-} # complete entry
+insert {
+
+    ?organization rdfs:comment ?comment
+
+} where {
+
+    ?organization a org:Organization .
+
+    filter not exists { ?organization rdfs:comment ?comment_ }
+
+    optional {
+        ?organization skos:definition ?definition
+    }
+
+    bind(?definition as ?comment)
+
+} # generate comment
