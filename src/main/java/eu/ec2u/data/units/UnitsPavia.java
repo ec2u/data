@@ -26,6 +26,7 @@ import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.work.Markdown;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.net.URI;
@@ -57,6 +58,16 @@ public final class UnitsPavia implements Runnable {
         return json.string(language)
                 .filter(LanguagePattern.asMatchPredicate())
                 .map(guarded(Locale::forLanguageTag));
+    }
+
+
+    private static String ai(final String text) {
+
+        if ( text == null ) {
+            throw new NullPointerException("null text");
+        }
+
+        return "✦ "+text;
     }
 
 
@@ -113,17 +124,19 @@ public final class UnitsPavia implements Runnable {
         return Xtream.of(catalog.url.toASCIIString())
 
                 .optMap(new GET<>(new HTML()))
-                .map(new Untag())
+                .optMap(new Markdown())
 
                 .optMap(analyzer.prompt("""
-                        Extract the following properties from the provided markdown document describing
-                        a list of university research units:
+                        The input is a markdown document containing a list of university research units;
+                        for each unit in the list, extract the following properties :
 
-                        - acronym (don't include if not explicitly defined in the document)
-                        - name (don't include acronym)
+                        - complete name (don't include the acronym)
                         - name language as a 2-letter ISO tag
-                        - URL
+                        - uppercase acronym (only if explicitly defined in the complete name, ignoring the URL)
+                        - URL (optional)
 
+                        Make absolutely sure to report all units included in the list.
+                        Don't include empty properties.
                         Respond with a JSON object.
                         """, """
                         {
@@ -244,11 +257,13 @@ public final class UnitsPavia implements Runnable {
                         )
 
                         .setSummary(json.string("summary")
+                                .map(UnitsPavia::ai)
                                 .map(summary -> entry(summary, locale))
                                 .orElse(null)
                         )
 
                         .setDescription(json.string("description")
+                                .map(UnitsPavia::ai)
                                 .map(summary -> entry(summary, locale))
                                 .orElse(null)
                         )
