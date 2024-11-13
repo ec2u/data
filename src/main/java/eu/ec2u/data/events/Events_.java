@@ -288,7 +288,7 @@ final class Events_ {
 
                         final Optional<URI> attendanceURL=event
                                 .string("attendanceURL")
-                                .map(base::resolve);
+                                .map(guarded(base::resolve));
 
                         final Optional<String> venueName=event
                                 .string("venueName");
@@ -298,7 +298,7 @@ final class Events_ {
 
                         final String language=event
                                 .string("language")
-                                .orElse("en"); // unexpected
+                                .orElse(university.language); // unexpected
 
                         return frame(
 
@@ -311,7 +311,7 @@ final class Events_ {
                                 field(Schema.name, event.string("title").map(v -> literal(v, language))),
                                 field(Schema.description, event.string("description").map(v -> literal(v, language))),
                                 field(Schema.disambiguatingDescription, event.string("summary").map(v -> literal(v, language))),
-                                field(Schema.image, event.string("imageURL").map(base::resolve).map(Frame::iri)),
+                                field(Schema.image, event.string("imageURL").map(guarded(base::resolve)).map(Frame::iri)),
 
                                 field(Events.startDate, startDate
                                         .map(date -> startTime
