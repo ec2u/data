@@ -44,6 +44,8 @@ export const Event=immutable({
 
 	image: optional({
 		id: required(id),
+		url: required(id),
+		author: optional(string),
 		description: optional(local)
 	}),
 
@@ -282,22 +284,33 @@ export function DataEvent() {
 
 		}) => <>
 
-			{image && <img src={image.id}
+			{image && <figure style={{
 
-                alt={image.description && toLocalString(image.description) || `Image of ${toLocalString(name)}`}
+				float: "right",
+				maxWidth: "33%",
+				margin: "0 0 1rem 2rem"
 
-                style={{
+			}}>
 
-					float: "right",
-					maxWidth: "33%",
-					margin: "0 0 1rem 2rem"
+                <img src={image.url}
 
-				}}
+                    alt={image.description && toLocalString(image.description) || `Image of ${toLocalString(name)}`}
 
-            />}
+                    style={{
+						margin: 0
+					}}
+                />
+
+				{image.author && <figcaption style={{
+					marginTop: "0.75em",
+					textAlign: "right",
+					fontStyle: "italic",
+					fontSize: "90%"
+				}}>Photo by {image.author}</figcaption>}
+
+            </figure>}
 
 			<dfn>{toLocalString(name)}</dfn>
-
 
 			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 

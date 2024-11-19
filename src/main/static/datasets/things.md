@@ -92,7 +92,8 @@ and cardinality are tightly specified and constrained.
 
 > [!IMPORTANT]
 >
-> Image object are expected to have exactly 1 `schema:url`value, which by convention is also used as the identifier of
+> Image objects are expected to have exactly one `schema:url` value, which by convention is also used as the identifier
+> of
 > the resource.
 
 > [!TIP]

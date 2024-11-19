@@ -23,6 +23,7 @@ import { dateTime } from "@metreeca/core/dateTime";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
+import { string } from "@metreeca/core/string";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
@@ -59,6 +60,8 @@ export const Events=immutable({
 
 		image: optional({
 			id: required(id),
+			url: required(id),
+			author: optional(string),
 			description: optional(local)
 		}),
 
@@ -166,7 +169,7 @@ export function DataEvents() {
 
 					}}</ToolLink>}
 
-					image={image?.id} // !!! alt text
+					image={image?.url} // !!! alt text
 					tags={university && <span>{toEntryString(university)}</span>}
 
 				>{
