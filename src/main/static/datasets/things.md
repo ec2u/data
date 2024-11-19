@@ -86,15 +86,16 @@ and cardinality are tightly specified and constrained.
 
 > [!WARNING]
 >
-> The `string`type for the `schema:author`property is known deviation from the *schema.org*definition, which specifies
+> The `string` type for the `schema:author` property is known deviation from the *schema.org* definition, which
+> specifies
 `schema:Person` or `schema:Organization` values.
 
 > [!IMPORTANT]
 >
-> Image object are exited to have exactly 1 `schema:url`value, which by convention is also used as the identifier of the
-> resource.
+> Image object are expected to have exactly 1 `schema:url`value, which by convention is also used as the identifier of
+> the resource.
 
 > [!TIP]
 >
-> The `schema:description`value may be used to provide an image description suitable for accessibility support, for
-> instance through the alt attribute of the `img`HTML tag.
+> The `schema:description` value may be used to provide an image description suitable for accessibility support, for
+> instance through the alt attribute of the `img` HTML tag.
