@@ -41,7 +41,11 @@ export const Event=immutable({
 	url: multiple(id),
 	name: required(local),
 	description: optional(local),
-	image: optional(id),
+
+	image: optional({
+		id: required(id),
+		description: optional(local)
+	}),
 
 	startDate: optional(dateTime),
 	endDate: optional(dateTime),
@@ -278,13 +282,19 @@ export function DataEvent() {
 
 		}) => <>
 
-			{image && <img src={image} alt={`Image of ${toLocalString(name)}`} style={{
+			{image && <img src={image.id}
 
-				float: "right",
-				maxWidth: "33%",
-				margin: "0 0 1rem 2rem"
+                alt={image.description && toLocalString(image.description) || `Image of ${toLocalString(name)}`}
 
-			}}/>}
+                style={{
+
+					float: "right",
+					maxWidth: "33%",
+					margin: "0 0 1rem 2rem"
+
+				}}
+
+            />}
 
 			<dfn>{toLocalString(name)}</dfn>
 

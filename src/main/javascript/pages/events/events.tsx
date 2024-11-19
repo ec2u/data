@@ -56,7 +56,11 @@ export const Events=immutable({
 		id: required(id),
 		label: required(local),
 		comment: optional(local),
-		image: optional(id),
+
+		image: optional({
+			id: required(id),
+			description: optional(local)
+		}),
 
 		startDate: required(dateTime),
 		endDate: optional(dateTime),
@@ -162,7 +166,7 @@ export function DataEvents() {
 
 					}}</ToolLink>}
 
-					image={image}
+					image={image?.id} // !!! alt text
 					tags={university && <span>{toEntryString(university)}</span>}
 
 				>{
