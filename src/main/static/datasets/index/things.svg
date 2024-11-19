@@ -17,7 +17,7 @@
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns:xl="http://www.w3.org/1999/xlink"
-        xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-7 -61 495 488" width="495" height="488">
+        xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-162 -61 650 488" width="650" height="488">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -36,7 +36,7 @@
     </defs>
     <g id="things" fill="none" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill-opacity="1">
         <title>things</title>
-        <rect fill="white" x="-7" y="-61" width="495" height="488"/>
+        <rect fill="white" x="-162" y="-61" width="650" height="488"/>
         <g id="things_Layer_1">
             <title>Layer 1</title>
             <g id="Group_358">
@@ -270,14 +270,14 @@
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Line_322">
-                <path d="M 55.47862 67.30766 L 47.37862 67.30766 L 47.37862 -24.098434 L 107.70367 -24.098434"
+                <path d="M 104.06089 106.43823 L 104.06089 137.40206 L -55.045975 137.40206 L -55.045975 107.6577"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_321">
-                <rect x="21.401575" y="-30.598434" width="82.75049" height="13" fill="white"/>
-                <text transform="translate(24.401575 -29.598434)" fill="black">
-                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:image :0..1</tspan>
+                <rect x="-95.4676" y="110.36723" width="80.84326" height="13" fill="white"/>
+                <text transform="translate(-92.4676 111.36723)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:image 0..1</tspan>
                 </text>
             </g>
             <g id="Graphic_365">
@@ -308,6 +308,41 @@
                 <text transform="translate(385.3209 142.30315)" fill="black">
                     <tspan font-family="Apple Symbols" font-size="18" fill="black" x="0" y="12">⊗</tspan>
                 </text>
+            </g>
+            <g id="Group_372">
+                <g id="Graphic_374">
+                    <a xl:href="https://schema.org/ImageObject">
+                        <rect x="-133.22835" y="33.807697" width="156.36475" height="17" fill="white"/>
+                        <rect x="-133.22835" y="33.807697" width="156.36475" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-97.84871 36.807697)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9">
+                                schema:ImageObject
+                            </tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_373">
+                    <rect x="-133.22835" y="50.807697" width="156.36475" height="50" fill="white"/>
+                    <rect x="-133.22835" y="50.807697" width="156.36475" height="50" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-127.22835 53.8077)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">schema:url : id [1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">schema:caption : text
+                            [0..1]
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31">schema:author : string
+                            [0..1[
+                        </tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42">schema:copyrightNotice :
+                            string [0..1
+                        </tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_375">
+                <line x1="23.136398" y1="67.3077" x2="45.72862" y2="67.30767" marker-end="url(#UMLInheritance_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
             </g>
         </g>
     </g>
