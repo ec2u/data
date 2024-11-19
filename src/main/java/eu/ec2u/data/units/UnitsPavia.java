@@ -67,7 +67,7 @@ public final class UnitsPavia implements Runnable {
             throw new NullPointerException("null text");
         }
 
-        return "✦ "+text;
+        return text+"\n✦";
     }
 
 
