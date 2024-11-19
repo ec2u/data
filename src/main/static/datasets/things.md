@@ -11,7 +11,9 @@ and cardinality are tightly specified and constrained.
 
 ## Thing
 
-> **⚠️** The `schema:Thing` data model is not intended to be used in isolation but only to provide base
+> [!IMPORTANT]
+>
+> The `schema:Thing` data model is not intended to be used in isolation but only to provide base
 > definitions factoring generic properties shared by the specialised models defined by each [dataset](./index.md).
 
 | term                                                                             | type                                   | #    | description                                                    |
@@ -20,9 +22,9 @@ and cardinality are tightly specified and constrained.
 | [schema:url](https://schema.org/url)                                             | id                                     | *    | links to public web pages describing the item                  |
 | [schema:identifier](https://schema.org/identifier)                               | string                                 | *    | formal identifiers assigned by the item owner                  |
 | [schema:name](https://schema.org/name)                                           | text                                   | 0..1 | item name                                                      |
-| [schema:image](https://schema.org/image)                                         | [rdfs:Resource](resources.md#resource) | 0..1 | link to an image of the item                                   |
 | [schema:description](https://schema.org/description)                             | text                                   | 0..1 | extended  description of the item                              |
 | [schema:disambiguatingDescription](https://schema.org/disambiguatingDescription) | text                                   | 0..1 | short description intended to identify the item out of context |
+| [schema:image](https://schema.org/image)                                         | [schema:ImageObject](#image-object)    | 0..1 | link to an image of the item                                   |
 
 ## Organization
 
@@ -71,3 +73,28 @@ and cardinality are tightly specified and constrained.
 |------------------------------------------------------------------|------------------------|---|------------------------------------------------------------|
 | **[schema:VirtualLocation](https://schema.org/VirtualLocation)** | [schema:Thing](#thing) |   | online virtual location, for instance for attending events |
 | [schema:url](https://schema.org/url)                             | id                     | 1 | link to the public web page hosting the virtual location   |
+
+## Image Object
+
+| term                                                         | type                   | #    | description                                   |
+|--------------------------------------------------------------|------------------------|------|-----------------------------------------------|
+| **[schema:ImageObject](https://schema.org/ImageObject)**     | [schema:Thing](#thing) |      | image file                                    |
+| [schema:url](https://schema.org/url)                         | id                     | 1    | link to the image source                      |
+| [schema:caption](https://schema.org/caption)                 | text                   | 0..1 | descriptive caption                           |
+| [schema:author](https://schema.org/author)                   | string                 | 0..1 | author name                                   |
+| [schema:copyrightNotice](https://schema.org/copyrightNotice) | string                 | 0..1 | copyright notice,  for instance `2024 © EC2U` |
+
+> [!WARNING]
+>
+> The `string`type for the `schema:author`property is known deviation from the *schema.org*definition, which specifies
+`schema:Person` or `schema:Organization` values.
+
+> [!IMPORTANT]
+>
+> Image object are exited to have exactly 1 `schema:url`value, which by convention is also used as the identifier of the
+> resource.
+
+> [!TIP]
+>
+> The `schema:description`value may be used to provide an image description suitable for accessibility support, for
+> instance through the alt attribute of the `img`HTML tag.
