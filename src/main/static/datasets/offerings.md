@@ -27,7 +27,8 @@ and  [schema:Course](https://schema.org/Course) data models.
 | [schema:occupationalCategory](https://schema.org/occupationalCategory)                   | [skos:Concept](concepts.md#concept)        | *    | target occupational sectors of the resource as links to entries in the [ESCO Occupations](/concepts/esco-occupations) taxonomy                                                                                                                                   |
 | [schema:competencyRequired](https://schema.org/competencyRequired)                       | [skos:Concept](concepts.md#concept)        | *    | knowledge, skill, ability to be demonstrated in order to earn related educational or occupational credentials as links to entries [ESCO Skills](/concepts/esco-skills) taxonomy                                                                                  |
 
-> **⚠️**`learningResourceType`values to be migrated to a standardised taxonomy
+> [!WARNING]
+> learningResourceType`values to be migrated to a standardised taxonomy
 
 > `❓` Any European-wide standardised taxonomic for `educational/occupationaCredentialAwarded` values?
 

@@ -29,7 +29,8 @@ the [Describing Linked Datasets with the VoID Vocabulary](https://www.w3.org/TR/
 | [rdfs:isDefinedBy](https://www.w3.org/TR/rdf-schema/#ch_isdefinedby) | [rdfs:Resource](resources.md)          | 0..1 | link to the data model specification                                                                                                                      |
 | [rdfs:member](https://www.w3.org/TR/rdf-schema/#ch_member)           | [rdfs:Resource](resources.md#resource) | *    | links to the EC2U Knowledge Hub resources included in the dataset                                                                                         |
 
-> **⚠️**  Only datasets with a defined issuance date defined by the `dct:issued` property are exposed through user
+> [!WARNING]
+> Only datasets with a defined issuance date defined by the `dct:issued` property are exposed through user
 > facing search interfaces.
 
 # Licensing
@@ -40,7 +41,8 @@ the [`dct:rights`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_rights)
 and  [`dct:accessRights`](https://www.w3.org/TR/vocab-dcat-2/#Property:resource_access_rights) properties as described
 in the [asset](assets.md) data model.
 
-> **⚠️** The licensing terms defined by the `dct:license` property apply to the dataset as a whole: individual entries
+> [!WARNING]
+> The licensing terms defined by the `dct:license` property apply to the dataset as a whole: individual entries
 > in the dataset may define their own licensing terms.
 
 # Sources

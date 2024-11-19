@@ -29,5 +29,6 @@ the [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-ter
 | [dct:license](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/license)           | [rdfs:Resource](resources.md) | *    | links to the public text of the licensing terms for the assets as a whole; entries listed in the asset may define their own licensing terms |
 | [dct:extent](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/extent)             | integer                       | 0..1 | asset size in terms of referenced resources                                                                                                 |
 
-> **⚠️** Published assets, that is assets that specify a `dct:issued` date, must also include at least
+> [!WARNING]
+> Published assets, that is assets that specify a `dct:issued` date, must also include at least
 > one `dct:license`.

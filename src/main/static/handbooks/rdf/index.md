@@ -144,9 +144,11 @@ as [SHACL core constraints components.](https://www.w3.org/TR/shacl/#core-compon
 
 Ancillary usage or explanatory notes are highlighted in the following formats:
 
-> **:warning:** Warning / Usage note warning of potentially limiting or troublesome data model characteristics.
+> [!WARNING]
+> Usage note warning of potentially limiting or troublesome data model characteristics.
 
-> *:information_source:*  Remark / Usage or explanatory note providing context or explaining design choices.
+> [!NOTE]
+> Remark / Usage or explanatory note providing context or explaining design choices.
 
 > :question:/:exclamation: Note / Open issue or editorial note.
 
@@ -178,10 +180,12 @@ query engines and easily mapped to native datatypes in most programming language
 | text     | localised human-readable textual content                                                    | [rdf:langString](https://www.w3.org/TR/rdf-schema/#ch_langstring) | `{ "locale": "text" }`           | ``Map<Locale, String>``      |
 |          |                                                                                             |                                                                   | `{ "locale": ["text", …] }`      | ``Map<Locale, Set<String>>`` |
 
-> **:warning:** Due to the limitations of SPARQL 1.1 calendrical functions, `xsd:dateTime` is the preferred temporal
+> [!WARNING]
+> Due to the limitations of SPARQL 1.1 calendrical functions, `xsd:dateTime` is the preferred temporal
 > datatype.
 
-> **:warning:** ​To improve interoperability with third-party calendrical function libraries, date-based (`PyYMMdD`) and
+> [!WARNING]
+> To improve interoperability with third-party calendrical function libraries, date-based (`PyYMMdD`) and
 > time-based (`PThHmMs.sssS`) representations are preferred.
 
 # Taxonomies
