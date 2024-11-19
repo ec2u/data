@@ -178,9 +178,17 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                 field(Schema.url, link),
                 field(Schema.name, label),
-                field(Schema.image, item.link("image").map(Frame::iri)),
                 field(Schema.disambiguatingDescription, brief),
                 field(Schema.description, description.map(value -> literal(value, Poitiers.language))),
+
+                field(Schema.image, item.link("image")
+                        .map(Frame::iri)
+                        .map(iri -> frame(
+                                field(ID, iri),
+                                field(TYPE, Schema.ImageObject),
+                                field(Schema.url, iri)
+                        ))
+                ),
 
                 field(startDate, startDate(item)),
                 field(endDate, endDate(item)),

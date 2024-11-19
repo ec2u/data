@@ -310,7 +310,13 @@ public final class EventsJenaUniversity implements Runnable {
 
                         field(Schema.url, focus.seq(Schema.url).value()),
                         field(Schema.name, label),
-                        field(Schema.image, focus.seq(Schema.image).value()),
+                        field(Schema.image, focus.seq(Schema.image).value()
+                                .map(iri -> frame(
+                                        field(ID, iri),
+                                        field(TYPE, Schema.ImageObject),
+                                        field(Schema.url, iri)
+                                ))
+                        ),
 
                         field(Schema.disambiguatingDescription, brief),
                         field(Schema.description, focus.seq(Schema.description).value(asString())

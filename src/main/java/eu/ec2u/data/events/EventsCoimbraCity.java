@@ -155,6 +155,11 @@ public final class EventsCoimbraCity implements Runnable {
 
                             field(Schema.image, json.string("profileImage._id")
                                     .map(image -> iri(format("https://www.coimbragenda.pt/api/v1/file/%s", image)))
+                                    .map(iri -> frame(
+                                            field(ID, iri),
+                                            field(TYPE, Schema.ImageObject),
+                                            field(Schema.url, iri)
+                                    ))
                             ),
 
                             field(Schema.description, description),

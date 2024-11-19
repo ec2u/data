@@ -200,9 +200,17 @@ public final class EventsTurkuCity implements Runnable {
 
                             field(Schema.url, url),
                             field(name, label(json.entries("name"))),
-                            field(image, json.strings("images.*.url").map(Frame::iri)),
                             field(disambiguatingDescription, shortDescription),
                             field(description, fullDescription),
+
+                            field(image, json.string("images.*.url")
+                                    .map(Frame::iri)
+                                    .map(iri -> frame(
+                                            field(ID, iri),
+                                            field(TYPE, Schema.ImageObject),
+                                            field(Schema.url, iri)
+                                    ))
+                            ),
 
                             field(isAccessibleForFree, json.bools("offers.*.is_free")
                                     .filter(v -> v)

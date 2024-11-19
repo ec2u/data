@@ -227,9 +227,17 @@ public final class EventsJenaCity implements Runnable {
 
                     field(Schema.url, url),
                     field(Schema.name, name),
-                    field(Schema.image, focus.seq(Schema.image, Schema.url).value(asString()).map(Frame::iri)),
                     field(Schema.description, description),
                     field(Schema.disambiguatingDescription, disambiguatingDescription),
+
+                    field(Schema.image, focus.seq(Schema.image, Schema.url).value(asString())
+                            .map(Frame::iri)
+                            .map(iri -> frame(
+                                    field(ID, iri),
+                                    field(TYPE, Schema.ImageObject),
+                                    field(Schema.url, iri)
+                            ))
+                    ),
 
                     field(startDate, focus.seq(startDate).value().map(this::datetime)),
                     field(endDate, focus.seq(endDate).value().map(this::datetime)),

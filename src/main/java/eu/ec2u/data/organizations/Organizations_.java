@@ -42,7 +42,15 @@ public final class Organizations_ {
 
                         field(Schema.url, focus.seq(Schema.url).value()),
                         field(Schema.identifier, focus.seq(Schema.identifier).value()),
-                        field(Schema.image, focus.seq(Schema.identifier).value()),
+
+                        field(Schema.image, focus.seq(Schema.identifier)
+                                .value()
+                                .map(iri -> frame(
+                                        field(ID, iri),
+                                        field(TYPE, Schema.ImageObject),
+                                        field(Schema.url, iri)
+                                ))
+                        ),
 
                         field(Schema.name, focus.seq(Schema.name).value(asString()).map(v -> literal(v, lang))),
                         field(Schema.legalName, focus.seq(Schema.legalName).value(asString()).map(v -> literal(v, lang))),

@@ -211,9 +211,18 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 field(Schema.url, event.string("url").flatMap(Parsers::url).map(Frame::iri)),
                 field(Schema.name, title),
-                field(Schema.image, event.string("image.url").flatMap(Parsers::url).map(Frame::iri)),
                 field(Schema.description, description),
                 field(Schema.disambiguatingDescription, excerpt),
+
+                field(Schema.image, event.string("image.url")
+                        .flatMap(Parsers::url)
+                        .map(Frame::iri)
+                        .map(iri -> frame(
+                                field(ID, iri),
+                                field(TYPE, Schema.ImageObject),
+                                field(Schema.url, iri)
+                        ))
+                ),
 
                 field(startDate, event.string("start_date").map(timestamp -> datetime(timestamp, zone, now))),
                 field(endDate, event.string("end_date").map(timestamp -> datetime(timestamp, zone, now))),
