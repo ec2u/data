@@ -103,9 +103,10 @@ public final class Schema extends Delegator {
                 property(url, multiple(id())),
                 property(identifier, multiple(string())),
                 property(name, optional(text(locales()))),
-                property(image, optional(ImageObject())),
                 property(description, optional(text(locales()))),
-                property(disambiguatingDescription, optional(text(locales())))
+                property(disambiguatingDescription, optional(text(locales()))),
+
+                property(image, () -> optional(ImageObject()))
 
         );
     }
