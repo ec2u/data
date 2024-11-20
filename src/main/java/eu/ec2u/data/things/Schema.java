@@ -69,7 +69,7 @@ public final class Schema extends Delegator {
     }
 
 
-    //// Shared ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸̸// Shared //̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸/
 
     public static final IRI about=schema("about");
     public static final IRI inLanguage=schema("inLanguage");
@@ -78,7 +78,7 @@ public final class Schema extends Delegator {
     public static final IRI location=schema("location");
 
 
-    //// Things ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸̸// Things //̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸/
 
     public static final IRI Thing=schema("Thing");
 
@@ -103,20 +103,23 @@ public final class Schema extends Delegator {
                 property(url, multiple(id())),
                 property(identifier, multiple(string())),
                 property(name, optional(text(locales()))),
-                property(image, optional(Resource())),
                 property(description, optional(text(locales()))),
-                property(disambiguatingDescription, optional(text(locales())))
+                property(disambiguatingDescription, optional(text(locales()))),
+
+                property(image, () -> optional(ImageObject()))
 
         );
     }
 
 
-    //// CreativeWork //////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸̸// CreativeWork //̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸///
 
     public static final IRI isAccessibleForFree=schema("isAccessibleForFree");
+    public static final IRI author=schema("author");
+    public static final IRI copyrightNotice=schema("copyrightNotice");
 
 
-    //// Organizations /////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸̸// Organizations //̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸//
 
     public static final IRI Organization=schema("Organization");
 
@@ -136,7 +139,7 @@ public final class Schema extends Delegator {
     }
 
 
-    //// Locations /////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸̸// Locations //̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸///̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸///
 
     public static final IRI Place=schema("Place");
     public static final IRI PostalAddress=schema("PostalAddress");
@@ -202,7 +205,27 @@ public final class Schema extends Delegator {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸̸// Image Objects //̸̸////̸̸////̸̸////̸̸////̸̸///////////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸///
+
+    public static final IRI ImageObject=schema("ImageObject");
+
+    public static final IRI caption=schema("caption");
+
+
+    public static Shape ImageObject() {
+        return shape(ImageObject, Thing(),
+
+                property(url, required()),
+
+                property(caption, optional(text(locales()))),
+                property(author, optional(string())),
+                property(copyrightNotice, optional(string()))
+
+        );
+    }
+
+
+    //̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸/
 
     public static void main(final String... args) {
         exec(() -> create(Context, Schema.class,
@@ -211,12 +234,13 @@ public final class Schema extends Delegator {
                 Location(),
                 Place(),
                 PostalAddress(),
-                VirtualLocation()
+                VirtualLocation(),
+                ImageObject()
         ));
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸////̸̸/
 
     public Schema() {
         delegate(handler(new Driver(Dataset(Thing())), new Worker()

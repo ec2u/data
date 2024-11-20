@@ -48,14 +48,14 @@ import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.rdf.formats.RDF.rdf;
 import static com.metreeca.http.rdf.schemas.Schema.normalize;
 import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.http.toolkits.Identifiers.md5;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
-import static eu.ec2u.data.things.Schema.Organization;
-import static eu.ec2u.data.things.Schema.schema;
+import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities.University.Jena;
 import static eu.ec2u.work.focus.Focus.focus;
@@ -71,25 +71,25 @@ public final class EventsJenaUniversity implements Runnable {
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/16965/kommende-veranstaltungen")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / Events (German)", "en"),
                                     literal("Universität Jena / Veranstaltungen (Deutsch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal(Jena.language))
+                            field(inLanguage, literal(Jena.language))
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/en/16965/events")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / Events (English)", "en"),
                                     literal("Universität Jena / Veranstaltungen (Englisch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal("en"))
+                            field(inLanguage, literal("en"))
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/17425/veranstaltungskalender")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / International / Events (German)", "en"),
                                     literal("Universität Jena / International / Veranstaltungen (Deutsch)", Jena.language)
                             ),
@@ -98,65 +98,65 @@ public final class EventsJenaUniversity implements Runnable {
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/en/17425/upcoming-events")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / International / Events (English)", "en"),
                                     literal("Universität Jena / International / Veranstaltungen (Englisch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal("en"))
+                            field(inLanguage, literal("en"))
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/81092/kalender-studium-international")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / Calendar Studies international / Events (German)", "en"),
                                     literal("Universität Jena / Kalender Studium international / Veranstaltungen (Deutsch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal(Jena.language))
+                            field(inLanguage, literal(Jena.language))
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/en/81092/calendar-studium-international")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / Calendar Studies international / Events (English)", "en"),
                                     literal("Universität Jena / Kalender Studium international / Veranstaltungen (Englisch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal("en"))
+                            field(inLanguage, literal("en"))
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/120659/ec2u-veranstaltungen")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / EC2U / Events (German)", "en"),
                                     literal("Universität Jena / EC2U / Veranstaltungen (Deutsch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal(Jena.language))
+                            field(inLanguage, literal(Jena.language))
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/en/120659/ec2u-veranstaltungen")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / EC2U / Events (English)", "en"),
                                     literal("Universität Jena / EC2U / Veranstaltungen (Englisch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal("en"))
+                            field(inLanguage, literal("en"))
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/17210/veranstaltungen")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / Academic Career / Events (German)", "en"),
                                     literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen (Deutsch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal(Jena.language))
+                            field(inLanguage, literal(Jena.language))
                     ),
 
                     frame(
                             field(ID, iri("https://www.uni-jena.de/en/17210/events")),
-                            field(Schema.name,
+                            field(name,
                                     literal("Jena University / Academic Career / Events (English)", "en"),
                                     literal("Universität Jena / Wissenschaftliche Karriere/ Veranstaltungen (Englisch)", Jena.language)
                             ),
-                            field(Schema.inLanguage, literal("en"))
+                            field(inLanguage, literal("en"))
                     )
 
             )
@@ -165,7 +165,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                     field(RDF.TYPE, Organization),
                     field(university, Jena.id),
-                    field(Schema.about, University)
+                    field(about, University)
 
             ))
 
@@ -283,16 +283,19 @@ public final class EventsJenaUniversity implements Runnable {
 
     private Optional<Frame> event(final Frame publisher, final Focus focus) {
 
-        final String language=focus.seq(Schema.inLanguage).value(asString()).orElse(Jena.language);
+        final String language=focus.seq(inLanguage) // replace de-DE with de
+                .value(asString())
+                .map(tag -> tag.toLowerCase(Locale.ROOT).replaceAll("^([a-z]+).*$", "$1"))
+                .orElse(Jena.language);
 
-        final Optional<Literal> label=focus.seq(Schema.name).value(asString())
+        final Optional<Literal> label=focus.seq(name).value(asString())
                 .map(text -> literal(text, language));
 
-        final Optional<Literal> brief=focus.seq(Schema.disambiguatingDescription).value(asString())
-                .or(() -> focus.seq(Schema.description).value(asString()))
+        final Optional<Literal> brief=focus.seq(disambiguatingDescription).value(asString())
+                .or(() -> focus.seq(description).value(asString()))
                 .map(text -> literal(text, language));
 
-        return focus.seq(Schema.url).value(asIRI())
+        return focus.seq(url).value(asIRI())
 
                 .flatMap(url -> Optional.of(url.stringValue()) // !!! merge events with same code
                         // .map(PostURLPattern::matcher)
@@ -308,22 +311,41 @@ public final class EventsJenaUniversity implements Runnable {
 
                         field(university, Jena.id),
 
-                        field(Schema.url, focus.seq(Schema.url).value()),
-                        field(Schema.name, label),
-                        field(Schema.image, focus.seq(Schema.image).value()),
+                        field(url, focus.seq(url).value()),
+                        field(name, label),
 
-                        field(Schema.disambiguatingDescription, brief),
-                        field(Schema.description, focus.seq(Schema.description).value(asString())
-                                .or(() -> focus.seq(Schema.disambiguatingDescription).value(asString()))
+                        field(image, focus.seq(image).split().findFirst().map(image -> frame(
+
+                                // ;( prevent clashes between multiple inconsistent image metadata
+
+                                field(ID, image.seq(url).value()
+                                        .map(v -> v+"#"+md5(id))
+                                        .map(Frame::iri)
+                                ),
+
+                                field(TYPE, ImageObject),
+
+                                field(url, image.seq(url).value()),
+                                field(description, image.seq(description).value()
+                                        .map(description -> literal(description.stringValue(), language))
+                                ),
+
+                                field(author, image.seq(author, name).value())
+
+                        ))),
+
+                        field(disambiguatingDescription, brief),
+                        field(description, focus.seq(description).value(asString())
+                                .or(() -> focus.seq(disambiguatingDescription).value(asString()))
                                 .map(text -> literal(text, language))
                         ),
 
                         field(startDate, datetime(focus.seq(startDate).value(asString()))),
                         field(endDate, datetime(focus.seq(endDate).value(asString()))),
 
-                        field(Schema.isAccessibleForFree, focus.seq(Schema.isAccessibleForFree).value(asBoolean()).map(Frame::literal)),
+                        field(isAccessibleForFree, focus.seq(isAccessibleForFree).value(asBoolean()).map(Frame::literal)),
 
-                        field(Schema.inLanguage, focus.seq(Schema.inLanguage).value(asString()) // retain only language
+                        field(inLanguage, focus.seq(inLanguage).value(asString()) // retain only language
                                 .map(tag -> tag.toLowerCase(Locale.ROOT).replaceAll("^([a-z]+).*$", "$1"))
                                 .map(Frame::literal)
                         ),

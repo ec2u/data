@@ -143,9 +143,17 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
                     field(Schema.url, iri(url)),
                     field(Schema.name, name),
-                    field(Schema.image, item.link("enclosure/@url").map(Frame::iri)),
                     field(Schema.description, description),
                     field(Schema.disambiguatingDescription, disambiguatingDescription),
+
+                    field(Schema.image, item.link("enclosure/@url")
+                            .map(Frame::iri)
+                            .map(iri -> frame(
+                                    field(ID, iri),
+                                    field(TYPE, Schema.ImageObject),
+                                    field(Schema.url, iri)
+                            ))
+                    ),
 
                     field(startDate, datetime(item, "ev:startdate")),
                     field(endDate, datetime(item, "ev:enddate")),

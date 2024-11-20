@@ -26,7 +26,8 @@ EC2U staff are described using a controlled subset of the [FOAF](http://xmlns.co
 
 ## ec2u:Person
 
-> ❗️TBC
+> [!WARNING]
+> TBC
 
 | property                                     | description          |
 | -------------------------------------------- | -------------------- |

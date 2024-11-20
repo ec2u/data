@@ -175,7 +175,15 @@ public final class EventsPaviaCity implements Runnable {
                                             field(name, focus.seq(name).value()),
                                             field(Schema.description, focus.seq(Schema.description).value().or(() -> description)),
                                             field(disambiguatingDescription, focus.seq(disambiguatingDescription).value()),
-                                            field(image, focus.seq(image).values()),
+
+                                            field(image, focus.seq(image)
+                                                    .value()
+                                                    .map(iri -> frame(
+                                                            field(ID, iri),
+                                                            field(TYPE, Schema.ImageObject),
+                                                            field(Schema.url, iri)
+                                                    ))
+                                            ),
 
                                             field(startDate, focus.seq(startDate).value()),
                                             field(endDate, focus.seq(endDate).value()),

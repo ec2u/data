@@ -21,14 +21,14 @@
 </concepts/event-topics> a skos:ConceptScheme ;
     dct:issued "2024-01-01"^^xsd:date ;
     dct:title "EC2U Local Event Topics"@en ;
-    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en ;
+    dct:description "> [!WARNING]\n> To be migrated to standardized taxonomy"@en ;
     dct:publisher <https://ec2u.eu/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 
 </concepts/event-audiences> a skos:ConceptScheme ;
     dct:issued "2024-01-01"^^xsd:date ;
     dct:title "EC2U Local Event Audiences"@en ;
-    dct:description "> **:warn:** To be migrated to standardized taxonomy"@en ;
+    dct:description "> [!WARNING]\n> To be migrated to standardized taxonomy"@en ;
     dct:publisher <https://ec2u.eu/> ;
     dct:rights "Copyright © 2022-2024 EC2U Alliance" .
 

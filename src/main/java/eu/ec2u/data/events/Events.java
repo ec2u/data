@@ -163,13 +163,24 @@ public final class Events extends Delegator {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Events() {
 
         final Frame ResourceModel=frame(
                 field(ID, iri()),
                 field(RDFS.LABEL, literal("", ANY_LOCALE))
+        );
+
+        final Frame ImageObjectModel=frame(
+
+                field(ID, iri()),
+
+                field(url, iri()),
+                field(caption, literal("", ANY_LOCALE)),
+                field(author, literal("")),
+                field(copyrightNotice, literal(""))
+
         );
 
         final Frame ThingModel=frame(
@@ -179,7 +190,9 @@ public final class Events extends Delegator {
                 field(url, iri()),
                 field(name, literal("", ANY_LOCALE)),
                 field(description, literal("", ANY_LOCALE)),
-                field(disambiguatingDescription, literal("", ANY_LOCALE))
+                field(disambiguatingDescription, literal("", ANY_LOCALE)),
+
+                field(image, ImageObjectModel)
 
         );
 

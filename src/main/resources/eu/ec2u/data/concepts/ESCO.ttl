@@ -12,7 +12,8 @@
     dct:alternative "ESCO Occupations"@en ;
     dct:description
         """ ESCO (European Skills, Competences, Qualifications and Occupations) European multilingual classification of occupations.
-> **⚠️** The hosted version of the *ESCO Occupations* taxonomy is currently depth-limited.
+> [!WARNING]
+> The hosted version of the *ESCO Occupations* taxonomy is currently depth-limited.
 """@en ;
     dct:publisher <https://commission.europa.eu/> ;
     dct:source <https://esco.ec.europa.eu/en/classification/occupation_main> ;
@@ -25,8 +26,9 @@
     dct:alternative "ESCO Skills"@en ;
     dct:description
         """ ESCO (European Skills, Competences, Qualifications and Occupations) European multilingual classification of skills and competences.
-> **⚠️** The hosted version of the *ESCO Skills* taxonomy is currently depth-limited.
-        """@en ;
+> [!WARNING]
+> The hosted version of the *ESCO Skills* taxonomy is currently depth-limited
+"""@en ;
     dct:publisher <https://commission.europa.eu/> ;
     dct:source <https://esco.ec.europa.eu/en/classification/skill_main> ;
     dct:rights "Copyright @ 2017-2024 European Commission" ;

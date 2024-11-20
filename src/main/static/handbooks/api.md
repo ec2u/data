@@ -2,14 +2,8 @@
 title: REST/JSON-LD APIs
 ---
 
-> **:warning:**  Warning
-
-
-> *:information_source:* Work in progress
->
-> Pio
->
-> ZOt
+> [!WARNING]
+> Work in progress
 
 > * RDF data model
 > * dataset RDF context

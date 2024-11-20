@@ -227,9 +227,17 @@ public final class EventsLinzCity implements Runnable {
                 field(university, Linz.id),
 
                 field(url, id),
-                field(image, focus.seq(image).value(asIRI())),
                 field(name, focus.seq(name).value(asString()).map(s -> literal(decode(s), "en"))),
                 field(description, focus.seq(description).value(asString()).map(s -> literal(decode(s), "en"))),
+
+                field(image, focus.seq(image)
+                        .value(asIRI())
+                        .map(iri -> frame(
+                                field(ID, iri),
+                                field(TYPE, Schema.ImageObject),
+                                field(Schema.url, iri)
+                        ))
+                ),
 
                 field(startDate, focus.seq(startDate).value(asString()).flatMap(this::datetime)),
                 field(endDate, focus.seq(endDate).value(asString()).flatMap(this::datetime)),
