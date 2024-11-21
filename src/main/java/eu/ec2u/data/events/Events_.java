@@ -30,6 +30,7 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work.AI;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -71,7 +72,7 @@ final class Events_ {
     private Events_() { }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final class Loader implements Consumer<Collection<Statement>> {
 
@@ -154,7 +155,7 @@ final class Events_ {
 
                     .flatMap(analyzer.prompt("""
                             Extract the following properties from the provided markdown document describing an academic event:
-
+                            
                             - title
                             - plain text summary of about 500 characters
                             - complete descriptive text as included in the document in markdown format (don't include the title)
@@ -171,7 +172,7 @@ final class Events_ {
                             - image URL
                             - tags
                             - language as guessed from the description as a 2-letter ISO tag
-
+                            
                             Don't include properties if not defined in the document.
                             Don't include empty properties.
                             Respond with a JSON object
@@ -309,9 +310,31 @@ final class Events_ {
 
                                 field(Schema.url, iri(url)),
                                 field(Schema.name, event.string("title").map(v -> literal(v, language))),
-                                field(Schema.description, event.string("description").map(v -> literal(v, language))),
-                                field(Schema.disambiguatingDescription, event.string("summary").map(v -> literal(v, language))),
-                                field(Schema.image, event.string("imageURL").map(guarded(base::resolve)).map(Frame::iri)),
+
+                                field(Schema.description, event
+                                        .string("description")
+                                        .map(AI::ai)
+                                        .map(v -> literal(v, language))
+                                ),
+
+                                field(Schema.disambiguatingDescription, event
+                                        .string("summary")
+                                        .map(AI::ai)
+                                        .map(v -> literal(v, language))
+                                ),
+
+                                field(Schema.image, event.string("imageURL")
+                                        .map(guarded(base::resolve))
+                                        .map(Frame::iri)
+                                        .map(iri -> frame(
+
+                                                field(ID, iri),
+                                                field(TYPE, Schema.ImageObject),
+
+                                                field(Schema.url, iri)
+
+                                        ))
+                                ),
 
                                 field(Events.startDate, startDate
                                         .map(date -> startTime
