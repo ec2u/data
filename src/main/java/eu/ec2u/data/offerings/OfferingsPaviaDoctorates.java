@@ -159,6 +159,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                             field(ID, program.string("url").map(url -> item(Programs.Context, Pavia, url))),
                             field(TYPE, Programs.EducationalOccupationalProgram),
 
+                            field(Resources.generated, literal(true)),
                             field(Resources.university, Pavia.id),
 
                             field(Schema.name, program.string("name").map(name ->

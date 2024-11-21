@@ -1,8 +1,7 @@
 # Getting Involved
 
 Code patches are not the only way to get involved: you can help the project by reporting bugs; improving docs; helping
-others on [GitHub Issues](issues); tweeting to [@EC2U_Alliance](https://twitter.com/EC2U_Alliance); telling the world
-about EC2U ;-)
+others on [GitHub Issues](issues); telling the world about EC2U ;-)
 
 # Reporting Bugs
 

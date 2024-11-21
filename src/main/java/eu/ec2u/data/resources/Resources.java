@@ -53,6 +53,7 @@ public final class Resources extends Delegator {
 
     public static final IRI Resource=term("Resource");
 
+    public static final IRI generated=term("generated");
     public static final IRI university=term("university");
     public static final IRI concept=term("concept");
 
@@ -85,6 +86,8 @@ public final class Resources extends Delegator {
 
                 property(RDFS.SEEALSO, multiple(id())),
                 property(RDFS.ISDEFINEDBY, optional(id())),
+
+                property(generated, () -> optional(bool())),
 
                 property(university, () -> optional(University())),
                 property(concept, () -> multiple(Concept())),

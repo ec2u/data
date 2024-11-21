@@ -18,8 +18,10 @@
 import { Languages } from "@ec2u/data/languages";
 import { Documents } from "@ec2u/data/pages/documents/documents";
 import { Events } from "@ec2u/data/pages/events/events";
+import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
 import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
 import { toEntryString } from "@metreeca/core/entry";
@@ -38,6 +40,8 @@ import React from "react";
 export const Document=immutable({
 
 	id: required("/documents/{code}"),
+
+	generated: optional(boolean),
 
 	title: required(local),
 	description: optional(local),
@@ -103,7 +107,7 @@ export function DataDocument() {
 
 	const [document]=useResource(Document);
 
-	return <DataPage name={[Documents, {}]}
+	return <DataPage name={[Documents, {}]} info={<DataAI>{document?.generated}</DataAI>}
 
 		tray={<ToolFrame as={({
 

@@ -17,8 +17,10 @@
 
 import { Events } from "@ec2u/data/pages/events/events";
 import { Units } from "@ec2u/data/pages/units/units";
+import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, repeatable, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
 import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -35,6 +37,8 @@ import React from "react";
 export const Unit=immutable({
 
 	id: required("/units/{code}"),
+
+	generated: optional(boolean),
 
 	label: required(local),
 	comment: optional(local),
@@ -80,10 +84,7 @@ export function DataUnit() {
 
 	const [unit]=useResource(Unit);
 
-
-	return <DataPage
-
-		name={[Units, ""]}
+	return <DataPage name={[Units, ""]} info={<DataAI>{unit?.generated}</DataAI>}
 
 		tray={<ToolFrame as={({
 

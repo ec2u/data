@@ -50,7 +50,8 @@ public final class UnitsPavia implements Runnable {
     private static final IRI Context=iri(Units.Context, "/pavia");
 
 
-    //// !!! Factor ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ̸ !!! Factor
+    /// ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static final Pattern LanguagePattern=Pattern.compile("[a-zA-Z]{2}");
 
@@ -61,24 +62,14 @@ public final class UnitsPavia implements Runnable {
     }
 
 
-    private static String ai(final String text) {
-
-        if ( text == null ) {
-            throw new NullPointerException("null text");
-        }
-
-        return "✦ "+text;
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ̸///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(final String... args) {
         exec(() -> new UnitsPavia().run());
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ̸///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Analyzer analyzer=service(analyzer());
 
@@ -118,7 +109,7 @@ public final class UnitsPavia implements Runnable {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ̸///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<Unit> catalog(final Catalog catalog) {
         return Xtream.of(catalog.url.toASCIIString())
@@ -129,12 +120,12 @@ public final class UnitsPavia implements Runnable {
                 .optMap(analyzer.prompt("""
                         The input is a markdown document containing a list of university research units;
                         for each unit in the list, extract the following properties :
-
+                        
                         - complete name (don't include the acronym)
                         - name language as a 2-letter ISO tag
                         - uppercase acronym (only if explicitly defined in the complete name, ignoring the URL)
                         - URL (optional)
-
+                        
                         Make absolutely sure to report all units included in the list.
                         Don't include empty properties.
                         Respond with a JSON object.
@@ -181,6 +172,7 @@ public final class UnitsPavia implements Runnable {
 
                 .map(JSONPath::new).flatMap(json -> json.paths("units.*")).map(json -> new Unit()
 
+                        .setAnalyzed(true)
                         .setUniversity(Pavia)
 
                         .setAcronym(json.string("acronym")
@@ -215,12 +207,12 @@ public final class UnitsPavia implements Runnable {
                 .flatMap(analyzer.prompt("""
                         Extract the following properties from the provided markdown document
                         describing a university research unit:
-
+                        
                         - acronym (don't include if not explicitly defined in the document)
                         - plain text summary of about 500 characters in the document language
                         - full description as included in the document in markdown format
                         - document language as a 2-letter ISO tag
-
+                        
                         Remove personal email addresses.
                         Respond with a JSON object.
                         """, """
@@ -257,13 +249,11 @@ public final class UnitsPavia implements Runnable {
                         )
 
                         .setSummary(json.string("summary")
-                                .map(UnitsPavia::ai)
                                 .map(summary -> entry(summary, locale))
                                 .orElse(null)
                         )
 
                         .setDescription(json.string("description")
-                                .map(UnitsPavia::ai)
                                 .map(summary -> entry(summary, locale))
                                 .orElse(null)
                         )
@@ -274,7 +264,7 @@ public final class UnitsPavia implements Runnable {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ̸///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private record Catalog(
             URI url,

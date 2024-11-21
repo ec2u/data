@@ -17,8 +17,10 @@
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { ec2u } from "@ec2u/data/views";
+import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
 import { entryCompare } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
@@ -39,6 +41,8 @@ export const Concept=immutable({
 
 	id: required("/concepts/{scheme}/*"),
 	label: required(local),
+
+	generated: optional(boolean),
 
 	notation: multiple(string),
 
@@ -99,7 +103,7 @@ export function DataConcept() {
 	}));
 
 
-	return <DataPage name={[Schemes, concept?.inScheme, {}]}
+	return <DataPage name={[Schemes, concept?.inScheme, {}]} info={<DataAI>{concept?.generated}</DataAI>}
 
 		tray={<>
 

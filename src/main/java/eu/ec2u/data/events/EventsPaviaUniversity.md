@@ -1,16 +1,11 @@
-# Site
+# Sources
 
-* http://news.unipv.it/
-  * University of Pavia / News
-  * Università di Pavia / News
+* https://www.unipv.news/eventi
 
 # Integration
 
-## 2024-04-08
+* Event info extracted by LLM from event catalog and linked event pages
 
-* disabled after the site was migrated to https://www.unipv.news
+## 2024-11-07
 
-## 2022-07-18
-
-* Extended to handle both `encoded` and `decription` elements
-* Fix decoding of HTML entities
+* migrated to LLM extraction

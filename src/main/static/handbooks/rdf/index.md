@@ -16,7 +16,7 @@ title: Linked Data Data Models
 - This modelling approach makes it possible to express complex connectivity patterns, typical of many real-world
   processes, in a simpler yet more expressive and richer graphical language.
 - Free from the technical constraints of relational models, ontology-based graphs can more accurately capture complex
-  domain structures, closely aligning with the high‑level descriptions provided by subject matter experts.
+  domain structures, closely aligning with the high‑level descriptions provided by subject-matter experts.
 - At the same time, ontologies provide a formal, machine‑readable description of domain data structures, which can
   support advanced model-driven technical processes, such as data validation and extraction of tacit knowledge through
   logical inference.
@@ -212,5 +212,6 @@ standard:
 | skos:narrower          | skos:Concept       | *    | links to more specific child concepts                                                                |
 | skos:related           | skos:Concept       | *    | links to related concepts not included among broader/narrower categories                             |
 
-> *:information_source:* Property multiplicities are not specified by the W3C standard: they are introduced to simplify
+> [!NOTE]
+> Property multiplicities are not specified by the W3C standard: they are introduced to simplify
 > application-level taxonomy management.
