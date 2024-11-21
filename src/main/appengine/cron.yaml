@@ -136,6 +136,10 @@ cron:
     url: /cron/events/linz/city
     schedule: every day 00:00
 
+  - description: "events › linz › university - nightly crawling"
+    url: /cron/events/linz/university
+    schedule: every day 00:00
+
   - description: "events › pavia › borromeo - nightly crawling"
     url: /cron/events/pavia/borromeo
     schedule: every day 00:00

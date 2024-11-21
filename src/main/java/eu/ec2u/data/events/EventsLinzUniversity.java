@@ -36,7 +36,7 @@ import static java.util.Map.entry;
 
 public final class EventsLinzUniversity implements Runnable {
 
-    private static final IRI Context=iri(Events.Context, "/pavia/university");
+    private static final IRI Context=iri(Events.Context, "/linz/university");
 
     private static final Frame Publisher=frame(
 
@@ -60,7 +60,7 @@ public final class EventsLinzUniversity implements Runnable {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
         update(connection -> Xtream.of("https://www.jku.at/news-events/events/")
