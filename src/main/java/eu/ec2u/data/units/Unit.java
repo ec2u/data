@@ -38,7 +38,7 @@ import static eu.ec2u.data.EC2U.item;
 
 public final class Unit {
 
-    //// !!! Factor ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸// !!! Factor ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static Optional<IRI> value(final URI uri) {
         return Optional.ofNullable(uri).map(Frame::iri);
@@ -49,7 +49,9 @@ public final class Unit {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private boolean analyzed;
 
     private University university;
 
@@ -61,6 +63,18 @@ public final class Unit {
 
     private URI url;
     private IRI classification;
+
+
+    public boolean isAnalyzed() {
+        return analyzed;
+    }
+
+    public Unit setAnalyzed(final boolean analyzed) {
+
+        this.analyzed=analyzed;
+
+        return this;
+    }
 
 
     public University getUniversity() {
@@ -166,6 +180,7 @@ public final class Unit {
                         field(RDFS.LABEL, value(name)),
                         field(RDFS.COMMENT, value(summary)),
 
+                        field(Resources.analyzed, literal(true)),
                         field(Resources.university, university.id),
 
                         field(SKOS.PREF_LABEL, value(name)),

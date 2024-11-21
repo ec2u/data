@@ -16,8 +16,10 @@
 
 
 import { Programs } from "@ec2u/data/pages/programs/programs";
+import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
 import { entryCompare } from "@metreeca/core/entry";
@@ -38,6 +40,8 @@ import React, { Fragment } from "react";
 export const Program=immutable({
 
 	id: required("/programs/{code}"),
+
+	analyzed: optional(boolean),
 
 	name: required(local),
 	description: optional(local),
@@ -86,7 +90,7 @@ export function DataProgram() {
 
 	const [program]=useResource(Program);
 
-	return <DataPage name={[Programs, {}]}
+	return <DataPage name={[Programs, {}]} info={<DataAI>{program?.analyzed}</DataAI>}
 
 		tray={<ToolFrame as={({
 

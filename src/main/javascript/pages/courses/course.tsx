@@ -17,6 +17,7 @@
 
 import { Languages } from "@ec2u/data/languages";
 import { Courses } from "@ec2u/data/pages/courses/courses";
+import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
@@ -40,6 +41,8 @@ import React, { Fragment } from "react";
 export const Course=immutable({
 
 	id: required("/courses/{code}"),
+
+	analyzed: optional(boolean),
 
 	name: required(local),
 
@@ -105,7 +108,7 @@ export function DataCourse() {
 	const [course]=useResource(Course);
 
 
-	return <DataPage name={[Courses, {}]}
+	return <DataPage name={[Courses, {}]} info={<DataAI>{course?.analyzed}</DataAI>}
 
 		tray={<ToolFrame as={({
 

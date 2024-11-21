@@ -154,6 +154,7 @@ public final class OfferingsPaviaSchools implements Runnable {
                             field(ID, name.map(n -> item(Programs.Context, Pavia, "%s @ %s".formatted(n, page)))), // !!!
                             field(TYPE, Programs.EducationalOccupationalProgram),
 
+                            field(Resources.analyzed, literal(true)),
                             field(Resources.university, Pavia.id),
 
                             field(Schema.name, name.map(n -> literal(n, Pavia.language))),

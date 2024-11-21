@@ -30,7 +30,6 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
-import eu.ec2u.work.AI;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -306,6 +305,7 @@ final class Events_ {
                                 field(ID, item(Events.Context, university, url)),
                                 field(TYPE, Events.Event),
 
+                                field(Resources.analyzed, literal(true)),
                                 field(Resources.university, university.id),
 
                                 field(Schema.url, iri(url)),
@@ -313,13 +313,11 @@ final class Events_ {
 
                                 field(Schema.description, event
                                         .string("description")
-                                        .map(AI::ai)
                                         .map(v -> literal(v, language))
                                 ),
 
                                 field(Schema.disambiguatingDescription, event
                                         .string("summary")
-                                        .map(AI::ai)
                                         .map(v -> literal(v, language))
                                 ),
 

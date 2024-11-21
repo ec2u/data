@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work;
+data-ai {
 
-public final class AI {
+    display: flex;
+    flex-direction: row;
 
-    public static String ai(final String text) {
+    width: 100%;
 
-        if ( text == null ) {
-            throw new NullPointerException("null text");
-        }
+    align-items: center;
+    justify-content: space-between;
 
-        return "✦\n"+text;
+    color: red;
+
+    & > span:first-child {
+        font-size: 1.25em;
     }
 
 }

@@ -26,7 +26,6 @@ import com.metreeca.http.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.work.AI;
 import eu.ec2u.work.Markdown;
 import org.eclipse.rdf4j.model.IRI;
 
@@ -173,6 +172,7 @@ public final class UnitsPavia implements Runnable {
 
                 .map(JSONPath::new).flatMap(json -> json.paths("units.*")).map(json -> new Unit()
 
+                        .setAnalyzed(true)
                         .setUniversity(Pavia)
 
                         .setAcronym(json.string("acronym")
@@ -249,13 +249,11 @@ public final class UnitsPavia implements Runnable {
                         )
 
                         .setSummary(json.string("summary")
-                                .map(AI::ai)
                                 .map(summary -> entry(summary, locale))
                                 .orElse(null)
                         )
 
                         .setDescription(json.string("description")
-                                .map(AI::ai)
                                 .map(summary -> entry(summary, locale))
                                 .orElse(null)
                         )
