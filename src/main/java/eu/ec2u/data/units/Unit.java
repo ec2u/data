@@ -180,7 +180,7 @@ public final class Unit {
                         field(RDFS.LABEL, value(name)),
                         field(RDFS.COMMENT, value(summary)),
 
-                        field(Resources.analyzed, literal(true)),
+                        field(Resources.generated, literal(true)),
                         field(Resources.university, university.id),
 
                         field(SKOS.PREF_LABEL, value(name)),

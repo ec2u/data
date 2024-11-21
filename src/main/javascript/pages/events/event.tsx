@@ -39,7 +39,7 @@ export const Event=immutable({
 
 	id: required("/events/{code}"),
 
-	analyzed: optional(boolean),
+	generated: optional(boolean),
 
 	url: multiple(id),
 	name: required(local),
@@ -158,7 +158,7 @@ export function DataEvent() {
 
 	const [event]=useResource(Event);
 
-	return <DataPage name={[Events, {}]} info={<DataAI>{event?.analyzed}</DataAI>}
+	return <DataPage name={[Events, {}]} info={<DataAI>{event?.generated}</DataAI>}
 
 		tray={<ToolFrame as={({
 

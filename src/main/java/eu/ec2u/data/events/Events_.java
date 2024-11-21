@@ -305,7 +305,7 @@ final class Events_ {
                                 field(ID, item(Events.Context, university, url)),
                                 field(TYPE, Events.Event),
 
-                                field(Resources.analyzed, literal(true)),
+                                field(Resources.generated, literal(true)),
                                 field(Resources.university, university.id),
 
                                 field(Schema.url, iri(url)),

@@ -42,7 +42,7 @@ export const Concept=immutable({
 	id: required("/concepts/{scheme}/*"),
 	label: required(local),
 
-	analyzed: optional(boolean),
+	generated: optional(boolean),
 
 	notation: multiple(string),
 
@@ -103,7 +103,7 @@ export function DataConcept() {
 	}));
 
 
-	return <DataPage name={[Schemes, concept?.inScheme, {}]} info={<DataAI>{concept?.analyzed}</DataAI>}
+	return <DataPage name={[Schemes, concept?.inScheme, {}]} info={<DataAI>{concept?.generated}</DataAI>}
 
 		tray={<>
 

@@ -41,7 +41,7 @@ export const Document=immutable({
 
 	id: required("/documents/{code}"),
 
-	analyzed: optional(boolean),
+	generated: optional(boolean),
 
 	title: required(local),
 	description: optional(local),
@@ -107,7 +107,7 @@ export function DataDocument() {
 
 	const [document]=useResource(Document);
 
-	return <DataPage name={[Documents, {}]} info={<DataAI>{document?.analyzed}</DataAI>}
+	return <DataPage name={[Documents, {}]} info={<DataAI>{document?.generated}</DataAI>}
 
 		tray={<ToolFrame as={({
 

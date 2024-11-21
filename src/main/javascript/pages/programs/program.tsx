@@ -41,7 +41,7 @@ export const Program=immutable({
 
 	id: required("/programs/{code}"),
 
-	analyzed: optional(boolean),
+	generated: optional(boolean),
 
 	name: required(local),
 	description: optional(local),
@@ -90,7 +90,7 @@ export function DataProgram() {
 
 	const [program]=useResource(Program);
 
-	return <DataPage name={[Programs, {}]} info={<DataAI>{program?.analyzed}</DataAI>}
+	return <DataPage name={[Programs, {}]} info={<DataAI>{program?.generated}</DataAI>}
 
 		tray={<ToolFrame as={({
 

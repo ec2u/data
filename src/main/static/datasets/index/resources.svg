@@ -17,7 +17,7 @@
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-116 132 367 237" width="367" height="237">
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-119 132 370 237" width="370" height="237">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -36,13 +36,13 @@
     </defs>
     <g id="resources" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1" stroke-opacity="1">
         <title>resources</title>
-        <rect fill="white" x="-116" y="132" width="367" height="237"/>
+        <rect fill="white" x="-119" y="132" width="370" height="237"/>
         <g id="resources_Layer_1">
             <title>Layer 1</title>
             <g id="Group_223">
                 <g id="Graphic_225">
-                    <rect x="-87.6681" y="160.15748" width="127.19385" height="17.661808" fill="white"/>
-                    <rect x="-87.6681" y="160.15748" width="127.19385" height="17.661808" stroke="black"
+                    <rect x="-90.02796" y="160.15748" width="131.91357" height="17.661808" fill="white"/>
+                    <rect x="-90.02796" y="160.15748" width="131.91357" height="17.661808" stroke="black"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
                     <text transform="translate(-50.88441 163.48839)" fill="black">
                         <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9" fill="black"
@@ -51,10 +51,10 @@
                     </text>
                 </g>
                 <g id="Graphic_224">
-                    <rect x="-87.6681" y="177.81929" width="127.19385" height="72" fill="white"/>
-                    <rect x="-87.6681" y="177.81929" width="127.19385" height="72" stroke="black" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width=".25"/>
-                    <text transform="translate(-81.6681 180.8193)" fill="black">
+                    <rect x="-90.02796" y="177.81929" width="131.91357" height="72" fill="white"/>
+                    <rect x="-90.02796" y="177.81929" width="131.91357" height="72" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-84.02796 180.8193)" fill="black">
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">rdf:type : id [*]</tspan>
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20">rdfs:label : text [0..1]
                         </tspan>
@@ -65,7 +65,7 @@
                         <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53">rdfs:isDefinedBy : id
                             [0..1]
                         </tspan>
-                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="64">ec2u:analyzed : boolean
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="64">ec2u:generated : boolean
                             [0..1]
                         </tspan>
                     </text>
@@ -86,13 +86,13 @@
                 </g>
             </g>
             <g id="Line_218">
-                <path d="M 39.52575 204.98839 L 49.62575 204.98839 L 49.62575 195.58465 L 140.55158 195.58465"
+                <path d="M 41.88561 204.98839 L 51.98561 204.98839 L 51.98561 195.58465 L 140.55158 195.58465"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_217">
-                <rect x="59.59148" y="189.08465" width="82.05176" height="13" fill="white"/>
-                <text transform="translate(62.59148 190.08465)" fill="black">
+                <rect x="60.532855" y="189.08465" width="82.05176" height="13" fill="white"/>
+                <text transform="translate(63.532855 190.08465)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">ec2u:university 0..1</tspan>
                 </text>
             </g>
@@ -142,13 +142,13 @@
                 </g>
             </g>
             <g id="Line_236">
-                <path d="M 39.52575 204.98839 L 49.62575 204.98839 L 49.62575 214.37397 L 140.55158 214.37397"
+                <path d="M 41.88561 204.98839 L 51.98561 204.98839 L 51.98561 214.37397 L 140.55158 214.37397"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>
             <g id="Graphic_237">
-                <rect x="73.85915" y="207.87397" width="67.37842" height="13" fill="white"/>
-                <text transform="translate(76.85915 208.87397)" fill="black">
+                <rect x="74.66119" y="207.87397" width="67.37842" height="13" fill="white"/>
+                <text transform="translate(77.66119 208.87397)" fill="black">
                     <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9">ec2u:concept *</tspan>
                 </text>
             </g>

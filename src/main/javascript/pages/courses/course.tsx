@@ -42,7 +42,7 @@ export const Course=immutable({
 
 	id: required("/courses/{code}"),
 
-	analyzed: optional(boolean),
+	generated: optional(boolean),
 
 	name: required(local),
 
@@ -108,7 +108,7 @@ export function DataCourse() {
 	const [course]=useResource(Course);
 
 
-	return <DataPage name={[Courses, {}]} info={<DataAI>{course?.analyzed}</DataAI>}
+	return <DataPage name={[Courses, {}]} info={<DataAI>{course?.generated}</DataAI>}
 
 		tray={<ToolFrame as={({
 

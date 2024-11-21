@@ -38,7 +38,7 @@ export const Unit=immutable({
 
 	id: required("/units/{code}"),
 
-	analyzed: optional(boolean),
+	generated: optional(boolean),
 
 	label: required(local),
 	comment: optional(local),
@@ -84,7 +84,7 @@ export function DataUnit() {
 
 	const [unit]=useResource(Unit);
 
-	return <DataPage name={[Units, ""]} info={<DataAI>{unit?.analyzed}</DataAI>}
+	return <DataPage name={[Units, ""]} info={<DataAI>{unit?.generated}</DataAI>}
 
 		tray={<ToolFrame as={({
 
