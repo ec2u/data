@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2024 EC2U Alliance
+ * Copyright © 2020-2025 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import com.metreeca.http.handlers.Router;
 import com.metreeca.http.handlers.Worker;
 import com.metreeca.http.services.Logger;
 
-import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offerings.*;
