@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2024 EC2U Alliance
+ * Copyright © 2020-2025 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.services.Analyzer;
 import com.metreeca.http.rdf4j.actions.TupleQuery;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
+import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Crawl;
 import com.metreeca.http.xml.actions.Untag;
 import com.metreeca.http.xml.formats.HTML;
@@ -36,8 +36,10 @@ import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.query.BindingSet;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 
@@ -47,16 +49,15 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.universities.University.Pavia;
-import static eu.ec2u.work.xlations.Xlations.translate;
+import static eu.ec2u.work.SPARQL.sparql;
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.joining;
 
 public final class UnitsPaviaLabs implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/pavia/units");
+    private static final IRI Context=iri(Units.Context, "/pavia/units/labs");
 
 
     public static void main(final String... args) {
@@ -64,97 +65,140 @@ public final class UnitsPaviaLabs implements Runnable {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Analyzer analyzer=service(analyzer());
 
 
     @Override public void run() {
+        final Xtream<Object> pages=departments()
 
-        update(connection -> Xtream
+                .map(bindings -> bindings.getValue("home").stringValue())
 
-                .of("""
+                .skip(15) // !!!
+                .limit(1) // !!!
+
+                .flatMap(this::pages)
+                .map(Entry::getValue) // !!!
+                // .flatMap(this::units)
+
+                ;
+
+        pages.forEach(System.out::println);
+
+        // final Xtream<Frame> home=pages
+        //
+        //         .map(this::unit);
+
+
+        // update(connection -> home // !!!
+        //
+        //         .flatMap(Frame::stream)
+        //         .batch(0)
+        //
+        //         .map(model -> translate("en", model))
+        //
+        //         .forEach(new Upload()
+        //                 .contexts(Context)
+        //                 .clear(true)
+        //         )
+        // );
+    }
+
+    private static Xtream<BindingSet> departments() {
+        return Xtream
+
+                .of(sparql("""
                         prefix foaf: <http://xmlns.com/foaf/0.1/>
                         prefix ec2u: <https://data.ec2u.eu/terms/>
                         prefix org: <http://www.w3.org/ns/org#>
-                                                
-                        select * {
-
+                        
+                        select ?home {
+                        
                             ?dept a org:OrganizationalUnit;
                             	ec2u:university </universities/pavia>;
                             	org:classification </concepts/organizations/university-unit/department>;
                                 foaf:homepage ?home.
-
+                        
                         }
                         """
-                )
+                ))
 
                 .flatMap(new TupleQuery()
                         .base(EC2U.BASE)
-                )
-
-                .map(bindings -> bindings.getValue("home").stringValue())
-
-                .limit(3) // !!!
-
-                .flatMap(this::pages)
-                .flatMap(this::units)
-                .map(this::unit)
-
-                .peek(v -> System.out.println(v)) // !!!
-
-                .flatMap(Frame::stream)
-                .batch(0)
-
-                .map(model -> translate("en", model))
-
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
+                );
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Xtream<Entry<String, String>> pages(final String home) {
         return Xtream.of(home)
 
                 .flatMap(new Crawl())
 
-                .pipe(urls -> Xtream.of(urls.collect(joining("\n"))))
-
-                .optMap(analyzer.prompt("""
-                         Select from the provided list of URLs from a university department website:
-
-                         - the URL of the topmost page containing a list of research units or groups
-                         - the URL of the topmost page containing a list of research labs
-
-                        Respond with a JSON object.""", """
-                        {
-                          "name": "urls",
-                          "schema": {
-                            "type": "object",
-                            "properties": {
-                              "urls": {
-                                "type": "array",
-                                "items": {
-                                  "type": "string",
-                                  "format": "uri"
-                                }
-                              }
-                            }
-                          },
-                          "required": [
-                            "urls"
-                          ]
-                        }"""
-                ))
-
-                .map(JSONPath::new).flatMap(json ->
-                        json.strings("urls.*")
+                .optMap(url -> Optional.of(url)
+                        .flatMap(new GET<>(new HTML()))
+                        .map(XPath::new)
+                        .flatMap(xml -> xml.string("//head/meta[@property='og:title']/@content")
+                                .or(() -> xml.string("//head/title"))
+                        )
+                        .map(title -> entry(url, title))
                 )
+
+
+                .pipe(pages -> {
+
+                    final List<Entry<String, String>> entries=pages.toList();
+
+                    return Xtream
+
+                            .of(entries.stream()
+                                    .map(page -> "- %s".formatted(page.getValue()))
+                                    .collect(joining("\n"))
+                            )
+
+                            .optMap(analyzer.prompt("""
+                                    From the provided list of page titles pages from a university department website,
+                                    select the title of the pages that are extremely likely to contain a list of:
+                                    
+                                    - research teams or groups
+                                    - research laboratories
+                                    - research centres
+                                    
+                                    Don't include single units.
+                                    Respond with a JSON object.
+                                    """, """
+                                    {
+                                      "name": "pages",
+                                      "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                          "titles": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "titles"
+                                      ]
+                                    }"""
+                            ))
+
+                            .map(JSONPath::new).flatMap(json ->
+                                    json.strings("titles.*")
+                            )
+
+                            .flatMap(title -> entries.stream()
+                                    .filter(e -> e.getValue().equalsIgnoreCase(title))
+                                    .map(Entry::getKey)
+                            );
+
+                })
+
 
                 .map(page -> entry(home, page));
     }
@@ -166,13 +210,14 @@ public final class UnitsPaviaLabs implements Runnable {
                 .map(new Untag())
 
                 .optMap(analyzer.prompt("""
-                        Extract from the provided markdown document describing a list of university research units:
-
-                        - acronym
-                        - name
-                        - URL
-                        - language as guessed from name as a 2-letter ISO tag
-
+                        From the provided markdown document describing a list of university research units,
+                        extract the following properties:
+                        
+                         - acronym
+                         - name
+                         - URL
+                         - language as guessed from name as a 2-letter ISO tag
+                        
                         Omit all fields if not included in the document.
                         Respond with a JSON object.""", """
                         {
@@ -256,15 +301,15 @@ public final class UnitsPaviaLabs implements Runnable {
                         .map(new Untag())
 
                         .flatMap(analyzer.prompt("""
-                                Extract the following properties from the provided markdown document describing
-                                a university research unit:
-
+                                From the provided markdown document describing a university research unit,
+                                extract the following properties:
+                                
                                 - type (group, laboratory)
                                 - summary of about 500 characters
                                 - extensive description as included in the document
                                 - outline of the unit activities and facilities
                                 - document language as a 2-letter ISO tag
-
+                                
                                 Respond in the document original language.
                                 Respond with a JSON object.""", """
                                 {
