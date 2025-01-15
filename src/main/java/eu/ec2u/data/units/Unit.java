@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.units;
 
+import com.metreeca.http.json.JSONPath;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.resources.Resources;
@@ -31,7 +32,9 @@ import java.net.URI;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
+import static com.metreeca.http.rdf.Values.guarded;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
@@ -39,6 +42,16 @@ import static eu.ec2u.data.EC2U.item;
 public final class Unit {
 
     //̸// !!! Factor //////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final Pattern LanguagePattern=Pattern.compile("[a-zA-Z]{2}");
+
+
+    static Optional<Locale> locale(final JSONPath json, final String language) {
+        return json.string(language)
+                .filter(LanguagePattern.asMatchPredicate())
+                .map(guarded(Locale::forLanguageTag));
+    }
+
 
     private static Optional<IRI> value(final URI uri) {
         return Optional.ofNullable(uri).map(Frame::iri);
@@ -54,6 +67,7 @@ public final class Unit {
     private boolean analyzed;
 
     private University university;
+    private IRI parent; // !!!
 
     private String acronym;
     private Entry<String, Locale> name;
@@ -84,6 +98,18 @@ public final class Unit {
     public Unit setUniversity(final University university) {
 
         this.university=university;
+
+        return this;
+    }
+
+
+    public IRI getParent() {
+        return parent;
+    }
+
+    public Unit setParent(final IRI parent) {
+
+        this.parent=parent;
 
         return this;
     }
@@ -164,6 +190,7 @@ public final class Unit {
     public Optional<Frame> toFrame() {
         return Optional.ofNullable(url).map(URI::toASCIIString)
                 .or(() -> Optional.ofNullable(name).map(Entry::getKey))
+                .or(() -> Optional.ofNullable(acronym))
 
                 .filter(id -> name != null)
 
@@ -183,16 +210,23 @@ public final class Unit {
                         field(Resources.generated, literal(true)),
                         field(Resources.university, university.id),
 
+                        field(ORG.UNIT_OF, Optional.ofNullable(parent).orElse(university.id)),
+
                         field(SKOS.PREF_LABEL, value(name)),
+                        field(SKOS.ALT_LABEL, Optional.ofNullable(acronym).map(v -> literal(v, "en"))), // !!!
                         field(SKOS.DEFINITION, value(description)),
 
                         field(FOAF.HOMEPAGE, value(url)),
 
-                        field(ORG.UNIT_OF, university.id),
-
-                        field(ORG.CLASSIFICATION, classification)
+                        field(ORG.CLASSIFICATION, Optional.ofNullable(classification))
 
                 ));
+    }
+
+
+    @Override
+    public String toString() {
+        return toFrame().toString();
     }
 
 }

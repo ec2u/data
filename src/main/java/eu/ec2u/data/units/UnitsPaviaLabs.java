@@ -20,6 +20,7 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.services.Analyzer;
 import com.metreeca.http.rdf4j.actions.TupleQuery;
+import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Crawl;
@@ -29,29 +30,30 @@ import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.OrganizationTypes;
-import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
-import org.eclipse.rdf4j.query.BindingSet;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.metreeca.http.Locator.service;
 import static com.metreeca.http.json.services.Analyzer.analyzer;
+import static com.metreeca.http.rdf.Values.guarded;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.resources.Resources.university;
+import static eu.ec2u.data.EC2U.update;
+import static eu.ec2u.data.units.Unit.locale;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.SPARQL.sparql;
+import static eu.ec2u.work.xlations.Xlations.translate;
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.joining;
 
@@ -59,10 +61,27 @@ public final class UnitsPaviaLabs implements Runnable {
 
     private static final IRI Context=iri(Units.Context, "/pavia/units/labs");
 
+    private static final Map<String, IRI> UnitTypes=Map.of(
+            "laboratory", OrganizationTypes.Laboratory,
+            "group", OrganizationTypes.Group,
+            "facility", OrganizationTypes.Facility
+    );
+
 
     public static void main(final String... args) {
         exec(() -> new UnitsPaviaLabs().run());
     }
+
+
+    private record Department(
+            String homepage
+    ) { }
+
+    private record Page(
+            Department department,
+            String url,
+            String title
+    ) { }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,42 +89,34 @@ public final class UnitsPaviaLabs implements Runnable {
     private final Analyzer analyzer=service(analyzer());
 
 
-    @Override public void run() {
-        final Xtream<Object> pages=departments()
+    @Override
+    public void run() {
+        update(connection -> departments()
 
-                .map(bindings -> bindings.getValue("home").stringValue())
-
+                // .skip(5) // !!!
                 .skip(15) // !!!
                 .limit(1) // !!!
 
                 .flatMap(this::pages)
-                .map(Entry::getValue) // !!!
-                // .flatMap(this::units)
+                .flatMap(this::units)
 
-                ;
+                .optMap(Unit::toFrame)
+                .flatMap(Frame::stream)
+                .batch(0)
 
-        pages.forEach(System.out::println);
+                .map(model -> translate("en", model))
 
-        // final Xtream<Frame> home=pages
-        //
-        //         .map(this::unit);
-
-
-        // update(connection -> home // !!!
-        //
-        //         .flatMap(Frame::stream)
-        //         .batch(0)
-        //
-        //         .map(model -> translate("en", model))
-        //
-        //         .forEach(new Upload()
-        //                 .contexts(Context)
-        //                 .clear(true)
-        //         )
-        // );
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
     }
 
-    private static Xtream<BindingSet> departments() {
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Xtream<Department> departments() {
         return Xtream
 
                 .of(sparql("""
@@ -126,14 +137,16 @@ public final class UnitsPaviaLabs implements Runnable {
 
                 .flatMap(new TupleQuery()
                         .base(EC2U.BASE)
-                );
+                )
+
+                .map(bindings -> new Department(
+                        bindings.getValue("home").stringValue()
+                ));
     }
 
+    private Xtream<Page> pages(final Department department) {
 
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Xtream<Entry<String, String>> pages(final String home) {
-        return Xtream.of(home)
+        final List<Page> pages=Xtream.of(department.homepage())
 
                 .flatMap(new Crawl())
 
@@ -143,68 +156,65 @@ public final class UnitsPaviaLabs implements Runnable {
                         .flatMap(xml -> xml.string("//head/meta[@property='og:title']/@content")
                                 .or(() -> xml.string("//head/title"))
                         )
-                        .map(title -> entry(url, title))
+                        .map(title -> new Page(department, url, title))
                 )
 
+                .toList();
 
-                .pipe(pages -> {
+        return Xtream
 
-                    final List<Entry<String, String>> entries=pages.toList();
+                .of(pages.stream()
+                        .map(page -> "- [%s](%s)".formatted(page.url(), page.title()))
+                        .collect(joining("\n"))
+                )
 
-                    return Xtream
+                .optMap(analyzer.prompt("""
+                        From the provided list of page titles pages from a university department website,
+                        select the title of the pages that are extremely likely to contain a directory of:
+                        
+                        - research teams, groups
+                        - research laboratories
+                        
+                        Ensure titles explicitly reference lists or directories.
+                        
+                        Exclude titles that seem to describe individual entities unless there is clear evidence 
+                        they serve as hubs for multiple units.
+                        
+                        Exclude lists of research centres.
+                        
+                        Respond with a JSON object.
+                        """, """
+                        {
+                          "name": "pages",
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "titles": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "required": [
+                            "titles"
+                          ]
+                        }"""
+                ))
 
-                            .of(entries.stream()
-                                    .map(page -> "- %s".formatted(page.getValue()))
-                                    .collect(joining("\n"))
-                            )
+                .map(JSONPath::new).flatMap(json ->
+                        json.strings("titles.*")
+                )
 
-                            .optMap(analyzer.prompt("""
-                                    From the provided list of page titles pages from a university department website,
-                                    select the title of the pages that are extremely likely to contain a list of:
-                                    
-                                    - research teams or groups
-                                    - research laboratories
-                                    - research centres
-                                    
-                                    Don't include single units.
-                                    Respond with a JSON object.
-                                    """, """
-                                    {
-                                      "name": "pages",
-                                      "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                          "titles": {
-                                            "type": "array",
-                                            "items": {
-                                              "type": "string"
-                                            }
-                                          }
-                                        }
-                                      },
-                                      "required": [
-                                        "titles"
-                                      ]
-                                    }"""
-                            ))
+                .flatMap(title -> pages.stream()
+                        .filter(page -> page.title().equalsIgnoreCase(title))
+                );
 
-                            .map(JSONPath::new).flatMap(json ->
-                                    json.strings("titles.*")
-                            )
-
-                            .flatMap(title -> entries.stream()
-                                    .filter(e -> e.getValue().equalsIgnoreCase(title))
-                                    .map(Entry::getKey)
-                            );
-
-                })
-
-
-                .map(page -> entry(home, page));
     }
 
-    private Xtream<Frame> units(final Entry<String, String> entry) {
-        return Xtream.of(entry.getValue())
+    private Xtream<Unit> units(final Page page) {
+        return Xtream.of(page.url())
 
                 .optMap(new GET<>(new HTML()))
                 .map(new Untag())
@@ -213,13 +223,16 @@ public final class UnitsPaviaLabs implements Runnable {
                         From the provided markdown document describing a list of university research units,
                         extract the following properties:
                         
-                         - acronym
-                         - name
-                         - URL
-                         - language as guessed from name as a 2-letter ISO tag
+                        - complete name (don't include the acronym)
+                        - name language as a 2-letter ISO tag
+                        - uppercase acronym (only if explicitly defined in the complete name, ignoring the URL)
+                        - URL (optional)
+                        - unit type (laboratory, group, facility)
                         
-                        Omit all fields if not included in the document.
-                        Respond with a JSON object.""", """
+                        Make absolutely sure to report all units included in the list.
+                        Don't include empty properties.
+                        Respond with a JSON object.
+                        """, """
                         {
                             "name": "units",
                             "strict": false,
@@ -243,7 +256,8 @@ public final class UnitsPaviaLabs implements Runnable {
                                       },
                                       "language": {
                                         "type": "string"
-                                      }
+                                      },
+                                      "type": { "type": "string",       "enum": ["laboratory", "group", "facility"] }
                                     },
                                     "required": [
                                       "name",
@@ -265,31 +279,35 @@ public final class UnitsPaviaLabs implements Runnable {
 
                 .filter(unit -> unit.string("name").isPresent())
 
-                .map(unit -> {
+                .map(unit -> new Unit()
 
-                    final URI base=URI.create(entry.getKey());
-                    final String language=unit.string("language").orElse(Pavia.language);
+                        .setAnalyzed(true)
+                        .setUniversity(Pavia)
+                        .setParent(item(Units.Context, Pavia, page.department().homepage()))
 
-                    return frame(
+                        .setAcronym(unit.string("acronym")
+                                .orElse(null)
+                        )
 
-                            field(ID, item(Units.Context, University.Pavia, unit.string("url")
-                                    .or(() -> unit.string("name"))
-                                    .or(() -> unit.string("acronym"))
-                                    .orElse("") // unexpected
-                            )),
+                        .setName(unit.string("name")
+                                .flatMap(name -> locale(unit, "language")
+                                        .map(locale -> entry(name, locale))
+                                )
+                                .orElse(null)
+                        )
 
-                            field(TYPE, Units.Unit),
+                        .setUrl(unit.string("url")
+                                .map(guarded(URI::create))
+                                .map(v -> URI.create(page.url()).resolve(v)) // !!!
+                                .orElse(null)
+                        )
 
-                            field(university, Pavia.id),
-                            field(ORG.UNIT_OF, item(Units.Context, Pavia, entry.getKey())),
+                        .setClassification(unit.string("type")
+                                .map(UnitTypes::get)
+                                .orElse(null)
+                        )
 
-                            field(FOAF.HOMEPAGE, unit.string("url").map(base::resolve).map(Frame::iri)),
-
-                            field(SKOS.ALT_LABEL, unit.string("acronym").map(v -> literal(v, language))),
-                            field(SKOS.PREF_LABEL, unit.string("name").map(v -> literal(v, language)))
-
-                    );
-                });
+                );
     }
 
     private Frame unit(final Frame unit) {

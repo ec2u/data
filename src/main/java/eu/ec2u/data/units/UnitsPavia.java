@@ -30,9 +30,7 @@ import eu.ec2u.work.Markdown;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.net.URI;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.services.Analyzer.analyzer;
@@ -179,7 +177,7 @@ public final class UnitsPavia implements Runnable {
                                 .orElse(null)
                         )
 
-                        .setName(json.string("name").flatMap(name -> locale(json, "language")
+                        .setName(json.string("name").flatMap(name -> Unit.locale(json, "language")
                                                 .map(locale -> entry(name, locale))
                                         )
                                         .orElse(null)
@@ -241,7 +239,7 @@ public final class UnitsPavia implements Runnable {
                         """
                 ))
 
-                .map(JSONPath::new).flatMap(json -> locale(json, "language").map(locale -> unit
+                .map(JSONPath::new).flatMap(json -> Unit.locale(json, "language").map(locale -> unit
 
                         .setAcronym(Optional.ofNullable(unit.getAcronym())
                                 .or(() -> json.string("acronym"))
