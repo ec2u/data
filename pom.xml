@@ -61,8 +61,8 @@
         <main>eu.ec2u.data.Data</main>
         <revision>next</revision>
 
-        <java.version>17</java.version>
         <maven.version>3.6</maven.version>
+        <maven.compiler.release>21</maven.compiler.release>
 
         <node.version>18.0.0</node.version>
         <npm.version>8.6.0</npm.version>
@@ -82,8 +82,8 @@
 
             <dependency>
                 <groupId>com.metreeca</groupId>
-                <artifactId>http</artifactId>
-                <version>0.3-SNAPSHOT</version>
+                <artifactId>flow</artifactId>
+                <version>4.0-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -96,48 +96,48 @@
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-jsonld</artifactId>
+            <artifactId>flow-jsonld</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-rdf</artifactId>
+            <artifactId>flow-rdf</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-xml</artifactId>
+            <artifactId>flow-xml</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-csv</artifactId>
+            <artifactId>flow-csv</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-ical</artifactId>
+            <artifactId>flow-ical</artifactId>
         </dependency>
 
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-gcp</artifactId>
+            <artifactId>flow-gcp</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-openai</artifactId>
+            <artifactId>flow-openai</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-lod</artifactId>
+            <artifactId>flow-lod</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>http-rdf4j</artifactId>
+            <artifactId>flow-rdf4j</artifactId>
         </dependency>
 
 
