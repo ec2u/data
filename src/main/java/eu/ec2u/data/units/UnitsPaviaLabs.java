@@ -20,7 +20,6 @@ import com.metreeca.http.actions.GET;
 import com.metreeca.http.json.JSONPath;
 import com.metreeca.http.json.services.Analyzer;
 import com.metreeca.http.rdf4j.actions.TupleQuery;
-import com.metreeca.http.rdf4j.actions.Upload;
 import com.metreeca.http.work.Xtream;
 import com.metreeca.http.xml.XPath;
 import com.metreeca.http.xml.actions.Crawl;
@@ -49,17 +48,15 @@ import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.units.Unit.locale;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.SPARQL.sparql;
-import static eu.ec2u.work.xlations.Xlations.translate;
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.joining;
 
 public final class UnitsPaviaLabs implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/pavia/units/labs");
+    private static final IRI Context=iri(Units.Context, "/pavia/labs");
 
     private static final Map<String, IRI> UnitTypes=Map.of(
             "laboratory", OrganizationTypes.Laboratory,
@@ -91,26 +88,32 @@ public final class UnitsPaviaLabs implements Runnable {
 
     @Override
     public void run() {
-        update(connection -> departments()
+        // update(connection ->
+
+        departments()
 
                 // .skip(5) // !!!
                 .skip(15) // !!!
                 .limit(1) // !!!
 
                 .flatMap(this::pages)
-                .flatMap(this::units)
+                // .flatMap(this::units)
 
-                .optMap(Unit::toFrame)
-                .flatMap(Frame::stream)
-                .batch(0)
+                .forEach(System.out::println);
 
-                .map(model -> translate("en", model))
+        // .optMap(Unit::toFrame)
+        // .flatMap(Frame::stream)
+        // .batch(0)
 
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-        );
+        // .map(model -> translate("en", model))
+
+        // .forEach(new Upload()
+        //         .contexts(Context)
+        //         .clear(true)
+        // )
+        // )
+
+        ;
     }
 
 
@@ -210,7 +213,6 @@ public final class UnitsPaviaLabs implements Runnable {
                 .flatMap(title -> pages.stream()
                         .filter(page -> page.title().equalsIgnoreCase(title))
                 );
-
     }
 
     private Xtream<Unit> units(final Page page) {
@@ -234,43 +236,50 @@ public final class UnitsPaviaLabs implements Runnable {
                         Respond with a JSON object.
                         """, """
                         {
-                            "name": "units",
-                            "strict": false,
-                            "schema": {
-                              "type": "object",
-                              "properties": {
-                                "units": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "object",
-                                    "properties": {
-                                      "acronym": {
-                                        "type": "string"
-                                      },
-                                      "name": {
-                                        "type": "string"
-                                      },
-                                      "url": {
-                                        "type": "string",
-                                        "format": "uri"
-                                      },
-                                      "language": {
-                                        "type": "string"
-                                      },
-                                      "type": { "type": "string",       "enum": ["laboratory", "group", "facility"] }
+                          "name": "units",
+                          "strict": false,
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "units": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "acronym": {
+                                      "type": "string"
                                     },
-                                    "required": [
-                                      "name",
-                                      "language"
-                                    ]
-                                  }
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    },
+                                    "language": {
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "laboratory",
+                                        "group",
+                                        "facility"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "language"
+                                  ]
                                 }
-                              },
-                              "required": [
-                                "units"
-                              ]
-                            }
-                          }"""
+                              }
+                            },
+                            "required": [
+                              "units"
+                            ]
+                          }
+                        }"""
                 ))
 
                 .map(JSONPath::new).flatMap(json ->
@@ -322,7 +331,7 @@ public final class UnitsPaviaLabs implements Runnable {
                                 From the provided markdown document describing a university research unit,
                                 extract the following properties:
                                 
-                                - type (group, laboratory)
+                                - type (laboratory, group, facility)
                                 - summary of about 500 characters
                                 - extensive description as included in the document
                                 - outline of the unit activities and facilities
@@ -336,7 +345,12 @@ public final class UnitsPaviaLabs implements Runnable {
                                     "type": "object",
                                     "properties": {
                                       "type": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "enum": [
+                                          "laboratory",
+                                          "group",
+                                          "facility"
+                                        ]
                                       },
                                       "summary": {
                                         "type": "string"
@@ -370,13 +384,14 @@ public final class UnitsPaviaLabs implements Runnable {
                                     field(ID, item(Units.Context, Pavia, url.stringValue())),
 
                                     field(ORG.CLASSIFICATION, json.string("type").map(type -> switch ( type ) {
-                                        case "group" -> OrganizationTypes.Group;
                                         case "laboratory" -> OrganizationTypes.Laboratory;
+                                        case "group" -> OrganizationTypes.Group;
+                                        case "facility" -> OrganizationTypes.Facility;
                                         default -> null;
                                     })),
 
                                     field(SKOS.DEFINITION, json.string("description").map(v -> literal(v, language))),
-                                    field(DCTERMS.SUBJECT)// !!!
+                                    field(DCTERMS.SUBJECT) // !!!
 
                             );
                         }))
