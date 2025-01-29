@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.http.rdf.actions.Retrieve;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.rdf.actions.Retrieve;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.work.Xtream;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
@@ -27,9 +27,9 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.stream.Stream;
 
-import static com.metreeca.http.rdf.Values.*;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.flow.rdf.Values.*;
+import static com.metreeca.flow.rdf.formats.RDF.rdf;
+import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;

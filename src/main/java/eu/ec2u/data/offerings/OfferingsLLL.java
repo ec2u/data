@@ -16,10 +16,10 @@
 
 package eu.ec2u.data.offerings;
 
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.services.Vault;
-import com.metreeca.http.toolkits.Strings;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.services.Vault;
+import com.metreeca.flow.toolkits.Strings;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
@@ -48,8 +48,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;

@@ -16,8 +16,8 @@
 
 package eu.ec2u.work;
 
-import com.metreeca.http.json.JSONPath;
-import com.metreeca.http.json.services.Analyzer;
+import com.metreeca.flow.json.JSONPath;
+import com.metreeca.flow.json.services.Analyzer;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,8 +34,8 @@ import java.io.StringWriter;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.json.services.Analyzer.analyzer;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.services.Analyzer.analyzer;
 
 public final class Markdown implements Function<Document, Optional<String>> {
 

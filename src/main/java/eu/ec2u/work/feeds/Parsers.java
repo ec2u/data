@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.rdf.Values.guarded;
+import static com.metreeca.flow.rdf.Values.guarded;
 
 import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;

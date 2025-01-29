@@ -16,10 +16,10 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Worker;
-import com.metreeca.http.jsonld.handlers.Driver;
-import com.metreeca.http.jsonld.handlers.Relator;
+import com.metreeca.flow.handlers.Delegator;
+import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.jsonld.handlers.Driver;
+import com.metreeca.flow.jsonld.handlers.Relator;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;
@@ -30,7 +30,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Handler.handler;
+import static com.metreeca.flow.Handler.handler;
 import static com.metreeca.link.Constraint.any;
 import static com.metreeca.link.Expression.expression;
 import static com.metreeca.link.Frame.*;

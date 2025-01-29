@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.universities;
 
-import com.metreeca.http.lod.actions.WikidataMirror;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.lod.actions.WikidataMirror;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.link.Frame;
 
 import java.util.stream.Stream;

@@ -24,8 +24,8 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Optional;
 
-import static com.metreeca.http.toolkits.Strings.lower;
-import static com.metreeca.http.toolkits.Strings.title;
+import static com.metreeca.flow.toolkits.Strings.lower;
+import static com.metreeca.flow.toolkits.Strings.title;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;

@@ -16,17 +16,17 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.FormatException;
-import com.metreeca.http.Request;
-import com.metreeca.http.actions.Fetch;
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.json.JSONPath;
-import com.metreeca.http.json.formats.JSON;
-import com.metreeca.http.jsonld.formats.JSONLD;
-import com.metreeca.http.work.Xtream;
-import com.metreeca.http.xml.XPath;
-import com.metreeca.http.xml.actions.Untag;
-import com.metreeca.http.xml.formats.HTML;
+import com.metreeca.flow.FormatException;
+import com.metreeca.flow.Request;
+import com.metreeca.flow.actions.Fetch;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.json.JSONPath;
+import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.jsonld.formats.JSONLD;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.xml.XPath;
+import com.metreeca.flow.xml.actions.Untag;
+import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
@@ -54,12 +54,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.Request.POST;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.rdf.schemas.Schema.normalize;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.toolkits.Strings.clip;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.Request.POST;
+import static com.metreeca.flow.rdf.formats.RDF.rdf;
+import static com.metreeca.flow.rdf.schemas.Schema.normalize;
+import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;

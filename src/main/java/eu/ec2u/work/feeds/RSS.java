@@ -16,9 +16,9 @@
 
 package eu.ec2u.work.feeds;
 
-import com.metreeca.http.work.Xtream;
-import com.metreeca.http.xml.XPath;
-import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.xml.XPath;
+import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.link.Frame;
 
 import org.eclipse.rdf4j.model.IRI;

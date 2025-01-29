@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;

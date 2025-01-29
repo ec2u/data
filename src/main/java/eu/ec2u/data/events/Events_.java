@@ -16,14 +16,14 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.json.JSONPath;
-import com.metreeca.http.json.services.Analyzer;
-import com.metreeca.http.rdf4j.actions.Update;
-import com.metreeca.http.rdf4j.services.Graph;
-import com.metreeca.http.services.Logger;
-import com.metreeca.http.xml.actions.Untag;
-import com.metreeca.http.xml.formats.HTML;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.json.JSONPath;
+import com.metreeca.flow.json.services.Analyzer;
+import com.metreeca.flow.rdf4j.actions.Update;
+import com.metreeca.flow.rdf4j.services.Graph;
+import com.metreeca.flow.services.Logger;
+import com.metreeca.flow.xml.actions.Untag;
+import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.resources.Resources;
@@ -47,14 +47,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.json.services.Analyzer.analyzer;
-import static com.metreeca.http.rdf.Values.guarded;
-import static com.metreeca.http.rdf4j.services.Graph.graph;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.services.Logger.time;
-import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.services.Analyzer.analyzer;
+import static com.metreeca.flow.rdf.Values.guarded;
+import static com.metreeca.flow.rdf4j.services.Graph.graph;
+import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.services.Logger.time;
+import static com.metreeca.flow.toolkits.Resources.resource;
+import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.BASE;

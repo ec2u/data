@@ -16,15 +16,15 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.actions.Fill;
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.rdf.actions.Localize;
-import com.metreeca.http.rdf.actions.Microdata;
-import com.metreeca.http.rdf.actions.Normalize;
-import com.metreeca.http.work.Xtream;
-import com.metreeca.http.xml.actions.Extract;
-import com.metreeca.http.xml.actions.Untag;
-import com.metreeca.http.xml.formats.HTML;
+import com.metreeca.flow.actions.Fill;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.rdf.actions.Localize;
+import com.metreeca.flow.rdf.actions.Microdata;
+import com.metreeca.flow.rdf.actions.Normalize;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.xml.actions.Extract;
+import com.metreeca.flow.xml.actions.Untag;
+import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;

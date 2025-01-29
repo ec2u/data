@@ -16,10 +16,10 @@
 
 package eu.ec2u.data;
 
-import com.metreeca.http.handlers.Delegator;
-import com.metreeca.http.handlers.Router;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.services.Logger;
+import com.metreeca.flow.handlers.Delegator;
+import com.metreeca.flow.handlers.Router;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.services.Logger;
 import com.metreeca.link.Frame;
 import com.metreeca.link.Shape;
 import com.metreeca.link.Trace;
@@ -64,14 +64,14 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.rdf4j.services.Graph.graph;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.services.Logger.time;
-import static com.metreeca.http.toolkits.Identifiers.md5;
-import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.formats.RDF.rdf;
+import static com.metreeca.flow.rdf4j.services.Graph.graph;
+import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.services.Logger.time;
+import static com.metreeca.flow.toolkits.Identifiers.md5;
+import static com.metreeca.flow.toolkits.Resources.resource;
+import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.link.Frame.iri;
 import static com.metreeca.link.Frame.literal;
 

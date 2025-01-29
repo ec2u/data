@@ -16,10 +16,10 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.actions.Fill;
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.work.Xtream;
-import com.metreeca.http.xml.formats.XML;
+import com.metreeca.flow.actions.Fill;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.xml.formats.XML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;

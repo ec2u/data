@@ -16,8 +16,8 @@
 
 package eu.ec2u.work.focus;
 
-import com.metreeca.http.rdf.Values;
-import com.metreeca.http.services.Logger;
+import com.metreeca.flow.rdf.Values;
+import com.metreeca.flow.services.Logger;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
@@ -28,8 +28,8 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Logger.logger;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.link.Frame.forward;
 import static com.metreeca.link.Frame.reverse;
 

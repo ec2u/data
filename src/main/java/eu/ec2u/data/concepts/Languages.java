@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.http.toolkits.Strings;
+import com.metreeca.flow.toolkits.Strings;
 
 import eu.ec2u.data.resources.Resources;
 import jakarta.json.Json;
