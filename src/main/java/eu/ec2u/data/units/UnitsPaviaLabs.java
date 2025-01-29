@@ -16,15 +16,16 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.json.JSONPath;
-import com.metreeca.http.json.services.Analyzer;
-import com.metreeca.http.rdf4j.actions.TupleQuery;
-import com.metreeca.http.work.Xtream;
-import com.metreeca.http.xml.XPath;
-import com.metreeca.http.xml.actions.Crawl;
-import com.metreeca.http.xml.actions.Untag;
-import com.metreeca.http.xml.formats.HTML;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.json.JSONPath;
+import com.metreeca.flow.json.services.Analyzer;
+import com.metreeca.flow.rdf4j.actions.TupleQuery;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.xml.XPath;
+import com.metreeca.flow.xml.actions.Crawl;
+import com.metreeca.flow.xml.actions.Untag;
+import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
@@ -41,16 +42,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.json.services.Analyzer.analyzer;
-import static com.metreeca.http.rdf.Values.guarded;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.services.Analyzer.analyzer;
+import static com.metreeca.flow.rdf.Values.guarded;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.units.Unit.locale;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.SPARQL.sparql;
+import static eu.ec2u.work.xlations.Xlations.translate;
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.joining;
 
@@ -88,32 +91,27 @@ public final class UnitsPaviaLabs implements Runnable {
 
     @Override
     public void run() {
-        // update(connection ->
-
-        departments()
+        update(connection -> departments()
 
                 // .skip(5) // !!!
                 .skip(15) // !!!
                 .limit(1) // !!!
 
                 .flatMap(this::pages)
-                // .flatMap(this::units)
+                .flatMap(this::units)
 
-                .forEach(System.out::println);
 
-        // .optMap(Unit::toFrame)
-        // .flatMap(Frame::stream)
-        // .batch(0)
+                .optMap(Unit::toFrame)
+                .flatMap(Frame::stream)
+                .batch(0)
 
-        // .map(model -> translate("en", model))
+                .map(model -> translate("en", model))
 
-        // .forEach(new Upload()
-        //         .contexts(Context)
-        //         .clear(true)
-        // )
-        // )
-
-        ;
+                .forEach(new Upload()
+                        .contexts(Context)
+                        .clear(true)
+                )
+        );
     }
 
 

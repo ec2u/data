@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.http.json.JSONPath;
+import com.metreeca.flow.json.JSONPath;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.resources.Resources;
@@ -34,7 +34,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static com.metreeca.http.rdf.Values.guarded;
+import static com.metreeca.flow.rdf.Values.guarded;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
