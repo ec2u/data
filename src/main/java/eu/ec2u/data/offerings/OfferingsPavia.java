@@ -343,11 +343,7 @@ public final class OfferingsPavia implements Runnable {
                     new IllegalArgumentException("missing cdsCod")
             );
 
-            final String year=cds.string("ns2:aaOffId").orElseThrow(() ->
-                    new IllegalArgumentException("missing aaOffId")
-            );
-
-            return cds.paths("ns2:regdid[ns2:aaRegdidId='%s']/ns2:pds/ns2:af".formatted(year))
+            return cds.paths("ns2:regdid/ns2:pds/ns2:af")
                     .flatMap(af -> af.strings("ns2:afGenCod").flatMap(course -> Stream.of(
 
                             frame(
