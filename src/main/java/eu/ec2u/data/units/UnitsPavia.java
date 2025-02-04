@@ -30,7 +30,9 @@ import eu.ec2u.work.Markdown;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.net.URI;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.services.Analyzer.analyzer;
@@ -48,8 +50,7 @@ public final class UnitsPavia implements Runnable {
     private static final IRI Context=iri(Units.Context, "/pavia");
 
 
-    /// ̸ !!! Factor
-    /// //////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ̸ !!! Factor //////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static final Pattern LanguagePattern=Pattern.compile("[a-zA-Z]{2}");
 
@@ -72,7 +73,8 @@ public final class UnitsPavia implements Runnable {
     private final Analyzer analyzer=service(analyzer());
 
 
-    @Override public void run() {
+    @Override
+    public void run() {
         update(connection -> Xtream
 
                 .of(
