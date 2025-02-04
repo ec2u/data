@@ -49,7 +49,6 @@ Authorization: Basic {offerings-pavia-usr}:{offerings-pavia-pwd}
 ```
 
 ```xml
-
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.di.u-gov.cineca.it/">
     <soapenv:Header/>
     <soapenv:Body>
