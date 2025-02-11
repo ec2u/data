@@ -82,7 +82,8 @@ public final class EventsCoimbraCity implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    @Override public void run() {
+    @Override
+    public void run() {
         update(connection -> Xtream.of(Instant.now())
 
                 .flatMap(this::crawl)
@@ -106,8 +107,8 @@ public final class EventsCoimbraCity implements Runnable {
 
                 .flatMap(new Fill<Instant>()
                         .model("https://www.coimbragenda.pt/api/v1/event/filter"
-                                +"?limit=1000" // ;-) avoid pagination (usually some 50 events returned)
-                                +"&page=1"
+                               +"?limit=1000" // ;-) avoid pagination (usually some 50 events returned)
+                               +"&page=1"
                         )
                 )
 
