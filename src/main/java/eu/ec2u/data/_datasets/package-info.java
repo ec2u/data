@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U resource catalogue.
+ * EC2U dataset catalogue.
  */
-package eu.ec2u.data.resources;
+package eu.ec2u.data._datasets;

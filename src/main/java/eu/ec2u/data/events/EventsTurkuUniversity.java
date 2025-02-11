@@ -112,7 +112,8 @@ public final class EventsTurkuUniversity implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override public void run() {
+    @Override
+    public void run() {
         update(connection -> Xtream.of(Instant.now())
 
                 .flatMap(this::crawl)

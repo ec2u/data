@@ -82,7 +82,8 @@ final class Events_ {
         public Loader(final IRI context) { this.context=context; }
 
 
-        @Override public void accept(final Collection<Statement> model) {
+        @Override
+        public void accept(final Collection<Statement> model) {
 
             final Set<Resource> resources=model.stream()
                     .map(Statement::getSubject)
@@ -144,7 +145,8 @@ final class Events_ {
         }
 
 
-        @Override public Optional<Frame> apply(final String url) {
+        @Override
+        public Optional<Frame> apply(final String url) {
             return Optional.of(url)
 
                     .flatMap(new GET<>(new HTML()))

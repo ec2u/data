@@ -14,14 +14,3 @@
     void:rootResource ec2u:Asset ;
     rdfs:isDefinedBy </datasets/assets> .
 
-
-########################################################################################################################
-
-ec2u:Asset a owl:Class .
-
-
-#### Standard Licenses #################################################################################################
-
-<http://creativecommons.org/licenses/by-nc-nd/4.0/>
-    rdfs:label "CC BY-NC-ND 4.0"@en ;
-    rdfs:comment "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"@en .

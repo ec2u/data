@@ -141,7 +141,8 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override public Xtream<Frame> apply(final Instant instant) {
+    @Override
+    public Xtream<Frame> apply(final Instant instant) {
 
         if ( instant == null ) {
             throw new NullPointerException("null instant");
@@ -160,9 +161,9 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                 .flatMap(new Fill<Instant>()
 
                         .model(base+"/wp-json/tribe/events/v1/events/"
-                                +"?per_page=100"
-                                +"&start_date={start}"
-                                +"&page={page}"
+                               +"?per_page=100"
+                               +"&start_date={start}"
+                               +"&page={page}"
                         )
 
                         .value("start", LocalDate.now().minus(Delta))

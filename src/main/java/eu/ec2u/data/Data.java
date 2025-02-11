@@ -43,16 +43,15 @@ import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.Response.SeeOther;
 import static com.metreeca.flow.json.services.Analyzer.analyzer;
-import static com.metreeca.flow.jsonld.formats.JSONLD.codec;
-import static com.metreeca.flow.jsonld.formats.JSONLD.store;
+import static com.metreeca.flow.jsonld.formats.JSONLD.*;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Cache.cache;
 import static com.metreeca.flow.services.Fetcher.fetcher;
 import static com.metreeca.flow.services.Logger.Level.debug;
 import static com.metreeca.flow.services.Translator.translator;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.json.JSON.json;
-import static com.metreeca.link.rdf4j.RDF4J.rdf4j;
+import static com.metreeca.mesh.json.JSONCodec.json;
+import static com.metreeca.mesh.rdf4j.RDF4J.rdf4j;
 
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
@@ -62,7 +61,7 @@ public final class Data extends Delegator {
     private static final boolean Production=GCPServer.production();
 
     private static final String GraphDBServer="http://base.ec2u.net"; // !!! https
-    private static final String GraphDBRepository="data-next";
+    private static final String GraphDBRepository="data-work";
     private static final String GraphDBUsr="server";
     private static final String GraphDBPwd="graphdb-server-pwd";
 
@@ -89,7 +88,10 @@ public final class Data extends Delegator {
 
                 .set(graph(), () -> new Graph(service(Data::repository)))
                 .set(store(), () -> rdf4j(service(Data::repository)))
-                .set(codec(), () -> json().pretty(true))
+                .set(codec(), () -> json().indent(true))
+
+                .set(_store(), () -> com.metreeca.link.rdf4j.RDF4J.rdf4j(service(Data::repository))) // !!!
+                .set(_codec(), () -> com.metreeca.link.json.JSON.json().pretty(true)) // !!!
 
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
 
