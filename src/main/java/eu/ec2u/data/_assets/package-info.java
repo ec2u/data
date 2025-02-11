@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U dataset catalogue.
+ * EC2U knowledge sharing assets.
  */
-package eu.ec2u.data.datasets;
+package eu.ec2u.data._assets;

@@ -83,7 +83,7 @@
             <dependency>
                 <groupId>com.metreeca</groupId>
                 <artifactId>flow</artifactId>
-                <version>4.0-SNAPSHOT</version>
+                <version>4.0-mesh-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -93,6 +93,27 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>mesh-bean</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>mesh-json</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>mesh-rdf4j</artifactId>
+        </dependency>
+
+        <dependency> <!-- !!! mesh -->
+            <groupId>com.metreeca</groupId>
+            <artifactId>link-rdf4j</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>com.metreeca</groupId>
@@ -138,12 +159,6 @@
         <dependency>
             <groupId>com.metreeca</groupId>
             <artifactId>flow-rdf4j</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.metreeca</groupId>
-            <artifactId>link-rdf4j</artifactId>
         </dependency>
 
 

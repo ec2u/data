@@ -76,19 +76,23 @@ public final class Events extends Delegator {
         MixedEventAttendanceMode;
 
 
-        @Override public String getNamespace() {
+        @Override
+        public String getNamespace() {
             return Namespace;
         }
 
-        @Override public String getLocalName() {
+        @Override
+        public String getLocalName() {
             return name();
         }
 
-        @Override public String stringValue() {
+        @Override
+        public String stringValue() {
             return getNamespace()+getLocalName();
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return stringValue();
         }
 
@@ -103,19 +107,23 @@ public final class Events extends Delegator {
         EventCancelled;
 
 
-        @Override public String getNamespace() {
+        @Override
+        public String getNamespace() {
             return Namespace;
         }
 
-        @Override public String getLocalName() {
+        @Override
+        public String getLocalName() {
             return name();
         }
 
-        @Override public String stringValue() {
+        @Override
+        public String stringValue() {
             return getNamespace()+getLocalName();
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return stringValue();
         }
 

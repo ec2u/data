@@ -93,7 +93,8 @@ public final class EventsTurkuCity implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override public void run() {
+    @Override
+    public void run() {
         update(connection -> {
 
             final List<Frame> events=Xtream.of(Instant.now())
@@ -144,7 +145,7 @@ public final class EventsTurkuCity implements Runnable {
 
                 .flatMap(new Fill<Instant>()
                         .model("https://api.hel.fi/linkedevents/v1/event/"
-                                +"?last_modified_since={since}"
+                               +"?last_modified_since={since}"
                         )
                         .value("since", since ->
                                 LocalDate.ofInstant(since, UTC).format(ISO_LOCAL_DATE)

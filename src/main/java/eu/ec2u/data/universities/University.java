@@ -105,6 +105,8 @@ public enum University {
                     Stream.of("en")
             )
 
+            .sorted()
+
             .collect(toUnmodifiableSet());
 
 
