@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2025 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink"
+        xmlns="http://www.w3.org/2000/svg" viewBox="-752 792 695 187" width="695" height="187">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
+                color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker_2"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-25 -10 26 20" markerWidth="26"
+                markerHeight="20" color="black">
+            <g>
+                <path d="M -24 0 L 0 0 M 0 9 L -24 0 L 0 -9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
+                color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="programs" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none">
+        <title>programs</title>
+        <rect fill="white" x="-752" y="792" width="695" height="187"/>
+        <g id="programs_Layer_1">
+            <title>Layer 1</title>
+            <g id="Line_38">
+                <path d="M -400.8394 855.8835 L -397.4894 855.8835 L -379.7394 855.8835 L -379.7394 882.3405 L -242.7199 882.3405"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_37">
+                <path d="M -400.8394 855.8835 L -379.7394 855.8835 L -379.7394 829.4265 L -235.47438 829.4265"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_31">
+                <g id="Graphic_32">
+                    <a xl:href="organizations.svg">
+                        <rect x="-228.62438" y="820.9265" width="86.05664" height="17" fill="white"/>
+                        <rect x="-228.62438" y="820.9265" width="86.05664" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-222.62438 823.9265)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9"
+                                    xml:space="preserve">ec2u:Organization</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_27">
+                <line x1="-440.0074" y1="871.364" x2="-440.0074" y2="932.673" marker-start="url(#StickArrow_Marker_2)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_26">
+                <rect x="-484.0699" y="910.6285" width="88.125" height="13" fill="white"/>
+                <text transform="translate(-481.0699 911.6285)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:hasCourse *</tspan>
+                </text>
+            </g>
+            <g id="Graphic_25">
+                <rect x="-309.79722" y="875.8405" width="68.47705" height="13" fill="white"/>
+                <text transform="translate(-306.79722 876.8405)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:about *</tspan>
+                </text>
+            </g>
+            <g id="Graphic_21">
+                <a xl:href="taxonomies.svg">
+                    <rect x="-229.0199" y="847.514" width="138.10986" height="17" fill="white"/>
+                    <rect x="-229.0199" y="847.514" width="138.10986" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-223.0199 850.514)" fill="#a5a5a5">
+                        <tspan font-family="Roboto" font-size="9" fill="#a5a5a5" x="0" y="9" xml:space="preserve">/taxonomies/isced-2011/{code}</tspan>
+                    </text>
+                </a>
+            </g>
+            <g id="Graphic_20">
+                <a xl:href="taxonomies.svg">
+                    <rect x="-229.0199" y="873.8405" width="143.64258" height="17" fill="white"/>
+                    <rect x="-229.0199" y="873.8405" width="143.64258" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-223.0199 876.8405)" fill="#a5a5a5">
+                        <tspan font-family="Roboto" font-size="9" fill="#a5a5a5" x="0" y="9" xml:space="preserve">/taxonomies/isced-f-2013/{code}</tspan>
+                    </text>
+                </a>
+            </g>
+            <g id="Graphic_19">
+                <rect x="-328.19237" y="822.9265" width="88.41943" height="13" fill="white"/>
+                <text transform="translate(-325.19237 823.9265)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:provider 0..1</tspan>
+                </text>
+            </g>
+            <g id="Graphic_18">
+                <rect x="-469.4361" y="873.4768" width="58.85742" height="13" fill="white"/>
+                <text transform="translate(-466.4361 874.4768)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">‹inProgram› *</tspan>
+                </text>
+            </g>
+            <g id="Line_16">
+                <path d="M -400.8394 855.8835 L -392.7394 855.8835 L -237.1199 856.014 L -235.8699 856.014"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_15">
+                <rect x="-361.9126" y="849.4609" width="122.77148" height="13" fill="white"/>
+                <text transform="translate(-358.9126 850.4609)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:educationalLevel 0..1</tspan>
+                </text>
+            </g>
+            <g id="Group_39">
+                <g id="Graphic_40">
+                    <rect x="-479.1754" y="847.253" width="78.336" height="17.261063" fill="white"/>
+                    <rect x="-479.1754" y="847.253" width="78.336" height="17.261063" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-470.1754 850.253)" fill="black">
+                        <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                xml:space="preserve">ec2u:Program</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_43">
+                <g id="Graphic_44">
+                    <rect x="-476.0974" y="932.673" width="72.18" height="17.261063" fill="white"/>
+                    <rect x="-476.0974" y="932.673" width="72.18" height="17.261063" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-467.0974 935.673)" fill="#a5a5a5">
+                        <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="#a5a5a5"
+                                x="14921397e-20" y="9" xml:space="preserve">ec2u:Course</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_45">
+                <g id="Graphic_46">
+                    <rect x="-723.6244" y="860.4342" width="199.449" height="17.261063" fill="white"/>
+                    <rect x="-723.6244" y="860.4342" width="199.449" height="17.261063" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-714.6244 863.4342)" fill="#a5a5a5">
+                        <tspan font-family="Helvetica Neue" font-weight="bold" font-size="9" fill="#a5a5a5"
+                                x="27000624e-20" y="9"
+                                xml:space="preserve">schema:EducationalOccupationalProgram</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_47">
+                <path d="M -479.1754 855.8835 L -502.1754 855.8835 L -502.1754 869.0647 L -514.4254 869.0647"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_48">
+                <g id="Graphic_49">
+                    <a xl:href="datasets.svg">
+                        <rect x="-596.4859" y="834.0718" width="72.31055" height="17" fill="white"/>
+                        <rect x="-596.4859" y="834.0718" width="72.31055" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-590.4859 837.0718)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9"
+                                    xml:space="preserve">ec2u:Resource</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_50">
+                <path d="M -479.1754 855.8835 L -502.1754 855.8835 L -502.1754 842.5718 L -514.4254 842.5718"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -19,7 +19,7 @@ import {resolve} from "node:path";
 import react from "@vitejs/plugin-react";
 import postcssNesting from "postcss-nesting";
 
-const src=resolve(process.env.src || "src/main/javascript");
+const src = resolve(process.env.src || "src/main/typescript");
 const etc=resolve(process.env.etc || "src/main/static");
 const out=resolve(process.env.out || "target/appengine-staging/static");
 

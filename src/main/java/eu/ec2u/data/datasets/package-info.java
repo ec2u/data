@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U dataset catalogue.
+ * EC2U Knowledge Hub datasets.
  */
 package eu.ec2u.data.datasets;

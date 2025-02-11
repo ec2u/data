@@ -1,0 +1,2 @@
+- find a unique and compact xpath 1.0 expression matching pagination links in data/work.html
+- find a unique and compact xpath 1.0 expression matching links to event pages in data/work.html
