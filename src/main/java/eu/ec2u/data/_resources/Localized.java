@@ -22,6 +22,9 @@ import com.metreeca.mesh.bean.shacl.UniqueLang;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.Collection;
+
+import static com.metreeca.mesh.Values.list;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -30,7 +33,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ FIELD, METHOD })
 @Retention(RUNTIME)
 @Alias(
-        LanguageIn=@LanguageIn({ "en", "it", "fr", "ro", "es", "de", "fi", "pt" }),
+        LanguageIn=@LanguageIn({ "", "en", "de", "es", "fi", "fr", "it", "pt", "ro" }),
         UniqueLang=@UniqueLang()
 )
-public @interface Localized { }
+public @interface Localized {
+
+    Collection<String> Languages=list("", "en", "de", "es", "fi", "fr", "it", "pt", "ro");
+
+}

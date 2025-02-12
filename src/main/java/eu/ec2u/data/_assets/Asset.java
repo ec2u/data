@@ -22,14 +22,14 @@ import com.metreeca.mesh.bean.jsonld.Property;
 import com.metreeca.mesh.bean.jsonld.Type;
 import com.metreeca.mesh.bean.shacl.Required;
 
-import eu.ec2u.data._resources.Label;
+import eu.ec2u.data._resources.Localized;
 import eu.ec2u.data._resources.Resource;
-import org.checkerframework.checker.i18n.qual.Localized;
 
 import java.beans.JavaBean;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.metreeca.flow.toolkits.Strings.clip;
@@ -37,17 +37,12 @@ import static com.metreeca.mesh.Text.text;
 import static com.metreeca.mesh.Values.set;
 
 @JavaBean
-@Namespace("http://purl.org/dc/terms/")
 @Type("ec2u:")
-public interface Asset<T extends Asset<T>> extends Resource<Asset<T>> {
+@Namespace("http://purl.org/dc/terms/")
+public interface Asset<T extends Asset<T>> extends Resource<T> {
 
-    int CommentLength=1000;
+    T setId(URI id);
 
-
-    @Override
-    default URI getId() {
-        return getPath();
-    }
 
     @Override
     default Set<Text> getLabel() {
@@ -56,28 +51,25 @@ public interface Asset<T extends Asset<T>> extends Resource<Asset<T>> {
 
     @Override
     default Set<Text> getComment() {
-        return set(java.util.Optional.ofNullable(getDescription()).stream() // !!! import
+        return set(Optional.ofNullable(getDescription()).stream()
                 .flatMap(Collection::stream)
                 .map(text -> text(clip(text.string(), CommentLength), text.locale()))
         );
     }
 
 
-    URI getPath(); // !!! ignore
-
-    T setPath(URI id);
-
-
     @Required
-    @Label
+    @Localized
     Set<Text> getTitle();
 
     T setTitle(Set<Text> title);
 
-    @Label
+
+    @Localized
     Set<Text> getAlternative();
 
     T setAlternative(Set<Text> alternative);
+
 
     @Localized
     Set<Text> getDescription();

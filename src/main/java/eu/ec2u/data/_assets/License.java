@@ -33,15 +33,11 @@ import static com.metreeca.mesh.bean.Beans.bean;
 public interface License extends Reference {
 
     static License CCBYNCND40() {
-
         return bean(License.class)
                 .setId(uri("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
                 .setLabel(set(text("CC BY-NC-ND 4.0")))
-                .setComment(set(text("Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International", "en")));
-
+                .setComment(set(text("Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International")));
     }
-
-    ;
 
 
     License setId(URI id);
