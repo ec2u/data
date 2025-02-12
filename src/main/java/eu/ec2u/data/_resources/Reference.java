@@ -31,18 +31,22 @@ import java.util.Set;
 @Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
 public interface Reference {
 
+    int LabelLength=100;
+    int CommentLength=1000;
+
+
     @Id
     URI getId();
 
 
     @Required
-    @Label
-    @MaxLength(100)
+    @Localized
+    @MaxLength(LabelLength)
     @Property("rdfs:")
     Set<Text> getLabel();
 
     @Localized
-    @MaxLength(1000)
+    @MaxLength(CommentLength)
     @Property("rdfs:")
     Set<Text> getComment();
 
