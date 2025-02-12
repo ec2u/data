@@ -16,26 +16,65 @@
 
 package eu.ec2u.data._datasets;
 
-import com.metreeca.mesh.Frame;
+import com.metreeca.flow.jsonld.actions.Validate;
+import com.metreeca.flow.services.Translator;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Store;
+import com.metreeca.mesh.Text;
+import com.metreeca.mesh.bean.Beans;
 
 import eu.ec2u.data._assets.License;
 
+import java.util.Set;
+
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.jsonld.formats.JSONLD.store;
+import static com.metreeca.flow.services.Translator.translator;
 import static com.metreeca.mesh.Text.text;
 import static com.metreeca.mesh.Values.set;
 import static com.metreeca.mesh.Values.uri;
 import static com.metreeca.mesh.bean.Beans.bean;
-import static com.metreeca.mesh.bean.Beans.frame;
+
+import static eu.ec2u.data.Data.exec;
+import static java.util.stream.Collectors.toList;
 
 public final class Work {
 
     public static void main(final String... args) {
+        exec(() -> {
 
-        // </> a void:Dataset ;
-        //     void:rootResource void:Dataset ;
+            final Store store=service(store());
 
-        final Dataset catalog=bean(Dataset.class)
+            store.insert(Xtream.of(catalog())
+                    .map(catalog -> catalog
+                            .setTitle(localize(catalog.getTitle()))
+                            .setAlternative(localize(catalog.getAlternative()))
+                            .setDescription(localize(catalog.getDescription()))
+                    )
+                    .map(Beans::frame)
+                    .optMap(new Validate().deep(true))
+                    .collect(toList())
+            );
 
-                .setPath(uri("/"))
+        });
+    }
+
+
+    private static Set<Text> localize(final Set<Text> value) {
+
+        final Translator translator=service(translator());
+
+        return value; // !!!
+    }
+
+
+    private static Dataset catalog() {
+
+        // !!! void:rootResource void:Dataset ;
+
+        return bean(Dataset.class)
+
+                .setId(uri("/"))
 
                 .setTitle(set(
                         text("EC2U Dataset Catalog", "en")
@@ -56,14 +95,6 @@ public final class Work {
                 .setLicenses(set(
                         License.CCBYNCND40()
                 ));
-
-        final Frame frame=frame(catalog);
-
-        frame.validate(true)
-                .ifPresent(trace -> System.out.println(trace));
-
-        System.out.println(catalog);
-
     }
 
 }
