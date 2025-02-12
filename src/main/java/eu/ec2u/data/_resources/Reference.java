@@ -16,33 +16,34 @@
 
 package eu.ec2u.data._resources;
 
-import com.metreeca.mesh.bean.jsonld.Base;
+import com.metreeca.mesh.Text;
+import com.metreeca.mesh.bean.jsonld.Id;
 import com.metreeca.mesh.bean.jsonld.Namespace;
 import com.metreeca.mesh.bean.jsonld.Property;
+import com.metreeca.mesh.bean.shacl.MaxLength;
+import com.metreeca.mesh.bean.shacl.Required;
 
 import java.beans.JavaBean;
 import java.net.URI;
 import java.util.Set;
 
 @JavaBean
-@Base("https://data.ec2u.eu/")
-@Namespace(prefix="ec2u", value="/terms/")
-public interface Resource<T extends Resource<T>> extends Reference {
+@Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
+public interface Reference {
 
+    @Id
+    URI getId();
+
+
+    @Required
+    @Label
+    @MaxLength(100)
     @Property("rdfs:")
-    URI getIsDefinedBy();
+    Set<Text> getLabel();
 
-    T setIsDefinedBy(URI isDefinedBy);
-
+    @Localized
+    @MaxLength(1000)
     @Property("rdfs:")
-    Set<URI> getSeeAlso();
-
-    T setSeeAlso(Set<URI> seeAlso);
-
-
-    @Property("ec2u:")
-    boolean isGenerated();
-
-    T setGenerated(boolean generated);
+    Set<Text> getComment();
 
 }
