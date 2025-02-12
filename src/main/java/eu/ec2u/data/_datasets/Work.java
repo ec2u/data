@@ -54,13 +54,15 @@ public final class Work {
                 .setIsDefinedBy(uri("/datasets/"))
 
                 .setLicenses(set(
-                        License.CCBYNCND40
+                        License.CCBYNCND40()
                 ));
 
         final Frame frame=frame(catalog);
 
         frame.validate(true)
                 .ifPresent(trace -> System.out.println(trace));
+
+        System.out.println(catalog);
 
     }
 

@@ -20,7 +20,6 @@ import com.metreeca.mesh.Text;
 import com.metreeca.mesh.bean.jsonld.Namespace;
 import com.metreeca.mesh.bean.jsonld.Property;
 import com.metreeca.mesh.bean.jsonld.Type;
-import com.metreeca.mesh.bean.shacl.Optional;
 import com.metreeca.mesh.bean.shacl.Required;
 
 import eu.ec2u.data._resources.Label;
@@ -75,41 +74,37 @@ public interface Asset<T extends Asset<T>> extends Resource<Asset<T>> {
 
     T setTitle(Set<Text> title);
 
-    @Optional
     @Label
     Set<Text> getAlternative();
 
     T setAlternative(Set<Text> alternative);
 
-    @Optional
     @Localized
     Set<Text> getDescription();
 
     T setDescription(Set<Text> description);
 
 
-    @Optional
     LocalDate getCreated();
 
     T setCreated(LocalDate created);
 
-    @Optional
+
     LocalDate getIssued();
 
     T setIssued(LocalDate issued);
 
-    @Optional
+
     LocalDate getModified();
 
     T setModified(LocalDate modified);
 
 
-    @Optional
     String getRights();
 
     T setRights(String rights);
 
-    @Optional
+
     Text getAccessRights();
 
     T setAccessRights(Text accessRights);
