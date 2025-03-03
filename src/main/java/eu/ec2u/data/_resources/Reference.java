@@ -16,7 +16,6 @@
 
 package eu.ec2u.data._resources;
 
-import com.metreeca.mesh.Text;
 import com.metreeca.mesh.bean.jsonld.Id;
 import com.metreeca.mesh.bean.jsonld.Namespace;
 import com.metreeca.mesh.bean.jsonld.Property;
@@ -25,7 +24,8 @@ import com.metreeca.mesh.bean.shacl.Required;
 
 import java.beans.JavaBean;
 import java.net.URI;
-import java.util.Set;
+import java.util.Locale;
+import java.util.Map;
 
 @JavaBean
 @Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
@@ -43,11 +43,11 @@ public interface Reference {
     @Localized
     @MaxLength(LabelLength)
     @Property("rdfs:")
-    Set<Text> getLabel();
+    Map<Locale, String> getLabel();
 
     @Localized
     @MaxLength(CommentLength)
     @Property("rdfs:")
-    Set<Text> getComment();
+    Map<Locale, String> getComment();
 
 }
