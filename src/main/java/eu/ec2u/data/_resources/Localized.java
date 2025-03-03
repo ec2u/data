@@ -18,13 +18,9 @@ package eu.ec2u.data._resources;
 
 import com.metreeca.mesh.bean.shacl.Alias;
 import com.metreeca.mesh.bean.shacl.LanguageIn;
-import com.metreeca.mesh.bean.shacl.UniqueLang;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.Collection;
-
-import static com.metreeca.mesh.Values.list;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -33,11 +29,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ FIELD, METHOD })
 @Retention(RUNTIME)
 @Alias(
-        LanguageIn=@LanguageIn({ "", "en", "de", "es", "fi", "fr", "it", "pt", "ro" }),
-        UniqueLang=@UniqueLang()
+        LanguageIn=@LanguageIn({ "", "en", "de", "es", "fi", "fr", "it", "pt", "ro" })
 )
 public @interface Localized {
-
-    Collection<String> Languages=list("", "en", "de", "es", "fi", "fr", "it", "pt", "ro");
 
 }

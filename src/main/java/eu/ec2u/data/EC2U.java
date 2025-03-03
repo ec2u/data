@@ -26,15 +26,12 @@ import com.metreeca.link.Trace;
 
 import eu.ec2u.data.actors.Actors;
 import eu.ec2u.data.agents.Agents;
-import eu.ec2u.data.assets.Assets;
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.offerings.Offerings;
-import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
@@ -108,26 +105,6 @@ public final class EC2U extends Delegator {
 
     public static IRI item(final IRI dataset, final University university, final String name) {
         return iri(dataset, "/"+(MD5Pattern.matcher(name).matches() ? name : md5(university.id+"@"+name)));
-    }
-
-
-    public static void main(final String... args) {
-        Resources.main();
-        Assets.main();
-        Datasets.main();
-        Concepts.main();
-        Agents.main();
-        Organizations.main();
-        Universities.main();
-        Units.main();
-        Persons.main();
-        Documents.main();
-        Actors.main();
-        Schema.main();
-        Offerings.main();
-        Programs.main();
-        Courses.main();
-        Events.main();
     }
 
 
