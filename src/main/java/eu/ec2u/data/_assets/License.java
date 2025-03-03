@@ -16,18 +16,17 @@
 
 package eu.ec2u.data._assets;
 
-import com.metreeca.mesh.Text;
-
 import eu.ec2u.data._resources.Reference;
 
 import java.beans.JavaBean;
 import java.net.URI;
-import java.util.Set;
+import java.util.Locale;
+import java.util.Map;
 
-import static com.metreeca.mesh.Text.text;
-import static com.metreeca.mesh.Values.set;
 import static com.metreeca.mesh.Values.uri;
 import static com.metreeca.mesh.bean.Beans.bean;
+
+import static java.util.Locale.ROOT;
 
 @JavaBean
 public interface License extends Reference {
@@ -35,15 +34,15 @@ public interface License extends Reference {
     static License CCBYNCND40() {
         return bean(License.class)
                 .setId(uri("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
-                .setLabel(set(text("CC BY-NC-ND 4.0")))
-                .setComment(set(text("Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International")));
+                .setLabel(Map.of(ROOT, "CC BY-NC-ND 4.0"))
+                .setComment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
     }
 
 
     License setId(URI id);
 
-    License setLabel(Set<Text> label);
+    License setLabel(Map<Locale, String> label);
 
-    License setComment(Set<Text> comment);
+    License setComment(Map<Locale, String> comment);
 
 }

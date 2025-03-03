@@ -16,7 +16,6 @@
 
 package eu.ec2u.data._assets;
 
-import com.metreeca.mesh.Text;
 import com.metreeca.mesh.bean.jsonld.Namespace;
 import com.metreeca.mesh.bean.jsonld.Property;
 import com.metreeca.mesh.bean.jsonld.Type;
@@ -28,13 +27,15 @@ import eu.ec2u.data._resources.Resource;
 import java.beans.JavaBean;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.toolkits.Strings.clip;
-import static com.metreeca.mesh.Text.text;
-import static com.metreeca.mesh.Values.set;
+
+import static java.util.stream.Collectors.toMap;
 
 @JavaBean
 @Type("ec2u:")
@@ -45,36 +46,35 @@ public interface Asset<T extends Asset<T>> extends Resource<T> {
 
 
     @Override
-    default Set<Text> getLabel() {
+    default Map<Locale, String> getLabel() {
         return getTitle(); // !!! merge alternative / clip
     }
 
     @Override
-    default Set<Text> getComment() {
-        return set(Optional.ofNullable(getDescription()).stream()
-                .flatMap(Collection::stream)
-                .map(text -> text(clip(text.string(), CommentLength), text.locale()))
-        );
+    default Map<Locale, String> getComment() {
+        return Stream.ofNullable(getDescription())
+                .flatMap(description -> description.entrySet().stream())
+                .collect(toMap(Entry::getKey, entry -> clip(entry.getValue())));
     }
 
 
     @Required
     @Localized
-    Set<Text> getTitle();
+    Map<Locale, String> getTitle();
 
-    T setTitle(Set<Text> title);
-
-
-    @Localized
-    Set<Text> getAlternative();
-
-    T setAlternative(Set<Text> alternative);
+    T setTitle(Map<Locale, String> title);
 
 
     @Localized
-    Set<Text> getDescription();
+    Map<Locale, String> getAlternative();
 
-    T setDescription(Set<Text> description);
+    T setAlternative(Map<Locale, String> alternative);
+
+
+    @Localized
+    Map<Locale, String> getDescription();
+
+    T setDescription(Map<Locale, String> description);
 
 
     LocalDate getCreated();
@@ -97,9 +97,9 @@ public interface Asset<T extends Asset<T>> extends Resource<T> {
     T setRights(String rights);
 
 
-    Text getAccessRights();
+    Entry<Locale, String> getAccessRights();
 
-    T setAccessRights(Text accessRights);
+    T setAccessRights(Entry<Locale, String> accessRights);
 
 
     @Property("license")

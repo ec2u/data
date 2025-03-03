@@ -19,82 +19,67 @@ package eu.ec2u.data._datasets;
 import com.metreeca.flow.jsonld.actions.Validate;
 import com.metreeca.flow.services.Translator;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Store;
-import com.metreeca.mesh.Text;
 import com.metreeca.mesh.bean.Beans;
 
 import eu.ec2u.data._assets.License;
 
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.jsonld.formats.JSONLD.store;
 import static com.metreeca.flow.services.Translator.translator;
-import static com.metreeca.mesh.Text.text;
-import static com.metreeca.mesh.Values.set;
 import static com.metreeca.mesh.Values.uri;
 import static com.metreeca.mesh.bean.Beans.bean;
 
 import static eu.ec2u.data.Data.exec;
-import static java.util.stream.Collectors.toList;
 
 public final class Work {
 
     public static void main(final String... args) {
-        exec(() -> {
+        exec(() -> service(store()).insert(Xtream
 
-            final Store store=service(store());
+                .of(bean(Dataset.class)
 
-            store.insert(Xtream.of(catalog())
-                    .map(catalog -> catalog
-                            .setTitle(localize(catalog.getTitle()))
-                            .setAlternative(localize(catalog.getAlternative()))
-                            .setDescription(localize(catalog.getDescription()))
-                    )
-                    .map(Beans::frame)
-                    .optMap(new Validate().deep(true))
-                    .collect(toList())
-            );
+                        // !!! void:rootResource void:Dataset ;
 
-        });
+                        .setId(uri("/"))
+
+                        .setTitle(localize(Map.of(
+                                Locale.ENGLISH, "EC2U Dataset Catalog"
+                        )))
+
+                        .setAlternative(localize(Map.of(
+                                Locale.ENGLISH, "EC2U Datasets"
+                        )))
+
+                        .setDescription(localize(Map.of(
+                                Locale.ENGLISH, "Datasets published on the EC2U Knowledge Hub."
+                        )))
+
+                        .setRights("Copyright © 2022-2024 EC2U Alliance")
+
+                        .setIsDefinedBy(uri("/datasets/"))
+
+                        .setLicenses(Set.of(
+                                License.CCBYNCND40()
+                        ))
+
+                )
+
+                .map(Beans::value)
+                .optMap(new Validate().deep(true))
+                .toList()
+        ));
     }
 
 
-    private static Set<Text> localize(final Set<Text> value) {
+    private static Map<Locale, String> localize(final Map<Locale, String> value) {
 
         final Translator translator=service(translator());
 
         return value; // !!!
-    }
-
-
-    private static Dataset catalog() {
-
-        // !!! void:rootResource void:Dataset ;
-
-        return bean(Dataset.class)
-
-                .setId(uri("/"))
-
-                .setTitle(set(
-                        text("EC2U Dataset Catalog", "en")
-                ))
-
-                .setAlternative(set(
-                        text("EC2U Datasets", "en")
-                ))
-
-                .setDescription(set(
-                        text("Datasets published on the EC2U Knowledge Hub.", "en")
-                ))
-
-                .setRights("Copyright © 2022-2024 EC2U Alliance")
-
-                .setIsDefinedBy(uri("/datasets/"))
-
-                .setLicenses(set(
-                        License.CCBYNCND40()
-                ));
     }
 
 }
