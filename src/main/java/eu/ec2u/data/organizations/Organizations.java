@@ -16,16 +16,14 @@
 
 package eu.ec2u.data.organizations;
 
-import com.metreeca.link.Shape;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.work._junk.Shape;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
-import static com.metreeca.link.Frame.LITERAL;
-import static com.metreeca.link.Frame.reverse;
-import static com.metreeca.link.Shape.*;
+import static com.metreeca.flow.rdf.Values.reverse;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
@@ -33,6 +31,7 @@ import static eu.ec2u.data.agents.Agents.Agent;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.persons.Persons.Person;
 import static eu.ec2u.data.resources.Resources.locales;
+import static eu.ec2u.work._junk.Shape.*;
 
 public final class Organizations {
 

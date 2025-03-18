@@ -22,14 +22,15 @@ import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
@@ -41,13 +42,14 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.rdf.schemas.Schema.normalize;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -58,7 +60,9 @@ import static eu.ec2u.data.offerings.Offerings.educationalLevel;
 import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities.University.Jena;
+import static eu.ec2u.work._junk.Frame.*;
 import static java.util.Map.entry;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class OfferingsJena implements Runnable {
 
@@ -178,6 +182,10 @@ public final class OfferingsJena implements Runnable {
                 )
 
         ));
+    }
+
+    private Function<Value, IRI> asIRI() {
+        return null;
     }
 
 }

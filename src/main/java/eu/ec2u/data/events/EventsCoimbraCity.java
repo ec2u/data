@@ -18,18 +18,18 @@ package eu.ec2u.data.events;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
@@ -40,15 +40,20 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.toolkits.Strings.clip;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.universities.University.Coimbra;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsCoimbraCity implements Runnable {
 
@@ -147,7 +152,7 @@ public final class EventsCoimbraCity implements Runnable {
 
                             field(ID, item(Events.Context, url)),
 
-                            field(RDF.TYPE, Event),
+                            field(TYPE, Event),
 
                             field(university, Coimbra.id),
 
@@ -195,7 +200,7 @@ public final class EventsCoimbraCity implements Runnable {
                         .map(integer -> LocalTime.of(integer.intValue()/60, 0))
                         .map(time -> LocalDateTime.of(_date, time).atZone(Coimbra.zone))
                 )
-                .map(Frame::literal);
+                .map(Values::literal);
     }
 
     private Stream<Frame> topics(final JSONPath json) {
@@ -208,7 +213,7 @@ public final class EventsCoimbraCity implements Runnable {
 
                     field(ID, item(Topics, id)),
 
-                    field(RDF.TYPE, SKOS.CONCEPT),
+                    field(TYPE, SKOS.CONCEPT),
                     field(SKOS.TOP_CONCEPT_OF, Topics),
                     field(SKOS.PREF_LABEL, label)
 
@@ -228,8 +233,8 @@ public final class EventsCoimbraCity implements Runnable {
                         field(TYPE, Schema.Place),
 
                         field(Schema.name, literal(name, Coimbra.language)),
-                        field(Schema.longitude, json.decimal("place.longitude").map(Frame::literal)),
-                        field(Schema.latitude, json.decimal("place.latitude").map(Frame::literal))
+                        field(Schema.longitude, json.decimal("place.longitude").map(Values::literal)),
+                        field(Schema.latitude, json.decimal("place.latitude").map(Values::literal))
 
                 ))
 

@@ -19,23 +19,22 @@ package eu.ec2u.data.events;
 import com.metreeca.flow.FormatException;
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
-import com.metreeca.flow.jsonld.formats.JSONLD;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
@@ -52,12 +51,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.rdf.schemas.Schema.normalize;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.xml.XPath.decode;
 import static com.metreeca.flow.xml.formats.HTML.html;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -67,10 +66,13 @@ import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Jena;
 import static eu.ec2u.data.universities.University.Linz;
+import static eu.ec2u.work._junk.Frame.*;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.stream.Collectors.joining;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsLinzCity implements Runnable {
 
@@ -198,7 +200,7 @@ public final class EventsLinzCity implements Runnable {
 
                     } catch ( final FormatException e ) {
 
-                        logger.warning(JSONLD.class, e.getMessage());
+                        logger.warning(JSON.class, e.getMessage());
 
                         return Set.<Statement>of();
 
@@ -207,7 +209,7 @@ public final class EventsLinzCity implements Runnable {
                 })
 
                 .flatMap(model -> focus(Set.of(Event), normalize(model))
-                        .seq(reverse(RDF.TYPE))
+                        .seq(reverse(TYPE))
                         .split()
                 )
 
@@ -241,7 +243,7 @@ public final class EventsLinzCity implements Runnable {
 
                 field(startDate, focus.seq(startDate).value(asString()).flatMap(this::datetime)),
                 field(endDate, focus.seq(endDate).value(asString()).flatMap(this::datetime)),
-                field(isAccessibleForFree, focus.seq(isAccessibleForFree).value(asBoolean()).map(Frame::literal)),
+                field(isAccessibleForFree, focus.seq(isAccessibleForFree).value(asBoolean()).map(Values::literal)),
 
                 field(publisher, Publisher),
 
@@ -272,7 +274,7 @@ public final class EventsLinzCity implements Runnable {
     private Stream<Frame> location(final Focus focus) {
         return focus.seq(location).split().flatMap(location -> location
 
-                .seq(RDF.TYPE).value(asIRI())
+                .seq(TYPE).value(asIRI())
 
                 .map(type -> {
 
@@ -321,13 +323,13 @@ public final class EventsLinzCity implements Runnable {
                 field(addressLocality, address.seq(addressLocality)
                         .value(asString())
                         .map(XPath::decode)
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 ),
 
                 field(postalCode, address.seq(postalCode)
                         .value(asString())
                         .map(XPath::decode)
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 )
 
         ));

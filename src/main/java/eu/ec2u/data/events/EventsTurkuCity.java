@@ -18,21 +18,21 @@ package eu.ec2u.data.events;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Untag;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import jakarta.json.JsonValue;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -44,9 +44,8 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.flow.rdf.Values.guarded;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -56,11 +55,14 @@ import static eu.ec2u.data.resources.Resources.locales;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Turku;
+import static eu.ec2u.work._junk.Frame.*;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsTurkuCity implements Runnable {
 
@@ -174,7 +176,7 @@ public final class EventsTurkuCity implements Runnable {
                 .flatMap(entry -> entry.getValue().strings(""))
                 .map(Strings::normalize)
                 .filter(not(String::isBlank))
-                .map(Frame::iri)
+                .map(Values::iri)
                 .findFirst()
 
                 .map(url -> {
@@ -197,7 +199,7 @@ public final class EventsTurkuCity implements Runnable {
 
                             field(ID, iri(Events.Context, md5(id))),
 
-                            field(RDF.TYPE, Event),
+                            field(TYPE, Event),
 
                             field(Schema.url, url),
                             field(name, label(json.entries("name"))),
@@ -205,10 +207,10 @@ public final class EventsTurkuCity implements Runnable {
                             field(description, fullDescription),
 
                             field(image, json.string("images.*.url")
-                                    .map(Frame::iri)
+                                    .map(Values::iri)
                                     .map(iri -> frame(
                                             field(ID, iri),
-                                            field(TYPE, Schema.ImageObject),
+                                            field(TYPE, ImageObject),
                                             field(Schema.url, iri)
                                     ))
                             ),
@@ -216,7 +218,7 @@ public final class EventsTurkuCity implements Runnable {
                             field(isAccessibleForFree, json.bools("offers.*.is_free")
                                     .filter(v -> v)
                                     .findFirst()
-                                    .map(Frame::literal)
+                                    .map(Values::literal)
                             ),
 
                             field(eventStatus, json.string("event_status")
@@ -226,11 +228,11 @@ public final class EventsTurkuCity implements Runnable {
 
                             field(startDate, json.string("start_time")
                                     .map(guarded(OffsetDateTime::parse))
-                                    .map(Frame::literal)),
+                                    .map(Values::literal)),
 
                             field(endDate, json.string("end_time")
                                     .map(guarded(OffsetDateTime::parse))
-                                    .map(Frame::literal)),
+                                    .map(Values::literal)),
 
                             // !!! keywords
                             // !!! in_language
@@ -251,10 +253,10 @@ public final class EventsTurkuCity implements Runnable {
         // !!! is_virtualevent // not populated as of 2022-07-25
 
         return json.string("location.@id")
-                .map(Frame::iri)
+                .map(Values::iri)
                 .map(iri -> frame(
                         field(ID, item(Locations.Context, iri.stringValue())),
-                        field(RDF.TYPE, Place),
+                        field(TYPE, Place),
                         field(url, iri)
                 ))
                 .map(Stream::of)
@@ -269,7 +271,7 @@ public final class EventsTurkuCity implements Runnable {
 
                                         field(Place, frame(
                                                 field(ID, item(Locations.Context, info)),
-                                                field(RDF.TYPE, Place),
+                                                field(TYPE, Place),
                                                 field(name, literal(info, entry.getKey()))
                                         ))
 
@@ -304,7 +306,7 @@ public final class EventsTurkuCity implements Runnable {
 
                 field(ID, item(Locations.Context, id)),
 
-                field(RDF.TYPE, json.string("@type").map(Schema::schema).orElse(Place)),
+                field(TYPE, json.string("@type").map(Schema::schema).orElse(Place)),
 
                 field(url, iri(id)), // !!! skolemize
 
@@ -329,8 +331,8 @@ public final class EventsTurkuCity implements Runnable {
                 //                 ))))
                 // ),
 
-                field(longitude, json.decimal("position.coordinates.0").map(Frame::literal)),
-                field(latitude, json.decimal("position.coordinates.1").map(Frame::literal))
+                field(longitude, json.decimal("position.coordinates.0").map(Values::literal)),
+                field(latitude, json.decimal("position.coordinates.1").map(Values::literal))
 
         );
     }

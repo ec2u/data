@@ -20,9 +20,6 @@ import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Shape;
-import com.metreeca.link.Trace;
 
 import eu.ec2u.data.actors.Actors;
 import eu.ec2u.data.agents.Agents;
@@ -38,6 +35,9 @@ import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.Shape;
+import eu.ec2u.work._junk.Trace;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.common.exception.ValidationException;
 import org.eclipse.rdf4j.model.IRI;
@@ -62,6 +62,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Logger.logger;
@@ -69,8 +71,6 @@ import static com.metreeca.flow.services.Logger.time;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.flow.toolkits.Resources.text;
-import static com.metreeca.link.Frame.iri;
-import static com.metreeca.link.Frame.literal;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
@@ -269,7 +269,7 @@ public final class EC2U extends Delegator {
     }
 
 
-    private static String skolemize(final Function<IRI, Stream<Value>> source, final IRI... predicates) {
+    private static String skolemize(final Function<IRI, Stream<? extends Value>> source, final IRI... predicates) {
         return md5(Arrays.stream(predicates)
                 .flatMap(predicate -> source.apply(predicate)
                         .map(value -> format("'%s':'%s'", predicate, value))

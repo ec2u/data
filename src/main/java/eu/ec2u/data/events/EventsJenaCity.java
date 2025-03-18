@@ -20,26 +20,25 @@ import com.metreeca.flow.FormatException;
 import com.metreeca.flow.Request;
 import com.metreeca.flow.actions.Fetch;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
-import com.metreeca.flow.jsonld.formats.JSONLD;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.link.Frame;
+import com.metreeca.mesh.Field;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import eu.ec2u.work.focus.Focus;
-import jakarta.json.Json;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 import org.eclipse.rdf4j.rio.RDFParser;
@@ -56,21 +55,28 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.Request.POST;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.rdf.schemas.Schema.normalize;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.toolkits.Strings.clip;
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.mesh.Value.*;
+import static com.metreeca.mesh.Value.integer;
+import static com.metreeca.mesh.Value.string;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.things.Schema.schema;
 import static eu.ec2u.data.universities.University.Jena;
+import static eu.ec2u.work._junk.Frame.*;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.util.function.Predicate.not;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsJenaCity implements Runnable {
 
@@ -131,14 +137,13 @@ public final class EventsJenaCity implements Runnable {
                                 .base("https://www.jena-veranstaltungen.de/")
                                 .query("ndssolr=search")
                                 .header("Accept", JSON.MIME)
-                                .body(new JSON(), Json.createObjectBuilder()
-                                        .add("q", "*")
-                                        .add("selectedFilter", Json.createArrayBuilder()
-                                                .add("tx_ndsdestinationdataevent_domain_model_event")
-                                        )
-                                        .add("page", page)
-                                        .build()
-                                )
+                                .body(new JSON(), object(
+                                        Field.field("q", string("*")),
+                                        Field.field("selectedFilter", array(
+                                                string("tx_ndsdestinationdataevent_domain_model_event")
+                                        )),
+                                        Field.field("page", integer(page))
+                                ))
                         )
 
                         .optMap(new Fetch())
@@ -186,7 +191,7 @@ public final class EventsJenaCity implements Runnable {
 
                     } catch ( final FormatException e ) {
 
-                        service(logger()).warning(JSONLD.class, e.getMessage());
+                        service(logger()).warning(JSON.class, e.getMessage());
 
                         return Set.<Statement>of();
 
@@ -195,7 +200,7 @@ public final class EventsJenaCity implements Runnable {
                 })
 
                 .flatMap(model -> focus(Set.of(Event), normalize(model))
-                        .seq(reverse(RDF.TYPE))
+                        .seq(reverse(TYPE))
                         .split()
                 );
     }
@@ -221,7 +226,7 @@ public final class EventsJenaCity implements Runnable {
 
                     field(ID, iri(Events.Context, skolemize(focus, Schema.url, startDate))),
 
-                    field(RDF.TYPE, Event),
+                    field(TYPE, Event),
 
                     field(university, Jena.id),
 
@@ -231,7 +236,7 @@ public final class EventsJenaCity implements Runnable {
                     field(Schema.disambiguatingDescription, disambiguatingDescription),
 
                     field(Schema.image, focus.seq(Schema.image, Schema.url).value(asString())
-                            .map(Frame::iri)
+                            .map(Values::iri)
                             .map(iri -> frame(
                                     field(ID, iri),
                                     field(TYPE, Schema.ImageObject),
@@ -255,7 +260,7 @@ public final class EventsJenaCity implements Runnable {
 
                                     field(ID, item(Topics, keyword)),
 
-                                    field(RDF.TYPE, SKOS.CONCEPT),
+                                    field(TYPE, SKOS.CONCEPT),
                                     field(SKOS.TOP_CONCEPT_OF, Topics),
                                     field(SKOS.PREF_LABEL, literal(keyword, Jena.language))
 
@@ -282,7 +287,7 @@ public final class EventsJenaCity implements Runnable {
 
                         field(ID, item(collection, skolemize(focus, Schema.url, Schema.name))),
 
-                        field(RDF.TYPE, focus.seq(RDF.TYPE).value()),
+                        field(TYPE, focus.seq(TYPE).value()),
 
                         field(Schema.url, focus.seq(Schema.url).value().map(v -> iri(v.stringValue()))),
                         field(Schema.name, focus.seq(Schema.name).value().map(v -> literal(v.stringValue(), Jena.language)))

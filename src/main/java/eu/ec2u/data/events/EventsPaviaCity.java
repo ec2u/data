@@ -25,16 +25,15 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Extract;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -42,16 +41,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.flow.rdf.Values.*;
 
 import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.University.Pavia;
+import static eu.ec2u.work._junk.Frame.*;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.time.Instant.now;
 import static java.time.ZoneOffset.UTC;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsPaviaCity implements Runnable {
 
@@ -124,7 +127,7 @@ public final class EventsPaviaCity implements Runnable {
                 .batch(0)
 
                 .flatMap(model -> focus(Set.of(Event), model)
-                        .seq(reverse(RDF.TYPE), url)
+                        .seq(reverse(TYPE), url)
                         .values(asIRI())
                 );
     }
@@ -161,7 +164,7 @@ public final class EventsPaviaCity implements Runnable {
 
                             .flatMap(model -> focus(Set.of(Event), model)
 
-                                    .seq(reverse(RDF.TYPE))
+                                    .seq(reverse(TYPE))
                                     .split()
 
                                     .map(focus -> frame(

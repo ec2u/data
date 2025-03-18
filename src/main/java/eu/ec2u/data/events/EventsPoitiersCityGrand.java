@@ -18,29 +18,30 @@ package eu.ec2u.data.events;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.XML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
@@ -48,13 +49,17 @@ import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Poitiers;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.time.Instant.now;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsPoitiersCityGrand implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/poitiers/city/grand");
 
-    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("https://sortir.grandpoitiers.fr/")),
             field(TYPE, Organization),
@@ -132,14 +137,14 @@ public final class EventsPoitiersCityGrand implements Runnable {
                     .map(text -> literal(text, Poitiers.language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
-                    .map(Frame::literal);
+                    .map(Values::literal);
 
 
             return frame(
 
                     field(ID, iri(Events.Context, md5(url))),
 
-                    field(RDF.TYPE, Event),
+                    field(TYPE, Event),
 
                     field(Schema.url, iri(url)),
                     field(Schema.name, name),
@@ -147,7 +152,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
                     field(Schema.disambiguatingDescription, disambiguatingDescription),
 
                     field(Schema.image, item.link("enclosure/@url")
-                            .map(Frame::iri)
+                            .map(Values::iri)
                             .map(iri -> frame(
                                     field(ID, iri),
                                     field(TYPE, Schema.ImageObject),
@@ -175,7 +180,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
                 .map(OffsetDateTime::parse)
                 .map(OffsetDateTime::toLocalDateTime)
                 .map(v -> v.atOffset(Poitiers.zone.getRules().getOffset(v)))
-                .map(Frame::literal);
+                .map(Values::literal);
     }
 
     private Optional<Frame> category(final XPath item) {
@@ -187,7 +192,7 @@ public final class EventsPoitiersCityGrand implements Runnable {
 
                     field(ID, EC2U.item(Events.Topics, category)),
 
-                    field(RDF.TYPE, SKOS.CONCEPT),
+                    field(TYPE, SKOS.CONCEPT),
                     field(SKOS.TOP_CONCEPT_OF, Events.Topics),
                     field(SKOS.PREF_LABEL, label)
 

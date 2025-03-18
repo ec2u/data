@@ -22,9 +22,9 @@ import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.rdf.Values.iri;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.toolkits.Resources.resource;
-import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.BASE;

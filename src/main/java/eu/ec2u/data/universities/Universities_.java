@@ -18,9 +18,10 @@ package eu.ec2u.data.universities;
 
 import com.metreeca.flow.lod.actions.WikidataMirror;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import java.util.stream.Stream;
+
+import static com.metreeca.flow.rdf.Values.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Resources.locales;
@@ -55,7 +56,7 @@ public final class Universities_ implements Runnable {
                 )
 
                 .sink(new WikidataMirror()
-                        .contexts(Frame.iri(Universities.Context, "/wikidata"))
+                        .contexts(iri(Universities.Context, "/wikidata"))
                         .languages(locales())
                 );
     }

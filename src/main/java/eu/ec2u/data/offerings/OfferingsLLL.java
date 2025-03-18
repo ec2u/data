@@ -16,11 +16,11 @@
 
 package eu.ec2u.data.offerings;
 
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.concepts.ISCEDF2013;
@@ -31,13 +31,13 @@ import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.math.BigDecimal;
@@ -49,16 +49,21 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.events.Events.EventAttendanceModeEnumeration.*;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable {
 
@@ -105,7 +110,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
                 field(ID, id),
 
-                field(RDF.TYPE, Course, CourseInstance),
+                field(TYPE, Course, CourseInstance),
 
                 field(Resources.university, university.id),
 
@@ -123,7 +128,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
                 // !!! Study degree course (in English)
 
-                field(courseCode, value(record, "University Course code").map(Frame::literal)),
+                field(courseCode, value(record, "University Course code").map(Values::literal)),
 
                 field(Schema.name, titleOriginal
                         .filter(not(title -> title.equals(titleEnglish.orElse(""))))
@@ -167,7 +172,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
 
                 field(Schema.inLanguage, value(record, "Course Language").stream()
                         .flatMap(Parsers::languages)
-                        .map(Frame::literal)),
+                        .map(Values::literal)),
 
                 field(Schema.about, values(record, "SDG Number (if SDGs related)", s -> {
 
@@ -214,11 +219,11 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
                 ),
 
                 field(Offerings.numberOfCredits, value(record, "Number of ECTS", Parsers::decimal)
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 ),
 
                 field(Schema.url, value(record, "Link to the course site/description", Parsers::url)
-                        .map(Frame::iri)
+                        .map(Values::iri)
                 )
 
         )));
@@ -269,7 +274,7 @@ public final class OfferingsLLL extends CSVProcessor<Frame> implements Runnable 
                 .filter(Matcher::find)
                 .map(matcher -> matcher.group(1))
                 .map(code -> format("%s/%s", ISCEDF2013.Scheme, code)) // !!! validate
-                .map(Frame::iri);
+                .map(Values::iri);
     }
 
     private static Literal duration(final BigDecimal value) {

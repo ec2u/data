@@ -17,14 +17,15 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.persons.Persons;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
@@ -33,7 +34,8 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.reverse;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -42,9 +44,13 @@ import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.units.Units.ResearchTopics;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.University.Poitiers;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.model.util.Values.literal;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class UnitsPoitiers implements Runnable {
 
@@ -96,9 +102,9 @@ public final class UnitsPoitiers implements Runnable {
                 field(TYPE, Unit),
 
                 field(university, Poitiers.id),
-                field(RDFS.ISDEFINEDBY, json.string("fiche_rnsr").map(Frame::iri)),
+                field(RDFS.ISDEFINEDBY, json.string("fiche_rnsr").map(Values::iri)),
 
-                field(FOAF.HOMEPAGE, json.string("site_web").map(Frame::iri)),
+                field(FOAF.HOMEPAGE, json.string("site_web").map(Values::iri)),
                 field(FOAF.MBOX),
 
                 field(ORG.IDENTIFIER, literal(id)),

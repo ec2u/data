@@ -18,18 +18,19 @@ package eu.ec2u.data.units;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.*;
@@ -43,10 +44,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.reverse;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -54,9 +56,13 @@ import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.units.Units.ResearchTopics;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.University.Coimbra;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static org.eclipse.rdf4j.model.util.Values.literal;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class UnitsCoimbra implements Runnable {
 
@@ -138,8 +144,8 @@ public final class UnitsCoimbra implements Runnable {
 
                 field(Resources.university, Coimbra.id),
 
-                field(FOAF.HOMEPAGE, json.string("web_url").map(Frame::iri)),
-                field(FOAF.MBOX, json.string("email").map(Frame::literal)),
+                field(FOAF.HOMEPAGE, json.string("web_url").map(Values::iri)),
+                field(FOAF.MBOX, json.string("email").map(Values::literal)),
 
                 field(ORG.IDENTIFIER, literal(id)),
                 field(SKOS.PREF_LABEL, json.string("name_en").filter(not(String::isEmpty)).map(v -> literal(v, "en"))),

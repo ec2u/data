@@ -19,46 +19,51 @@ package eu.ec2u.data.events;
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
 import com.metreeca.flow.ical.formats.iCal;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.toolkits.Identifiers;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Untag;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.*;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalQueries;
 import java.util.Optional;
 
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.toolkits.Identifiers.AbsoluteIRIPattern;
 import static com.metreeca.flow.toolkits.Strings.TextLength;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
 import static net.fortuna.ical4j.model.Component.VEVENT;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsSalamancaUniversity implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/salamanca/university");
 
 
-    private static final Frame Publisher=Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("https://sac.usal.es/programacion/")),
             field(TYPE, Organization),
@@ -124,7 +129,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                 .filter(not(String::isEmpty))
                 .map(s -> s.startsWith("sac.usal.es/") ? String.format("https://%s", s) : s)
                 .filter(AbsoluteIRIPattern.asMatchPredicate())
-                .map(Frame::iri)
+                .map(Values::iri)
 
                 .map(url -> {
 
@@ -151,20 +156,20 @@ public final class EventsSalamancaUniversity implements Runnable {
                     final Optional<Literal> created=event.getCreated()
                             .map(Created::getDate)
                             .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
-                            .map(Frame::literal);
+                            .map(Values::literal);
 
                     final Optional<Literal> lastModified=event.getLastModified()
                             .map(LastModified::getDate)
                             .map(instant -> OffsetDateTime.ofInstant(instant, UTC))
-                            .map(Frame::literal);
+                            .map(Values::literal);
 
                     final Optional<Literal> startDate=event.getDateTimeStart()
                             .map(start -> toOffsetDateTime(start.getDate()))
-                            .map(Frame::literal);
+                            .map(Values::literal);
 
                     final Optional<Literal> endDate=event.getDateTimeEnd()
                             .map(end -> toOffsetDateTime(end.getDate()))
-                            .map(Frame::literal);
+                            .map(Values::literal);
 
                     return frame(
 
@@ -173,7 +178,7 @@ public final class EventsSalamancaUniversity implements Runnable {
                                     .orElseGet(Identifiers::md5)
                             )),
 
-                            field(RDF.TYPE, Event),
+                            field(TYPE, Event),
 
                             field(Schema.url, url),
                             field(Schema.name, label),

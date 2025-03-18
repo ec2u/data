@@ -21,13 +21,12 @@ import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.Parse;
 import com.metreeca.flow.actions.Query;
 import com.metreeca.flow.formats.Text;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.concepts.Languages;
@@ -35,6 +34,8 @@ import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -52,10 +53,11 @@ import java.util.regex.Pattern;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.Request.POST;
 import static com.metreeca.flow.Request.query;
+import static com.metreeca.flow.rdf.Values.iri;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Strings.lenient;
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.mesh.Value.string;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -64,9 +66,13 @@ import static eu.ec2u.data.courses.Courses.*;
 import static eu.ec2u.data.offerings.Offerings.*;
 import static eu.ec2u.data.programs.Programs.*;
 import static eu.ec2u.data.universities.University.Coimbra;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
+import static org.eclipse.rdf4j.model.util.Values.literal;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class OfferingsCoimbra implements Runnable {
 
@@ -245,7 +251,7 @@ public final class OfferingsCoimbra implements Runnable {
 
                 .optMap(json -> {
 
-                    if ( "SUCCESS".equals(json.asJsonObject().getString("status")) ) {
+                    if ( string("status").equals(string("SUCCESS")) ) {
 
                         return Optional.of(json);
 
@@ -274,8 +280,8 @@ public final class OfferingsCoimbra implements Runnable {
 
                 field(Schema.identifier, literal(id.toString())),
 
-                field(Schema.url, json.string("urlEN").map(Frame::iri)),
-                field(Schema.url, json.string("urlPT").map(Frame::iri)),
+                field(Schema.url, json.string("urlEN").map(Values::iri)),
+                field(Schema.url, json.string("urlPT").map(Values::iri)),
 
                 field(Schema.name, json.paths("designacoes.*")
                         .optMap(this::localized)
@@ -288,7 +294,7 @@ public final class OfferingsCoimbra implements Runnable {
 
                 field(numberOfCredits, json.string("ects")
                         .map(Offerings_::ects)
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 ),
 
                 field(educationalCredentialAwarded, json.paths("qualificoesAtribuidas.*")
@@ -339,8 +345,8 @@ public final class OfferingsCoimbra implements Runnable {
                 field(Schema.identifier, literal(id.toString())),
                 field(courseCode, literal(id.toString())),
 
-                field(Schema.url, json.string("urlEN").map(Frame::iri)),
-                field(Schema.url, json.string("urlPT").map(Frame::iri)),
+                field(Schema.url, json.string("urlEN").map(Values::iri)),
+                field(Schema.url, json.string("urlPT").map(Values::iri)),
 
                 field(Schema.name, json.paths("designacoes.*")
                         .optMap(this::localized)
@@ -357,7 +363,7 @@ public final class OfferingsCoimbra implements Runnable {
                         .map(NotLettersPattern::split)
                         .flatMap(Arrays::stream)
                         .map(name -> Languages.languageCode(name).orElse(Coimbra.language))
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 ),
 
                 // !!! review schema
@@ -368,7 +374,7 @@ public final class OfferingsCoimbra implements Runnable {
 
                 field(numberOfCredits, json.string("ects")
                         .map(Offerings_::ects)
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 ),
 
                 field(timeRequired, json.string("duracaoEN")

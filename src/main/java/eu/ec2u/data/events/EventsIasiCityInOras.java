@@ -20,30 +20,35 @@ import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.formats.XML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.time.Instant;
 
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
 import static eu.ec2u.data.events.Events.startDate;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.universities.University.Iasi;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static eu.ec2u.work.feeds.WordPress.WordPress;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsIasiCityInOras implements Runnable {
 
     public static final IRI Context=iri(Events.Context, "/iasi/in-oras");
 
-    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("https://iasi.inoras.ro/evenimente")),
             field(TYPE, Schema.Organization),

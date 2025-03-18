@@ -19,20 +19,20 @@ package eu.ec2u.data.events;
 import com.metreeca.flow.FormatException;
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.organizations.Organizations_;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.focus.Focus;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
@@ -45,11 +45,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.rdf.schemas.Schema.normalize;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
@@ -58,8 +58,11 @@ import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.*;
 import static eu.ec2u.data.universities.Universities.University;
 import static eu.ec2u.data.universities.University.Jena;
+import static eu.ec2u.work._junk.Frame.*;
 import static eu.ec2u.work.focus.Focus.focus;
 import static java.util.stream.Collectors.toList;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsJenaUniversity implements Runnable {
 
@@ -163,7 +166,7 @@ public final class EventsJenaUniversity implements Runnable {
 
             .map(frame -> frame(frame,
 
-                    field(RDF.TYPE, Organization),
+                    field(TYPE, Organization),
                     field(university, Jena.id),
                     field(about, University)
 
@@ -263,7 +266,7 @@ public final class EventsJenaUniversity implements Runnable {
                         final Collection<Statement> model=normalize(rdf(reader, "", parser));
 
                         return focus(Set.of(Event), model)
-                                .seq(reverse(RDF.TYPE))
+                                .seq(reverse(TYPE))
                                 .split()
                                 .filter(focus -> focus.seq(reverse(schema("subEvent"))).isEmpty());
 
@@ -307,7 +310,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                         field(ID, item(Events.Context, Jena, id)),
 
-                        field(RDF.TYPE, Event),
+                        field(TYPE, Event),
 
                         field(university, Jena.id),
 
@@ -320,7 +323,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                                 field(ID, image.seq(url).value()
                                         .map(v -> v+"#"+md5(id))
-                                        .map(Frame::iri)
+                                        .map(Values::iri)
                                 ),
 
                                 field(TYPE, ImageObject),
@@ -343,15 +346,15 @@ public final class EventsJenaUniversity implements Runnable {
                         field(startDate, datetime(focus.seq(startDate).value(asString()))),
                         field(endDate, datetime(focus.seq(endDate).value(asString()))),
 
-                        field(isAccessibleForFree, focus.seq(isAccessibleForFree).value(asBoolean()).map(Frame::literal)),
+                        field(isAccessibleForFree, focus.seq(isAccessibleForFree).value(asBoolean()).map(Values::literal)),
 
                         field(inLanguage, focus.seq(inLanguage).value(asString()) // retain only language
                                 .map(tag -> tag.toLowerCase(Locale.ROOT).replaceAll("^([a-z]+).*$", "$1"))
-                                .map(Frame::literal)
+                                .map(Values::literal)
                         ),
 
                         field(eventAttendanceMode, focus.seq(eventAttendanceMode).value(asString()) // ;( included as strings
-                                .map(Frame::iri)
+                                .map(Values::iri)
                         ),
 
                         field(Events.publisher, publisher),
@@ -376,7 +379,7 @@ public final class EventsJenaUniversity implements Runnable {
     private Optional<Literal> datetime(final Optional<String> datetime) {
         return datetime
                 .map(OffsetDateTime::parse)
-                .map(Frame::literal);
+                .map(Values::literal);
     }
 
 }

@@ -23,7 +23,6 @@ import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.metreeca.mesh.Values.uri;
 import static com.metreeca.mesh.bean.Beans.bean;
 
 import static java.util.Locale.ROOT;
@@ -33,7 +32,7 @@ public interface License extends Reference {
 
     static License CCBYNCND40() {
         return bean(License.class)
-                .setId(uri("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
+                .setId(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
                 .setLabel(Map.of(ROOT, "CC BY-NC-ND 4.0"))
                 .setComment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
     }

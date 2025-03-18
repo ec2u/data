@@ -42,8 +42,9 @@ import static com.metreeca.flow.Handler.handler;
 import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.Response.SeeOther;
+import static com.metreeca.flow.json.formats.JSON.codec;
+import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.json.services.Analyzer.analyzer;
-import static com.metreeca.flow.jsonld.formats.JSONLD.*;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Cache.cache;
 import static com.metreeca.flow.services.Fetcher.fetcher;
@@ -89,9 +90,6 @@ public final class Data extends Delegator {
                 .set(graph(), () -> new Graph(service(Data::repository)))
                 .set(store(), () -> rdf4j(service(Data::repository)))
                 .set(codec(), () -> json().indent(true))
-
-                .set(_store(), () -> com.metreeca.link.rdf4j.RDF4J.rdf4j(service(Data::repository))) // !!!
-                .set(_codec(), () -> com.metreeca.link.json.JSON.json().pretty(true)) // !!!
 
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
 

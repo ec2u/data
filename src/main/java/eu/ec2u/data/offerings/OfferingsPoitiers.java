@@ -16,18 +16,19 @@
 
 package eu.ec2u.data.offerings;
 
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
@@ -42,10 +43,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Resources.reader;
 import static com.metreeca.flow.toolkits.Resources.resource;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -57,8 +59,11 @@ import static eu.ec2u.data.programs.Programs.hasCourse;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.identifier;
 import static eu.ec2u.data.universities.University.Poitiers;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
 import static java.util.Map.entry;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class OfferingsPoitiers implements Runnable {
 
@@ -215,7 +220,7 @@ public final class OfferingsPoitiers implements Runnable {
 
                 field(numberOfCredits, json.decimal("credits")
                         .map(Offerings_::ects)
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 ),
 
                 field(provider, json.string("composante")
@@ -287,7 +292,7 @@ public final class OfferingsPoitiers implements Runnable {
 
                             field(numberOfCredits, json.string("credits")
                                     .map(Offerings_::ects)
-                                    .map(Frame::literal)
+                                    .map(Values::literal)
                             ),
 
                             field(Offerings.provider, provider),

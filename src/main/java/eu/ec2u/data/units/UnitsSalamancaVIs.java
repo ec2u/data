@@ -20,8 +20,8 @@ import com.metreeca.flow.actions.GET;
 import com.metreeca.flow.csv.formats.CSV;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
+import eu.ec2u.work._junk.Frame;
 import org.apache.commons.csv.CSVFormat;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
@@ -31,10 +31,14 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class UnitsSalamancaVIs implements Runnable {
 

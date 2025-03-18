@@ -16,10 +16,12 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.link.Frame;
+
+import com.metreeca.flow.rdf.Values;
 
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work._junk.Frame;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
@@ -32,20 +34,24 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.flow.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class Unit {
 
     //̸// !!! Factor //////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static Optional<IRI> value(final URI uri) {
-        return Optional.ofNullable(uri).map(Frame::iri);
+        return Optional.ofNullable(uri).map(Values::iri);
     }
 
     private static Optional<Literal> value(final Entry<String, Locale> text) {
-        return Optional.ofNullable(text).map(v -> literal(v.getKey(), v.getValue()));
+        return Optional.ofNullable(text).map(v -> literal(v.getKey(), v.getValue().getLanguage()));
     }
 
 

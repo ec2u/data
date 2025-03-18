@@ -18,20 +18,20 @@ package eu.ec2u.data.events;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.XML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.text.ParsePosition;
 import java.time.Instant;
@@ -41,9 +41,8 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Locale;
 import java.util.Optional;
 
-import static com.metreeca.flow.rdf.Values.guarded;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
@@ -51,13 +50,17 @@ import static eu.ec2u.data.events.Events.startDate;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.time.temporal.ChronoField.*;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsSalamancaCityTO implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/salamanca/city/to");
 
-    private static final Frame Publisher=Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("https://salamanca.es/en/calendar")),
             field(TYPE, Organization),
@@ -157,7 +160,7 @@ public final class EventsSalamancaCityTO implements Runnable {
 
                     field(ID, iri(Events.Context, md5(url))),
 
-                    field(RDF.TYPE, Events.Event),
+                    field(TYPE, Events.Event),
 
                     field(Schema.url, iri(url)),
                     field(Schema.name, name),
@@ -167,7 +170,7 @@ public final class EventsSalamancaCityTO implements Runnable {
                     field(startDate, item.string("title")
                             .map(guarded(v -> FeedDateTime.parse(v, new ParsePosition(0))))
                             .map(v -> LocalDateTime.from(v).atOffset(Salamanca.zone.getRules().getOffset(now)))
-                            .map(Frame::literal)
+                            .map(Values::literal)
                     ),
 
                     field(university, Salamanca.id),

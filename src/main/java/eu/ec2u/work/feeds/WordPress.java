@@ -17,41 +17,45 @@
 package eu.ec2u.work.feeds;
 
 import com.metreeca.flow.xml.actions.Untag;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Optional;
 
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.toolkits.Strings.TextLength;
 import static com.metreeca.flow.toolkits.Strings.clip;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.skolemize;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static eu.ec2u.work.feeds.RSS.*;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class WordPress {
 
     public static Frame WordPress(final Frame frame, final String lang) {
 
-        final Optional<Value> name=frame.value(Title, asString())
+        final Optional<Value> name=frame.value(Title, Frame.asString())
                 .map(text -> clip(text, TextLength))
                 .map(text -> literal(text, lang));
 
-        final Optional<Value> disambiguatingDescription=frame.value(Encoded, asString())
-                .or(() -> frame.value(Description, asString()))
+        final Optional<Value> disambiguatingDescription=frame.value(Encoded, Frame.asString())
+                .or(() -> frame.value(Description, Frame.asString()))
 
                 .map(Untag::untag)
                 .map(text -> clip(text, TextLength))
                 .map(text -> literal(text, lang));
 
-        final Optional<Value> description=frame.value(Encoded, asString())
-                .or(() -> frame.value(Description, asString()))
+        final Optional<Value> description=frame.value(Encoded, Frame.asString())
+                .or(() -> frame.value(Description, Frame.asString()))
 
                 .map(Untag::untag)
                 .map(text -> literal(text, lang));
@@ -67,7 +71,7 @@ public final class WordPress {
                 field(Schema.disambiguatingDescription, disambiguatingDescription),
                 field(Schema.description, description),
 
-                field(Schema.about, frame.values(Category, asString()).map(category -> frame(
+                field(Schema.about, frame.values(Category, Frame.asString()).map(category -> frame(
 
                         field(ID, item(Events.Topics, category)),
 

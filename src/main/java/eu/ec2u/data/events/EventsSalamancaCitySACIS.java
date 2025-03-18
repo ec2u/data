@@ -18,27 +18,28 @@ package eu.ec2u.data.events;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.XML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.feeds.RSS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.time.Instant;
 import java.util.Optional;
 
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
@@ -46,12 +47,16 @@ import static eu.ec2u.data.events.Events.startDate;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Salamanca;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsSalamancaCitySACIS implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/salamanca/city/sacis");
 
-    private static final Frame Publisher=Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("https://www.salamanca.com/actividades-eventos-propuestas-agenda-salamanca/")),
             field(TYPE, Organization),
@@ -127,14 +132,14 @@ public final class EventsSalamancaCitySACIS implements Runnable {
                     .map(text -> literal(text, Salamanca.language));
 
             final Optional<Literal> pubDate=RSS.pubDate(item)
-                    .map(Frame::literal);
+                    .map(Values::literal);
 
 
             return frame(
 
                     field(ID, iri(Events.Context, md5(url))),
 
-                    field(RDF.TYPE, Events.Event),
+                    field(TYPE, Events.Event),
 
                     field(Schema.url, iri(url)),
                     field(Schema.name, name),

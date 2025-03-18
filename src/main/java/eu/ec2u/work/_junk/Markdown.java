@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work;
+package eu.ec2u.work._junk;
 
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.services.Analyzer;
 
 import org.w3c.dom.Document;

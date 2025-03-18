@@ -18,8 +18,8 @@ package eu.ec2u.data.concepts;
 
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.feeds.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
@@ -28,14 +28,19 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import java.util.Collection;
 import java.util.Optional;
 
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.toolkits.Resources.resource;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.BASE;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.resources.Resources.locales;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 
 /**
@@ -97,7 +102,8 @@ public final class SDGs implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static class FrameCSVProcessor extends CSVProcessor<Frame> {
+    private static class FrameCSVProcessor extends CSVProcessor<
+            Frame> {
 
         @Override protected Optional<Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
             return value(record, "Goal Number").map(number -> {

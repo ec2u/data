@@ -18,10 +18,12 @@ package eu.ec2u.data.resources;
 
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
-import com.metreeca.flow.jsonld.handlers.Driver;
-import com.metreeca.flow.jsonld.handlers.Relator;
-import com.metreeca.link.Shape;
 
+import eu.ec2u.data.EC2U;
+import eu.ec2u.work._junk.Driver;
+import eu.ec2u.work._junk.Filter;
+import eu.ec2u.work._junk.Relator;
+import eu.ec2u.work._junk.Shape;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -31,31 +33,33 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Handler.handler;
-import static com.metreeca.link.Constraint.any;
-import static com.metreeca.link.Expression.expression;
-import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.filter;
-import static com.metreeca.link.Query.query;
-import static com.metreeca.link.Shape.*;
+import static com.metreeca.flow.rdf.Values.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.universities.Universities.University;
+import static eu.ec2u.work._junk.Filter.*;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
+import static eu.ec2u.work._junk.Shape.*;
+import static eu.ec2u.work._junk.Shape.bool;
+import static eu.ec2u.work._junk.Shape.text;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toUnmodifiableSet;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 
 public final class Resources extends Delegator {
 
-    public static final IRI Context=item("/resources/");
+    public static final IRI Context=EC2U.item("/resources/");
 
-    public static final IRI Resource=term("Resource");
+    public static final IRI Resource=EC2U.term("Resource");
 
-    public static final IRI generated=term("generated");
-    public static final IRI university=term("university");
-    public static final IRI concept=term("concept");
+    public static final IRI generated=EC2U.term("generated");
+    public static final IRI university=EC2U.term("university");
+    public static final IRI concept=EC2U.term("concept");
 
 
     private static final Set<String> locales=Stream
@@ -113,7 +117,7 @@ public final class Resources extends Delegator {
                         field(ID, iri()),
                         field(RDFS.LABEL, literal("EC2U Knowledge Hub Resources", "en")),
 
-                        field(RDFS.MEMBER, query(
+                        field(RDFS.MEMBER, Filter.query(
 
                                 frame(
 

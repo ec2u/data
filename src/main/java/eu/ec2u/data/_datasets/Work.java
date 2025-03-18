@@ -16,21 +16,22 @@
 
 package eu.ec2u.data._datasets;
 
-import com.metreeca.flow.jsonld.actions.Validate;
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Translator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.bean.Beans;
 
 import eu.ec2u.data._assets.License;
 
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.jsonld.formats.JSONLD.store;
+import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Translator.translator;
-import static com.metreeca.mesh.Values.uri;
+import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.bean.Beans.bean;
 
 import static eu.ec2u.data.Data.exec;
@@ -38,13 +39,13 @@ import static eu.ec2u.data.Data.exec;
 public final class Work {
 
     public static void main(final String... args) {
-        exec(() -> service(store()).insert(Xtream
+        exec(() -> service(store()).update(array(Xtream
 
                 .of(bean(Dataset.class)
 
                         // !!! void:rootResource void:Dataset ;
 
-                        .setId(uri("/"))
+                        .setId(URI.create("/"))
 
                         .setTitle(localize(Map.of(
                                 Locale.ENGLISH, "EC2U Dataset Catalog"
@@ -60,7 +61,7 @@ public final class Work {
 
                         .setRights("Copyright © 2022-2024 EC2U Alliance")
 
-                        .setIsDefinedBy(uri("/datasets/"))
+                        .setIsDefinedBy(URI.create("/datasets/"))
 
                         .setLicenses(Set.of(
                                 License.CCBYNCND40()
@@ -71,7 +72,7 @@ public final class Work {
                 .map(Beans::value)
                 .optMap(new Validate().deep(true))
                 .toList()
-        ));
+        )));
     }
 
 

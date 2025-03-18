@@ -16,22 +16,27 @@
 
 package eu.ec2u.data.persons;
 
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.toolkits.Strings;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work._junk.Frame;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.toolkits.Strings.normalize;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.resources.Resources.university;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class Persons_ {
 
@@ -56,7 +61,7 @@ public final class Persons_ {
 
                             field(university, _university.id),
 
-                            field(FOAF.TITLE, title.map(Frame::literal)),
+                            field(FOAF.TITLE, title.map(Values::literal)),
                             field(FOAF.GIVEN_NAME, literal(givenName)),
                             field(FOAF.FAMILY_NAME, literal(familyName))
 
