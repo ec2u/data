@@ -16,23 +16,24 @@
 
 package eu.ec2u.work.feeds;
 
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.actions.Untag;
-import com.metreeca.link.Frame;
 
+import eu.ec2u.work._junk.Frame;
 import org.eclipse.rdf4j.model.IRI;
 import org.w3c.dom.Document;
 
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.flow.rdf.Values.iri;
 
 import static eu.ec2u.data.EC2U.term;
+import static eu.ec2u.work._junk.Frame.field;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
@@ -70,22 +71,22 @@ public final class RSS implements Function<Document, Xtream<Frame>> {
                 .map(XPath::new)
                 .flatMap(xpath -> xpath.paths("/rss/channel/item"))
 
-                .map(item -> frame(
+                .map(item -> Frame.frame(
 
-                        field(Title, item.string("title").map(Frame::literal)),
+                        field(Title, item.string("title").map(Values::literal)),
 
-                        field(Link, item.link("link").map(Frame::iri)),
-                        field(Category, item.strings("category").map(Frame::literal)),
+                        field(Link, item.link("link").map(Values::iri)),
+                        field(Category, item.strings("category").map(Values::literal)),
 
                         field(PubDate, item.string("pubDate")
                                 .map(RFC_1123_DATE_TIME::parse)
                                 .map(OffsetDateTime::from)
-                                .map(timestamp -> timestamp.withOffsetSameInstant(ZoneOffset.UTC))
-                                .map(Frame::literal)
+                                .map(timestamp -> timestamp.withOffsetSameInstant(UTC))
+                                .map(Values::literal)
                         ),
 
-                        field(Description, item.string("description").map(Frame::literal)),
-                        field(Encoded, item.string("content:encoded").map(Untag::untag).map(Frame::literal))
+                        field(Description, item.string("description").map(Values::literal)),
+                        field(Encoded, item.string("content:encoded").map(Untag::untag).map(Values::literal))
                 ));
 
     }

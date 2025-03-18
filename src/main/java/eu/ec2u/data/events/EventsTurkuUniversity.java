@@ -19,25 +19,25 @@ package eu.ec2u.data.events;
 import com.metreeca.flow.actions.Fetch;
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.Query;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.actions.Untag;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import eu.ec2u.work.feeds.Parsers;
 import jakarta.json.Json;
 import jakarta.json.JsonReader;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.io.InputStream;
 import java.time.Instant;
@@ -48,13 +48,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Formats.SQL_TIMESTAMP;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
 import static com.metreeca.flow.toolkits.Strings.TextLength;
 import static com.metreeca.flow.toolkits.Strings.clip;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
@@ -63,9 +64,13 @@ import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.things.Schema.location;
 import static eu.ec2u.data.universities.University.Turku;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsTurkuUniversity implements Runnable {
 
@@ -212,10 +217,10 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 field(ID, iri(Events.Context, md5(Publisher.id().orElseThrow().stringValue()+id))),
 
-                field(RDF.TYPE, Event),
+                field(TYPE, Event),
 
                 field(Schema.url, url
-                        .map(Frame::iri)
+                        .map(Values::iri)
                 ),
 
                 field(Schema.name, title),
@@ -242,11 +247,11 @@ public final class EventsTurkuUniversity implements Runnable {
         return json.string("url").map(id -> {
 
             final Optional<String> name=json.string("free_text");
-            final Optional<Value> url=json.string("url").flatMap(Parsers::url).map(Frame::iri);
+            final Optional<Value> url=json.string("url").flatMap(Parsers::url).map(Values::iri);
             final Optional<Value> addressCountry=Optional.ofNullable(Turku.country);
             final Optional<Value> addressLocality=Optional.ofNullable(Turku.city);
-            final Optional<Value> postalCode=json.string("postal_code").map(Frame::literal);
-            final Optional<Value> streetAddress=json.string("street").map(Frame::literal);
+            final Optional<Value> postalCode=json.string("postal_code").map(Values::literal);
+            final Optional<Value> streetAddress=json.string("street").map(Values::literal);
 
             // the same URL may be used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
 
@@ -259,7 +264,7 @@ public final class EventsTurkuUniversity implements Runnable {
                             field(ID, item(Locations.Context, Xtream
 
                                     .of(
-                                            Optional.of(id).map(Frame::literal), name.map(Frame::literal),
+                                            Optional.of(id).map(Values::literal), name.map(Values::literal),
                                             url, addressCountry, addressLocality, postalCode, streetAddress
                                     )
 
@@ -269,7 +274,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
                             )),
 
-                            field(RDF.TYPE, Schema.Place),
+                            field(TYPE, Schema.Place),
 
                             field(Schema.url, url),
                             field(Schema.name, name.map(text -> literal(text, Turku.language))),
@@ -286,7 +291,7 @@ public final class EventsTurkuUniversity implements Runnable {
 
                                     )),
 
-                                    field(RDF.TYPE, Schema.PostalAddress),
+                                    field(TYPE, Schema.PostalAddress),
 
                                     field(Schema.addressCountry, addressCountry),
                                     field(Schema.addressLocality, addressLocality),
@@ -309,10 +314,10 @@ public final class EventsTurkuUniversity implements Runnable {
 
                 field(ID, item(Organizations.Context, id)),
 
-                field(RDF.TYPE, Organization),
+                field(TYPE, Organization),
 
                 field(Schema.name, json.string("name").map(XPath::decode).map(text -> literal(text, Turku.language))),
-                field(Schema.email, json.string("email").map(Frame::literal))
+                field(Schema.email, json.string("email").map(Values::literal))
 
         ));
     }

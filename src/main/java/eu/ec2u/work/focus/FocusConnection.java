@@ -29,9 +29,9 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.forward;
+import static com.metreeca.flow.rdf.Values.reverse;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.link.Frame.forward;
-import static com.metreeca.link.Frame.reverse;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;

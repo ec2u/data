@@ -17,19 +17,20 @@
 package eu.ec2u.data.offerings;
 
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.services.Analyzer;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Extract;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 
@@ -37,14 +38,19 @@ import java.util.List;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.services.Analyzer.analyzer;
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.universities.University.Pavia;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static eu.ec2u.work.xlations.Xlations.translate;
 import static java.util.function.Predicate.not;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class OfferingsPaviaDoctorates implements Runnable {
 
@@ -71,7 +77,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
         final List<Frame> details=Xtream.from(doctorates)
 
-                .optMap(doctorate -> doctorate.value(Schema.url, asIRI()))
+                .optMap(doctorate -> doctorate.value(Schema.url, Frame.asIRI()))
                 .map(Value::stringValue)
 
                 .flatMap(this::doctorate)
@@ -166,7 +172,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                                     literal((language.equals(Pavia.language) ? "Dottorato in" : "Doctorate in ")+name, language)
                             )),
 
-                            field(Schema.url, program.string("url").map(Frame::iri)),
+                            field(Schema.url, program.string("url").map(Values::iri)),
 
                             field(Offerings.educationalLevel, ISCED2011.Level8),
                             field(Offerings.educationalCredentialAwarded, literal("Dottorato di Ricerca", Pavia.language))

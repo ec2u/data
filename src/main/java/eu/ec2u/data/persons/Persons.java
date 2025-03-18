@@ -17,19 +17,18 @@
 package eu.ec2u.data.persons;
 
 import com.metreeca.flow.handlers.Delegator;
-import com.metreeca.link.Shape;
 
+import eu.ec2u.work._junk.Shape;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.ORG;
-
-import static com.metreeca.link.Shape.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.agents.Agents.Agent;
 import static eu.ec2u.data.organizations.Organizations.Organization;
+import static eu.ec2u.work._junk.Shape.*;
 
 public final class Persons extends Delegator {
 

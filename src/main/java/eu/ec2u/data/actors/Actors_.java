@@ -18,12 +18,13 @@ package eu.ec2u.data.actors;
 
 import com.metreeca.flow.actions.GET;
 import com.metreeca.flow.csv.formats.CSV;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.work._junk.Frame;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
@@ -37,19 +38,21 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.rdf.Values.statement;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.universities.University.*;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class Actors_ implements Runnable {
 
@@ -347,7 +350,7 @@ public final class Actors_ implements Runnable {
         return Optional.ofNullable(map().get(normalize(record.get(col("AG"))))).or(() -> Optional
                 .of(normalize(record.get(col("AI"))))
                 .filter(not(("i don't know / no opinion")::equals))
-                .map(Frame::literal)
+                .map(Values::literal)
         );
     }
 
@@ -822,7 +825,7 @@ public final class Actors_ implements Runnable {
     private static Optional<Literal> open(final CSVRecord record, final String col) {
         return Optional.of(normalize(record.get(col(col))))
                 .filter(not(String::isEmpty))
-                .map(Frame::literal);
+                .map(Values::literal);
     }
 
     private static Optional<Literal> other(final String value) {

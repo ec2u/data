@@ -16,18 +16,19 @@
 
 package eu.ec2u.data.organizations;
 
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.focus.Focus;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.Optional;
 
-import static com.metreeca.link.Frame.*;
-
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.skolemize;
+import static eu.ec2u.work._junk.Frame.*;
+import static org.eclipse.rdf4j.model.util.Values.literal;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class Organizations_ {
 
@@ -38,7 +39,7 @@ public final class Organizations_ {
 
                         field(ID, item(Organizations.Context, skolemize(focus, Schema.name, Schema.legalName))),
 
-                        field(RDF.TYPE, Schema.Organization),
+                        field(TYPE, Schema.Organization),
 
                         field(Schema.url, focus.seq(Schema.url).value()),
                         field(Schema.identifier, focus.seq(Schema.identifier).value()),

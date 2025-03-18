@@ -18,21 +18,21 @@ package eu.ec2u.work.feeds;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.actions.Untag;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.*;
@@ -40,19 +40,24 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.toolkits.Formats.SQL_TIMESTAMP;
 import static com.metreeca.flow.toolkits.Identifiers.md5;
 import static com.metreeca.flow.toolkits.Strings.TextLength;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.*;
 import static eu.ec2u.data.things.Schema.location;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 
 public final class Tribe implements Function<Instant, Xtream<Frame>> {
@@ -206,18 +211,18 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 field(ID, iri(Context, md5(id))),
 
-                field(RDF.TYPE, Event),
+                field(TYPE, Event),
 
                 field(Schema.about, event.paths("categories.*").optMap(this::category)),
 
-                field(Schema.url, event.string("url").flatMap(Parsers::url).map(Frame::iri)),
+                field(Schema.url, event.string("url").flatMap(Parsers::url).map(Values::iri)),
                 field(Schema.name, title),
                 field(Schema.description, description),
                 field(Schema.disambiguatingDescription, excerpt),
 
                 field(Schema.image, event.string("image.url")
                         .flatMap(Parsers::url)
-                        .map(Frame::iri)
+                        .map(Values::iri)
                         .map(iri -> frame(
                                 field(ID, iri),
                                 field(TYPE, Schema.ImageObject),
@@ -249,7 +254,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                     field(ID, item(Topics, self)),
 
-                    field(RDF.TYPE, SKOS.CONCEPT),
+                    field(TYPE, SKOS.CONCEPT),
                     field(SKOS.TOP_CONCEPT_OF, Topics),
                     field(SKOS.PREF_LABEL, name)
 
@@ -263,12 +268,12 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                 field(ID, item(Organizations.Context, id)),
 
-                field(RDF.TYPE, Schema.Organization),
+                field(TYPE, Schema.Organization),
 
-                field(Schema.url, organizer.string("website").flatMap(Parsers::url).map(Frame::iri)),
+                field(Schema.url, organizer.string("website").flatMap(Parsers::url).map(Values::iri)),
                 field(Schema.name, organizer.string("organizer").map(XPath::decode).map(text -> literal(text, language))),
-                field(Schema.email, organizer.string("email").map(Frame::literal)),
-                field(Schema.telephone, organizer.string("phone").map(Frame::literal))
+                field(Schema.email, organizer.string("email").map(Values::literal)),
+                field(Schema.telephone, organizer.string("phone").map(Values::literal))
 
         ));
     }
@@ -280,7 +285,7 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
             final Optional<Value> addressCountry=Optional.ofNullable(country);
             final Optional<Value> addressLocality=Optional.ofNullable(locality);
-            final Optional<Value> streetAddress=location.string("address").map(Frame::literal);
+            final Optional<Value> streetAddress=location.string("address").map(Values::literal);
 
             return frame(
 
@@ -290,13 +295,13 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
 
                             field(ID, item(Locations.Context, id)),
 
-                            field(RDF.TYPE, Schema.Place),
+                            field(TYPE, Schema.Place),
 
-                            field(Schema.url, location.string("url").map(Frame::iri)),
+                            field(Schema.url, location.string("url").map(Values::iri)),
                             field(Schema.name, (location.string("venue")).map(text -> literal(text, language))),
 
-                            field(Schema.latitude, location.decimal("geo_lat").map(Frame::literal)),
-                            field(Schema.longitude, location.decimal("geo_lng").map(Frame::literal)),
+                            field(Schema.latitude, location.decimal("geo_lat").map(Values::literal)),
+                            field(Schema.longitude, location.decimal("geo_lng").map(Values::literal)),
 
                             field(Schema.address, frame(
 
@@ -307,15 +312,15 @@ public final class Tribe implements Function<Instant, Xtream<Frame>> {
                                             .collect(joining("\n")))
                                     ),
 
-                                    field(RDF.TYPE, Schema.PostalAddress),
+                                    field(TYPE, Schema.PostalAddress),
 
                                     field(Schema.addressCountry, addressCountry),
                                     field(Schema.addressLocality, addressLocality),
                                     field(Schema.streetAddress, streetAddress),
 
-                                    field(Schema.url, location.string("website").flatMap(Parsers::url).map(Frame::iri)),
-                                    field(Schema.email, location.string("email").map(Frame::literal)),
-                                    field(Schema.telephone, location.string("phone").map(Frame::literal))
+                                    field(Schema.url, location.string("website").flatMap(Parsers::url).map(Values::iri)),
+                                    field(Schema.email, location.string("email").map(Values::literal)),
+                                    field(Schema.telephone, location.string("phone").map(Values::literal))
 
                             ))
 

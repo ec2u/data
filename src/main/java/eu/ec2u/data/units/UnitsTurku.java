@@ -19,14 +19,14 @@ package eu.ec2u.data.units;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
+import eu.ec2u.work._junk.Frame;
 import org.eclipse.rdf4j.model.IRI;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.universities.University.Turku;

@@ -17,15 +17,14 @@
 package eu.ec2u.data.offerings;
 
 import com.metreeca.flow.actions.*;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.XML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
 import eu.ec2u.data.concepts.SDGs;
@@ -36,6 +35,8 @@ import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import eu.ec2u.work.feeds.Parsers;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -60,19 +61,23 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.Request.POST;
 import static com.metreeca.flow.Request.basic;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.universities.University.Pavia;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class OfferingsPavia implements Runnable {
 
@@ -162,7 +167,7 @@ public final class OfferingsPavia implements Runnable {
 
                 .distinct(frame -> frame.id()
                         .filter(iri -> frame.value(reverse(Programs.hasCourse)).isEmpty())
-                        .orElseGet(Frame::iri)
+                        .orElseGet(Values::iri)
                 )
 
                 .flatMap(Frame::stream)
@@ -401,7 +406,7 @@ public final class OfferingsPavia implements Runnable {
 
                                     field(Schema.inLanguage, af.strings("ns2:linDid/ns2:linDidAf/ns2:linDidDes")
                                             .flatMap(Parsers::languages)
-                                            .map(Frame::literal)
+                                            .map(Values::literal)
                                     ),
 
                                     field(Courses.courseMode, af.string("ns2:modDid/ns2:modDidAf/ns2:modDidDes")

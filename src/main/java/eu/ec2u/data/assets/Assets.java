@@ -16,21 +16,20 @@
 
 package eu.ec2u.data.assets;
 
+import com.metreeca.flow.Handler;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
-import com.metreeca.flow.jsonld.handlers.Driver;
-import com.metreeca.flow.jsonld.handlers.Relator;
-import com.metreeca.link.Shape;
 
+import eu.ec2u.work._junk.Driver;
+import eu.ec2u.work._junk.Filter;
+import eu.ec2u.work._junk.Relator;
+import eu.ec2u.work._junk.Shape;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 
-import static com.metreeca.flow.Handler.handler;
-import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.query;
-import static com.metreeca.link.Shape.integer;
-import static com.metreeca.link.Shape.*;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
@@ -38,6 +37,10 @@ import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.organizations.Organizations.Organization;
 import static eu.ec2u.data.resources.Resources.Resource;
 import static eu.ec2u.data.resources.Resources.locales;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
+import static eu.ec2u.work._junk.Shape.*;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class Assets extends Delegator {
 
@@ -90,7 +93,7 @@ public final class Assets extends Delegator {
                         field(ID, iri()),
                         field(RDFS.LABEL, literal("Assets", "en")),
 
-                        field(RDFS.MEMBER, query(
+                        field(RDFS.MEMBER, Filter.query(
 
                                 frame(
                                         field(ID, iri()),
@@ -102,6 +105,10 @@ public final class Assets extends Delegator {
                 )))
 
         ));
+    }
+
+    private Handler handler(Driver driver, Worker worker) {
+        return null;
     }
 
 }

@@ -17,19 +17,20 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.services.Analyzer;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Update;
 import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Locations;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -48,20 +49,24 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.services.Analyzer.analyzer;
-import static com.metreeca.flow.rdf.Values.guarded;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Logger.time;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.flow.toolkits.Resources.text;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.BASE;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.EventAttendanceModeEnumeration.*;
+import static eu.ec2u.data.events.Events.Topics;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static eu.ec2u.work.xlations.Xlations.translate;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 
 final class Events_ {
@@ -323,7 +328,7 @@ final class Events_ {
 
                                 field(Schema.image, event.string("imageURL")
                                         .map(guarded(base::resolve))
-                                        .map(Frame::iri)
+                                        .map(Values::iri)
                                         .map(iri -> frame(
 
                                                 field(ID, iri),
@@ -355,7 +360,7 @@ final class Events_ {
 
 
                                 field(Events.eventAttendanceMode, attendanceMode),
-                                field(Schema.isAccessibleForFree, entryFees.map(Frame::literal)),
+                                field(Schema.isAccessibleForFree, entryFees.map(Values::literal)),
 
                                 // !!! field(Schema.about, event.strings("tags.*").map(tag -> frame(
                                 //
@@ -382,7 +387,7 @@ final class Events_ {
                                                 field(Schema.streetAddress, literal(a))
                                         ))
 
-                                        .or(() -> venueName.map(Frame::literal))
+                                        .or(() -> venueName.map(Values::literal))
 
                                 )
 

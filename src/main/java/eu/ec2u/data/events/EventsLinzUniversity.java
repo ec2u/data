@@ -20,19 +20,24 @@ import com.metreeca.flow.actions.GET;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import org.eclipse.rdf4j.model.IRI;
 
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.universities.University.Linz;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.util.Map.entry;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsLinzUniversity implements Runnable {
 

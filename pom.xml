@@ -109,15 +109,10 @@
             <artifactId>mesh-rdf4j</artifactId>
         </dependency>
 
-        <dependency> <!-- !!! mesh -->
-            <groupId>com.metreeca</groupId>
-            <artifactId>link-rdf4j</artifactId>
-        </dependency>
-
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>flow-jsonld</artifactId>
+            <artifactId>flow-json</artifactId>
         </dependency>
 
         <dependency>

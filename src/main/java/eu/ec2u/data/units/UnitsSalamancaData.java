@@ -18,17 +18,21 @@ package eu.ec2u.data.units;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.persons.Persons;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
+import org.eclipse.rdf4j.model.vocabulary.ORG;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.time.Instant;
 import java.util.Base64;
@@ -37,9 +41,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.*;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Strings.split;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -48,9 +52,13 @@ import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.units.Units.ResearchTopics;
 import static eu.ec2u.data.units.Units.Unit;
 import static eu.ec2u.data.universities.University.Salamanca;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.function.Predicate.not;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class UnitsSalamancaData implements Runnable {
 
@@ -126,7 +134,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                     field(ID, item(Units.Context, Salamanca, id)),
 
-                    field(RDF.TYPE, Unit),
+                    field(TYPE, Unit),
                     field(university, Salamanca.id),
 
                     field(DCTERMS.TITLE, label),
@@ -140,7 +148,7 @@ public final class UnitsSalamancaData implements Runnable {
                             .flatMap(v -> split(v, "[,;]"))
                             .map(v -> frame(
                                     field(ID, item(ResearchTopics, Salamanca, "branch: "+v)),
-                                    field(RDF.TYPE, SKOS.CONCEPT),
+                                    field(TYPE, SKOS.CONCEPT),
                                     field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
                                     field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
 
@@ -151,7 +159,7 @@ public final class UnitsSalamancaData implements Runnable {
                             .flatMap(v -> split(v, "[,;]"))
                             .map(v -> frame(
                                     field(ID, item(ResearchTopics, Salamanca, "ris3"+v)),
-                                    field(RDF.TYPE, SKOS.CONCEPT),
+                                    field(TYPE, SKOS.CONCEPT),
                                     field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
                                     field(SKOS.PREF_LABEL, literal(v, Salamanca.language))
                             ))
@@ -159,7 +167,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                     field(FOAF.HOMEPAGE, json.string("group_scientific_portal_url")
                             .filter(not(String::isEmpty))
-                            .map(Frame::iri)
+                            .map(Values::iri)
                     ),
 
                     field(SKOS.PREF_LABEL, label),
@@ -223,14 +231,14 @@ public final class UnitsSalamancaData implements Runnable {
 
                     field(ID, item(Units.Context, Salamanca, name)),
 
-                    field(RDF.TYPE, Unit),
+                    field(TYPE, Unit),
                     field(university, Salamanca.id),
 
                     field(DCTERMS.TITLE, title),
                     field(SKOS.PREF_LABEL, title),
 
-                    field(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Frame::iri)),
-                    field(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Frame::iri)),
+                    field(FOAF.HOMEPAGE, json.string("department_web_usal_url").map(Values::iri)),
+                    field(FOAF.HOMEPAGE, json.string("department_scientific_portal_url").map(Values::iri)),
 
                     field(ORG.CLASSIFICATION, Department),
                     field(ORG.UNIT_OF, Salamanca.id)
@@ -248,7 +256,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                     field(ID, item(Units.Context, Salamanca, name)),
 
-                    field(RDF.TYPE, Unit),
+                    field(TYPE, Unit),
                     field(university, Salamanca.id),
 
                     field(DCTERMS.TITLE, title),
@@ -256,7 +264,7 @@ public final class UnitsSalamancaData implements Runnable {
 
                     field(FOAF.HOMEPAGE, json.string("institute_webusal_url").stream()
                             .flatMap(v -> split(v, ','))
-                            .map(Frame::iri)
+                            .map(Values::iri)
                     ),
 
                     field(ORG.CLASSIFICATION, Institute),

@@ -16,40 +16,42 @@
 
 package eu.ec2u.data.documents;
 
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.*;
 
 import java.util.Collection;
 import java.util.Optional;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Strings.lower;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.concepts.Concepts_.concept;
 import static eu.ec2u.data.documents.Documents.Document;
 import static eu.ec2u.data.persons.Persons_.person;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static eu.ec2u.work.feeds.Parsers.url;
 import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 final class Documents_ {
 
@@ -121,8 +123,8 @@ final class Documents_ {
 
                     field(Resources.university, university.id),
 
-                    field(Schema.url, value(record, "URL (English)", Parsers::uri).map(Frame::iri)),
-                    field(Schema.url, value(record, "URL (Local)", Parsers::uri).map(Frame::iri)),
+                    field(Schema.url, value(record, "URL (English)", Parsers::uri).map(Values::iri)),
+                    field(Schema.url, value(record, "URL (Local)", Parsers::uri).map(Values::iri)),
 
                     field(DCTERMS.IDENTIFIER, value(record, "Identifier")
                             .map(Values::literal)
@@ -179,7 +181,7 @@ final class Documents_ {
                     )),
 
                     field(DCTERMS.RIGHTS, value(record, "Rights")
-                            .map(Frame::literal)
+                            .map(Values::literal)
                     ),
 
                     field(DCTERMS.ACCESS_RIGHTS, value(record, "License", this::license)
@@ -188,7 +190,7 @@ final class Documents_ {
 
                     field(DCTERMS.LICENSE, value(record, "License", this::license)
                             .flatMap(Parsers::url)
-                            .map(Frame::iri)
+                            .map(Values::iri)
                     ),
 
                     field(DCTERMS.TYPE, value(record, "Type", type ->
@@ -238,7 +240,7 @@ final class Documents_ {
 
         private Optional<Frame> publisher(final CSVRecord record) {
 
-            final Optional<IRI> home=value(record, "Home", Parsers::uri).map(Frame::iri);
+            final Optional<IRI> home=value(record, "Home", Parsers::uri).map(com.metreeca.flow.rdf.Values::iri);
             final Optional<String> nameEnglish=value(record, "Publisher (English)");
             final Optional<String> nameLocal=value(record, "Publisher (Local)");
 
@@ -288,7 +290,7 @@ final class Documents_ {
                     .map(this::id)
                     .flatMap(Optional::stream)
 
-                    .collect(toList());
+                    .toList();
 
             if ( matches.isEmpty() ) {
                 warning(format("no matches for reference <%s>", reference));

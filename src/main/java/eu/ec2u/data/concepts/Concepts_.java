@@ -16,19 +16,22 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.link.Frame;
 
+import eu.ec2u.work._junk.Frame;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Optional;
 
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.toolkits.Strings.lower;
 import static com.metreeca.flow.toolkits.Strings.title;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class Concepts_ {
 

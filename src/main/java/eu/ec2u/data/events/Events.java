@@ -19,13 +19,10 @@ package eu.ec2u.data.events;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
-import com.metreeca.flow.jsonld.handlers.Driver;
-import com.metreeca.flow.jsonld.handlers.Relator;
-import com.metreeca.link.Frame;
-import com.metreeca.link.Shape;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.work._junk.*;
 import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
@@ -34,9 +31,7 @@ import org.eclipse.rdf4j.model.vocabulary.XSD;
 import java.time.OffsetDateTime;
 
 import static com.metreeca.flow.Handler.handler;
-import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.query;
-import static com.metreeca.link.Shape.*;
+import static com.metreeca.flow.rdf.Values.iri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.create;
@@ -44,6 +39,11 @@ import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
 import static eu.ec2u.data.things.Schema.*;
+import static eu.ec2u.work._junk.Frame.*;
+import static eu.ec2u.work._junk.Frame.decimal;
+import static eu.ec2u.work._junk.Shape.*;
+import static org.eclipse.rdf4j.model.util.Values.literal;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class Events extends Delegator {
 
@@ -176,7 +176,7 @@ public final class Events extends Delegator {
 
         final Frame ResourceModel=frame(
                 field(ID, iri()),
-                field(RDFS.LABEL, literal("", ANY_LOCALE))
+                field(RDFS.LABEL, literal("", Shape.ANY_LOCALE))
         );
 
         final Frame ImageObjectModel=frame(
@@ -184,7 +184,7 @@ public final class Events extends Delegator {
                 field(ID, iri()),
 
                 field(url, iri()),
-                field(caption, literal("", ANY_LOCALE)),
+                field(caption, literal("", Shape.ANY_LOCALE)),
                 field(author, literal("")),
                 field(copyrightNotice, literal(""))
 
@@ -195,9 +195,9 @@ public final class Events extends Delegator {
                 field(ID, iri()),
 
                 field(url, iri()),
-                field(name, literal("", ANY_LOCALE)),
-                field(description, literal("", ANY_LOCALE)),
-                field(disambiguatingDescription, literal("", ANY_LOCALE)),
+                field(name, literal("", Shape.ANY_LOCALE)),
+                field(description, literal("", Shape.ANY_LOCALE)),
+                field(disambiguatingDescription, literal("", Shape.ANY_LOCALE)),
 
                 field(image, ImageObjectModel)
 
@@ -236,8 +236,8 @@ public final class Events extends Delegator {
 
                         field(Place, frame(ThingModel,
 
-                                field(latitude, literal(Frame.decimal(0))),
-                                field(longitude, literal(Frame.decimal(0))),
+                                field(latitude, literal(decimal(0))),
+                                field(longitude, literal(decimal(0))),
 
                                 field(address, PostalAddressModel)
 
@@ -263,9 +263,9 @@ public final class Events extends Delegator {
                         .get(new Relator(frame(
 
                                 field(ID, iri()),
-                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
+                                field(RDFS.LABEL, literal("", Shape.ANY_LOCALE)),
 
-                                field(RDFS.MEMBER, query(EventModel))
+                                field(RDFS.MEMBER, Filter.query(EventModel))
 
                         )))
 

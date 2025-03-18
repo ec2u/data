@@ -19,13 +19,14 @@ package eu.ec2u.data.units;
 import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
 import eu.ec2u.data.concepts.EuroSciVoc;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.Shape;
 import eu.ec2u.work.feeds.CSVProcessor;
 import eu.ec2u.work.feeds.Parsers;
 import org.apache.commons.csv.CSVFormat;
@@ -43,18 +44,23 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.reverse;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.concepts.OrganizationTypes.InstituteVirtual;
 import static eu.ec2u.data.persons.Persons_.person;
 import static eu.ec2u.data.units.Units.*;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.rdf4j.model.util.Values.literal;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class Units_ {
 
@@ -81,7 +87,7 @@ public final class Units_ {
 
         @Override protected Optional<Frame> process(final CSVRecord record, final Collection<CSVRecord> records) {
 
-            final Optional<Literal> acronym=value(record, "Acronym").map(v -> literal(v, NOT_LOCALE));
+            final Optional<Literal> acronym=value(record, "Acronym").map(v -> literal(v, Shape.NOT_LOCALE));
 
             final Optional<Literal> nameEnglish=value(record, "Name (English)").map(v -> literal(v, "en"));
             final Optional<Literal> nameLocal=value(record, "Name (Local)").map(v -> literal(v, university.language));
@@ -101,7 +107,7 @@ public final class Units_ {
                             .flatMap(this::type)
                     ),
 
-                    field(ORG.IDENTIFIER, value(record, "Code").map(Frame::literal)),
+                    field(ORG.IDENTIFIER, value(record, "Code").map(Values::literal)),
 
                     field(ORG.UNIT_OF, value(record, "Parent")
                             .map(parent -> parents(parent, records))
@@ -162,7 +168,7 @@ public final class Units_ {
                     ))),
 
 
-                    field(FOAF.MBOX, value(record, "Email", Parsers::email).map(Frame::literal)),
+                    field(FOAF.MBOX, value(record, "Email", Parsers::email).map(Values::literal)),
 
                     field(reverse(ORG.HEAD_OF), value(record, "Head", person -> person(person, university)))
 
@@ -361,7 +367,7 @@ public final class Units_ {
 
                     .map(label -> frame(
                             field(ID, EC2U.item(ResearchTopics, label.stringValue())),
-                            field(RDF.TYPE, SKOS.CONCEPT),
+                            field(TYPE, SKOS.CONCEPT),
                             field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
                             field(SKOS.PREF_LABEL, label)
                     ));

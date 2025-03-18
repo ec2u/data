@@ -17,17 +17,18 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.concepts.OrganizationTypes;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work.feeds.Tribe;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.time.Instant;
 
-import static com.metreeca.link.Frame.*;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.events.Events.publisher;
@@ -35,12 +36,16 @@ import static eu.ec2u.data.events.Events.startDate;
 import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.Organization;
 import static eu.ec2u.data.universities.University.Pavia;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
+import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class EventsPaviaBorromeo implements Runnable {
 
     private static final IRI Context=iri(Events.Context, "/pavia/borromeo");
 
-    private static final com.metreeca.link.Frame Publisher=com.metreeca.link.Frame.frame(
+    private static final Frame Publisher=frame(
 
             field(ID, iri("http://www.collegioborromeo.it/it/eventi/")),
             field(TYPE, Organization),

@@ -18,17 +18,18 @@ package eu.ec2u.data.offerings;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -39,8 +40,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.rdf.Values.literal;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
@@ -50,7 +52,10 @@ import static eu.ec2u.data.offerings.Offerings.numberOfCredits;
 import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
 import static eu.ec2u.data.programs.Programs.hasCourse;
 import static eu.ec2u.data.universities.University.Salamanca;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static java.util.Map.entry;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class OfferingsSalamanca implements Runnable {
 
@@ -143,7 +148,7 @@ public final class OfferingsSalamanca implements Runnable {
                         field(RDF.TYPE, EducationalOccupationalProgram),
                         field(Resources.university, Salamanca.id),
 
-                        field(Schema.url, json.string("programUrl").map(Frame::iri)),
+                        field(Schema.url, json.string("programUrl").map(Values::iri)),
                         field(Schema.identifier, literal(code)),
 
                         field(Schema.name, json.strings("programName").map(v -> literal(v, Salamanca.language)))
@@ -178,7 +183,7 @@ public final class OfferingsSalamanca implements Runnable {
                 field(RDF.TYPE, Course),
                 field(Resources.university, Salamanca.id),
 
-                field(Schema.url, json.string("urlEN").map(Frame::iri)),
+                field(Schema.url, json.string("urlEN").map(Values::iri)),
                 field(Schema.identifier, literal(code)),
 
                 field(Schema.name, Stream.concat(
@@ -190,12 +195,12 @@ public final class OfferingsSalamanca implements Runnable {
 
                 field(numberOfCredits, json.string("ects")
                         .map(Offerings_::ects)
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 ),
 
                 field(timeRequired, json.string("field_guias_asig_tdu_value")
                         .map(Durations::get)
-                        .map(Frame::literal)
+                        .map(Values::literal)
                 )
 
         ));

@@ -26,8 +26,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.link.Frame.forward;
-import static com.metreeca.link.Frame.reverse;
+import static com.metreeca.flow.rdf.Values.forward;
+import static com.metreeca.flow.rdf.Values.reverse;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
