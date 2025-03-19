@@ -16,16 +16,15 @@
 
 package eu.ec2u.data._assets;
 
-import com.metreeca.mesh.bean.jsonld.Namespace;
-import com.metreeca.mesh.bean.jsonld.Property;
-import com.metreeca.mesh.bean.jsonld.Type;
-import com.metreeca.mesh.bean.shacl.Required;
+import com.metreeca.mesh.mint.jsonld.Frame;
+import com.metreeca.mesh.mint.jsonld.Namespace;
+import com.metreeca.mesh.mint.jsonld.Property;
+import com.metreeca.mesh.mint.jsonld.Type;
+import com.metreeca.mesh.mint.shacl.Required;
 
 import eu.ec2u.data._resources.Localized;
 import eu.ec2u.data._resources.Resource;
 
-import java.beans.JavaBean;
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
@@ -37,22 +36,19 @@ import static com.metreeca.flow.toolkits.Strings.clip;
 
 import static java.util.stream.Collectors.toMap;
 
-@JavaBean
+@Frame
 @Type("ec2u:")
 @Namespace("http://purl.org/dc/terms/")
-public interface Asset<T extends Asset<T>> extends Resource<T> {
-
-    T setId(URI id);
-
+public interface Asset extends Resource {
 
     @Override
-    default Map<Locale, String> getLabel() {
-        return getTitle(); // !!! merge alternative / clip
+    default Map<Locale, String> label() {
+        return title(); // !!! merge alternative / clip
     }
 
     @Override
-    default Map<Locale, String> getComment() {
-        return Stream.ofNullable(getDescription())
+    default Map<Locale, String> comment() {
+        return Stream.ofNullable(description())
                 .flatMap(description -> description.entrySet().stream())
                 .collect(toMap(Entry::getKey, entry -> clip(entry.getValue())));
     }
@@ -60,51 +56,27 @@ public interface Asset<T extends Asset<T>> extends Resource<T> {
 
     @Required
     @Localized
-    Map<Locale, String> getTitle();
-
-    T setTitle(Map<Locale, String> title);
-
+    Map<Locale, String> title();
 
     @Localized
-    Map<Locale, String> getAlternative();
-
-    T setAlternative(Map<Locale, String> alternative);
-
+    Map<Locale, String> alternative();
 
     @Localized
-    Map<Locale, String> getDescription();
-
-    T setDescription(Map<Locale, String> description);
+    Map<Locale, String> description();
 
 
-    LocalDate getCreated();
+    LocalDate created();
 
-    T setCreated(LocalDate created);
+    LocalDate issued();
 
-
-    LocalDate getIssued();
-
-    T setIssued(LocalDate issued);
+    LocalDate modified();
 
 
-    LocalDate getModified();
+    String rights();
 
-    T setModified(LocalDate modified);
-
-
-    String getRights();
-
-    T setRights(String rights);
-
-
-    Entry<Locale, String> getAccessRights();
-
-    T setAccessRights(Entry<Locale, String> accessRights);
-
+    Entry<Locale, String> accessRights();
 
     @Property("license")
-    Set<License> getLicenses();
-
-    T setLicenses(Set<License> licenses);
+    Set<License> licenses();
 
 }
