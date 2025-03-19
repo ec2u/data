@@ -96,17 +96,18 @@
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>mesh-bean</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.metreeca</groupId>
             <artifactId>mesh-json</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.metreeca</groupId>
             <artifactId>mesh-rdf4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>mesh-mint</artifactId>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -434,7 +435,7 @@
 
             </plugin>
 
-            <plugin> <!-- https://central.sonatype.com/artifact/com.google.cloud.tools/appengine-maven-plugin/versions -->
+            <plugin> <!-- https://central.sonatype.com/artifact/com.google.cloud.tools/appengine-maven-plugin/ -->
 
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>

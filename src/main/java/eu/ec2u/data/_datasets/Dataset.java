@@ -16,16 +16,15 @@
 
 package eu.ec2u.data._datasets;
 
-import com.metreeca.mesh.bean.jsonld.Namespace;
-import com.metreeca.mesh.bean.jsonld.Type;
+import com.metreeca.mesh.mint.jsonld.Frame;
+import com.metreeca.mesh.mint.jsonld.Namespace;
+import com.metreeca.mesh.mint.jsonld.Type;
 
 import eu.ec2u.data._assets.Asset;
 
-import java.beans.JavaBean;
-
-@JavaBean
+@Frame
 @Type("void:")
 @Namespace(prefix="void", value="http://rdfs.org/ns/void#")
-public interface Dataset extends Asset<Dataset> {
+public interface Dataset extends Asset {
 
 }

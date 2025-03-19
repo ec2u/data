@@ -14,40 +14,17 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._resources;
+package eu.ec2u.data._organizations;
 
 import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Id;
 import com.metreeca.mesh.mint.jsonld.Namespace;
-import com.metreeca.mesh.mint.jsonld.Property;
-import com.metreeca.mesh.mint.shacl.MaxLength;
-import com.metreeca.mesh.mint.shacl.Required;
+import com.metreeca.mesh.mint.jsonld.Type;
 
-import java.net.URI;
-import java.util.Locale;
-import java.util.Map;
+import eu.ec2u.data._agents.Agent;
 
 @Frame
-@Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
-public interface Reference {
-
-    int LabelLength=100;
-    int CommentLength=1000;
-
-
-    @Id
-    URI id();
-
-
-    @Required
-    @Localized
-    @MaxLength(LabelLength)
-    @Property("rdfs:")
-    Map<Locale, String> label();
-
-    @Localized
-    @MaxLength(CommentLength)
-    @Property("rdfs:")
-    Map<Locale, String> comment();
+@Namespace("")
+@Type
+public interface Organization extends Agent {
 
 }
