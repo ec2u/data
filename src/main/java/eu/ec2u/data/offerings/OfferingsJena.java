@@ -95,7 +95,7 @@ public final class OfferingsJena implements Runnable {
                 .flatMap(this::programs)
                 .optMap(this::program)
 
-                .flatMap(com.metreeca.link.Frame::stream)
+                .flatMap(Frame::stream)
                 .batch(0)
 
                 .forEach(new Upload()

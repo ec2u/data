@@ -26,7 +26,6 @@ import com.metreeca.flow.openai.services.OpenAnalyzer;
 import com.metreeca.flow.rdf4j.handlers.Graphs;
 import com.metreeca.flow.rdf4j.handlers.SPARQL;
 import com.metreeca.flow.rdf4j.services.Graph;
-import com.metreeca.flow.rdf4j.services.GraphTranslator;
 import com.metreeca.flow.services.Cache.FileCache;
 import com.metreeca.flow.services.Fetcher.CacheFetcher;
 import com.metreeca.flow.services.Fetcher.URLFetcher;
@@ -95,7 +94,7 @@ public final class Data extends Delegator {
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
 
                 .set(translator(), () -> new CacheTranslator(new ComboTranslator(
-                        new GraphTranslator(),
+                        // !!! new GraphTranslator(),
                         new GCPTranslator()
                 )));
 

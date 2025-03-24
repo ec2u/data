@@ -42,6 +42,14 @@ cron:
     url: /cron/offerings/jena
     schedule: every 1 of month 00:00
 
+  - description: "offerings › linz › programs - monthly crawling"
+    url: /cron/offerings/linz/programs
+    schedule: every 1 of month 00:00
+
+  - description: "offerings › linz › courses - monthly crawling"
+    url: /cron/offerings/linz/courses
+    schedule: every 1 of month 00:00
+
   - description: "offerings › pavia - monthly crawling"
     url: /cron/offerings/pavia
     schedule: every 1 of month 00:00
