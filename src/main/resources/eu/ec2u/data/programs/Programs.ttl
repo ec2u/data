@@ -12,7 +12,7 @@
     dct:alternative "EC2U Programs"@en ;
     dct:description "Degree and occupational programs offered by EC2U allied universities."@en ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:rights "Copyright © 2022-2025 EC2U Alliance" ;
     dct:issued "2022-03-10"^^xsd:date ;
     void:rootResource schema:EducationalOccupationalProgram ;
     rdfs:isDefinedBy </datasets/offerings> .

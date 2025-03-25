@@ -11,7 +11,7 @@
     dct:alternative "EC2U Datasets"@en ;
     dct:description "Datasets published on the EC2U Knowledge Hub."@en ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:rights "Copyright © 2022-2025 EC2U Alliance" ;
     void:rootResource void:Dataset ;
     rdfs:isDefinedBy </datasets/> .
 
