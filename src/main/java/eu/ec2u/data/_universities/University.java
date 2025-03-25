@@ -17,6 +17,7 @@
 package eu.ec2u.data._universities;
 
 import com.metreeca.mesh.mint.jsonld.Frame;
+import com.metreeca.mesh.mint.jsonld.Internal;
 import com.metreeca.mesh.mint.jsonld.Namespace;
 import com.metreeca.mesh.mint.jsonld.Type;
 import com.metreeca.mesh.mint.shacl.Required;
@@ -25,6 +26,8 @@ import eu.ec2u.data._organizations.FormalOrganization;
 import eu.ec2u.data._resources.GeoReference;
 
 import java.net.URI;
+import java.time.ZoneId;
+import java.util.Locale;
 
 import static eu.ec2u.data._universities.UniversityFrame.University;
 
@@ -34,10 +37,9 @@ import static eu.ec2u.data._universities.UniversityFrame.University;
 public interface University extends FormalOrganization {
 
     University Pavia=University()
-            .id(URI.create("")) // !!! string
-            // .locale(Locale.ITALIAN)
-            // .zone(ZoneId.of("Europe/Rome"))
-            ;
+            .id(URI.create("")) // !!! string?
+            .locale(Locale.ITALIAN)
+            .zone(ZoneId.of("Europe/Rome"));
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +51,10 @@ public interface University extends FormalOrganization {
     GeoReference country();
 
 
-    // Locale locale(); // !!! don't map to value
+    @Internal
+    Locale locale();
 
-    // ZoneId zone();  // !!! don't map to value
+    @Internal
+    ZoneId zone();
 
 }
