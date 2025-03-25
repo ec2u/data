@@ -22,14 +22,13 @@ import com.metreeca.mesh.mint.shacl.LanguageIn;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ FIELD, METHOD })
+@Target(METHOD)
 @Retention(RUNTIME)
 @Alias(
-        LanguageIn=@LanguageIn({ "", "en", "de", "es", "fi", "fr", "it", "pt", "ro" })
+        LanguageIn=@LanguageIn({ "", "en", "de", "es", "fi", "fr", "it", "pt", "ro", "sv" })
 )
 public @interface Localized {
 
