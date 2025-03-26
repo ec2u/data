@@ -16,29 +16,47 @@
 
 package eu.ec2u.data._universities;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Internal;
-import com.metreeca.mesh.mint.jsonld.Namespace;
-import com.metreeca.mesh.mint.jsonld.Type;
-import com.metreeca.mesh.mint.shacl.Required;
+import com.metreeca.flow.Handler;
+import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Internal;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._organizations.FormalOrganization;
+import eu.ec2u.data._organizations.OrgFormalOrganization;
 import eu.ec2u.data._resources.GeoReference;
+import eu.ec2u.data._resources.Resource;
 
-import java.net.URI;
 import java.time.ZoneId;
 import java.util.Locale;
 
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.meta.Values.model;
+import static com.metreeca.mesh.meta.Values.value;
+import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.mesh.util.Locales.ANY_LOCALE;
+import static com.metreeca.mesh.util.URIs.uri;
+
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._resources.Localized.EN;
+import static eu.ec2u.data._resources.Localized.IT;
 import static eu.ec2u.data._universities.UniversityFrame.University;
+import static java.util.Map.entry;
 
 @Frame
-@Namespace("ec2u:")
-@Type
-public interface University extends FormalOrganization {
+@Namespace("[ec2u]")
+public interface University extends Resource, OrgFormalOrganization {
 
     University Pavia=University()
-            .id(URI.create("")) // !!! string?
-            .locale(Locale.ITALIAN)
+            .id(Universities.ID.resolve("pavia"))
+            .prefLabel(map(
+                    entry(EN, "University of Pavia"),
+                    entry(IT, "Università di Pavia")
+            ))
+            .locale(IT)
             .zone(ZoneId.of("Europe/Rome"));
 
 
@@ -56,5 +74,23 @@ public interface University extends FormalOrganization {
 
     @Internal
     ZoneId zone();
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    static void main(final String... args) {
+        exec(() -> service(store()).update((array(
+                value(Pavia)
+        )), true));
+    }
+
+    static Handler handler() {
+        return new Worker().get(new Relator(model(University()
+
+                .id(uri())
+                .label(map(entry(ANY_LOCALE, "")))
+
+        )));
+    }
 
 }

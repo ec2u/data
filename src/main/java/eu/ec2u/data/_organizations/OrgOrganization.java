@@ -16,15 +16,26 @@
 
 package eu.ec2u.data._organizations;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Namespace;
-import com.metreeca.mesh.mint.jsonld.Type;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._agents.Agent;
+import eu.ec2u.data._agents.FOAFAgent;
+import eu.ec2u.data._resources.Localized;
+
+import java.util.Locale;
+import java.util.Map;
 
 @Frame
-@Namespace("")
-@Type
-public interface Organization extends Agent {
+@Namespace(prefix="[org]", value="http://www.w3.org/ns/org#")
+@Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
+public interface OrgOrganization extends FOAFAgent {
+
+    @Required
+    @Localized
+    Map<Locale, String> prefLabel();
+
+    @Localized
+    Map<Locale, String> altLabel();
 
 }

@@ -16,7 +16,7 @@
 
 package eu.ec2u.data._assets;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data._resources.Reference;
 
@@ -29,11 +29,9 @@ import static java.util.Locale.ROOT;
 @Frame
 public interface License extends Reference {
 
-    static License CCBYNCND40() {
-        return License()
-                .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
-                .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
-                .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
-    }
+    License CCBYNCND40=License()
+            .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
+            .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
+            .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
 
 }

@@ -16,19 +16,19 @@
 
 package eu.ec2u.data._resources;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Id;
-import com.metreeca.mesh.mint.jsonld.Namespace;
-import com.metreeca.mesh.mint.jsonld.Property;
-import com.metreeca.mesh.mint.shacl.MaxLength;
-import com.metreeca.mesh.mint.shacl.Required;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Id;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Type;
+import com.metreeca.mesh.meta.shacl.MaxLength;
+import com.metreeca.mesh.meta.shacl.Required;
 
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 
 @Frame
-@Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
+@Namespace(prefix="[rdfs]", value="http://www.w3.org/2000/01/rdf-schema#")
 public interface Reference {
 
     int LabelLength=100;
@@ -38,16 +38,17 @@ public interface Reference {
     @Id
     URI id();
 
+    @Type
+    String type();
+
 
     @Required
     @Localized
     @MaxLength(LabelLength)
-    @Property("rdfs:")
     Map<Locale, String> label();
 
     @Localized
     @MaxLength(CommentLength)
-    @Property("rdfs:")
     Map<Locale, String> comment();
 
 }

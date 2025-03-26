@@ -14,37 +14,47 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._assets;
+package eu.ec2u.data._resources;
 
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Property;
+import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._resources.DCDescription;
-import eu.ec2u.data._resources.Resource;
+import eu.ec2u.data._assets.License;
 
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Stream;
-
-import static com.metreeca.flow.toolkits.Strings.clip;
-
-import static java.util.stream.Collectors.toMap;
+import java.util.Set;
 
 @Frame
-@Namespace("[ec2u]")
-public interface Asset extends Resource, DCDescription {
+@Namespace(prefix="[dct]", value="http://purl.org/dc/terms/")
+public interface DCDescription {
 
-    @Override
-    default Map<Locale, String> label() {
-        return title(); // !!! merge alternative / clip
-    }
+    @Required
+    @Localized
+    Map<Locale, String> title();
 
-    @Override
-    default Map<Locale, String> comment() {
-        return Stream.ofNullable(description())
-                .flatMap(description -> description.entrySet().stream())
-                .collect(toMap(Entry::getKey, entry -> clip(entry.getValue())));
-    }
+    @Localized
+    Map<Locale, String> alternative();
+
+    @Localized
+    Map<Locale, String> description();
+
+
+    LocalDate created();
+
+    LocalDate issued();
+
+    LocalDate modified();
+
+
+    String rights();
+
+    Map.Entry<Locale, String> accessRights();
+
+    @Property("license")
+    Set<License> licenses();
 
 }

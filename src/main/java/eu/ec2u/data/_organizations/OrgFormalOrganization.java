@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._resources;
+package eu.ec2u.data._organizations;
 
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Property;
 
 @Frame
-@Namespace(prefix="[wgs84]", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
-public interface GeoReference extends Reference {
-
-    @Property("lat")
-    double latitude();
-
-    @Property("long")
-    double longitude();
-
-}
+public interface OrgFormalOrganization extends OrgOrganization { }
