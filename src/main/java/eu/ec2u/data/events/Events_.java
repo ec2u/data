@@ -34,7 +34,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -60,7 +59,6 @@ import static com.metreeca.link.Frame.*;
 import static eu.ec2u.data.EC2U.BASE;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.events.Events.EventAttendanceModeEnumeration.*;
-import static eu.ec2u.data.events.Events.Topics;
 import static eu.ec2u.work.xlations.Xlations.translate;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
@@ -357,15 +355,15 @@ final class Events_ {
                                 field(Events.eventAttendanceMode, attendanceMode),
                                 field(Schema.isAccessibleForFree, entryFees.map(Frame::literal)),
 
-                                field(Schema.about, event.strings("tags.*").map(tag -> frame(
-
-                                        field(ID, item(Topics, tag)),
-                                        field(TYPE, SKOS.CONCEPT),
-
-                                        field(SKOS.TOP_CONCEPT_OF, Topics),
-                                        field(SKOS.PREF_LABEL, literal(tag, language))
-
-                                ))),
+                                // !!! field(Schema.about, event.strings("tags.*").map(tag -> frame(
+                                //
+                                //         field(ID, item(Topics, tag)),
+                                //         field(TYPE, SKOS.CONCEPT),
+                                //
+                                //         field(SKOS.TOP_CONCEPT_OF, Topics),
+                                //         field(SKOS.PREF_LABEL, literal(tag, language))
+                                //
+                                // ))),
 
                                 field(Schema.location, attendanceURL.map(u -> frame(
                                         field(ID, item(Locations.Context, university, u.toString())),
