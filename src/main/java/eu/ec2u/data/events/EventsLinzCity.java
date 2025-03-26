@@ -148,10 +148,10 @@ public final class EventsLinzCity implements Runnable {
                 .flatMap(new Fill<LocalDate>()
 
                         .model(Root
-                                +"/en/leisure/discover-linz/events/event-calendar/load"
-                                +"?Category2[HN]=HN" // only "highlight" events
-                                +"&FromDate={lower}"
-                                +"&ToDate={upper}"
+                               +"/en/leisure/discover-linz/events/event-calendar/load"
+                               +"?Category2[HN]=HN" // only "highlight" events
+                               +"&FromDate={lower}"
+                               +"&ToDate={upper}"
                         )
 
                         .value("lower", date -> date)
