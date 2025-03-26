@@ -16,11 +16,14 @@
 
 package eu.ec2u.data._resources;
 
-import com.metreeca.mesh.mint.shacl.Alias;
-import com.metreeca.mesh.mint.shacl.LanguageIn;
+import com.metreeca.mesh.meta.shacl.Alias;
+import com.metreeca.mesh.meta.shacl.LanguageIn;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.Locale;
+
+import static com.metreeca.mesh.util.Locales.locale;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -28,8 +31,20 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(METHOD)
 @Retention(RUNTIME)
 @Alias(
+
         LanguageIn=@LanguageIn({ "", "en", "de", "es", "fi", "fr", "it", "pt", "ro", "sv" })
+
 )
 public @interface Localized {
+
+    Locale EN=locale("en");
+    Locale DE=locale("de");
+    Locale ES=locale("es");
+    Locale FI=locale("fi");
+    Locale FR=locale("fr");
+    Locale IT=locale("it");
+    Locale PT=locale("pt");
+    Locale RO=locale("ro");
+    Locale SV=locale("sv");
 
 }

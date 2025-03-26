@@ -14,37 +14,36 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._assets;
+package eu.ec2u.data._organizations;
 
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._resources.DCDescription;
-import eu.ec2u.data._resources.Resource;
+import eu.ec2u.data._agents.FOAFAgent;
+import eu.ec2u.data._resources.Localized;
 
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
-
-import static com.metreeca.flow.toolkits.Strings.clip;
-
-import static java.util.stream.Collectors.toMap;
 
 @Frame
-@Namespace("[ec2u]")
-public interface Asset extends Resource, DCDescription {
+@Namespace(prefix="[org]", value="http://www.w3.org/ns/org#")
+@Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
+public interface OrgOrganization extends FOAFAgent {
 
-    @Override
-    default Map<Locale, String> label() {
-        return title(); // !!! merge alternative / clip
-    }
+    Entry<URI, String> identifier();
 
-    @Override
-    default Map<Locale, String> comment() {
-        return Stream.ofNullable(description())
-                .flatMap(description -> description.entrySet().stream())
-                .collect(toMap(Entry::getKey, entry -> clip(entry.getValue())));
-    }
+
+    @Required
+    @Localized
+    Map<Locale, String> prefLabel();
+
+    @Localized
+    Map<Locale, String> altLabel();
+
+    @Localized
+    Map<Locale, String> definition();
 
 }

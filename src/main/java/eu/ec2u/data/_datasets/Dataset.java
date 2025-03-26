@@ -16,15 +16,11 @@
 
 package eu.ec2u.data._datasets;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Namespace;
-import com.metreeca.mesh.mint.jsonld.Type;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data._assets.Asset;
+import eu.ec2u.data._resources.Catalog;
+import eu.ec2u.data._resources.Resource;
 
-@Frame
-@Type("void:")
-@Namespace(prefix="void", value="http://rdfs.org/ns/void#")
-public interface Dataset extends Asset {
-
-}
+@Namespace("[ec2u]")
+public interface Dataset<T extends Resource> extends Asset, Catalog<T>, VOIDDataset { }
