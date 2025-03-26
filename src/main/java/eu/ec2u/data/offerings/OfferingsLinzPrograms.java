@@ -18,17 +18,17 @@ package eu.ec2u.data.offerings;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.actions.GET;
-import com.metreeca.flow.json.JSONPath;
 import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.rdf.Values;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.link.Frame;
 
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.things.Schema;
+import eu.ec2u.work._junk.Frame;
+import eu.ec2u.work._junk.JSONPath;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
@@ -38,14 +38,17 @@ import java.util.Optional;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.rdf.Values.iri;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.EC2U.update;
 import static eu.ec2u.data.programs.Programs.EducationalOccupationalProgram;
 import static eu.ec2u.data.universities.University.Linz;
+import static eu.ec2u.work._junk.Frame.field;
+import static eu.ec2u.work._junk.Frame.frame;
 import static eu.ec2u.work.xlations.Xlations.translate;
+import static org.eclipse.rdf4j.model.util.Values.literal;
+import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
 
 public final class OfferingsLinzPrograms implements Runnable {
 

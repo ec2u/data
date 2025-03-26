@@ -16,12 +16,12 @@
 
 package eu.ec2u.data._resources;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Namespace;
-import com.metreeca.mesh.mint.jsonld.Property;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Property;
 
 @Frame
-@Namespace("http://www.w3.org/2003/01/geo/wgs84_pos#")
+@Namespace(prefix="[wgs84]", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
 public interface GeoReference extends Reference {
 
     @Property("lat")

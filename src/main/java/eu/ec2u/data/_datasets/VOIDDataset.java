@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._organizations;
+package eu.ec2u.data._datasets;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Type;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 
 @Frame
-@Type
-public interface FormalOrganization extends Organization {
-
-}
+@Namespace(prefix="[void]", value="http://rdfs.org/ns/void#")
+public interface VOIDDataset { }

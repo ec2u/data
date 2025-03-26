@@ -16,14 +16,14 @@
 
 package eu.ec2u.data._resources;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Property;
+import com.metreeca.mesh.meta.jsonld.Property;
+import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import java.util.Set;
 
-@Frame
 public interface Catalog<T extends Resource> extends Resource {
 
+    @Virtual
     @Property("rdfs:member")
     Set<T> members();
 

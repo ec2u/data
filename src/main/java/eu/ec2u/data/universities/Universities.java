@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.universities;
 
-import com.metreeca.flow.Handler;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
@@ -31,6 +30,7 @@ import org.eclipse.rdf4j.model.vocabulary.ORG;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.WGS84;
 
+import static com.metreeca.flow.Handler.handler;
 import static com.metreeca.flow.rdf.Values.iri;
 import static com.metreeca.flow.rdf.Values.literal;
 
@@ -126,10 +126,6 @@ public final class Universities extends Delegator {
                 ))
         );
 
-    }
-
-    private Handler handler(Driver driver, Worker worker) {
-        return null;
     }
 
 }

@@ -14,17 +14,28 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._organizations;
+package eu.ec2u.data._agents;
 
-import com.metreeca.mesh.mint.jsonld.Frame;
-import com.metreeca.mesh.mint.jsonld.Namespace;
-import com.metreeca.mesh.mint.jsonld.Type;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.Pattern;
 
-import eu.ec2u.data._agents.Agent;
+import java.net.URI;
+import java.util.Set;
 
 @Frame
-@Namespace("")
-@Type
-public interface Organization extends Agent {
+@Namespace(prefix="[foaf]", value="http://xmlns.com/foaf/0.1/")
+public interface FOAFAgent {
+
+    Set<URI> depiction();
+
+    Set<URI> homepage();
+
+
+    @Pattern("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+    Set<String> mbox();
+
+    @Pattern("^\\+?[1-9]\\d{1,14}$")
+    Set<String> phone();
 
 }
