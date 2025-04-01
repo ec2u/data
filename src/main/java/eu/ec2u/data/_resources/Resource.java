@@ -16,10 +16,8 @@
 
 package eu.ec2u.data._resources;
 
-import com.metreeca.mesh.meta.jsonld.Base;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Property;
+import com.metreeca.mesh.meta.jsonld.*;
+import com.metreeca.mesh.meta.jsonld.Class;
 
 import eu.ec2u.data._EC2U;
 
@@ -27,6 +25,7 @@ import java.net.URI;
 import java.util.Set;
 
 @Frame
+@Class
 @Base(_EC2U.BASE)
 @Namespace(prefix="[ec2u]", value="/terms/")
 public interface Resource extends Reference {

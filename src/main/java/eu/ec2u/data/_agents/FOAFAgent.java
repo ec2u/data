@@ -16,6 +16,7 @@
 
 package eu.ec2u.data._agents;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Pattern;
@@ -24,6 +25,7 @@ import java.net.URI;
 import java.util.Set;
 
 @Frame
+@Class("foaf:Agent")
 @Namespace(prefix="[foaf]", value="http://xmlns.com/foaf/0.1/")
 public interface FOAFAgent {
 

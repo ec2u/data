@@ -16,7 +16,9 @@
 
 package eu.ec2u.data._organizations;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 @Frame
+@Class("org:FormalOrganization")
 public interface OrgFormalOrganization extends OrgOrganization { }

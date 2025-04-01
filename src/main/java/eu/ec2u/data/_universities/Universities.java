@@ -32,17 +32,13 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.meta.Record.model;
-import static com.metreeca.mesh.meta.Record.set;
-import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
-import static com.metreeca.mesh.util.Locales.ANY_LOCALE;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._universities.UniversitiesRecord.Universities;
-import static eu.ec2u.data._universities.UniversityRecord.University;
 
 @Frame
 @Namespace("[ec2u]")
@@ -94,16 +90,16 @@ public interface Universities extends Dataset<University> {
 
                 .id(uri())
 
-                .members(set(query()
-
-                        .model(model(University()
-
-                                .id(uri())
-                                .label(map(Map.entry(ANY_LOCALE, "")))
-
-                        ))
-
-                ))
+                // .members(set(query()
+                //
+                //         .model(model(University()
+                //
+                //                 .id(uri())
+                //                 .label(map(Map.entry(ANY_LOCALE, "")))
+                //
+                //         ))
+                //
+                // ))
 
         )));
     }
