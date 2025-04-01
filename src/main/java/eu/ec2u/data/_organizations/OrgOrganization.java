@@ -16,8 +16,10 @@
 
 package eu.ec2u.data._organizations;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Property;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data._agents.FOAFAgent;
@@ -29,6 +31,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @Frame
+@Class("org:Organization")
 @Namespace(prefix="[org]", value="http://www.w3.org/ns/org#")
 @Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
 public interface OrgOrganization extends FOAFAgent {
@@ -38,12 +41,15 @@ public interface OrgOrganization extends FOAFAgent {
 
     @Required
     @Localized
+    @Property("skos:")
     Map<Locale, String> prefLabel();
 
     @Localized
+    @Property("skos:")
     Map<Locale, String> altLabel();
 
     @Localized
+    @Property("skos:")
     Map<Locale, String> definition();
 
 }

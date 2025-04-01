@@ -19,18 +19,23 @@ package eu.ec2u.data._universities;
 import com.metreeca.flow.Handler;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Internal;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Required;
+import com.metreeca.mesh.rdf4j.RDF4J;
+import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data._organizations.OrgFormalOrganization;
 import eu.ec2u.data._resources.GeoReference;
 import eu.ec2u.data._resources.Resource;
+import org.eclipse.rdf4j.rio.turtle.TurtleWriter;
 
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -46,6 +51,7 @@ import static eu.ec2u.data._universities.UniversityRecord.University;
 import static java.util.Map.entry;
 
 @Frame
+@Class
 @Namespace("[ec2u]")
 public interface University extends Resource, OrgFormalOrganization {
 
@@ -282,7 +288,8 @@ public interface University extends Resource, OrgFormalOrganization {
                                 Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. In 2011,
                                 it was awarded the Campus of International Excellence status. It is the university of reference
                                 in its region and beyond (Castile and León) and the “Alma Mater” of nearly all historical Latin
-                                American universities.""")
+                                American universities."""
+                        )
                 ))
                 .homepage(set(
                         uri("https://www.usal.es")
@@ -333,6 +340,12 @@ public interface University extends Resource, OrgFormalOrganization {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    default Map<Locale, String> label() {
+        return prefLabel();
+    }
+
+
     @Required
     GeoReference city();
 
@@ -351,11 +364,23 @@ public interface University extends Resource, OrgFormalOrganization {
 
     static void main(final String... args) {
 
-        // System.out.println(array(universities.stream().map(Record::value).toList()));
+        exec(() -> {
 
-        exec(() -> service(store()).update((
-                value(Pavia)
-        ), true));
+            final Store store=service(store());
+
+            store.update((
+                    value(Pavia)
+            ), true);
+
+
+            ((RDF4J)store).connect(connection -> {
+
+                connection.export(new TurtleWriter(System.out));
+
+                return null;
+            });
+        });
+
 
     }
 

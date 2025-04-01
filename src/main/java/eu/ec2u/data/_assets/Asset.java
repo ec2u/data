@@ -16,6 +16,7 @@
 
 package eu.ec2u.data._assets;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
@@ -32,6 +33,7 @@ import static com.metreeca.flow.toolkits.Strings.clip;
 import static java.util.stream.Collectors.toMap;
 
 @Frame
+@Class
 @Namespace("[ec2u]")
 public interface Asset extends Resource, DCDescription {
 

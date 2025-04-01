@@ -107,6 +107,8 @@ public final class _Data extends Delegator {
 
     public static Repository repository(final String name) {
 
+        // final SailRepository repository=new SailRepository(new MemoryStore());
+
         final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GraphDBServer, name));
 
         repository.setUsernameAndPassword(GraphDBUsr, service(vault()).get(GraphDBPwd));
