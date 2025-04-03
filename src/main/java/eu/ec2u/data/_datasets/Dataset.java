@@ -16,11 +16,17 @@
 
 package eu.ec2u.data._datasets;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data._assets.Asset;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Resource;
 
+@Class
 @Namespace("[ec2u]")
-public interface Dataset<T extends Resource> extends Asset, Catalog<T>, VOIDDataset { }
+public interface Dataset<T extends Resource> extends Asset, VOIDDataset, Catalog<T> {
+
+    // Catalog<T> at end to keep members as last field
+
+}

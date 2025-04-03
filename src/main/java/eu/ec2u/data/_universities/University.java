@@ -19,6 +19,7 @@ package eu.ec2u.data._universities;
 import com.metreeca.flow.Handler;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.mesh.meta.Record;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Internal;
@@ -39,10 +40,10 @@ import java.util.Map;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.meta.Record.model;
-import static com.metreeca.mesh.meta.Record.value;
 import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Locales.ANY_LOCALE;
+import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data._Data.exec;
@@ -369,7 +370,7 @@ public interface University extends Resource, OrgFormalOrganization {
             final Store store=service(store());
 
             store.update((
-                    value(Pavia)
+                    array(list(universities.stream().map(Record::value)))
             ), true);
 
 
@@ -378,17 +379,18 @@ public interface University extends Resource, OrgFormalOrganization {
                 connection.export(new TurtleWriter(System.out));
 
                 return null;
+
             });
         });
 
 
     }
 
-    static Handler handler() {
+    static Handler university() {
         return new Worker().get(new Relator(model(University()
 
                 .id(uri())
-                .label(map(entry(ANY_LOCALE, "")))
+                .label(map(entry(ANY, "")))
 
         )));
     }
