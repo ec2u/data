@@ -19,20 +19,7 @@ package eu.ec2u.data;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 
-import eu.ec2u.data._universities.Universities;
-import eu.ec2u.data._universities.University;
-import eu.ec2u.data.actors.Actors;
-import eu.ec2u.data.agents.Agents;
-import eu.ec2u.data.concepts.Concepts;
-import eu.ec2u.data.courses.Courses;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.documents.Documents;
-import eu.ec2u.data.events.Events;
-import eu.ec2u.data.offerings.Offerings;
-import eu.ec2u.data.programs.Programs;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.things.Schema;
-import eu.ec2u.data.units.Units;
+import static eu.ec2u.data._universities.Universities.universities;
 
 
 public final class _EC2U extends Delegator {
@@ -43,34 +30,20 @@ public final class _EC2U extends Delegator {
     public _EC2U() {
         delegate(new Router()
 
-                .path("/", new Datasets())
-
-                .path("/resources/*", new Resources())
-
-                .path("/assets/*", new Resources())
-
-                .path("/concepts/*", new Concepts())
-
-                .path("/agents/*", new Agents())
-
-                .path("/universities/", Universities.handler())
-                .path("/universities/{code}", University.handler())
-
-                .path("/units/*", new Units())
-
-                .path("/documents/*", new Documents())
-
-                .path("/actors/*", new Actors())
-
-                .path("/things/*", new Schema())
-
-                .path("/events/*", new Events())
-
-                .path("/offerings/*", new Offerings())
-
-                .path("/programs/*", new Programs())
-
-                .path("/courses/*", new Courses())
+                        // !!! .path("/", new Datasets())
+                        // !!! .path("/resources/*", new Resources())
+                        // !!! .path("/assets/*", new Resources())
+                        // !!! .path("/concepts/*", new Concepts())
+                        // !!! .path("/agents/*", new Agents())
+                .path("/universities/*", universities())
+                // !!! .path("/units/*", new Units())
+                // !!! .path("/documents/*", new Documents())
+                // !!! .path("/actors/*", new Actors())
+                // !!! .path("/things/*", new Schema())
+                // !!! .path("/events/*", new Events())
+                // !!! .path("/offerings/*", new Offerings())
+                // !!! .path("/programs/*", new Programs())
+                // !!! .path("/courses/*", new Courses())
 
         );
     }

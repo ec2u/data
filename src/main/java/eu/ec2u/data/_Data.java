@@ -53,6 +53,7 @@ import static com.metreeca.flow.services.Translator.translator;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.json.JSONCodec.json;
 import static com.metreeca.mesh.rdf4j.RDF4J.rdf4j;
+import static com.metreeca.mesh.util.URIs.uri;
 
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
@@ -89,7 +90,11 @@ public final class _Data extends Delegator {
 
                 .set(graph(), () -> new Graph(service(_Data::repository)))
                 .set(store(), () -> rdf4j(service(_Data::repository)))
-                .set(codec(), () -> json().indent(true))
+                .set(codec(), () -> json()
+                        .prune(true)
+                        .indent(true)
+                        .base(uri(_EC2U.BASE))
+                )
 
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
 
@@ -106,8 +111,6 @@ public final class _Data extends Delegator {
     }
 
     public static Repository repository(final String name) {
-
-        // final SailRepository repository=new SailRepository(new MemoryStore());
 
         final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GraphDBServer, name));
 
@@ -156,7 +159,7 @@ public final class _Data extends Delegator {
                         .before(request -> request.base(_EC2U.BASE)), // define canonical base
 
                 new Router()
-                        .path("/cron/*", new _Cron())
+                        // !!! .path("/cron/*", new _Cron())
                         .path("/*", new _EC2U())
 
         ));
