@@ -32,8 +32,6 @@ import java.util.Map;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.meta.Record.model;
-import static com.metreeca.mesh.meta.Record.value;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
@@ -41,9 +39,12 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._universities.UniversitiesRecord.Universities;
+import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
+import static eu.ec2u.data._universities.UniversitiesFrame.model;
+import static eu.ec2u.data._universities.UniversitiesFrame.value;
 import static eu.ec2u.data._universities.University.university;
-import static eu.ec2u.data._universities.UniversityRecord.University;
+import static eu.ec2u.data._universities.UniversityFrame.University;
+import static eu.ec2u.data._universities.UniversityFrame.model;
 
 @Frame
 @Virtual

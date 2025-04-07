@@ -23,7 +23,7 @@ import eu.ec2u.data._resources.Reference;
 import java.net.URI;
 import java.util.Map;
 
-import static eu.ec2u.data._assets.LicenseRecord.License;
+import static eu.ec2u.data._assets.LicenseFrame.License;
 import static java.util.Locale.ROOT;
 
 @Frame

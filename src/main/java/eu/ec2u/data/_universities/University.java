@@ -19,7 +19,6 @@ package eu.ec2u.data._universities;
 import com.metreeca.flow.Handler;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.handlers.Relator;
-import com.metreeca.mesh.meta.Record;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Internal;
@@ -41,14 +40,14 @@ import java.util.Map;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.meta.Record.model;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data._Data.exec;
 import static eu.ec2u.data._resources.Localized.*;
-import static eu.ec2u.data._universities.UniversityRecord.University;
+import static eu.ec2u.data._universities.UniversityFrame.University;
+import static eu.ec2u.data._universities.UniversityFrame.model;
 import static java.util.Map.entry;
 
 @Frame
@@ -370,7 +369,7 @@ public interface University extends Resource, OrgFormalOrganization {
             final Store store=service(store());
 
             store.update((
-                    array(list(universities.stream().map(Record::value)))
+                    array(list(universities.stream().map(UniversityFrame::value)))
             ), true);
 
 
