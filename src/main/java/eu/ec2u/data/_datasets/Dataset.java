@@ -27,6 +27,6 @@ import eu.ec2u.data._resources.Resource;
 @Namespace("[ec2u]")
 public interface Dataset<T extends Resource> extends Asset, VOIDDataset, Catalog<T> {
 
-    // Catalog<T> at end to keep members as last field
+    // Catalog<T> at end to keep <members> as last field
 
 }

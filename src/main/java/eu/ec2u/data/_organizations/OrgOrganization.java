@@ -22,19 +22,21 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Property;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._agents.FOAFAgent;
+import eu.ec2u.data._agents.FOAFOrganization;
+import eu.ec2u.data._concepts.SKOSConcept;
 import eu.ec2u.data._resources.Localized;
 
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 @Frame
 @Class("org:Organization")
 @Namespace(prefix="[org]", value="http://www.w3.org/ns/org#")
 @Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
-public interface OrgOrganization extends FOAFAgent {
+public interface OrgOrganization extends FOAFOrganization {
 
     Entry<URI, String> identifier();
 
@@ -51,5 +53,8 @@ public interface OrgOrganization extends FOAFAgent {
     @Localized
     @Property("skos:")
     Map<Locale, String> definition();
+
+
+    Set<SKOSConcept> classification();
 
 }

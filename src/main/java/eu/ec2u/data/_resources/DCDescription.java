@@ -21,16 +21,29 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Property;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._assets.License;
+import eu.ec2u.data._organizations.OrgOrganization;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import static eu.ec2u.data._resources.ReferenceFrame.Reference;
+import static java.util.Locale.ROOT;
 
 @Frame
 @Namespace(prefix="[dct]", value="http://purl.org/dc/terms/")
 public interface DCDescription {
+
+    Reference CCBYNCND40=Reference()
+            .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
+            .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
+            .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Required
     @Localized
@@ -52,9 +65,14 @@ public interface DCDescription {
 
     String rights();
 
-    Map.Entry<Locale, String> accessRights();
+    Entry<Locale, String> accessRights();
+
+
+    OrgOrganization publisher();
+
+    Reference source();
 
     @Property("license")
-    Set<License> licenses();
+    Set<Reference> licenses();
 
 }

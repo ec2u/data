@@ -18,28 +18,9 @@ package eu.ec2u.data._agents;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.shacl.Pattern;
-
-import eu.ec2u.data._resources.Reference;
-
-import java.net.URI;
-import java.util.Set;
 
 @Frame
-@Class("foaf:Agent")
-@Namespace(prefix="[foaf]", value="http://xmlns.com/foaf/0.1/")
-public interface FOAFAgent extends Reference {
-
-    Set<URI> depiction();
-
-    Set<URI> homepage();
-
-
-    @Pattern("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
-    Set<String> mbox();
-
-    @Pattern("^\\+?[1-9]\\d{1,14}$")
-    Set<String> phone();
+@Class("foaf:Organization")
+public interface FOAFOrganization extends FOAFAgent {
 
 }

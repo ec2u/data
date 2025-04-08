@@ -385,7 +385,7 @@ public interface University extends Resource, OrgFormalOrganization {
 
     }
 
-    static Handler university() {
+    static Handler _university() {
         return new Worker().get(new Relator(model(University()
 
                 .id(uri())

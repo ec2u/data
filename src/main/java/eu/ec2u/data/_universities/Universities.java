@@ -24,11 +24,16 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
+import eu.ec2u.data._EC2U;
 import eu.ec2u.data._datasets.Dataset;
+import eu.ec2u.data._organizations.OrgOrganization;
+import eu.ec2u.data._resources.Reference;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -38,11 +43,12 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._organizations.OrgOrganizationFrame.OrgOrganization;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
 import static eu.ec2u.data._universities.UniversitiesFrame.model;
 import static eu.ec2u.data._universities.UniversitiesFrame.value;
-import static eu.ec2u.data._universities.University.university;
+import static eu.ec2u.data._universities.University._university;
 import static eu.ec2u.data._universities.UniversityFrame.University;
 import static eu.ec2u.data._universities.UniversityFrame.model;
 
@@ -54,6 +60,11 @@ public interface Universities extends Dataset<University> {
     // !!! public static final IRI Context=item("/universities/");
 
     URI ID=uri("/universities/");
+
+    OrgOrganization EC2U=OrgOrganization()
+            .id(uri(_EC2U.BASE))
+            .prefLabel(map(entry(EN, "European Campus of City-Universities")))
+            .altLabel(map(entry(EN, "EC2U")));
 
 
     @Override
@@ -77,13 +88,31 @@ public interface Universities extends Dataset<University> {
         return map(entry(EN, "Background information about EC2U allied universities."));
     }
 
+    @Override
+    default URI isDefinedBy() {
+        return uri("/datasets/").resolve("universities");
+    }
 
-    // !!! dct:publisher <https://ec2u.eu/> ;
-    // !!! dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-    // !!! dct:rights "Copyright © 2022-2025 EC2U Alliance" ;
-    // !!! dct:issued "2022-01-01"^^xsd:date ;
-    // !!! void:rootResource ec2u:University ;
-    // !!! rdfs:isDefinedBy </datasets/universities> .
+
+    @Override
+    default LocalDate issued() {
+        return LocalDate.parse("2022-01-01");
+    }
+
+    @Override
+    default String rights() {
+        return "Copyright © 2022-2025 EC2U Alliance";
+    }
+
+    @Override
+    default OrgOrganization publisher() {
+        return EC2U;
+    }
+
+    @Override
+    default Set<Reference> licenses() {
+        return set(CCBYNCND40);
+    }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +142,7 @@ public interface Universities extends Dataset<University> {
 
                 ))))
 
-                .path("/{code}", university());
+                .path("/{code}", _university());
     }
 
 }

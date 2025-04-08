@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._assets;
+package eu.ec2u.data._organizations;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._resources.Reference;
-
-import java.net.URI;
-import java.util.Map;
-
-import static eu.ec2u.data._assets.LicenseFrame.License;
-import static java.util.Locale.ROOT;
+import java.util.Set;
 
 @Frame
-public interface License extends Reference {
+@Class("org:OrganizationalUnit")
+public interface OrgOrganizationalUnit extends OrgOrganization {
 
-    License CCBYNCND40=License()
-            .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
-            .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
-            .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
+    @Required
+    Set<OrgOrganization> unitOf();
 
 }
