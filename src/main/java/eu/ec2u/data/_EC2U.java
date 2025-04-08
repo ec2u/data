@@ -26,6 +26,7 @@ import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
 import static com.metreeca.mesh.util.URIs.uri;
 
+import static eu.ec2u.data._datasets.Datasets.datasets;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._units.Units.units;
 import static eu.ec2u.data._universities.Universities.universities;
@@ -43,7 +44,7 @@ public final class _EC2U extends Delegator {
     public _EC2U() {
         delegate(new Router()
 
-                        // !!! .path("/", new Datasets())
+                        .path("/", datasets())
                         // !!! .path("/resources/*", new Resources())
                         // !!! .path("/assets/*", new Resources())
                         // !!! .path("/concepts/*", new Concepts())

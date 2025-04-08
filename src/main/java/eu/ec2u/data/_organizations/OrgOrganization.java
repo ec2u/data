@@ -69,4 +69,8 @@ public interface OrgOrganization extends FOAFOrganization {
 
     Set<SKOSConcept> classification();
 
+    Set<OrgOrganization> subOrganizationOf();
+
+    Set<OrgOrganization> hasSubOrganization();
+
 }

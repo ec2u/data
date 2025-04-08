@@ -27,6 +27,7 @@ import com.metreeca.mesh.meta.jsonld.Virtual;
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._organizations.OrgOrganization;
+import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
 
 import java.net.URI;
@@ -55,7 +56,7 @@ import static eu.ec2u.data._units.UnitsFrame.value;
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Units extends Dataset<Unit> {
+public interface Units extends Dataset, Catalog<Unit> {
 
     // </concepts/research-topics> a skos:ConceptScheme ;
     //     dct:issued "2024-01-01"^^xsd:date ;

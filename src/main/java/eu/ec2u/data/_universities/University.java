@@ -23,15 +23,20 @@ import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Internal;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data._organizations.OrgFormalOrganization;
+import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.GeoReference;
 import eu.ec2u.data._resources.Resource;
 
+import java.net.URI;
+import java.time.Year;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -41,6 +46,7 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data._Data.exec;
+import static eu.ec2u.data._EC2U.EC2U;
 import static eu.ec2u.data._resources.Localized.*;
 import static eu.ec2u.data._universities.UniversityFrame.*;
 import static java.util.Map.entry;
@@ -48,7 +54,7 @@ import static java.util.Map.entry;
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface University extends Resource, OrgFormalOrganization {
+public interface University extends Resource, GeoReference, OrgFormalOrganization {
 
     University Coimbra=Coimbra();
     University Iasi=Iasi();
@@ -329,12 +335,27 @@ public interface University extends Resource, OrgFormalOrganization {
         return prefLabel();
     }
 
+    @Required
+    @Override Set<URI> depiction();
+
+    @MinCount(1)
+    @Override Set<URI> homepage();
+
+    @Required
+    Year inception();
+
+    @Required
+    int students();
 
     @Required
     GeoReference city();
 
     @Required
     GeoReference country();
+
+
+    @Override
+    default Set<OrgOrganization> subOrganizationOf() { return set(EC2U); }
 
 
     @Internal
@@ -347,7 +368,7 @@ public interface University extends Resource, OrgFormalOrganization {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(array(list(list(
+        exec(() -> service(store()).update(array(list(
                 value(Coimbra),
                 value(Iasi),
                 value(Jena),
@@ -356,7 +377,7 @@ public interface University extends Resource, OrgFormalOrganization {
                 value(Poitiers),
                 value(Salamanca),
                 value(Turku)
-        ))), true));
+        )), true));
     }
 
     static Handler _university() {

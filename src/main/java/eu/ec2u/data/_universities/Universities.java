@@ -28,6 +28,7 @@ import eu.ec2u.data._EC2U;
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._organizations.OrgOrganization;
+import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
 
 import java.net.URI;
@@ -55,9 +56,7 @@ import static eu.ec2u.data._universities.UniversityFrame.model;
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Universities extends Dataset<University> {
-
-    // !!! public static final IRI Context=item("/universities/");
+public interface Universities extends Dataset, Catalog<University> {
 
     URI ID=uri("/universities/");
 
