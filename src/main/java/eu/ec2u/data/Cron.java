@@ -75,25 +75,15 @@ public final class Cron extends Delegator {
                 .path("/documents/turku", execute(new DocumentsTurku()))
 
                 .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
-                .path("/events/coimbra/city", execute(new EventsCoimbraCity()))
                 .path("/events/iasi/university", execute(new EventsIasiUniversity()))
                 .path("/events/iasi/university/360", execute(new EventsIasiUniversity360()))
-                .path("/events/iasi/city/cultura", execute(new EventsIasiCityCultura()))
-                .path("/events/iasi/city/in-oras", execute(new EventsIasiCityInOras()))
                 .path("/events/jena/university", execute(new EventsJenaUniversity()))
-                .path("/events/jena/city", execute(new EventsJenaCity()))
-                .path("/events/linz/city", execute(new EventsLinzCity()))
                 .path("/events/linz/university", execute(new EventsLinzUniversity()))
-                .path("/events/pavia/city", execute(new EventsPaviaCity()))
                 .path("/events/pavia/university", execute(new EventsPaviaUniversity()))
                 .path("/events/pavia/borromeo", execute(new EventsPaviaBorromeo()))
                 .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
-                .path("/events/poitiers/city/grand", execute(new EventsPoitiersCityGrand()))
                 .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
-                .path("/events/salamanca/city/sacis", execute(new EventsSalamancaCitySACIS()))
-                .path("/events/salamanca/city/to", execute(new EventsSalamancaCityTO()))
                 .path("/events/turku/university", execute(new EventsTurkuUniversity()))
-                .path("/events/turku/city", execute(new EventsTurkuCity()))
 
         ));
     }
