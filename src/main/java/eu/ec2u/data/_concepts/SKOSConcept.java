@@ -18,9 +18,38 @@ package eu.ec2u.data._concepts;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.shacl.Required;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 @Frame
 @Class("skos:Concept")
-public interface SKOSConcept extends SKOSEntity {
+public interface SKOSConcept extends SKOS {
+
+    @Required
+    Map<Locale, String> prefLabel();
+
+    Map<Locale, Set<String>> altLabel();
+
+    Map<Locale, Set<String>> hiddenLabel();
+
+    Map<Locale, String> definition();
+
+
+    @Required
+    SKOSConceptScheme inScheme();
+
+    SKOSConceptScheme topConceptOf();
+
+
+    Set<SKOSConcept> broader();
+
+    Set<SKOSConcept> narrower();
+
+    Set<SKOSConcept> related();
+
+    Set<SKOSConcept> exactMatch();
 
 }

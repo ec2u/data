@@ -19,8 +19,14 @@ package eu.ec2u.data._concepts;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
+import java.util.Set;
+
 @Frame
 @Class("skos:ConceptScheme")
-public interface SKOSConceptScheme extends SKOSEntity {
+public interface SKOSConceptScheme extends SKOS {
+
+    // !!! label/comment
+
+    Set<SKOSConcept> hasTopConcept();
 
 }

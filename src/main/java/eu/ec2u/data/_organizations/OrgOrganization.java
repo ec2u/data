@@ -23,6 +23,7 @@ import com.metreeca.mesh.meta.jsonld.Property;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data._agents.FOAFOrganization;
+import eu.ec2u.data._agents.FOAFPerson;
 import eu.ec2u.data._concepts.SKOSConcept;
 import eu.ec2u.data._resources.Localized;
 
@@ -36,6 +37,7 @@ import java.util.Set;
 @Class("org:Organization")
 @Namespace(prefix="[org]", value="http://www.w3.org/ns/org#")
 @Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
+@SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
 public interface OrgOrganization extends FOAFOrganization {
 
     @Override
@@ -69,8 +71,12 @@ public interface OrgOrganization extends FOAFOrganization {
 
     Set<SKOSConcept> classification();
 
+    Set<FOAFPerson> hasMember();
+
     Set<OrgOrganization> subOrganizationOf();
 
     Set<OrgOrganization> hasSubOrganization();
+
+    Set<OrgOrganizationalUnit> hasUnit();
 
 }
