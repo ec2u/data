@@ -24,16 +24,12 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Internal;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Required;
-import com.metreeca.mesh.rdf4j.RDF4J;
-import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data._organizations.OrgFormalOrganization;
 import eu.ec2u.data._resources.GeoReference;
 import eu.ec2u.data._resources.Resource;
-import org.eclipse.rdf4j.rio.turtle.TurtleWriter;
 
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -46,8 +42,7 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data._Data.exec;
 import static eu.ec2u.data._resources.Localized.*;
-import static eu.ec2u.data._universities.UniversityFrame.University;
-import static eu.ec2u.data._universities.UniversityFrame.model;
+import static eu.ec2u.data._universities.UniversityFrame.*;
 import static java.util.Map.entry;
 
 @Frame
@@ -64,19 +59,8 @@ public interface University extends Resource, OrgFormalOrganization {
     University Salamanca=Salamanca();
     University Turku=Turku();
 
-    List<University> universities=list(
-            Coimbra,
-            Iasi,
-            Jena,
-            Linz,
-            Pavia,
-            Poitiers,
-            Salamanca,
-            Turku
-    );
 
-
-    static University Coimbra() {
+    private static University Coimbra() {
         return University()
                 .id(Universities.ID.resolve("coimbra"))
                 .prefLabel(map(
@@ -108,7 +92,7 @@ public interface University extends Resource, OrgFormalOrganization {
                 .zone(ZoneId.of("Europe/Lisbon"));
     }
 
-    static University Iasi() {
+    private static University Iasi() {
         return University()
                 .id(Universities.ID.resolve("iasi"))
                 .prefLabel(map(
@@ -142,7 +126,7 @@ public interface University extends Resource, OrgFormalOrganization {
                 .zone(ZoneId.of("Europe/Bucharest"));
     }
 
-    static University Jena() {
+    private static University Jena() {
         return University()
                 .id(Universities.ID.resolve("jena"))
                 .prefLabel(map(
@@ -174,7 +158,7 @@ public interface University extends Resource, OrgFormalOrganization {
                 .zone(ZoneId.of("Europe/Berlin"));
     }
 
-    static University Linz() {
+    private static University Linz() {
         return University()
                 .id(Universities.ID.resolve("linz"))
                 .prefLabel(map(
@@ -207,7 +191,7 @@ public interface University extends Resource, OrgFormalOrganization {
                 .zone(ZoneId.of("Europe/Vienna"));
     }
 
-    static University Pavia() {
+    private static University Pavia() {
         return University()
                 .id(Universities.ID.resolve("pavia"))
                 .prefLabel(map(
@@ -238,7 +222,7 @@ public interface University extends Resource, OrgFormalOrganization {
                 .zone(ZoneId.of("Europe/Rome"));
     }
 
-    static University Poitiers() {
+    private static University Poitiers() {
         return University()
                 .id(Universities.ID.resolve("poitiers"))
                 .prefLabel(map(
@@ -271,7 +255,7 @@ public interface University extends Resource, OrgFormalOrganization {
                 .zone(ZoneId.of("Europe/Paris"));
     }
 
-    static University Salamanca() {
+    private static University Salamanca() {
         return University()
                 .id(Universities.ID.resolve("salamanca"))
                 .prefLabel(map(
@@ -304,7 +288,7 @@ public interface University extends Resource, OrgFormalOrganization {
                 .zone(ZoneId.of("Europe/Madrid"));
     }
 
-    static University Turku() {
+    private static University Turku() {
         return University()
                 .id(Universities.ID.resolve("turku"))
                 .prefLabel(map(
@@ -363,26 +347,16 @@ public interface University extends Resource, OrgFormalOrganization {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static void main(final String... args) {
-
-        exec(() -> {
-
-            final Store store=service(store());
-
-            store.update((
-                    array(list(universities.stream().map(UniversityFrame::value)))
-            ), true);
-
-
-            ((RDF4J)store).connect(connection -> {
-
-                connection.export(new TurtleWriter(System.out));
-
-                return null;
-
-            });
-        });
-
-
+        exec(() -> service(store()).update(array(list(list(
+                value(Coimbra),
+                value(Iasi),
+                value(Jena),
+                value(Linz),
+                value(Pavia),
+                value(Poitiers),
+                value(Salamanca),
+                value(Turku)
+        ))), true));
     }
 
     static Handler _university() {

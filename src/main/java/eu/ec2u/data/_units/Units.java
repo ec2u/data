@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._universities;
+package eu.ec2u.data._units;
 
 import com.metreeca.flow.Handler;
 import com.metreeca.flow.handlers.Router;
@@ -24,7 +24,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._organizations.OrgOrganization;
@@ -44,22 +43,28 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.EC2U;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
-import static eu.ec2u.data._universities.UniversitiesFrame.model;
-import static eu.ec2u.data._universities.UniversitiesFrame.value;
-import static eu.ec2u.data._universities.University._university;
-import static eu.ec2u.data._universities.UniversityFrame.University;
-import static eu.ec2u.data._universities.UniversityFrame.model;
+import static eu.ec2u.data._units.Unit.unit;
+import static eu.ec2u.data._units.UnitFrame.Unit;
+import static eu.ec2u.data._units.UnitFrame.model;
+import static eu.ec2u.data._units.UnitsFrame.Units;
+import static eu.ec2u.data._units.UnitsFrame.model;
+import static eu.ec2u.data._units.UnitsFrame.value;
 
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Universities extends Dataset<University> {
+public interface Units extends Dataset<Unit> {
 
-    // !!! public static final IRI Context=item("/universities/");
+    // </concepts/research-topics> a skos:ConceptScheme ;
+    //     dct:issued "2024-01-01"^^xsd:date ;
+    //     dct:title "EC2U Research Unit Topics"@en ;
+    //     dct:description "> [!WARNING]\n> To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
+    //     dct:rights "Copyright © 2022-2025 EC2U Alliance" .
 
-    URI ID=uri("/universities/");
+
+    URI ID=uri("/units/");
 
 
     @Override
@@ -70,22 +75,25 @@ public interface Universities extends Dataset<University> {
 
     @Override
     default Map<Locale, String> title() {
-        return map(entry(EN, "EC2U Allied Universities"));
+        return map(entry(EN, "EC2U Research Units and Facilities"));
     }
 
     @Override
     default Map<Locale, String> alternative() {
-        return map(entry(EN, "EC2U Universities"));
+        return map(entry(EN, "EC2U Units"));
     }
 
     @Override
     default Map<Locale, String> description() {
-        return map(entry(EN, "Background information about EC2U allied universities."));
+        return map(entry(EN, """
+                Identifying and background information about research and innovation units and supporting structures
+                at EC2U allied universities."""
+        ));
     }
 
     @Override
     default URI isDefinedBy() {
-        return Datasets.ID.resolve("universities");
+        return Datasets.ID.resolve("units");
     }
 
 
@@ -101,7 +109,7 @@ public interface Universities extends Dataset<University> {
 
     @Override
     default OrgOrganization publisher() {
-        return _EC2U.EC2U;
+        return EC2U;
     }
 
     @Override
@@ -113,20 +121,20 @@ public interface Universities extends Dataset<University> {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(value(Universities()), true));
+        exec(() -> service(store()).update(value(Units()), true));
     }
 
-    static Handler universities() {
+    static Handler units() {
         return new Router()
 
-                .path("/", new Worker().get(new Relator(model(Universities()
+                .path("/", new Worker().get(new Relator(model(Units()
 
                         .id(uri())
                         .label(map(entry(ANY, "")))
 
                         .members(stash(query()
 
-                                .model(model(University()
+                                .model(model(Unit()
 
                                         .id(uri())
                                         .label(map(entry(ANY, "")))
@@ -137,7 +145,7 @@ public interface Universities extends Dataset<University> {
 
                 ))))
 
-                .path("/{code}", _university());
+                .path("/{code}", unit());
     }
 
 }

@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._concepts;
-
-import com.metreeca.mesh.meta.jsonld.Namespace;
-
-import eu.ec2u.data._resources.Reference;
-
-@Namespace(prefix="[skos]", value="http://www.w3.org/2004/02/skos/core#")
-public interface SKOSEntity extends Reference {
-}
+/**
+ * EC2U research units and facilities.
+ */
+package eu.ec2u.data._units;

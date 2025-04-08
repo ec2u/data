@@ -20,7 +20,7 @@ import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data._resources.DCDescription;
+import eu.ec2u.data._resources.Description;
 import eu.ec2u.data._resources.Resource;
 
 import java.util.Locale;
@@ -35,7 +35,7 @@ import static java.util.stream.Collectors.toMap;
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Asset extends Resource, DCDescription {
+public interface Asset extends Resource, Description {
 
     @Override
     default Map<Locale, String> label() {

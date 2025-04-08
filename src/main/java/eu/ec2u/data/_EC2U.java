@@ -19,12 +19,25 @@ package eu.ec2u.data;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 
+import eu.ec2u.data._organizations.OrgOrganization;
+import eu.ec2u.data._organizations.OrgOrganizationFrame;
+
+import static com.metreeca.mesh.util.Collections.entry;
+import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.mesh.util.URIs.uri;
+
+import static eu.ec2u.data._resources.Localized.EN;
+import static eu.ec2u.data._units.Units.units;
 import static eu.ec2u.data._universities.Universities.universities;
 
 
 public final class _EC2U extends Delegator {
 
     public static final String BASE="https://data.ec2u.eu/";
+    public static final OrgOrganization EC2U=OrgOrganizationFrame.OrgOrganization()
+            .id(uri(BASE))
+            .prefLabel(map(entry(EN, "European Campus of City-Universities")))
+            .altLabel(map(entry(EN, "EC2U")));
 
 
     public _EC2U() {
@@ -35,8 +48,8 @@ public final class _EC2U extends Delegator {
                         // !!! .path("/assets/*", new Resources())
                         // !!! .path("/concepts/*", new Concepts())
                         // !!! .path("/agents/*", new Agents())
-                .path("/universities/*", universities())
-                // !!! .path("/units/*", new Units())
+                        .path("/universities/*", universities())
+                        .path("/units/*", units())
                 // !!! .path("/documents/*", new Documents())
                 // !!! .path("/actors/*", new Actors())
                 // !!! .path("/things/*", new Schema())

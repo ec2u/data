@@ -38,6 +38,18 @@ import java.util.Set;
 @Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
 public interface OrgOrganization extends FOAFOrganization {
 
+    @Override
+    default Map<Locale, String> label() {
+        return prefLabel(); // !!! altLabel?
+    }
+
+    @Override
+
+    default Map<Locale, String> comment() {
+        return definition(); // !!! clip
+    }
+
+
     Entry<URI, String> identifier();
 
 
