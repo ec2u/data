@@ -26,6 +26,7 @@ import com.metreeca.link.Shape;
 
 import eu.ec2u.data.concepts.Concepts;
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.data.resources.Resources;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
@@ -42,8 +43,6 @@ import static eu.ec2u.data.EC2U.create;
 import static eu.ec2u.data.EC2U.item;
 import static eu.ec2u.data.concepts.Concepts.Concept;
 import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.data.resources.Resources.university;
 import static eu.ec2u.data.things.Schema.*;
 
 public final class Events extends Delegator {
@@ -151,8 +150,8 @@ public final class Events extends Delegator {
                 property(about, multiple(Concept(), scheme(Topics))),
                 property(audience, multiple(Concept(), scheme(Audiences))),
 
-                property(eventAttendanceMode, optional(Resource(), in(EventAttendanceModeEnumeration.values()))),
-                property(eventStatus, optional(Resource(), in(EventStatusType.values())))
+                property(eventAttendanceMode, optional(Resources.Resource(), in(EventAttendanceModeEnumeration.values()))),
+                property(eventStatus, optional(Resources.Resource(), in(EventStatusType.values())))
 
         );
     }
@@ -211,7 +210,8 @@ public final class Events extends Delegator {
 
         final Frame EventModel=frame(ThingModel,
 
-                field(university, iri()), // !!!
+                field(Resources.generated, literal(false)),
+                field(Resources.university, iri()), // !!!
 
                 field(startDate, literal(OffsetDateTime.now())),
                 field(endDate, literal(OffsetDateTime.now())),
