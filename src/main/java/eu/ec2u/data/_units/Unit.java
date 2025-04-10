@@ -25,6 +25,7 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data._EC2U;
 import eu.ec2u.data._organizations.OrgOrganizationalUnit;
+import eu.ec2u.data._resources.Member;
 import eu.ec2u.data._resources.Resource;
 
 import static com.metreeca.flow.Locator.service;
@@ -44,7 +45,7 @@ import static java.util.Map.entry;
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Unit extends Resource, OrgOrganizationalUnit {
+public interface Unit extends Resource, OrgOrganizationalUnit, Member<Units, Unit> {
 
     Unit GLADE=GLADE();
     Unit VIQE=VIQE();
@@ -52,7 +53,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     Unit VIPJSI=VIPJSI();
 
 
-    private static UnitFrame GLADE() {
+    private static Unit GLADE() {
         return Unit()
                 .id(Units.ID.resolve("glade"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Good Health and Well‑Being")))
@@ -81,7 +82,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 ));
     }
 
-    private static UnitFrame VIQE() {
+    private static Unit VIQE() {
         return Unit()
                 .id(Units.ID.resolve("viqe"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Quality Education")))
@@ -106,7 +107,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 ));
     }
 
-    private static UnitFrame VISCC() {
+    private static Unit VISCC() {
         return Unit()
                 .id(Units.ID.resolve("viscc"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Sustainable Cities and Communities")))
@@ -135,7 +136,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 ));
     }
 
-    private static UnitFrame VIPJSI() {
+    private static Unit VIPJSI() {
         return Unit()
                 .id(Units.ID.resolve("vipjsi"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Peace, Justice and Strong Institutions")))
@@ -171,8 +172,6 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     }
 
 
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     static void main(final String... args) {
         exec(() -> service(store()).update(array(list(
                 value(GLADE),
@@ -181,6 +180,9 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 value(VIPJSI)
         )), true));
     }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static Handler unit() {
         return new Worker().get(new Relator(model(Unit()

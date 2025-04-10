@@ -52,7 +52,7 @@ import static eu.ec2u.data._resources.Localized.EN;
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Datasets extends Dataset, Catalog<Dataset> {
+public interface Datasets extends Dataset, Catalog<Datasets, Dataset> {
 
     URI METADATA=uri("/datasets/");
 

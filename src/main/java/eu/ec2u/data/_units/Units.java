@@ -56,7 +56,14 @@ import static eu.ec2u.data._units.UnitsFrame.value;
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Units extends Dataset, Catalog<Unit> {
+public interface Units extends Dataset, Catalog<Units, Unit> {
+
+    static void main(final String... args) {
+        exec(() -> service(store()).update(value(Units()), true));
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // </concepts/research-topics> a skos:ConceptScheme ;
     //     dct:issued "2024-01-01"^^xsd:date ;
@@ -120,10 +127,6 @@ public interface Units extends Dataset, Catalog<Unit> {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    static void main(final String... args) {
-        exec(() -> service(store()).update(value(Units()), true));
-    }
 
     static Handler units() {
         return new Router()

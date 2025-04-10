@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._datasets;
+package eu.ec2u.data._resources;
 
-import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Property;
 
-import eu.ec2u.data._assets.Asset;
-import eu.ec2u.data._resources.Member;
+public interface Member<C extends Catalog<C, M>, M extends Member<C, M>> extends Reference {
 
-@Frame
-@Class
-@Namespace("[ec2u]")
-public interface Dataset extends Asset, VOIDDataset, Member<Datasets, Dataset> { }
+    @Property(reverse=true, value="rdfs:member")
+    C catalog();
+
+}

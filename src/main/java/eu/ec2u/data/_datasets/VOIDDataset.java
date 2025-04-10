@@ -23,6 +23,4 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 @Namespace(prefix="[void]", value="http://rdfs.org/ns/void#")
 public interface VOIDDataset {
 
-    int entities();
-
 }

@@ -22,7 +22,9 @@ import com.metreeca.mesh.meta.shacl.LanguageIn;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Locale;
+import java.util.Set;
 
+import static com.metreeca.mesh.util.Collections.set;
 import static com.metreeca.mesh.util.Locales.locale;
 
 import static java.lang.annotation.ElementType.METHOD;
@@ -46,5 +48,7 @@ public @interface Localized {
     Locale PT=locale("pt");
     Locale RO=locale("ro");
     Locale SV=locale("sv");
+
+    Set<Locale> LANGUAGES=set(EN, DE, ES, FI, FR, IT, PT, RO, SV);
 
 }

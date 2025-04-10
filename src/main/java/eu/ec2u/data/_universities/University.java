@@ -16,45 +16,68 @@
 
 package eu.ec2u.data._universities;
 
-import com.metreeca.flow.Handler;
+import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.lod.actions.Wikidata;
+import com.metreeca.flow.rdf4j.actions.GraphQuery;
+import com.metreeca.flow.rdf4j.services.Graph;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Internal;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
+import com.metreeca.mesh.util.Collections;
+import com.metreeca.mesh.util.Locales;
 
 import eu.ec2u.data._organizations.OrgFormalOrganization;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.GeoReference;
+import eu.ec2u.data._resources.GeoReferenceFrame;
+import eu.ec2u.data._resources.Member;
 import eu.ec2u.data._resources.Resource;
+import eu.ec2u.work.focus.Rover;
+import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
 import java.net.URI;
 import java.time.Year;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.toolkits.Resources.resource;
+import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.tools.Store.Options.DEEP;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
+import static com.metreeca.mesh.util.Strings.fill;
+import static com.metreeca.mesh.util.URIs.term;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data._Data.exec;
 import static eu.ec2u.data._EC2U.EC2U;
 import static eu.ec2u.data._resources.Localized.*;
-import static eu.ec2u.data._universities.UniversityFrame.*;
+import static eu.ec2u.data._universities.UniversityFrame.University;
+import static eu.ec2u.data._universities.UniversityFrame.model;
+import static eu.ec2u.work.focus.Rover.rover;
 import static java.util.Map.entry;
+import static java.util.stream.Collectors.joining;
 
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface University extends Resource, GeoReference, OrgFormalOrganization {
+public interface University extends Resource, GeoReference, Member<Universities, University>, OrgFormalOrganization {
 
     University Coimbra=Coimbra();
     University Iasi=Iasi();
@@ -65,10 +88,21 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
     University Salamanca=Salamanca();
     University Turku=Turku();
 
+    Set<University> Universities=set(
+            Coimbra,
+            Iasi,
+            Jena,
+            Linz,
+            Pavia,
+            Poitiers,
+            Salamanca,
+            Turku
+    );
+
 
     private static University Coimbra() {
         return University()
-                .id(Universities.ID.resolve("coimbra"))
+                .id(eu.ec2u.data._universities.Universities.ID.resolve("coimbra"))
                 .prefLabel(map(
                         entry(EN, "University of Coimbra"),
                         entry(PT, "Universidade de Coimbra")
@@ -79,10 +113,11 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                Focused on the future and recognized as major promoter of change, the University of Coimbra
-                                has more than 7 centuries of experience in the creation and dissemination of knowledge, culture,
-                                science and technology through study, teaching, cutting-edge research and innovation in the
-                                most diverse areas of knowledge.""")
+                                Focused on the future and recognized as major promoter of change, the University of Coimbra \
+                                has more than 7 centuries of experience in the creation and dissemination of knowledge, \
+                                culture, science and technology through study, teaching, cutting-edge research and \
+                                innovation in the most diverse areas of knowledge."""
+                        )
                 ))
                 .homepage(set(
                         uri("https://www.uc.pt/en/"),
@@ -95,12 +130,13 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                         uri("http://www.wikidata.org/entity/Q368643")
                 ))
                 .locale(PT)
-                .zone(ZoneId.of("Europe/Lisbon"));
+                .zone(ZoneId.of("Europe/Lisbon"))
+                .catalog(UniversitiesFrame.Universities());
     }
 
     private static University Iasi() {
         return University()
-                .id(Universities.ID.resolve("iasi"))
+                .id(eu.ec2u.data._universities.Universities.ID.resolve("iasi"))
                 .prefLabel(map(
                         entry(EN, "Alexandru Ioan Cuza University of Iaşi"),
                         entry(RO, "Universitatea Alexandru Ioan Cuza din Iași")
@@ -111,12 +147,13 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania (in 1860),
-                                is constantly ranked 1 – 3 among Romanian universities in terms of research, education and
-                                institutional transparency. With about 23000 students and 2000 full-time staff in its 15 faculties,
-                                our university’s academic offer includes 80 degrees at bachelor level (4 in English, 1 in French),
-                                116 master level programmes (14 in English, 1 in French) and 27 fields of study at the doctoral
-                                level (all offered in English as well).""")
+                                Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania \
+                                (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, \
+                                education and institutional transparency. With about 23000 students and 2000 full-time \
+                                staff in its 15 faculties, our university's academic offer includes 80 degrees at bachelor \
+                                level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) \
+                                and 27 fields of study at the doctoral level (all offered in English as well)."""
+                        )
                 ))
                 .homepage(set(
                         uri("https://www.uaic.ro/en/"),
@@ -134,7 +171,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     private static University Jena() {
         return University()
-                .id(Universities.ID.resolve("jena"))
+                .id(eu.ec2u.data._universities.Universities.ID.resolve("jena"))
                 .prefLabel(map(
                         entry(EN, "Friedrich Schiller University Jena"),
                         entry(DE, "Friedrich-Schiller-Universität Jena")
@@ -145,10 +182,11 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities in
-                                Germany. Once the centre of German philosophical thought, it has become a broad-based,
-                                research-intensive institution with a global reach and a thriving international community of
-                                more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide.""")
+                                Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities \
+                                in Germany. Once the centre of German philosophical thought, it has become a broad-based, \
+                                research-intensive institution with a global reach and a thriving international community \
+                                of more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide."""
+                        )
                 ))
                 .homepage(set(
                         uri("https://www.uni-jena.de/en"),
@@ -166,7 +204,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     private static University Linz() {
         return University()
-                .id(Universities.ID.resolve("linz"))
+                .id(eu.ec2u.data._universities.Universities.ID.resolve("linz"))
                 .prefLabel(map(
                         entry(EN, "Johannes Kepler University Linz (JKU)"),
                         entry(DE, "Johannes Kepler Universität Linz (JKU)")
@@ -177,11 +215,12 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                The Johannes Kepler University Linz (JKU), with 24,000 students, offers diverse programs in
-                                law, business, social sciences, engineering, natural sciences, and medicine. It prioritizes
-                                impactful research in AI, medical tech, and sustainable polymers, with a focus on social and
-                                environmental responsibility. The university aims for climate neutrality by 2030 and actively
-                                engages students in groundbreaking endeavors, fostering a passion for shaping the future.""")
+                                The Johannes Kepler University Linz (JKU), with 24,000 students, offers diverse programs \
+                                in law, business, social sciences, engineering, natural sciences, and medicine. It prioritizes \
+                                impactful research in AI, medical tech, and sustainable polymers, with a focus on social and \
+                                environmental responsibility. The university aims for climate neutrality by 2030 and actively \
+                                engages students in groundbreaking endeavors, fostering a passion for shaping the future."""
+                        )
                 ))
                 .homepage(set(
                         uri("https://www.jku.at/en"),
@@ -199,7 +238,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     private static University Pavia() {
         return University()
-                .id(Universities.ID.resolve("pavia"))
+                .id(eu.ec2u.data._universities.Universities.ID.resolve("pavia"))
                 .prefLabel(map(
                         entry(EN, "University of Pavia"),
                         entry(IT, "Università di Pavia")
@@ -210,9 +249,10 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                The University of Pavia (UNIPV) is one of the world’s oldest academic institutions: it was
-                                founded in 1361 and until the 20th century it was the only University in the Milan Area and
-                                the region of Lombardy.""")
+                                The University of Pavia (UNIPV) is one of the world's oldest academic institutions: it was \
+                                founded in 1361 and until the 20th century it was the only University in the Milan Area and \
+                                the region of Lombardy."""
+                        )
                 ))
                 .homepage(set(
                         uri("https://web-en.unipv.it"),
@@ -230,7 +270,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     private static University Poitiers() {
         return University()
-                .id(Universities.ID.resolve("poitiers"))
+                .id(eu.ec2u.data._universities.Universities.ID.resolve("poitiers"))
                 .prefLabel(map(
                         entry(EN, "University of Poitiers"),
                         entry(FR, "Université de Poitiers")
@@ -241,11 +281,12 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                Founded in 1431, the University of Poitiers is a multidisciplinary university which enrols
-                                29,000 students, 4200 of which are international students from 120 different countries,
-                                supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers
-                                ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and is above
-                                the national average with 16% of foreign students.""")
+                                Founded in 1431, the University of Poitiers is a multidisciplinary university which enro/costls \
+                                29,000 students, 4200 of which are international students from 120 different countries, \
+                                supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers \
+                                ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and is above \
+                                the national average with 16% of foreign students."""
+                        )
                 ))
                 .homepage(set(
                         uri("https://www.univ-poitiers.fr/en/"),
@@ -263,7 +304,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     private static University Salamanca() {
         return University()
-                .id(Universities.ID.resolve("salamanca"))
+                .id(eu.ec2u.data._universities.Universities.ID.resolve("salamanca"))
                 .prefLabel(map(
                         entry(EN, "University of Salamanca"),
                         entry(ES, "Universidad de Salamanca")
@@ -274,11 +315,11 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                The University of Salamanca was founded in 1218 and is one of the three oldest universities in
-                                Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. In 2011,
-                                it was awarded the Campus of International Excellence status. It is the university of reference
-                                in its region and beyond (Castile and León) and the “Alma Mater” of nearly all historical Latin
-                                American universities."""
+                                The University of Salamanca was founded in 1218 and is one of the three oldest universities \
+                                in Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. \
+                                In 2011, it was awarded the Campus of International Excellence status. It is the university \
+                                of reference in its region and beyond (Castile and León) and the "Alma Mater" of nearly all \
+                                historical Latin American universities."""
                         )
                 ))
                 .homepage(set(
@@ -296,7 +337,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     private static University Turku() {
         return University()
-                .id(Universities.ID.resolve("turku"))
+                .id(eu.ec2u.data._universities.Universities.ID.resolve("turku"))
                 .prefLabel(map(
                         entry(EN, "University of Turku"),
                         entry(FI, "Turun Yliopisto")
@@ -307,11 +348,12 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                The University of Turku (UTU) is a renowned research institution with a diverse community of
-                                25,000 individuals from over 100 countries. Situated in Turku's historic city center, it offers
-                                study and research options across seven faculties and special units. With its convenient campus,
-                                exceptional services, and vibrant academic environment, UTU ensures that international students
-                                and scholars feel welcomed and supported throughout their time in Finland.""")
+                                The University of Turku (UTU) is a renowned research institution with a diverse community of \
+                                25,000 individuals from over 100 countries. Situated in Turku's historic city center, it offers \
+                                study and research options across seven faculties and special units. With its convenient campus, \
+                                exceptional services, and vibrant academic environment, UTU ensures that international students \
+                                and scholars feel welcomed and supported throughout their time in Finland."""
+                        )
                 ))
                 .homepage(set(
                         uri("https://www.utu.fi/en"),
@@ -329,16 +371,86 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(array(list(
-                value(Coimbra),
-                value(Iasi),
-                value(Jena),
-                value(Linz),
-                value(Pavia),
-                value(Poitiers),
-                value(Salamanca),
-                value(Turku)
-        )), true));
+        exec(() -> exec(() -> {
+
+            final Rover wikidata=rover(Stream.of(text(resource(University.class, ".qlt")))
+
+                    .map(query -> fill(query, map(
+
+                            Collections.entry("universities", Universities.stream()
+                                    .map(u -> u.seeAlso().stream().findFirst().orElseThrow())
+                                    .map("<%s>"::formatted)
+                                    .collect(joining("\n"))
+                            ),
+
+                            Collections.entry("languages", LANGUAGES.stream()
+                                    .map(Locales::locale)
+                                    .map("\"%s\""::formatted)
+                                    .collect(joining(", "))
+                            )
+
+                    )))
+
+                    .flatMap(new GraphQuery()
+                            .graph(new Graph(new SPARQLRepository("https://query.wikidata.org/sparql")))
+                    )
+
+                    .toList()
+            );
+
+            final Value update=array(list(Xtream.from(Universities)
+
+                    .map(university -> {
+
+                        final Rover focus=wikidata.focus(university.seeAlso().stream().findFirst().orElseThrow());
+
+                        final Integer students=focus.get(term("students")).integral().map(Long::intValue).orElse(0);
+                        final Year inception=focus.get(term("inception")).year().orElse(null);
+                        final Rover city=focus.get(term("city"));
+                        final Rover country=focus.get(term("country"));
+
+                        final Optional<Wikidata.Point> coordinates=focus
+                                .get(term("coordinates"))
+                                .lexical()
+                                .flatMap(Wikidata::point);
+
+                        final Optional<Wikidata.Point> cityCoordinates=city
+                                .get(term("coordinates"))
+                                .lexical()
+                                .flatMap(Wikidata::point);
+
+                        final Optional<Wikidata.Point> countyCoordinates=country
+                                .get(term("coordinates"))
+                                .lexical()
+                                .flatMap(Wikidata::point);
+
+                        return University(university)
+                                .students(students)
+                                .inception(inception)
+                                .longitude(coordinates.map(Wikidata.Point::longitude).orElse(0.0D))
+                                .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
+                                .city(GeoReferenceFrame.GeoReference()
+                                        .id(city.uri().orElse(null))
+                                        .label(city.get(term("name")).texts().orElse(null))
+                                        .longitude(cityCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
+                                        .latitude(cityCoordinates.map(Wikidata.Point::latitude).orElse(0.0D))
+                                )
+                                .country(GeoReferenceFrame.GeoReference()
+                                        .id(country.uri().orElse(null))
+                                        .label(country.get(term("name")).texts().orElse(null))
+                                        .longitude(countyCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
+                                        .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
+                                );
+                    })
+
+                    .map(UniversityFrame::value)
+                    .optMap(new Validate().deep(true))
+
+            ));
+
+            service(store()).update(update, FORCE, DEEP);
+
+        }));
     }
 
 
@@ -389,13 +501,17 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static Handler _university() {
-        return new Worker().get(new Relator(model(University()
+    final class Handler extends Delegator {
 
-                .id(uri())
-                .label(map(entry(ANY, "")))
+        public Handler() {
+            delegate(new Worker().get(new Relator(model(University()
 
-        )));
+                    .id(uri())
+                    .label(map(entry(ANY, "")))
+
+            ))));
+        }
+
     }
 
 }

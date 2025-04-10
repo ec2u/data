@@ -16,7 +16,7 @@
 
 package eu.ec2u.data._universities;
 
-import com.metreeca.flow.Handler;
+import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.handlers.Relator;
@@ -24,7 +24,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._organizations.OrgOrganization;
@@ -45,18 +44,19 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.EC2U;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
 import static eu.ec2u.data._universities.UniversitiesFrame.model;
 import static eu.ec2u.data._universities.UniversitiesFrame.value;
-import static eu.ec2u.data._universities.University._university;
 import static eu.ec2u.data._universities.UniversityFrame.University;
 import static eu.ec2u.data._universities.UniversityFrame.model;
+import static java.util.Map.entry;
 
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Universities extends Dataset, Catalog<University> {
+public interface Universities extends Dataset, Catalog<Universities, University> {
 
     static void main(final String... args) {
         exec(() -> service(store()).update(value(Universities()), true));
@@ -107,7 +107,7 @@ public interface Universities extends Dataset, Catalog<University> {
 
     @Override
     default OrgOrganization publisher() {
-        return _EC2U.EC2U;
+        return EC2U;
     }
 
     @Override
@@ -118,28 +118,34 @@ public interface Universities extends Dataset, Catalog<University> {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static Handler universities() {
-        return new Router()
+    final class Handler extends Delegator {
 
-                .path("/", new Worker().get(new Relator(model(Universities()
+        public Handler() {
+            delegate(new Router()
 
-                        .id(uri())
-                        .label(map(entry(ANY, "")))
+                    .path("/", new Worker().get(new Relator(model(Universities()
 
-                        .members(stash(query()
+                            .id(uri())
+                            .label(map(entry(ANY, "")))
 
-                                .model(model(University()
+                            .members(stash(query()
 
-                                        .id(uri())
-                                        .label(map(entry(ANY, "")))
+                                    .model(model(University()
 
-                                ))
+                                            .id(uri())
+                                            .label(map(entry(ANY, "")))
 
-                        ))
+                                    ))
 
-                ))))
+                            ))
 
-                .path("/{code}", _university());
+                    ))))
+
+                    .path("/{code}", new University.Handler())
+
+            );
+        }
+
     }
 
 }

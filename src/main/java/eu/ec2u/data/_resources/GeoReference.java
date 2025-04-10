@@ -21,13 +21,13 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Property;
 
 @Frame
-@Namespace(prefix="[wgs84]", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
+@Namespace(prefix="[wgs]", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
 public interface GeoReference extends Reference {
-
-    @Property("lat")
-    double latitude();
 
     @Property("long")
     double longitude();
+
+    @Property("lat")
+    double latitude();
 
 }

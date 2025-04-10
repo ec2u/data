@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 public interface Focus {
 
-    public static Focus focus(final Collection<Value> values, final Collection<Statement> statements) {
+    static Focus focus(final Collection<Value> values, final Collection<Statement> statements) {
 
         if ( values == null || values.stream().anyMatch(Objects::isNull) ) {
             throw new NullPointerException("null values");
@@ -43,7 +43,7 @@ public interface Focus {
         return new FocusModel(new LinkedHashSet<>(values), new LinkedHashSet<>(statements));
     }
 
-    public static Focus focus(final Collection<Value> values, final RepositoryConnection connection) {
+    static Focus focus(final Collection<Value> values, final RepositoryConnection connection) {
 
         if ( values == null || values.stream().anyMatch(Objects::isNull) ) {
             throw new NullPointerException("null values");
@@ -59,22 +59,29 @@ public interface Focus {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public default Focus cache() { return this; }
+    default Focus cache() { return this; }
 
-    public Stream<Focus> split();
+    Stream<Focus> split();
 
 
-    public default boolean isEmpty() {
+    default boolean isEmpty() {
         return value().isEmpty();
     }
 
 
-    public default Optional<Value> value() { return values().findFirst(); }
+    default Optional<Value> value() { return values().findFirst(); }
 
-    public Stream<Value> values();
+    Stream<Value> values();
 
 
-    public default <T> Optional<T> value(final Function<Value, T> converter) {
+    Focus seq(final IRI step);
+
+    Focus seq(final IRI... steps);
+
+
+    //̸// !!! //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    default <T> Optional<T> value(final Function<Value, T> converter) {
 
         if ( converter == null ) {
             throw new NullPointerException("null converter");
@@ -83,18 +90,13 @@ public interface Focus {
         return value().map(guard(converter));
     }
 
-    public default <T> Stream<T> values(final Function<Value, T> converter) {
+    default <T> Stream<T> values(final Function<Value, T> converter) {
 
         if ( converter == null ) {
             throw new NullPointerException("null converter");
         }
         return values().map(guard(converter)).filter(Objects::nonNull);
     }
-
-
-    public Focus seq(final IRI step);
-
-    public Focus seq(final IRI... steps);
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
