@@ -30,7 +30,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
+
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._resources.ReferenceFrame.Reference;
+import static eu.ec2u.data._resources.ReferenceFrame.value;
 import static java.util.Locale.ROOT;
 
 @Frame
@@ -41,6 +46,11 @@ public interface Description {
             .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
             .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
             .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
+
+
+    static void main(final String... args) {
+        exec(() -> service(store()).update(value(CCBYNCND40), true));
+    }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

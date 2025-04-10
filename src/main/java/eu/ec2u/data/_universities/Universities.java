@@ -58,6 +58,13 @@ import static eu.ec2u.data._universities.UniversityFrame.model;
 @Namespace("[ec2u]")
 public interface Universities extends Dataset, Catalog<University> {
 
+    static void main(final String... args) {
+        exec(() -> service(store()).update(value(Universities()), true));
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     URI ID=uri("/universities/");
 
 
@@ -110,10 +117,6 @@ public interface Universities extends Dataset, Catalog<University> {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    static void main(final String... args) {
-        exec(() -> service(store()).update(value(Universities()), true));
-    }
 
     static Handler universities() {
         return new Router()

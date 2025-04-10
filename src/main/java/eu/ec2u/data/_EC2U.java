@@ -22,11 +22,15 @@ import com.metreeca.flow.handlers.Router;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._organizations.OrgOrganizationFrame;
 
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
 import static com.metreeca.mesh.util.URIs.uri;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._datasets.Datasets.datasets;
+import static eu.ec2u.data._organizations.OrgOrganizationFrame.value;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._units.Units.units;
 import static eu.ec2u.data._universities.Universities.universities;
@@ -41,6 +45,13 @@ public final class _EC2U extends Delegator {
             .prefLabel(map(entry(EN, "European Campus of City-Universities")))
             .altLabel(map(entry(EN, "EC2U")));
 
+
+    public static void main(final String... args) {
+        exec(() -> service(store()).update(value(EC2U), true));
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public _EC2U() {
         delegate(new Router()

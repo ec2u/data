@@ -34,6 +34,7 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
@@ -119,6 +120,8 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
                                 .label(map(entry(ANY, "")))
 
                         ))
+
+                        .criterion("issued", criterion().any(set()))
 
                 ))
 

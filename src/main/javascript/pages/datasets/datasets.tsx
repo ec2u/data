@@ -15,18 +15,21 @@
  */
 
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
+import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
-import { integer } from "@metreeca/core/integer";
-import { local } from "@metreeca/core/local";
+import { local, toLocalString } from "@metreeca/core/local";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
+import { ToolSheet } from "@metreeca/view/lenses/sheet";
+import { ToolCard } from "@metreeca/view/widgets/card";
 import { Package } from "@metreeca/view/widgets/icon";
+import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
@@ -52,7 +55,7 @@ export const Datasets=immutable({
 		title: required(local),
 		alternative: optional(local),
 
-		entities: optional(integer)
+		// entities: optional(integer)
 
 	})
 
@@ -90,8 +93,8 @@ export function DataDatasets() {
 
 		<div/>
 
-		{/*
-		<ToolSheet placeholder={Datasets[icon]} sorted={"entities"} as={({
+
+		<ToolSheet placeholder={Datasets[icon]} as={({ // !!! sorted={"entities"}
 
 			id,
 
@@ -99,7 +102,7 @@ export function DataDatasets() {
 			alternative,
 			comment,
 
-			entities
+			// entities
 
 		}) =>
 
@@ -107,7 +110,7 @@ export function DataDatasets() {
 
 				title={<ToolLink>{{ id, label: ec2u(title) }}</ToolLink>}
 
-				tags={entities ? `${toIntegerString(entities)}` : null}
+				// !!! tags={entities ? `${toIntegerString(entities)}` : null}
 				image={alternative && <span>{ec2u(toLocalString(alternative))}</span>}
 
 			>{
@@ -117,7 +120,7 @@ export function DataDatasets() {
 			}</ToolCard>
 
 		}>{datasets}</ToolSheet>
-		 */}
+
 
 	</DataPage>;
 }
