@@ -15,26 +15,18 @@
  */
 
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
-import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
-import { entry } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
-import { integer, toIntegerString } from "@metreeca/core/integer";
-import { local, toLocalString } from "@metreeca/core/local";
-import { toValueString } from "@metreeca/core/value";
+import { integer } from "@metreeca/core/integer";
+import { local } from "@metreeca/core/local";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
-import { useOptions } from "@metreeca/data/models/options";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
 import { ToolClear } from "@metreeca/view/lenses/clear";
 import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolOptions } from "@metreeca/view/lenses/options";
-import { ToolSheet } from "@metreeca/view/lenses/sheet";
-import { ToolCard } from "@metreeca/view/widgets/card";
 import { Package } from "@metreeca/view/widgets/icon";
-import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
@@ -81,9 +73,9 @@ export function DataDatasets() {
 				useKeywords(datasets, "label")
 			}</ToolSearch>
 
-			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
+			{/* <ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
 				useOptions(datasets, "license", { type: entry({ id: "", label: required(local) }) })
-			}</ToolOptions>
+			 }</ToolOptions> */}
 
 		</>}
 
@@ -96,6 +88,9 @@ export function DataDatasets() {
 
 	>
 
+		<div/>
+
+		{/*
 		<ToolSheet placeholder={Datasets[icon]} sorted={"entities"} as={({
 
 			id,
@@ -122,6 +117,7 @@ export function DataDatasets() {
 			}</ToolCard>
 
 		}>{datasets}</ToolSheet>
+		 */}
 
 	</DataPage>;
 }

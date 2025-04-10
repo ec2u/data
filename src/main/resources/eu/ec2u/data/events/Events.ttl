@@ -13,7 +13,7 @@
     dct:description
         "Information about events at EC2U allied universities and associated local communities, dynamically collected from academic, public and commercial sources."@en ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-    dct:rights "Copyright © 2022-2025 EC2U Alliance" ;
+    dct:rights "Copyright © 2022‑2025 EC2U Alliance" ;
     dct:issued "2022-01-01"^^xsd:date ;
     void:rootResource schema:Event ;
     rdfs:isDefinedBy </datasets/events> .
@@ -23,14 +23,14 @@
     dct:title "EC2U Local Event Topics"@en ;
     dct:description "> [!WARNING]\n> To be migrated to standardized taxonomy"@en ;
     dct:publisher <https://ec2u.eu/> ;
-    dct:rights "Copyright © 2022-2025 EC2U Alliance" .
+    dct:rights "Copyright © 2022‑2025 EC2U Alliance" .
 
 </concepts/event-audiences> a skos:ConceptScheme ;
     dct:issued "2024-01-01"^^xsd:date ;
     dct:title "EC2U Local Event Audiences"@en ;
     dct:description "> [!WARNING]\n> To be migrated to standardized taxonomy"@en ;
     dct:publisher <https://ec2u.eu/> ;
-    dct:rights "Copyright © 2022-2025 EC2U Alliance" .
+    dct:rights "Copyright © 2022‑2025 EC2U Alliance" .
 
 
 

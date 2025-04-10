@@ -53,12 +53,12 @@ import static eu.ec2u.data._resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Datasets extends Dataset, Catalog<Dataset> {
 
-    URI ID=uri("/datasets/");
+    URI METADATA=uri("/datasets/");
 
 
     @Override
     default URI id() {
-        return ID;
+        return uri("/");
     }
 
 
@@ -79,13 +79,13 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
     @Override
     default URI isDefinedBy() {
-        return ID;
+        return METADATA;
     }
 
 
     @Override
     default String rights() {
-        return "Copyright © 2022-2025 EC2U Alliance";
+        return "Copyright © 2022‑2025 EC2U Alliance";
     }
 
     @Override

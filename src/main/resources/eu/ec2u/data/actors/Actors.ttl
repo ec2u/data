@@ -11,7 +11,7 @@
     dct:description
         "Anonymized information about knowledge ecosystem actors at EC2U allied universities and associated local communities."@en ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-    dct:rights "Copyright © 2022-2025 EC2U Alliance" ;
+    dct:rights "Copyright © 2022‑2025 EC2U Alliance" ;
     dct:issued "2022-01-01"^^xsd:date ;
     void:rootResource ec2u:Actor ;
     rdfs:isDefinedBy </datasets/actors> .

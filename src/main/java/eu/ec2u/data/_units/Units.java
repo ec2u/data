@@ -62,7 +62,7 @@ public interface Units extends Dataset, Catalog<Unit> {
     //     dct:issued "2024-01-01"^^xsd:date ;
     //     dct:title "EC2U Research Unit Topics"@en ;
     //     dct:description "> [!WARNING]\n> To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
-    //     dct:rights "Copyright © 2022-2025 EC2U Alliance" .
+    //     dct:rights "Copyright © 2022‑2025 EC2U Alliance" .
 
 
     URI ID=uri("/units/");
@@ -94,7 +94,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
     @Override
     default URI isDefinedBy() {
-        return Datasets.ID.resolve("units");
+        return Datasets.METADATA.resolve("units");
     }
 
 
@@ -105,7 +105,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
     @Override
     default String rights() {
-        return "Copyright © 2022-2025 EC2U Alliance";
+        return "Copyright © 2022‑2025 EC2U Alliance";
     }
 
     @Override

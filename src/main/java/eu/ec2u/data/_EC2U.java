@@ -35,8 +35,9 @@ import static eu.ec2u.data._universities.Universities.universities;
 public final class _EC2U extends Delegator {
 
     public static final String BASE="https://data.ec2u.eu/";
+
     public static final OrgOrganization EC2U=OrgOrganizationFrame.OrgOrganization()
-            .id(uri(BASE))
+            .id(uri("https://ec2u.eu/"))
             .prefLabel(map(entry(EN, "European Campus of City-Universities")))
             .altLabel(map(entry(EN, "EC2U")));
 

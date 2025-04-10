@@ -9,6 +9,6 @@
     dct:title "EC2U Knowledge Hub Resources"@en ;
     dct:alternative "EC2U Resources"@en ;
     dct:description "Shared resources published on the EC2U Knowledge Hub."@en ;
-    dct:rights "Copyright © 2022-2025 EC2U Alliance" ;
+    dct:rights "Copyright © 2022‑2025 EC2U Alliance" ;
     rdfs:isDefinedBy </datasets/resources> .
 

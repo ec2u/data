@@ -84,7 +84,7 @@ public interface Universities extends Dataset, Catalog<University> {
 
     @Override
     default URI isDefinedBy() {
-        return Datasets.ID.resolve("universities");
+        return Datasets.METADATA.resolve("universities");
     }
 
 
@@ -95,7 +95,7 @@ public interface Universities extends Dataset, Catalog<University> {
 
     @Override
     default String rights() {
-        return "Copyright © 2022-2025 EC2U Alliance";
+        return "Copyright © 2022‑2025 EC2U Alliance";
     }
 
     @Override
