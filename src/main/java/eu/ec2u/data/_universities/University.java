@@ -328,6 +328,20 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
     }
 
 
+    static void main(final String... args) {
+        exec(() -> service(store()).update(array(list(
+                value(Coimbra),
+                value(Iasi),
+                value(Jena),
+                value(Linz),
+                value(Pavia),
+                value(Poitiers),
+                value(Salamanca),
+                value(Turku)
+        )), true));
+    }
+
+
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
@@ -335,11 +349,19 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
         return prefLabel();
     }
 
+    @Override
+    default Map<Locale, String> comment() {
+        return definition();
+    }
+
+
     @Required
-    @Override Set<URI> depiction();
+    @Override
+    Set<URI> depiction();
 
     @MinCount(1)
-    @Override Set<URI> homepage();
+    @Override
+    Set<URI> homepage();
 
     @Required
     Year inception();
@@ -366,19 +388,6 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    static void main(final String... args) {
-        exec(() -> service(store()).update(array(list(
-                value(Coimbra),
-                value(Iasi),
-                value(Jena),
-                value(Linz),
-                value(Pavia),
-                value(Poitiers),
-                value(Salamanca),
-                value(Turku)
-        )), true));
-    }
 
     static Handler _university() {
         return new Worker().get(new Relator(model(University()

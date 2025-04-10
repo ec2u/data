@@ -16,8 +16,7 @@
 
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, required } from "@metreeca/core";
-import { toEntryString } from "@metreeca/core/entry";
+import { immutable, multiple, repeatable, required } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
 import { integer } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -55,13 +54,12 @@ export const Universities=immutable({
 
 		prefLabel: required(local),
 		comment: required(local),
-		depiction: required(id),
+		depiction: repeatable(id),
 
 		country: required({
-				id: required(id),
-				label: required(local)
-			}
-		)
+			id: required(id),
+			label: required(local)
+		})
 
 	})
 });
@@ -114,9 +112,9 @@ export function DataUniversities() {
 			<ToolCard key={id} side={"end"}
 
 				title={<ToolLink>{{ id, label: prefLabel }}</ToolLink>}
-				image={depiction}
+				image={depiction[0]}
 
-				tags={<span>{toEntryString(country)}</span>}
+				// !!! tags={<span>{toEntryString(country)}</span>}
 
 			>{
 
