@@ -55,7 +55,10 @@ export const Dataset=immutable({
 		label: required(local)
 	}),
 
-	source: optional(id),
+	source: optional({
+		id: required(id),
+		label: required(local)
+	}),
 
 	issued: optional(date),
 
