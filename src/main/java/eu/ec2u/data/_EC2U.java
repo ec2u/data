@@ -19,21 +19,19 @@ package eu.ec2u.data;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 
+import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._organizations.OrgOrganizationFrame;
-import eu.ec2u.data._universities.Universities;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
 import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._datasets.Datasets.datasets;
-import static eu.ec2u.data._organizations.OrgOrganizationFrame.value;
+import static eu.ec2u.data._Data.exec;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._units.Units.units;
 
 
 public final class _EC2U extends Delegator {
@@ -47,7 +45,7 @@ public final class _EC2U extends Delegator {
 
 
     public static void main(final String... args) {
-        exec(() -> service(store()).update(value(EC2U), true));
+        exec(() -> service(store()).update(OrgOrganizationFrame.value(EC2U), FORCE));
     }
 
 
@@ -56,13 +54,13 @@ public final class _EC2U extends Delegator {
     public _EC2U() {
         delegate(new Router()
 
-                        .path("/", datasets())
-                        // !!! .path("/resources/*", new Resources())
-                        // !!! .path("/assets/*", new Resources())
-                        // !!! .path("/concepts/*", new Concepts())
-                        // !!! .path("/agents/*", new Agents())
-                        .path("/universities/*", new Universities.Handler())
-                        .path("/units/*", units())
+                        .path("/", new Datasets.Handler())
+                // !!! .path("/resources/*", new Resources())
+                // !!! .path("/assets/*", new Resources())
+                // !!! .path("/concepts/*", new Concepts())
+                // !!! .path("/agents/*", new Agents())
+                // .path("/universities/*", new Universities.Handler())
+                // .path("/units/*", new Units.Handler())
                 // !!! .path("/documents/*", new Documents())
                 // !!! .path("/actors/*", new Actors())
                 // !!! .path("/things/*", new Schema())

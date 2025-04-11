@@ -16,7 +16,7 @@
 
 package eu.ec2u.data._units;
 
-import com.metreeca.flow.Handler;
+import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.handlers.Relator;
@@ -39,6 +39,7 @@ import java.util.Set;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
@@ -46,7 +47,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.EC2U;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._units.Unit.unit;
 import static eu.ec2u.data._units.UnitFrame.Unit;
 import static eu.ec2u.data._units.UnitFrame.model;
 import static eu.ec2u.data._units.UnitsFrame.Units;
@@ -56,10 +56,10 @@ import static eu.ec2u.data._units.UnitsFrame.value;
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Units extends Dataset, Catalog<Units, Unit> {
+public interface Units extends Dataset, Catalog<Unit> {
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(value(Units()), true));
+        exec(() -> service(store()).update(value(Units()), FORCE));
     }
 
 
@@ -101,7 +101,7 @@ public interface Units extends Dataset, Catalog<Units, Unit> {
 
     @Override
     default URI isDefinedBy() {
-        return Datasets.METADATA.resolve("units");
+        return Datasets.DATASETS.resolve("units");
     }
 
 
@@ -128,28 +128,33 @@ public interface Units extends Dataset, Catalog<Units, Unit> {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static Handler units() {
-        return new Router()
+    final class Handler extends Delegator {
 
-                .path("/", new Worker().get(new Relator(model(Units()
+        public Handler() {
+            delegate(new Router()
 
-                        .id(uri())
-                        .label(map(entry(ANY, "")))
+                    .path("/", new Worker().get(new Relator(model(Units()
 
-                        .members(stash(query()
+                            .id(uri())
+                            .label(map(entry(ANY, "")))
 
-                                .model(model(Unit()
+                            .members(stash(query()
 
-                                        .id(uri())
-                                        .label(map(entry(ANY, "")))
+                                    .model(model(Unit()
 
-                                ))
+                                            .id(uri())
+                                            .label(map(entry(ANY, "")))
 
-                        ))
+                                    ))
 
-                ))))
+                            ))
 
-                .path("/{code}", unit());
+                    ))))
+
+                    .path("/{code}", new Unit.Handler())
+            );
+        }
+
     }
 
 }

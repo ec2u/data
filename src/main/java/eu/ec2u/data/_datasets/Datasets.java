@@ -16,7 +16,7 @@
 
 package eu.ec2u.data._datasets;
 
-import com.metreeca.flow.Handler;
+import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.handlers.Relator;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -36,6 +36,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
@@ -52,10 +53,17 @@ import static eu.ec2u.data._resources.Localized.EN;
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Datasets extends Dataset, Catalog<Datasets, Dataset> {
+public interface Datasets extends Dataset, Catalog<Dataset> {
 
-    URI METADATA=uri("/datasets/");
+    URI DATASETS=uri("/datasets/");
 
+
+    static void main(final String... args) {
+        exec(() -> service(store()).update(value(Datasets()), FORCE));
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     default URI id() {
@@ -80,7 +88,7 @@ public interface Datasets extends Dataset, Catalog<Datasets, Dataset> {
 
     @Override
     default URI isDefinedBy() {
-        return METADATA;
+        return DATASETS;
     }
 
 
@@ -102,30 +110,30 @@ public interface Datasets extends Dataset, Catalog<Datasets, Dataset> {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static void main(final String... args) {
-        exec(() -> service(store()).update(value(Datasets()), true));
-    }
+    final class Handler extends Delegator {
 
-    static Handler datasets() {
-        return new Worker().get(new Relator(model(Datasets()
+        public Handler() {
+            delegate(new Worker().get(new Relator(model(Datasets()
 
-                .id(uri())
-                .label(map(entry(ANY, "")))
+                    .id(uri())
+                    .label(map(entry(ANY, "")))
 
-                .members(stash(query()
+                    .members(stash(query()
 
-                        .model(model(Dataset()
+                            .model(model(Dataset()
 
-                                .id(uri())
-                                .label(map(entry(ANY, "")))
+                                    .id(uri())
+                                    .label(map(entry(ANY, "")))
 
-                        ))
+                            ))
 
-                        .criterion("issued", criterion().any(set()))
+                            .criterion("issued", criterion().any(set()))
 
-                ))
+                    ))
 
-        )));
+            ))));
+        }
+
     }
 
 }

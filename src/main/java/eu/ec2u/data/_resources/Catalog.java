@@ -21,10 +21,10 @@ import com.metreeca.mesh.meta.jsonld.Property;
 
 import java.util.Set;
 
-public interface Catalog<C extends Catalog<C, M>, M extends Member<C, M>> extends Reference {
+public interface Catalog<T extends Resource> extends Resource {
 
     @Foreign
     @Property("rdfs:member")
-    Set<M> members();
+    Set<T> members();
 
 }

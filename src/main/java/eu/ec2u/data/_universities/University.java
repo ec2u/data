@@ -31,14 +31,12 @@ import com.metreeca.mesh.meta.jsonld.Internal;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
-import com.metreeca.mesh.util.Collections;
 import com.metreeca.mesh.util.Locales;
 
+import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._organizations.OrgFormalOrganization;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.GeoReference;
-import eu.ec2u.data._resources.GeoReferenceFrame;
-import eu.ec2u.data._resources.Member;
 import eu.ec2u.data._resources.Resource;
 import eu.ec2u.work.focus.Rover;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
@@ -67,7 +65,10 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data._Data.exec;
 import static eu.ec2u.data._EC2U.EC2U;
+import static eu.ec2u.data._resources.GeoReferenceFrame.GeoReference;
 import static eu.ec2u.data._resources.Localized.*;
+import static eu.ec2u.data._universities.Universities.UNIVERSITIES;
+import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
 import static eu.ec2u.data._universities.UniversityFrame.University;
 import static eu.ec2u.data._universities.UniversityFrame.model;
 import static eu.ec2u.work.focus.Rover.rover;
@@ -77,7 +78,7 @@ import static java.util.stream.Collectors.joining;
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface University extends Resource, GeoReference, Member<Universities, University>, OrgFormalOrganization {
+public interface University extends Resource, GeoReference, OrgFormalOrganization {
 
     University Coimbra=Coimbra();
     University Iasi=Iasi();
@@ -102,7 +103,7 @@ public interface University extends Resource, GeoReference, Member<Universities,
 
     private static University Coimbra() {
         return University()
-                .id(eu.ec2u.data._universities.Universities.ID.resolve("coimbra"))
+                .id(UNIVERSITIES.resolve("coimbra"))
                 .prefLabel(map(
                         entry(EN, "University of Coimbra"),
                         entry(PT, "Universidade de Coimbra")
@@ -113,10 +114,10 @@ public interface University extends Resource, GeoReference, Member<Universities,
                 ))
                 .definition(map(
                         entry(EN, """
-                                Focused on the future and recognized as major promoter of change, the University of Coimbra \
-                                has more than 7 centuries of experience in the creation and dissemination of knowledge, \
-                                culture, science and technology through study, teaching, cutting-edge research and \
-                                innovation in the most diverse areas of knowledge."""
+                                Focused on the future and recognized as major promoter of change, the University of \
+                                Coimbra has more than 7 centuries of experience in the creation and dissemination of \
+                                knowledge, culture, science and technology through study, teaching, cutting-edge \
+                                research and innovation in the most diverse areas of knowledge."""
                         )
                 ))
                 .homepage(set(
@@ -130,13 +131,12 @@ public interface University extends Resource, GeoReference, Member<Universities,
                         uri("http://www.wikidata.org/entity/Q368643")
                 ))
                 .locale(PT)
-                .zone(ZoneId.of("Europe/Lisbon"))
-                .catalog(UniversitiesFrame.Universities());
+                .zone(ZoneId.of("Europe/Lisbon"));
     }
 
     private static University Iasi() {
         return University()
-                .id(eu.ec2u.data._universities.Universities.ID.resolve("iasi"))
+                .id(UNIVERSITIES.resolve("iasi"))
                 .prefLabel(map(
                         entry(EN, "Alexandru Ioan Cuza University of Iaşi"),
                         entry(RO, "Universitatea Alexandru Ioan Cuza din Iași")
@@ -148,11 +148,12 @@ public interface University extends Resource, GeoReference, Member<Universities,
                 .definition(map(
                         entry(EN, """
                                 Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania \
-                                (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of research, \
-                                education and institutional transparency. With about 23000 students and 2000 full-time \
-                                staff in its 15 faculties, our university's academic offer includes 80 degrees at bachelor \
-                                level (4 in English, 1 in French), 116 master level programmes (14 in English, 1 in French) \
-                                and 27 fields of study at the doctoral level (all offered in English as well)."""
+                                (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of \
+                                research, education and institutional transparency. With about 23000 students and 2000 \
+                                full-time staff in its 15 faculties, our university's academic offer includes 80 \
+                                degrees at bachelor level (4 in English, 1 in French), 116 master level programmes \
+                                (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered \
+                                in English as well)."""
                         )
                 ))
                 .homepage(set(
@@ -171,7 +172,7 @@ public interface University extends Resource, GeoReference, Member<Universities,
 
     private static University Jena() {
         return University()
-                .id(eu.ec2u.data._universities.Universities.ID.resolve("jena"))
+                .id(UNIVERSITIES.resolve("jena"))
                 .prefLabel(map(
                         entry(EN, "Friedrich Schiller University Jena"),
                         entry(DE, "Friedrich-Schiller-Universität Jena")
@@ -204,7 +205,7 @@ public interface University extends Resource, GeoReference, Member<Universities,
 
     private static University Linz() {
         return University()
-                .id(eu.ec2u.data._universities.Universities.ID.resolve("linz"))
+                .id(UNIVERSITIES.resolve("linz"))
                 .prefLabel(map(
                         entry(EN, "Johannes Kepler University Linz (JKU)"),
                         entry(DE, "Johannes Kepler Universität Linz (JKU)")
@@ -238,7 +239,7 @@ public interface University extends Resource, GeoReference, Member<Universities,
 
     private static University Pavia() {
         return University()
-                .id(eu.ec2u.data._universities.Universities.ID.resolve("pavia"))
+                .id(UNIVERSITIES.resolve("pavia"))
                 .prefLabel(map(
                         entry(EN, "University of Pavia"),
                         entry(IT, "Università di Pavia")
@@ -249,9 +250,9 @@ public interface University extends Resource, GeoReference, Member<Universities,
                 ))
                 .definition(map(
                         entry(EN, """
-                                The University of Pavia (UNIPV) is one of the world's oldest academic institutions: it was \
-                                founded in 1361 and until the 20th century it was the only University in the Milan Area and \
-                                the region of Lombardy."""
+                                The University of Pavia (UNIPV) is one of the world's oldest academic institutions: \
+                                it was founded in 1361 and until the 20th century it was the only University in the \
+                                Milan Area and the region of Lombardy."""
                         )
                 ))
                 .homepage(set(
@@ -270,7 +271,7 @@ public interface University extends Resource, GeoReference, Member<Universities,
 
     private static University Poitiers() {
         return University()
-                .id(eu.ec2u.data._universities.Universities.ID.resolve("poitiers"))
+                .id(UNIVERSITIES.resolve("poitiers"))
                 .prefLabel(map(
                         entry(EN, "University of Poitiers"),
                         entry(FR, "Université de Poitiers")
@@ -281,11 +282,11 @@ public interface University extends Resource, GeoReference, Member<Universities,
                 ))
                 .definition(map(
                         entry(EN, """
-                                Founded in 1431, the University of Poitiers is a multidisciplinary university which enro/costls \
-                                29,000 students, 4200 of which are international students from 120 different countries, \
-                                supervised by 2700 staff members (administrative, teaching staff and researchers). Poitiers \
-                                ranks 2nd in the overall ranking of major student cities in France in 2018-2019 and is above \
-                                the national average with 16% of foreign students."""
+                                Founded in 1431, the University of Poitiers is a multidisciplinary university which \
+                                enrols 29,000 students, 4200 of which are international students from 120 different \
+                                countries, supervised by 2700 staff members (administrative, teaching staff and \
+                                researchers). Poitiers ranks 2nd in the overall ranking of major student cities in \
+                                France in 2018-2019 and is above the national average with 16% of foreign students."""
                         )
                 ))
                 .homepage(set(
@@ -304,7 +305,7 @@ public interface University extends Resource, GeoReference, Member<Universities,
 
     private static University Salamanca() {
         return University()
-                .id(eu.ec2u.data._universities.Universities.ID.resolve("salamanca"))
+                .id(UNIVERSITIES.resolve("salamanca"))
                 .prefLabel(map(
                         entry(EN, "University of Salamanca"),
                         entry(ES, "Universidad de Salamanca")
@@ -337,7 +338,7 @@ public interface University extends Resource, GeoReference, Member<Universities,
 
     private static University Turku() {
         return University()
-                .id(eu.ec2u.data._universities.Universities.ID.resolve("turku"))
+                .id(UNIVERSITIES.resolve("turku"))
                 .prefLabel(map(
                         entry(EN, "University of Turku"),
                         entry(FI, "Turun Yliopisto")
@@ -377,13 +378,13 @@ public interface University extends Resource, GeoReference, Member<Universities,
 
                     .map(query -> fill(query, map(
 
-                            Collections.entry("universities", Universities.stream()
+                            entry("universities", Universities.stream()
                                     .map(u -> u.seeAlso().stream().findFirst().orElseThrow())
                                     .map("<%s>"::formatted)
                                     .collect(joining("\n"))
                             ),
 
-                            Collections.entry("languages", LANGUAGES.stream()
+                            entry("languages", LANGUAGES.stream()
                                     .map(Locales::locale)
                                     .map("\"%s\""::formatted)
                                     .collect(joining(", "))
@@ -403,9 +404,6 @@ public interface University extends Resource, GeoReference, Member<Universities,
                     .map(university -> {
 
                         final Rover focus=wikidata.focus(university.seeAlso().stream().findFirst().orElseThrow());
-
-                        final Integer students=focus.get(term("students")).integral().map(Long::intValue).orElse(0);
-                        final Year inception=focus.get(term("inception")).year().orElse(null);
                         final Rover city=focus.get(term("city"));
                         final Rover country=focus.get(term("country"));
 
@@ -425,17 +423,17 @@ public interface University extends Resource, GeoReference, Member<Universities,
                                 .flatMap(Wikidata::point);
 
                         return University(university)
-                                .students(students)
-                                .inception(inception)
+                                .students(focus.get(term("students")).integral().map(Long::intValue).orElse(0))
+                                .inception(focus.get(term("inception")).year().orElse(null))
                                 .longitude(coordinates.map(Wikidata.Point::longitude).orElse(0.0D))
                                 .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
-                                .city(GeoReferenceFrame.GeoReference()
+                                .city(GeoReference()
                                         .id(city.uri().orElse(null))
                                         .label(city.get(term("name")).texts().orElse(null))
                                         .longitude(cityCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
                                         .latitude(cityCoordinates.map(Wikidata.Point::latitude).orElse(0.0D))
                                 )
-                                .country(GeoReferenceFrame.GeoReference()
+                                .country(GeoReference()
                                         .id(country.uri().orElse(null))
                                         .label(country.get(term("name")).texts().orElse(null))
                                         .longitude(countyCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
@@ -465,6 +463,10 @@ public interface University extends Resource, GeoReference, Member<Universities,
     default Map<Locale, String> comment() {
         return definition();
     }
+
+
+    @Override
+    default Dataset dataset() { return Universities(); }
 
 
     @Required

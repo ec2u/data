@@ -19,16 +19,17 @@ package eu.ec2u.data._resources;
 import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
 
-import eu.ec2u.data._EC2U;
 import eu.ec2u.data._concepts.SKOSConcept;
-import eu.ec2u.data.universities.University;
+import eu.ec2u.data._datasets.Dataset;
 
 import java.net.URI;
 import java.util.Set;
 
+import static eu.ec2u.data._EC2U.BASE;
+
 @Frame
 @Class
-@Base(_EC2U.BASE)
+@Base(BASE)
 @Namespace(prefix="[ec2u]", value="/terms/")
 public interface Resource extends Reference {
 
@@ -37,9 +38,11 @@ public interface Resource extends Reference {
      */
     boolean generated();
 
-    University university();
 
-    @Property("concept")
+    @Property(reverse=true, value="rdfs:member")
+    Dataset dataset();
+
+    @Property(":concept")
     Set<SKOSConcept> concepts();
 
 

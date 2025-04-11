@@ -16,21 +16,23 @@
 
 package eu.ec2u.data._units;
 
-import com.metreeca.flow.Handler;
+import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data._EC2U;
 import eu.ec2u.data._organizations.OrgOrganizationalUnit;
-import eu.ec2u.data._resources.Member;
 import eu.ec2u.data._resources.Resource;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
@@ -38,14 +40,15 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data._Data.exec;
 import static eu.ec2u.data._concepts.SKOSConceptFrame.SKOSConcept;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._units.UnitFrame.*;
+import static eu.ec2u.data._units.UnitFrame.Unit;
+import static eu.ec2u.data._units.UnitFrame.model;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Unit extends Resource, OrgOrganizationalUnit, Member<Units, Unit> {
+public interface Unit extends Resource, OrgOrganizationalUnit {
 
     Unit GLADE=GLADE();
     Unit VIQE=VIQE();
@@ -173,24 +176,35 @@ public interface Unit extends Resource, OrgOrganizationalUnit, Member<Units, Uni
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(array(list(
-                value(GLADE),
-                value(VIQE),
-                value(VISCC),
-                value(VIPJSI)
-        )), true));
+        exec(() -> service(store()).update(array(list(Xtream
+
+                .of(
+                        GLADE,
+                        VIQE,
+                        VISCC,
+                        VIPJSI
+                )
+
+                .map(UnitFrame::value)
+                .optMap(new Validate().deep(true))
+
+        )), FORCE));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static Handler unit() {
-        return new Worker().get(new Relator(model(Unit()
+    final class Handler extends Delegator {
 
-                .id(uri())
-                .label(map(entry(ANY, "")))
+        public Handler() {
+            delegate(new Worker().get(new Relator(model(Unit()
 
-        )));
+                    .id(uri())
+                    .label(map(entry(ANY, "")))
+
+            ))));
+        }
+
     }
 
 }

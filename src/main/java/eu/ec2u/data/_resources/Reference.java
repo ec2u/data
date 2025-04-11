@@ -31,8 +31,8 @@ import java.util.Map;
 @Namespace(prefix="[rdfs]", value="http://www.w3.org/2000/01/rdf-schema#")
 public interface Reference {
 
-    int LabelLength=100;
-    int CommentLength=1000;
+    int LABEL_LENGTH=100;
+    int COMMENT_LENGTH=1000;
 
 
     @Id
@@ -44,11 +44,11 @@ public interface Reference {
 
     @Required
     @Localized
-    @MaxLength(LabelLength)
+    @MaxLength(LABEL_LENGTH)
     Map<Locale, String> label();
 
     @Localized
-    @MaxLength(CommentLength)
+    @MaxLength(COMMENT_LENGTH)
     Map<Locale, String> comment();
 
 }

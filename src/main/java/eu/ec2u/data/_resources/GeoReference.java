@@ -24,10 +24,10 @@ import com.metreeca.mesh.meta.jsonld.Property;
 @Namespace(prefix="[wgs]", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
 public interface GeoReference extends Reference {
 
-    @Property("long")
+    @Property("wgs:long")
     double longitude();
 
-    @Property("lat")
+    @Property("wgs:lat")
     double latitude();
 
 }

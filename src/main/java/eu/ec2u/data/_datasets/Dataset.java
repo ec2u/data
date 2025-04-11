@@ -21,9 +21,8 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data._assets.Asset;
-import eu.ec2u.data._resources.Member;
 
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Dataset extends Asset, VOIDDataset, Member<Datasets, Dataset> { }
+public interface Dataset extends Asset, VOIDDataset { }

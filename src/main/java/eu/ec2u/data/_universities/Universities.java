@@ -25,7 +25,6 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data._datasets.Dataset;
-import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
@@ -39,12 +38,14 @@ import java.util.Set;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.EC2U;
+import static eu.ec2u.data._datasets.Datasets.DATASETS;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
 import static eu.ec2u.data._universities.UniversitiesFrame.model;
@@ -56,21 +57,21 @@ import static java.util.Map.entry;
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Universities extends Dataset, Catalog<Universities, University> {
+public interface Universities extends Dataset, Catalog<eu.ec2u.data._universities.University> {
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(value(Universities()), true));
+        exec(() -> service(store()).update(value(Universities()), FORCE));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    URI ID=uri("/universities/");
+    URI UNIVERSITIES=uri("/universities/");
 
 
     @Override
     default URI id() {
-        return ID;
+        return UNIVERSITIES;
     }
 
 
@@ -91,7 +92,7 @@ public interface Universities extends Dataset, Catalog<Universities, University>
 
     @Override
     default URI isDefinedBy() {
-        return Datasets.METADATA.resolve("universities");
+        return DATASETS.resolve("universities");
     }
 
 
