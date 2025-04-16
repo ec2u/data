@@ -25,7 +25,8 @@ import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data._EC2U;
+import eu.ec2u.data.__._EC2U;
+import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._organizations.OrgOrganizationalUnit;
 import eu.ec2u.data._resources.Resource;
 
@@ -37,11 +38,13 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data._Data.exec;
+import static eu.ec2u.data.__._Data.exec;
 import static eu.ec2u.data._concepts.SKOSConceptFrame.SKOSConcept;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._units.UnitFrame.Unit;
 import static eu.ec2u.data._units.UnitFrame.model;
+import static eu.ec2u.data._units.Units.UNITS;
+import static eu.ec2u.data._units.UnitsFrame.Units;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 
@@ -58,7 +61,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     private static Unit GLADE() {
         return Unit()
-                .id(Units.ID.resolve("glade"))
+                .id(UNITS.resolve("glade"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Good Health and Well‑Being")))
                 .altLabel(map(entry(ROOT, "GLADE")))
                 .definition(map(entry(EN, """
@@ -87,7 +90,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     private static Unit VIQE() {
         return Unit()
-                .id(Units.ID.resolve("viqe"))
+                .id(UNITS.resolve("viqe"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Quality Education")))
                 .altLabel(map(entry(EN, "VIQE")))
                 .definition(map(entry(EN, """
@@ -112,7 +115,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     private static Unit VISCC() {
         return Unit()
-                .id(Units.ID.resolve("viscc"))
+                .id(UNITS.resolve("viscc"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Sustainable Cities and Communities")))
                 .altLabel(map(entry(EN, "VISCC")))
                 .definition(map(entry(EN, """
@@ -141,7 +144,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     private static Unit VIPJSI() {
         return Unit()
-                .id(Units.ID.resolve("vipjsi"))
+                .id(UNITS.resolve("vipjsi"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Peace, Justice and Strong Institutions")))
                 .altLabel(map(entry(EN, "VIPJSI")))
                 .definition(map(entry(EN, """
@@ -176,7 +179,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(array(list(Xtream
+        exec(() -> service(store()).partition(UNITS).update(array(list(Xtream
 
                 .of(
                         GLADE,
@@ -186,10 +189,16 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 )
 
                 .map(UnitFrame::value)
-                .optMap(new Validate().deep(true))
+                .optMap(new Validate())
 
         )), FORCE));
     }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    default Dataset dataset() { return Units(); }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

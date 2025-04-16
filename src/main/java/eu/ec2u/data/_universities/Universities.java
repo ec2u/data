@@ -48,7 +48,9 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.EC2U;
+import static eu.ec2u.data.__._EC2U.EC2U;
+import static eu.ec2u.data.__._EC2U.ROOT;
+import static eu.ec2u.data._datasets.Datasets.DATASETS;
 import static eu.ec2u.data._datasets.DatasetsFrame.Datasets;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
@@ -62,6 +64,9 @@ import static java.util.Map.entry;
 @Namespace("[ec2u]")
 public interface Universities extends Dataset, Catalog<University> {
 
+    URI UNIVERSITIES=ROOT.resolve("/universities/");
+
+
     static void main(final String... args) {
         exec(() -> {
 
@@ -72,7 +77,7 @@ public interface Universities extends Dataset, Catalog<University> {
 
             ));
 
-            service(store()).update(update, FORCE);
+            service(store()).partition(UNIVERSITIES).update(update, FORCE);
 
         });
     }
@@ -80,12 +85,10 @@ public interface Universities extends Dataset, Catalog<University> {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    URI ID=uri("/universities/");
-
 
     @Override
     default URI id() {
-        return ID;
+        return UNIVERSITIES;
     }
 
 
@@ -106,7 +109,7 @@ public interface Universities extends Dataset, Catalog<University> {
 
     @Override
     default URI isDefinedBy() {
-        return eu.ec2u.data._datasets.Datasets.ID.resolve("universities");
+        return DATASETS.resolve("universities");
     }
 
 

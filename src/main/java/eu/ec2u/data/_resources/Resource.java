@@ -25,7 +25,7 @@ import eu.ec2u.data._datasets.Dataset;
 import java.net.URI;
 import java.util.Set;
 
-import static eu.ec2u.data._EC2U.BASE;
+import static eu.ec2u.data.__._EC2U.BASE;
 
 @Frame
 @Class

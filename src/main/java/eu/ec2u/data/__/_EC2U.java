@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data;
+package eu.ec2u.data.__;
 
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
@@ -25,6 +25,8 @@ import eu.ec2u.data._organizations.OrgOrganizationFrame;
 import eu.ec2u.data._units.Units;
 import eu.ec2u.data._universities.Universities;
 
+import java.net.URI;
+
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
@@ -32,13 +34,15 @@ import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
 import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data._Data.exec;
+import static eu.ec2u.data.__._Data.exec;
 import static eu.ec2u.data._resources.Localized.EN;
 
 
 public final class _EC2U extends Delegator {
 
     public static final String BASE="https://data.ec2u.eu/";
+
+    public static final URI ROOT=uri(BASE);
 
     public static final OrgOrganization EC2U=OrgOrganizationFrame.OrgOrganization()
             .id(uri("https://ec2u.eu/"))

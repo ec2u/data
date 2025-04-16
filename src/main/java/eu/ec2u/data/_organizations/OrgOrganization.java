@@ -31,7 +31,12 @@ import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
+
+import static com.metreeca.flow.toolkits.Strings.clip;
+import static com.metreeca.mesh.util.Collections.entry;
+import static com.metreeca.mesh.util.Collections.map;
 
 @Frame
 @Class("org:Organization")
@@ -47,8 +52,12 @@ public interface OrgOrganization extends FOAFOrganization {
 
     @Override
 
-    default Map<Locale, String> comment() {
-        return definition(); // !!! clip
+    default Map<Locale, String> comment() { // !!! factor
+        return Optional.ofNullable(definition())
+                .map(definition -> map(definition.entrySet().stream()
+                        .map(e -> entry(e.getKey(), clip(e.getValue(), COMMENT_LENGTH)))
+                ))
+                .orElse(null);
     }
 
 

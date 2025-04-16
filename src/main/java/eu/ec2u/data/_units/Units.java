@@ -28,7 +28,6 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data._datasets.Dataset;
-import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._datasets.DatasetsFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.Catalog;
@@ -50,7 +49,9 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.EC2U;
+import static eu.ec2u.data.__._EC2U.EC2U;
+import static eu.ec2u.data.__._EC2U.ROOT;
+import static eu.ec2u.data._datasets.Datasets.DATASETS;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._units.UnitFrame.Unit;
 import static eu.ec2u.data._units.UnitFrame.model;
@@ -62,6 +63,9 @@ import static eu.ec2u.data._units.UnitsFrame.model;
 @Namespace("[ec2u]")
 public interface Units extends Dataset, Catalog<Unit> {
 
+    URI UNITS=ROOT.resolve("/units/");
+
+
     static void main(final String... args) {
         exec(() -> {
 
@@ -72,7 +76,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
             ));
 
-            service(store()).update(update, FORCE);
+            service(store()).partition(UNITS).update(update, FORCE);
 
         });
     }
@@ -86,12 +90,9 @@ public interface Units extends Dataset, Catalog<Unit> {
     //     dct:rights "Copyright © 2022‑2025 EC2U Alliance" .
 
 
-    URI ID=uri("/units/");
-
-
     @Override
     default URI id() {
-        return ID;
+        return UNITS;
     }
 
 
@@ -115,7 +116,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
     @Override
     default URI isDefinedBy() {
-        return Datasets.ID.resolve("units");
+        return DATASETS.resolve("units");
     }
 
 

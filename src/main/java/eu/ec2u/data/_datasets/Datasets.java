@@ -26,7 +26,7 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 import com.metreeca.mesh.queries.Table;
 
-import eu.ec2u.data._Data;
+import eu.ec2u.data.__._Data;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
@@ -51,8 +51,8 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._EC2U.BASE;
-import static eu.ec2u.data._EC2U.EC2U;
+import static eu.ec2u.data.__._EC2U.EC2U;
+import static eu.ec2u.data.__._EC2U.ROOT;
 import static eu.ec2u.data._datasets.DatasetFrame.Dataset;
 import static eu.ec2u.data._datasets.DatasetFrame.model;
 import static eu.ec2u.data._datasets.DatasetsFrame.Datasets;
@@ -64,7 +64,7 @@ import static eu.ec2u.data._resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Datasets extends Dataset, Catalog<Dataset> {
 
-    URI ID=uri("/datasets/");
+    URI DATASETS=ROOT.resolve("/datasets/");
 
 
     static void main(final String... args) {
@@ -77,10 +77,11 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
             ));
 
-            service(store()).update(update, FORCE);
+            service(store()).partition(DATASETS).update(update, FORCE);
 
         });
     }
+
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -107,7 +108,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
     @Override
     default URI isDefinedBy() {
-        return ID;
+        return DATASETS;
     }
 
 
@@ -171,7 +172,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
                 final Value stats=store.retrieve(model(Datasets()
 
-                        .id(uri(BASE))
+                        .id(ROOT)
 
                         .members(stash(query()
 
@@ -192,7 +193,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
                         ))
                 ));
 
-                store.mutate(mutation, FORCE);
+                store.partition(DATASETS.resolve("~")).mutate(mutation, FORCE);
 
             });
         }
