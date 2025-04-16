@@ -20,6 +20,7 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
+import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
 import { toValueString } from "@metreeca/core/value";
 import { useCollection } from "@metreeca/data/models/collection";
@@ -58,12 +59,7 @@ export const Datasets=immutable({
 		title: required(local),
 		alternative: optional(local),
 
-		// members: repeatable({
-		//
-		// 	count: virtual(optional(integer)),
-		// 	"count=count:members": optional(integer)
-		//
-		// })
+		entities: required(integer)
 
 	})
 
@@ -110,14 +106,14 @@ export function DataDatasets() {
 			alternative,
 			comment,
 
-			// members
+			entities
 
 		}) => {
 			return <ToolCard key={id} size={7.5}
 
 				title={<ToolLink>{{ id, label: ec2u(title) }}</ToolLink>}
 
-				// tags={toIntegerString(members[0].count || 0)}
+				tags={toIntegerString(entities)}
 				image={alternative && <span>{ec2u(toLocalString(alternative))}</span>}
 
 			>{

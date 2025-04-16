@@ -1,8 +1,8 @@
 cron:
 
-  - description: "universities - nightly housekeeping"
-    url: /cron/universities/
-    schedule: every day 00:00
+  - description: "datasets - nightly housekeeping"
+    url: /cron/datasets/
+    schedule: every day 00:05
 
 
   - description: "units › coimbra - nightly crawling"

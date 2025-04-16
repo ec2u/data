@@ -16,13 +16,24 @@
 
 package eu.ec2u.data._datasets;
 
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data._assets.Asset;
+import eu.ec2u.data._resources.Resource;
+
+import java.util.Set;
 
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Dataset extends Asset, VOIDDataset { }
+public interface Dataset extends Asset, VOIDDataset {
+
+    // @Override
+    // default Dataset dataset() { return Datasets(); }
+
+    @Foreign
+    @Property("^ec2u:dataset")
+    Set<Resource> resources();
+
+}

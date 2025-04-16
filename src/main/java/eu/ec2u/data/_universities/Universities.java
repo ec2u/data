@@ -19,7 +19,10 @@ package eu.ec2u.data._universities;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
@@ -37,6 +40,7 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
@@ -45,11 +49,10 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data._EC2U.EC2U;
-import static eu.ec2u.data._datasets.Datasets.DATASETS;
+import static eu.ec2u.data._datasets.DatasetsFrame.Datasets;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
 import static eu.ec2u.data._universities.UniversitiesFrame.model;
-import static eu.ec2u.data._universities.UniversitiesFrame.value;
 import static eu.ec2u.data._universities.UniversityFrame.University;
 import static eu.ec2u.data._universities.UniversityFrame.model;
 import static java.util.Map.entry;
@@ -57,21 +60,32 @@ import static java.util.Map.entry;
 @Frame
 @Virtual
 @Namespace("[ec2u]")
-public interface Universities extends Dataset, Catalog<eu.ec2u.data._universities.University> {
+public interface Universities extends Dataset, Catalog<University> {
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(value(Universities()), FORCE));
+        exec(() -> {
+
+            final Value update=array(list(Xtream.of(Universities())
+
+                    .map(UniversitiesFrame::value)
+                    .optMap(new Validate())
+
+            ));
+
+            service(store()).update(update, FORCE);
+
+        });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    URI UNIVERSITIES=uri("/universities/");
+    URI ID=uri("/universities/");
 
 
     @Override
     default URI id() {
-        return UNIVERSITIES;
+        return ID;
     }
 
 
@@ -92,7 +106,7 @@ public interface Universities extends Dataset, Catalog<eu.ec2u.data._universitie
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("universities");
+        return eu.ec2u.data._datasets.Datasets.ID.resolve("universities");
     }
 
 
@@ -115,6 +129,11 @@ public interface Universities extends Dataset, Catalog<eu.ec2u.data._universitie
     default Set<Reference> license() {
         return set(CCBYNCND40);
     }
+
+
+    @Override
+    default Dataset dataset() { return Datasets(); }
+
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -18,8 +18,8 @@ package eu.ec2u.data._resources;
 
 import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._concepts.SKOSConcept;
 import eu.ec2u.data._datasets.Dataset;
 
 import java.net.URI;
@@ -39,18 +39,13 @@ public interface Resource extends Reference {
     boolean generated();
 
 
-    @Property(reverse=true, value="rdfs:member")
-    Dataset dataset();
-
-    @Property(":concept")
-    Set<SKOSConcept> concepts();
-
-
-    @Property("rdfs:")
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     URI isDefinedBy();
 
     @Property("rdfs:")
     Set<URI> seeAlso();
+
+    @Required
+    Dataset dataset();
 
 }

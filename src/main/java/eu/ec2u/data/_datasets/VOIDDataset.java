@@ -16,10 +16,8 @@
 
 package eu.ec2u.data._datasets;
 
-import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-@Frame
 @Namespace(prefix="[void]", value="http://rdfs.org/ns/void#")
 public interface VOIDDataset {
 

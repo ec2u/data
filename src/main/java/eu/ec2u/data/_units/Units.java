@@ -19,13 +19,17 @@ package eu.ec2u.data._units;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._datasets.Datasets;
+import eu.ec2u.data._datasets.DatasetsFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
@@ -38,6 +42,7 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
@@ -51,7 +56,6 @@ import static eu.ec2u.data._units.UnitFrame.Unit;
 import static eu.ec2u.data._units.UnitFrame.model;
 import static eu.ec2u.data._units.UnitsFrame.Units;
 import static eu.ec2u.data._units.UnitsFrame.model;
-import static eu.ec2u.data._units.UnitsFrame.value;
 
 @Frame
 @Virtual
@@ -59,9 +63,19 @@ import static eu.ec2u.data._units.UnitsFrame.value;
 public interface Units extends Dataset, Catalog<Unit> {
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(value(Units()), FORCE));
-    }
+        exec(() -> {
 
+            final Value update=array(list(Xtream.of(Units())
+
+                    .map(UnitsFrame::value)
+                    .optMap(new Validate())
+
+            ));
+
+            service(store()).update(update, FORCE);
+
+        });
+    }
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +115,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
     @Override
     default URI isDefinedBy() {
-        return Datasets.DATASETS.resolve("units");
+        return Datasets.ID.resolve("units");
     }
 
 
@@ -124,6 +138,10 @@ public interface Units extends Dataset, Catalog<Unit> {
     default Set<Reference> license() {
         return set(CCBYNCND40);
     }
+
+
+    @Override
+    default Dataset dataset() { return DatasetsFrame.Datasets(); }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

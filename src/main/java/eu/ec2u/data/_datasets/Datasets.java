@@ -19,10 +19,14 @@ package eu.ec2u.data._datasets;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
+import com.metreeca.mesh.queries.Table;
 
+import eu.ec2u.data._Data;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
@@ -34,20 +38,25 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.Integer;
+import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Expression.expression;
+import static com.metreeca.mesh.queries.Probe.probe;
 import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.mesh.queries.Specs.specs;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._EC2U.BASE;
 import static eu.ec2u.data._EC2U.EC2U;
 import static eu.ec2u.data._datasets.DatasetFrame.Dataset;
 import static eu.ec2u.data._datasets.DatasetFrame.model;
 import static eu.ec2u.data._datasets.DatasetsFrame.Datasets;
 import static eu.ec2u.data._datasets.DatasetsFrame.model;
-import static eu.ec2u.data._datasets.DatasetsFrame.value;
 import static eu.ec2u.data._resources.Localized.EN;
 
 @Frame
@@ -55,13 +64,23 @@ import static eu.ec2u.data._resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Datasets extends Dataset, Catalog<Dataset> {
 
-    URI DATASETS=uri("/datasets/");
+    URI ID=uri("/datasets/");
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(value(Datasets()), FORCE));
-    }
+        exec(() -> {
 
+            final Value update=array(list(Xtream.of(Datasets())
+
+                            .map(DatasetFrame::value)
+                    // !!! .optMap(new Validate())
+
+            ));
+
+            service(store()).update(update, FORCE);
+
+        });
+    }
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -88,7 +107,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS;
+        return ID;
     }
 
 
@@ -106,6 +125,10 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
     default Set<Reference> license() {
         return set(CCBYNCND40);
     }
+
+
+    @Override
+    default Dataset dataset() { return null; }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,6 +155,46 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
                     ))
 
             ))));
+        }
+
+    }
+
+    final class Housekeeper implements Runnable {
+
+        public static void main(final String... args) {
+            _Data.exec(() -> new Housekeeper().run());
+        }
+
+        @Override
+        public void run() {
+            service(store()).execute(store -> {
+
+                final Value stats=store.retrieve(model(Datasets()
+
+                        .id(uri(BASE))
+
+                        .members(stash(query()
+
+                                .model(Value.value(specs(
+                                        probe("dataset", expression(), model(Dataset().id(uri()))),
+                                        probe("entities", expression("count:resources"), Integer())
+                                )))
+
+                        ))
+
+                ));
+
+                final Value mutation=array(list(stats.get("members").value(Table.class).stream()
+                        .flatMap(table -> table.rows().stream())
+                        .map(tuple -> model(Dataset()
+                                .id(tuple.value("dataset").flatMap(Value::id).orElse(null))
+                                .entities(tuple.value("entities").flatMap(Value::integral).orElse(0L).intValue())
+                        ))
+                ));
+
+                store.mutate(mutation, FORCE);
+
+            });
         }
 
     }

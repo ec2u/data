@@ -22,11 +22,11 @@ import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.services.Logger;
 
+import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offerings.*;
 import eu.ec2u.data.units.*;
-import eu.ec2u.data.universities.Universities_;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.Response.BadGateway;
@@ -47,7 +47,7 @@ public final class _Cron extends Delegator {
     public _Cron() {
         delegate(cron(new Router()
 
-                .path("/universities/", execute(new Universities_()))
+                .path("/datasets/", execute(new Datasets.Housekeeper()))
 
                 .path("/units/coimbra", execute(new UnitsCoimbra()))
                 .path("/units/iasi", execute(new UnitsIasi()))

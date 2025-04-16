@@ -19,23 +19,50 @@ package eu.ec2u.data._assets;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data._resources.Description;
+import eu.ec2u.data._concepts.SKOSConcept;
+import eu.ec2u.data._organizations.OrgOrganization;
+import eu.ec2u.data._resources.Localized;
+import eu.ec2u.data._resources.Reference;
 import eu.ec2u.data._resources.Resource;
 
+import java.net.URI;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Strings.clip;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
 
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data._resources.ReferenceFrame.Reference;
+import static eu.ec2u.data._resources.ReferenceFrame.value;
+import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.toMap;
 
 @Frame
-@Class
-@Namespace("[ec2u]")
-public interface Asset extends Resource, Description {
+@Class("ec2u:")
+@Namespace(prefix="[dct]", value="http://purl.org/dc/terms/")
+public interface Asset extends Resource {
+
+    Reference CCBYNCND40=Reference()
+            .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
+            .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
+            .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
+
+
+    static void main(final String... args) {
+        exec(() -> service(store()).update(value(CCBYNCND40), FORCE));
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     default Map<Locale, String> label() {
@@ -48,5 +75,37 @@ public interface Asset extends Resource, Description {
                 .flatMap(description -> description.entrySet().stream())
                 .collect(toMap(Entry::getKey, entry -> clip(entry.getValue())));
     }
+
+
+    @Required
+    @Localized
+    Map<Locale, String> title();
+
+    @Localized
+    Map<Locale, String> alternative();
+
+    @Localized
+    Map<Locale, String> description();
+
+
+    LocalDate created();
+
+    LocalDate issued();
+
+    LocalDate modified();
+
+
+    String rights();
+
+    Entry<Locale, String> accessRights();
+
+
+    OrgOrganization publisher();
+
+    Reference source();
+
+    Set<Reference> license();
+
+    Set<SKOSConcept> subject();
 
 }

@@ -22,6 +22,8 @@ import com.metreeca.flow.handlers.Router;
 import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._organizations.OrgOrganizationFrame;
+import eu.ec2u.data._units.Units;
+import eu.ec2u.data._universities.Universities;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -59,8 +61,8 @@ public final class _EC2U extends Delegator {
                 // !!! .path("/assets/*", new Resources())
                 // !!! .path("/concepts/*", new Concepts())
                 // !!! .path("/agents/*", new Agents())
-                // .path("/universities/*", new Universities.Handler())
-                // .path("/units/*", new Units.Handler())
+                        .path("/universities/*", new Universities.Handler())
+                        .path("/units/*", new Units.Handler())
                 // !!! .path("/documents/*", new Documents())
                 // !!! .path("/actors/*", new Actors())
                 // !!! .path("/things/*", new Schema())
