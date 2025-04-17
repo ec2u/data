@@ -15,6 +15,7 @@
  */
 
 import { Universities } from "@ec2u/data/pages/universities/universities";
+import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required, virtual } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
@@ -70,7 +71,7 @@ export function DataUniversity() {
 
 			dataset: required({
 				id: required(id),
-				label: required(local)
+				alternative: required(local)
 			}),
 
 			resources: virtual(required(integer)),
@@ -113,7 +114,7 @@ export function DataUniversity() {
 
 					label: <ToolLink filter={[dataset, { university }]}>{{
 						id: dataset.id,
-						label: (dataset.label)
+						label: ec2u(dataset.alternative)
 					}}</ToolLink>,
 
 					value: toIntegerString(resources)

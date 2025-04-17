@@ -25,7 +25,6 @@ import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data._agents.FOAFPerson;
@@ -73,7 +72,6 @@ import static java.util.Locale.ROOT;
 
 @Frame
 @Virtual
-@Namespace("[ec2u]")
 public interface Units extends Dataset, Catalog<Unit> {
 
     URI UNITS=DATA.resolve("/units/");

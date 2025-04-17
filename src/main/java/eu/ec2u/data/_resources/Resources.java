@@ -23,13 +23,12 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Relator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data.__._EC2U;
 import eu.ec2u.data._datasets.Dataset;
-import eu.ec2u.data._datasets.DatasetFrame;
 import eu.ec2u.data._datasets.DatasetsFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
-import eu.ec2u.data._units.UnitFrame;
 import eu.ec2u.data._units.UnitsFrame;
 
 import java.net.URI;
@@ -47,17 +46,21 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
+import static eu.ec2u.data._datasets.DatasetFrame.Dataset;
 import static eu.ec2u.data._datasets.Datasets.DATASETS;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._units.UnitFrame.Unit;
+import static eu.ec2u.data._resources.ResourceFrame.Resource;
+import static eu.ec2u.data._resources.ResourcesFrame.model;
 import static eu.ec2u.data._units.UnitsFrame.Units;
-import static eu.ec2u.data._units.UnitsFrame.model;
 import static eu.ec2u.data._universities.UniversityFrame.University;
 
+@Frame
+@Virtual
 public interface Resources extends Dataset, Catalog<Resource> {
 
-    URI RESOURCES=_EC2U.DATA.resolve("/resources/");
+    URI RESOURCES=DATA.resolve("/resources/");
 
 
     static void main(final String... args) {
@@ -124,19 +127,19 @@ public interface Resources extends Dataset, Catalog<Resource> {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Router().path("/", new Worker().get(new Relator(model(Units()
+            delegate(new Router().path("/", new Worker().get(new Relator(model(ResourcesFrame.Resources()
 
                     .id(uri())
                     .label(map(entry(ANY, "")))
 
                     .members(stash(query()
 
-                            .model(UnitFrame.model(Unit()
+                            .model(ResourceFrame.model(Resource()
 
                                     .id(uri())
                                     .label(map(entry(ANY, "")))
 
-                                    .dataset(DatasetFrame.Dataset()
+                                    .dataset(Dataset()
 
                                             .id(uri())
                                             .label(map(entry(ANY, "")))
