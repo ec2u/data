@@ -16,10 +16,8 @@
 
 package eu.ec2u.data._organizations;
 
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Property;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data._agents.FOAFOrganization;
@@ -89,14 +87,18 @@ public interface OrgOrganization extends FOAFOrganization {
 
     Set<OrgOrganization> subOrganizationOf();
 
+    @Foreign
     Set<OrgOrganization> hasSubOrganization();
 
+    @Foreign
     Set<OrgOrganizationalUnit> hasUnit();
 
 
+    @Foreign
     @Property("^org:headOf")
     Set<FOAFPerson> hasHead();
 
+    @Foreign
     Set<FOAFPerson> hasMember();
 
 }

@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._agents;
+package eu.ec2u.data._taxonomies;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+
+import eu.ec2u.data._assets.Asset;
+import eu.ec2u.data._concepts.SKOSConceptScheme;
 
 @Frame
-@Class("foaf:Organization")
-public interface FOAFOrganization extends FOAFAgent { }
+@Class
+@Namespace("[ec2u]")
+public interface Taxonomy extends Asset, SKOSConceptScheme { }

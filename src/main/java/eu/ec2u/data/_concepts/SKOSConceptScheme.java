@@ -17,7 +17,9 @@
 package eu.ec2u.data._concepts;
 
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Foreign;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Property;
 
 import java.util.Set;
 
@@ -27,6 +29,11 @@ public interface SKOSConceptScheme extends SKOS {
 
     // !!! label/comment
 
+    @Foreign
+    @Property("^skos:inScheme")
+    Set<SKOSConcept> hasConcept();
+
+    @Foreign
     Set<SKOSConcept> hasTopConcept();
 
 }

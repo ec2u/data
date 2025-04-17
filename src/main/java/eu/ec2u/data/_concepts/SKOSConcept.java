@@ -16,10 +16,11 @@
 
 package eu.ec2u.data._concepts;
 
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.Required;
 
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -37,19 +38,26 @@ public interface SKOSConcept extends SKOS {
 
     Map<Locale, String> definition();
 
+    Map<URI, Set<String>> notation();
+
 
     @Required
     SKOSConceptScheme inScheme();
 
+    @Inverse("skos:hasTopConcept")
     SKOSConceptScheme topConceptOf();
 
 
-    Set<SKOSConcept> broader();
-
+    @Foreign
     Set<SKOSConcept> narrower();
 
+    @Inverse("skos:narrower")
+    Set<SKOSConcept> broader();
+
+    @Symmetric
     Set<SKOSConcept> related();
 
+    @Symmetric
     Set<SKOSConcept> exactMatch();
 
 }
