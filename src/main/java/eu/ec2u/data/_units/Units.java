@@ -21,23 +21,29 @@ import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
+import eu.ec2u.data._agents.FOAFPerson;
+import eu.ec2u.data._concepts.SKOSConceptScheme;
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._datasets.DatasetsFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
+import eu.ec2u.data._universities.University;
+import eu.ec2u.work.feeds.CSVProcessor;
+import eu.ec2u.work.feeds.Parsers;
+import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -49,21 +55,28 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
-import static eu.ec2u.data.__._EC2U.ROOT;
+import static eu.ec2u.data._concepts.SKOSConceptSchemeFrame.SKOSConceptScheme;
 import static eu.ec2u.data._datasets.Datasets.DATASETS;
+import static eu.ec2u.data._organizations.OrgOrganizationFrame.OrgOrganization;
+import static eu.ec2u.data._persons.Person.person;
 import static eu.ec2u.data._resources.Localized.EN;
+import static eu.ec2u.data._units.Unit.VIS;
 import static eu.ec2u.data._units.UnitFrame.Unit;
 import static eu.ec2u.data._units.UnitFrame.model;
 import static eu.ec2u.data._units.UnitsFrame.Units;
 import static eu.ec2u.data._units.UnitsFrame.model;
+import static eu.ec2u.data._universities.University.uuid;
+import static java.lang.String.format;
+import static java.util.Locale.ROOT;
 
 @Frame
 @Virtual
 @Namespace("[ec2u]")
 public interface Units extends Dataset, Catalog<Unit> {
 
-    URI UNITS=ROOT.resolve("/units/");
+    URI UNITS=DATA.resolve("/units/");
 
 
     static void main(final String... args) {
@@ -81,13 +94,14 @@ public interface Units extends Dataset, Catalog<Unit> {
         });
     }
 
+
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // </concepts/research-topics> a skos:ConceptScheme ;
-    //     dct:issued "2024-01-01"^^xsd:date ;
-    //     dct:title "EC2U Research Unit Topics"@en ;
-    //     dct:description "> [!WARNING]\n> To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
-    //     dct:rights "Copyright © 2022‑2025 EC2U Alliance" .
+    SKOSConceptScheme RESEARCH_TOPICS=SKOSConceptScheme();
+    // !!! dct:issued "2024-01-01"^^xsd:date ;
+    // !!! dct:title "EC2U Research Unit Topics"@en ;
+    // !!! dct:description "> [!WARNING]\n> To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
+    // !!! dct:rights "Copyright © 2022‑2025 EC2U Alliance" .
 
 
     @Override
@@ -141,7 +155,7 @@ public interface Units extends Dataset, Catalog<Unit> {
     }
 
 
-    @Override
+    @Override // !!! remove
     default Dataset dataset() { return DatasetsFrame.Datasets(); }
 
 
@@ -173,6 +187,258 @@ public interface Units extends Dataset, Catalog<Unit> {
                     .path("/{code}", new Unit.Handler())
             );
         }
+
+    }
+
+    final class CSVLoader extends CSVProcessor<Unit> {
+
+        private final University university;
+
+
+        CSVLoader(final University university) {
+
+            if ( university == null ) {
+                throw new NullPointerException("null university");
+            }
+
+            this.university=university;
+        }
+
+
+        @Override protected Optional<Unit> process(final CSVRecord record, final Collection<CSVRecord> records) {
+            return id(record).map(id -> Unit()
+
+                    .id(id)
+                    .university(university)
+
+                    .identifier(value(record, "Code")
+                            .map(v -> entry(university.id(), v))
+                            .orElse(null)
+                    )
+
+                    .unitOf(set(Stream.concat(
+
+                            value(record, "Parent")
+                                    .map(parent -> parents(parent, records))
+                                    .orElseGet(() -> Stream.of(university)),
+
+                            value(record, "VI")
+                                    .flatMap(this::vi)
+                                    .stream()
+
+                    )))
+
+                    // field(ORG.CLASSIFICATION, value(record, "Type")
+                    //         .flatMap(this::type)
+                    // ),
+
+                    // field(DCTERMS.SUBJECT, value(record, "Sector")
+                    //         .flatMap(this::sector)
+                    // ),
+
+                    // field(DCTERMS.SUBJECT, Stream.concat(
+                    //
+                    //         value(record, "Topics (English)").stream()
+                    //                 .flatMap(topics -> topics(topics, "en")),
+                    //
+                    //         value(record, "Topics (Local)").stream()
+                    //                 .flatMap(topics -> topics(topics, university.language))
+                    //
+                    // )),
+
+                    .prefLabel(map(Xtream.from(
+                            value(record, "Name (English)").stream().map(v -> entry(EN, v)),
+                            value(record, "Name (Local)").stream().map(v -> entry(university.locale(), v))
+                    )))
+
+                    .altLabel(map(Xtream.from(
+                            value(record, "Acronym").stream().map(v -> entry(ROOT, v))
+                    )))
+
+                    .definition(map(Xtream.from(
+                            value(record, "Description (English)").stream().map(v -> entry(EN, v)),
+                            value(record, "Description (Local)").stream().map(v -> entry(university.locale(), v))
+                    )))
+
+                    .homepage(set(Xtream.from(
+
+                            value(record, "Factsheet", Parsers::uri).stream(),
+                            value(record, "Factsheet (English)", Parsers::uri).stream(), // !!! record language
+                            value(record, "Factsheet (Local)", Parsers::uri).stream(), // !!! record language
+
+                            value(record, "Homepage", Parsers::uri).stream(),
+                            value(record, "Homepage (English)", Parsers::uri).stream(), // !!! record language
+                            value(record, "Homepage (Local)", Parsers::uri).stream() // !!! record language
+
+                    )))
+
+                    .mbox(set(
+                            value(record, "Email", Parsers::email).stream()
+                    ))
+
+                    .hasHead(set(value(record, "Head", person -> person(person, university))
+                            .map(FOAFPerson.class::cast)
+                            .stream()
+                    ))
+
+            );
+        }
+
+
+        private Optional<URI> id(final CSVRecord record) {
+
+            final Optional<String> code=value(record, "Code");
+            final Optional<String> nameEnglish=value(record, "Name (English)");
+            final Optional<String> nameLocal=value(record, "Name (Local)");
+
+            if ( nameEnglish.isEmpty() && nameLocal.isEmpty() ) {
+
+                warning(record, "no name provided");
+
+                return Optional.empty();
+
+            } else {
+
+                return Optional.of(UNITS.resolve(uuid(university, code
+                        .or(() -> nameEnglish)
+                        .or(() -> nameLocal)
+                        .orElse("") // unexpected
+                )));
+
+            }
+        }
+
+        private Stream<OrgOrganization> parents(final String parent, final Collection<CSVRecord> records) {
+
+            final List<OrgOrganization> parents=Xtream.of(parent)
+                    .flatMap(Strings::split)
+                    .optMap(ref -> {
+
+                        final Optional<URI> id=records.stream()
+
+                                .filter(record -> value(record, "Code").filter(ref::equalsIgnoreCase)
+                                        .or(() -> value(record, "Acronym").filter(ref::equalsIgnoreCase))
+                                        .or(() -> value(record, "Name (English)").filter(ref::equalsIgnoreCase))
+                                        .or(() -> value(record, "Name (Local)").filter(ref::equalsIgnoreCase))
+                                        .isPresent()
+                                )
+
+                                .findFirst()
+
+                                .flatMap(this::id);
+
+                        if ( id.isEmpty() ) {
+                            warning(format("unknown parent <%s>", ref));
+                        }
+
+                        return id;
+
+                    })
+                    .map(id -> (OrgOrganization)OrgOrganization().id(id))
+                    .toList();
+
+            return parents.isEmpty() ? Stream.of(university) : parents.stream();
+        }
+
+        private Optional<Unit> vi(final String code) {
+            return VIS.stream()
+                    .filter(vi -> entry(DATA, code).equals(vi.identifier()))
+                    .findFirst();
+        }
+
+        // private Optional<org.eclipse.rdf4j.model.Value> sector(final String sector) {
+        //     return Optional
+        //
+        //             .of(sectors.computeIfAbsent(sector, key -> graph.query(connection -> {
+        //
+        //                 final TupleQuery query=connection.prepareTupleQuery("""
+        //                         \
+        //                         prefix skos: <http://www.w3.org/2004/02/skos/core#>
+        //
+        //                         select ?concept {
+        //
+        //                             ?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label.\s
+        //
+        //                             filter (lcase(str(?label)) = lcase(str($value)))
+        //
+        //                         }
+        //                         """
+        //                 );
+        //
+        //                 query.setBinding("scheme", EuroSciVoc.Scheme);
+        //                 query.setBinding("value", literal(key));
+        //
+        //                 try ( final TupleQueryResult evaluate=query.evaluate() ) {
+        //
+        //                     return evaluate.stream().findFirst()
+        //                             .map(bindings -> bindings.getValue("concept"))
+        //                             .orElseGet(() -> {
+        //
+        //                                 warning(format("unknown sector <%s>", key));
+        //
+        //                                 return RDF.NIL;
+        //
+        //                             });
+        //
+        //                 }
+        //
+        //             })))
+        //
+        //             .filter(not(RDF.NIL::equals));
+        // }
+
+        // private Optional<org.eclipse.rdf4j.model.Value> type(final String type) {
+        //     return Optional
+        //
+        //             .of(types.computeIfAbsent(type, key -> graph.query(connection -> {
+        //
+        //                 final TupleQuery query=connection.prepareTupleQuery(""
+        //                                                                     +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
+        //                                                                     +"\n"
+        //                                                                     +"select ?concept {\n"
+        //                                                                     +"\n"
+        //                                                                     +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
+        //                                                                     +"\n"
+        //                                                                     +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
+        //                                                                     +"\n"
+        //                                                                     +"}\n"
+        //                 );
+        //
+        //                 query.setBinding("scheme", OrganizationTypes.OrganizationTypes);
+        //                 query.setBinding("value", literal(key));
+        //
+        //                 try ( final TupleQueryResult evaluate=query.evaluate() ) {
+        //
+        //                     return evaluate.stream().findFirst()
+        //                             .map(bindings -> bindings.getValue("concept"))
+        //                             .orElseGet(() -> {
+        //
+        //                                 warning(format("unknown unit type <%s>", key));
+        //
+        //                                 return RDF.NIL;
+        //
+        //                             });
+        //
+        //                 }
+        //
+        //             })))
+        //
+        //             .filter(not(RDF.NIL::equals));
+        // }
+
+        // private Stream<eu.ec2u.work._junk.Frame> topics(final String topics, final String language) {
+        //     return Stream.of(topics)
+        //
+        //             .flatMap(Strings::split)
+        //             .map(v -> literal(v, language))
+        //
+        //             .map(label -> frame(
+        //                     field(ID, eu.ec2u.data.EC2U.item(ResearchTopics, label.stringValue())),
+        //                     field(TYPE, SKOS.CONCEPT),
+        //                     field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
+        //                     field(SKOS.PREF_LABEL, label)
+        //             ));
+        // }
 
     }
 

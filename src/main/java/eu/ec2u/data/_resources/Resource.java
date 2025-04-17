@@ -21,6 +21,7 @@ import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data._datasets.Dataset;
+import eu.ec2u.data._universities.University;
 
 import java.net.URI;
 import java.util.Set;
@@ -47,5 +48,7 @@ public interface Resource extends Reference {
 
     @Required
     Dataset dataset();
+
+    University university();
 
 }

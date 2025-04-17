@@ -17,6 +17,7 @@
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, repeatable, required } from "@metreeca/core";
+import { toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
@@ -114,7 +115,7 @@ export function DataUniversities() {
 				title={<ToolLink>{{ id, label: prefLabel }}</ToolLink>}
 				image={depiction[0]}
 
-				// !!! tags={<span>{toEntryString(country)}</span>}
+				tags={<span>{toEntryString(country)}</span>}
 
 			>{
 

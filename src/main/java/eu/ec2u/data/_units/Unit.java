@@ -24,11 +24,16 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Property;
 
-import eu.ec2u.data.__._EC2U;
+import eu.ec2u.data._concepts.SKOSConcept;
+import eu.ec2u.data._concepts.SKOSConceptFrame;
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._organizations.OrgOrganizationalUnit;
 import eu.ec2u.data._resources.Resource;
+
+import java.util.Locale;
+import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -39,31 +44,44 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.__._Data.exec;
+import static eu.ec2u.data.__._EC2U.DATA;
+import static eu.ec2u.data.__._EC2U.EC2U;
 import static eu.ec2u.data._concepts.SKOSConceptFrame.SKOSConcept;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._units.UnitFrame.Unit;
 import static eu.ec2u.data._units.UnitFrame.model;
 import static eu.ec2u.data._units.Units.UNITS;
 import static eu.ec2u.data._units.UnitsFrame.Units;
-import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 
 @Frame
 @Class
 @Namespace("[ec2u]")
+@Namespace(prefix="dct", value="http://purl.org/dc/terms/")
 public interface Unit extends Resource, OrgOrganizationalUnit {
+
+    SKOSConceptFrame VIRTUAL=SKOSConcept() // !!! update to std org taxonomy
+            .id(DATA.resolve("/concepts/organizations/university-unit/institute/virtual"));
 
     Unit GLADE=GLADE();
     Unit VIQE=VIQE();
     Unit VISCC=VISCC();
     Unit VIPJSI=VIPJSI();
 
+    Set<Unit> VIS=set(
+            GLADE,
+            VIQE,
+            VISCC,
+            VIPJSI
+    );
+
 
     private static Unit GLADE() {
         return Unit()
                 .id(UNITS.resolve("glade"))
+                .identifier(entry(DATA, "GLADE"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Good Health and Well‑Being")))
-                .altLabel(map(entry(ROOT, "GLADE")))
+                .altLabel(map(entry(Locale.ROOT, "GLADE")))
                 .definition(map(entry(EN, """
                         GLADE is the EC2U Alliance’s Virtual Institute aimed to develop specific approaches in education,
                         research, innovation and service transfer to the community in areas of the third UNSDG: Good
@@ -82,15 +100,14 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                         """
                 )))
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/glade-for-researchers-staff/")))
-                .unitOf(set(_EC2U.EC2U))
-                .classification(set(SKOSConcept()
-                        .id(uri("/concepts/organizations/university-unit/institute/virtual"))
-                ));
+                .unitOf(set(EC2U))
+                .classification(set(VIRTUAL));
     }
 
     private static Unit VIQE() {
         return Unit()
                 .id(UNITS.resolve("viqe"))
+                .identifier(entry(DATA, "VIQE"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Quality Education")))
                 .altLabel(map(entry(EN, "VIQE")))
                 .definition(map(entry(EN, """
@@ -107,15 +124,14 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                         """
                 )))
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-quality-education-viqe/")))
-                .unitOf(set(_EC2U.EC2U))
-                .classification(set(SKOSConcept()
-                        .id(uri("/concepts/organizations/university-unit/institute/virtual"))
-                ));
+                .unitOf(set(EC2U))
+                .classification(set(VIRTUAL));
     }
 
     private static Unit VISCC() {
         return Unit()
                 .id(UNITS.resolve("viscc"))
+                .identifier(entry(DATA, "VISCC"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Sustainable Cities and Communities")))
                 .altLabel(map(entry(EN, "VISCC")))
                 .definition(map(entry(EN, """
@@ -136,15 +152,14 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                         """
                 )))
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-sustainable-cities-and-communities/")))
-                .unitOf(set(_EC2U.EC2U))
-                .classification(set(SKOSConcept()
-                        .id(uri("/concepts/organizations/university-unit/institute/virtual"))
-                ));
+                .unitOf(set(EC2U))
+                .classification(set(VIRTUAL));
     }
 
     private static Unit VIPJSI() {
         return Unit()
                 .id(UNITS.resolve("vipjsi"))
+                .identifier(entry(DATA, "VIPJSI"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Peace, Justice and Strong Institutions")))
                 .altLabel(map(entry(EN, "VIPJSI")))
                 .definition(map(entry(EN, """
@@ -171,10 +186,8 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                         """
                 )))
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-peace-justice-and-strong-institutions/")))
-                .unitOf(set(_EC2U.EC2U))
-                .classification(set(SKOSConcept()
-                        .id(uri("/concepts/organizations/university-unit/institute/virtual"))
-                ));
+                .unitOf(set(EC2U))
+                .classification(set(VIRTUAL));
     }
 
 
@@ -199,6 +212,10 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     @Override
     default Dataset dataset() { return Units(); }
+
+
+    @Property("dct:")
+    Set<SKOSConcept> subject();
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

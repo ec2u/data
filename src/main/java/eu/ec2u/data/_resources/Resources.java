@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._universities;
+package eu.ec2u.data._resources;
 
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
@@ -23,24 +23,23 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Relator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Virtual;
 
+import eu.ec2u.data.__._EC2U;
 import eu.ec2u.data._datasets.Dataset;
+import eu.ec2u.data._datasets.DatasetFrame;
+import eu.ec2u.data._datasets.DatasetsFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
-import eu.ec2u.data._resources.Catalog;
-import eu.ec2u.data._resources.Reference;
+import eu.ec2u.data._units.UnitFrame;
+import eu.ec2u.data._units.UnitsFrame;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
@@ -48,36 +47,30 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
 import static eu.ec2u.data._datasets.Datasets.DATASETS;
-import static eu.ec2u.data._datasets.DatasetsFrame.Datasets;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
-import static eu.ec2u.data._universities.UniversitiesFrame.model;
+import static eu.ec2u.data._units.UnitFrame.Unit;
+import static eu.ec2u.data._units.UnitsFrame.Units;
+import static eu.ec2u.data._units.UnitsFrame.model;
 import static eu.ec2u.data._universities.UniversityFrame.University;
-import static eu.ec2u.data._universities.UniversityFrame.model;
-import static java.util.Map.entry;
 
-@Frame
-@Virtual
-@Namespace("[ec2u]")
-public interface Universities extends Dataset, Catalog<University> {
+public interface Resources extends Dataset, Catalog<Resource> {
 
-    URI UNIVERSITIES=DATA.resolve("/universities/");
+    URI RESOURCES=_EC2U.DATA.resolve("/resources/");
 
 
     static void main(final String... args) {
         exec(() -> {
 
-            final Value update=array(list(Xtream.of(Universities())
+            final Value update=array(list(Xtream.of(Units())
 
-                    .map(UniversitiesFrame::value)
+                    .map(UnitsFrame::value)
                     .optMap(new Validate())
 
             ));
 
-            service(store()).partition(UNIVERSITIES).update(update, FORCE);
+            service(store()).partition(RESOURCES).update(update, FORCE);
 
         });
     }
@@ -85,37 +78,30 @@ public interface Universities extends Dataset, Catalog<University> {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     @Override
     default URI id() {
-        return UNIVERSITIES;
+        return RESOURCES;
     }
 
 
     @Override
     default Map<Locale, String> title() {
-        return map(entry(EN, "EC2U Allied Universities"));
+        return map(entry(EN, "EC2U Knowledge Hub Resources"));
     }
 
     @Override
     default Map<Locale, String> alternative() {
-        return map(entry(EN, "EC2U Universities"));
+        return map(entry(EN, "EC2U Resources"));
     }
 
     @Override
     default Map<Locale, String> description() {
-        return map(entry(EN, "Background information about EC2U allied universities."));
+        return map(entry(EN, "Shared resources published on the EC2U Knowledge Hub."));
     }
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("universities");
-    }
-
-
-    @Override
-    default LocalDate issued() {
-        return LocalDate.parse("2022-01-01");
+        return DATASETS.resolve("resources");
     }
 
     @Override
@@ -128,15 +114,9 @@ public interface Universities extends Dataset, Catalog<University> {
         return EC2U;
     }
 
-    @Override
-    default Set<Reference> license() {
-        return set(CCBYNCND40);
-    }
 
-
-    @Override
-    default Dataset dataset() { return Datasets(); }
-
+    @Override // !!! remove
+    default Dataset dataset() { return DatasetsFrame.Datasets(); }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,31 +124,40 @@ public interface Universities extends Dataset, Catalog<University> {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Router()
+            delegate(new Router().path("/", new Worker().get(new Relator(model(Units()
 
-                    .path("/", new Worker().get(new Relator(model(Universities()
+                    .id(uri())
+                    .label(map(entry(ANY, "")))
 
-                            .id(uri())
-                            .label(map(entry(ANY, "")))
+                    .members(stash(query()
 
-                            .members(stash(query()
+                            .model(UnitFrame.model(Unit()
 
-                                    .model(model(University()
+                                    .id(uri())
+                                    .label(map(entry(ANY, "")))
+
+                                    .dataset(DatasetFrame.Dataset()
 
                                             .id(uri())
                                             .label(map(entry(ANY, "")))
 
-                                    ))
+                                    )
+
+                                    .university(University()
+
+                                            .id(uri())
+                                            .label(map(entry(ANY, "")))
+
+                                    )
 
                             ))
 
-                    ))))
+                            .criterion("dataset.issued", criterion().any(set()))
 
-                    .path("/{code}", new University.Handler())
+                    ))
 
-            );
+            )))));
         }
 
     }
-
 }

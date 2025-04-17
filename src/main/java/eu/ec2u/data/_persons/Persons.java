@@ -14,30 +14,14 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data._agents;
+package eu.ec2u.data._persons;
 
-import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
+import java.net.URI;
 
-import eu.ec2u.data._organizations.OrgOrganization;
+import static eu.ec2u.data.__._EC2U.DATA;
 
-import java.util.Set;
+public interface Persons {
 
-@Frame
-@Class("foaf:Person")
-@Namespace(prefix="org", value="http://www.w3.org/ns/org#")
-public interface FOAFPerson extends FOAFAgent {
-
-    String title();
-
-    String givenName();
-
-    String familyName();
-
-
-    Set<OrgOrganization> headOf();
-
-    Set<OrgOrganization> memberOf();
+    URI PERSONS=DATA.resolve("/persons/");
 
 }

@@ -14,32 +14,34 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.units;
+package eu.ec2u.data._units;
 
-import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 
-import eu.ec2u.work._junk.Frame;
-import org.eclipse.rdf4j.model.IRI;
+import java.net.URI;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Vault.vault;
+import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.universities.University.Iasi;
+import static eu.ec2u.data._units.Units.UNITS;
+import static eu.ec2u.data._universities.University.LINZ;
 
-public final class UnitsIasi implements Runnable {
+public final class UnitsLinz implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/iasi");
+    private static final URI CONTEXT=UNITS.resolve("linz");
 
-    private static final String DataUrl="units-iasi-url"; // vault label
+    private static final String DATA_URL="units-linz-url"; // vault label
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitsIasi().run());
+        exec(() -> new UnitsLinz().run());
     }
 
 
@@ -47,25 +49,19 @@ public final class UnitsIasi implements Runnable {
 
     private final Vault vault=service(vault());
 
-
     @Override public void run() {
 
-        final String url=vault.get(DataUrl);
+        final String url=vault.get(DATA_URL);
 
-        update(connection -> Xtream.of(url)
+        service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new Units_.CSVLoader(Iasi))
+                .flatMap(new eu.ec2u.data._units.Units.CSVLoader(LINZ))
 
-                .flatMap(Frame::stream)
-                .batch(0)
+                .map(UnitFrame::value)
+                .optMap(new Validate())
 
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-
-        );
-
+        )), FORCE);
     }
+
 
 }

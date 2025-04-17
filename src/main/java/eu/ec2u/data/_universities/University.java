@@ -32,6 +32,7 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
 import com.metreeca.mesh.util.Locales;
+import com.metreeca.mesh.util.URIs;
 
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._organizations.OrgFormalOrganization;
@@ -45,7 +46,6 @@ import java.net.URI;
 import java.time.Year;
 import java.time.ZoneId;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -80,24 +80,24 @@ import static java.util.stream.Collectors.joining;
 @Namespace("[ec2u]")
 public interface University extends Resource, GeoReference, OrgFormalOrganization {
 
-    University Coimbra=Coimbra();
-    University Iasi=Iasi();
-    University Jena=Jena();
-    University Linz=Linz();
-    University Pavia=Pavia();
-    University Poitiers=Poitiers();
-    University Salamanca=Salamanca();
-    University Turku=Turku();
+    University COIMBRA=Coimbra();
+    University IASI=Iasi();
+    University JENA=Jena();
+    University LINZ=Linz();
+    University PAVIA=Pavia();
+    University POITIERS=Poitiers();
+    University SALAMANCA=Salamanca();
+    University TURKU=Turku();
 
     Set<University> Universities=set(
-            Coimbra,
-            Iasi,
-            Jena,
-            Linz,
-            Pavia,
-            Poitiers,
-            Salamanca,
-            Turku
+            COIMBRA,
+            IASI,
+            JENA,
+            LINZ,
+            PAVIA,
+            POITIERS,
+            SALAMANCA,
+            TURKU
     );
 
 
@@ -183,10 +183,11 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                Founded in 1558, the Friedrich Schiller University Jena is one of the oldest universities \
-                                in Germany. Once the centre of German philosophical thought, it has become a broad-based, \
-                                research-intensive institution with a global reach and a thriving international community \
-                                of more than 18,000 undergraduate and postgraduate students from over 110 countries worldwide."""
+                                Founded in 1558, the Friedrich Schiller University Jena is one of the oldest \
+                                universities in Germany. Once the centre of German philosophical thought, it has \
+                                become a broad-based, research-intensive institution with a global reach and a \
+                                thriving international community of more than 18,000 undergraduate and postgraduate \
+                                students from over 110 countries worldwide."""
                         )
                 ))
                 .homepage(set(
@@ -216,11 +217,12 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                The Johannes Kepler University Linz (JKU), with 24,000 students, offers diverse programs \
-                                in law, business, social sciences, engineering, natural sciences, and medicine. It prioritizes \
-                                impactful research in AI, medical tech, and sustainable polymers, with a focus on social and \
-                                environmental responsibility. The university aims for climate neutrality by 2030 and actively \
-                                engages students in groundbreaking endeavors, fostering a passion for shaping the future."""
+                                The Johannes Kepler University Linz (JKU), with 24,000 students, offers diverse \
+                                programs in law, business, social sciences, engineering, natural sciences, and \
+                                medicine. It prioritizes impactful research in AI, medical tech, and sustainable \
+                                polymers, with a focus on social and environmental responsibility. The university \
+                                aims for climate neutrality by 2030 and actively engages students in groundbreaking \
+                                endeavors, fostering a passion for shaping the future."""
                         )
                 ))
                 .homepage(set(
@@ -316,11 +318,11 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                The University of Salamanca was founded in 1218 and is one of the three oldest universities \
-                                in Europe, boasting a wide range of Faculties and Research Institutes in Sciences and Arts. \
-                                In 2011, it was awarded the Campus of International Excellence status. It is the university \
-                                of reference in its region and beyond (Castile and León) and the "Alma Mater" of nearly all \
-                                historical Latin American universities."""
+                                The University of Salamanca was founded in 1218 and is one of the three oldest \
+                                universities in Europe, boasting a wide range of Faculties and Research Institutes \
+                                in Sciences and Arts. In 2011, it was awarded the Campus of International Excellence \
+                                status. It is the university of reference in its region and beyond (Castile and León) \
+                                and the "Alma Mater" of nearly all historical Latin American universities."""
                         )
                 ))
                 .homepage(set(
@@ -349,12 +351,12 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .definition(map(
                         entry(EN, """
-                                The University of Turku (UTU) is a renowned research institution with a diverse community of \
-                                25,000 individuals from over 100 countries. Situated in Turku's historic city center, it offers \
-                                study and research options across seven faculties and special units. With its convenient campus, \
-                                exceptional services, and vibrant academic environment, UTU ensures that international students \
-                                and scholars feel welcomed and supported throughout their time in Finland."""
-                        )
+                                The University of Turku (UTU) is a renowned research institution with a diverse \
+                                community of 25,000 individuals from over 100 countries. Situated in Turku's historic \
+                                city center, it offers study and research options across seven faculties and special \
+                                units. With its convenient campus, exceptional services, and vibrant academic \
+                                environment, UTU ensures that international students and scholars feel welcomed and \
+                                supported throughout their time in Finland.""")
                 ))
                 .homepage(set(
                         uri("https://www.utu.fi/en"),
@@ -368,6 +370,20 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 ))
                 .locale(FI)
                 .zone(ZoneId.of("Europe/Helsinki"));
+    }
+
+
+    static String uuid(final University university, final String name) {
+
+        if ( university == null ) {
+            throw new NullPointerException("null university");
+        }
+
+        if ( name == null ) {
+            throw new NullPointerException("null name");
+        }
+
+        return URIs.uuid(university.id()+"@"+name);
     }
 
 
@@ -453,17 +469,6 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default Map<Locale, String> label() {
-        return prefLabel();
-    }
-
-    @Override
-    default Map<Locale, String> comment() {
-        return definition();
-    }
-
 
     @Override
     default Dataset dataset() { return Universities(); }

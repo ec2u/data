@@ -22,6 +22,7 @@ import com.metreeca.flow.handlers.Router;
 import eu.ec2u.data._datasets.Datasets;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._organizations.OrgOrganizationFrame;
+import eu.ec2u.data._resources.Resources;
 import eu.ec2u.data._units.Units;
 import eu.ec2u.data._universities.Universities;
 
@@ -42,7 +43,7 @@ public final class _EC2U extends Delegator {
 
     public static final String BASE="https://data.ec2u.eu/";
 
-    public static final URI ROOT=uri(BASE);
+    public static final URI DATA=uri(BASE);
 
     public static final OrgOrganization EC2U=OrgOrganizationFrame.OrgOrganization()
             .id(uri("https://ec2u.eu/"))
@@ -61,7 +62,7 @@ public final class _EC2U extends Delegator {
         delegate(new Router()
 
                         .path("/", new Datasets.Handler())
-                // !!! .path("/resources/*", new Resources())
+                        .path("/resources/*", new Resources.Handler())
                 // !!! .path("/assets/*", new Resources())
                 // !!! .path("/concepts/*", new Concepts())
                 // !!! .path("/agents/*", new Agents())

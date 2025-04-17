@@ -40,9 +40,8 @@ export const Unit=immutable({
 
 	generated: optional(boolean),
 
-	label: required(local),
-	comment: optional(local),
-
+	prefLabel: required(local),
+	altLabel: optional(local),
 	definition: optional(local),
 
 	homepage: multiple(id),
@@ -130,9 +129,8 @@ export function DataUnit() {
 
 		<ToolFrame placeholder={Events[icon]} as={({
 
-			comment,
-			label,
-
+			prefLabel,
+			altLabel,
 			definition,
 
 			university,
@@ -144,11 +142,11 @@ export function DataUnit() {
 		}) => {
 
 			const parent=unitOf.filter(unit => !university || unit.id !== university.id);
-			const description=definition ?? comment;
+			const description=definition;
 
 			return <>
 
-				<dfn>{toLocalString(label)}</dfn>
+				<dfn>{toLocalString(prefLabel)}</dfn>
 
 				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 

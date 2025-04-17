@@ -28,15 +28,16 @@ import eu.ec2u.data._concepts.SKOSConcept;
 import eu.ec2u.data._resources.Localized;
 
 import java.net.URI;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.reducing;
 
 @Frame
 @Class("org:Organization")
@@ -46,8 +47,13 @@ import static com.metreeca.mesh.util.Collections.map;
 public interface OrgOrganization extends FOAFOrganization {
 
     @Override
-    default Map<Locale, String> label() {
-        return prefLabel(); // !!! altLabel?
+    default Map<Locale, String> label() { // !!! factor
+        return map(Stream.of(altLabel(), prefLabel())
+                .filter(Objects::nonNull)
+                .flatMap(m -> m.entrySet().stream())
+                .map(e -> entry(e.getKey(), clip(e.getValue(), LABEL_LENGTH)))
+                .collect(groupingBy(Entry::getKey, reducing(null, Entry::getValue, (x, y) -> x == null ? y : x)))
+        );
     }
 
     @Override
@@ -80,12 +86,17 @@ public interface OrgOrganization extends FOAFOrganization {
 
     Set<SKOSConcept> classification();
 
-    Set<FOAFPerson> hasMember();
 
     Set<OrgOrganization> subOrganizationOf();
 
     Set<OrgOrganization> hasSubOrganization();
 
     Set<OrgOrganizationalUnit> hasUnit();
+
+
+    @Property("^org:headOf")
+    Set<FOAFPerson> hasHead();
+
+    Set<FOAFPerson> hasMember();
 
 }

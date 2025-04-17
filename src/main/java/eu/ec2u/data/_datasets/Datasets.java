@@ -18,6 +18,7 @@ package eu.ec2u.data._datasets;
 
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Relator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
@@ -51,8 +52,8 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
-import static eu.ec2u.data.__._EC2U.ROOT;
 import static eu.ec2u.data._datasets.DatasetFrame.Dataset;
 import static eu.ec2u.data._datasets.DatasetFrame.model;
 import static eu.ec2u.data._datasets.DatasetsFrame.Datasets;
@@ -64,7 +65,7 @@ import static eu.ec2u.data._resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Datasets extends Dataset, Catalog<Dataset> {
 
-    URI DATASETS=ROOT.resolve("/datasets/");
+    URI DATASETS=DATA.resolve("/datasets/");
 
 
     static void main(final String... args) {
@@ -72,8 +73,8 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
             final Value update=array(list(Xtream.of(Datasets())
 
-                            .map(DatasetFrame::value)
-                    // !!! .optMap(new Validate())
+                    .map(DatasetFrame::value)
+                    .optMap(new Validate())
 
             ));
 
@@ -128,10 +129,6 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
     }
 
 
-    @Override
-    default Dataset dataset() { return null; }
-
-
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     final class Handler extends Delegator {
@@ -172,7 +169,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
                 final Value stats=store.retrieve(model(Datasets()
 
-                        .id(ROOT)
+                        .id(DATA)
 
                         .members(stash(query()
 
