@@ -45,7 +45,7 @@ public final class _EC2U extends Delegator {
 
     public static final URI DATA=uri(BASE);
 
-    public static final OrgOrganization EC2U=OrgOrganizationFrame.OrgOrganization()
+    public static final OrgOrganization EC2U=new OrgOrganizationFrame()
             .id(uri("https://ec2u.eu/"))
             .prefLabel(map(entry(EN, "European Campus of City-Universities")))
             .altLabel(map(entry(EN, "EC2U")));

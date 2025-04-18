@@ -39,8 +39,7 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.Integer;
-import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.*;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Expression.expression;
 import static com.metreeca.mesh.queries.Probe.probe;
@@ -54,9 +53,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
-import static eu.ec2u.data._datasets.DatasetFrame.Dataset;
-import static eu.ec2u.data._datasets.DatasetFrame.model;
-import static eu.ec2u.data._datasets.DatasetsFrame.Datasets;
 import static eu.ec2u.data._datasets.DatasetsFrame.model;
 import static eu.ec2u.data._resources.Localized.EN;
 
@@ -71,7 +67,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
     static void main(final String... args) {
         exec(() -> {
 
-            final Value update=array(list(Xtream.of(Datasets())
+            final Value update=array(list(Xtream.of(new DatasetsFrame())
 
                     .map(DatasetFrame::value)
                     .optMap(new Validate())
@@ -88,7 +84,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
     @Override
     default URI id() {
-        return uri("/");
+        return DATA;
     }
 
 
@@ -134,14 +130,15 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Worker().get(new Relator(model(Datasets()
+
+            delegate(new Worker().get(new Relator(DatasetsFrame.model(new DatasetsFrame()
 
                     .id(uri())
                     .label(map(entry(ANY, "")))
 
                     .members(stash(query()
 
-                            .model(model(Dataset()
+                            .model(DatasetFrame.model(new DatasetFrame()
 
                                     .id(uri())
                                     .label(map(entry(ANY, "")))
@@ -167,14 +164,14 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
         public void run() {
             service(store()).execute(store -> {
 
-                final Value stats=store.retrieve(model(Datasets()
+                final Value stats=store.retrieve(model(new DatasetsFrame()
 
                         .id(DATA)
 
                         .members(stash(query()
 
-                                .model(Value.value(specs(
-                                        probe("dataset", expression(), model(Dataset().id(uri()))),
+                                .model(value(specs(
+                                        probe("dataset", expression(), object(Value.id(uri()))),
                                         probe("entities", expression("count:resources"), Integer())
                                 )))
 
@@ -184,7 +181,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
                 final Value mutation=array(list(stats.get("members").value(Table.class).stream()
                         .flatMap(table -> table.rows().stream())
-                        .map(tuple -> model(Dataset()
+                        .map(tuple -> model(new DatasetsFrame()
                                 .id(tuple.value("dataset").flatMap(Value::id).orElse(null))
                                 .entities(tuple.value("entities").flatMap(Value::integral).orElse(0L).intValue())
                         ))

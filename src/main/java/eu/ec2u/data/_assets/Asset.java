@@ -25,6 +25,7 @@ import eu.ec2u.data._concepts.SKOSConcept;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.Localized;
 import eu.ec2u.data._resources.Reference;
+import eu.ec2u.data._resources.ReferenceFrame;
 import eu.ec2u.data._resources.Resource;
 
 import java.net.URI;
@@ -41,7 +42,6 @@ import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data._resources.ReferenceFrame.Reference;
 import static eu.ec2u.data._resources.ReferenceFrame.value;
 import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.toMap;
@@ -51,7 +51,7 @@ import static java.util.stream.Collectors.toMap;
 @Namespace(prefix="[dct]", value="http://purl.org/dc/terms/")
 public interface Asset extends Resource {
 
-    Reference CCBYNCND40=Reference()
+    Reference CCBYNCND40=new ReferenceFrame()
             .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
             .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
             .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));

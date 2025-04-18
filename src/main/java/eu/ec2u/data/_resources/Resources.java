@@ -27,9 +27,11 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data._datasets.Dataset;
+import eu.ec2u.data._datasets.DatasetFrame;
 import eu.ec2u.data._datasets.DatasetsFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._units.UnitsFrame;
+import eu.ec2u.data._universities.UniversityFrame;
 
 import java.net.URI;
 import java.util.Locale;
@@ -48,13 +50,11 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
-import static eu.ec2u.data._datasets.DatasetFrame.Dataset;
 import static eu.ec2u.data._datasets.Datasets.DATASETS;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._resources.ResourceFrame.Resource;
+import static eu.ec2u.data._resources.ResourceFrame.model;
 import static eu.ec2u.data._resources.ResourcesFrame.model;
-import static eu.ec2u.data._units.UnitsFrame.Units;
-import static eu.ec2u.data._universities.UniversityFrame.University;
+
 
 @Frame
 @Virtual
@@ -66,7 +66,7 @@ public interface Resources extends Dataset, Catalog<Resource> {
     static void main(final String... args) {
         exec(() -> {
 
-            final Value update=array(list(Xtream.of(Units())
+            final Value update=array(list(Xtream.of(new UnitsFrame())
 
                     .map(UnitsFrame::value)
                     .optMap(new Validate())
@@ -119,7 +119,7 @@ public interface Resources extends Dataset, Catalog<Resource> {
 
 
     @Override // !!! remove
-    default Dataset dataset() { return DatasetsFrame.Datasets(); }
+    default Dataset dataset() { return new DatasetsFrame(); }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,26 +127,26 @@ public interface Resources extends Dataset, Catalog<Resource> {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Router().path("/", new Worker().get(new Relator(model(ResourcesFrame.Resources()
+            delegate(new Router().path("/", new Worker().get(new Relator(model(new ResourcesFrame()
 
                     .id(uri())
                     .label(map(entry(ANY, "")))
 
                     .members(stash(query()
 
-                            .model(ResourceFrame.model(Resource()
+                            .model(model(new ResourceFrame()
 
                                     .id(uri())
                                     .label(map(entry(ANY, "")))
 
-                                    .dataset(Dataset()
+                                    .dataset(new DatasetFrame()
 
                                             .id(uri())
                                             .label(map(entry(ANY, "")))
 
                                     )
 
-                                    .university(University()
+                                    .university(new UniversityFrame()
 
                                             .id(uri())
                                             .label(map(entry(ANY, "")))

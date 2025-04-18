@@ -29,9 +29,11 @@ import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data._agents.FOAFPerson;
 import eu.ec2u.data._concepts.SKOSConceptScheme;
+import eu.ec2u.data._concepts.SKOSConceptSchemeFrame;
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._datasets.DatasetsFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
+import eu.ec2u.data._organizations.OrgOrganizationFrame;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
 import eu.ec2u.data._universities.University;
@@ -56,15 +58,11 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
-import static eu.ec2u.data._concepts.SKOSConceptSchemeFrame.SKOSConceptScheme;
 import static eu.ec2u.data._datasets.Datasets.DATASETS;
-import static eu.ec2u.data._organizations.OrgOrganizationFrame.OrgOrganization;
 import static eu.ec2u.data._persons.Person.person;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._units.Unit.VIS;
-import static eu.ec2u.data._units.UnitFrame.Unit;
 import static eu.ec2u.data._units.UnitFrame.model;
-import static eu.ec2u.data._units.UnitsFrame.Units;
 import static eu.ec2u.data._units.UnitsFrame.model;
 import static eu.ec2u.data._universities.University.uuid;
 import static java.lang.String.format;
@@ -80,7 +78,7 @@ public interface Units extends Dataset, Catalog<Unit> {
     static void main(final String... args) {
         exec(() -> {
 
-            final Value update=array(list(Xtream.of(Units())
+            final Value update=array(list(Xtream.of(new UnitsFrame())
 
                     .map(UnitsFrame::value)
                     .optMap(new Validate())
@@ -95,7 +93,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SKOSConceptScheme RESEARCH_TOPICS=SKOSConceptScheme();
+    SKOSConceptScheme RESEARCH_TOPICS=new SKOSConceptSchemeFrame();
     // !!! dct:issued "2024-01-01"^^xsd:date ;
     // !!! dct:title "EC2U Research Unit Topics"@en ;
     // !!! dct:description "> [!WARNING]\n> To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
@@ -154,7 +152,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
 
     @Override // !!! remove
-    default Dataset dataset() { return DatasetsFrame.Datasets(); }
+    default Dataset dataset() { return new DatasetsFrame(); }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,14 +162,14 @@ public interface Units extends Dataset, Catalog<Unit> {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Relator(model(Units()
+                    .path("/", new Worker().get(new Relator(model(new UnitsFrame()
 
                             .id(uri())
                             .label(map(entry(ANY, "")))
 
                             .members(stash(query()
 
-                                    .model(model(Unit()
+                                    .model(model(new UnitFrame()
 
                                             .id(uri())
                                             .label(map(entry(ANY, "")))
@@ -204,7 +202,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
 
         @Override protected Optional<Unit> process(final CSVRecord record, final Collection<CSVRecord> records) {
-            return id(record).map(id -> Unit()
+            return id(record).map(id -> new UnitFrame()
 
                     .id(id)
                     .university(university)
@@ -332,7 +330,7 @@ public interface Units extends Dataset, Catalog<Unit> {
                         return id;
 
                     })
-                    .map(id -> (OrgOrganization)OrgOrganization().id(id))
+                    .map(id -> (OrgOrganization)new OrgOrganizationFrame().id(id))
                     .toList();
 
             return parents.isEmpty() ? Stream.of(university) : parents.stream();

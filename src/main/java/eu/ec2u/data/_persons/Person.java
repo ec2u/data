@@ -54,7 +54,7 @@ public interface Person extends Resource, FOAFPerson {
                     final String familyName=normalize(matcher.group(1));
                     final String givenName=normalize(matcher.group(2));
 
-                    return PersonFrame.Person()
+                    return new PersonFrame()
                             .id(PERSONS.resolve(uuid(university, format("%s, %s", familyName, givenName))))
                             .university(university);
 

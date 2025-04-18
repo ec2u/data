@@ -94,7 +94,7 @@ public final class UnitsPoitiers implements Runnable {
     }
 
     private Optional<Unit> unit(final Value json) {
-        return json.get("numero_national_de_structure").string().map(id -> UnitFrame.Unit()
+        return json.get("numero_national_de_structure").string().map(id -> new UnitFrame()
 
                         .id(UNITS.resolve(uuid(POITIERS, id)))
                         .university(POITIERS)
@@ -171,7 +171,7 @@ public final class UnitsPoitiers implements Runnable {
             final String forename=forenames.get(index);
             final String surname=surnames.get(index);
 
-            return PersonFrame.Person()
+            return new PersonFrame()
 
                     .id(PERSONS.resolve(uuid(POITIERS, join(", ", surname, forename))))
                     .university(POITIERS)

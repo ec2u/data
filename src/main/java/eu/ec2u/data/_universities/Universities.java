@@ -28,6 +28,7 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data._datasets.Dataset;
+import eu.ec2u.data._datasets.DatasetFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
@@ -51,13 +52,8 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
 import static eu.ec2u.data._datasets.Datasets.DATASETS;
-import static eu.ec2u.data._datasets.DatasetsFrame.Datasets;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._universities.UniversitiesFrame.Universities;
 import static eu.ec2u.data._universities.UniversitiesFrame.model;
-import static eu.ec2u.data._universities.UniversityFrame.University;
-import static eu.ec2u.data._universities.UniversityFrame.model;
-import static java.util.Map.entry;
 
 @Frame
 @Virtual
@@ -70,7 +66,7 @@ public interface Universities extends Dataset, Catalog<University> {
     static void main(final String... args) {
         exec(() -> {
 
-            final Value update=array(list(Xtream.of(Universities())
+            final Value update=array(list(Xtream.of(new UniversitiesFrame())
 
                     .map(UniversitiesFrame::value)
                     .optMap(new Validate())
@@ -134,9 +130,8 @@ public interface Universities extends Dataset, Catalog<University> {
     }
 
 
-    @Override
-    default Dataset dataset() { return Datasets(); }
-
+    @Override // !!! remove
+    default Dataset dataset() { return new DatasetFrame(); }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,14 +141,14 @@ public interface Universities extends Dataset, Catalog<University> {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Relator(model(Universities()
+                    .path("/", new Worker().get(new Relator(model(new UniversitiesFrame()
 
                             .id(uri())
                             .label(map(entry(ANY, "")))
 
                             .members(stash(query()
 
-                                    .model(model(University()
+                                    .model(UniversityFrame.model(new UniversityFrame()
 
                                             .id(uri())
                                             .label(map(entry(ANY, "")))

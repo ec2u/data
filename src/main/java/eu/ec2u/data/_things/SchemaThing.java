@@ -21,5 +21,4 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 
 @Frame
 @Namespace(prefix="[schema]", value="https://schema.org/")
-public interface SchemaThing {
-}
+public interface SchemaThing { }
