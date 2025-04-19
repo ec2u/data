@@ -19,7 +19,7 @@ package eu.ec2u.data._datasets;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -131,7 +131,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
         public Handler() {
 
-            delegate(new Worker().get(new Relator(DatasetsFrame.model(new DatasetsFrame()
+            delegate(new Worker().get(new Driver(model(new DatasetsFrame()
 
                     .id(uri())
                     .label(map(entry(ANY, "")))

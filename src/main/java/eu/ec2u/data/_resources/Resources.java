@@ -20,7 +20,7 @@ import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -127,7 +127,7 @@ public interface Resources extends Dataset, Catalog<Resource> {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Router().path("/", new Worker().get(new Relator(model(new ResourcesFrame()
+            delegate(new Router().path("/", new Worker().get(new Driver(model(new ResourcesFrame()
 
                     .id(uri())
                     .label(map(entry(ANY, "")))

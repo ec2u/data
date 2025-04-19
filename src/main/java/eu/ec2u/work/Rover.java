@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.focus;
+package eu.ec2u.work;
 
 import com.metreeca.mesh.util.Locales;
 

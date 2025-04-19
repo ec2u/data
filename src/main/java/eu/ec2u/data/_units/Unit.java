@@ -19,7 +19,7 @@ package eu.ec2u.data._units;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -220,7 +220,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Worker().get(new Relator(model(new UnitFrame()
+            delegate(new Worker().get(new Driver(model(new UnitFrame()
 
                     .id(uri())
                     .label(map(entry(ANY, "")))

@@ -20,7 +20,6 @@ import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -141,7 +140,7 @@ public interface Universities extends Dataset, Catalog<University> {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Relator(model(new UniversitiesFrame()
+                    .path("/", new Worker().get(new com.metreeca.flow.json.handlers.Driver(model(new UniversitiesFrame()
 
                             .id(uri())
                             .label(map(entry(ANY, "")))

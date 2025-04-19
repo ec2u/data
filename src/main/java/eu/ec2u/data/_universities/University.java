@@ -19,7 +19,7 @@ package eu.ec2u.data._universities;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.lod.actions.Wikidata;
 import com.metreeca.flow.rdf4j.actions.GraphQuery;
 import com.metreeca.flow.rdf4j.services.Graph;
@@ -42,7 +42,7 @@ import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.GeoReference;
 import eu.ec2u.data._resources.GeoReferenceFrame;
 import eu.ec2u.data._resources.Resource;
-import eu.ec2u.work.focus.Rover;
+import eu.ec2u.work.Rover;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
 import java.net.URI;
@@ -70,7 +70,7 @@ import static eu.ec2u.data.__._Data.exec;
 import static eu.ec2u.data.__._EC2U.EC2U;
 import static eu.ec2u.data._resources.Localized.*;
 import static eu.ec2u.data._universities.UniversityFrame.model;
-import static eu.ec2u.work.focus.Rover.rover;
+import static eu.ec2u.work.Rover.rover;
 import static java.util.stream.Collectors.joining;
 
 @Frame
@@ -508,7 +508,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Worker().get(new Relator(model(new UniversityFrame()
+            delegate(new Worker().get(new Driver(model(new UniversityFrame()
 
                     .id(uri())
                     .label(map(entry(ANY, "")))
