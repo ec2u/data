@@ -20,6 +20,8 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 
+import eu.ec2u.data._units.Units.CSVLoader;
+
 import java.net.URI;
 
 import static com.metreeca.flow.Locator.service;
@@ -55,10 +57,9 @@ public final class UnitsLinz implements Runnable {
 
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new eu.ec2u.data._units.Units.CSVLoader(LINZ))
+                .flatMap(new CSVLoader(LINZ))
 
-                .map(UnitFrame::value)
-                .optMap(new Validate())
+                .optMap(new Validate<>())
 
         )), FORCE);
     }

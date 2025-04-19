@@ -80,8 +80,7 @@ public final class UnitsPoitiers implements Runnable {
                 .flatMap(this::units)
                 .optMap(this::unit)
 
-                .map(UnitFrame::value)
-                .optMap(new Validate())
+                .optMap(new Validate<>())
 
         )), FORCE);
     }
@@ -93,7 +92,7 @@ public final class UnitsPoitiers implements Runnable {
                 .flatMap(Value::values);
     }
 
-    private Optional<Unit> unit(final Value json) {
+    private Optional<UnitFrame> unit(final Value json) {
         return json.get("numero_national_de_structure").string().map(id -> new UnitFrame()
 
                         .id(UNITS.resolve(uuid(POITIERS, id)))

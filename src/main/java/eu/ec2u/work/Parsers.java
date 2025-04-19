@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.feeds;
+package eu.ec2u.work;
 
 
 import java.math.BigDecimal;

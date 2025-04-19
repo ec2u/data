@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.feeds;
+package eu.ec2u.work;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static eu.ec2u.work.feeds.Parsers.decimal;
-import static eu.ec2u.work.feeds.Parsers.url;
+import static eu.ec2u.work.Parsers.decimal;
+import static eu.ec2u.work.Parsers.url;
 import static org.assertj.core.api.Assertions.assertThat;
 
 final class ParsersTest {

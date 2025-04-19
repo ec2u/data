@@ -58,8 +58,7 @@ public final class UnitsIasi implements Runnable {
 
                 .flatMap(new Units.CSVLoader(IASI))
 
-                .map(UnitFrame::value)
-                .optMap(new Validate())
+                .optMap(new Validate<>())
 
         )), FORCE);
     }

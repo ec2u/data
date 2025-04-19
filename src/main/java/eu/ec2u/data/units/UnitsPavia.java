@@ -24,9 +24,9 @@ import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
+import eu.ec2u.work.Markdown;
 import eu.ec2u.work._junk.Frame;
 import eu.ec2u.work._junk.JSONPath;
-import eu.ec2u.work._junk.Markdown;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.net.URI;

@@ -20,7 +20,7 @@ import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
@@ -37,8 +37,8 @@ import eu.ec2u.data._organizations.OrgOrganizationFrame;
 import eu.ec2u.data._resources.Catalog;
 import eu.ec2u.data._resources.Reference;
 import eu.ec2u.data._universities.University;
-import eu.ec2u.work.feeds.CSVProcessor;
-import eu.ec2u.work.feeds.Parsers;
+import eu.ec2u.work.CSVProcessor;
+import eu.ec2u.work.Parsers;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
@@ -52,8 +52,6 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Locales.ANY;
-import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.__._EC2U.DATA;
@@ -62,8 +60,6 @@ import static eu.ec2u.data._datasets.Datasets.DATASETS;
 import static eu.ec2u.data._persons.Person.person;
 import static eu.ec2u.data._resources.Localized.EN;
 import static eu.ec2u.data._units.Unit.VIS;
-import static eu.ec2u.data._units.UnitFrame.model;
-import static eu.ec2u.data._units.UnitsFrame.model;
 import static eu.ec2u.data._universities.University.uuid;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
@@ -80,8 +76,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
             final Value update=array(list(Xtream.of(new UnitsFrame())
 
-                    .map(UnitsFrame::value)
-                    .optMap(new Validate())
+                    .optMap(new Validate<>())
 
             ));
 
@@ -162,23 +157,11 @@ public interface Units extends Dataset, Catalog<Unit> {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Relator(model(new UnitsFrame()
+                    .path("/", new Worker().get(new Driver(new UnitsFrame()
 
-                            .id(uri())
-                            .label(map(entry(ANY, "")))
+                            .members(stash(query(new UnitFrame())))
 
-                            .members(stash(query()
-
-                                    .model(model(new UnitFrame()
-
-                                            .id(uri())
-                                            .label(map(entry(ANY, "")))
-
-                                    ))
-
-                            ))
-
-                    ))))
+                    )))
 
                     .path("/{code}", new Unit.Handler())
             );
@@ -186,7 +169,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
     }
 
-    final class CSVLoader extends CSVProcessor<Unit> {
+    final class CSVLoader extends CSVProcessor<UnitFrame> {
 
         private final University university;
 
@@ -201,7 +184,7 @@ public interface Units extends Dataset, Catalog<Unit> {
         }
 
 
-        @Override protected Optional<Unit> process(final CSVRecord record, final Collection<CSVRecord> records) {
+        @Override protected Optional<UnitFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
             return id(record).map(id -> new UnitFrame()
 
                     .id(id)

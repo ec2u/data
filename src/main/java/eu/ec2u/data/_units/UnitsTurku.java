@@ -59,8 +59,7 @@ public final class UnitsTurku implements Runnable {
 
                 .flatMap(new Units.CSVLoader(TURKU))
 
-                .map(UnitFrame::value)
-                .optMap(new Validate())
+                .optMap(new Validate<>())
 
         )), FORCE);
     }

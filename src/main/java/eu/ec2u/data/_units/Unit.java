@@ -19,7 +19,7 @@ package eu.ec2u.data._units;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -40,14 +40,12 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.__._Data.exec;
 import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._units.UnitFrame.model;
 import static eu.ec2u.data._units.Units.UNITS;
 import static java.util.Map.entry;
 
@@ -60,10 +58,10 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     SKOSConceptFrame VIRTUAL=new SKOSConceptFrame() // !!! update to std org taxonomy
             .id(DATA.resolve("/concepts/organizations/university-unit/institute/virtual"));
 
-    Unit GLADE=GLADE();
-    Unit VIQE=VIQE();
-    Unit VISCC=VISCC();
-    Unit VIPJSI=VIPJSI();
+    UnitFrame GLADE=GLADE();
+    UnitFrame VIQE=VIQE();
+    UnitFrame VISCC=VISCC();
+    UnitFrame VIPJSI=VIPJSI();
 
     Set<Unit> VIS=set(
             GLADE,
@@ -73,7 +71,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     );
 
 
-    private static Unit GLADE() {
+    private static UnitFrame GLADE() {
         return new UnitFrame()
                 .id(UNITS.resolve("glade"))
                 .identifier(entry(DATA, "GLADE"))
@@ -101,7 +99,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 .classification(set(VIRTUAL));
     }
 
-    private static Unit VIQE() {
+    private static UnitFrame VIQE() {
         return new UnitFrame()
                 .id(UNITS.resolve("viqe"))
                 .identifier(entry(DATA, "VIQE"))
@@ -125,7 +123,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 .classification(set(VIRTUAL));
     }
 
-    private static Unit VISCC() {
+    private static UnitFrame VISCC() {
         return new UnitFrame()
                 .id(UNITS.resolve("viscc"))
                 .identifier(entry(DATA, "VISCC"))
@@ -153,7 +151,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 .classification(set(VIRTUAL));
     }
 
-    private static Unit VIPJSI() {
+    private static UnitFrame VIPJSI() {
         return new UnitFrame()
                 .id(UNITS.resolve("vipjsi"))
                 .identifier(entry(DATA, "VIPJSI"))
@@ -198,8 +196,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                         VIPJSI
                 )
 
-                .map(UnitFrame::value)
-                .optMap(new Validate())
+                .optMap(new Validate<>())
 
         )), FORCE));
     }
@@ -220,12 +217,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Worker().get(new Relator(model(new UnitFrame()
-
-                    .id(uri())
-                    .label(map(entry(ANY, "")))
-
-            ))));
+            delegate(new Worker().get(new Driver(new UnitFrame())));
         }
 
     }

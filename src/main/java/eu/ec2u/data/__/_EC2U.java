@@ -20,7 +20,6 @@ import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 
 import eu.ec2u.data._datasets.Datasets;
-import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._organizations.OrgOrganizationFrame;
 import eu.ec2u.data._resources.Resources;
 import eu.ec2u.data._units.Units;
@@ -45,14 +44,14 @@ public final class _EC2U extends Delegator {
 
     public static final URI DATA=uri(BASE);
 
-    public static final OrgOrganization EC2U=new OrgOrganizationFrame()
+    public static final OrgOrganizationFrame EC2U=new OrgOrganizationFrame()
             .id(uri("https://ec2u.eu/"))
             .prefLabel(map(entry(EN, "European Campus of City-Universities")))
             .altLabel(map(entry(EN, "EC2U")));
 
 
     public static void main(final String... args) {
-        exec(() -> service(store()).update(OrgOrganizationFrame.value(EC2U), FORCE));
+        exec(() -> service(store()).update(EC2U, FORCE));
     }
 
 

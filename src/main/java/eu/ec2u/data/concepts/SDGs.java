@@ -19,8 +19,8 @@ package eu.ec2u.data.concepts;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.work.Xtream;
 
+import eu.ec2u.work.CSVProcessor;
 import eu.ec2u.work._junk.Frame;
-import eu.ec2u.work.feeds.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;

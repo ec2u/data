@@ -20,13 +20,14 @@ import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
+import eu.ec2u.data.__._Data;
 import eu.ec2u.data._datasets.Dataset;
 import eu.ec2u.data._datasets.DatasetFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
@@ -45,15 +46,11 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Locales.ANY;
-import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
 import static eu.ec2u.data._datasets.Datasets.DATASETS;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._universities.UniversitiesFrame.model;
 
 @Frame
 @Virtual
@@ -64,12 +61,11 @@ public interface Universities extends Dataset, Catalog<University> {
 
 
     static void main(final String... args) {
-        exec(() -> {
+        _Data.exec(() -> {
 
             final Value update=array(list(Xtream.of(new UniversitiesFrame())
 
-                    .map(UniversitiesFrame::value)
-                    .optMap(new Validate())
+                    .optMap(new Validate<>())
 
             ));
 
@@ -80,7 +76,6 @@ public interface Universities extends Dataset, Catalog<University> {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     @Override
     default URI id() {
@@ -141,23 +136,11 @@ public interface Universities extends Dataset, Catalog<University> {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Relator(model(new UniversitiesFrame()
+                    .path("/", new Worker().get(new Driver(new UniversitiesFrame()
 
-                            .id(uri())
-                            .label(map(entry(ANY, "")))
+                            .members(stash(query(new UniversityFrame())))
 
-                            .members(stash(query()
-
-                                    .model(UniversityFrame.model(new UniversityFrame()
-
-                                            .id(uri())
-                                            .label(map(entry(ANY, "")))
-
-                                    ))
-
-                            ))
-
-                    ))))
+                    )))
 
                     .path("/{code}", new University.Handler())
 

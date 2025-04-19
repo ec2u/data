@@ -20,18 +20,16 @@ import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data._datasets.Dataset;
-import eu.ec2u.data._datasets.DatasetFrame;
 import eu.ec2u.data._datasets.DatasetsFrame;
 import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._units.UnitsFrame;
-import eu.ec2u.data._universities.UniversityFrame;
 
 import java.net.URI;
 import java.util.Locale;
@@ -44,16 +42,12 @@ import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Locales.ANY;
-import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.__._EC2U.DATA;
 import static eu.ec2u.data.__._EC2U.EC2U;
 import static eu.ec2u.data._datasets.Datasets.DATASETS;
 import static eu.ec2u.data._resources.Localized.EN;
-import static eu.ec2u.data._resources.ResourceFrame.model;
-import static eu.ec2u.data._resources.ResourcesFrame.model;
 
 
 @Frame
@@ -68,8 +62,7 @@ public interface Resources extends Dataset, Catalog<Resource> {
 
             final Value update=array(list(Xtream.of(new UnitsFrame())
 
-                    .map(UnitsFrame::value)
-                    .optMap(new Validate())
+                    .optMap(new Validate<>())
 
             ));
 
@@ -127,39 +120,13 @@ public interface Resources extends Dataset, Catalog<Resource> {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Router().path("/", new Worker().get(new Relator(model(new ResourcesFrame()
+            delegate(new Router().path("/", new Worker().get(new Driver(new ResourcesFrame()
 
-                    .id(uri())
-                    .label(map(entry(ANY, "")))
-
-                    .members(stash(query()
-
-                            .model(model(new ResourceFrame()
-
-                                    .id(uri())
-                                    .label(map(entry(ANY, "")))
-
-                                    .dataset(new DatasetFrame()
-
-                                            .id(uri())
-                                            .label(map(entry(ANY, "")))
-
-                                    )
-
-                                    .university(new UniversityFrame()
-
-                                            .id(uri())
-                                            .label(map(entry(ANY, "")))
-
-                                    )
-
-                            ))
-
-                            .criterion("dataset.issued", criterion().any(set()))
-
+                    .members(stash(query(new ResourceFrame())
+                            .where("dataset.issued", criterion().any(set()))
                     ))
 
-            )))));
+            ))));
         }
 
     }

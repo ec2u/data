@@ -22,7 +22,7 @@ import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.services.Logger;
 
-import eu.ec2u.data._datasets.Datasets;
+import eu.ec2u.data._datasets.Housekeeper;
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
 import eu.ec2u.data.offerings.*;
@@ -47,7 +47,7 @@ public final class _Cron extends Delegator {
     public _Cron() {
         delegate(cron(new Router()
 
-                .path("/datasets/", execute(new Datasets.Housekeeper()))
+                .path("/datasets/", execute(new Housekeeper()))
 
                 .path("/units/coimbra", execute(new UnitsCoimbra()))
                 .path("/units/iasi", execute(new UnitsIasi()))

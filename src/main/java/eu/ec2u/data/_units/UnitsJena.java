@@ -57,8 +57,7 @@ public final class UnitsJena implements Runnable {
 
                 .flatMap(new Units.CSVLoader(JENA))
 
-                .map(UnitFrame::value)
-                .optMap(new Validate())
+                .optMap(new Validate<>())
 
         )), FORCE);
 

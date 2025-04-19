@@ -19,7 +19,7 @@ package eu.ec2u.data._universities;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Relator;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.lod.actions.Wikidata;
 import com.metreeca.flow.rdf4j.actions.GraphQuery;
 import com.metreeca.flow.rdf4j.services.Graph;
@@ -31,7 +31,6 @@ import com.metreeca.mesh.meta.jsonld.Internal;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
-import com.metreeca.mesh.util.Collections;
 import com.metreeca.mesh.util.Locales;
 import com.metreeca.mesh.util.URIs;
 
@@ -42,7 +41,7 @@ import eu.ec2u.data._organizations.OrgOrganization;
 import eu.ec2u.data._resources.GeoReference;
 import eu.ec2u.data._resources.GeoReferenceFrame;
 import eu.ec2u.data._resources.Resource;
-import eu.ec2u.work.focus.Rover;
+import eu.ec2u.work.Rover;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
 import java.net.URI;
@@ -61,7 +60,6 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.tools.Store.Options.DEEP;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.Strings.fill;
 import static com.metreeca.mesh.util.URIs.term;
 import static com.metreeca.mesh.util.URIs.uri;
@@ -69,8 +67,7 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.__._Data.exec;
 import static eu.ec2u.data.__._EC2U.EC2U;
 import static eu.ec2u.data._resources.Localized.*;
-import static eu.ec2u.data._universities.UniversityFrame.model;
-import static eu.ec2u.work.focus.Rover.rover;
+import static eu.ec2u.work.Rover.rover;
 import static java.util.stream.Collectors.joining;
 
 @Frame
@@ -78,16 +75,16 @@ import static java.util.stream.Collectors.joining;
 @Namespace("[ec2u]")
 public interface University extends Resource, GeoReference, OrgFormalOrganization {
 
-    University COIMBRA=Coimbra();
-    University IASI=Iasi();
-    University JENA=Jena();
-    University LINZ=Linz();
-    University PAVIA=Pavia();
-    University POITIERS=Poitiers();
-    University SALAMANCA=Salamanca();
-    University TURKU=Turku();
+    UniversityFrame COIMBRA=Coimbra();
+    UniversityFrame IASI=Iasi();
+    UniversityFrame JENA=Jena();
+    UniversityFrame LINZ=Linz();
+    UniversityFrame PAVIA=Pavia();
+    UniversityFrame POITIERS=Poitiers();
+    UniversityFrame SALAMANCA=Salamanca();
+    UniversityFrame TURKU=Turku();
 
-    Set<University> UNIVERSITIES=set(
+    Set<UniversityFrame> UNIVERSITIES=set(
             COIMBRA,
             IASI,
             JENA,
@@ -99,7 +96,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
     );
 
 
-    private static University Coimbra() {
+    private static UniversityFrame Coimbra() {
         return new UniversityFrame()
                 .id(eu.ec2u.data._universities.Universities.UNIVERSITIES.resolve("coimbra"))
                 .prefLabel(map(
@@ -132,7 +129,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Lisbon"));
     }
 
-    private static University Iasi() {
+    private static UniversityFrame Iasi() {
         return new UniversityFrame()
                 .id(eu.ec2u.data._universities.Universities.UNIVERSITIES.resolve("iasi"))
                 .prefLabel(map(
@@ -168,7 +165,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Bucharest"));
     }
 
-    private static University Jena() {
+    private static UniversityFrame Jena() {
         return new UniversityFrame()
                 .id(eu.ec2u.data._universities.Universities.UNIVERSITIES.resolve("jena"))
                 .prefLabel(map(
@@ -202,7 +199,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Berlin"));
     }
 
-    private static University Linz() {
+    private static UniversityFrame Linz() {
         return new UniversityFrame()
                 .id(eu.ec2u.data._universities.Universities.UNIVERSITIES.resolve("linz"))
                 .prefLabel(map(
@@ -237,7 +234,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Vienna"));
     }
 
-    private static University Pavia() {
+    private static UniversityFrame Pavia() {
         return new UniversityFrame()
                 .id(eu.ec2u.data._universities.Universities.UNIVERSITIES.resolve("pavia"))
                 .prefLabel(map(
@@ -269,7 +266,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Rome"));
     }
 
-    private static University Poitiers() {
+    private static UniversityFrame Poitiers() {
         return new UniversityFrame()
                 .id(eu.ec2u.data._universities.Universities.UNIVERSITIES.resolve("poitiers"))
                 .prefLabel(map(
@@ -303,7 +300,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Paris"));
     }
 
-    private static University Salamanca() {
+    private static UniversityFrame Salamanca() {
         return new UniversityFrame()
                 .id(eu.ec2u.data._universities.Universities.UNIVERSITIES.resolve("salamanca"))
                 .prefLabel(map(
@@ -336,7 +333,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Madrid"));
     }
 
-    private static University Turku() {
+    private static UniversityFrame Turku() {
         return new UniversityFrame()
                 .id(eu.ec2u.data._universities.Universities.UNIVERSITIES.resolve("turku"))
                 .prefLabel(map(
@@ -413,7 +410,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                     .toList()
             );
 
-            final Value update=array(Collections.list(Xtream.from(UNIVERSITIES)
+            final Value update=array(list(Xtream.from(UNIVERSITIES)
 
                     .map(university -> {
 
@@ -436,7 +433,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                                 .lexical()
                                 .flatMap(Wikidata::point);
 
-                        return new UniversityFrame(university)
+                        return university
                                 .students(focus.get(term("students")).integral().map(Long::intValue).orElse(0))
                                 .inception(focus.get(term("inception")).year().orElse(null))
                                 .longitude(coordinates.map(Wikidata.Point::longitude).orElse(0.0D))
@@ -455,8 +452,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                                 );
                     })
 
-                    .map(UniversityFrame::value)
-                    .optMap(new Validate())
+                    .optMap(new Validate<>())
 
             ));
 
@@ -508,12 +504,9 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Worker().get(new Relator(model(new UniversityFrame()
-
-                    .id(uri())
-                    .label(map(entry(ANY, "")))
-
-            ))));
+            delegate(new Worker().get(new Driver(new UniversityFrame()
+                    .inception(null) // !!!
+                    .students(0))));
         }
 
     }
