@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.concepts;
 
-import java.net.URI;
+import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Foreign;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Property;
 
-import static eu.ec2u.data.EC2U.DATA;
+import java.util.Set;
 
-public interface Persons {
+@Frame
+@Class("skos:ConceptScheme")
+public interface SKOSConceptScheme extends SKOS {
 
-    URI PERSONS=DATA.resolve("/persons/");
+    // !!! label/comment
+
+    @Foreign
+    @Property("^skos:inScheme")
+    Set<SKOSConcept> hasConcept();
+
+    @Foreign
+    Set<SKOSConcept> hasTopConcept();
 
 }

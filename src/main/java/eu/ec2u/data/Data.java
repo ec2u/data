@@ -48,12 +48,14 @@ import static com.metreeca.flow.json.services.Analyzer.analyzer;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Cache.cache;
 import static com.metreeca.flow.services.Fetcher.fetcher;
-import static com.metreeca.flow.services.Logger.Level.debug;
+import static com.metreeca.flow.services.Logger.Level.DEBUG;
 import static com.metreeca.flow.services.Translator.translator;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.json.JSONCodec.json;
 import static com.metreeca.mesh.rdf4j.RDF4J.rdf4j;
 
+import static eu.ec2u.data.EC2U.BASE;
+import static eu.ec2u.data.EC2U.DATA;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 
@@ -68,7 +70,7 @@ public final class Data extends Delegator {
 
 
     static {
-        debug.log("com.metreeca");
+        DEBUG.log("com.metreeca");
     }
 
     static {
@@ -89,7 +91,11 @@ public final class Data extends Delegator {
 
                 .set(graph(), () -> new Graph(service(Data::repository)))
                 .set(store(), () -> rdf4j(service(Data::repository)))
-                .set(codec(), () -> json().indent(true))
+                .set(codec(), () -> json()
+                        .prune(true)
+                        .indent(true)
+                        .base(DATA)
+                )
 
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
 
@@ -151,10 +157,10 @@ public final class Data extends Delegator {
 
                 new Wrapper() // after publisher
 
-                        .before(request -> request.base(EC2U.BASE)), // define canonical base
+                        .before(request -> request.base(BASE)), // define canonical base
 
                 new Router()
-                        .path("/cron/*", new Cron())
+                        // !!! .path("/cron/*", new _Cron())
                         .path("/*", new EC2U())
 
         ));

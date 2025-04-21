@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.taxonomies;
 
-import java.net.URI;
+import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import static eu.ec2u.data.EC2U.DATA;
+import eu.ec2u.data.assets.Asset;
+import eu.ec2u.data.concepts.SKOSConceptScheme;
 
-public interface Persons {
-
-    URI PERSONS=DATA.resolve("/persons/");
-
-}
+@Frame
+@Class
+@Namespace("[ec2u]")
+public interface Taxonomy extends Asset, SKOSConceptScheme { }

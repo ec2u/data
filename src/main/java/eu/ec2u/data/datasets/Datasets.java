@@ -18,95 +18,155 @@ package eu.ec2u.data.datasets;
 
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.flow.json.handlers.Driver;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Value;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Virtual;
+import com.metreeca.mesh.queries.Table;
 
-import eu.ec2u.work._junk.Driver;
-import eu.ec2u.work._junk.Filter;
-import eu.ec2u.work._junk.Relator;
-import eu.ec2u.work._junk.Shape;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.VOID;
+import eu.ec2u.data.Data;
+import eu.ec2u.data.organizations.OrgOrganization;
+import eu.ec2u.data.resources.Catalog;
+import eu.ec2u.data.resources.Reference;
 
-import static com.metreeca.flow.Handler.handler;
-import static com.metreeca.flow.rdf.Values.iri;
-import static com.metreeca.flow.rdf.Values.literal;
+import java.net.URI;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.Integer;
+import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Expression.expression;
+import static com.metreeca.mesh.queries.Probe.probe;
+import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.create;
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.assets.Assets.Asset;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.work._junk.Filter.any;
-import static eu.ec2u.work._junk.Filter.filter;
-import static eu.ec2u.work._junk.Frame.field;
-import static eu.ec2u.work._junk.Frame.frame;
-import static eu.ec2u.work._junk.Shape.*;
-import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
+import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.data.EC2U.EC2U;
+import static eu.ec2u.data.resources.Localized.EN;
 
-public final class Datasets extends Delegator {
+@Frame
+@Virtual
+@Namespace("[ec2u]")
+public interface Datasets extends Dataset, Catalog<Dataset> {
 
-    public static final IRI Context=item("/datasets/");
+    URI DATASETS=DATA.resolve("/datasets/");
 
 
-    public static Shape Datasets() {
-        return Dataset(Dataset());
-    }
+    static void main(final String... args) {
+        Data.exec(() -> {
 
-    public static Shape Dataset() {
-        return shape(VOID.DATASET, Asset(),
+            final Value update=array(list(Xtream.of(new DatasetsFrame())
+                    .optMap(new Validate<>())
+            ));
 
-                property(VOID.ENTITIES, optional(integer())),
-                property(VOID.ROOT_RESOURCE, multiple(Resource())),
+            service(store()).partition(DATASETS).update(update, FORCE);
 
-                property(RDFS.ISDEFINEDBY, optional(Resource()))
-
-        );
-    }
-
-    public static Shape Dataset(final Shape shape) {
-
-        if ( shape == null ) {
-            throw new NullPointerException("null shape");
-        }
-
-        return shape(Dataset(),
-
-                property("members", RDFS.MEMBER, shape)
-
-        );
-    }
-
-
-    public static void main(final String... args) {
-        exec(() -> create(Context, Datasets.class, Dataset()));
+        });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Datasets() {
-        delegate(handler(new Driver(Datasets()), new Worker()
+    @Override
+    default URI id() {
+        return DATA;
+    }
 
-                .get(new Relator(frame(
 
-                        field(ID, iri()),
-                        field(RDFS.LABEL, literal("Datasets", "en")),
+    @Override
+    default Map<Locale, String> title() {
+        return map(entry(EN, "EC2U Dataset Catalog"));
+    }
 
-                        field(RDFS.MEMBER, Filter.query(
+    @Override
+    default Map<Locale, String> alternative() {
+        return map(entry(EN, "EC2U Datasets"));
+    }
 
-                                frame(
-                                        field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
-                                ),
+    @Override
+    default Map<Locale, String> description() {
+        return map(entry(EN, "Datasets published on the EC2U Knowledge Hub."));
+    }
 
-                                filter(DCTERMS.ISSUED, any())
+    @Override
+    default URI isDefinedBy() {
+        return DATASETS;
+    }
 
-                        ))
 
-                )))
+    @Override
+    default String rights() {
+        return "Copyright © 2022‑2025 EC2U Alliance";
+    }
 
-        ));
+    @Override
+    default OrgOrganization publisher() {
+        return EC2U;
+    }
+
+    @Override
+    default Set<Reference> license() {
+        return set(CCBYNCND40);
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    final class Handler extends Delegator {
+
+        public Handler() {
+
+            delegate(new Worker().get(new Driver(new DatasetsFrame()
+
+                    .members(stash(query(new DatasetFrame())
+                            .where("issued", criterion().any(set()))
+                    ))
+
+            )));
+        }
+
+    }
+
+    final class Housekeeper implements Runnable {
+
+        public static void main(final String... args) { exec(() -> new Housekeeper().run()); }
+
+
+        @Override
+        public void run() {
+            service(store()).execute(store -> {
+
+                final Value stats=store.retrieve(new DatasetsFrame(true).id(DATA)
+
+                        .members(stash(query(
+                                probe("dataset", expression(), Value.object(Value.id(uri()))),
+                                probe("entities", expression("count:resources"), Integer())
+                        )))
+
+                );
+
+                final Value mutation=array(list(stats.get("members").value(Table.class).stream()
+                        .flatMap(table -> table.rows().stream())
+                        .map(tuple -> new DatasetFrame(true)
+                                .id(tuple.value("dataset").flatMap(Value::id).orElse(null))
+                                .entities(tuple.value("entities").flatMap(Value::integral).map(Long::intValue).orElse(null)))
+                ));
+
+                store.partition(DATASETS.resolve("~")).mutate(mutation, FORCE);
+
+            });
+        }
+
     }
 
 }

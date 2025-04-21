@@ -14,14 +14,32 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.agents;
+
+import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.Pattern;
+
+import eu.ec2u.data.resources.Reference;
 
 import java.net.URI;
+import java.util.Set;
 
-import static eu.ec2u.data.EC2U.DATA;
+@Frame
+@Class("foaf:Agent")
+@Namespace(prefix="[foaf]", value="http://xmlns.com/foaf/0.1/")
+public interface FOAFAgent extends Reference {
 
-public interface Persons {
+    Set<URI> depiction();
 
-    URI PERSONS=DATA.resolve("/persons/");
+    Set<URI> homepage();
+
+
+    @Pattern("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+    Set<String> mbox();
+
+    @Pattern("^\\+?[1-9]\\d{1,14}$")
+    Set<String> phone();
 
 }

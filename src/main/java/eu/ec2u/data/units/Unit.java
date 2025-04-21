@@ -16,189 +16,210 @@
 
 package eu.ec2u.data.units;
 
+import com.metreeca.flow.handlers.Delegator;
+import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.flow.json.handlers.Driver;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Property;
 
-import com.metreeca.flow.rdf.Values;
+import eu.ec2u.data.concepts.SKOSConcept;
+import eu.ec2u.data.concepts.SKOSConceptFrame;
+import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.organizations.OrgOrganizationalUnit;
+import eu.ec2u.data.resources.Resource;
 
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.universities.University;
-import eu.ec2u.work._junk.Frame;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.vocabulary.FOAF;
-import org.eclipse.rdf4j.model.vocabulary.ORG;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
-
-import java.net.URI;
 import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Optional;
+import java.util.Set;
 
-import static com.metreeca.flow.rdf.Values.literal;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.work._junk.Frame.field;
-import static eu.ec2u.work._junk.Frame.frame;
-import static org.eclipse.rdf4j.model.vocabulary.RDF.TYPE;
-import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.data.EC2U.EC2U;
+import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.units.Units.UNITS;
+import static java.util.Map.entry;
 
-public final class Unit {
+@Frame
+@Class
+@Namespace("[ec2u]")
+@Namespace(prefix="dct", value="http://purl.org/dc/terms/")
+public interface Unit extends Resource, OrgOrganizationalUnit {
 
-    //̸// !!! Factor //////////////////////////////////////////////////////////////////////////////////////////////////
+    SKOSConceptFrame VIRTUAL=new SKOSConceptFrame() // !!! update to std org taxonomy
+            .id(DATA.resolve("/concepts/organizations/university-unit/institute/virtual"));
 
-    private static Optional<IRI> value(final URI uri) {
-        return Optional.ofNullable(uri).map(Values::iri);
+    UnitFrame GLADE=GLADE();
+    UnitFrame VIQE=VIQE();
+    UnitFrame VISCC=VISCC();
+    UnitFrame VIPJSI=VIPJSI();
+
+    Set<Unit> VIS=set(
+            GLADE,
+            VIQE,
+            VISCC,
+            VIPJSI
+    );
+
+
+    private static UnitFrame GLADE() {
+        return new UnitFrame()
+                .id(UNITS.resolve("glade"))
+                .identifier(entry(DATA, "GLADE"))
+                .prefLabel(map(entry(EN, "Virtual Institute for Good Health and Well‑Being")))
+                .altLabel(map(entry(Locale.ROOT, "GLADE")))
+                .definition(map(entry(EN, """
+                        GLADE is the EC2U Alliance’s Virtual Institute aimed to develop specific approaches in education,
+                        research, innovation and service transfer to the community in areas of the third UNSDG: Good
+                        Health and Well-being for All.
+                        
+                        The Virtual Institute GLADE is the headquarter for:
+                        
+                        - EC2U Glade Literacy LAB that encourages itinerant conferences of EC2U specialists, Summer Schools
+                        and short video trainings in the area of good health and well-being for all;
+                        - EC2U GLADE Transformative Research HUB that initiates and supports studies, guidelines for local
+                        authorities, policy paperspolicy papers on Good Health and Well-being;
+                        - EC2U GLADE Healthy Campus Services that focuses on a brand new approach of Health in Campuses.
+                        
+                        The main objective of the GLADE Virtual Institute is to develop cooperation’s contexts for
+                        promoting health and well-being in the 7 EC2U universities and their cities.
+                        """
+                )))
+                .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/glade-for-researchers-staff/")))
+                .unitOf(set(EC2U))
+                .classification(set(VIRTUAL));
     }
 
-    private static Optional<Literal> value(final Entry<String, Locale> text) {
-        return Optional.ofNullable(text).map(v -> literal(v.getKey(), v.getValue().getLanguage()));
+    private static UnitFrame VIQE() {
+        return new UnitFrame()
+                .id(UNITS.resolve("viqe"))
+                .identifier(entry(DATA, "VIQE"))
+                .prefLabel(map(entry(EN, "Virtual Institute for Quality Education")))
+                .altLabel(map(entry(EN, "VIQE")))
+                .definition(map(entry(EN, """
+                        Virtual Institutes are a completely new way of approaching and solving a given challenge. The
+                        VIQE, Virtual Institue for Quality Edication combines education, research and innovation for
+                        advanced studies in quality education.
+                        
+                        In practice, VIQE will carry out the following activities:
+                        
+                        - Language Policy Research Project
+                        - Research Seed Mobility Programme on Language and Cultural Diversity
+                        - Joint PhD training activities for the existing PhD programmes on European languages and
+                          cultures.
+                        """
+                )))
+                .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-quality-education-viqe/")))
+                .unitOf(set(EC2U))
+                .classification(set(VIRTUAL));
+    }
+
+    private static UnitFrame VISCC() {
+        return new UnitFrame()
+                .id(UNITS.resolve("viscc"))
+                .identifier(entry(DATA, "VISCC"))
+                .prefLabel(map(entry(EN, "Virtual Institute for Sustainable Cities and Communities")))
+                .altLabel(map(entry(EN, "VISCC")))
+                .definition(map(entry(EN, """
+                        The Virtual Institute for Sustainable Cities and Communities (VISCC) aims at bringing together
+                        research, education and innovation, and outreaching in the field of the United Nation’s
+                        sustainable development goal n°11: “Sustainable Cities and Communities”.
+                        
+                        The VISCC carries out scientific activities that promote interdisciplinarity, collaborative work
+                        and mobility between the EC2U Partner Universities, the cities and the citizens.
+                        
+                        What does the VISCC offer?
+                        
+                        - A Joint Master Degree in Sustainable Cities and Communities (more info)
+                        - PhD training activities and thesis projects in co-supervision
+                        - Online courses
+                        - Winter and Summer Schools
+                        - Research projects
+                        """
+                )))
+                .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-sustainable-cities-and-communities/")))
+                .unitOf(set(EC2U))
+                .classification(set(VIRTUAL));
+    }
+
+    private static UnitFrame VIPJSI() {
+        return new UnitFrame()
+                .id(UNITS.resolve("vipjsi"))
+                .identifier(entry(DATA, "VIPJSI"))
+                .prefLabel(map(entry(EN, "Virtual Institute for Peace, Justice and Strong Institutions")))
+                .altLabel(map(entry(EN, "VIPJSI")))
+                .definition(map(entry(EN, """
+                        The Virtual Institute for Peace, Justice and Strong Institutions (VIPJSI) carries out scientific
+                        activities that promote interdisciplinarity, collaborative work and mobility between the EC2U
+                        Partner Universities, the cities and the citizens.
+                        
+                        The VIPJSI aims at bringing together interdisciplinary research, education and innovation, and
+                        outreaching in the field of the United Nation’s Sustainable Development Goal #16: Promote
+                        peaceful and inclusive societies for sustainable development, provide access to justice for all
+                        and build effective, accountable and inclusive institutions at all levels.
+                        
+                        Our research deals with current questions regarding Peace, Justice and Strong Institutions in
+                        Europe from different points of view: law, politics, history and ethics.
+                        
+                        The VIPJSI offers:
+                        
+                        - A Joint Master Program in Peace, Justice and Good Governance (starting 2027)
+                        - PhD training activities and thesis projects in co-supervision (starting 2025)
+                        - Online courses
+                        - Winter and Summer Schools
+                        - Thinktanks & Conferences (starting 2025: Conference on Solidarity in Pavia in Spring and in Jena
+                          in autumn)
+                        """
+                )))
+                .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-peace-justice-and-strong-institutions/")))
+                .unitOf(set(EC2U))
+                .classification(set(VIRTUAL));
     }
 
 
-    //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static void main(final String... args) {
+        exec(() -> service(store()).partition(UNITS).update(array(list(Xtream
 
-    private boolean analyzed;
+                .of(
+                        GLADE,
+                        VIQE,
+                        VISCC,
+                        VIPJSI
+                )
 
-    private University university;
+                .optMap(new Validate<>())
 
-    private String acronym;
-    private Entry<String, Locale> name;
-
-    private Entry<String, Locale> summary;
-    private Entry<String, Locale> description;
-
-    private URI url;
-    private IRI classification;
-
-
-    public boolean isAnalyzed() {
-        return analyzed;
-    }
-
-    public Unit setAnalyzed(final boolean analyzed) {
-
-        this.analyzed=analyzed;
-
-        return this;
+        )), FORCE));
     }
 
 
-    public University getUniversity() {
-        return university;
-    }
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Unit setUniversity(final University university) {
-
-        this.university=university;
-
-        return this;
-    }
+    @Override
+    default Dataset dataset() { return new UnitsFrame(); }
 
 
-    public String getAcronym() {
-        return acronym;
-    }
-
-    public Unit setAcronym(final String acronym) {
-
-        this.acronym=acronym;
-
-        return this;
-    }
+    @Property("dct:")
+    Set<SKOSConcept> subject();
 
 
-    public Entry<String, Locale> getName() {
-        return name;
-    }
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Unit setName(final Entry<String, Locale> name) {
+    final class Handler extends Delegator {
 
-        this.name=name;
+        public Handler() {
+            delegate(new Worker().get(new Driver(new UnitFrame())));
+        }
 
-        return this;
-    }
-
-
-    public Entry<String, Locale> getSummary() {
-        return summary;
-    }
-
-    public Unit setSummary(final Entry<String, Locale> summary) {
-
-        this.summary=summary;
-
-        return this;
-    }
-
-
-    public Entry<String, Locale> getDescription() {
-        return description;
-    }
-
-    public Unit setDescription(final Entry<String, Locale> description) {
-
-        this.description=description;
-
-        return this;
-    }
-
-
-    public URI getUrl() {
-        return url;
-    }
-
-    public Unit setUrl(final URI url) {
-
-        this.url=url;
-
-        return this;
-    }
-
-
-    public IRI getClassification() {
-        return classification;
-    }
-
-    public Unit setClassification(final IRI classification) {
-
-        this.classification=classification;
-
-        return this;
-    }
-
-
-    public Optional<Frame> toFrame() {
-        return Optional.ofNullable(url).map(URI::toASCIIString)
-                .or(() -> Optional.ofNullable(name).map(Entry::getKey))
-
-                .filter(id -> name != null)
-
-                .map(id -> frame(
-
-                        field(ID, item(Units.Context, university, id)),
-                        field(TYPE, Units.Unit),
-
-                        // field(RDFS.LABEL, Optional.ofNullable(acronym)
-                        //         .map(a -> literal(a+" - "+name.getKey(), name.getValue()))
-                        //         .or(() -> value(name))
-                        // ),
-
-                        field(RDFS.LABEL, value(name)),
-                        field(RDFS.COMMENT, value(summary)),
-
-                        field(Resources.generated, literal(true)),
-                        field(Resources.university, university.id),
-
-                        field(SKOS.PREF_LABEL, value(name)),
-                        field(SKOS.DEFINITION, value(description)),
-
-                        field(FOAF.HOMEPAGE, value(url)),
-
-                        field(ORG.UNIT_OF, university.id),
-
-                        field(ORG.CLASSIFICATION, classification)
-
-                ));
     }
 
 }

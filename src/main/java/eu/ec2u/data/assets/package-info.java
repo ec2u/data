@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
-
-import java.net.URI;
-
-import static eu.ec2u.data.EC2U.DATA;
-
-public interface Persons {
-
-    URI PERSONS=DATA.resolve("/persons/");
-
-}
+/**
+ * EC2U knowledge sharing assets.
+ */
+package eu.ec2u.data.assets;

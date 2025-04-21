@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.datasets;
 
-import java.net.URI;
+import com.metreeca.mesh.meta.jsonld.*;
+import com.metreeca.mesh.meta.jsonld.Class;
 
-import static eu.ec2u.data.EC2U.DATA;
+import eu.ec2u.data.assets.Asset;
+import eu.ec2u.data.resources.Resource;
 
-public interface Persons {
+import java.util.Set;
 
-    URI PERSONS=DATA.resolve("/persons/");
+@Frame
+@Class
+@Namespace("[ec2u]")
+public interface Dataset extends Asset, VOIDDataset {
+
+    // !!! @Override
+    // default Dataset dataset() { return Datasets(); }
+
+    @Foreign
+    @Property("^ec2u:dataset")
+    Set<Resource> resources();
 
 }

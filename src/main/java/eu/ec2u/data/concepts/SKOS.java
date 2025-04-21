@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.concepts;
 
-import java.net.URI;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import static eu.ec2u.data.EC2U.DATA;
+import eu.ec2u.data.resources.Reference;
 
-public interface Persons {
-
-    URI PERSONS=DATA.resolve("/persons/");
-
-}
+@Namespace(prefix="[skos]", value="http://www.w3.org/2004/02/skos/core#")
+public interface SKOS extends Reference { }

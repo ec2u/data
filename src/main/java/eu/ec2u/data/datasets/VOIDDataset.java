@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.datasets;
 
-import java.net.URI;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import static eu.ec2u.data.EC2U.DATA;
+@Namespace(prefix="[void]", value="http://rdfs.org/ns/void#")
+public interface VOIDDataset {
 
-public interface Persons {
-
-    URI PERSONS=DATA.resolve("/persons/");
+    int entities();
 
 }

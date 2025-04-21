@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.resources;
 
-import java.net.URI;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Property;
 
-import static eu.ec2u.data.EC2U.DATA;
+@Frame
+@Namespace(prefix="[wgs]", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
+public interface GeoReference extends Reference {
 
-public interface Persons {
+    @Property("wgs:long")
+    double longitude();
 
-    URI PERSONS=DATA.resolve("/persons/");
+    @Property("wgs:lat")
+    double latitude();
 
 }

@@ -19,112 +19,133 @@ package eu.ec2u.data.universities;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.flow.json.handlers.Driver;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Value;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.work._junk.Driver;
-import eu.ec2u.work._junk.Filter;
-import eu.ec2u.work._junk.Relator;
-import eu.ec2u.work._junk.Shape;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.FOAF;
-import org.eclipse.rdf4j.model.vocabulary.ORG;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.WGS84;
+import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.datasets.DatasetFrame;
+import eu.ec2u.data.organizations.OrgOrganization;
+import eu.ec2u.data.resources.Catalog;
+import eu.ec2u.data.resources.Reference;
 
-import static com.metreeca.flow.Handler.handler;
-import static com.metreeca.flow.rdf.Values.iri;
-import static com.metreeca.flow.rdf.Values.literal;
+import java.net.URI;
+import java.time.LocalDate;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.organizations.Organizations.FormalOrganization;
-import static eu.ec2u.data.resources.Resources.Resource;
-import static eu.ec2u.work._junk.Frame.field;
-import static eu.ec2u.work._junk.Frame.frame;
-import static eu.ec2u.work._junk.Shape.*;
-import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
+import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.data.EC2U.EC2U;
+import static eu.ec2u.data.datasets.Datasets.DATASETS;
+import static eu.ec2u.data.resources.Localized.EN;
+
+@Frame
+@Virtual
+@Namespace("[ec2u]")
+public interface Universities extends Dataset, Catalog<University> {
+
+    URI UNIVERSITIES=DATA.resolve("/universities/");
 
 
-public final class Universities extends Delegator {
+    static void main(final String... args) {
+        exec(() -> {
 
-    public static final IRI Context=item("/universities/");
+            final Value update=array(list(Xtream.of(new UniversitiesFrame())
 
-    public static final IRI University=term("University");
+                    .optMap(new Validate<>())
 
-    private static final IRI inception=term("inception");
-    private static final IRI students=term("students");
-    private static final IRI country=term("country");
-    private static final IRI city=term("city");
+            ));
 
+            service(store()).partition(UNIVERSITIES).update(update, FORCE);
 
-    public static Shape Universities() {
-        return Dataset(University());
-    }
-
-    public static Shape University() {
-        return shape(University, FormalOrganization(),
-
-                property(FOAF.DEPICTION, required()),
-                property(FOAF.HOMEPAGE, repeatable()),
-
-                property(inception, required(year())),
-                property(students, required(integer())),
-                property(country, required(Resource())),
-                property(city, required(Resource())),
-
-                property(WGS84.LAT, required(decimal())),
-                property(WGS84.LONG, required(decimal())),
-
-                property(ORG.SUB_ORGANIZATION_OF, hasValue((iri("https://ec2u.eu/"))))
-
-        );
-    }
-
-
-    public static void main(final String... args) {
-        exec(
-                () -> new Universities_().run(),
-                () -> create(Context, Universities.class, University())
-        );
+        });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Universities() {
-        delegate(new Router()
+    @Override
+    default URI id() {
+        return UNIVERSITIES;
+    }
 
-                .path("/", handler(new Driver(Universities()), new Worker()
 
-                        .get(new Relator(frame(
+    @Override
+    default Map<Locale, String> title() {
+        return map(entry(EN, "EC2U Allied Universities"));
+    }
 
-                                field(ID, iri()),
-                                field(RDFS.LABEL, literal("", ANY_LOCALE)),
+    @Override
+    default Map<Locale, String> alternative() {
+        return map(entry(EN, "EC2U Universities"));
+    }
 
-                                field(RDFS.MEMBER, Filter.query(
+    @Override
+    default Map<Locale, String> description() {
+        return map(entry(EN, "Background information about EC2U allied universities."));
+    }
 
-                                        frame(
-                                                field(ID, iri()),
-                                                field(RDFS.LABEL, literal("", ANY_LOCALE))
-                                        )
+    @Override
+    default URI isDefinedBy() {
+        return DATASETS.resolve("universities");
+    }
 
-                                ))
 
-                        )))
+    @Override
+    default LocalDate issued() {
+        return LocalDate.parse("2022-01-01");
+    }
 
-                ))
+    @Override
+    default String rights() {
+        return "Copyright © 2022‑2025 EC2U Alliance";
+    }
 
-                .path("/{code}", handler(new Driver(University()), new Worker()
+    @Override
+    default OrgOrganization publisher() {
+        return EC2U;
+    }
 
-                        .get(new Relator(frame(
+    @Override
+    default Set<Reference> license() {
+        return set(CCBYNCND40);
+    }
 
-                                field(ID, iri()),
-                                field(RDFS.LABEL, literal("", ANY_LOCALE))
 
-                        )))
+    @Override // !!! remove
+    default Dataset dataset() { return new DatasetFrame(); }
 
-                ))
-        );
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    final class Handler extends Delegator {
+
+        public Handler() {
+            delegate(new Router()
+
+                    .path("/", new Worker().get(new Driver(new UniversitiesFrame()
+
+                            .members(stash(query(new UniversityFrame())))
+
+                    )))
+
+                    .path("/{code}", new University.Handler())
+
+            );
+        }
 
     }
 

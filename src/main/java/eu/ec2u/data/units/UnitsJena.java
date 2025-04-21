@@ -16,30 +16,32 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 
-import eu.ec2u.data.Data;
-import eu.ec2u.work._junk.Frame;
-import org.eclipse.rdf4j.model.IRI;
+import java.net.URI;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.rdf.Values.iri;
+import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Vault.vault;
+import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.util.Collections.list;
 
-import static eu.ec2u.data.EC2U.update;
-import static eu.ec2u.data.universities.University.Jena;
+import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.units.Units.UNITS;
+import static eu.ec2u.data.universities.University.JENA;
 
 public final class UnitsJena implements Runnable {
 
-    private static final IRI Context=iri(Units.Context, "/jena");
+    private static final URI CONTEXT=UNITS.resolve("jena");
 
-    private static final String DataUrl="units-jena-url"; // vault label
+    private static final String DATA_URL="units-jena-url"; // vault label
 
 
     public static void main(final String... args) {
-        Data.exec(() -> new UnitsJena().run());
+        exec(() -> new UnitsJena().run());
     }
 
 
@@ -49,23 +51,16 @@ public final class UnitsJena implements Runnable {
 
     @Override public void run() {
 
-        final String url=vault.get(DataUrl);
+        final String url=vault.get(DATA_URL);
 
-        update(connection -> Xtream.of(url)
+        service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new Units_.CSVLoader(Jena))
+                .flatMap(new Units.CSVLoader(JENA))
 
-                .flatMap(Frame::stream)
-                .batch(0)
+                .optMap(new Validate<>())
 
-                .forEach(new Upload()
-                        .contexts(Context)
-                        .clear(true)
-                )
-
-        );
+        )), FORCE);
 
     }
-
 
 }

@@ -11,13 +11,13 @@
 ## Pending
 
 * waiting for API extensions
-  * research  centres
-  * description
-  * extended contact data
+    * research centres
+    * description
+    * extended contact data
 
 ## 2022-10-20
 
-* automated ingestion of research unit ‹› virtual institute associations 
+* automated ingestion of research unit ‹› virtual institute associations
 
 ## 2022-10-06
 
@@ -28,7 +28,7 @@
 
 ## 2022-09-26
 
-  * extract department data
+* extract department data
 
 ## 2022-09-23
 

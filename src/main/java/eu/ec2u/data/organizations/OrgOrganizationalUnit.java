@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.organizations;
 
-import java.net.URI;
+import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.shacl.Required;
 
-import static eu.ec2u.data.EC2U.DATA;
+import java.util.Set;
 
-public interface Persons {
+@Frame
+@Class("org:OrganizationalUnit")
+public interface OrgOrganizationalUnit extends OrgOrganization {
 
-    URI PERSONS=DATA.resolve("/persons/");
+    @Required
+    Set<OrgOrganization> unitOf();
 
 }

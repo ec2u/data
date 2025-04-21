@@ -17,125 +17,117 @@
 package eu.ec2u.data.resources;
 
 import com.metreeca.flow.handlers.Delegator;
+import com.metreeca.flow.handlers.Router;
 import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.flow.json.handlers.Driver;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Value;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data.EC2U;
-import eu.ec2u.work._junk.Driver;
-import eu.ec2u.work._junk.Filter;
-import eu.ec2u.work._junk.Relator;
-import eu.ec2u.work._junk.Shape;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.datasets.DatasetsFrame;
+import eu.ec2u.data.organizations.OrgOrganization;
+import eu.ec2u.data.units.UnitsFrame;
 
-import java.util.Set;
-import java.util.stream.Stream;
+import java.net.URI;
+import java.util.Locale;
+import java.util.Map;
 
-import static com.metreeca.flow.Handler.handler;
-import static com.metreeca.flow.rdf.Values.*;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.create;
-import static eu.ec2u.data.concepts.Concepts.Concept;
-import static eu.ec2u.data.datasets.Datasets.Dataset;
-import static eu.ec2u.data.universities.Universities.University;
-import static eu.ec2u.work._junk.Filter.*;
-import static eu.ec2u.work._junk.Frame.field;
-import static eu.ec2u.work._junk.Frame.frame;
-import static eu.ec2u.work._junk.Shape.*;
-import static eu.ec2u.work._junk.Shape.bool;
-import static eu.ec2u.work._junk.Shape.text;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toUnmodifiableSet;
-import static org.eclipse.rdf4j.model.vocabulary.XSD.ID;
+import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.data.EC2U.EC2U;
+import static eu.ec2u.data.datasets.Datasets.DATASETS;
+import static eu.ec2u.data.resources.Localized.EN;
 
 
-public final class Resources extends Delegator {
+@Frame
+@Virtual
+public interface Resources extends Dataset, Catalog<Resource> {
 
-    public static final IRI Context=EC2U.item("/resources/");
-
-    public static final IRI Resource=EC2U.term("Resource");
-
-    public static final IRI generated=EC2U.term("generated");
-    public static final IRI university=EC2U.term("university");
-    public static final IRI concept=EC2U.term("concept");
+    URI RESOURCES=DATA.resolve("/resources/");
 
 
-    private static final Set<String> locales=Stream
+    static void main(final String... args) {
+        exec(() -> {
 
-            .concat(
-                    Stream.of(NOT_LOCALE, "en"),
-                    stream(eu.ec2u.data.universities.University.values()).map(u -> u.language)
-            )
+            final Value update=array(list(Xtream.of(new UnitsFrame())
 
-            .collect(toUnmodifiableSet());
+                    .optMap(new Validate<>())
 
+            ));
 
-    public static Set<String> locales() {
-        return locales;
-    }
+            service(store()).partition(RESOURCES).update(update, FORCE);
 
-
-    public static Shape Resources() { return Dataset(Resource()); }
-
-    public static Shape Resource() {
-        return shape(
-
-                property("id", ID, required(id())),
-
-                property(RDF.TYPE, multiple(id())),
-                property(RDFS.LABEL, optional(text(locales()), maxLength(1_000))), // !!! 1000
-                property(RDFS.COMMENT, optional(text(locales()), maxLength(10_000))), // !!! 1_000
-
-                property(RDFS.SEEALSO, multiple(id())),
-                property(RDFS.ISDEFINEDBY, optional(id())),
-
-                property(generated, () -> optional(bool())),
-
-                property(university, () -> optional(University())),
-                property(concept, () -> multiple(Concept())),
-
-                property("dataset", reverse(RDFS.MEMBER), () -> multiple(Dataset()))
-
-        );
-    }
-
-
-    public static void main(final String... args) {
-        exec(() -> create(Context, Resources.class, Resource()));
+        });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Resources() {
-        delegate(handler(new Driver(Resources()), new Worker()
-
-                .get(new Relator(frame(
-
-                        field(ID, iri()),
-                        field(RDFS.LABEL, literal("EC2U Knowledge Hub Resources", "en")),
-
-                        field(RDFS.MEMBER, Filter.query(
-
-                                frame(
-
-                                        field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", ANY_LOCALE)),
-
-                                        field(reverse(RDFS.MEMBER), iri()),
-                                        field(university, iri())
-
-                                ),
-
-                                filter(expression(reverse(RDFS.MEMBER), DCTERMS.ISSUED), any())
-
-                        ))
-
-                )))
-
-        ));
+    @Override
+    default URI id() {
+        return RESOURCES;
     }
 
+
+    @Override
+    default Map<Locale, String> title() {
+        return map(entry(EN, "EC2U Knowledge Hub Resources"));
+    }
+
+    @Override
+    default Map<Locale, String> alternative() {
+        return map(entry(EN, "EC2U Resources"));
+    }
+
+    @Override
+    default Map<Locale, String> description() {
+        return map(entry(EN, "Shared resources published on the EC2U Knowledge Hub."));
+    }
+
+    @Override
+    default URI isDefinedBy() {
+        return DATASETS.resolve("resources");
+    }
+
+    @Override
+    default String rights() {
+        return "Copyright © 2022‑2025 EC2U Alliance";
+    }
+
+    @Override
+    default OrgOrganization publisher() {
+        return EC2U;
+    }
+
+
+    @Override // !!! remove
+    default Dataset dataset() { return new DatasetsFrame(); }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    final class Handler extends Delegator {
+
+        public Handler() {
+            delegate(new Router().path("/", new Worker().get(new Driver(new ResourcesFrame()
+
+                    .members(stash(query(new ResourceFrame())
+                            .where("dataset.issued", criterion().any(set()))
+                    ))
+
+            ))));
+        }
+
+    }
 }

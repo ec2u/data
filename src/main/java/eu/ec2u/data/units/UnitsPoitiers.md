@@ -1,6 +1,6 @@
 # Sites
 
-*  none
+* none
 
 # Integration
 
@@ -10,7 +10,7 @@
 ## 2024-04-24
 
 * upgrade to REST/JSON API provided by RNSR national catalog
-  * https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles
+    * https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles
 
 ## 2022-12-10
 
@@ -100,16 +100,16 @@
 Source pointers provided by UniPoitiesr on 2024-04-09.
 
 - **RNSR**
-  - table view
-    https://data.enseignementsup-recherche.gouv.fr/explore/embed/dataset/fr-esr-structures-recherche-publiques-actives/table/?disjunctive.numero_national_de_structure&disjunctive.type_de_structure&disjunctive.tutelles&refine.tutelles=Universit%C3%A9%20de%20Poitiers&refine.type_de_structure=Unit%C3%A9%20mixte&refine.type_de_structure=Unit%C3%A9%20propre
-  - json all structures ():
-    https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles
-  - json only laboratories :
-    https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles%20AND%20code_de_niveau_de_structure%20%3D%202
+    - table view
+      https://data.enseignementsup-recherche.gouv.fr/explore/embed/dataset/fr-esr-structures-recherche-publiques-actives/table/?disjunctive.numero_national_de_structure&disjunctive.type_de_structure&disjunctive.tutelles&refine.tutelles=Universit%C3%A9%20de%20Poitiers&refine.type_de_structure=Unit%C3%A9%20mixte&refine.type_de_structure=Unit%C3%A9%20propre
+    - json all structures ():
+      https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles
+    - json only laboratories :
+      https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles%20AND%20code_de_niveau_de_structure%20%3D%202
 - **auréHal**
-  - table view
-    https://aurehal.archives-ouvertes.fr/structure/browse/critere/parentDocid_i%3A54493/solR/1/page/1/nbResultPerPage/200/tri/valid/filter/valid/category/%2A
+    - table view
+      https://aurehal.archives-ouvertes.fr/structure/browse/critere/parentDocid_i%3A54493/solR/1/page/1/nbResultPerPage/200/tri/valid/filter/valid/category/%2A
 
-  - json :
-    http://api.archives-ouvertes.fr/ref/structure/?q=parentDocid_i:54493&fq=valid_s:VALID
+    - json :
+      http://api.archives-ouvertes.fr/ref/structure/?q=parentDocid_i:54493&fq=valid_s:VALID
 

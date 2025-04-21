@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.units;
 
-import java.net.URI;
-
-import static eu.ec2u.data.EC2U.DATA;
-
-public interface Persons {
-
-    URI PERSONS=DATA.resolve("/persons/");
-
+public final class _UnitsSalamanca {
 }

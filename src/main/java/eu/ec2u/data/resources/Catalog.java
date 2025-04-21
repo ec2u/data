@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.resources;
 
-import java.net.URI;
+import com.metreeca.mesh.meta.jsonld.Property;
 
-import static eu.ec2u.data.EC2U.DATA;
+import java.util.Set;
 
-public interface Persons {
+public interface Catalog<T extends Resource> extends Resource {
 
-    URI PERSONS=DATA.resolve("/persons/");
+    @Property("rdfs:member")
+    Set<T> members();
 
 }
