@@ -138,6 +138,8 @@ public interface Universities extends Dataset, Catalog<University> {
 
                     .path("/", new Worker().get(new Driver(new UniversitiesFrame()
 
+                            .resources(null)
+
                             .members(stash(query(new UniversityFrame())))
 
                     )))
