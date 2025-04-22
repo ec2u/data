@@ -27,7 +27,6 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Property;
 
 import eu.ec2u.data.concepts.SKOSConcept;
-import eu.ec2u.data.concepts.SKOSConceptFrame;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Resource;
@@ -46,6 +45,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.OrganizationType.VirtualInstitute;
 import static eu.ec2u.data.units.Units.UNITS;
 import static java.util.Map.entry;
 
@@ -55,23 +55,7 @@ import static java.util.Map.entry;
 @Namespace(prefix="dct", value="http://purl.org/dc/terms/")
 public interface Unit extends Resource, OrgOrganizationalUnit {
 
-    SKOSConceptFrame VIRTUAL=new SKOSConceptFrame() // !!! update to std org taxonomy
-            .id(DATA.resolve("/concepts/organizations/university-unit/institute/virtual"));
-
-    UnitFrame GLADE=GLADE();
-    UnitFrame VIQE=VIQE();
-    UnitFrame VISCC=VISCC();
-    UnitFrame VIPJSI=VIPJSI();
-
-    Set<Unit> VIS=set(
-            GLADE,
-            VIQE,
-            VISCC,
-            VIPJSI
-    );
-
-
-    private static UnitFrame GLADE() {
+    static UnitFrame GLADE() {
         return new UnitFrame()
                 .id(UNITS.resolve("glade"))
                 .identifier(entry(DATA, "GLADE"))
@@ -96,10 +80,10 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 )))
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/glade-for-researchers-staff/")))
                 .unitOf(set(EC2U))
-                .classification(set(VIRTUAL));
+                .classification(set(VirtualInstitute()));
     }
 
-    private static UnitFrame VIQE() {
+    static UnitFrame VIQE() {
         return new UnitFrame()
                 .id(UNITS.resolve("viqe"))
                 .identifier(entry(DATA, "VIQE"))
@@ -120,10 +104,10 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 )))
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-quality-education-viqe/")))
                 .unitOf(set(EC2U))
-                .classification(set(VIRTUAL));
+                .classification(set(VirtualInstitute()));
     }
 
-    private static UnitFrame VISCC() {
+    static UnitFrame VISCC() {
         return new UnitFrame()
                 .id(UNITS.resolve("viscc"))
                 .identifier(entry(DATA, "VISCC"))
@@ -148,10 +132,10 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 )))
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-sustainable-cities-and-communities/")))
                 .unitOf(set(EC2U))
-                .classification(set(VIRTUAL));
+                .classification(set(VirtualInstitute()));
     }
 
-    private static UnitFrame VIPJSI() {
+    static UnitFrame VIPJSI() {
         return new UnitFrame()
                 .id(UNITS.resolve("vipjsi"))
                 .identifier(entry(DATA, "VIPJSI"))
@@ -182,7 +166,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 )))
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-peace-justice-and-strong-institutions/")))
                 .unitOf(set(EC2U))
-                .classification(set(VIRTUAL));
+                .classification(set(VirtualInstitute()));
     }
 
 
@@ -190,10 +174,10 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
         exec(() -> service(store()).partition(UNITS).update(array(list(Xtream
 
                 .of(
-                        GLADE,
-                        VIQE,
-                        VISCC,
-                        VIPJSI
+                        GLADE(),
+                        VIQE(),
+                        VISCC(),
+                        VIPJSI()
                 )
 
                 .optMap(new Validate<>())

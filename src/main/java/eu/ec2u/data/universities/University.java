@@ -75,7 +75,7 @@ import static java.util.stream.Collectors.joining;
 @Namespace("[ec2u]")
 public interface University extends Resource, GeoReference, OrgFormalOrganization {
 
-    static UniversityFrame Coimbra() {
+    public static UniversityFrame Coimbra() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("coimbra"))
                 .prefLabel(map(
@@ -108,7 +108,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Lisbon"));
     }
 
-    static UniversityFrame Iasi() {
+    public static UniversityFrame Iasi() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("iasi"))
                 .prefLabel(map(
@@ -144,7 +144,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Bucharest"));
     }
 
-    static UniversityFrame Jena() {
+    public static UniversityFrame Jena() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("jena"))
                 .prefLabel(map(
@@ -178,7 +178,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Berlin"));
     }
 
-    static UniversityFrame Linz() {
+    public static UniversityFrame Linz() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("linz"))
                 .prefLabel(map(
@@ -213,7 +213,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Vienna"));
     }
 
-    static UniversityFrame Pavia() {
+    public static UniversityFrame Pavia() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("pavia"))
                 .prefLabel(map(
@@ -245,7 +245,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Rome"));
     }
 
-    static UniversityFrame Poitiers() {
+    public static UniversityFrame Poitiers() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("poitiers"))
                 .prefLabel(map(
@@ -279,7 +279,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Paris"));
     }
 
-    static UniversityFrame Salamanca() {
+    public static UniversityFrame Salamanca() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("salamanca"))
                 .prefLabel(map(

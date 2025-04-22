@@ -56,7 +56,6 @@ import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.units.Unit.VIS;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
@@ -147,6 +146,14 @@ public interface Units extends Dataset, Catalog<Unit> {
     }
 
     final class CSVLoader extends CSVProcessor<UnitFrame> {
+
+        private static final Set<Unit> VIS=set(
+                Unit.GLADE(),
+                Unit.VIQE(),
+                Unit.VISCC(),
+                Unit.VIPJSI()
+        );
+
 
         private final University university;
 
