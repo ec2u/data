@@ -86,9 +86,7 @@ public interface Persons extends Dataset, Catalog<Unit> {
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("persons");
+        return DATASETS.resolve("/persons");
     }
-
-
 
 }

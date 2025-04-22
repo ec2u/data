@@ -28,14 +28,11 @@ import com.metreeca.mesh.meta.jsonld.Virtual;
 import com.metreeca.mesh.queries.Table;
 
 import eu.ec2u.data.Data;
-import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Catalog;
-import eu.ec2u.data.resources.Reference;
 
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -51,7 +48,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
-import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
@@ -101,22 +97,6 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
     @Override
     default URI isDefinedBy() {
         return DATASETS;
-    }
-
-
-    @Override
-    default String rights() {
-        return "Copyright © 2022‑2025 EC2U Alliance";
-    }
-
-    @Override
-    default OrgOrganization publisher() {
-        return EC2U;
-    }
-
-    @Override
-    default Set<Reference> license() {
-        return set(CCBYNCND40);
     }
 
 

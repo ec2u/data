@@ -16,24 +16,50 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Id;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Type;
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.shacl.MaxLength;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.metreeca.flow.toolkits.Strings.clip;
+import static com.metreeca.mesh.util.Collections.entry;
+import static com.metreeca.mesh.util.Collections.map;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.reducing;
+
 @Frame
-@Namespace(prefix="[rdfs]", value="http://www.w3.org/2000/01/rdf-schema#")
+@Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
 public interface Reference {
 
     int LABEL_LENGTH=100;
     int COMMENT_LENGTH=1000;
 
+
+    @SafeVarargs
+    static Map<Locale, String> label(final Map<Locale, String>... labels) {
+        return map(Arrays.stream(labels)
+                .flatMap(m -> m.entrySet().stream())
+                .map(e -> entry(e.getKey(), clip(e.getValue(), LABEL_LENGTH)))
+                .collect(groupingBy(Map.Entry::getKey, reducing(null, Map.Entry::getValue, (x, y) -> x == null ? y : x)))
+        );
+    }
+
+    @SafeVarargs
+    static Map<Locale, String> comment(final Map<Locale, String>... labels) {
+        return map(Arrays.stream(labels)
+                .flatMap(m -> m.entrySet().stream())
+                .map(e -> entry(e.getKey(), clip(e.getValue(), COMMENT_LENGTH)))
+                .collect(groupingBy(Map.Entry::getKey, reducing(null, Map.Entry::getValue, (x, y) -> x == null ? y : x)))
+        );
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Id
     URI id();
@@ -45,10 +71,12 @@ public interface Reference {
     @Required
     @Localized
     @MaxLength(LABEL_LENGTH)
+    @Property("rdfs:")
     Map<Locale, String> label();
 
     @Localized
     @MaxLength(COMMENT_LENGTH)
+    @Property("rdfs:")
     Map<Locale, String> comment();
 
 }

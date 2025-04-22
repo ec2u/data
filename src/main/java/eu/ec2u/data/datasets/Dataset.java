@@ -20,9 +20,16 @@ import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
 
 import eu.ec2u.data.assets.Asset;
+import eu.ec2u.data.organizations.OrgOrganization;
+import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 
 import java.util.Set;
+
+import static com.metreeca.mesh.util.Collections.set;
+
+import static eu.ec2u.data.EC2U.COPYRIGHT;
+import static eu.ec2u.data.EC2U.EC2U;
 
 @Frame
 @Class
@@ -31,6 +38,23 @@ public interface Dataset extends Asset, VOIDDataset {
 
     @Override
     default Dataset dataset() { return new DatasetsFrame(); }
+
+
+    @Override
+    default String rights() {
+        return COPYRIGHT;
+    }
+
+    @Override
+    default OrgOrganization publisher() {
+        return EC2U;
+    }
+
+    @Override
+    default Set<Reference> license() {
+        return set(CCBYNCND40);
+    }
+
 
     @Foreign
     @Property("^ec2u:dataset")

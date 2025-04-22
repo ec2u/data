@@ -28,15 +28,12 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Catalog;
-import eu.ec2u.data.resources.Reference;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -47,7 +44,6 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
-import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
@@ -104,21 +100,6 @@ public interface Universities extends Dataset, Catalog<University> {
     @Override
     default LocalDate issued() {
         return LocalDate.parse("2022-01-01");
-    }
-
-    @Override
-    default String rights() {
-        return "Copyright © 2022‑2025 EC2U Alliance";
-    }
-
-    @Override
-    default OrgOrganization publisher() {
-        return EC2U;
-    }
-
-    @Override
-    default Set<Reference> license() {
-        return set(CCBYNCND40);
     }
 
 

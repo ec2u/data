@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
+/**
+ * EC2U classification taxonomies
+ */
 package eu.ec2u.data.taxonomies;
-
-import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-
-import eu.ec2u.data.assets.Asset;
-import eu.ec2u.data.concepts.SKOSConceptScheme;
-
-@Frame
-@Class
-@Namespace("[ec2u]")
-public interface Taxonomy extends Asset, SKOSConceptScheme { }

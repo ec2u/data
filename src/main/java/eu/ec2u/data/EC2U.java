@@ -22,6 +22,7 @@ import com.metreeca.flow.handlers.Router;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 
@@ -43,6 +44,7 @@ public final class EC2U extends Delegator {
     public static final String BASE="https://data.ec2u.eu/";
 
     public static final URI DATA=uri(BASE);
+    public static final String COPYRIGHT="Copyright © 2022‑2025 EC2U Alliance";
 
     public static final OrgOrganizationFrame EC2U=new OrgOrganizationFrame()
             .id(uri("https://ec2u.eu/"))
@@ -62,18 +64,15 @@ public final class EC2U extends Delegator {
 
                         .path("/", new Datasets.Handler())
                         .path("/resources/*", new Resources.Handler())
-                        // !!! .path("/assets/*", new Resources())
-                        // !!! .path("/concepts/*", new Concepts())
-                        // !!! .path("/agents/*", new Agents())
+                        .path("/concepts/*", new Taxonomies.Handler())
                         .path("/universities/*", new Universities.Handler())
                         .path("/units/*", new Units.Handler())
-                // !!! .path("/documents/*", new Documents())
-                // !!! .path("/actors/*", new Actors())
-                // !!! .path("/things/*", new Schema())
-                // !!! .path("/events/*", new Events())
                 // !!! .path("/offerings/*", new Offerings())
                 // !!! .path("/programs/*", new Programs())
                 // !!! .path("/courses/*", new Courses())
+                // !!! .path("/documents/*", new Documents())
+                // !!! .path("/events/*", new Events())
+                // !!! .path("/actors/*", new Actors())
 
         );
     }

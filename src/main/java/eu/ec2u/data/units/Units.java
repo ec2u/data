@@ -34,7 +34,6 @@ import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Catalog;
-import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
 import eu.ec2u.work.Parsers;
@@ -54,7 +53,6 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
-import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
@@ -116,30 +114,16 @@ public interface Units extends Dataset, Catalog<Unit> {
         ));
     }
 
+
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("units");
+        return DATASETS.resolve("/units");
     }
 
 
     @Override
     default LocalDate issued() {
         return LocalDate.parse("2022-01-01");
-    }
-
-    @Override
-    default String rights() {
-        return "Copyright © 2022‑2025 EC2U Alliance";
-    }
-
-    @Override
-    default OrgOrganization publisher() {
-        return EC2U;
-    }
-
-    @Override
-    default Set<Reference> license() {
-        return set(CCBYNCND40);
     }
 
 

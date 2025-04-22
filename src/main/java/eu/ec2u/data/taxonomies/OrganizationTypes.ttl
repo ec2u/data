@@ -1,0 +1,131 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vivo: <http://vivoweb.org/ontology/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+
+########################################################################################################################
+
+</concepts/organizations/university> a skos:Concept ;
+    skos:prefLabel "University"@en .
+
+</concepts/organizations/college> a skos:Concept ;
+    skos:prefLabel "College"@en .
+
+</concepts/organizations/association> a skos:Concept ;
+    skos:prefLabel "Association"@en .
+
+</concepts/organizations/city> a skos:Concept ;
+    skos:prefLabel "City"@en .
+
+</concepts/organizations/other> a skos:Concept ;
+    skos:prefLabel "Other"@en .
+
+
+########################################################################################################################
+
+</concepts/organizations/university-unit> a skos:Concept ;
+    skos:prefLabel "University Unit"@en .
+
+</concepts/organizations/university-unit/area> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit> ;
+    skos:prefLabel "Research Area"@en ;
+    skos:definition
+        """Thematic collaboration area gathering researchers from different disciplines to advance multidisciplinary
+            research and education across faculty boundaries, create platforms for networks,business collaboration,
+            innovations and strategic partnerships; part of the formal organization of the University with an
+            appointed head/board."""@en .
+
+</concepts/organizations/university-unit/network> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit> ;
+    skos:prefLabel "Research Network"@en ;
+    skos:definition
+        """Networks of researchers sharing a research theme or topic;
+        not part of the formal organization of the University;
+        not limited to the researchers of the University"""@en .
+
+</concepts/organizations/university-unit/institute> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit> ;
+    skos:prefLabel "Institute"@en ;
+    owl:sameAs vivo:Institute .
+
+</concepts/organizations/university-unit/institute/virtual> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/institute> ;
+    skos:prefLabel "Virtual Institute"@en .
+
+</concepts/organizations/university-unit/department> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit> ;
+    skos:prefLabel "Department"@en ;
+    owl:sameAs vivo:AcademicDepartment .
+
+</concepts/organizations/university-unit/centre> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit> ;
+    skos:prefLabel "Centre"@en ;
+    skos:hiddenLabel "Center"@en ;
+    owl:sameAs vivo:Center .
+
+</concepts/organizations/university-unit/centre/research> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/centre> ;
+    skos:prefLabel "Research Centre"@en ;
+    skos:hiddenLabel "Research Center"@en .
+
+</concepts/organizations/university-unit/centre/research/interdepartmental> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/centre/research> ;
+    skos:prefLabel "Interdepartmental Research Center"@en ;
+    skos:hiddenLabel "Interdepartmental Research Center"@en .
+
+</concepts/organizations/university-unit/centre/transfer> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/centre> ;
+    skos:prefLabel "Technology Transfer Centre"@en ;
+    skos:hiddenLabel "Technology Transfer Center"@en .
+
+</concepts/organizations/university-unit/centre/service> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/centre> ;
+    skos:prefLabel "Service Centre"@en ;
+    skos:hiddenLabel "Service Center"@en .
+
+</concepts/organizations/university-unit/group> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit> ;
+    skos:prefLabel "Research Group"@en .
+
+</concepts/organizations/university-unit/group/recognized> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/group> ;
+    skos:prefLabel "Recognized Research Group"@en .
+
+</concepts/organizations/university-unit/group/informal> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/group> ;
+    skos:prefLabel "Informal Research Group"@en .
+
+</concepts/organizations/university-unit/group/student> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/group> ;
+    skos:prefLabel "Student Research Group"@en .
+
+</concepts/organizations/university-unit/laboratory> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit> ;
+    skos:prefLabel "Laboratory"@en ;
+    owl:sameAs vivo:Laboratory .
+
+</concepts/organizations/university-unit/facility> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit> ;
+    skos:prefLabel "Research Facility"@en .
+
+</concepts/organizations/university-unit/facility/library> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/facility> ;
+    skos:prefLabel "Research Library"@en .
+
+</concepts/organizations/university-unit/facility/collection> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/facility> ;
+    skos:prefLabel "Research Collection"@en ;
+    skos:definition "Museum, archive, bio-bank, …"@en .
+
+</concepts/organizations/university-unit/facility/instrument> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/facility> ;
+    skos:prefLabel "Research Instrument"@en ;
+    skos:definition "Large research instrument with dedicated management (telescope, reactor, accelerator, …)"@en .
+
+</concepts/organizations/university-unit/facility/station> a skos:Concept ;
+    skos:broader </concepts/organizations/university-unit/facility> ;
+    skos:prefLabel "Research Station"@en ;
+    skos:altLabel "Research Base"@en .

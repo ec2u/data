@@ -24,18 +24,13 @@ import eu.ec2u.data.agents.FOAFOrganization;
 import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.concepts.SKOSConcept;
 import eu.ec2u.data.resources.Localized;
+import eu.ec2u.data.resources.Reference;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
-
-import static com.metreeca.flow.toolkits.Strings.clip;
-import static com.metreeca.mesh.util.Collections.entry;
-import static com.metreeca.mesh.util.Collections.map;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.reducing;
+import java.util.Set;
 
 @Frame
 @Class("org:Organization")
@@ -45,23 +40,13 @@ import static java.util.stream.Collectors.reducing;
 public interface OrgOrganization extends FOAFOrganization {
 
     @Override
-    default Map<Locale, String> label() { // !!! factor
-        return map(Stream.of(altLabel(), prefLabel())
-                .filter(Objects::nonNull)
-                .flatMap(m -> m.entrySet().stream())
-                .map(e -> entry(e.getKey(), clip(e.getValue(), LABEL_LENGTH)))
-                .collect(groupingBy(Entry::getKey, reducing(null, Entry::getValue, (x, y) -> x == null ? y : x)))
-        );
+    default Map<Locale, String> label() {
+        return Reference.label(altLabel(), prefLabel());
     }
 
     @Override
-
-    default Map<Locale, String> comment() { // !!! factor
-        return Optional.ofNullable(definition())
-                .map(definition -> map(definition.entrySet().stream()
-                        .map(e -> entry(e.getKey(), clip(e.getValue(), COMMENT_LENGTH)))
-                ))
-                .orElse(null);
+    default Map<Locale, String> comment() {
+        return Reference.comment(definition());
     }
 
 
