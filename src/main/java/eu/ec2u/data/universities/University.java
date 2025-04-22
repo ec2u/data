@@ -75,17 +75,7 @@ import static java.util.stream.Collectors.joining;
 @Namespace("[ec2u]")
 public interface University extends Resource, GeoReference, OrgFormalOrganization {
 
-    UniversityFrame COIMBRA=Coimbra();
-    UniversityFrame IASI=Iasi();
-    UniversityFrame JENA=Jena();
-    UniversityFrame LINZ=Linz();
-    UniversityFrame PAVIA=Pavia();
-    UniversityFrame POITIERS=Poitiers();
-    UniversityFrame SALAMANCA=Salamanca();
-    UniversityFrame TURKU=Turku();
-
-
-    private static UniversityFrame Coimbra() {
+    static UniversityFrame Coimbra() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("coimbra"))
                 .prefLabel(map(
@@ -118,7 +108,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Lisbon"));
     }
 
-    private static UniversityFrame Iasi() {
+    static UniversityFrame Iasi() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("iasi"))
                 .prefLabel(map(
@@ -154,7 +144,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Bucharest"));
     }
 
-    private static UniversityFrame Jena() {
+    static UniversityFrame Jena() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("jena"))
                 .prefLabel(map(
@@ -188,7 +178,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Berlin"));
     }
 
-    private static UniversityFrame Linz() {
+    static UniversityFrame Linz() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("linz"))
                 .prefLabel(map(
@@ -223,7 +213,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Vienna"));
     }
 
-    private static UniversityFrame Pavia() {
+    static UniversityFrame Pavia() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("pavia"))
                 .prefLabel(map(
@@ -255,7 +245,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Rome"));
     }
 
-    private static UniversityFrame Poitiers() {
+    static UniversityFrame Poitiers() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("poitiers"))
                 .prefLabel(map(
@@ -289,7 +279,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Paris"));
     }
 
-    private static UniversityFrame Salamanca() {
+    static UniversityFrame Salamanca() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("salamanca"))
                 .prefLabel(map(
@@ -322,7 +312,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Madrid"));
     }
 
-    private static UniversityFrame Turku() {
+    static UniversityFrame Turku() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("turku"))
                 .prefLabel(map(
@@ -375,14 +365,14 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
         exec(() -> exec(() -> {
 
             final Set<UniversityFrame> universities=set(
-                    COIMBRA,
-                    IASI,
-                    JENA,
-                    LINZ,
-                    PAVIA,
-                    POITIERS,
-                    SALAMANCA,
-                    TURKU
+                    Coimbra(),
+                    Iasi(),
+                    Jena(),
+                    Linz(),
+                    Pavia(),
+                    Poitiers(),
+                    Salamanca(),
+                    Turku()
             );
 
             final Rover wikidata=rover(Stream.of(text(resource(University.class, ".qlt")))

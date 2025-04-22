@@ -21,6 +21,7 @@ import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 
 import eu.ec2u.data.units.Units.CSVLoader;
+import eu.ec2u.data.universities.University;
 
 import java.net.URI;
 
@@ -33,7 +34,6 @@ import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.units.Units.UNITS;
-import static eu.ec2u.data.universities.University.LINZ;
 
 public final class UnitsLinz implements Runnable {
 
@@ -57,7 +57,7 @@ public final class UnitsLinz implements Runnable {
 
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new CSVLoader(LINZ))
+                .flatMap(new CSVLoader(University.Linz()))
 
                 .optMap(new Validate<>())
 

@@ -25,6 +25,7 @@ import com.metreeca.mesh.Value;
 import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.PersonsFrame;
+import eu.ec2u.data.universities.University;
 
 import java.net.URI;
 import java.util.List;
@@ -42,7 +43,6 @@ import static com.metreeca.mesh.util.Collections.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.units.Units.UNITS;
-import static eu.ec2u.data.universities.University.POITIERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
@@ -85,20 +85,20 @@ public final class UnitsPoitiers implements Runnable {
     private Optional<UnitFrame> unit(final Value json) {
         return json.get("numero_national_de_structure").string().map(id -> new UnitFrame()
 
-                        .id(UNITS.resolve(uuid(POITIERS, id)))
-                        .university(POITIERS)
+                        .id(UNITS.resolve(uuid(University.Poitiers(), id)))
+                        .university(University.Poitiers())
                         .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
 
                         .homepage(set(json.get("site_web").uri().stream()))
 
-                        .identifier(entry(POITIERS.id(), id))
+                        .identifier(entry(University.Poitiers().id(), id))
 
-                        .prefLabel(map(entry(POITIERS.locale(), json.get("libelle").string().orElse(""))))
+                        .prefLabel(map(entry(University.Poitiers().locale(), json.get("libelle").string().orElse(""))))
                         .altLabel(map(entry(ROOT, json.get("sigle").string().orElse(""))))
 
                         .hasHead(set(heads(json)))
 
-                        .unitOf(set(POITIERS))
+                        .unitOf(set(University.Poitiers()))
 
                 // !!!field(ORG.CLASSIFICATION, type(json)),
 
@@ -164,8 +164,8 @@ public final class UnitsPoitiers implements Runnable {
 
                     return new PersonFrame()
 
-                            .id(PERSONS.resolve(uuid(POITIERS, join(", ", surname, forename))))
-                            .university(POITIERS)
+                            .id(PERSONS.resolve(uuid(University.Poitiers(), join(", ", surname, forename))))
+                            .university(University.Poitiers())
                             .dataset(new PersonsFrame())
 
                             .givenName(forename)
