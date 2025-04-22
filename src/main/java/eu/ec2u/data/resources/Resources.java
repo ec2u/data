@@ -52,7 +52,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Virtual
 public interface Resources extends Dataset, Catalog<Resource> {
 
-    URI RESOURCES=DATA.resolve("/resources/");
+    URI RESOURCES=DATA.resolve("resources/");
 
 
     static void main(final String... args) {
@@ -93,7 +93,7 @@ public interface Resources extends Dataset, Catalog<Resource> {
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("/resources");
+        return DATASETS.resolve("resources");
     }
 
     @Override

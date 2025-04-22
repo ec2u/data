@@ -16,7 +16,7 @@
 
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, optional, required } from "@metreeca/core";
+import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer } from "@metreeca/core/integer";
@@ -58,7 +58,12 @@ export const Schemes=immutable({
 		title: required(local),
 		alternative: required(local),
 
-		entities: required(integer)
+		hasConcept: [{
+
+			count: virtual(required(integer)),
+			"count=count:": required(integer)
+
+		}]
 
 	})
 
@@ -114,7 +119,7 @@ export function DataSchemes() {
 
 			comment,
 
-			entities
+			hasConcept
 
 		}) =>
 
@@ -130,7 +135,7 @@ export function DataSchemes() {
 
 				}}</ToolLink>}
 
-				tags={`${entities} concepts`}
+				tags={`${hasConcept[0].count} concepts`}
 
 			>{
 

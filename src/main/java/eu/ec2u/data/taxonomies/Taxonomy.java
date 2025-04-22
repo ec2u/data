@@ -25,5 +25,5 @@ import eu.ec2u.data.concepts.SKOSConceptScheme;
 
 @Frame
 @Class
-@Namespace("[dct]")
+@Namespace("[ec2u]")
 public interface Taxonomy extends Asset, SKOSConceptScheme { }

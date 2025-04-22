@@ -25,7 +25,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
-import com.metreeca.mesh.queries.Query;
 
 import eu.ec2u.data.concepts.SKOSConceptFrame;
 import eu.ec2u.data.concepts.SKOSConceptSchemeFrame;
@@ -39,6 +38,7 @@ import java.util.Map;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
@@ -51,7 +51,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Virtual
 public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
 
-    URI CONCEPTS=DATA.resolve("/concepts/");
+    URI CONCEPTS=DATA.resolve("concepts/");
 
 
     static void main(final String... args) {
@@ -92,7 +92,7 @@ public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("/concepts");
+        return DATASETS.resolve("concepts");
     }
 
 
@@ -104,7 +104,7 @@ public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
             delegate(new Router()
 
                     .path("/", new Worker().get(new Driver(new TaxonomiesFrame()
-                            .members(stash(Query.query(new TaxonomyFrame())))
+                            .members(stash(query(new TaxonomyFrame())))
                     )))
 
                     .path("/{scheme}", new Worker().get(new Driver(new SKOSConceptSchemeFrame())))

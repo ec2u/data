@@ -52,7 +52,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Universities extends Dataset, Catalog<University> {
 
-    URI UNIVERSITIES=DATA.resolve("/universities/");
+    URI UNIVERSITIES=DATA.resolve("universities/");
 
 
     static void main(final String... args) {

@@ -64,7 +64,7 @@ import static java.util.Locale.ROOT;
 @Virtual
 public interface Units extends Dataset, Catalog<Unit> {
 
-    URI UNITS=DATA.resolve("/units/");
+    URI UNITS=DATA.resolve("units/");
 
 
     static void main(final String... args) {
@@ -116,7 +116,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("/units");
+        return DATASETS.resolve("units");
     }
 
 

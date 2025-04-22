@@ -34,16 +34,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 
 import static eu.ec2u.data.Data.exec;
 import static java.util.Locale.ROOT;
-import static java.util.stream.Collectors.toMap;
 
 @Frame
 @Class("ec2u:")
@@ -65,14 +62,12 @@ public interface Asset extends Resource {
 
     @Override
     default Map<Locale, String> label() {
-        return title(); // !!! merge alternative / clip
+        return Reference.comment(alternative(), title());
     }
 
     @Override
     default Map<Locale, String> comment() {
-        return Stream.ofNullable(description())
-                .flatMap(description -> description.entrySet().stream())
-                .collect(toMap(Entry::getKey, entry -> clip(entry.getValue())));
+        return Reference.comment(description());
     }
 
 

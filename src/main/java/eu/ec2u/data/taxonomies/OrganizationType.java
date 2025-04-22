@@ -22,6 +22,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.concepts.SKOSConceptFrame;
+import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Reference;
 
@@ -45,18 +46,30 @@ import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.Taxonomies.CONCEPTS;
 
 /**
- * EC2U Research Unit SKOS Concept Scheme.
+ * EC2U Organization Type SKOS Concept Scheme.
+ * <p>
+ * This taxonomy defines a hierarchical classification of organization types in the EC2U alliance context. The taxonomy
+ * structure consists of:
+ * <p>
+ * - Top-level concepts (University, College, Association, City, Other) representing main organization categories -
+ * University Unit as a special top-level concept with a rich hierarchy of specialized academic structures -
+ * Second-level concepts under University Unit (Area, Network, Institute, Department, Centre, Group, Laboratory,
+ * Facility) - Further specializations at the third and fourth levels (e.g., Virtual Institute, Research Centre, Library
+ * Facility)
+ * <p>
+ * This scheme provides standardized terminology for categorizing organizations and their units within the EC2U
+ * alliance, ensuring consistent classification across institutions.
  */
 @Frame
 @Namespace("[dct]")
 public interface OrganizationType extends Taxonomy {
 
-    URI ORGANIZATIONS=CONCEPTS.resolve("/organizations");
+    URI ORGANIZATIONS=CONCEPTS.resolve("organizations");
 
 
     static SKOSConceptFrame University() {
         return new SKOSConceptFrame()
-                .id(ORGANIZATIONS.resolve("/university"))
+                .id(uri(ORGANIZATIONS+"/university"))
                 .topConceptOf(new OrganizationTypeFrame())
                 .inScheme(new OrganizationTypeFrame()) // !!! implied by topConceptOf
                 .prefLabel(map(entry(EN, "University")));
@@ -64,7 +77,7 @@ public interface OrganizationType extends Taxonomy {
 
     static SKOSConceptFrame College() {
         return new SKOSConceptFrame()
-                .id(ORGANIZATIONS.resolve("/college"))
+                .id(uri(ORGANIZATIONS+"/college"))
                 .topConceptOf(new OrganizationTypeFrame())
                 .inScheme(new OrganizationTypeFrame())
                 .prefLabel(map(entry(EN, "College")));
@@ -72,7 +85,7 @@ public interface OrganizationType extends Taxonomy {
 
     static SKOSConceptFrame Association() {
         return new SKOSConceptFrame()
-                .id(ORGANIZATIONS.resolve("/association"))
+                .id(uri(ORGANIZATIONS+"/association"))
                 .topConceptOf(new OrganizationTypeFrame())
                 .inScheme(new OrganizationTypeFrame())
                 .prefLabel(map(entry(EN, "Association")));
@@ -80,7 +93,7 @@ public interface OrganizationType extends Taxonomy {
 
     static SKOSConceptFrame City() {
         return new SKOSConceptFrame()
-                .id(ORGANIZATIONS.resolve("/city"))
+                .id(uri(ORGANIZATIONS+"/city"))
                 .topConceptOf(new OrganizationTypeFrame())
                 .inScheme(new OrganizationTypeFrame())
                 .prefLabel(map(entry(EN, "City")));
@@ -88,7 +101,7 @@ public interface OrganizationType extends Taxonomy {
 
     static SKOSConceptFrame Other() {
         return new SKOSConceptFrame()
-                .id(ORGANIZATIONS.resolve("/other"))
+                .id(uri(ORGANIZATIONS+"/other"))
                 .topConceptOf(new OrganizationTypeFrame())
                 .inScheme(new OrganizationTypeFrame())
                 .prefLabel(map(entry(EN, "Other")));
@@ -96,7 +109,7 @@ public interface OrganizationType extends Taxonomy {
 
     static SKOSConceptFrame UniversityUnit() {
         return new SKOSConceptFrame()
-                .id(ORGANIZATIONS.resolve("/university-unit"))
+                .id(uri(ORGANIZATIONS+"/university-unit"))
                 .topConceptOf(new OrganizationTypeFrame())
                 .inScheme(new OrganizationTypeFrame())
                 .prefLabel(map(entry(EN, "University Unit")));
@@ -334,13 +347,19 @@ public interface OrganizationType extends Taxonomy {
 
 
     @Override
+    default Dataset dataset() { return new TaxonomiesFrame(); }
+
+
+    @Override
     default Map<Locale, String> title() {
         return map(entry(EN, "EC2U Organization Types"));
     }
 
     @Override
     default Map<Locale, String> description() {
-        return map(entry(EN, "Topic taxonomies and other concept schemes for classifying resources."));
+        return map(entry(EN,
+                "Standardized terminology for categorizing organizations and their units within the EC2U Alliance"
+        ));
     }
 
 

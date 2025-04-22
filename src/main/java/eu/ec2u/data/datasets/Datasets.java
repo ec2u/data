@@ -55,7 +55,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Datasets extends Dataset, Catalog<Dataset> {
 
-    URI DATASETS=DATA.resolve("/datasets/");
+    URI DATASETS=DATA.resolve("datasets/");
 
 
     static void main(final String... args) {
