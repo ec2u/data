@@ -23,8 +23,11 @@ import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
+import { ToolLabel } from "@metreeca/view/layouts/label";
+import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
 import { ToolHint } from "@metreeca/view/widgets/hint";
 import { ToolInfo } from "@metreeca/view/widgets/info";
@@ -59,8 +62,6 @@ export const Scheme=immutable({
 		label: required(local)
 	}),
 
-	extent: required(integer),
-
 	hasConcept: virtual(multiple(Concept)),
 	hasTopConcept: virtual(multiple(Concept))
 
@@ -69,6 +70,7 @@ export const Scheme=immutable({
 
 export function DataScheme() {
 
+	const [route]=useRouter();
 	const [keywords, setKeywords]=useState("");
 
 	const [scheme]=useResource({
@@ -82,22 +84,60 @@ export function DataScheme() {
 
 	});
 
+	const [stats]=useResource(immutable({
+
+		id: required(route),
+
+		hasConcept: [{
+
+			count: virtual(required(integer)),
+			"count=count:": required(integer)
+
+		}]
+
+	}));
+
 
 	return <DataPage name={[Schemes, toLocalString(scheme?.alternative ?? {})]}
 
-		tray={<ToolFrame as={({
+		tray={<>
 
-			extent
+			<ToolFrame placeholder={Schemes[icon]} as={({
 
-		}) => <>
+				publisher,
+				source,
+				license
 
-			<ToolInfo>{{
+			}) => <>
 
-				"Concepts": toIntegerString(extent)
+				<ToolInfo>{{
 
-			}}</ToolInfo>
+					"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
+					"Source": source && <ToolLink>{source}</ToolLink>,
 
-		</>}>{scheme}</ToolFrame>}
+					"License": license && <ul>{license.map(license =>
+						<li key={license.id}><ToolLink>{license}</ToolLink></li>
+					)}</ul>
+
+				}}</ToolInfo>
+
+			</>}>{scheme}</ToolFrame>
+
+			<ToolFrame as={({
+
+				hasConcept
+
+			}) => <>
+
+				<ToolInfo>{{
+
+					"Concepts": toIntegerString(hasConcept[0].count)
+
+				}}</ToolInfo>
+
+			</>}>{stats}</ToolFrame>
+
+		</>}
 
 	>
 
@@ -106,11 +146,8 @@ export function DataScheme() {
 			title,
 			description,
 
-			publisher,
-			source,
-
 			rights,
-			license,
+			accessRights,
 
 			hasConcept,
 			hasTopConcept
@@ -121,18 +158,23 @@ export function DataScheme() {
 
 			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
 
-			<ToolInfo>{{
+			<ToolPanel stack>{Object.entries({
 
-				"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
-				"Source": source && <ToolLink>{source}</ToolLink>,
+				"Copyright": rights,
+				"Access Rights": accessRights && toLocalString(accessRights)
 
-				"Rights": rights && <span>{rights}</span>,
+			}).map(([
 
-				"License": license && <ul>{license.map(license =>
-					<li key={license.id}><ToolLink>{license}</ToolLink></li>
-				)}</ul>
+				term,
+				data
 
-			}}</ToolInfo>
+			]) => data && <ToolLabel key={term} name={term}>
+
+				{data}
+
+            </ToolLabel>)
+
+			}</ToolPanel>
 
 			{
 				keywords || hasTopConcept && hasTopConcept.some(concept => concept.narrower)

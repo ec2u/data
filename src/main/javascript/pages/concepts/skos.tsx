@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { immutable, multiple, required } from "@metreeca/core";
+import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
+import { local } from "@metreeca/core/local";
 import { numberCompare } from "@metreeca/core/number";
-import { string } from "@metreeca/core/string";
 import { useResource } from "@metreeca/data/models/resource";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolSpin } from "@metreeca/view/widgets/spin";
@@ -29,9 +29,9 @@ import * as React from "react";
 export const Concept=immutable({
 
 	id: required(id),
-	label: required(id),
+	label: required(local),
 
-	notation: multiple(string),
+	notation: optional({}),
 
 	narrower: multiple({
 		id: required(id)

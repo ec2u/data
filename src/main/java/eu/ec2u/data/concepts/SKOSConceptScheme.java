@@ -25,15 +25,15 @@ import java.util.Set;
 
 @Frame
 @Class("skos:ConceptScheme")
+@SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
 public interface SKOSConceptScheme extends SKOS {
 
-    // !!! label/comment
+    @Foreign
+    @Property("^skos:topConceptOf")
+    Set<SKOSConcept> hasTopConcept();
 
     @Foreign
     @Property("^skos:inScheme")
     Set<SKOSConcept> hasConcept();
-
-    @Foreign
-    Set<SKOSConcept> hasTopConcept();
 
 }

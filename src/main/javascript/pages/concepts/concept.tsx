@@ -16,23 +16,17 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
-import { ec2u } from "@ec2u/data/views";
-import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
-import { boolean } from "@metreeca/core/boolean";
+import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
-import { integer, toIntegerString } from "@metreeca/core/integer";
 import { local, toLocalString } from "@metreeca/core/local";
-import { string, stringCompare } from "@metreeca/core/string";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { ToolLabel } from "@metreeca/view/layouts/label";
 import { ToolPanel } from "@metreeca/view/layouts/panel";
 import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ToolInfo } from "@metreeca/view/widgets/info";
 import { ToolLink } from "@metreeca/view/widgets/link";
 import { ToolMark } from "@metreeca/view/widgets/mark";
 import React from "react";
@@ -42,12 +36,11 @@ export const Concept=immutable({
 	id: required("/concepts/{scheme}/*"),
 	label: required(local),
 
-	generated: optional(boolean),
+	// !!! generated: optional(boolean),
 
-	notation: multiple(string),
+	notation: optional({}),
 
 	prefLabel: required(local),
-	// altLabel: multiple(local),
 	definition: optional(local),
 
 	inScheme: {
@@ -82,47 +75,8 @@ export function DataConcept() {
 
 	const [concept]=useResource(Concept);
 
-	const [stats]=useResource(immutable({
 
-		id: required("/resources/"),
-
-		members: [{
-
-			dataset: required({
-				id: required(id),
-				label: required(local)
-			}),
-
-			resources: virtual(required(integer)),
-			"resources=count:": required(integer),
-
-			"?concept": [route]
-
-		}]
-
-	}));
-
-
-	return <DataPage name={[Schemes, concept?.inScheme, {}]} info={<DataAI>{concept?.generated}</DataAI>}
-
-		tray={<>
-
-			<ToolInfo>{stats?.members?.slice()
-				?.sort(({ resources: x }, { resources: y }) => x - y)
-				?.map(({ dataset, resources }) => ({
-
-					label: <ToolLink filter={["/resources/", { dataset, concept }]}>{{
-						label: ec2u(dataset.label)
-					}}</ToolLink>,
-
-					value: toIntegerString(resources)
-
-				}))
-
-			}</ToolInfo>
-
-		</>}
-	>
+	return <DataPage name={[Schemes, concept?.inScheme, {}]} /* info={<DataAI>{concept?.generated}</DataAI>} */>
 
 		<ToolFrame placeholder={Schemes[icon]} as={({
 
@@ -145,11 +99,11 @@ export function DataConcept() {
 
 			<ToolPanel>
 
-				{notation && <ToolLabel name={"Codes"}>
+				{/* {notation && <ToolLabel name={"Codes"}>
                     <ul>{notation.slice().sort(stringCompare).map(notation =>
 						<li key={notation}>{notation}</li>
 					)}</ul>
-                </ToolLabel>}
+				 </ToolLabel>} */}
 
 				{sameAs && <ToolLabel name={"URI"}>
                     <a href={sameAs}>{toIdString(sameAs)}</a>

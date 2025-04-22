@@ -71,7 +71,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(ORGANIZATIONS+"/university"))
                 .topConceptOf(new OrganizationTypeFrame())
-                .inScheme(new OrganizationTypeFrame()) // !!! implied by topConceptOf
+                .inScheme(new OrganizationTypeFrame())
                 .prefLabel(map(entry(EN, "University")));
     }
 
@@ -119,7 +119,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/area"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame()) // !!! implied by broader
+                .inScheme(new OrganizationTypeFrame())
                 .prefLabel(map(entry(EN, "Research Area")))
                 .definition(map(entry(EN, """
                         Thematic collaboration area gathering researchers from different disciplines to advance \
