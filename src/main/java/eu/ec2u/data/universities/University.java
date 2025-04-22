@@ -312,7 +312,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                 .zone(ZoneId.of("Europe/Madrid"));
     }
 
-    static UniversityFrame Turku() {
+    public static UniversityFrame Turku() {
         return new UniversityFrame()
                 .id(UNIVERSITIES.resolve("turku"))
                 .prefLabel(map(

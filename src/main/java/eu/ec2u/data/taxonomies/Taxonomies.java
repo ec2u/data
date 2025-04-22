@@ -28,7 +28,6 @@ import com.metreeca.mesh.meta.jsonld.Virtual;
 import com.metreeca.mesh.queries.Query;
 
 import eu.ec2u.data.concepts.SKOSConceptFrame;
-import eu.ec2u.data.concepts.SKOSConceptScheme;
 import eu.ec2u.data.concepts.SKOSConceptSchemeFrame;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.Catalog;
@@ -50,7 +49,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
 @Virtual
-public interface Taxonomies extends Dataset, Catalog<SKOSConceptScheme> {
+public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
 
     URI CONCEPTS=DATA.resolve("/concepts/");
 
@@ -105,9 +104,7 @@ public interface Taxonomies extends Dataset, Catalog<SKOSConceptScheme> {
             delegate(new Router()
 
                     .path("/", new Worker().get(new Driver(new TaxonomiesFrame()
-
-                            .members(stash(Query.query(new SKOSConceptSchemeFrame())))
-
+                            .members(stash(Query.query(new TaxonomyFrame())))
                     )))
 
                     .path("/{scheme}", new Worker().get(new Driver(new SKOSConceptSchemeFrame())))

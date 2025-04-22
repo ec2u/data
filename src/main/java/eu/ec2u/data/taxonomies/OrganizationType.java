@@ -21,9 +21,7 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.assets.Asset;
 import eu.ec2u.data.concepts.SKOSConceptFrame;
-import eu.ec2u.data.concepts.SKOSConceptScheme;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Reference;
 
@@ -51,7 +49,7 @@ import static eu.ec2u.data.taxonomies.Taxonomies.CONCEPTS;
  */
 @Frame
 @Namespace("[dct]")
-public interface OrganizationType extends Asset, SKOSConceptScheme {
+public interface OrganizationType extends Taxonomy {
 
     URI ORGANIZATIONS=CONCEPTS.resolve("/organizations");
 

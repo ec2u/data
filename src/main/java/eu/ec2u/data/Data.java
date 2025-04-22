@@ -48,7 +48,7 @@ import static com.metreeca.flow.json.services.Analyzer.analyzer;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Cache.cache;
 import static com.metreeca.flow.services.Fetcher.fetcher;
-import static com.metreeca.flow.services.Logger.Level.INFO;
+import static com.metreeca.flow.services.Logger.Level.DEBUG;
 import static com.metreeca.flow.services.Translator.translator;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.json.JSONCodec.json;
@@ -70,7 +70,7 @@ public final class Data extends Delegator {
 
 
     static {
-        INFO.log("com.metreeca");
+        DEBUG.log("com.metreeca");
     }
 
     static {
