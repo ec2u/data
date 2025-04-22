@@ -28,7 +28,6 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.datasets.DatasetFrame;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Catalog;
 import eu.ec2u.data.resources.Reference;
@@ -64,9 +63,7 @@ public interface Universities extends Dataset, Catalog<University> {
         exec(() -> {
 
             final Value update=array(list(Xtream.of(new UniversitiesFrame())
-
                     .optMap(new Validate<>())
-
             ));
 
             service(store()).partition(UNIVERSITIES).update(update, FORCE);
@@ -123,10 +120,6 @@ public interface Universities extends Dataset, Catalog<University> {
     default Set<Reference> license() {
         return set(CCBYNCND40);
     }
-
-
-    @Override // !!! remove
-    default Dataset dataset() { return new DatasetFrame(); }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

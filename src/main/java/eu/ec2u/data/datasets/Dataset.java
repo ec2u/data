@@ -29,8 +29,8 @@ import java.util.Set;
 @Namespace("[ec2u]")
 public interface Dataset extends Asset, VOIDDataset {
 
-    // !!! @Override
-    // default Dataset dataset() { return Datasets(); }
+    @Override
+    default Dataset dataset() { return new DatasetsFrame(); }
 
     @Foreign
     @Property("^ec2u:dataset")

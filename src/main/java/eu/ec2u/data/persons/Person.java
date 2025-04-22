@@ -56,20 +56,11 @@ public interface Person extends Resource, FOAFPerson {
 
                     return new PersonFrame()
                             .id(PERSONS.resolve(uuid(university, format("%s, %s", familyName, givenName))))
-                            .university(university);
+                            .university(university)
 
-                    // return frame(
-                    //
-                    //         field(ID, item(Persons.Context, _university, format("%s, %s", familyName, givenName))),
-                    //         field(TYPE, FOAF.PERSON),
-                    //
-                    //         field(university, _university.id),
-                    //
-                    //         field(FOAF.TITLE, title.map(Values::literal)),
-                    //         field(FOAF.GIVEN_NAME, literal(givenName)),
-                    //         field(FOAF.FAMILY_NAME, literal(familyName))
-                    //
-                    // );
+                            .title(title.orElse(null))
+                            .givenName(givenName)
+                            .familyName(familyName);
 
                 });
     }

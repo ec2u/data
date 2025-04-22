@@ -31,7 +31,6 @@ import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.concepts.SKOSConceptScheme;
 import eu.ec2u.data.concepts.SKOSConceptSchemeFrame;
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.datasets.DatasetsFrame;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Catalog;
@@ -75,9 +74,7 @@ public interface Units extends Dataset, Catalog<Unit> {
         exec(() -> {
 
             final Value update=array(list(Xtream.of(new UnitsFrame())
-
                     .optMap(new Validate<>())
-
             ));
 
             service(store()).partition(UNITS).update(update, FORCE);
@@ -144,10 +141,6 @@ public interface Units extends Dataset, Catalog<Unit> {
     default Set<Reference> license() {
         return set(CCBYNCND40);
     }
-
-
-    @Override // !!! remove
-    default Dataset dataset() { return new DatasetsFrame(); }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

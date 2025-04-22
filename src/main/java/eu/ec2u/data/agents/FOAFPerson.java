@@ -16,18 +16,34 @@
 
 package eu.ec2u.data.agents;
 
-import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Property;
+import com.metreeca.mesh.meta.owl.Inverse;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.organizations.OrgOrganization;
 
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+
+import static com.metreeca.mesh.util.Collections.map;
+
+import static java.util.Locale.ROOT;
+import static java.util.Map.entry;
 
 @Frame
 @Class("foaf:Person")
 @Namespace(prefix="org", value="http://www.w3.org/ns/org#")
 public interface FOAFPerson extends FOAFAgent {
+
+    @Override
+    default Map<Locale, String> label() {
+        return map(entry(ROOT, "%s, %s".formatted(familyName(), givenName())));
+    }
+
 
     String title();
 
