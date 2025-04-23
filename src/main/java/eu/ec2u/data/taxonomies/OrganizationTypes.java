@@ -62,7 +62,7 @@ import static eu.ec2u.data.taxonomies.Taxonomies.CONCEPTS;
  */
 @Frame
 @Namespace("[dct]")
-public interface OrganizationType extends Taxonomy {
+public interface OrganizationTypes extends Taxonomy {
 
     URI ORGANIZATIONS=CONCEPTS.resolve("organizations");
 
@@ -70,48 +70,48 @@ public interface OrganizationType extends Taxonomy {
     static SKOSConceptFrame University() {
         return new SKOSConceptFrame()
                 .id(uri(ORGANIZATIONS+"/university"))
-                .topConceptOf(new OrganizationTypeFrame())
-                .inScheme(new OrganizationTypeFrame())
+                .topConceptOf(new OrganizationTypesFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "University")));
     }
 
     static SKOSConceptFrame College() {
         return new SKOSConceptFrame()
                 .id(uri(ORGANIZATIONS+"/college"))
-                .topConceptOf(new OrganizationTypeFrame())
-                .inScheme(new OrganizationTypeFrame())
+                .topConceptOf(new OrganizationTypesFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "College")));
     }
 
     static SKOSConceptFrame Association() {
         return new SKOSConceptFrame()
                 .id(uri(ORGANIZATIONS+"/association"))
-                .topConceptOf(new OrganizationTypeFrame())
-                .inScheme(new OrganizationTypeFrame())
+                .topConceptOf(new OrganizationTypesFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Association")));
     }
 
     static SKOSConceptFrame City() {
         return new SKOSConceptFrame()
                 .id(uri(ORGANIZATIONS+"/city"))
-                .topConceptOf(new OrganizationTypeFrame())
-                .inScheme(new OrganizationTypeFrame())
+                .topConceptOf(new OrganizationTypesFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "City")));
     }
 
     static SKOSConceptFrame Other() {
         return new SKOSConceptFrame()
                 .id(uri(ORGANIZATIONS+"/other"))
-                .topConceptOf(new OrganizationTypeFrame())
-                .inScheme(new OrganizationTypeFrame())
+                .topConceptOf(new OrganizationTypesFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Other")));
     }
 
     static SKOSConceptFrame UniversityUnit() {
         return new SKOSConceptFrame()
                 .id(uri(ORGANIZATIONS+"/university-unit"))
-                .topConceptOf(new OrganizationTypeFrame())
-                .inScheme(new OrganizationTypeFrame())
+                .topConceptOf(new OrganizationTypesFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "University Unit")));
     }
 
@@ -119,7 +119,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/area"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Area")))
                 .definition(map(entry(EN, """
                         Thematic collaboration area gathering researchers from different disciplines to advance \
@@ -133,7 +133,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/network"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Network")))
                 .definition(map(entry(EN, """
                         Networks of researchers sharing a research theme or topic; not part of the formal \
@@ -145,7 +145,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/institute"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Institute")));
     }
 
@@ -153,7 +153,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Institute().id()+"/virtual"))
                 .broader(set(Institute()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Virtual Institute")));
     }
 
@@ -161,7 +161,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/department"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Department")));
     }
 
@@ -169,7 +169,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/centre"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Centre")))
                 .hiddenLabel(map(entry(EN, set("Center"))));
     }
@@ -178,7 +178,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Centre().id()+"/research"))
                 .broader(set(Centre()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Centre")))
                 .hiddenLabel(map(entry(EN, set("Research Center"))));
     }
@@ -187,7 +187,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(ResearchCentre().id()+"/interdepartmental"))
                 .broader(set(ResearchCentre()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Interdepartmental Research Center")))
                 .hiddenLabel(map(entry(EN, set("Interdepartmental Research Center"))));
     }
@@ -196,7 +196,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Centre().id()+"/transfer"))
                 .broader(set(Centre()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Technology Transfer Centre")))
                 .hiddenLabel(map(entry(EN, set("Technology Transfer Center"))));
     }
@@ -205,7 +205,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Centre().id()+"/service"))
                 .broader(set(Centre()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Service Centre")))
                 .hiddenLabel(map(entry(EN, set("Service Center"))));
     }
@@ -214,7 +214,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/group"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Group")));
     }
 
@@ -222,7 +222,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Group().id()+"/recognized"))
                 .broader(set(Group()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Recognized Research Group")));
     }
 
@@ -230,7 +230,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Group().id()+"/informal"))
                 .broader(set(Group()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Informal Research Group")));
     }
 
@@ -238,7 +238,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Group().id()+"/student"))
                 .broader(set(Group()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Student Research Group")));
     }
 
@@ -246,7 +246,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/laboratory"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Laboratory")));
     }
 
@@ -254,7 +254,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(UniversityUnit().id()+"/facility"))
                 .broader(set(UniversityUnit()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Facility")));
     }
 
@@ -262,7 +262,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Facility().id()+"/library"))
                 .broader(set(Facility()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Library")));
     }
 
@@ -270,7 +270,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Facility().id()+"/collection"))
                 .broader(set(Facility()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Collection")))
                 .definition(map(entry(EN, "Museum, archive, bio-bank, …")));
     }
@@ -279,7 +279,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Facility().id()+"/instrument"))
                 .broader(set(Facility()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Instrument")))
                 .definition(map(entry(EN, """
                         Large research instrument with dedicated management (telescope, reactor, accelerator, …)"""
@@ -290,7 +290,7 @@ public interface OrganizationType extends Taxonomy {
         return new SKOSConceptFrame()
                 .id(uri(Facility().id()+"/station"))
                 .broader(set(Facility()))
-                .inScheme(new OrganizationTypeFrame())
+                .inScheme(new OrganizationTypesFrame())
                 .prefLabel(map(entry(EN, "Research Station")))
                 .altLabel(map(entry(EN, set("Research Base"))));
     }
@@ -301,7 +301,7 @@ public interface OrganizationType extends Taxonomy {
 
                 .of(
 
-                        new OrganizationTypeFrame(),
+                        new OrganizationTypesFrame(),
 
                         University(),
                         College(),

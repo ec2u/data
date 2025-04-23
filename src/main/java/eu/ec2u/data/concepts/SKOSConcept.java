@@ -54,7 +54,7 @@ public interface SKOSConcept extends SKOS {
 
     Map<Locale, String> definition();
 
-    Map<URI, Set<String>> notation();
+    Map<URI, String> notation();
 
 
     @Required

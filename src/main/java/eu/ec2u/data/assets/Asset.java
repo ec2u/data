@@ -32,7 +32,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
@@ -91,7 +90,8 @@ public interface Asset extends Resource {
 
     String rights();
 
-    Entry<Locale, String> accessRights();
+    @Localized
+    Map<Locale, String> accessRights();
 
 
     OrgOrganization publisher();

@@ -45,7 +45,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.OrganizationType.VirtualInstitute;
+import static eu.ec2u.data.taxonomies.OrganizationTypes.VirtualInstitute;
 import static eu.ec2u.data.units.Units.UNITS;
 import static java.util.Map.entry;
 
