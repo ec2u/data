@@ -80,7 +80,7 @@ public interface SDGs extends Taxonomy {
 
                         Stream.of(
                                 new SDGsFrame(),
-                                UNITED_NATIONS
+                                UNITED_NATIONS // !!! deep loading
                         ),
 
                         Xtream.of(resource(SDGs.class, ".csv").toString())
