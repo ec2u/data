@@ -88,17 +88,18 @@ public interface Asset extends Resource {
     LocalDate modified();
 
 
-    String rights();
-
-    @Localized
-    Map<Locale, String> accessRights();
-
-
     OrgOrganization publisher();
 
     Reference source();
 
+
+    String rights();
+
     Set<Reference> license();
+
+    @Localized
+    Map<Locale, String> accessRights();
+
 
     Set<SKOSConcept> subject();
 

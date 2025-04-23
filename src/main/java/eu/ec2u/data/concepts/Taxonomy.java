@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.concepts;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.assets.Asset;
-import eu.ec2u.data.concepts.SKOSConceptScheme;
 
 @Frame
 @Class

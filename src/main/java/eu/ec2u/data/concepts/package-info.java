@@ -15,6 +15,6 @@
  */
 
 /**
- * SKOS concept schemes.
+ * EC2U classification concepts
  */
 package eu.ec2u.data.concepts;

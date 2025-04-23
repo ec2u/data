@@ -19,10 +19,10 @@ package eu.ec2u.data;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 
+import eu.ec2u.data.concepts.Taxonomies;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 

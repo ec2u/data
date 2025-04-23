@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.concepts;
 
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
@@ -86,7 +86,7 @@ public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
 
     @Override
     default Map<Locale, String> description() {
-        return map(entry(EN, "Topic taxonomies and other concept schemes for classifying resources."));
+        return map(entry(EN, "Topic concepts and other concept schemes for classifying resources."));
     }
 
     @Override

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.concepts;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
@@ -41,8 +41,8 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.concepts.Taxonomies.CONCEPTS;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.Taxonomies.CONCEPTS;
 
 /**
  * International Standard Classification of Education 2011 (ISCED 2011) SKOS Concept Scheme.
@@ -70,7 +70,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/0"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "0")))
+                .notation("0")
                 .prefLabel(map(entry(EN, "Early childhood education")));
     }
 
@@ -79,7 +79,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/1"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "1")))
+                .notation("1")
                 .prefLabel(map(entry(EN, "Primary education")));
     }
 
@@ -88,7 +88,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/2"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "2")))
+                .notation("2")
                 .prefLabel(map(entry(EN, "Lower secondary education")));
     }
 
@@ -97,7 +97,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/3"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "3")))
+                .notation("3")
                 .prefLabel(map(entry(EN, "Upper secondary education")));
     }
 
@@ -106,7 +106,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/4"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "4")))
+                .notation("4")
                 .prefLabel(map(entry(EN, "Post-secondary non-tertiary education")));
     }
 
@@ -115,7 +115,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/5"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "5")))
+                .notation("5")
                 .prefLabel(map(entry(EN, "Short-cycle tertiary education")));
     }
 
@@ -124,7 +124,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/6"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "6")))
+                .notation("6")
                 .prefLabel(map(entry(EN, "Bachelor's or equivalent level")));
     }
 
@@ -133,7 +133,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/7"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "7")))
+                .notation("7")
                 .prefLabel(map(entry(EN, "Master's or equivalent level")));
     }
 
@@ -142,7 +142,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/8"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "8")))
+                .notation("8")
                 .prefLabel(map(entry(EN, "Doctoral or equivalent level")));
     }
 
@@ -151,7 +151,7 @@ public interface ISCED2011 extends Taxonomy {
                 .id(uri(ISCED2011+"/9"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
-                .notation(map(entry(ISCED2011, "9")))
+                .notation("9")
                 .prefLabel(map(entry(EN, "Not elsewhere classified")));
     }
 
@@ -213,6 +213,12 @@ public interface ISCED2011 extends Taxonomy {
         ));
     }
 
+
+
+    @Override
+    default LocalDate created() {
+        return LocalDate.parse("2011-11-10");
+    }
 
     @Override
     default LocalDate issued() {

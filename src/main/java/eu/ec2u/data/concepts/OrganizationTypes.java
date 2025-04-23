@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.concepts;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
@@ -42,8 +42,8 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.COPYRIGHT;
 import static eu.ec2u.data.EC2U.EC2U;
+import static eu.ec2u.data.concepts.Taxonomies.CONCEPTS;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.Taxonomies.CONCEPTS;
 
 /**
  * EC2U Organization Type SKOS Concept Scheme.
@@ -353,6 +353,11 @@ public interface OrganizationTypes extends Taxonomy {
     @Override
     default Map<Locale, String> title() {
         return map(entry(EN, "EC2U Organization Types"));
+    }
+
+    @Override
+    default Map<Locale, String> alternative() {
+        return map(entry(EN, "EC2U Organizations"));
     }
 
     @Override

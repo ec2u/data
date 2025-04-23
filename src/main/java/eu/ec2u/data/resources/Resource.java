@@ -16,15 +16,14 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.mesh.meta.jsonld.*;
+import com.metreeca.mesh.meta.jsonld.Base;
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.universities.University;
-
-import java.net.URI;
-import java.util.Set;
 
 import static eu.ec2u.data.EC2U.BASE;
 
@@ -39,12 +38,6 @@ public interface Resource extends Reference {
      */
     Boolean generated();
 
-
-    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-    URI isDefinedBy();
-
-    @Property("rdfs:")
-    Set<URI> seeAlso();
 
     @Required
     Dataset dataset();

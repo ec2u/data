@@ -24,6 +24,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.mesh.util.Collections.entry;
@@ -78,5 +79,12 @@ public interface Reference {
     @MaxLength(COMMENT_LENGTH)
     @Property("rdfs:")
     Map<Locale, String> comment();
+
+
+    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
+    URI isDefinedBy();
+
+    @Property("rdfs:")
+    Set<URI> seeAlso();
 
 }

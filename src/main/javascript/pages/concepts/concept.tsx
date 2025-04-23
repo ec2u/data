@@ -19,7 +19,8 @@ import { Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
-import { id, toIdString } from "@metreeca/core/id";
+import { id } from "@metreeca/core/id";
+import { string } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
@@ -27,6 +28,7 @@ import { icon } from "@metreeca/view";
 import { TileLabel } from "@metreeca/view/layouts/label";
 import { TilePanel } from "@metreeca/view/layouts/panel";
 import { TileFrame } from "@metreeca/view/lenses/frame";
+import { TileInfo } from "@metreeca/view/widgets/info";
 import { TileLink } from "@metreeca/view/widgets/link";
 import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
@@ -36,9 +38,7 @@ export const Concept=immutable({
 	id: required("/concepts/{scheme}/*"),
 	label: required(text),
 
-	// !!! generated: optional(boolean),
-
-	notation: optional({}),
+	notation: optional(string),
 
 	prefLabel: required(text),
 	definition: optional(text),
@@ -64,7 +64,10 @@ export const Concept=immutable({
 		label: required(text)
 	}),
 
-	sameAs: optional(id)
+	exactMatch: multiple({
+		id: required(id),
+		label: required(text)
+	})
 
 });
 
@@ -76,11 +79,29 @@ export function DataConcept() {
 	const [concept]=useResource(Concept);
 
 
-	return <DataPage name={[Schemes, concept?.inScheme, {}]} /* info={<DataAI>{concept?.generated}</DataAI>} */>
+	return <DataPage name={[Schemes, concept?.inScheme, {}]}
+
+		tray={<>
+
+			<TileFrame as={({
+
+				notation
+
+			}) => <>
+
+				<TileInfo>{{
+
+					"Code": notation
+
+				}}</TileInfo>
+
+			</>}>{concept}</TileFrame>
+
+		</>}
+
+	>
 
 		<TileFrame placeholder={Schemes[icon]} as={({
-
-			notation,
 
 			prefLabel,
 			definition,
@@ -89,7 +110,7 @@ export function DataConcept() {
 			narrower,
 			related,
 
-			sameAs
+			exactMatch
 
 		}) => <>
 
@@ -97,36 +118,28 @@ export function DataConcept() {
 
 			{definition && <TileMark>{toTextString(definition)}</TileMark>}
 
-			<TilePanel>
-
-				{/* {notation && <TileLabel name={"Codes"}>
-                    <ul>{notation.slice().sort(stringCompare).map(notation =>
-						<li key={notation}>{notation}</li>
-					)}</ul>
-				 </TileLabel>} */}
-
-				{sameAs && <TileLabel name={"URI"}>
-                    <a href={sameAs}>{toIdString(sameAs)}</a>
-                </TileLabel>}
-
-			</TilePanel>
-
 			<TilePanel stack>
 
-				{broaderTransitive && <TileLabel name={"Broader Concepts"}>
+				{broaderTransitive?.length && <TileLabel name={"Broader Concepts"}>
                     <ul style={{ listStyleType: "disclosure-open" }}>{sort(broaderTransitive).map(entry =>
 						<li key={entry.id}><TileLink>{entry}</TileLink></li>
 					)}</ul>
                 </TileLabel>}
 
-				{narrower && <TileLabel name={"Narrower Concepts"}>
+				{narrower?.length && <TileLabel name={"Narrower Concepts"}>
                     <ul style={{ listStyleType: "disclosure-closed" }}>{narrower.slice().sort(entryCompare).map(entry =>
 						<li key={entry.id}><TileLink>{entry}</TileLink></li>
 					)}</ul>
                 </TileLabel>}
 
-				{related && <TileLabel name={"Related Concepts"}>
+				{related?.length && <TileLabel name={"Related Concepts"}>
                     <ul>{related.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><TileLink>{entry}</TileLink></li>
+					)}</ul>
+                </TileLabel>}
+
+				{exactMatch?.length && <TileLabel name={"Exact Matches"}>
+                    <ul>{exactMatch.slice().sort(entryCompare).map(entry =>
 						<li key={entry.id}><TileLink>{entry}</TileLink></li>
 					)}</ul>
                 </TileLabel>}

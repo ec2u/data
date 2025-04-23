@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.concepts;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.concepts.SKOSConceptFrame;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
@@ -48,8 +47,8 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.concepts.Taxonomies.CONCEPTS;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.Taxonomies.CONCEPTS;
 
 /**
  * United Nations Sustainable Development Goals (SDGs) SKOS Concept Scheme.
@@ -83,7 +82,7 @@ public interface SDGs extends Taxonomy {
                                 UNITED_NATIONS // !!! deep loading
                         ),
 
-                        Xtream.of(resource(SDGs.class, ".csv").toString())
+                        Stream.of(resource(SDGs.class, ".csv").toString())
                                 .flatMap(new Loader())
 
                 )
@@ -132,6 +131,11 @@ public interface SDGs extends Taxonomy {
 
 
     @Override
+    default LocalDate created() {
+        return LocalDate.parse("2015-09-25");
+    }
+
+    @Override
     default LocalDate issued() {
         return LocalDate.parse("2019-12-19");
     }
@@ -174,10 +178,10 @@ public interface SDGs extends Taxonomy {
             return value(record, "Goal Number").map(number -> new SKOSConceptFrame()
 
                     .id(uri(SDGS+"/"+number))
-                    .notation(map(entry(SDGS, number)))
+                    .notation(number)
 
                     .prefLabel(value(record, "Short Label").map(v -> map(entry(EN, v))).orElse(null))
-                    .definition(value(record, "Long Label").map(v -> map(entry(EN, v))).orElse(null))
+                    .definition(value(record, "Extended Description").map(v -> map(entry(EN, v))).orElse(null))
 
                     .inScheme(new SDGsFrame())
                     .topConceptOf(new SDGsFrame()));

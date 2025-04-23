@@ -18,6 +18,7 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { numberCompare } from "@metreeca/core/number";
+import { string } from "@metreeca/core/string";
 import { text } from "@metreeca/core/text";
 import { useResource } from "@metreeca/data/models/resource";
 import { TileLink } from "@metreeca/view/widgets/link";
@@ -31,7 +32,7 @@ export const Concept=immutable({
 	id: required(id),
 	label: required(text),
 
-	notation: optional({}),
+	notation: optional(string),
 
 	narrower: multiple({
 		id: required(id)
@@ -42,7 +43,7 @@ export const Concept=immutable({
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function TileConcept({
+function SKOSConcept({
 
 	children: concept
 
@@ -58,12 +59,12 @@ function TileConcept({
 	});
 
 	return data
-		? data.narrower && <TileConcepts>{data.narrower}</TileConcepts>
+		? data.narrower && <SKOSConcepts>{data.narrower}</SKOSConcepts>
 		: <TileSpin/>;
 
 }
 
-export function TileConcepts({
+export function SKOSConcepts({
 
 	children: concepts
 
@@ -75,15 +76,10 @@ export function TileConcepts({
 
 
 	function conceptCompare(x: typeof Concept, y: typeof Concept): number {
-
-		function min(strings: undefined | string[]): undefined | number {
-			return strings
-				?.map(parseInt)
-				.reduce((min, value) => value < min ? value : min);
-		}
-
-		return numberCompare(min(x.notation) || 0, min(y.notation) || 0) || entryCompare(x, y);
-
+		return numberCompare(
+			x.notation && parseInt(x.notation) || 0,
+			y.notation && parseInt(y.notation) || 0
+		) || entryCompare(x, y);
 	}
 
 	return <>
@@ -92,7 +88,7 @@ export function TileConcepts({
 
 			<TileTree key={concept.id} label={<TileLink>{concept}</TileLink>}>
 
-				{concept.narrower && <TileConcept>{concept}</TileConcept>}
+				{concept.narrower && <SKOSConcept>{concept}</SKOSConcept>}
 
 			</TileTree>
 		)}

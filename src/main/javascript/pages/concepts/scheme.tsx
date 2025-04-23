@@ -16,9 +16,12 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
-import { Concept, TileConcepts } from "@ec2u/data/pages/concepts/skos";
+import { Concept, SKOSConcepts } from "@ec2u/data/pages/concepts/skos";
+import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
+import { date, toDateString } from "@metreeca/core/date";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { string } from "@metreeca/core/string";
@@ -26,8 +29,6 @@ import { text, toTextString } from "@metreeca/core/text";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { TileLabel } from "@metreeca/view/layouts/label";
-import { TilePanel } from "@metreeca/view/layouts/panel";
 import { TileFrame } from "@metreeca/view/lenses/frame";
 import { TileHint } from "@metreeca/view/widgets/hint";
 import { TileInfo } from "@metreeca/view/widgets/info";
@@ -41,11 +42,15 @@ import { useState } from "react";
 export const Scheme=immutable({
 
 	id: required("/concepts/{scheme}"),
-	label: required(text),
+
+	generated: optional(boolean),
 
 	title: required(text),
 	alternative: optional(text),
 	description: optional(text),
+
+	created: optional(date),
+	modified: optional(date),
 
 	publisher: optional({
 		id: required(id),
@@ -98,30 +103,9 @@ export function DataScheme() {
 	}));
 
 
-	return <DataPage name={[Schemes, toTextString(scheme?.alternative ?? {})]}
+	return <DataPage name={[Schemes, toTextString(scheme?.alternative ?? scheme?.title ?? {})]}
 
 		tray={<>
-
-			<TileFrame placeholder={Schemes[icon]} as={({
-
-				publisher,
-				source,
-				license
-
-			}) => <>
-
-				<TileInfo>{{
-
-					"Publisher": publisher && <TileLink>{publisher}</TileLink>,
-					"Source": source && <TileLink>{source}</TileLink>,
-
-					"License": license && <ul>{license.map(license =>
-						<li key={license.id}><TileLink>{license}</TileLink></li>
-					)}</ul>
-
-				}}</TileInfo>
-
-			</>}>{scheme}</TileFrame>
 
 			<TileFrame as={({
 
@@ -137,7 +121,30 @@ export function DataScheme() {
 
 			</>}>{stats}</TileFrame>
 
+			<TileFrame placeholder={Schemes[icon]} as={({
+
+				created,
+				modified,
+
+				publisher,
+				source,
+				license
+
+			}) => <>
+
+				<TileInfo>{{
+
+					"Created": created && toDateString(created),
+					"Modified": modified && toDateString(modified)
+
+				}}</TileInfo>
+
+			</>}>{scheme}</TileFrame>
+
+
 		</>}
+
+		info={<DataAI>{scheme?.generated}</DataAI>}
 
 	>
 
@@ -146,7 +153,11 @@ export function DataScheme() {
 			title,
 			description,
 
+			publisher,
+			source,
+
 			rights,
+			license,
 			accessRights,
 
 			hasConcept,
@@ -158,23 +169,20 @@ export function DataScheme() {
 
 			{description && <TileMark>{toTextString(description)}</TileMark>}
 
-			<TilePanel stack>{Object.entries({
+			<TileInfo center={true}>{{
 
+				"Publisher": publisher && <TileLink>{publisher}</TileLink>,
 				"Copyright": rights,
-				"Access Rights": accessRights && toTextString(accessRights)
 
-			}).map(([
+				"License": license && <ul>{license.map(license =>
+					<li key={license.id}><TileLink>{license}</TileLink></li>
+				)}</ul>,
 
-				term,
-				data
+				"Source": source && <TileLink>{source}</TileLink>,
+				"Access": accessRights && <TileMark>{toTextString(accessRights)}</TileMark>
 
-			]) => data && <TileLabel key={term} name={term}>
 
-				{data}
-
-            </TileLabel>)
-
-			}</TilePanel>
+			}}</TileInfo>
 
 			{
 				keywords || hasTopConcept && hasTopConcept.some(concept => concept.narrower)
@@ -184,8 +192,8 @@ export function DataScheme() {
 					: <hr/>
 			}
 
-			{hasConcept ? <TileConcepts>{hasConcept}</TileConcepts>
-				: hasTopConcept ? <TileConcepts>{hasTopConcept}</TileConcepts>
+			{hasConcept ? <SKOSConcepts>{hasConcept}</SKOSConcepts>
+				: hasTopConcept ? <SKOSConcepts>{hasTopConcept}</SKOSConcepts>
 					: <div><TileHint>{Schemes[icon]} No Matches</TileHint></div>
 			}
 
