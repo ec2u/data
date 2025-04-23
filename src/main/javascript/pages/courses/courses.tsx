@@ -23,23 +23,23 @@ import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
-import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { text, toTextString } from "@metreeca/core/text";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
 import { useRange } from "@metreeca/data/models/range";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
-import { ToolClear } from "@metreeca/view/lenses/clear";
-import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolOptions } from "@metreeca/view/lenses/options";
-import { ToolRange } from "@metreeca/view/lenses/range";
-import { ToolSheet } from "@metreeca/view/lenses/sheet";
-import { ToolCard } from "@metreeca/view/widgets/card";
+import { TileClear } from "@metreeca/view/lenses/clear";
+import { TileCount } from "@metreeca/view/lenses/count";
+import { TileOptions } from "@metreeca/view/lenses/options";
+import { TileRange } from "@metreeca/view/lenses/range";
+import { TileSheet } from "@metreeca/view/lenses/sheet";
+import { TileCard } from "@metreeca/view/widgets/card";
 import { BookOpen } from "@metreeca/view/widgets/icon";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolSearch } from "@metreeca/view/widgets/search";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 export const Courses=immutable({
@@ -55,12 +55,12 @@ export const Courses=immutable({
 	members: multiple({
 
 		id: required(id),
-		label: required(local),
-		comment: optional((local)),
+		label: required(text),
+		comment: optional((text)),
 
 		university: optional({
 				id: required(id),
-				label: required(local)
+			label: required(text)
 			}
 		)
 
@@ -77,57 +77,57 @@ export function DataCourses() {
 
 		tray={< >
 
-			<ToolSearch placeholder={"Name"}>{
+			<TileSearch placeholder={"Name"}>{
 				useKeywords(courses, "label")
-			}</ToolSearch>
+			}</TileSearch>
 
-			<ToolOptions placeholder={"University"}>{
-				useOptions(courses, "university", { type: entry({ id: "", label: required(local) }) })
-			}</ToolOptions>
+			<TileOptions placeholder={"University"}>{
+				useOptions(courses, "university", { type: entry({ id: "", label: required(text) }) })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Level"}>{
-				useOptions(courses, "educationalLevel", { type: entry({ id: "", label: required(local) }) })
-			}</ToolOptions>
+			<TileOptions placeholder={"Level"}>{
+				useOptions(courses, "educationalLevel", { type: entry({ id: "", label: required(text) }) })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Language"} compact as={value => toLocalString(Languages[value])}>{
+			<TileOptions placeholder={"Language"} compact as={value => toTextString(Languages[value])}>{
 				useOptions(courses, "inLanguage", { type: string })
-			}</ToolOptions>
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Attendance"} compact>{
-				useOptions(courses, "courseMode", { type: entry({ id: "", label: required(local) }) })
-			}</ToolOptions>
+			<TileOptions placeholder={"Attendance"} compact>{
+				useOptions(courses, "courseMode", { type: entry({ id: "", label: required(text) }) })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
+			<TileOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
 				useOptions(courses, "timeRequired", { type: string, size: 10 }) // !!! duration >> range
-			}</ToolOptions>
+			}</TileOptions>
 
-			<ToolRange placeholder={"Credits"} compact>{
+			<TileRange placeholder={"Credits"} compact>{
 				useRange(courses, "numberOfCredits", { type: decimal })
-			}</ToolRange>
+			}</TileRange>
 
-			<ToolOptions placeholder={"Title Awarded"} compact>{
-				useOptions(courses, "educationalCredentialAwarded", { type: local, size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Title Awarded"} compact>{
+				useOptions(courses, "educationalCredentialAwarded", { type: text, size: 10 })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Audience"} compact>{
+			<TileOptions placeholder={"Audience"} compact>{
 				useOptions(courses, "audience", { type: string })
-			}</ToolOptions>
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Free for Externals"} compact>{
+			<TileOptions placeholder={"Free for Externals"} compact>{
 				useOptions(courses, "isAccessibleForFree", { type: boolean })
-			}</ToolOptions>
+			}</TileOptions>
 
 		</>}
 
 		info={<>
 
-			<ToolCount>{useStats(courses)}</ToolCount>
-			<ToolClear>{courses}</ToolClear>
+			<TileCount>{useStats(courses)}</TileCount>
+			<TileClear>{courses}</TileClear>
 
 		</>}
 
 	>
-		<ToolSheet placeholder={Courses[icon]} as={({
+		<TileSheet placeholder={Courses[icon]} as={({
 
 			id,
 			label,
@@ -137,18 +137,18 @@ export function DataCourses() {
 
 		}) =>
 
-			<ToolCard key={id} side={"end"}
+			<TileCard key={id} side={"end"}
 
-				title={<ToolLink>{{ id, label }}</ToolLink>}
+				title={<TileLink>{{ id, label }}</TileLink>}
 				tags={university && <span>{toEntryString(university)}</span>}
 
 			>{
 
-				comment && toLocalString(comment)
+				comment && toTextString(comment)
 
-			}</ToolCard>
+			}</TileCard>
 
-		}>{courses}</ToolSheet>
+		}>{courses}</TileSheet>
 
 
 	</DataPage>;

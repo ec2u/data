@@ -17,19 +17,19 @@
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
-import { local } from "@metreeca/core/local";
 import { numberCompare } from "@metreeca/core/number";
+import { text } from "@metreeca/core/text";
 import { useResource } from "@metreeca/data/models/resource";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolSpin } from "@metreeca/view/widgets/spin";
-import { ToolTree } from "@metreeca/view/widgets/tree";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileSpin } from "@metreeca/view/widgets/spin";
+import { TileTree } from "@metreeca/view/widgets/tree";
 import * as React from "react";
 
 
 export const Concept=immutable({
 
 	id: required(id),
-	label: required(local),
+	label: required(text),
 
 	notation: optional({}),
 
@@ -42,7 +42,7 @@ export const Concept=immutable({
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function ToolConcept({
+function TileConcept({
 
 	children: concept
 
@@ -58,12 +58,12 @@ function ToolConcept({
 	});
 
 	return data
-		? data.narrower && <ToolConcepts>{data.narrower}</ToolConcepts>
-		: <ToolSpin/>;
+		? data.narrower && <TileConcepts>{data.narrower}</TileConcepts>
+		: <TileSpin/>;
 
 }
 
-export function ToolConcepts({
+export function TileConcepts({
 
 	children: concepts
 
@@ -90,11 +90,11 @@ export function ToolConcepts({
 
 		{concepts.slice().sort(conceptCompare).map(concept =>
 
-			<ToolTree key={concept.id} label={<ToolLink>{concept}</ToolLink>}>
+			<TileTree key={concept.id} label={<TileLink>{concept}</TileLink>}>
 
-				{concept.narrower && <ToolConcept>{concept}</ToolConcept>}
+				{concept.narrower && <TileConcept>{concept}</TileConcept>}
 
-			</ToolTree>
+			</TileTree>
 		)}
 
 	</>;

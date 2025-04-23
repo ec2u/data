@@ -21,17 +21,17 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { date } from "@metreeca/core/date";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { text, toTextString } from "@metreeca/core/text";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useAsset } from "@metreeca/data/hooks/asset";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
+import { TileFrame } from "@metreeca/view/lenses/frame";
 import { EyeIcon, HelpCircleIcon } from "@metreeca/view/widgets/icon";
-import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
+import { TileInfo } from "@metreeca/view/widgets/info";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
 
 
@@ -46,28 +46,28 @@ export const Dataset=immutable({
 
 	id: "/datasets/*",
 
-	title: required(local),
-	alternative: optional(local),
-	description: optional(local),
+	title: required(text),
+	alternative: optional(text),
+	description: optional(text),
 
 	publisher: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	source: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	issued: optional(date),
 
 	rights: optional(string),
-	accessRights: optional(local),
+	accessRights: optional(text),
 
 	license: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	entities: required(integer),
@@ -117,7 +117,7 @@ export function DataMeta() {
 
 	return <DataPage
 
-		name={[Books, dataset && toLocalString(dataset.alternative || dataset.title)]}
+		name={[Books, dataset && toTextString(dataset.alternative || dataset.title)]}
 
 		menu={(dataset?.id === "/" || dataset?.issued) && <button
 
@@ -125,7 +125,7 @@ export function DataMeta() {
 
         ><EyeIcon/></button>}
 
-		tray={<ToolFrame as={({
+		tray={<TileFrame as={({
 
 			publisher,
 			source,
@@ -140,39 +140,39 @@ export function DataMeta() {
 		}) => <>
 
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
-				"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
-				"Source": source && <ToolLink>{source}</ToolLink>,
+				"Publisher": publisher && <TileLink>{publisher}</TileLink>,
+				"Source": source && <TileLink>{source}</TileLink>,
 
 				"Rights": rights && <span>{rights}</span>,
 
 				"License": license?.length && <ul>{license.map(license =>
-					<li key={license.id}><ToolLink>{license}</ToolLink></li>
+					<li key={license.id}><TileLink>{license}</TileLink></li>
 				)}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Resources": toIntegerString(entities)
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
 
 			{isDefinedBy && <>
 
                 <hr/>
 
-                <ToolMark meta={"toc"}>{model}</ToolMark>
+                <TileMark meta={"toc"}>{model}</TileMark>
 
             </>}
 
-		</>}>{dataset}</ToolFrame>}
+		</>}>{dataset}</TileFrame>}
 
 	>
 
-		<ToolFrame placeholder={Datasets[icon]} as={({
+		<TileFrame placeholder={Datasets[icon]} as={({
 
 			description,
 
@@ -180,11 +180,11 @@ export function DataMeta() {
 
 		}) => <>
 
-			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
-			{isDefinedBy && <ToolMark>{model}</ToolMark>}
+			{description && <TileMark>{toTextString(description)}</TileMark>}
+			{isDefinedBy && <TileMark>{model}</TileMark>}
 
 
-		</>}>{dataset}</ToolFrame>
+		</>}>{dataset}</TileFrame>
 
 	</DataPage>;
 

@@ -16,24 +16,24 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
-import { Concept, ToolConcepts } from "@ec2u/data/pages/concepts/skos";
+import { Concept, TileConcepts } from "@ec2u/data/pages/concepts/skos";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { text, toTextString } from "@metreeca/core/text";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolLabel } from "@metreeca/view/layouts/label";
-import { ToolPanel } from "@metreeca/view/layouts/panel";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ToolHint } from "@metreeca/view/widgets/hint";
-import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
-import { ToolSearch } from "@metreeca/view/widgets/search";
+import { TileLabel } from "@metreeca/view/layouts/label";
+import { TilePanel } from "@metreeca/view/layouts/panel";
+import { TileFrame } from "@metreeca/view/lenses/frame";
+import { TileHint } from "@metreeca/view/widgets/hint";
+import { TileInfo } from "@metreeca/view/widgets/info";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileMark } from "@metreeca/view/widgets/mark";
+import { TileSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 import { useState } from "react";
 
@@ -41,25 +41,25 @@ import { useState } from "react";
 export const Scheme=immutable({
 
 	id: required("/concepts/{scheme}"),
-	label: required(local),
+	label: required(text),
 
-	title: required(local),
-	alternative: optional(local),
-	description: optional(local),
+	title: required(text),
+	alternative: optional(text),
+	description: optional(text),
 
 	publisher: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	source: optional(id),
 
 	rights: optional(string),
-	accessRights: optional(local),
+	accessRights: optional(text),
 
 	license: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	hasConcept: virtual(multiple(Concept)),
@@ -98,11 +98,11 @@ export function DataScheme() {
 	}));
 
 
-	return <DataPage name={[Schemes, toLocalString(scheme?.alternative ?? {})]}
+	return <DataPage name={[Schemes, toTextString(scheme?.alternative ?? {})]}
 
 		tray={<>
 
-			<ToolFrame placeholder={Schemes[icon]} as={({
+			<TileFrame placeholder={Schemes[icon]} as={({
 
 				publisher,
 				source,
@@ -110,38 +110,38 @@ export function DataScheme() {
 
 			}) => <>
 
-				<ToolInfo>{{
+				<TileInfo>{{
 
-					"Publisher": publisher && <ToolLink>{publisher}</ToolLink>,
-					"Source": source && <ToolLink>{source}</ToolLink>,
+					"Publisher": publisher && <TileLink>{publisher}</TileLink>,
+					"Source": source && <TileLink>{source}</TileLink>,
 
 					"License": license && <ul>{license.map(license =>
-						<li key={license.id}><ToolLink>{license}</ToolLink></li>
+						<li key={license.id}><TileLink>{license}</TileLink></li>
 					)}</ul>
 
-				}}</ToolInfo>
+				}}</TileInfo>
 
-			</>}>{scheme}</ToolFrame>
+			</>}>{scheme}</TileFrame>
 
-			<ToolFrame as={({
+			<TileFrame as={({
 
 				hasConcept
 
 			}) => <>
 
-				<ToolInfo>{{
+				<TileInfo>{{
 
 					"Concepts": toIntegerString(hasConcept[0].count)
 
-				}}</ToolInfo>
+				}}</TileInfo>
 
-			</>}>{stats}</ToolFrame>
+			</>}>{stats}</TileFrame>
 
 		</>}
 
 	>
 
-		<ToolFrame placeholder={Schemes[icon]} as={({
+		<TileFrame placeholder={Schemes[icon]} as={({
 
 			title,
 			description,
@@ -154,42 +154,42 @@ export function DataScheme() {
 
 		}) => <>
 
-			<dfn>{toLocalString(title)}</dfn>
+			<dfn>{toTextString(title)}</dfn>
 
-			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+			{description && <TileMark>{toTextString(description)}</TileMark>}
 
-			<ToolPanel stack>{Object.entries({
+			<TilePanel stack>{Object.entries({
 
 				"Copyright": rights,
-				"Access Rights": accessRights && toLocalString(accessRights)
+				"Access Rights": accessRights && toTextString(accessRights)
 
 			}).map(([
 
 				term,
 				data
 
-			]) => data && <ToolLabel key={term} name={term}>
+			]) => data && <TileLabel key={term} name={term}>
 
 				{data}
 
-            </ToolLabel>)
+            </TileLabel>)
 
-			}</ToolPanel>
+			}</TilePanel>
 
 			{
 				keywords || hasTopConcept && hasTopConcept.some(concept => concept.narrower)
 					? <div style={{ marginTop: "1.5em", marginBottom: "1em" }}>
-						<ToolSearch placeholder={"Concepts"}>{[keywords, setKeywords]}</ToolSearch>
+						<TileSearch placeholder={"Concepts"}>{[keywords, setKeywords]}</TileSearch>
 					</div>
 					: <hr/>
 			}
 
-			{hasConcept ? <ToolConcepts>{hasConcept}</ToolConcepts>
-				: hasTopConcept ? <ToolConcepts>{hasTopConcept}</ToolConcepts>
-					: <div><ToolHint>{Schemes[icon]} No Matches</ToolHint></div>
+			{hasConcept ? <TileConcepts>{hasConcept}</TileConcepts>
+				: hasTopConcept ? <TileConcepts>{hasTopConcept}</TileConcepts>
+					: <div><TileHint>{Schemes[icon]} No Matches</TileHint></div>
 			}
 
-		</>}>{scheme}</ToolFrame>
+		</>}>{scheme}</TileFrame>
 
 	</DataPage>;
 

@@ -18,7 +18,7 @@ import { Datasets } from "@ec2u/data/pages/datasets/datasets";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable } from "@metreeca/core";
 import { useRouter } from "@metreeca/data/contexts/router";
-import { ToolHint } from "@metreeca/view/widgets/hint";
+import { TileHint } from "@metreeca/view/widgets/hint";
 import { CancelIcon, NotFoundIcon } from "@metreeca/view/widgets/icon";
 import * as React from "react";
 import { useEffect } from "react";
@@ -55,7 +55,7 @@ export default function DataWild() {
 
 		>
 
-			<ToolHint><NotFoundIcon/></ToolHint>
+			<TileHint><NotFoundIcon/></TileHint>
 
 		</DataPage>
 

@@ -22,7 +22,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@metreeca/view": "^0.3.0-10",
+    "@metreeca/view": "^0.4.0-0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

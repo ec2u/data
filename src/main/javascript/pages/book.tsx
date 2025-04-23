@@ -17,7 +17,7 @@
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, required } from "@metreeca/core";
 import { useAsset } from "@metreeca/data/hooks/asset";
-import { ToolMark } from "@metreeca/view/widgets/mark";
+import { TileMark } from "@metreeca/view/widgets/mark";
 import * as React from "react";
 
 
@@ -46,17 +46,17 @@ export function DataBook() {
 
 	return <DataPage
 
-		name={[Books, <ToolMark key={"title"} meta={"title"}>{text}</ToolMark>]}
+		name={[Books, <TileMark key={"title"} meta={"title"}>{text}</TileMark>]}
 
 		tray={
 
-			<ToolMark meta={"toc"}>{text}</ToolMark>
+			<TileMark meta={"toc"}>{text}</TileMark>
 
 		}
 
 	>
 
-		<ToolMark>{text}</ToolMark>
+		<TileMark>{text}</TileMark>
 
 	</DataPage>;
 

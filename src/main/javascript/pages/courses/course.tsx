@@ -26,16 +26,16 @@ import { duration, toDurationString } from "@metreeca/core/duration";
 import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
-import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { text, toTextString } from "@metreeca/core/text";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolLabel } from "@metreeca/view/layouts/label";
-import { ToolPanel } from "@metreeca/view/layouts/panel";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
+import { TileLabel } from "@metreeca/view/layouts/label";
+import { TilePanel } from "@metreeca/view/layouts/panel";
+import { TileFrame } from "@metreeca/view/lenses/frame";
+import { TileInfo } from "@metreeca/view/widgets/info";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileMark } from "@metreeca/view/widgets/mark";
 import React, { Fragment } from "react";
 
 export const Course=immutable({
@@ -44,7 +44,7 @@ export const Course=immutable({
 
 	generated: optional(boolean),
 
-	name: required(local),
+	name: required(text),
 
 	url: multiple(id),
 
@@ -54,25 +54,25 @@ export const Course=immutable({
 	timeRequired: optional(string),
 	courseWorkload: optional(string),
 
-	teaches: optional(local),
-	assesses: optional(local),
-	coursePrerequisites: optional(local),
-	educationalCredentialAwarded: optional(local),
-	occupationalCredentialAwarded: optional(local),
+	teaches: optional(text),
+	assesses: optional(text),
+	coursePrerequisites: optional(text),
+	educationalCredentialAwarded: optional(text),
+	occupationalCredentialAwarded: optional(text),
 
 	university: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	provider: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	educationalLevel: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	audience: multiple(string),
@@ -80,24 +80,24 @@ export const Course=immutable({
 
 	// learningResourceType: multiple({
 	// 	id: required(id),
-	// 	label: required(local)
+	// 	label: required(text)
 	// }),
 
 	courseMode: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	about: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
-	// competencyRequired: optional(local),
+	// competencyRequired: optional(text),
 
 	inProgram: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	})
 
 });
@@ -110,7 +110,7 @@ export function DataCourse() {
 
 	return <DataPage name={[Courses, {}]} info={<DataAI>{course?.generated}</DataAI>}
 
-		tray={<ToolFrame as={({
+		tray={<TileFrame as={({
 
 			university,
 				provider,
@@ -129,21 +129,21 @@ export function DataCourse() {
 			}
 		) => <>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
-				"University": university && <ToolLink>{university}</ToolLink>,
+				"University": university && <TileLink>{university}</TileLink>,
 				"Provider": provider && <span>{toFrameString(provider)}</span>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Code": courseCode && <span>{courseCode}</span>,
 
-				"Level": educationalLevel && <ToolLink>{educationalLevel}</ToolLink>,
+				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>,
 
 				"Language": inLanguage?.length && <ul>{inLanguage
-					.map(tag => toLocalString(Languages[tag]))
+					.map(tag => toTextString(Languages[tag]))
 					.filter(language => language)
 					.sort((x, y) => x.localeCompare(y))
 					.map(language => <li key={language}>{language}</li>)
@@ -155,9 +155,9 @@ export function DataCourse() {
 				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Audience": audience?.length && <ul>{audience
 					.sort((x, y) => x.localeCompare(y))
@@ -168,21 +168,21 @@ export function DataCourse() {
 					: isAccessibleForFree === false ? "Paid for Externals"
 						: undefined
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Info": url?.length && <ul>{url.map(item =>
 					<li key={item}><a href={item}>{toIdString(item, { compact: true })}</a></li>
 				)}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-		</>}>{course}</ToolFrame>}
+		</>}>{course}</TileFrame>}
 
 	>
 
-		<ToolFrame placeholder={Courses[icon]} as={({
+		<TileFrame placeholder={Courses[icon]} as={({
 
 			name,
 
@@ -200,29 +200,29 @@ export function DataCourse() {
 
 			return <>
 
-				<dfn>{toLocalString(name)}</dfn>
+				<dfn>{toTextString(name)}</dfn>
 
-				<ToolPanel>
+				<TilePanel>
 
-					{inProgram && <ToolLabel name={"Programs"}>{
+					{inProgram && <TileLabel name={"Programs"}>{
 
 						<ul>{inProgram.slice().sort(entryCompare).map(program =>
-							<li key={program.id}><ToolLink>{program}</ToolLink></li>
+							<li key={program.id}><TileLink>{program}</TileLink></li>
 						)}</ul>
 
-					}</ToolLabel>}
+					}</TileLabel>}
 
-					{about && <ToolLabel name={"Subjects"}>{
+					{about && <TileLabel name={"Subjects"}>{
 
 						<ul>{about.slice().sort(entryCompare).map(about =>
-							<li key={about.id}><ToolLink>{about}</ToolLink></li>
+							<li key={about.id}><TileLink>{about}</TileLink></li>
 						)}</ul>
 
-					}</ToolLabel>}
+					}</TileLabel>}
 
-				</ToolPanel>
+				</TilePanel>
 
-				<ToolPanel stack>{Object.entries({
+				<TilePanel stack>{Object.entries({
 
 					"Educational Credential Awarded": educationalCredentialAwarded,
 					"Occupational Credential Awarded": occupationalCredentialAwarded,
@@ -237,17 +237,17 @@ export function DataCourse() {
 					term,
 					data
 
-				]) => data && <ToolLabel key={term} name={term}>
+				]) => data && <TileLabel key={term} name={term}>
 
-                    <ToolMark>{toLocalString(data)}</ToolMark>
+                    <TileMark>{toTextString(data)}</TileMark>
 
-                </ToolLabel>)
+                </TileLabel>)
 
-				}</ToolPanel>
+				}</TilePanel>
 
 			</>;
 
-		}}>{course}</ToolFrame>
+		}}>{course}</TileFrame>
 
 	</DataPage>;
 

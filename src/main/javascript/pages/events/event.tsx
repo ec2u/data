@@ -24,15 +24,15 @@ import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
 import { entryCompare, isEntry, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
-import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { text, toTextString } from "@metreeca/core/text";
 import { toTimeString } from "@metreeca/core/time";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
+import { TileFrame } from "@metreeca/view/lenses/frame";
+import { TileInfo } from "@metreeca/view/widgets/info";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
 
 export const Event=immutable({
@@ -42,14 +42,14 @@ export const Event=immutable({
 	generated: optional(boolean),
 
 	url: multiple(id),
-	name: required(local),
-	description: optional(local),
+	name: required(text),
+	description: optional(text),
 
 	image: optional({
 		id: required(id),
 		url: required(id),
 		author: optional(string),
-		description: optional(local)
+		description: optional(text)
 	}),
 
 	startDate: optional(dateTime),
@@ -60,39 +60,39 @@ export const Event=immutable({
 
 	eventAttendanceMode: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	eventStatus: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	about: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	audience: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	organizer: multiple({
 		id: required(id),
-		label: required(local),
+		label: required(text),
 		url: optional(id)
 	}),
 
 	publisher: optional({
 
 		id: required(id),
-		label: required(local),
+		label: required(text),
 		url: optional(id),
 
 		about: multiple({
 			id: required(id),
-			label: required(local)
+			label: required(text)
 		})
 
 	}),
@@ -102,7 +102,7 @@ export const Event=immutable({
 		Text: optional(string),
 
 		Place: optional({
-			label: required(local),
+			label: required(text),
 			url: optional(id),
 			address: optional({
 				streetAddress: optional(string),
@@ -118,7 +118,7 @@ export const Event=immutable({
 		}),
 
 		VirtualLocation: optional({
-			label: required(local),
+			label: required(text),
 			url: required(id)
 		})
 
@@ -126,7 +126,7 @@ export const Event=immutable({
 
 	university: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	})
 
 });
@@ -137,7 +137,7 @@ type PostalAddress=Exclude<Exclude<typeof Event.location, undefined>[number]["Po
 
 function asPlace(place: Place) {
 	return <div>
-		<span>{toLocalString(place.label)}</span>
+		<span>{toTextString(place.label)}</span>
 		{place.address && asPostalAddress(place.address)}
 	</div>;
 }
@@ -147,7 +147,7 @@ function asPostalAddress(address: PostalAddress) {
 		{address.streetAddress && <span>{address.streetAddress}</span>}
 		{address.addressLocality && <span>{address.postalCode} {
 			isEntry(address.addressLocality)
-				? <ToolLink>{address.addressLocality}</ToolLink>
+				? <TileLink>{address.addressLocality}</TileLink>
 				: address.addressLocality}</span>
 		}
 	</div>;
@@ -160,7 +160,7 @@ export function DataEvent() {
 
 	return <DataPage name={[Events, {}]} info={<DataAI>{event?.generated}</DataAI>}
 
-		tray={<ToolFrame as={({
+		tray={<TileFrame as={({
 
 			url,
 
@@ -184,31 +184,31 @@ export function DataEvent() {
 
 		}) => <>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
-				"University": university && <ToolLink>{university}</ToolLink>
+				"University": university && <TileLink>{university}</TileLink>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Topics": about?.length && <ul>{[...about]
 					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
 					.map(about => <li key={about.id}>
-						<ToolLink filter={[Events, { university, about }]}>{about}</ToolLink>
+						<TileLink filter={[Events, { university, about }]}>{about}</TileLink>
 					</li>)
 				}</ul>,
 
 				"Audience": audience?.length && <ul>{[...audience]
 					.sort((x, y) => toEntryString(x).localeCompare(toEntryString(y)))
 					.map(audience => <li key={audience.id}>
-						<ToolLink filter={[Events, { university, audience }]}>{audience}</ToolLink>
+						<TileLink filter={[Events, { university, audience }]}>{audience}</TileLink>
 					</li>)
 				}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				...(startDate && {
 					"Start Date": toDateString(new Date(startDate)),
@@ -222,13 +222,13 @@ export function DataEvent() {
 					"End Time": toTimeString(new Date(endDate))
 				})
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Entry": isAccessibleForFree === true ? "Free" : isAccessibleForFree === false ? "Paid" : undefined,
-				"Language": inLanguage && toLocalString(Languages[inLanguage]),
+				"Language": inLanguage && toTextString(Languages[inLanguage]),
 
 				"Attendance": eventAttendanceMode && toEntryString(eventAttendanceMode),
 				"Status": eventStatus && toEntryString(eventStatus),
@@ -241,15 +241,15 @@ export function DataEvent() {
 							: Place ? asPlace(Place)
 								: PostalAddress ? asPostalAddress(PostalAddress)
 									: VirtualLocation ?
-										<a href={VirtualLocation.url}>{toLocalString(VirtualLocation.label)}</a>
+										<a href={VirtualLocation.url}>{toTextString(VirtualLocation.label)}</a>
 										: null
 
 					}</li>
 				)}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Info": url && url.map(item => <a key={item} href={item}>{
 					toIdString(item, { compact: true })
@@ -258,28 +258,28 @@ export function DataEvent() {
 				"Organizer": organizer && organizer.slice().sort(entryCompare).map(({
 						id, label, url
 					}) => url
-						? <a key={id} href={url}>{toLocalString(label)}</a>
-						: <span key={id}>{toLocalString(label)}</span>
+					? <a key={id} href={url}>{toTextString(label)}</a>
+					: <span key={id}>{toTextString(label)}</span>
 				),
 
 				"Publisher": publisher && [publisher].map(({ id, label, url }) =>
-					<a key={id} href={url || id}>{toLocalString(label)}</a>
+					<a key={id} href={url || id}>{toTextString(label)}</a>
 				),
 
 				"Source": publisher?.about && <ul>{publisher.about.slice().sort(entryCompare)
 					.map(about => <li key={about.id}>
-						<ToolLink>{about}</ToolLink>
+						<TileLink>{about}</TileLink>
 					</li>)
 				}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
 
-		</>}>{event}</ToolFrame>}
+		</>}>{event}</TileFrame>}
 
 	>
 
-		<ToolFrame placeholder={Events[icon]} as={({
+		<TileFrame placeholder={Events[icon]} as={({
 
 			name,
 			description,
@@ -297,7 +297,7 @@ export function DataEvent() {
 
                 <img src={image.url}
 
-                    alt={image.description && toLocalString(image.description) || `Image of ${toLocalString(name)}`}
+                    alt={image.description && toTextString(image.description) || `Image of ${toTextString(name)}`}
 
                     style={{
 						margin: 0
@@ -313,11 +313,11 @@ export function DataEvent() {
 
             </figure>}
 
-			<dfn>{toLocalString(name)}</dfn>
+			<dfn>{toTextString(name)}</dfn>
 
-			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+			{description && <TileMark>{toTextString(description)}</TileMark>}
 
-		</>}>{event}</ToolFrame>
+		</>}>{event}</TileFrame>
 
 	</DataPage>;
 

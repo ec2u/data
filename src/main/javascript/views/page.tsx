@@ -19,9 +19,9 @@ import { DataLogo } from "@ec2u/data/views/logo";
 import { asArray } from "@metreeca/core";
 import { title } from "@metreeca/data/contexts/router";
 import { app } from "@metreeca/view";
-import { ToolPage } from "@metreeca/view/layouts/page";
+import { TilePage } from "@metreeca/view/layouts/page";
 import { Github } from "@metreeca/view/widgets/icon";
-import { Path, ToolPath } from "@metreeca/view/widgets/path";
+import { Path, TilePath } from "@metreeca/view/widgets/path";
 import React, { ReactNode, useEffect } from "react";
 
 
@@ -57,11 +57,11 @@ export function DataPage({
 
 	useEffect(() => { title(name); }, asArray(name) ?? [name]);
 
-	return <ToolPage
+	return <TilePage
 
 		logo={<DataLogo/>}
 
-		name={<ToolPath>{name}</ToolPath>}
+		name={<TilePath>{name}</TilePath>}
 		menu={menu}
 
 		done={done}
@@ -79,6 +79,6 @@ export function DataPage({
 
 		children
 
-	}</ToolPage>;
+	}</TilePage>;
 
 }

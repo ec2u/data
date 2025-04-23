@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { Local } from "@metreeca/core/local";
 import { isString } from "@metreeca/core/string";
+import { Text } from "@metreeca/core/text";
 
 // remove leading alliance name
 
-export function ec2u(label: Local): Local ;
+export function ec2u(label: Text): Text ;
 export function ec2u(label: string): string ;
 
-export function ec2u(label: string | Local) {
+export function ec2u(label: string | Text) {
 	return isString(label)
 		? label.replace(/^EC2U\s+/, "")
 		: Object.entries(label).reduce((labels, [lang, text]) => ({ ...labels, [lang]: ec2u(text) }), {});

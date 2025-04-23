@@ -22,23 +22,23 @@ import { date } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
-import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { text, toTextString } from "@metreeca/core/text";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
 import { useRange } from "@metreeca/data/models/range";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
-import { ToolClear } from "@metreeca/view/lenses/clear";
-import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolOptions } from "@metreeca/view/lenses/options";
-import { ToolRange } from "@metreeca/view/lenses/range";
-import { ToolSheet } from "@metreeca/view/lenses/sheet";
-import { ToolCard } from "@metreeca/view/widgets/card";
+import { TileClear } from "@metreeca/view/lenses/clear";
+import { TileCount } from "@metreeca/view/lenses/count";
+import { TileOptions } from "@metreeca/view/lenses/options";
+import { TileRange } from "@metreeca/view/lenses/range";
+import { TileSheet } from "@metreeca/view/lenses/sheet";
+import { TileCard } from "@metreeca/view/widgets/card";
 import { Calendar } from "@metreeca/view/widgets/icon";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolSearch } from "@metreeca/view/widgets/search";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 
@@ -55,14 +55,14 @@ export const Events=immutable({
 	members: multiple({
 
 		id: required(id),
-		label: required(local),
-		comment: optional(local),
+		label: required(text),
+		comment: optional(text),
 
 		image: optional({
 			id: required(id),
 			url: required(id),
 			author: optional(string),
-			description: optional(local)
+			description: optional(text)
 		}),
 
 		startDate: required(dateTime),
@@ -70,7 +70,7 @@ export const Events=immutable({
 
 		university: optional({
 			id: required(id),
-			label: required(local)
+			label: required(text)
 		})
 
 	})
@@ -86,55 +86,55 @@ export function DataEvents() {
 
 		tray={<>
 
-			<ToolSearch placeholder={"Name"}>{
+			<TileSearch placeholder={"Name"}>{
 				useKeywords(events, "label")
-			}</ToolSearch>
+			}</TileSearch>
 
 
-			<ToolOptions placeholder={"University"}>{
+			<TileOptions placeholder={"University"}>{
 				useOptions(events, "university")
-			}</ToolOptions>
+			}</TileOptions>
 
-			<ToolRange placeholder={"Date"}>{
+			<TileRange placeholder={"Date"}>{
 				useRange(events, "startDate", { type: date.cast(dateTime) })
-			}</ToolRange>
+			}</TileRange>
 
-			<ToolOptions placeholder={"Free"} compact>{
+			<TileOptions placeholder={"Free"} compact>{
 				useOptions(events, "isAccessibleForFree", { type: boolean })
-			}</ToolOptions>
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Topic"} compact>{
-				useOptions(events, "about", { type: entry({ id: "", label: required(local) }), size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Topic"} compact>{
+				useOptions(events, "about", { type: entry({ id: "", label: required(text) }), size: 10 })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Audience"} compact>{
-				useOptions(events, "audience", { type: entry({ id: "", label: required(local) }), size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Audience"} compact>{
+				useOptions(events, "audience", { type: entry({ id: "", label: required(text) }), size: 10 })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Organizer"} compact>{
-				useOptions(events, "organizer", { type: entry({ id: "", label: required(local) }), size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Organizer"} compact>{
+				useOptions(events, "organizer", { type: entry({ id: "", label: required(text) }), size: 10 })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Publisher"} compact>{
-				useOptions(events, "publisher", { type: entry({ id: "", label: required(local) }), size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Publisher"} compact>{
+				useOptions(events, "publisher", { type: entry({ id: "", label: required(text) }), size: 10 })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Source"} compact>{
-				useOptions(events, "publisher.about", { type: entry({ id: "", label: required(local) }), size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Source"} compact>{
+				useOptions(events, "publisher.about", { type: entry({ id: "", label: required(text) }), size: 10 })
+			}</TileOptions>
 
 		</>}
 
 		info={<>
 
-			<ToolCount>{useStats(events)}</ToolCount>
-			<ToolClear>{events}</ToolClear>
+			<TileCount>{useStats(events)}</TileCount>
+			<TileClear>{events}</TileClear>
 
 		</>}
 
 	>
 
-		<ToolSheet placeholder={Events[icon]}
+		<TileSheet placeholder={Events[icon]}
 
 			sorted={{
 
@@ -160,26 +160,26 @@ export function DataEvents() {
 				const start=startDate.substring(0, 10);
 				const end=endDate?.substring(0, 10);
 
-				return <ToolCard key={id} side={"end"} size={10}
+				return <TileCard key={id} side={"end"} size={10}
 
-					title={<ToolLink>{{
+					title={<TileLink>{{
 
 						id,
-						label: `${start}${end && end !== start ? ` › ${end}` : ""} / ${toLocalString(label)}`
+						label: `${start}${end && end !== start ? ` › ${end}` : ""} / ${toTextString(label)}`
 
-					}}</ToolLink>}
+					}}</TileLink>}
 
 					image={image?.url} // !!! alt text
 					tags={university && <span>{toEntryString(university)}</span>}
 
 				>{
 
-					comment && toLocalString(comment)
+					comment && toTextString(comment)
 
-				}</ToolCard>;
+				}</TileCard>;
 			}
 
-			}>{events}</ToolSheet>
+			}>{events}</TileSheet>
 
 	</DataPage>;
 

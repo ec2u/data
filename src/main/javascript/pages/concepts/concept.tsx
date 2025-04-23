@@ -20,48 +20,48 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
-import { local, toLocalString } from "@metreeca/core/local";
+import { text, toTextString } from "@metreeca/core/text";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolLabel } from "@metreeca/view/layouts/label";
-import { ToolPanel } from "@metreeca/view/layouts/panel";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
+import { TileLabel } from "@metreeca/view/layouts/label";
+import { TilePanel } from "@metreeca/view/layouts/panel";
+import { TileFrame } from "@metreeca/view/lenses/frame";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
 
 export const Concept=immutable({
 
 	id: required("/concepts/{scheme}/*"),
-	label: required(local),
+	label: required(text),
 
 	// !!! generated: optional(boolean),
 
 	notation: optional({}),
 
-	prefLabel: required(local),
-	definition: optional(local),
+	prefLabel: required(text),
+	definition: optional(text),
 
 	inScheme: {
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	},
 
 	broaderTransitive: multiple({
 		id: required(id),
-		label: required(local),
+		label: required(text),
 		broader: optional(id)
 	}),
 
 	narrower: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	related: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	sameAs: optional(id)
@@ -78,7 +78,7 @@ export function DataConcept() {
 
 	return <DataPage name={[Schemes, concept?.inScheme, {}]} /* info={<DataAI>{concept?.generated}</DataAI>} */>
 
-		<ToolFrame placeholder={Schemes[icon]} as={({
+		<TileFrame placeholder={Schemes[icon]} as={({
 
 			notation,
 
@@ -93,47 +93,47 @@ export function DataConcept() {
 
 		}) => <>
 
-			<dfn>{toLocalString(prefLabel)}</dfn>
+			<dfn>{toTextString(prefLabel)}</dfn>
 
-			{definition && <ToolMark>{toLocalString(definition)}</ToolMark>}
+			{definition && <TileMark>{toTextString(definition)}</TileMark>}
 
-			<ToolPanel>
+			<TilePanel>
 
-				{/* {notation && <ToolLabel name={"Codes"}>
+				{/* {notation && <TileLabel name={"Codes"}>
                     <ul>{notation.slice().sort(stringCompare).map(notation =>
 						<li key={notation}>{notation}</li>
 					)}</ul>
-				 </ToolLabel>} */}
+				 </TileLabel>} */}
 
-				{sameAs && <ToolLabel name={"URI"}>
+				{sameAs && <TileLabel name={"URI"}>
                     <a href={sameAs}>{toIdString(sameAs)}</a>
-                </ToolLabel>}
+                </TileLabel>}
 
-			</ToolPanel>
+			</TilePanel>
 
-			<ToolPanel stack>
+			<TilePanel stack>
 
-				{broaderTransitive && <ToolLabel name={"Broader Concepts"}>
+				{broaderTransitive && <TileLabel name={"Broader Concepts"}>
                     <ul style={{ listStyleType: "disclosure-open" }}>{sort(broaderTransitive).map(entry =>
-						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+						<li key={entry.id}><TileLink>{entry}</TileLink></li>
 					)}</ul>
-                </ToolLabel>}
+                </TileLabel>}
 
-				{narrower && <ToolLabel name={"Narrower Concepts"}>
+				{narrower && <TileLabel name={"Narrower Concepts"}>
                     <ul style={{ listStyleType: "disclosure-closed" }}>{narrower.slice().sort(entryCompare).map(entry =>
-						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+						<li key={entry.id}><TileLink>{entry}</TileLink></li>
 					)}</ul>
-                </ToolLabel>}
+                </TileLabel>}
 
-				{related && <ToolLabel name={"Related Concepts"}>
+				{related && <TileLabel name={"Related Concepts"}>
                     <ul>{related.slice().sort(entryCompare).map(entry =>
-						<li key={entry.id}><ToolLink>{entry}</ToolLink></li>
+						<li key={entry.id}><TileLink>{entry}</TileLink></li>
 					)}</ul>
-                </ToolLabel>}
+                </TileLabel>}
 
-			</ToolPanel>
+			</TilePanel>
 
-		</>}>{concept}</ToolFrame>
+		</>}>{concept}</TileFrame>
 
 	</DataPage>;
 

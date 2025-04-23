@@ -20,14 +20,14 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, optional, required, virtual } from "@metreeca/core";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { local, toLocalString } from "@metreeca/core/local";
+import { text, toTextString } from "@metreeca/core/text";
 import { year } from "@metreeca/core/year";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
+import { TileFrame } from "@metreeca/view/lenses/frame";
+import { TileInfo } from "@metreeca/view/widgets/info";
+import { TileLink } from "@metreeca/view/widgets/link";
 import * as React from "react";
 
 
@@ -35,23 +35,23 @@ export const University=immutable({
 
 	id: required("/universities/{code}"),
 
-	label: required(local),
+	label: required(text),
 	depiction: required(id),
 
-	prefLabel: required(local),
-	definition: required(local),
+	prefLabel: required(text),
+	definition: required(text),
 
 	inception: optional(year),
 	students: optional(integer),
 
 	country: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	city: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	})
 
 });
@@ -71,7 +71,7 @@ export function DataUniversity() {
 
 			dataset: required({
 				id: required(id),
-				alternative: required(local)
+				alternative: required(text)
 			}),
 
 			resources: virtual(required(integer)),
@@ -85,7 +85,7 @@ export function DataUniversity() {
 
 	return <DataPage name={[Universities, {}]}
 
-		tray={<ToolFrame as={({
+		tray={<TileFrame as={({
 
 			inception,
 			students,
@@ -94,40 +94,40 @@ export function DataUniversity() {
 
 		}) => <>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
-				"Country": country && <ToolLink>{country}</ToolLink>,
-				"City": city && <ToolLink>{city}</ToolLink>
+				"Country": country && <TileLink>{country}</TileLink>,
+				"City": city && <TileLink>{city}</TileLink>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Inception": inception && inception.substring(0, 4),
 				"Students": students && toIntegerString(students)
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{stats?.members?.slice()
+			<TileInfo>{stats?.members?.slice()
 				?.sort(({ resources: x }, { resources: y }) => x - y)
 				?.map(({ dataset, resources }) => ({
 
-					label: <ToolLink filter={[dataset, { university }]}>{{
+					label: <TileLink filter={[dataset, { university }]}>{{
 						id: dataset.id,
 						label: ec2u(dataset.alternative)
-					}}</ToolLink>,
+					}}</TileLink>,
 
 					value: toIntegerString(resources)
 
 				}))
 
-			}</ToolInfo>
+			}</TileInfo>
 
-		</>}>{university}</ToolFrame>}
+		</>}>{university}</TileFrame>}
 
 	>
 
-		<ToolFrame placeholder={Universities[icon]} as={({
+		<TileFrame placeholder={Universities[icon]} as={({
 
 			label,
 			depiction,
@@ -137,13 +137,13 @@ export function DataUniversity() {
 
 		}) => <>
 
-			<img className={"right"} src={depiction} alt={`Image of ${toLocalString(label)}`}/>
+			<img className={"right"} src={depiction} alt={`Image of ${toTextString(label)}`}/>
 
-			<dfn>{toLocalString(prefLabel)}</dfn>
+			<dfn>{toTextString(prefLabel)}</dfn>
 
-			<p>{toLocalString(definition)}</p>
+			<p>{toTextString(definition)}</p>
 
-		</>}>{university}</ToolFrame>
+		</>}>{university}</TileFrame>
 
 	</DataPage>;
 

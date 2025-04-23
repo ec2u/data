@@ -20,21 +20,21 @@ import { immutable, multiple, repeatable, required } from "@metreeca/core";
 import { toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer } from "@metreeca/core/integer";
-import { local, toLocalString } from "@metreeca/core/local";
+import { text, toTextString } from "@metreeca/core/text";
 import { year } from "@metreeca/core/year";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useRange } from "@metreeca/data/models/range";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
-import { ToolClear } from "@metreeca/view/lenses/clear";
-import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolRange } from "@metreeca/view/lenses/range";
-import { ToolSheet } from "@metreeca/view/lenses/sheet";
-import { ToolCard } from "@metreeca/view/widgets/card";
+import { TileClear } from "@metreeca/view/lenses/clear";
+import { TileCount } from "@metreeca/view/lenses/count";
+import { TileRange } from "@metreeca/view/lenses/range";
+import { TileSheet } from "@metreeca/view/lenses/sheet";
+import { TileCard } from "@metreeca/view/widgets/card";
 import { Landmark } from "@metreeca/view/widgets/icon";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolSearch } from "@metreeca/view/widgets/search";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 
@@ -53,13 +53,13 @@ export const Universities=immutable({
 
 		id: required(id),
 
-		prefLabel: required(local),
-		comment: required(local),
+		prefLabel: required(text),
+		comment: required(text),
 		depiction: repeatable(id),
 
 		country: required({
 			id: required(id),
-			label: required(local)
+			label: required(text)
 		})
 
 	})
@@ -76,30 +76,30 @@ export function DataUniversities() {
 
 		tray={<>
 
-			<ToolSearch placeholder={"Name"}>{
+			<TileSearch placeholder={"Name"}>{
 				useKeywords(universities, "prefLabel")
-			}</ToolSearch>
+			}</TileSearch>
 
-			<ToolRange placeholder={"Inception"}>{
+			<TileRange placeholder={"Inception"}>{
 				useRange(universities, "inception", { type: year })
-			}</ToolRange>
+			}</TileRange>
 
-			<ToolRange placeholder={"Students"}>{
+			<TileRange placeholder={"Students"}>{
 				useRange(universities, "students", { type: integer })
-			}</ToolRange>
+			}</TileRange>
 
 		</>}
 
 		info={<>
 
-			<ToolCount>{useStats(universities)}</ToolCount>
-			<ToolClear>{universities}</ToolClear>
+			<TileCount>{useStats(universities)}</TileCount>
+			<TileClear>{universities}</TileClear>
 
 		</>}
 
 	>
 
-		<ToolSheet placeholder={Universities[icon]} sorted={"city.label"} as={({
+		<TileSheet placeholder={Universities[icon]} sorted={"city.label"} as={({
 
 			id,
 			prefLabel,
@@ -110,20 +110,20 @@ export function DataUniversities() {
 
 		}) =>
 
-			<ToolCard key={id} side={"end"}
+			<TileCard key={id} side={"end"}
 
-				title={<ToolLink>{{ id, label: prefLabel }}</ToolLink>}
+				title={<TileLink>{{ id, label: prefLabel }}</TileLink>}
 				image={depiction[0]}
 
 				tags={<span>{toEntryString(country)}</span>}
 
 			>{
 
-				toLocalString(comment)
+				toTextString(comment)
 
-			}</ToolCard>
+			}</TileCard>
 
-		}>{universities}</ToolSheet>
+		}>{universities}</TileSheet>
 
 	</DataPage>;
 

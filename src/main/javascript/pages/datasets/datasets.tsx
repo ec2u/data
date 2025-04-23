@@ -21,21 +21,21 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
-import { local, toLocalString } from "@metreeca/core/local";
+import { text, toTextString } from "@metreeca/core/text";
 import { toValueString } from "@metreeca/core/value";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
-import { ToolClear } from "@metreeca/view/lenses/clear";
-import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolOptions } from "@metreeca/view/lenses/options";
-import { ToolSheet } from "@metreeca/view/lenses/sheet";
-import { ToolCard } from "@metreeca/view/widgets/card";
+import { TileClear } from "@metreeca/view/lenses/clear";
+import { TileCount } from "@metreeca/view/lenses/count";
+import { TileOptions } from "@metreeca/view/lenses/options";
+import { TileSheet } from "@metreeca/view/lenses/sheet";
+import { TileCard } from "@metreeca/view/widgets/card";
 import { Package } from "@metreeca/view/widgets/icon";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolSearch } from "@metreeca/view/widgets/search";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 
@@ -54,10 +54,10 @@ export const Datasets=immutable({
 	members: multiple({
 
 		id: required(id),
-		comment: optional(local),
+		comment: optional(text),
 
-		title: required(local),
-		alternative: optional(local),
+		title: required(text),
+		alternative: optional(text),
 
 		entities: required(integer)
 
@@ -76,20 +76,20 @@ export function DataDatasets() {
 
 		tray={< >
 
-			<ToolSearch placeholder={"Name"}>{
+			<TileSearch placeholder={"Name"}>{
 				useKeywords(datasets, "label")
-			}</ToolSearch>
+			}</TileSearch>
 
-			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
-				useOptions(datasets, "license", { type: entry({ id: "", label: required(local) }) })
-			}</ToolOptions>
+			<TileOptions placeholder={"License"} as={license => toValueString(license)}>{
+				useOptions(datasets, "license", { type: entry({ id: "", label: required(text) }) })
+			}</TileOptions>
 
 		</>}
 
 		info={<>
 
-			<ToolCount>{useStats(datasets)}</ToolCount>
-			<ToolClear>{datasets}</ToolClear>
+			<TileCount>{useStats(datasets)}</TileCount>
+			<TileClear>{datasets}</TileClear>
 
 		</>}
 
@@ -98,7 +98,7 @@ export function DataDatasets() {
 		<div/>
 
 
-		<ToolSheet placeholder={Datasets[icon]} as={({ // !!! sorted={"entities"}
+		<TileSheet placeholder={Datasets[icon]} as={({ // !!! sorted={"entities"}
 
 			id,
 
@@ -109,21 +109,21 @@ export function DataDatasets() {
 			entities
 
 		}) => {
-			return <ToolCard key={id} size={7.5}
+			return <TileCard key={id} size={7.5}
 
-				title={<ToolLink>{{ id, label: ec2u(title) }}</ToolLink>}
+				title={<TileLink>{{ id, label: ec2u(title) }}</TileLink>}
 
 				tags={toIntegerString(entities)}
-				image={alternative && <span>{ec2u(toLocalString(alternative))}</span>}
+				image={alternative && <span>{ec2u(toTextString(alternative))}</span>}
 
 			>{
 
-				comment && toLocalString(ec2u(comment))
+				comment && toTextString(ec2u(comment))
 
-			}</ToolCard>;
+			}</TileCard>;
 		}
 
-		}>{datasets}</ToolSheet>
+		}>{datasets}</TileSheet>
 
 
 	</DataPage>;

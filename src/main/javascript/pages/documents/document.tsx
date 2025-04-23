@@ -27,14 +27,14 @@ import { dateTime } from "@metreeca/core/dateTime";
 import { toEntryString } from "@metreeca/core/entry";
 import { sortFrames } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
-import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { text, toTextString } from "@metreeca/core/text";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
+import { TileFrame } from "@metreeca/view/lenses/frame";
+import { TileInfo } from "@metreeca/view/widgets/info";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
 
 export const Document=immutable({
@@ -43,8 +43,8 @@ export const Document=immutable({
 
 	generated: optional(boolean),
 
-	title: required(local),
-	description: optional(local),
+	title: required(text),
+	description: optional(text),
 
 	url: multiple(string),
 
@@ -60,44 +60,44 @@ export const Document=immutable({
 
 	type: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	university: optional({
 			id: required(id),
-			label: required(local)
+		label: required(text)
 		}
 	),
 
 	publisher: optional({
 		id: required(id),
-		label: required(local),
+		label: required(text),
 		homepage: optional(string)
 	}),
 
 	creator: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	contributor: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	audience: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	relation: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	subject: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	})
 
 });
@@ -109,7 +109,7 @@ export function DataDocument() {
 
 	return <DataPage name={[Documents, {}]} info={<DataAI>{document?.generated}</DataAI>}
 
-		tray={<ToolFrame as={({
+		tray={<TileFrame as={({
 
 			url,
 
@@ -135,13 +135,13 @@ export function DataDocument() {
 
 		}) => <>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
-				"University": university && <ToolLink>{university}</ToolLink>
+				"University": university && <TileLink>{university}</TileLink>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Code": identifier && <span>{identifier}</span>,
 
@@ -150,41 +150,41 @@ export function DataDocument() {
 				)}</ul>,
 
 				"Language": language?.length && <ul>{language.map(item =>
-					<li key={item}><span>{toLocalString(Languages[item])}</span></li>
+					<li key={item}><span>{toTextString(Languages[item])}</span></li>
 				)}</ul>
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Type": type && type.length && <ul>{sortFrames(type).map(type =>
 					<li key={type.id}>
-						<ToolLink filter={[Documents, { university, subject: type }]}>{type}</ToolLink>
+						<TileLink filter={[Documents, { university, subject: type }]}>{type}</TileLink>
 					</li>
 				)}</ul>,
 
 				"Audience": audience && audience.length && <ul>{sortFrames(audience).map(audience =>
 					<li key={audience.id}>
-						<ToolLink filter={[Documents, { university, audience }]}>{audience}</ToolLink>
+						<TileLink filter={[Documents, { university, audience }]}>{audience}</TileLink>
 					</li>
 				)}</ul>,
 
 				"Topics": subject && subject.length && <ul>{sortFrames(subject).map(subject =>
 					<li key={subject.id}>
-						<ToolLink filter={[Documents, { university, subject }]}>{subject}</ToolLink>
+						<TileLink filter={[Documents, { university, subject }]}>{subject}</TileLink>
 					</li>
 				)}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Issued": issued && toDateString(new Date(issued)),
 				"Updated": modified && toDateString(new Date(modified)),
 				"Valid": valid
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Publisher": publisher && (publisher.homepage
 						? <a href={publisher.homepage}>{toEntryString(publisher)}</a>
@@ -197,9 +197,9 @@ export function DataDocument() {
 					.map(contributor => <li key={contributor.id}>{toEntryString(contributor)}</li>)
 				}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"License": license && (license.startsWith("http")
 						? <a href={license}>{license.replace(/^https?:/, "")}</a>
@@ -208,13 +208,13 @@ export function DataDocument() {
 
 				"Rights": rights && <span>{rights}</span>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-		</>}>{document}</ToolFrame>}
+		</>}>{document}</TileFrame>}
 
 	>
 
-		<ToolFrame placeholder={Events[icon]} as={({
+		<TileFrame placeholder={Events[icon]} as={({
 
 			title,
 			description,
@@ -223,23 +223,23 @@ export function DataDocument() {
 
 		}) => <>
 
-			<dfn>{toLocalString(title)}</dfn>
+			<dfn>{toTextString(title)}</dfn>
 
-			{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+			{description && <TileMark>{toTextString(description)}</TileMark>}
 
 			{relation && <>
 
                 <h1>Related Documents</h1>
 
                 <ul>{sortFrames(relation).map(relation => <li key={relation.id}>
-						<ToolLink>{relation}</ToolLink>
+					<TileLink>{relation}</TileLink>
 					</li>
 				)}</ul>
 
             </>}
 
 
-		</>}>{document}</ToolFrame>
+		</>}>{document}</TileFrame>
 
 	</DataPage>;
 

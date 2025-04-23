@@ -20,22 +20,22 @@ import { immutable, multiple, optional, required, virtual } from "@metreeca/core
 import { entry } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer } from "@metreeca/core/integer";
-import { local, toLocalString } from "@metreeca/core/local";
+import { text, toTextString } from "@metreeca/core/text";
 import { toValueString } from "@metreeca/core/value";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
-import { ToolClear } from "@metreeca/view/lenses/clear";
-import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolOptions } from "@metreeca/view/lenses/options";
-import { ToolSheet } from "@metreeca/view/lenses/sheet";
-import { ToolCard } from "@metreeca/view/widgets/card";
+import { TileClear } from "@metreeca/view/lenses/clear";
+import { TileCount } from "@metreeca/view/lenses/count";
+import { TileOptions } from "@metreeca/view/lenses/options";
+import { TileSheet } from "@metreeca/view/lenses/sheet";
+import { TileCard } from "@metreeca/view/widgets/card";
 import { GraduationCap } from "@metreeca/view/widgets/icon";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
-import { ToolSearch } from "@metreeca/view/widgets/search";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileMark } from "@metreeca/view/widgets/mark";
+import { TileSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 
@@ -52,11 +52,11 @@ export const Schemes=immutable({
 	members: multiple({
 
 		id: required(id),
-		label: required(local),
-		comment: optional(local),
+		label: required(text),
+		comment: optional(text),
 
-		title: required(local),
-		alternative: required(local),
+		title: required(text),
+		alternative: required(text),
 
 		hasConcept: [{
 
@@ -79,17 +79,17 @@ export function DataSchemes() {
 
 		tray={< >
 
-			<ToolSearch placeholder={"Name"}>{
+			<TileSearch placeholder={"Name"}>{
 				useKeywords(schemes, "label")
-			}</ToolSearch>
+			}</TileSearch>
 
-			<ToolOptions placeholder={"License"} as={license => toValueString(license)}>{
-				useOptions(schemes, "license", { type: entry({ id: "", label: required(local) }) })
-			}</ToolOptions>
+			<TileOptions placeholder={"License"} as={license => toValueString(license)}>{
+				useOptions(schemes, "license", { type: entry({ id: "", label: required(text) }) })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Publisher"} as={license => toValueString(license)}>{
-				useOptions(schemes, "publisher", { type: entry({ id: "", label: required(local) }) })
-			}</ToolOptions>
+			<TileOptions placeholder={"Publisher"} as={license => toValueString(license)}>{
+				useOptions(schemes, "publisher", { type: entry({ id: "", label: required(text) }) })
+			}</TileOptions>
 
 			<div className={"info"} style={{
 
@@ -104,13 +104,13 @@ export function DataSchemes() {
 
 		info={<>
 
-			<ToolCount>{useStats(schemes)}</ToolCount>
-			<ToolClear>{schemes}</ToolClear>
+			<TileCount>{useStats(schemes)}</TileCount>
+			<TileClear>{schemes}</TileClear>
 
 		</>}
 	>
 
-		<ToolSheet placeholder={Schemes[icon]} as={({
+		<TileSheet placeholder={Schemes[icon]} as={({
 
 			id,
 
@@ -124,26 +124,26 @@ export function DataSchemes() {
 		}) =>
 
 
-			<ToolCard key={id} side={"end"}
+			<TileCard key={id} side={"end"}
 
-				title={<ToolLink>{{
+				title={<TileLink>{{
 
 					id,
 					label: alternative
-						? `${toLocalString(alternative)} / ${toLocalString(title)}`
-						: toLocalString(title)
+						? `${toTextString(alternative)} / ${toTextString(title)}`
+						: toTextString(title)
 
-				}}</ToolLink>}
+				}}</TileLink>}
 
 				tags={`${hasConcept[0].count} concepts`}
 
 			>{
 
-				comment && <ToolMark>{toLocalString(comment)}</ToolMark>
+				comment && <TileMark>{toTextString(comment)}</TileMark>
 
-			}</ToolCard>
+			}</TileCard>
 
-		}>{schemes}</ToolSheet>
+		}>{schemes}</TileSheet>
 
 	</DataPage>;
 

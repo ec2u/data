@@ -20,21 +20,21 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
-import { local, toLocalString } from "@metreeca/core/local";
 import { string } from "@metreeca/core/string";
+import { text, toTextString } from "@metreeca/core/text";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
 import { useStats } from "@metreeca/data/models/stats";
 import { icon } from "@metreeca/view";
-import { ToolClear } from "@metreeca/view/lenses/clear";
-import { ToolCount } from "@metreeca/view/lenses/count";
-import { ToolOptions } from "@metreeca/view/lenses/options";
-import { ToolSheet } from "@metreeca/view/lenses/sheet";
-import { ToolCard } from "@metreeca/view/widgets/card";
+import { TileClear } from "@metreeca/view/lenses/clear";
+import { TileCount } from "@metreeca/view/lenses/count";
+import { TileOptions } from "@metreeca/view/lenses/options";
+import { TileSheet } from "@metreeca/view/lenses/sheet";
+import { TileCard } from "@metreeca/view/widgets/card";
 import { Files } from "@metreeca/view/widgets/icon";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolSearch } from "@metreeca/view/widgets/search";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 
@@ -51,12 +51,12 @@ export const Documents=immutable({
 	members: multiple({
 
 		id: required(id),
-		label: required(local),
-		comment: optional(local),
+		label: required(text),
+		comment: optional(text),
 
 		university: optional({
 				id: required(id),
-				label: required(local)
+			label: required(text)
 			}
 		)
 
@@ -73,46 +73,46 @@ export function DataDocuments() {
 
 		tray={<>
 
-			<ToolSearch placeholder={"Name"}>{
+			<TileSearch placeholder={"Name"}>{
 				useKeywords(documents, "label")
-			}</ToolSearch>
+			}</TileSearch>
 
-			<ToolOptions placeholder={"University"}>{
+			<TileOptions placeholder={"University"}>{
 				useOptions(documents, "university")
-			}</ToolOptions>
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Type"} compact>{
-				useOptions(documents, "type", { type: entry({ id: "", label: required(local) }), size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Type"} compact>{
+				useOptions(documents, "type", { type: entry({ id: "", label: required(text) }), size: 10 })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Audience"} compact>{
-				useOptions(documents, "audience", { type: entry({ id: "", label: required(local) }), size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Audience"} compact>{
+				useOptions(documents, "audience", { type: entry({ id: "", label: required(text) }), size: 10 })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Topic"} compact>{
-				useOptions(documents, "subject", { type: entry({ id: "", label: required(local) }), size: 10 })
-			}</ToolOptions>
+			<TileOptions placeholder={"Topic"} compact>{
+				useOptions(documents, "subject", { type: entry({ id: "", label: required(text) }), size: 10 })
+			}</TileOptions>
 
-			<ToolOptions placeholder={"Language"} compact as={value => toLocalString(Languages[value])}>{
+			<TileOptions placeholder={"Language"} compact as={value => toTextString(Languages[value])}>{
 				useOptions(documents, "language", { type: string, size: 10 })
-			}</ToolOptions>
+			}</TileOptions>
 
-			<ToolOptions placeholder={"License"} compact>{
+			<TileOptions placeholder={"License"} compact>{
 				useOptions(documents, "license", { type: string, size: 10 })
-			}</ToolOptions>
+			}</TileOptions>
 
 		</>}
 
 		info={<>
 
-			<ToolCount>{useStats(documents)}</ToolCount>
-			<ToolClear>{documents}</ToolClear>
+			<TileCount>{useStats(documents)}</TileCount>
+			<TileClear>{documents}</TileClear>
 
 		</>}
 
 	>
 
-		<ToolSheet placeholder={Documents[icon]} as={({
+		<TileSheet placeholder={Documents[icon]} as={({
 
 			id,
 			label,
@@ -123,18 +123,18 @@ export function DataDocuments() {
 		}) =>
 
 
-			<ToolCard key={id} side={"end"}
+			<TileCard key={id} side={"end"}
 
-				title={<ToolLink>{{ id, label }}</ToolLink>}
+				title={<TileLink>{{ id, label }}</TileLink>}
 				tags={<span>{university && toEntryString(university) || "EC2U Alliance"}</span>}
 
 			>{
 
-				comment && toLocalString(comment)
+				comment && toTextString(comment)
 
-			}</ToolCard>
+			}</TileCard>
 
-		}>{documents}</ToolSheet>
+		}>{documents}</TileSheet>
 
 	</DataPage>;
 

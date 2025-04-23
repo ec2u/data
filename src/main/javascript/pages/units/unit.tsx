@@ -23,15 +23,15 @@ import { immutable, multiple, optional, repeatable, required } from "@metreeca/c
 import { boolean } from "@metreeca/core/boolean";
 import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
-import { local, toLocalString } from "@metreeca/core/local";
+import { text, toTextString } from "@metreeca/core/text";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
-import { ToolLabel } from "@metreeca/view/layouts/label";
-import { ToolPanel } from "@metreeca/view/layouts/panel";
-import { ToolFrame } from "@metreeca/view/lenses/frame";
-import { ToolInfo } from "@metreeca/view/widgets/info";
-import { ToolLink } from "@metreeca/view/widgets/link";
-import { ToolMark } from "@metreeca/view/widgets/mark";
+import { TileLabel } from "@metreeca/view/layouts/label";
+import { TilePanel } from "@metreeca/view/layouts/panel";
+import { TileFrame } from "@metreeca/view/lenses/frame";
+import { TileInfo } from "@metreeca/view/widgets/info";
+import { TileLink } from "@metreeca/view/widgets/link";
+import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
 
 export const Unit=immutable({
@@ -40,40 +40,40 @@ export const Unit=immutable({
 
 	generated: optional(boolean),
 
-	prefLabel: required(local),
-	altLabel: optional(local),
-	definition: optional(local),
+	prefLabel: required(text),
+	altLabel: optional(text),
+	definition: optional(text),
 
 	homepage: multiple(id),
 
 	university: optional({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	hasHead: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	unitOf: repeatable({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	hasUnit: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	classification: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	}),
 
 	subject: multiple({
 		id: required(id),
-		label: required(local)
+		label: required(text)
 	})
 
 });
@@ -85,7 +85,7 @@ export function DataUnit() {
 
 	return <DataPage name={[Units, ""]} info={<DataAI>{unit?.generated}</DataAI>}
 
-		tray={<ToolFrame as={({
+		tray={<TileFrame as={({
 
 			homepage,
 
@@ -96,17 +96,17 @@ export function DataUnit() {
 
 		}) => <>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
-				"University": university && <ToolLink>{university}</ToolLink>,
+				"University": university && <TileLink>{university}</TileLink>,
 
 				"Type": classification?.length && <ul>{classification.map(type =>
-					<li key={type.id}><ToolLink>{type}</ToolLink></li>
+					<li key={type.id}><TileLink>{type}</TileLink></li>
 				)}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Head": hasHead?.length === 1 ? <span>{toEntryString(hasHead[0])}</span> : hasHead?.length &&
                     <ul>{[...hasHead]
@@ -114,20 +114,20 @@ export function DataUnit() {
 						.map(head => <li key={head.id}>{toEntryString(head)}</li>)
 					}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-			<ToolInfo>{{
+			<TileInfo>{{
 
 				"Info": homepage?.length && <ul>{homepage.map(url =>
 					<li key={url}><a href={url}>{toIdString(url, { compact: true })}</a></li>
 				)}</ul>
 
-			}}</ToolInfo>
+			}}</TileInfo>
 
-		</>}>{unit}</ToolFrame>}
+		</>}>{unit}</TileFrame>}
 	>
 
-		<ToolFrame placeholder={Events[icon]} as={({
+		<TileFrame placeholder={Events[icon]} as={({
 
 			prefLabel,
 			altLabel,
@@ -146,39 +146,39 @@ export function DataUnit() {
 
 			return <>
 
-				<dfn>{toLocalString(prefLabel)}</dfn>
+				<dfn>{toTextString(prefLabel)}</dfn>
 
-				{description && <ToolMark>{toLocalString(description)}</ToolMark>}
+				{description && <TileMark>{toTextString(description)}</TileMark>}
 
-				{(parent.length || hasUnit || subject) && <ToolPanel>
+				{(parent.length || hasUnit || subject) && <TilePanel>
 
-					{parent.length > 0 && <ToolLabel name={"Parent Organizations"} wide>
+					{parent.length > 0 && <TileLabel name={"Parent Organizations"} wide>
                         <ul>{parent.slice()
 							.sort(entryCompare)
 							.map(parent =>
-								<li key={parent.id}><ToolLink>{parent}</ToolLink>
+								<li key={parent.id}><TileLink>{parent}</TileLink>
 								</li>
 							)}</ul>
-                    </ToolLabel>}
+                    </TileLabel>}
 
-					{hasUnit && <ToolLabel name={"Organizational Units"} wide>
+					{hasUnit && <TileLabel name={"Organizational Units"} wide>
                         <ul>{hasUnit.slice()
 							.sort(entryCompare)
 							.map(unit =>
-								<li key={unit.id}><ToolLink>{unit}</ToolLink></li>
+								<li key={unit.id}><TileLink>{unit}</TileLink></li>
 							)}</ul>
-                    </ToolLabel>}
+                    </TileLabel>}
 
-					{subject && <ToolLabel name={"Topics"} wide>
+					{subject && <TileLabel name={"Topics"} wide>
                         <ul>{subject.slice().sort(entryCompare).map(subject =>
-							<li key={subject.id}><ToolLink>{subject}</ToolLink></li>
+							<li key={subject.id}><TileLink>{subject}</TileLink></li>
 						)}</ul>
-                    </ToolLabel>}
+                    </TileLabel>}
 
-                </ToolPanel>}
+                </TilePanel>}
 
 			</>;
-		}}>{unit}</ToolFrame>
+		}}>{unit}</TileFrame>
 
 	</DataPage>;
 

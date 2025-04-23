@@ -35,8 +35,8 @@ import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
 import { DataUniversity, University } from "@ec2u/data/pages/universities/university";
 import DataWild, { Wild } from "@ec2u/data/pages/wild";
-import { ToolContext } from "@metreeca/data/contexts/context";
-import { ToolRouter } from "@metreeca/data/contexts/router";
+import { TileContext } from "@metreeca/data/contexts/context";
+import { TileRouter } from "@metreeca/data/contexts/router";
 import "@metreeca/view/styles/quicksand.css";
 import * as React from "react";
 import { createRoot } from "react-dom/client";
@@ -45,9 +45,9 @@ import "./index.css";
 
 createRoot(document.body.firstElementChild!).render(<React.StrictMode>
 
-	<ToolContext>
+	<TileContext>
 
-		<ToolRouter>{{
+		<TileRouter>{{
 
 			[Datasets.id]: DataDatasets,
 			[Resources.id]: DataResources,
@@ -80,9 +80,9 @@ createRoot(document.body.firstElementChild!).render(<React.StrictMode>
 			[Book.id]: DataBook,
 			[Wild.id]: DataWild
 
-		}}</ToolRouter>
+		}}</TileRouter>
 
-	</ToolContext>
+	</TileContext>
 
 </React.StrictMode>);
 
