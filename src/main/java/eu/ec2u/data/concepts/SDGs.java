@@ -41,7 +41,6 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.DEEP;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
@@ -79,7 +78,7 @@ public interface SDGs extends Taxonomy {
 
                         Stream.of(
                                 new SDGsFrame(),
-                                UNITED_NATIONS // !!! deep loading
+                                UNITED_NATIONS
                         ),
 
                         Stream.of(resource(SDGs.class, ".csv").toString())
@@ -89,7 +88,7 @@ public interface SDGs extends Taxonomy {
 
                 .optMap(new Validate<>())
 
-        )), FORCE, DEEP));
+        )), FORCE));
     }
 
 

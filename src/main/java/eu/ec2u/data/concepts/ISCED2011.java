@@ -21,7 +21,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.concepts.SKOSConceptFrame;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
@@ -161,7 +160,7 @@ public interface ISCED2011 extends Taxonomy {
 
                 .of(
                         new ISCED2011Frame(),
-                        UIS, // !!! deep loading
+                        UIS,
 
                         Level0(),
                         Level1(),

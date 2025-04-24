@@ -36,7 +36,6 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.DEEP;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
@@ -72,7 +71,7 @@ public final class UnitsPoitiers implements Runnable {
 
                 .optMap(new Validate<>())
 
-        )), FORCE, DEEP);
+        )), FORCE);
     }
 
 

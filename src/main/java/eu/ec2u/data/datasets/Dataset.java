@@ -56,6 +56,7 @@ public interface Dataset extends Asset, VOIDDataset {
     }
 
 
+    @Hidden
     @Foreign
     @Reverse("ec2u:dataset")
     Set<Resource> resources();

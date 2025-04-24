@@ -56,7 +56,6 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.DEEP;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Strings.fill;
@@ -446,7 +445,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
             ));
 
-            service(store()).partition(UNIVERSITIES).update(update, FORCE, DEEP);
+            service(store()).partition(UNIVERSITIES).update(update, FORCE);
 
         }));
     }
