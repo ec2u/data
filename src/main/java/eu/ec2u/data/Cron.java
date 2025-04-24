@@ -27,7 +27,7 @@ import static com.metreeca.flow.Response.BadGateway;
 import static com.metreeca.flow.Response.OK;
 import static com.metreeca.flow.gcp.GCPServer.cron;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.flow.services.Logger.time;
+import static com.metreeca.mesh.util.Loggers.time;
 
 import static java.lang.String.format;
 
