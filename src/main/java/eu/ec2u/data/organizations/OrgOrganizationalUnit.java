@@ -17,7 +17,9 @@
 package eu.ec2u.data.organizations;
 
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Reverse;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import java.util.Set;
@@ -27,6 +29,8 @@ import java.util.Set;
 public interface OrgOrganizationalUnit extends OrgOrganization {
 
     @Required
+    @Forward
+    @Reverse("org:hasUnit")
     Set<OrgOrganization> unitOf();
 
 }

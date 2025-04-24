@@ -118,9 +118,10 @@ export function DataUnit() {
 
 			<TileInfo>{{
 
-				"Info": homepage?.length && <ul>{homepage.map(url =>
-					<li key={url}><a href={url}>{toIdString(url, { compact: true })}</a></li>
-				)}</ul>
+				"Info": homepage?.length === 1 && <a href={homepage[0]}>{toIdString(homepage[0], { compact: true })}</a>
+					|| homepage?.length && <ul>{homepage.map(url =>
+						<li key={url}><a href={url}>{toIdString(url, { compact: true })}</a></li>
+					)}</ul>
 
 			}}</TileInfo>
 
