@@ -55,15 +55,15 @@ public interface OrgOrganization extends FOAFOrganization {
 
     @Required
     @Localized
-    @Property("skos:")
+    @Forward("skos:")
     Map<Locale, String> prefLabel();
 
     @Localized
-    @Property("skos:")
+    @Forward("skos:")
     Map<Locale, String> altLabel();
 
     @Localized
-    @Property("skos:")
+    @Forward("skos:")
     Map<Locale, String> definition();
 
 
@@ -80,7 +80,7 @@ public interface OrgOrganization extends FOAFOrganization {
 
 
     @Foreign
-    @Property("^org:headOf")
+    @Reverse("org:headOf")
     Set<FOAFPerson> hasHead();
 
     @Foreign

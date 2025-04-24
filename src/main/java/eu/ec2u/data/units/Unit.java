@@ -22,9 +22,9 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Property;
 
 import eu.ec2u.data.concepts.SKOSConcept;
 import eu.ec2u.data.datasets.Dataset;
@@ -192,7 +192,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     default Dataset dataset() { return new UnitsFrame(); }
 
 
-    @Property("dct:")
+    @Forward("dct:")
     Set<SKOSConcept> subject();
 
 

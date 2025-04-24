@@ -16,11 +16,8 @@
 
 package eu.ec2u.data.agents;
 
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Property;
-import com.metreeca.mesh.meta.owl.Inverse;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.organizations.OrgOrganization;
@@ -54,11 +51,11 @@ public interface FOAFPerson extends FOAFAgent {
     String familyName();
 
 
-    @Property("org:")
+    @Forward("org:")
     Set<OrgOrganization> headOf();
 
-    @Property("org:")
-    @Inverse("org:hasMember")
+    @Forward("org:")
+    @Reverse("org:hasMember")
     Set<OrgOrganization> memberOf();
 
 }

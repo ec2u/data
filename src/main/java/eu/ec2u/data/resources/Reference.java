@@ -72,19 +72,20 @@ public interface Reference {
     @Required
     @Localized
     @MaxLength(LABEL_LENGTH)
-    @Property("rdfs:")
+    @Forward("rdfs:")
     Map<Locale, String> label();
 
     @Localized
     @MaxLength(COMMENT_LENGTH)
-    @Property("rdfs:")
+    @Forward("rdfs:")
     Map<Locale, String> comment();
 
 
+    @Forward("rdfs:")
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     URI isDefinedBy();
 
-    @Property("rdfs:")
+    @Forward("rdfs:")
     Set<URI> seeAlso();
 
 }

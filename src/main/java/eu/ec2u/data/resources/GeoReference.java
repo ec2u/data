@@ -16,18 +16,18 @@
 
 package eu.ec2u.data.resources;
 
+import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Property;
 
 @Frame
 @Namespace(prefix="[wgs]", value="http://www.w3.org/2003/01/geo/wgs84_pos#")
 public interface GeoReference extends Reference {
 
-    @Property("wgs:long")
+    @Forward("wgs:long")
     double longitude();
 
-    @Property("wgs:lat")
+    @Forward("wgs:lat")
     double latitude();
 
 }

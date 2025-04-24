@@ -174,9 +174,11 @@ export function DataScheme() {
 				"Publisher": publisher && <TileLink>{publisher}</TileLink>,
 				"Copyright": rights,
 
-				"License": license && <ul>{license.map(license =>
-					<li key={license.id}><TileLink>{license}</TileLink></li>
-				)}</ul>,
+				"License": license?.length === 1 && <TileLink>{license[0]}</TileLink>
+
+					|| license?.length && <ul>{license.map(license =>
+						<li key={license.id}><TileLink>{license}</TileLink></li>
+					)}</ul>,
 
 				"Source": source && <TileLink>{source}</TileLink>,
 				"Access": accessRights && <TileMark>{toTextString(accessRights)}</TileMark>

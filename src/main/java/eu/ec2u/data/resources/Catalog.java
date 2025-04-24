@@ -16,13 +16,13 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.mesh.meta.jsonld.Property;
+import com.metreeca.mesh.meta.jsonld.Forward;
 
 import java.util.Set;
 
 public interface Catalog<T extends Reference> extends Reference {
 
-    @Property("rdfs:member")
+    @Forward("rdfs:member")
     Set<T> members();
 
 }

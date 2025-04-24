@@ -16,11 +16,8 @@
 
 package eu.ec2u.data.concepts;
 
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Foreign;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.owl.Inverse;
-import com.metreeca.mesh.meta.owl.Symmetric;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.resources.Reference;
@@ -72,10 +69,13 @@ public interface SKOSConcept extends SKOS {
     @Required
     SKOSConceptScheme inScheme();
 
-    @Inverse("skos:hasTopConcept")
+    @Forward
+    @Reverse("skos:hasTopConcept")
     SKOSConceptScheme topConceptOf();
 
 
+    @Forward
+    @Reverse("skos:narrower")
     Set<SKOSConcept> broader();
 
     default Set<SKOSConcept> broaderTransitive() {
@@ -85,13 +85,16 @@ public interface SKOSConcept extends SKOS {
         ));
     }
 
+
     @Foreign
     Set<SKOSConcept> narrower();
 
-    @Symmetric
+    @Forward
+    @Reverse
     Set<SKOSConcept> related();
 
-    @Symmetric
+    @Forward
+    @Reverse
     Set<SKOSConcept> exactMatch();
 
 }
