@@ -16,7 +16,7 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
-import { Concept, SKOSConcepts } from "@ec2u/data/pages/concepts/skos";
+import { SKOSConcept, ToolSKOSConcepts } from "@ec2u/data/pages/concepts/skos";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
@@ -67,8 +67,8 @@ export const Scheme=immutable({
 		label: required(text)
 	}),
 
-	hasConcept: virtual(multiple(Concept)),
-	hasTopConcept: virtual(multiple(Concept))
+	hasConcept: virtual(multiple(SKOSConcept)),
+	hasTopConcept: virtual(multiple(SKOSConcept))
 
 });
 
@@ -83,8 +83,8 @@ export function DataScheme() {
 		...Scheme,
 
 		...(keywords
-				? { hasConcept: multiple({ ...Concept, "~label": keywords }) }
-				: { hasTopConcept: multiple(Concept) }
+				? { hasConcept: multiple({ ...SKOSConcept, "~label": keywords }) }
+				: { hasTopConcept: multiple(SKOSConcept) }
 		)
 
 	});
@@ -194,8 +194,8 @@ export function DataScheme() {
 					: <hr/>
 			}
 
-			{hasConcept ? <SKOSConcepts>{hasConcept}</SKOSConcepts>
-				: hasTopConcept ? <SKOSConcepts>{hasTopConcept}</SKOSConcepts>
+			{hasConcept ? <ToolSKOSConcepts>{hasConcept}</ToolSKOSConcepts>
+				: hasTopConcept ? <ToolSKOSConcepts>{hasTopConcept}</ToolSKOSConcepts>
 					: <div><TileHint>{Schemes[icon]} No Matches</TileHint></div>
 			}
 

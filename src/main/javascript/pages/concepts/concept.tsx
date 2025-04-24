@@ -16,13 +16,13 @@
 
 
 import { Schemes } from "@ec2u/data/pages/concepts/schemes";
+import { SKOSConcept, ToolSKOSConcepts } from "@ec2u/data/pages/concepts/skos";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entryCompare } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
-import { useRouter } from "@metreeca/data/contexts/router";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
 import { TileLabel } from "@metreeca/view/layouts/label";
@@ -32,6 +32,7 @@ import { TileInfo } from "@metreeca/view/widgets/info";
 import { TileLink } from "@metreeca/view/widgets/link";
 import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
+import { TileTree } from "../../../../../../../../Products/Tile/code/view/widgets/tree";
 
 export const Concept=immutable({
 
@@ -54,10 +55,7 @@ export const Concept=immutable({
 		broader: optional(id)
 	}),
 
-	narrower: multiple({
-		id: required(id),
-		label: required(text)
-	}),
+	narrower: multiple(SKOSConcept),
 
 	related: multiple({
 		id: required(id),
@@ -73,8 +71,6 @@ export const Concept=immutable({
 
 
 export function DataConcept() {
-
-	const [route]=useRouter();
 
 	const [concept]=useResource(Concept);
 
@@ -118,31 +114,37 @@ export function DataConcept() {
 
 			{definition && <TileMark>{toTextString(definition)}</TileMark>}
 
-			<TilePanel stack>
+			<TilePanel>
 
-				{broaderTransitive?.length && <TileLabel name={"Broader Concepts"}>
-                    <ul style={{ listStyleType: "disclosure-open" }}>{sort(broaderTransitive).map(entry =>
-						<li key={entry.id}><TileLink>{entry}</TileLink></li>
-					)}</ul>
-                </TileLabel>}
+				<TilePanel stack>
 
-				{narrower?.length && <TileLabel name={"Narrower Concepts"}>
-                    <ul style={{ listStyleType: "disclosure-closed" }}>{narrower.slice().sort(entryCompare).map(entry =>
-						<li key={entry.id}><TileLink>{entry}</TileLink></li>
-					)}</ul>
-                </TileLabel>}
+					{broaderTransitive?.length &&
+                        <TileLabel name={"Broader Concepts"}>{sort(broaderTransitive).map(entry =>
+							<TileTree key={entry.id} expanded={"force"} label={<TileLink>{entry}</TileLink>}/>
+						)}</TileLabel>}
 
-				{related?.length && <TileLabel name={"Related Concepts"}>
-                    <ul>{related.slice().sort(entryCompare).map(entry =>
-						<li key={entry.id}><TileLink>{entry}</TileLink></li>
-					)}</ul>
-                </TileLabel>}
+					{narrower?.length && <TileLabel name={"Narrower Concepts"}>
+                        <ToolSKOSConcepts>{narrower}</ToolSKOSConcepts>
+                    </TileLabel>}
 
-				{exactMatch?.length && <TileLabel name={"Exact Matches"}>
-                    <ul>{exactMatch.slice().sort(entryCompare).map(entry =>
-						<li key={entry.id}><TileLink>{entry}</TileLink></li>
-					)}</ul>
-                </TileLabel>}
+
+				</TilePanel>
+
+				<TilePanel stack>
+
+					{related?.length && <TileLabel name={"Related Concepts"}>
+                        <ul>{related.slice().sort(entryCompare).map(entry =>
+							<li key={entry.id}><TileLink>{entry}</TileLink></li>
+						)}</ul>
+                    </TileLabel>}
+
+					{exactMatch?.length && <TileLabel name={"Exact Matches"}>
+                        <ul>{exactMatch.slice().sort(entryCompare).map(entry =>
+							<li key={entry.id}><TileLink>{entry}</TileLink></li>
+						)}</ul>
+                    </TileLabel>}
+
+				</TilePanel>
 
 			</TilePanel>
 

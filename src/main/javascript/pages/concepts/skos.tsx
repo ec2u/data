@@ -27,7 +27,7 @@ import { TileTree } from "@metreeca/view/widgets/tree";
 import * as React from "react";
 
 
-export const Concept=immutable({
+export const SKOSConcept=immutable({
 
 	id: required(id),
 	label: required(text),
@@ -43,39 +43,38 @@ export const Concept=immutable({
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function SKOSConcept({
+function ToolSKOSConcept({
 
 	children: concept
 
 }: {
 
-	children: typeof Concept
+	children: typeof SKOSConcept
 
 }) {
 
 	const [data]=useResource({
 		id: concept.id,
-		narrower: multiple(Concept)
+		narrower: multiple(SKOSConcept)
 	});
 
 	return data
-		? data.narrower && <SKOSConcepts>{data.narrower}</SKOSConcepts>
+		? data.narrower && <ToolSKOSConcepts>{data.narrower}</ToolSKOSConcepts>
 		: <TileSpin/>;
 
 }
 
-export function SKOSConcepts({
+export function ToolSKOSConcepts({
 
 	children: concepts
 
 }: {
 
-	children: typeof Concept[]
+	children: typeof SKOSConcept[]
 
 }) {
 
-
-	function conceptCompare(x: typeof Concept, y: typeof Concept): number {
+	function conceptCompare(x: typeof SKOSConcept, y: typeof SKOSConcept): number {
 		return numberCompare(
 			x.notation && parseInt(x.notation) || 0,
 			y.notation && parseInt(y.notation) || 0
@@ -88,7 +87,7 @@ export function SKOSConcepts({
 
 			<TileTree key={concept.id} label={<TileLink>{concept}</TileLink>}>
 
-				{concept.narrower && <SKOSConcept>{concept}</SKOSConcept>}
+				{concept.narrower && <ToolSKOSConcept>{concept}</ToolSKOSConcept>}
 
 			</TileTree>
 		)}
