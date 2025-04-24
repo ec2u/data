@@ -1,10 +1,5 @@
 cron:
 
-  - description: "datasets - nightly housekeeping"
-    url: /cron/datasets/
-    schedule: every day 00:05
-
-
   - description: "units › coimbra - nightly crawling"
     url: /cron/units/coimbra
     schedule: every day 00:00

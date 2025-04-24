@@ -41,8 +41,6 @@ public final class Cron extends Delegator {
     public Cron() {
         delegate(cron(new Router()
 
-                // .path("/datasets/", execute(new Housekeeper()))
-
                 // .path("/units/coimbra", execute(new UnitsCoimbra()))
                 // .path("/units/iasi", execute(new UnitsIasi()))
                 // .path("/units/jena", execute(new UnitsJena()))

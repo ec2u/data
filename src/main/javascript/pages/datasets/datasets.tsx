@@ -17,7 +17,7 @@
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, optional, required } from "@metreeca/core";
+import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
 import { entry } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
@@ -59,8 +59,12 @@ export const Datasets=immutable({
 		title: required(text),
 		alternative: optional(text),
 
-		entities: required(integer)
+		resources: [{
 
+			count: virtual(required(integer)),
+			"count=count:": required(integer)
+
+		}]
 	})
 
 });
@@ -95,10 +99,7 @@ export function DataDatasets() {
 
 	>
 
-		<div/>
-
-
-		<TileSheet placeholder={Datasets[icon]} as={({ // !!! sorted={"entities"}
+		<TileSheet placeholder={Datasets[icon]} sorted={(x, y) => x.resources[0].count - y.resources[0].count} as={({
 
 			id,
 
@@ -106,22 +107,22 @@ export function DataDatasets() {
 			alternative,
 			comment,
 
-			entities
+			resources
 
-		}) => {
-			return <TileCard key={id} size={7.5}
+		}) => <>
+
+			<TileCard key={id} size={7.5}
 
 				title={<TileLink>{{ id, label: ec2u(title) }}</TileLink>}
 
-				tags={toIntegerString(entities)}
+				tags={toIntegerString(resources[0].count)}
 				image={alternative && <span>{ec2u(toTextString(alternative))}</span>}
 
 			>{
 
 				comment && toTextString(ec2u(comment))
 
-			}</TileCard>;
-		}
+			}</TileCard></>
 
 		}>{datasets}</TileSheet>
 

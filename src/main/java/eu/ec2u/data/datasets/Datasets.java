@@ -25,7 +25,6 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
-import com.metreeca.mesh.queries.Table;
 
 import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Catalog;
@@ -36,17 +35,12 @@ import java.util.Map;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.Integer;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Criterion.criterion;
-import static com.metreeca.mesh.queries.Expression.expression;
-import static com.metreeca.mesh.queries.Probe.probe;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.resources.Localized.EN;
 
@@ -113,38 +107,6 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
                     ))
 
             )));
-        }
-
-    }
-
-    final class Housekeeper implements Runnable {
-
-        public static void main(final String... args) { exec(() -> new Housekeeper().run()); }
-
-
-        @Override
-        public void run() {
-            service(store()).execute(store -> {
-
-                final Value stats=store.retrieve(new DatasetsFrame(true).id(DATA)
-
-                        .members(stash(query(
-                                probe("dataset", expression(), Value.object(Value.id(uri()))),
-                                probe("entities", expression("count:resources"), Integer())
-                        )))
-
-                );
-
-                final Value mutation=array(list(stats.get("members").value(Table.class).stream()
-                        .flatMap(table -> table.rows().stream())
-                        .map(tuple -> new DatasetFrame(true)
-                                .id(tuple.value("dataset").flatMap(Value::id).orElse(null))
-                                .entities(tuple.value("entities").flatMap(Value::integral).map(Long::intValue).orElse(null)))
-                ));
-
-                store.partition(DATASETS.resolve("~")).mutate(mutation, FORCE);
-
-            });
         }
 
     }
