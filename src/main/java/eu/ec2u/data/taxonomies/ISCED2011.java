@@ -245,6 +245,7 @@ public final class ISCED2011 implements Runnable {
         store.partition(ISCED2011).update(array(list(Xtream
 
                 .of(
+
                         TAXONOMY,
                         UNESCO_INSTITUTE_FOR_STATISTICS,
 
@@ -258,6 +259,7 @@ public final class ISCED2011 implements Runnable {
                         LEVEL7,
                         LEVEL8,
                         LEVEL9
+
                 )
 
                 .optMap(new Validate<>())

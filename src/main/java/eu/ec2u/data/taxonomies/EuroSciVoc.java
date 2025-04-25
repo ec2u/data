@@ -154,7 +154,7 @@ public final class EuroSciVoc implements Runnable {
                                         .definition(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
                                                 .texts(LOCALES)
                                                 .map(map -> map.get(EN))
-                                                .flatMap(topic -> define(id, topic))
+                                                .flatMap(topic -> define(adopt(id), topic))
                                                 .orElse(null)
                                         )
                                         .broader(set(concept.forward(SKOS.BROADER)
@@ -180,12 +180,10 @@ public final class EuroSciVoc implements Runnable {
     }
 
     private Optional<Map<Locale, String>> define(final URI id, final String topic) {
-
         return store.retrieve(new TopicFrame(true)
                         .id(id)
                         .definition(map(entry(ANY, "")))
                 )
-
 
                 .value()
                 .filter(not(Value::isEmpty))

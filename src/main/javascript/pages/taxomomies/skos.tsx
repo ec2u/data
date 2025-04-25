@@ -25,6 +25,7 @@ import { TileLink } from "@metreeca/view/widgets/link";
 import { TileSpin } from "@metreeca/view/widgets/spin";
 import { TileTree } from "@metreeca/view/widgets/tree";
 import * as React from "react";
+import { createElement } from "react";
 
 
 export const SKOSConcept=immutable({
@@ -81,7 +82,7 @@ export function TileSKOSConcepts({
 		) || entryCompare(x, y);
 	}
 
-	return <>
+	return createElement("tile-skos-concept", {}, <>
 
 		{concepts.slice().sort(conceptCompare).map(concept =>
 
@@ -92,6 +93,6 @@ export function TileSKOSConcepts({
 			</TileTree>
 		)}
 
-	</>;
+	</>);
 
 }
