@@ -16,9 +16,6 @@
 
 import { Actors, DataActors } from "@ec2u/data/pages/actors/actors";
 import { Book, DataBook } from "@ec2u/data/pages/book";
-import { Concept, DataConcept } from "@ec2u/data/pages/concepts/concept";
-import { DataScheme, Scheme } from "@ec2u/data/pages/concepts/scheme";
-import { DataSchemes, Schemes } from "@ec2u/data/pages/concepts/schemes";
 import { Course, DataCourse } from "@ec2u/data/pages/courses/course";
 import { Courses, DataCourses } from "@ec2u/data/pages/courses/courses";
 import { DataMeta, Dataset } from "@ec2u/data/pages/datasets/dataset";
@@ -30,6 +27,9 @@ import { DataEvents, Events } from "@ec2u/data/pages/events/events";
 import { DataProgram, Program } from "@ec2u/data/pages/programs/program";
 import { DataPrograms, Programs } from "@ec2u/data/pages/programs/programs";
 import { DataResources, Resources } from "@ec2u/data/pages/resources/resources";
+import { DataTaxonomies, Taxonomies } from "@ec2u/data/pages/taxomomies/taxonomies";
+import { DataTaxonomy, Taxonomy } from "@ec2u/data/pages/taxomomies/taxonomy";
+import { DataTopic, Topic } from "@ec2u/data/pages/taxomomies/topic";
 import { DataUnit, Unit } from "@ec2u/data/pages/units/unit";
 import { DataUnits, Units } from "@ec2u/data/pages/units/units";
 import { DataUniversities, Universities } from "@ec2u/data/pages/universities/universities";
@@ -72,9 +72,9 @@ createRoot(document.body.firstElementChild!).render(<React.StrictMode>
 			[Events.id]: DataEvents,
 			[Event.id]: DataEvent,
 
-			[Schemes.id]: DataSchemes,
-			[Scheme.id]: DataScheme,
-			[Concept.id]: DataConcept,
+			[Taxonomies.id]: DataTaxonomies,
+			[Taxonomy.id]: DataTaxonomy,
+			[Topic.id]: DataTopic,
 
 			[Dataset.id]: DataMeta,
 			[Book.id]: DataBook,

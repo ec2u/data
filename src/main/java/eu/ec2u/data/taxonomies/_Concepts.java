@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.concepts;
+package eu.ec2u.data.taxonomies;
 
 public final class _Concepts {
 

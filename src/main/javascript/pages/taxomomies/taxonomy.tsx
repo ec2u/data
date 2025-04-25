@@ -15,8 +15,8 @@
  */
 
 
-import { Schemes } from "@ec2u/data/pages/concepts/schemes";
-import { SKOSConcept, ToolSKOSConcepts } from "@ec2u/data/pages/concepts/skos";
+import { SKOSConcept, TileSKOSConcepts } from "@ec2u/data/pages/taxomomies/skos";
+import { Taxonomies } from "@ec2u/data/pages/taxomomies/taxonomies";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
@@ -39,11 +39,11 @@ import * as React from "react";
 import { useState } from "react";
 
 
-export const Scheme=immutable({
-
-	id: required("/concepts/{scheme}"),
+export const Taxonomy=immutable({
 
 	generated: optional(boolean),
+
+	id: required("/taxonomies/{scheme}"),
 
 	title: required(text),
 	alternative: optional(text),
@@ -73,14 +73,14 @@ export const Scheme=immutable({
 });
 
 
-export function DataScheme() {
+export function DataTaxonomy() {
 
 	const [route]=useRouter();
 	const [keywords, setKeywords]=useState("");
 
-	const [scheme]=useResource({
+	const [taxonomy]=useResource({
 
-		...Scheme,
+		...Taxonomy,
 
 		...(keywords
 				? { hasConcept: multiple({ ...SKOSConcept, "~label": keywords }) }
@@ -103,7 +103,7 @@ export function DataScheme() {
 	}));
 
 
-	return <DataPage name={[Schemes, toTextString(scheme?.alternative ?? scheme?.title ?? {})]}
+	return <DataPage name={[Taxonomies, toTextString(taxonomy?.alternative ?? taxonomy?.title ?? {})]}
 
 		tray={<>
 
@@ -121,7 +121,7 @@ export function DataScheme() {
 
 			</>}>{stats}</TileFrame>
 
-			<TileFrame placeholder={Schemes[icon]} as={({
+			<TileFrame placeholder={Taxonomies[icon]} as={({
 
 				created,
 				modified,
@@ -139,16 +139,16 @@ export function DataScheme() {
 
 				}}</TileInfo>
 
-			</>}>{scheme}</TileFrame>
+			</>}>{taxonomy}</TileFrame>
 
 
 		</>}
 
-		info={<DataAI>{scheme?.generated}</DataAI>}
+		info={<DataAI>{taxonomy?.generated}</DataAI>}
 
 	>
 
-		<TileFrame placeholder={Schemes[icon]} as={({
+		<TileFrame placeholder={Taxonomies[icon]} as={({
 
 			title,
 			description,
@@ -194,12 +194,12 @@ export function DataScheme() {
 					: <hr/>
 			}
 
-			{hasConcept ? <ToolSKOSConcepts>{hasConcept}</ToolSKOSConcepts>
-				: hasTopConcept ? <ToolSKOSConcepts>{hasTopConcept}</ToolSKOSConcepts>
-					: <div><TileHint>{Schemes[icon]} No Matches</TileHint></div>
+			{hasConcept ? <TileSKOSConcepts>{hasConcept}</TileSKOSConcepts>
+				: hasTopConcept ? <TileSKOSConcepts>{hasTopConcept}</TileSKOSConcepts>
+					: <div><TileHint>{Taxonomies[icon]} No Matches</TileHint></div>
 			}
 
-		</>}>{scheme}</TileFrame>
+		</>}>{taxonomy}</TileFrame>
 
 	</DataPage>;
 

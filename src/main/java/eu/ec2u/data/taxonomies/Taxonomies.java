@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.concepts;
+package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
@@ -49,7 +49,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Virtual
 public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
 
-    URI CONCEPTS=DATA.resolve("concepts/");
+    URI TAXONOMIES=DATA.resolve("taxonomies/");
 
 
     static void main(final String... args) {
@@ -59,7 +59,7 @@ public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
                     .optMap(new Validate<>())
             ));
 
-            service(store()).partition(CONCEPTS).update(update, FORCE);
+            service(store()).partition(TAXONOMIES).update(update, FORCE);
 
         });
     }
@@ -69,7 +69,7 @@ public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
 
     @Override
     default URI id() {
-        return CONCEPTS;
+        return TAXONOMIES;
     }
 
 
@@ -85,12 +85,12 @@ public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
 
     @Override
     default Map<Locale, String> description() {
-        return map(entry(EN, "Topic concepts and other concept schemes for classifying resources."));
+        return map(entry(EN, "Topic taxonomies and other concept schemes for classifying resources."));
     }
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("concepts");
+        return DATASETS.resolve("taxonomies");
     }
 
 
@@ -105,8 +105,8 @@ public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
                             .members(stash(query(new TaxonomyFrame())))
                     )))
 
-                    .path("/{scheme}", new Worker().get(new Driver(new TaxonomyFrame())))
-                    .path("/{scheme}/*", new Worker().get(new Driver(new TopicFrame())))
+                    .path("/{taxonomy}", new Worker().get(new Driver(new TaxonomyFrame())))
+                    .path("/{taxonomy}/*", new Worker().get(new Driver(new TopicFrame())))
 
             );
         }

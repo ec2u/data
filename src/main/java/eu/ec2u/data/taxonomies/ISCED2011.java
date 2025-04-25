@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.concepts;
+package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
@@ -39,8 +39,8 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.concepts.Taxonomies.CONCEPTS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 
 /**
  * International Standard Classification of Education 2011 (ISCED 2011) SKOS Concept Scheme.
@@ -56,7 +56,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Namespace("[dct]")
 public interface ISCED2011 extends Taxonomy {
 
-    URI ISCED2011=CONCEPTS.resolve("isced-2011");
+    URI ISCED2011=TAXONOMIES.resolve("isced-2011");
 
     OrgOrganizationFrame UIS=new OrgOrganizationFrame()
             .id(uri("http://www.uis.unesco.org/"))

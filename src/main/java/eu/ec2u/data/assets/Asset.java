@@ -21,12 +21,12 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data.concepts.Topic;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Localized;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.ReferenceFrame;
 import eu.ec2u.data.resources.Resource;
+import eu.ec2u.data.taxonomies.Topic;
 
 import java.net.URI;
 import java.time.LocalDate;

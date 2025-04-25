@@ -39,11 +39,11 @@ import { TileSearch } from "@metreeca/view/widgets/search";
 import * as React from "react";
 
 
-export const Schemes=immutable({
+export const Taxonomies=immutable({
 
 	[icon]: <GraduationCap/>,
 
-	id: required("/concepts/"),
+	id: required("/taxonomies/"),
 
 	label: required({
 		"en": "Taxonomies"
@@ -70,12 +70,12 @@ export const Schemes=immutable({
 });
 
 
-export function DataSchemes() {
+export function DataTaxonomies() {
 
-	const schemes=useCollection(Schemes, "members");
+	const schemes=useCollection(Taxonomies, "members");
 
 
-	return <DataPage name={Schemes} menu={<DataInfo/>}
+	return <DataPage name={Taxonomies} menu={<DataInfo/>}
 
 		tray={< >
 
@@ -110,7 +110,7 @@ export function DataSchemes() {
 		</>}
 	>
 
-		<TileSheet placeholder={Schemes[icon]} as={({
+		<TileSheet placeholder={Taxonomies[icon]} as={({
 
 			id,
 

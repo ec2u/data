@@ -22,9 +22,9 @@ import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.agents.FOAFOrganization;
 import eu.ec2u.data.agents.FOAFPerson;
-import eu.ec2u.data.concepts.Topic;
 import eu.ec2u.data.resources.Localized;
 import eu.ec2u.data.resources.Reference;
+import eu.ec2u.data.taxonomies.Topic;
 
 import java.net.URI;
 import java.util.Locale;

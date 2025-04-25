@@ -19,10 +19,10 @@ package eu.ec2u.data;
 import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Router;
 
-import eu.ec2u.data.concepts.Taxonomies;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 
@@ -64,7 +64,7 @@ public final class EC2U extends Delegator {
 
                         .path("/", new Datasets.Handler())
                         .path("/resources/*", new Resources.Handler())
-                        .path("/concepts/*", new Taxonomies.Handler())
+                        .path("/taxonomies/*", new Taxonomies.Handler())
                         .path("/universities/*", new Universities.Handler())
                         .path("/units/*", new Units.Handler())
                 // !!! .path("/offerings/*", new Offerings())

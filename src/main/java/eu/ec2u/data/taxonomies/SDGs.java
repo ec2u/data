@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.concepts;
+package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
@@ -45,8 +45,8 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.concepts.Taxonomies.CONCEPTS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 
 /**
  * United Nations Sustainable Development Goals (SDGs) SKOS Concept Scheme.
@@ -63,7 +63,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Namespace("[dct]")
 public interface SDGs extends Taxonomy {
 
-    URI SDGS=CONCEPTS.resolve("sdgs");
+    URI SDGS=TAXONOMIES.resolve("sdgs");
 
     OrgOrganizationFrame UNITED_NATIONS=new OrgOrganizationFrame()
             .id(uri("http://un.org/"))

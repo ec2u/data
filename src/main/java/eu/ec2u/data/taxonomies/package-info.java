@@ -15,6 +15,6 @@
  */
 
 /**
- * EC2U classification concepts
+ * EC2U classification taxonomies
  */
-package eu.ec2u.data.concepts;
+package eu.ec2u.data.taxonomies;

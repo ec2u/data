@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.concepts;
+package eu.ec2u.data.taxonomies;
 
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;

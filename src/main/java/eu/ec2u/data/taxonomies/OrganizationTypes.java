@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.concepts;
+package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
@@ -40,8 +40,8 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.COPYRIGHT;
 import static eu.ec2u.data.EC2U.EC2U;
-import static eu.ec2u.data.concepts.Taxonomies.CONCEPTS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 
 /**
  * EC2U Organization Type SKOS Concept Scheme.
@@ -49,9 +49,9 @@ import static eu.ec2u.data.resources.Localized.EN;
  * This taxonomy defines a hierarchical classification of organization types in the EC2U alliance context. The taxonomy
  * structure consists of:
  * <p>
- * - Top-level concepts (University, College, Association, City, Other) representing main organization categories -
+ * - Top-level taxonomies (University, College, Association, City, Other) representing main organization categories -
  * University Unit as a special top-level concept with a rich hierarchy of specialized academic structures -
- * Second-level concepts under University Unit (Area, Network, Institute, Department, Centre, Group, Laboratory,
+ * Second-level taxonomies under University Unit (Area, Network, Institute, Department, Centre, Group, Laboratory,
  * Facility) - Further specializations at the third and fourth levels (e.g., Virtual Institute, Research Centre, Library
  * Facility)
  * <p>
@@ -62,11 +62,11 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Namespace("[dct]")
 public interface OrganizationTypes extends Taxonomy {
 
-    URI ORGANIZATIONS=CONCEPTS.resolve("organizations");
+    URI ORGANIZATIONS=TAXONOMIES.resolve("organizations");
 
 
     static TopicFrame University() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(ORGANIZATIONS+"/university"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -79,7 +79,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame College() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(ORGANIZATIONS+"/college"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -92,7 +92,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Association() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(ORGANIZATIONS+"/association"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -105,7 +105,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame City() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(ORGANIZATIONS+"/city"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -118,7 +118,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Other() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(ORGANIZATIONS+"/other"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -131,7 +131,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame UniversityUnit() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(ORGANIZATIONS+"/university-unit"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -145,7 +145,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Area() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(UniversityUnit().id()+"/area"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -159,7 +159,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Network() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(UniversityUnit().id()+"/network"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -171,7 +171,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Institute() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(UniversityUnit().id()+"/institute"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -184,7 +184,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame VirtualInstitute() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Institute().id()+"/virtual"))
                 .broader(set(Institute()))
                 .inScheme(new OrganizationTypesFrame())
@@ -198,7 +198,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Department() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(UniversityUnit().id()+"/department"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -212,7 +212,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Centre() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(UniversityUnit().id()+"/centre"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -227,7 +227,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame ResearchCentre() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Centre().id()+"/research"))
                 .broader(set(Centre()))
                 .inScheme(new OrganizationTypesFrame())
@@ -241,7 +241,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame InterdepartmentalResearchCentre() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(ResearchCentre().id()+"/interdepartmental"))
                 .broader(set(ResearchCentre()))
                 .inScheme(new OrganizationTypesFrame())
@@ -256,7 +256,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame TransferCentre() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Centre().id()+"/transfer"))
                 .broader(set(Centre()))
                 .inScheme(new OrganizationTypesFrame())
@@ -271,7 +271,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame ServiceCentre() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Centre().id()+"/service"))
                 .broader(set(Centre()))
                 .inScheme(new OrganizationTypesFrame())
@@ -286,7 +286,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Group() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(UniversityUnit().id()+"/group"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -299,7 +299,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame RecognizedGroup() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Group().id()+"/recognized"))
                 .broader(set(Group()))
                 .inScheme(new OrganizationTypesFrame())
@@ -313,7 +313,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame InformalGroup() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Group().id()+"/informal"))
                 .broader(set(Group()))
                 .inScheme(new OrganizationTypesFrame())
@@ -327,7 +327,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame StudentGroup() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Group().id()+"/student"))
                 .broader(set(Group()))
                 .inScheme(new OrganizationTypesFrame())
@@ -341,7 +341,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Laboratory() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(UniversityUnit().id()+"/laboratory"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -354,7 +354,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame Facility() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(UniversityUnit().id()+"/facility"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -368,7 +368,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame LibraryFacility() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Facility().id()+"/library"))
                 .broader(set(Facility()))
                 .inScheme(new OrganizationTypesFrame())
@@ -382,7 +382,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame CollectionFacility() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Facility().id()+"/collection"))
                 .broader(set(Facility()))
                 .inScheme(new OrganizationTypesFrame())
@@ -396,7 +396,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame InstrumentFacility() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Facility().id()+"/instrument"))
                 .broader(set(Facility()))
                 .inScheme(new OrganizationTypesFrame())
@@ -411,7 +411,7 @@ public interface OrganizationTypes extends Taxonomy {
     }
 
     static TopicFrame StationFacility() {
-        return new TopicFrame()
+        return new TopicFrame().generated(true)
                 .id(uri(Facility().id()+"/station"))
                 .broader(set(Facility()))
                 .inScheme(new OrganizationTypesFrame())
@@ -477,7 +477,9 @@ public interface OrganizationTypes extends Taxonomy {
 
 
     @Override
-    default Boolean generated() { return true; }
+    default boolean generated() {
+        return true;
+    }
 
 
     @Override

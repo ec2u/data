@@ -43,7 +43,7 @@ export const SKOSConcept=immutable({
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function ToolSKOSConcept({
+function TileSKOSConcept({
 
 	children: concept
 
@@ -59,12 +59,12 @@ function ToolSKOSConcept({
 	});
 
 	return data
-		? data.narrower && <ToolSKOSConcepts>{data.narrower}</ToolSKOSConcepts>
+		? data.narrower && <TileSKOSConcepts>{data.narrower}</TileSKOSConcepts>
 		: <TileSpin/>;
 
 }
 
-export function ToolSKOSConcepts({
+export function TileSKOSConcepts({
 
 	children: concepts
 
@@ -87,7 +87,7 @@ export function ToolSKOSConcepts({
 
 			<TileTree key={concept.id} label={<TileLink>{concept}</TileLink>}>
 
-				{concept.narrower && <ToolSKOSConcept>{concept}</ToolSKOSConcept>}
+				{concept.narrower && <TileSKOSConcept>{concept}</TileSKOSConcept>}
 
 			</TileTree>
 		)}

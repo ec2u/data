@@ -15,10 +15,12 @@
  */
 
 
-import { Schemes } from "@ec2u/data/pages/concepts/schemes";
-import { SKOSConcept, ToolSKOSConcepts } from "@ec2u/data/pages/concepts/skos";
+import { SKOSConcept, TileSKOSConcepts } from "@ec2u/data/pages/taxomomies/skos";
+import { Taxonomies } from "@ec2u/data/pages/taxomomies/taxonomies";
+import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
+import { boolean } from "@metreeca/core/boolean";
 import { entryCompare } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
@@ -34,9 +36,11 @@ import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
 import { TileTree } from "../../../../../../../../Products/Tile/code/view/widgets/tree";
 
-export const Concept=immutable({
+export const Topic=immutable({
 
-	id: required("/concepts/{scheme}/*"),
+	generated: optional(boolean),
+
+	id: required("/taxonomies/{scheme}/*"),
 	label: required(text),
 
 	notation: optional(string),
@@ -70,12 +74,12 @@ export const Concept=immutable({
 });
 
 
-export function DataConcept() {
+export function DataTopic() {
 
-	const [concept]=useResource(Concept);
+	const [topic]=useResource(Topic);
 
 
-	return <DataPage name={[Schemes, concept?.inScheme, {}]}
+	return <DataPage name={[Taxonomies, topic?.inScheme, {}]}
 
 		tray={<>
 
@@ -91,13 +95,15 @@ export function DataConcept() {
 
 				}}</TileInfo>
 
-			</>}>{concept}</TileFrame>
+			</>}>{topic}</TileFrame>
 
 		</>}
 
+		info={<DataAI>{topic?.generated}</DataAI>}
+
 	>
 
-		<TileFrame placeholder={Schemes[icon]} as={({
+		<TileFrame placeholder={Taxonomies[icon]} as={({
 
 			prefLabel,
 			definition,
@@ -124,7 +130,7 @@ export function DataConcept() {
 						)}</TileLabel>}
 
 					{narrower?.length && <TileLabel name={"Narrower Concepts"}>
-                        <ToolSKOSConcepts>{narrower}</ToolSKOSConcepts>
+                        <TileSKOSConcepts>{narrower}</TileSKOSConcepts>
                     </TileLabel>}
 
 
@@ -148,14 +154,14 @@ export function DataConcept() {
 
 			</TilePanel>
 
-		</>}>{concept}</TileFrame>
+		</>}>{topic}</TileFrame>
 
 	</DataPage>;
 
 }
 
 
-function sort(concepts: NonNullable<typeof Concept.broaderTransitive>) {
+function sort(concepts: NonNullable<typeof Topic.broaderTransitive>) {
 
 	const links: { [id: string]: undefined | string }=concepts.reduce((index, concept) => ({
 
