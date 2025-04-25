@@ -59,6 +59,7 @@ import static eu.ec2u.data.EC2U.DATA;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
 
 public final class Data extends Delegator {
 
@@ -72,6 +73,8 @@ public final class Data extends Delegator {
 
     static {
         logging(FINE, "com.metreeca");
+        logging(INFO, "com.metreeca.mesh.rdf4j.SPARQLFetcher");
+        logging(INFO, "com.metreeca.mesh.rdf4j.SPARQLUpdater");
     }
 
     static {
@@ -161,7 +164,7 @@ public final class Data extends Delegator {
                         .before(request -> request.base(BASE)), // define canonical base
 
                 new Router()
-                        // !!! .path("/cron/*", new _Cron())
+                        .path("/cron/*", new Cron())
                         .path("/*", new EC2U())
 
         ));

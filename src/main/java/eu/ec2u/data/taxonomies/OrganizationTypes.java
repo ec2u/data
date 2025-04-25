@@ -477,12 +477,6 @@ public interface OrganizationTypes extends Taxonomy {
 
 
     @Override
-    default boolean generated() {
-        return true;
-    }
-
-
-    @Override
     default Map<Locale, String> title() {
         return map(entry(EN, "EC2U Organization Types"));
     }
