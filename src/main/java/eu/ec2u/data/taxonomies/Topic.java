@@ -19,7 +19,6 @@ package eu.ec2u.data.taxonomies;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 
@@ -53,7 +52,7 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
     }
 
     @Override
-    default Dataset dataset() {
+    default Taxonomy collection() {
         return inScheme();
     }
 

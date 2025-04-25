@@ -454,7 +454,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    default Dataset dataset() { return new UniversitiesFrame(); }
+    default Dataset collection() { return new UniversitiesFrame(); }
 
     @Override
     default Set<OrgOrganization> subOrganizationOf() { return set(EC2U); }

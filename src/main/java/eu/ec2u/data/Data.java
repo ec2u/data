@@ -152,7 +152,7 @@ public final class Data extends Delegator {
 
                         )),
 
-                new Publisher() // static assets published by GAE
+                new Publisher() // static collections published by GAE
 
                         .fallback("/index.html"),
 

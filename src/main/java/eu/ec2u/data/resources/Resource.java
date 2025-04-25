@@ -22,7 +22,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.collections.Collection;
 import eu.ec2u.data.universities.University;
 
 import static eu.ec2u.data.EC2U.BASE;
@@ -39,8 +39,7 @@ public interface Resource extends Reference {
     boolean generated();
 
 
-    @Required
-    Dataset dataset();
+    @Required Collection collection();
 
     University university();
 

@@ -26,7 +26,7 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.collections.Collection;
 import eu.ec2u.data.resources.Catalog;
 
 import java.net.URI;
@@ -47,7 +47,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
 @Virtual
-public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
+public interface Taxonomies extends Collection, Catalog<Taxonomy> {
 
     URI TAXONOMIES=DATA.resolve("taxonomies/");
 

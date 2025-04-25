@@ -16,13 +16,13 @@
 
 package eu.ec2u.data.datasets;
 
-import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.assets.Asset;
+import eu.ec2u.data.collections.Collection;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Reference;
-import eu.ec2u.data.resources.Resource;
 
 import java.util.Set;
 
@@ -34,10 +34,10 @@ import static eu.ec2u.data.EC2U.EC2U;
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Dataset extends Asset {
+public interface Dataset extends Collection {
 
     @Override
-    default Dataset dataset() { return new DatasetsFrame(); }
+    default Datasets collection() { return new DatasetsFrame(); }
 
 
     @Override
@@ -54,11 +54,5 @@ public interface Dataset extends Asset {
     default Set<Reference> license() {
         return set(CCBYNCND40);
     }
-
-
-    @Hidden
-    @Foreign
-    @Reverse("ec2u:dataset")
-    Set<Resource> resources();
 
 }

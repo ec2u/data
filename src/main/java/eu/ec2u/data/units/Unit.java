@@ -189,7 +189,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    default Dataset dataset() { return new UnitsFrame(); }
+    default Dataset collection() { return new UnitsFrame(); }
 
 
     @Forward("dct:")

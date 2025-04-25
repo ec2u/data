@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.assets;
+package eu.ec2u.data.collections;
 
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.organizations.OrgOrganization;
@@ -44,7 +43,7 @@ import static java.util.Locale.ROOT;
 @Frame
 @Class("ec2u:")
 @Namespace(prefix="[dct]", value="http://purl.org/dc/terms/")
-public interface Asset extends Resource {
+public interface Collection extends Resource {
 
     ReferenceFrame CCBYNCND40=new ReferenceFrame()
             .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
@@ -102,5 +101,10 @@ public interface Asset extends Resource {
 
 
     Set<Topic> subject();
+
+    @Hidden
+    @Foreign
+    @Reverse("ec2u:collection")
+    Set<Resource> resources();
 
 }

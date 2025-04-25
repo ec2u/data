@@ -165,7 +165,7 @@ public final class UnitsPoitiers implements Runnable {
 
                             .id(PERSONS.resolve(uuid(University.Poitiers(), join(", ", surname, forename))))
                             .university(University.Poitiers())
-                            .dataset(new PersonsFrame())
+                            .collection(new PersonsFrame())
 
                             .givenName(forename)
                             .familyName(surname);
