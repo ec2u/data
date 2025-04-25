@@ -22,13 +22,16 @@ import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.universities.University;
 
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import static eu.ec2u.data.EC2U.BASE;
 
 @Frame
 @Class
 @Base(BASE)
 @Namespace(prefix="[ec2u]", value="/terms/")
-@Namespace(prefix="owl", value="http://www.w3.org/2002/07/owl#")
 public interface Resource extends Reference {
 
     /**
@@ -36,8 +39,10 @@ public interface Resource extends Reference {
      */
     boolean generated();
 
-    @Forward("owl:versionInfo")
     String version();
+
+    @Hidden
+    Map<Locale, Set<String>> indexed();
 
 
     @Required Collection collection();
