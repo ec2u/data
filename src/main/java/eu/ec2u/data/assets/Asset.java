@@ -21,7 +21,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data.concepts.SKOSConcept;
+import eu.ec2u.data.concepts.Topic;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Localized;
 import eu.ec2u.data.resources.Reference;
@@ -101,6 +101,6 @@ public interface Asset extends Resource {
     Map<Locale, String> accessRights();
 
 
-    Set<SKOSConcept> subject();
+    Set<Topic> subject();
 
 }

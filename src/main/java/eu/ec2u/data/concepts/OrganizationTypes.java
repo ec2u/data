@@ -21,7 +21,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.Reference;
 
@@ -66,8 +65,8 @@ public interface OrganizationTypes extends Taxonomy {
     URI ORGANIZATIONS=CONCEPTS.resolve("organizations");
 
 
-    static SKOSConceptFrame University() {
-        return new SKOSConceptFrame()
+    static TopicFrame University() {
+        return new TopicFrame()
                 .id(uri(ORGANIZATIONS+"/university"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -79,8 +78,8 @@ public interface OrganizationTypes extends Taxonomy {
                         educational, research, and societal challenges across European cities and regions.""")));
     }
 
-    static SKOSConceptFrame College() {
-        return new SKOSConceptFrame()
+    static TopicFrame College() {
+        return new TopicFrame()
                 .id(uri(ORGANIZATIONS+"/college"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -92,8 +91,8 @@ public interface OrganizationTypes extends Taxonomy {
                         complementing broader university programs.""")));
     }
 
-    static SKOSConceptFrame Association() {
-        return new SKOSConceptFrame()
+    static TopicFrame Association() {
+        return new TopicFrame()
                 .id(uri(ORGANIZATIONS+"/association"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -105,8 +104,8 @@ public interface OrganizationTypes extends Taxonomy {
                         to enhance educational outcomes, research initiatives, or community engagement.""")));
     }
 
-    static SKOSConceptFrame City() {
-        return new SKOSConceptFrame()
+    static TopicFrame City() {
+        return new TopicFrame()
                 .id(uri(ORGANIZATIONS+"/city"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -118,8 +117,8 @@ public interface OrganizationTypes extends Taxonomy {
                         and social initiatives linked to alliance activities.""")));
     }
 
-    static SKOSConceptFrame Other() {
-        return new SKOSConceptFrame()
+    static TopicFrame Other() {
+        return new TopicFrame()
                 .id(uri(ORGANIZATIONS+"/other"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -131,8 +130,8 @@ public interface OrganizationTypes extends Taxonomy {
                         on educational programs, research initiatives, knowledge transfer, or community projects.""")));
     }
 
-    static SKOSConceptFrame UniversityUnit() {
-        return new SKOSConceptFrame()
+    static TopicFrame UniversityUnit() {
+        return new TopicFrame()
                 .id(uri(ORGANIZATIONS+"/university-unit"))
                 .topConceptOf(new OrganizationTypesFrame())
                 .inScheme(new OrganizationTypesFrame())
@@ -145,8 +144,8 @@ public interface OrganizationTypes extends Taxonomy {
                         and community service.""")));
     }
 
-    static SKOSConceptFrame Area() {
-        return new SKOSConceptFrame()
+    static TopicFrame Area() {
+        return new TopicFrame()
                 .id(uri(UniversityUnit().id()+"/area"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -159,8 +158,8 @@ public interface OrganizationTypes extends Taxonomy {
                 )));
     }
 
-    static SKOSConceptFrame Network() {
-        return new SKOSConceptFrame()
+    static TopicFrame Network() {
+        return new TopicFrame()
                 .id(uri(UniversityUnit().id()+"/network"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -171,8 +170,8 @@ public interface OrganizationTypes extends Taxonomy {
                 )));
     }
 
-    static SKOSConceptFrame Institute() {
-        return new SKOSConceptFrame()
+    static TopicFrame Institute() {
+        return new TopicFrame()
                 .id(uri(UniversityUnit().id()+"/institute"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -184,8 +183,8 @@ public interface OrganizationTypes extends Taxonomy {
                         They may operate with varying degrees of autonomy while maintaining connections to their parent universities.""")));
     }
 
-    static SKOSConceptFrame VirtualInstitute() {
-        return new SKOSConceptFrame()
+    static TopicFrame VirtualInstitute() {
+        return new TopicFrame()
                 .id(uri(Institute().id()+"/virtual"))
                 .broader(set(Institute()))
                 .inScheme(new OrganizationTypesFrame())
@@ -198,8 +197,8 @@ public interface OrganizationTypes extends Taxonomy {
                         local, national, European and global challenges by collaborating across institutional boundaries.""")));
     }
 
-    static SKOSConceptFrame Department() {
-        return new SKOSConceptFrame()
+    static TopicFrame Department() {
+        return new TopicFrame()
                 .id(uri(UniversityUnit().id()+"/department"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -212,8 +211,8 @@ public interface OrganizationTypes extends Taxonomy {
                         and assessed.""")));
     }
 
-    static SKOSConceptFrame Centre() {
-        return new SKOSConceptFrame()
+    static TopicFrame Centre() {
+        return new TopicFrame()
                 .id(uri(UniversityUnit().id()+"/centre"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -227,8 +226,8 @@ public interface OrganizationTypes extends Taxonomy {
                         academic boundaries.""")));
     }
 
-    static SKOSConceptFrame ResearchCentre() {
-        return new SKOSConceptFrame()
+    static TopicFrame ResearchCentre() {
+        return new TopicFrame()
                 .id(uri(Centre().id()+"/research"))
                 .broader(set(Centre()))
                 .inScheme(new OrganizationTypesFrame())
@@ -241,8 +240,8 @@ public interface OrganizationTypes extends Taxonomy {
                         concentrated environments for research excellence, knowledge creation, and innovation within their domains of specialization.""")));
     }
 
-    static SKOSConceptFrame InterdepartmentalResearchCentre() {
-        return new SKOSConceptFrame()
+    static TopicFrame InterdepartmentalResearchCentre() {
+        return new TopicFrame()
                 .id(uri(ResearchCentre().id()+"/interdepartmental"))
                 .broader(set(ResearchCentre()))
                 .inScheme(new OrganizationTypesFrame())
@@ -256,8 +255,8 @@ public interface OrganizationTypes extends Taxonomy {
                         knowledge integration.""")));
     }
 
-    static SKOSConceptFrame TransferCentre() {
-        return new SKOSConceptFrame()
+    static TopicFrame TransferCentre() {
+        return new TopicFrame()
                 .id(uri(Centre().id()+"/transfer"))
                 .broader(set(Centre()))
                 .inScheme(new OrganizationTypesFrame())
@@ -271,8 +270,8 @@ public interface OrganizationTypes extends Taxonomy {
                         practical implementation.""")));
     }
 
-    static SKOSConceptFrame ServiceCentre() {
-        return new SKOSConceptFrame()
+    static TopicFrame ServiceCentre() {
+        return new TopicFrame()
                 .id(uri(Centre().id()+"/service"))
                 .broader(set(Centre()))
                 .inScheme(new OrganizationTypesFrame())
@@ -286,8 +285,8 @@ public interface OrganizationTypes extends Taxonomy {
                         service requests and delivery.""")));
     }
 
-    static SKOSConceptFrame Group() {
-        return new SKOSConceptFrame()
+    static TopicFrame Group() {
+        return new TopicFrame()
                 .id(uri(UniversityUnit().id()+"/group"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -299,8 +298,8 @@ public interface OrganizationTypes extends Taxonomy {
                         formal recognition, size, structure, and duration while serving as key units for research collaboration.""")));
     }
 
-    static SKOSConceptFrame RecognizedGroup() {
-        return new SKOSConceptFrame()
+    static TopicFrame RecognizedGroup() {
+        return new TopicFrame()
                 .id(uri(Group().id()+"/recognized"))
                 .broader(set(Group()))
                 .inScheme(new OrganizationTypesFrame())
@@ -313,8 +312,8 @@ public interface OrganizationTypes extends Taxonomy {
                         contribute to the institution's strategic research goals.""")));
     }
 
-    static SKOSConceptFrame InformalGroup() {
-        return new SKOSConceptFrame()
+    static TopicFrame InformalGroup() {
+        return new TopicFrame()
                 .id(uri(Group().id()+"/informal"))
                 .broader(set(Group()))
                 .inScheme(new OrganizationTypesFrame())
@@ -327,8 +326,8 @@ public interface OrganizationTypes extends Taxonomy {
                         over time.""")));
     }
 
-    static SKOSConceptFrame StudentGroup() {
-        return new SKOSConceptFrame()
+    static TopicFrame StudentGroup() {
+        return new TopicFrame()
                 .id(uri(Group().id()+"/student"))
                 .broader(set(Group()))
                 .inScheme(new OrganizationTypesFrame())
@@ -341,8 +340,8 @@ public interface OrganizationTypes extends Taxonomy {
                         developing students' research skills.""")));
     }
 
-    static SKOSConceptFrame Laboratory() {
-        return new SKOSConceptFrame()
+    static TopicFrame Laboratory() {
+        return new TopicFrame()
                 .id(uri(UniversityUnit().id()+"/laboratory"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -354,8 +353,8 @@ public interface OrganizationTypes extends Taxonomy {
                         initiatives, and often serve as collaborative spaces for interdisciplinary or inter-university research projects.""")));
     }
 
-    static SKOSConceptFrame Facility() {
-        return new SKOSConceptFrame()
+    static TopicFrame Facility() {
+        return new TopicFrame()
                 .id(uri(UniversityUnit().id()+"/facility"))
                 .broader(set(UniversityUnit()))
                 .inScheme(new OrganizationTypesFrame())
@@ -368,8 +367,8 @@ public interface OrganizationTypes extends Taxonomy {
                         and interdisciplinary collaboration.""")));
     }
 
-    static SKOSConceptFrame LibraryFacility() {
-        return new SKOSConceptFrame()
+    static TopicFrame LibraryFacility() {
+        return new TopicFrame()
                 .id(uri(Facility().id()+"/library"))
                 .broader(set(Facility()))
                 .inScheme(new OrganizationTypesFrame())
@@ -382,8 +381,8 @@ public interface OrganizationTypes extends Taxonomy {
                         discovery and use.""")));
     }
 
-    static SKOSConceptFrame CollectionFacility() {
-        return new SKOSConceptFrame()
+    static TopicFrame CollectionFacility() {
+        return new TopicFrame()
                 .id(uri(Facility().id()+"/collection"))
                 .broader(set(Facility()))
                 .inScheme(new OrganizationTypesFrame())
@@ -396,8 +395,8 @@ public interface OrganizationTypes extends Taxonomy {
                         essential for various disciplines.""")));
     }
 
-    static SKOSConceptFrame InstrumentFacility() {
-        return new SKOSConceptFrame()
+    static TopicFrame InstrumentFacility() {
+        return new TopicFrame()
                 .id(uri(Facility().id()+"/instrument"))
                 .broader(set(Facility()))
                 .inScheme(new OrganizationTypesFrame())
@@ -411,8 +410,8 @@ public interface OrganizationTypes extends Taxonomy {
                 )));
     }
 
-    static SKOSConceptFrame StationFacility() {
-        return new SKOSConceptFrame()
+    static TopicFrame StationFacility() {
+        return new TopicFrame()
                 .id(uri(Facility().id()+"/station"))
                 .broader(set(Facility()))
                 .inScheme(new OrganizationTypesFrame())
@@ -479,11 +478,6 @@ public interface OrganizationTypes extends Taxonomy {
 
     @Override
     default Boolean generated() { return true; }
-
-    ;
-
-    @Override
-    default Dataset dataset() { return new TaxonomiesFrame(); }
 
 
     @Override

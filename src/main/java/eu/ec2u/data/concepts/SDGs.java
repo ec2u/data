@@ -21,7 +21,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Reference;
@@ -101,10 +100,6 @@ public interface SDGs extends Taxonomy {
 
 
     @Override
-    default Dataset dataset() { return new TaxonomiesFrame(); }
-
-
-    @Override
     default Map<Locale, String> title() {
         return map(entry(EN, "United Nations Sustainable Development Goals"));
     }
@@ -171,10 +166,10 @@ public interface SDGs extends Taxonomy {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    final class Loader extends CSVProcessor<SKOSConceptFrame> {
+    final class Loader extends CSVProcessor<TopicFrame> {
 
-        @Override protected Optional<SKOSConceptFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
-            return value(record, "Goal Number").map(number -> new SKOSConceptFrame()
+        @Override protected Optional<TopicFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
+            return value(record, "Goal Number").map(number -> new TopicFrame()
 
                     .id(uri(SDGS+"/"+number))
                     .notation(number)

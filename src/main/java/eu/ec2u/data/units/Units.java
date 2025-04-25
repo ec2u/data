@@ -28,8 +28,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.agents.FOAFPerson;
-import eu.ec2u.data.concepts.SKOSConceptScheme;
-import eu.ec2u.data.concepts.SKOSConceptSchemeFrame;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
@@ -82,7 +80,7 @@ public interface Units extends Dataset, Catalog<Unit> {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SKOSConceptScheme RESEARCH_TOPICS=new SKOSConceptSchemeFrame();
+    // SKOSConceptScheme RESEARCH_TOPICS=new SKOSConceptSchemeFrame();
     // !!! dct:issued "2024-01-01"^^xsd:date ;
     // !!! dct:title "EC2U Research Unit Topics"@en ;
     // !!! dct:description "> [!WARNING]\n> To be migrated to [EuroSCiVoc](euroscivoc)"@en ;

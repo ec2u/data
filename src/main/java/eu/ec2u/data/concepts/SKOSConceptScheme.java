@@ -16,23 +16,24 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Foreign;
+import com.metreeca.mesh.meta.jsonld.Hidden;
+import com.metreeca.mesh.meta.jsonld.Reverse;
 
 import java.util.Set;
 
-@Frame
 @Class("skos:ConceptScheme")
 @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-public interface SKOSConceptScheme extends SKOS {
+public interface SKOSConceptScheme<S extends SKOSConceptScheme<S, C>, C extends SKOSConcept<S, C>> extends SKOS {
 
     @Foreign
     @Reverse("skos:topConceptOf")
-    Set<SKOSConcept> hasTopConcept();
+    Set<C> hasTopConcept();
 
     @Hidden
     @Foreign
     @Reverse("skos:inScheme")
-    Set<SKOSConcept> hasConcept();
+    Set<C> hasConcept();
 
 }

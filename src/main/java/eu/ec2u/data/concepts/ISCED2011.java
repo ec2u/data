@@ -21,7 +21,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Reference;
@@ -64,8 +63,8 @@ public interface ISCED2011 extends Taxonomy {
             .prefLabel(map(entry(EN, "UNESCO Institute for Statistics")));
 
 
-    static SKOSConceptFrame Level0() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level0() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/0"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -73,8 +72,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Early childhood education")));
     }
 
-    static SKOSConceptFrame Level1() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level1() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/1"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -82,8 +81,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Primary education")));
     }
 
-    static SKOSConceptFrame Level2() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level2() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/2"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -91,8 +90,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Lower secondary education")));
     }
 
-    static SKOSConceptFrame Level3() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level3() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/3"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -100,8 +99,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Upper secondary education")));
     }
 
-    static SKOSConceptFrame Level4() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level4() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/4"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -109,8 +108,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Post-secondary non-tertiary education")));
     }
 
-    static SKOSConceptFrame Level5() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level5() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/5"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -118,8 +117,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Short-cycle tertiary education")));
     }
 
-    static SKOSConceptFrame Level6() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level6() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/6"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -127,8 +126,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Bachelor's or equivalent level")));
     }
 
-    static SKOSConceptFrame Level7() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level7() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/7"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -136,8 +135,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Master's or equivalent level")));
     }
 
-    static SKOSConceptFrame Level8() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level8() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/8"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -145,8 +144,8 @@ public interface ISCED2011 extends Taxonomy {
                 .prefLabel(map(entry(EN, "Doctoral or equivalent level")));
     }
 
-    static SKOSConceptFrame Level9() {
-        return new SKOSConceptFrame()
+    static TopicFrame Level9() {
+        return new TopicFrame()
                 .id(uri(ISCED2011+"/9"))
                 .topConceptOf(new ISCED2011Frame())
                 .inScheme(new ISCED2011Frame())
@@ -186,10 +185,6 @@ public interface ISCED2011 extends Taxonomy {
     default URI id() {
         return ISCED2011;
     }
-
-
-    @Override
-    default Dataset dataset() { return new TaxonomiesFrame(); }
 
 
     @Override

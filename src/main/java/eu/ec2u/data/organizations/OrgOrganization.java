@@ -22,7 +22,7 @@ import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.agents.FOAFOrganization;
 import eu.ec2u.data.agents.FOAFPerson;
-import eu.ec2u.data.concepts.SKOSConcept;
+import eu.ec2u.data.concepts.Topic;
 import eu.ec2u.data.resources.Localized;
 import eu.ec2u.data.resources.Reference;
 
@@ -67,7 +67,7 @@ public interface OrgOrganization extends FOAFOrganization {
     Map<Locale, String> definition();
 
 
-    Set<SKOSConcept> classification();
+    Set<Topic> classification();
 
 
     Set<OrgOrganization> subOrganizationOf();

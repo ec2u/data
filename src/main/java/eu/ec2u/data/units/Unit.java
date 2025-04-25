@@ -26,7 +26,7 @@ import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.concepts.SKOSConcept;
+import eu.ec2u.data.concepts.Topic;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Resource;
@@ -193,7 +193,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
 
     @Forward("dct:")
-    Set<SKOSConcept> subject();
+    Set<Topic> subject();
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

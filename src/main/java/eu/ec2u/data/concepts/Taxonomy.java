@@ -20,9 +20,14 @@ import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.assets.Asset;
+import eu.ec2u.data.datasets.Dataset;
 
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Taxonomy extends Asset, SKOSConceptScheme { }
+public interface Taxonomy extends Dataset, SKOSConceptScheme<Taxonomy, Topic> {
+
+    @Override
+    default Dataset dataset() { return new TaxonomiesFrame(); }
+
+}

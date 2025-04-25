@@ -26,7 +26,6 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data.concepts.SKOSConceptFrame;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.Catalog;
 
@@ -107,7 +106,7 @@ public interface Taxonomies extends Dataset, Catalog<Taxonomy> {
                     )))
 
                     .path("/{scheme}", new Worker().get(new Driver(new TaxonomyFrame())))
-                    .path("/{scheme}/*", new Worker().get(new Driver(new SKOSConceptFrame())))
+                    .path("/{scheme}/*", new Worker().get(new Driver(new TopicFrame())))
 
             );
         }
