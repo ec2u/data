@@ -21,12 +21,9 @@ import com.metreeca.flow.json.services.Analyzer;
 import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
-import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.tools.Store;
 
-import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
-import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.ReferenceFrame;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
@@ -67,212 +64,166 @@ import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
  *         href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/euroscivoc">European
  *         Science Vocabulary (EuroSciVoc)</a>
  */
-@Frame
-public interface EuroSciVoc extends Taxonomy {
+public final class EuroSciVoc implements Runnable {
 
-    URI EUROSCIVOC=TAXONOMIES.resolve("euroscivoc");
+    private static final URI EUROSCIVOC=TAXONOMIES.resolve("euroscivoc");
 
-    String VERSION="1.5";
+    private static final String VERSION="1.5";
 
-    String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
-               +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution%2Feuroscivoc%2F20241002-0%2Fttl%2Fskos_xl%2FEuroSciVoc.ttl"
-               +"&fileName=EuroSciVoc.ttl";
+    private static final String EXTERNAL="http://data.europa.eu/8mn/euroscivoc/";
+    private static final String INTERNAL=EUROSCIVOC+"/";
+
+    private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
+                                    +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution%2Feuroscivoc%2F20241002-0%2Fttl%2Fskos_xl%2FEuroSciVoc.ttl"
+                                    +"&fileName=EuroSciVoc.ttl";
 
 
-    OrgOrganizationFrame EU_PUBLICATION_OFFICE=new OrgOrganizationFrame()
+    private static final OrgOrganizationFrame EU_PUBLICATION_OFFICE=new OrgOrganizationFrame()
             .id(uri("https://op.europa.eu/"))
             .prefLabel(map(entry(EN, "Publications Office of the European Union")));
 
+    private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
+            .id(EUROSCIVOC)
+            .version(VERSION)
+            .title(map(entry(EN, "European Science Vocabulary")))
+            .alternative(map(entry(EN, "EuroSciVoc")))
+            .description(map(entry(EN, """
+                    European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's \
+                    2015 Frascati Manual taxonomy. It was extended with fields of science categories extracted from \
+                    CORDIS content through a semi-automatic process developed with Natural Language Processing \
+                    (NLP) techniques."""
+            )))
+            .issued(LocalDate.parse("2024-10-02"))
+            .rights("Copyright © 2023 Publications Office of the European Union")
+            .publisher(EU_PUBLICATION_OFFICE)
+            .source(new ReferenceFrame()
+                    .id(uri("https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource"
+                            +"?uri=http://publications.europa.eu/resource/dataset/euroscivoc"
+                    )));
 
-    static void main(final String... args) {
-        exec(() -> new Loader().run());
+
+    public static void main(final String... args) {
+        exec(() -> new EuroSciVoc().run());
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    default URI id() {
-        return EUROSCIVOC;
-    }
-
-    @Override default String version() {
-        return VERSION;
-    }
+    private final Store store=service(store());
+    private final Analyzer analyzer=service(analyzer());
 
 
-    @Override
-    default Map<Locale, String> title() {
-        return map(entry(EN, "European Science Vocabulary"));
-    }
+    @Override public void run() {
+        store.partition(EUROSCIVOC).update(array(list(Xtream
 
-    @Override
-    default Map<Locale, String> alternative() {
-        return map(entry(EN, "EuroSciVoc"));
-    }
+                .from(
 
-    @Override
-    default Map<Locale, String> description() {
-        return map(entry(EN, """
-                European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 \
-                Frascati Manual taxonomy. It was extended with fields of science categories extracted from CORDIS \
-                content through a semi-automatic process developed with Natural Language Processing (NLP) techniques."""
-        ));
-    }
+                        Stream.of(
+                                TAXONOMY,
+                                EU_PUBLICATION_OFFICE
+                        ),
 
+                        Xtream.of(URL)
 
-    @Override
-    default LocalDate issued() {
-        return LocalDate.parse("2024-10-02");
-    }
+                                .map(new Retrieve()
+                                        .format(TURTLE)
+                                )
 
+                                .flatMap(model -> rover(model)
+                                        .focus(SKOS.CONCEPT)
+                                        .reverse(RDF.TYPE)
+                                        .split()
+                                )
 
-    @Override
-    default String rights() {
-        return "Copyright © 2023 Publications Office of the European Union";
-    }
+                                .optMap(concept -> concept.uri().map(id -> new TopicFrame()
+                                        .generated(true)
+                                        .id(adopt(id))
+                                        .inScheme(TAXONOMY)
+                                        .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
+                                                .uri().map(v -> TAXONOMY).orElse(null)
+                                        )
+                                        .notation(concept.forward(SKOS.NOTATION)
+                                                .string().orElse(null)
+                                        )
+                                        .prefLabel(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
+                                                .texts(LOCALES).orElse(null)
+                                        )
+                                        .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
+                                                .textsets(LOCALES).orElse(null)
+                                        )
+                                        .definition(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
+                                                .texts(LOCALES)
+                                                .map(map -> map.get(EN))
+                                                .flatMap(topic -> define(id, topic))
+                                                .orElse(null)
+                                        )
+                                        .broader(set(concept.forward(SKOS.BROADER)
+                                                .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                        ))
+                                        .broaderTransitive(set(concept.plus(SKOS.BROADER)
+                                                .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                        ))
+                                        .exactMatch(set(new TopicFrame().id(id)))
+                                ))
+                )
 
+                .optMap(new Validate<>())
 
-    @Override
-    default OrgOrganization publisher() {
-        return EU_PUBLICATION_OFFICE;
-    }
-
-    @Override
-    default Reference source() {
-        return new ReferenceFrame()
-                .id(uri("https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource"
-                        +"?uri=http://publications.europa.eu/resource/dataset/euroscivoc"
-                ));
+        )), FORCE);
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    final class Loader implements Runnable {
+    private URI adopt(final URI id) {
+        return uri(id.toString().replace(EXTERNAL, INTERNAL));
+    }
 
-        private static final EuroSciVocFrame TAXONOMY=new EuroSciVocFrame();
+    private Optional<Map<Locale, String>> define(final URI id, final String topic) {
 
-        private static final String EXTERNAL="http://data.europa.eu/8mn/euroscivoc/";
-        private static final String INTERNAL=EUROSCIVOC+"/";
-
-
-        private final Store store=service(store());
-        private final Analyzer analyzer=service(analyzer());
-
-
-        @Override public void run() {
-            store.partition(EUROSCIVOC).update(array(list(Xtream
-
-                    .from(
-
-                            Stream.of(
-                                    TAXONOMY,
-                                    EU_PUBLICATION_OFFICE
-                            ),
+        return store.retrieve(new TopicFrame(true)
+                        .id(id)
+                        .definition(map(entry(ANY, "")))
+                )
 
 
-                            Xtream.of(URL)
+                .value()
+                .filter(not(Value::isEmpty))
 
-                                    .map(new Retrieve()
-                                            .format(TURTLE)
-                                    )
+                .map(value -> value.get("definition"))
+                .map(v -> map(v.texts()))
 
-                                    .flatMap(model -> rover(model)
-                                            .focus(SKOS.CONCEPT)
-                                            .reverse(RDF.TYPE)
-                                            .split()
-                                    )
+                .or(() -> analyzer
 
-                                    .optMap(concept -> concept.uri().map(id -> new TopicFrame()
-                                            .generated(true)
-                                            .id(adopt(id))
-                                            .inScheme(TAXONOMY)
-                                            .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
-                                                    .uri().map(v -> TAXONOMY).orElse(null)
-                                            )
-                                            .notation(concept.forward(SKOS.NOTATION)
-                                                    .string().orElse(null)
-                                            )
-                                            .prefLabel(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                    .texts(LOCALES).orElse(null)
-                                            )
-                                            .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                    .textsets(LOCALES).orElse(null)
-                                            )
-                                            .definition(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                    .texts(LOCALES)
-                                                    .map(map -> map.get(EN))
-                                                    .flatMap(topic -> define(id, topic))
-                                                    .orElse(null)
-                                            )
-                                            .broader(set(concept.forward(SKOS.BROADER)
-                                                    .uris().map(b -> new TopicFrame().id(adopt(b)))
-                                            ))
-                                            .broaderTransitive(set(concept.plus(SKOS.BROADER)
-                                                    .uris().map(b -> new TopicFrame().id(adopt(b)))
-                                            ))
-                                            .exactMatch(set(new TopicFrame().id(id)))
-                                    ))
-                    )
+                        .prompt("""
+                                Provide a definition between 250 and 500 chars for the research activity related \
+                                to the given topic in the European Science Vocabulary (EuroSciVoc) taxonomy of \
+                                fields of science based on OECD's 2015 Frascati Manual taxonomy.
+                                
+                                Respond with a JSON object
+                                """, """
+                                {
+                                   "name": "topic",
+                                   "schema": {
+                                     "type": "object",
+                                     "properties": {
+                                       "definition": {
+                                         "type": "string"
+                                       }
+                                     },
+                                     "required": [
+                                       "definition"
+                                     ],
+                                     "additionalProperties": false
+                                   },
+                                   "strict": true
+                                 }
+                                """
+                        )
 
-                    .optMap(new Validate<>())
-
-            )), FORCE);
-        }
-
-
-        private URI adopt(final URI id) {
-            return uri(id.toString().replace(EXTERNAL, INTERNAL));
-        }
-
-        private Optional<Map<Locale, String>> define(final URI id, final String topic) {
-
-            return store.retrieve(new TopicFrame(true)
-                            .id(id)
-                            .definition(map(entry(ANY, "")))
-                    )
-
-
-                    .value()
-                    .filter(not(Value::isEmpty))
-
-                    .map(value -> value.get("definition"))
-                    .map(v -> map(v.texts()))
-
-                    .or(() -> analyzer
-
-                            .prompt("""
-                                    Provide a definition between 250 and 500 chars for the research activity related \
-                                    to the given topic in the European Science Vocabulary (EuroSciVoc) taxonomy of \
-                                    fields of science based on OECD's 2015 Frascati Manual taxonomy.
-                                    
-                                    Respond with a JSON object
-                                    """, """
-                                    {
-                                       "name": "topic",
-                                       "schema": {
-                                         "type": "object",
-                                         "properties": {
-                                           "definition": {
-                                             "type": "string"
-                                           }
-                                         },
-                                         "required": [
-                                           "definition"
-                                         ],
-                                         "additionalProperties": false
-                                       },
-                                       "strict": true
-                                     }
-                                    """
-                            )
-
-                            .apply(topic)
-                            .flatMap(value -> value.get("definition").string())
-                            .map(definition -> map(entry(EN, definition))));
-
-        }
+                        .apply(topic)
+                        .flatMap(value -> value.get("definition").string())
+                        .map(definition -> map(entry(EN, definition))));
 
     }
 
