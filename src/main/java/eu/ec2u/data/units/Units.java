@@ -54,6 +54,7 @@ import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.Topics.topic;
 import static eu.ec2u.data.universities.University.uuid;
@@ -151,7 +152,6 @@ public interface Units extends Dataset, Catalog<Unit> {
         private final University university;
 
 
-
         CSVLoader(final University university) {
 
             if ( university == null ) {
@@ -190,9 +190,10 @@ public interface Units extends Dataset, Catalog<Unit> {
                             .stream()
                     ))
 
-                    // field(DCTERMS.SUBJECT, value(record, "Sector")
-                    //         .flatMap(this::sector)
-                    // ),
+                    .subject(set(value(record, "Sector")
+                            .flatMap(type -> topic(EUROSCIVOC, type))
+                            .stream()
+                    ))
 
                     // field(DCTERMS.SUBJECT, Stream.concat(
                     //
@@ -303,48 +304,6 @@ public interface Units extends Dataset, Catalog<Unit> {
                     .filter(vi -> entry(DATA, code).equals(vi.identifier()))
                     .findFirst();
         }
-
-
-        // private Optional<org.eclipse.rdf4j.model.Value> sector(final String sector) {
-        //     return Optional
-        //
-        //             .of(sectors.computeIfAbsent(sector, key -> graph.query(connection -> {
-        //
-        //                 final TupleQuery query=connection.prepareTupleQuery("""
-        //                         \
-        //                         prefix skos: <http://www.w3.org/2004/02/skos/core#>
-        //
-        //                         select ?concept {
-        //
-        //                             ?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label.\s
-        //
-        //                             filter (lcase(str(?label)) = lcase(str($value)))
-        //
-        //                         }
-        //                         """
-        //                 );
-        //
-        //                 query.setBinding("scheme", EuroSciVoc.Scheme);
-        //                 query.setBinding("value", literal(key));
-        //
-        //                 try ( final TupleQueryResult evaluate=query.evaluate() ) {
-        //
-        //                     return evaluate.stream().findFirst()
-        //                             .map(bindings -> bindings.getValue("concept"))
-        //                             .orElseGet(() -> {
-        //
-        //                                 warning(format("unknown sector <%s>", key));
-        //
-        //                                 return RDF.NIL;
-        //
-        //                             });
-        //
-        //                 }
-        //
-        //             })))
-        //
-        //             .filter(not(RDF.NIL::equals));
-        // }
 
         // private Stream<eu.ec2u.work._junk.Frame> topics(final String topics, final String language) {
         //     return Stream.of(topics)

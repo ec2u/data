@@ -66,7 +66,8 @@ import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
  */
 public final class EuroSciVoc implements Runnable {
 
-    private static final URI EUROSCIVOC=TAXONOMIES.resolve("euroscivoc");
+    public static final URI EUROSCIVOC=TAXONOMIES.resolve("euroscivoc");
+
 
     private static final String VERSION="1.5";
 
@@ -134,6 +135,8 @@ public final class EuroSciVoc implements Runnable {
                                         .reverse(RDF.TYPE)
                                         .split()
                                 )
+
+                                .parallel()
 
                                 .optMap(concept -> concept.uri().map(id -> new TopicFrame()
                                         .generated(true)
