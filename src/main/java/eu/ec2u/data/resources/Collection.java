@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.collections;
+package eu.ec2u.data.resources;
 
 import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.organizations.OrgOrganization;
-import eu.ec2u.data.resources.Localized;
-import eu.ec2u.data.resources.Reference;
-import eu.ec2u.data.resources.ReferenceFrame;
-import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.taxonomies.Topic;
 
 import java.net.URI;

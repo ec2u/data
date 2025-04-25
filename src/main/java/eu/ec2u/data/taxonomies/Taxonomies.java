@@ -26,8 +26,8 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data.collections.Collection;
 import eu.ec2u.data.resources.Catalog;
+import eu.ec2u.data.resources.Collection;
 
 import java.net.URI;
 import java.util.Locale;

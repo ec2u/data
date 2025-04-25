@@ -20,7 +20,7 @@ import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.collections.Collection;
+import eu.ec2u.data.resources.Collection;
 
 @Frame
 @Class
