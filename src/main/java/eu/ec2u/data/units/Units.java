@@ -54,6 +54,8 @@ import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
+import static eu.ec2u.data.taxonomies.Topics.topic;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
@@ -79,13 +81,6 @@ public interface Units extends Dataset, Catalog<Unit> {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // SKOSConceptScheme RESEARCH_TOPICS=new SKOSConceptSchemeFrame();
-    // !!! dct:issued "2024-01-01"^^xsd:date ;
-    // !!! dct:title "EC2U Research Unit Topics"@en ;
-    // !!! dct:description "> [!WARNING]\n> To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
-    // !!! dct:rights "Copyright © 2022‑2025 EC2U Alliance" .
-
 
     @Override
     default URI id() {
@@ -156,6 +151,7 @@ public interface Units extends Dataset, Catalog<Unit> {
         private final University university;
 
 
+
         CSVLoader(final University university) {
 
             if ( university == null ) {
@@ -189,9 +185,10 @@ public interface Units extends Dataset, Catalog<Unit> {
 
                     )))
 
-                    // field(ORG.CLASSIFICATION, value(record, "Type")
-                    //         .flatMap(this::type)
-                    // ),
+                    .classification(set(value(record, "Type")
+                            .flatMap(type -> topic(ORGANIZATIONS, type))
+                            .stream()
+                    ))
 
                     // field(DCTERMS.SUBJECT, value(record, "Sector")
                     //         .flatMap(this::sector)
@@ -307,6 +304,7 @@ public interface Units extends Dataset, Catalog<Unit> {
                     .findFirst();
         }
 
+
         // private Optional<org.eclipse.rdf4j.model.Value> sector(final String sector) {
         //     return Optional
         //
@@ -336,45 +334,6 @@ public interface Units extends Dataset, Catalog<Unit> {
         //                             .orElseGet(() -> {
         //
         //                                 warning(format("unknown sector <%s>", key));
-        //
-        //                                 return RDF.NIL;
-        //
-        //                             });
-        //
-        //                 }
-        //
-        //             })))
-        //
-        //             .filter(not(RDF.NIL::equals));
-        // }
-
-        // private Optional<org.eclipse.rdf4j.model.Value> type(final String type) {
-        //     return Optional
-        //
-        //             .of(types.computeIfAbsent(type, key -> graph.query(connection -> {
-        //
-        //                 final TupleQuery query=connection.prepareTupleQuery(""
-        //                                                                     +"prefix skos: <http://www.w3.org/2004/02/skos/core#>\n"
-        //                                                                     +"\n"
-        //                                                                     +"select ?concept {\n"
-        //                                                                     +"\n"
-        //                                                                     +"\t?concept skos:inScheme $scheme; skos:prefLabel|skos:altLabel $label. \n"
-        //                                                                     +"\n"
-        //                                                                     +"\tfilter (lcase(str(?label)) = lcase(str($value)))\n"
-        //                                                                     +"\n"
-        //                                                                     +"}\n"
-        //                 );
-        //
-        //                 query.setBinding("scheme", OrganizationTypes.OrganizationTypes);
-        //                 query.setBinding("value", literal(key));
-        //
-        //                 try ( final TupleQueryResult evaluate=query.evaluate() ) {
-        //
-        //                     return evaluate.stream().findFirst()
-        //                             .map(bindings -> bindings.getValue("concept"))
-        //                             .orElseGet(() -> {
-        //
-        //                                 warning(format("unknown unit type <%s>", key));
         //
         //                                 return RDF.NIL;
         //

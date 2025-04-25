@@ -54,7 +54,8 @@ import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
  */
 public final class OrganizationTypes implements Runnable {
 
-    private static final URI ORGANIZATIONS=TAXONOMIES.resolve("organizations");
+    public static final URI ORGANIZATIONS=TAXONOMIES.resolve("organizations");
+
 
     private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
             .id(ORGANIZATIONS)

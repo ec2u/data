@@ -22,8 +22,6 @@ import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.universities.University;
 
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import static eu.ec2u.data.EC2U.BASE;
@@ -42,7 +40,7 @@ public interface Resource extends Reference {
     String version();
 
     @Hidden
-    Map<Locale, Set<String>> indexed();
+    Set<String> indexed();
 
 
     @Required Collection collection();

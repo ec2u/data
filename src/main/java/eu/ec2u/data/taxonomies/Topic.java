@@ -24,17 +24,15 @@ import eu.ec2u.data.resources.Resource;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.mesh.util.Collections.entry;
-import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.mesh.util.Collections.*;
 
+import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
 import static java.util.function.UnaryOperator.identity;
-import static java.util.stream.Collectors.*;
 
 @Frame
 @Namespace("[ec2u]")
@@ -63,24 +61,17 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
 
 
     @Override
-    default Map<Locale, Set<String>> indexed() {
-        return map(Stream
+    default Set<String> indexed() {
+        return set(Stream
 
                 .of(
-                        prefLabel().entrySet().stream(),
-                        altLabel().entrySet().stream().flatMap(e ->
-                                e.getValue().stream().map(v -> entry(e.getKey(), v))
-                        ),
-                        hiddenLabel().entrySet().stream().flatMap(e ->
-                                e.getValue().stream().map(v -> entry(e.getKey(), v))
-                        )
+                        prefLabel().values().stream(),
+                        altLabel().entrySet().stream().flatMap(e -> e.getValue().stream()),
+                        hiddenLabel().entrySet().stream().flatMap(e -> e.getValue().stream())
                 )
 
                 .flatMap(identity())
-                .collect(groupingBy(Entry::getKey, mapping(
-                        e -> e.getValue().toLowerCase(Locale.ROOT),
-                        toSet()
-                )))
+                .map(v -> v.toLowerCase(ROOT))
 
         );
     }
