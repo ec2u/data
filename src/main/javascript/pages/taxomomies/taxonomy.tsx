@@ -49,7 +49,9 @@ export const Taxonomy=immutable({
 	alternative: optional(text),
 	description: optional(text),
 
+	version: optional(string),
 	created: optional(date),
+	issued: optional(date),
 	modified: optional(date),
 
 	publisher: optional({
@@ -123,18 +125,19 @@ export function DataTaxonomy() {
 
 			<TileFrame placeholder={Taxonomies[icon]} as={({
 
+				version,
 				created,
-				modified,
+				issued,
+				modified
 
-				publisher,
-				source,
-				license
 
 			}) => <>
 
 				<TileInfo>{{
 
+					"Version": version,
 					"Created": created && toDateString(created),
+					"Published": issued && toDateString(issued),
 					"Modified": modified && toDateString(modified)
 
 				}}</TileInfo>

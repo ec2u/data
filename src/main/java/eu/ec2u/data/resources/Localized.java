@@ -49,6 +49,6 @@ public @interface Localized {
     Locale RO=locale("ro");
     Locale SV=locale("sv");
 
-    Set<Locale> LANGUAGES=set(EN, DE, ES, FI, FR, IT, PT, RO, SV);
+    Set<Locale> LOCALES=set(EN, DE, ES, FI, FR, IT, PT, RO, SV);
 
 }

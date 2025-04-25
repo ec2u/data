@@ -32,8 +32,7 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.metreeca.mesh.util.Collections.entry;
-import static com.metreeca.mesh.util.Collections.set;
+import static com.metreeca.mesh.util.Collections.*;
 
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.*;
@@ -73,6 +72,11 @@ public final class Rover {
     }
 
 
+    public Stream<Rover> split() {
+        return focus.stream().map(value -> new Rover(set(value), source));
+    }
+
+
     public Rover focus(final URI... values) {
 
         if ( values == null || Arrays.stream(values).anyMatch(Objects::isNull) ) {
@@ -83,20 +87,25 @@ public final class Rover {
     }
 
     public Rover focus(final Value... values) {
-        throw new UnsupportedOperationException(";( TBI"); // !!!
+
+        if ( values == null || Arrays.stream(values).anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null values");
+        }
+
+        return new Rover(set(values), source);
     }
 
 
-    public Rover get(final URI predicate) {
+    public Rover forward(final URI predicate) {
 
         if ( predicate == null ) {
             throw new NullPointerException("null predicate");
         }
 
-        return get(iri(predicate.toString()));
+        return forward(iri(predicate.toString()));
     }
 
-    public Rover get(final IRI predicate) {
+    public Rover forward(final IRI predicate) {
 
         if ( predicate == null ) {
             throw new NullPointerException("null predicate");
@@ -110,10 +119,57 @@ public final class Rover {
     }
 
 
+    public Rover reverse(final URI predicate) {
+
+        if ( predicate == null ) {
+            throw new NullPointerException("null predicate");
+        }
+
+        return reverse(iri(predicate.toString()));
+    }
+
+    public Rover reverse(final IRI predicate) {
+
+        if ( predicate == null ) {
+            throw new NullPointerException("null predicate");
+        }
+
+        return new Rover(set(source.stream()
+                .filter(s -> s.getPredicate().equals(predicate))
+                .filter(s -> focus.contains(s.getObject()))
+                .map(Statement::getSubject)
+        ), source);
+    }
+
+
+    public Rover plus(final IRI predicate) { // !!! review
+
+        if ( predicate == null ) {
+            throw new NullPointerException("null predicate");
+        }
+
+        Rover plus;
+        Rover next=forward(predicate);
+
+        do {
+
+            plus=next;
+            next=new Rover(set(Stream.concat(plus.focus.stream(), next.forward(predicate).focus.stream())), source);
+
+        } while ( !next.focus.equals(plus.focus) );
+
+        return plus;
+    }
+
+
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Optional<String> lexical() {
         return lexicals().findFirst();
+    }
+
+    public Optional<String> string() {
+        return strings().findFirst();
     }
 
     public Optional<URI> uri() {
@@ -138,6 +194,14 @@ public final class Rover {
                 .filter(Literal.class::isInstance)
                 .map(Literal.class::cast)
                 .map(guard(Value::stringValue));
+    }
+
+    public Stream<String> strings() {
+        return focus.stream()
+                .filter(Literal.class::isInstance)
+                .map(Literal.class::cast)
+                .filter(v -> v.getDatatype().equals(XSD.STRING))
+                .map(Value::stringValue);
     }
 
     public Stream<URI> uris() {
@@ -193,14 +257,40 @@ public final class Rover {
     }
 
     public Optional<Map<Locale, String>> texts() {
+        return texts(set());
+    }
+
+    public Optional<Map<Locale, String>> texts(final Collection<Locale> locales) {
+
+        if ( locales == null || locales.stream().anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null locales");
+        }
+
         return Optional
-                .of(textual().collect(toMap(this::locale, Value::stringValue, (x, y) -> x)))
+                .of(map(textual()
+                        .map(literal -> entry(locale(literal), literal.stringValue()))
+                        .filter(entry -> locales.isEmpty() || locales.contains(entry.getKey()))
+                        .collect(toMap(Entry::getKey, Entry::getValue, (x, y) -> x))
+                ))
                 .filter(not(Map::isEmpty));
     }
 
     public Optional<Map<Locale, Set<String>>> textsets() {
+        return textsets(set());
+    }
+
+    public Optional<Map<Locale, Set<String>>> textsets(final Collection<Locale> locales) {
+
+        if ( locales == null || locales.stream().anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null locales");
+        }
+
         return Optional
-                .of(textual().collect(groupingBy(this::locale, mapping(Value::stringValue, toSet()))))
+                .of(map(textual()
+                        .map(literal -> entry(locale(literal), literal.stringValue()))
+                        .filter(entry -> locales.isEmpty() || locales.contains(entry.getKey()))
+                        .collect(groupingBy(Entry::getKey, mapping(Entry::getValue, toSet())))
+                ))
                 .filter(not(Map::isEmpty));
     }
 
@@ -214,6 +304,10 @@ public final class Rover {
 
     private Locale locale(final Literal literal) {
         return Locales.locale(literal.getLanguage().orElse(""));
+    }
+
+    @Override public String toString() {
+        return focus.toString();
     }
 
 

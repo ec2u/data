@@ -384,7 +384,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                                     .collect(joining("\n"))
                             ),
 
-                            entry("languages", LANGUAGES.stream()
+                            entry("languages", LOCALES.stream()
                                     .map(Locales::locale)
                                     .map("\"%s\""::formatted)
                                     .collect(joining(", "))
@@ -404,38 +404,38 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                     .map(university -> {
 
                         final Rover focus=wikidata.focus(university.seeAlso().stream().findFirst().orElseThrow());
-                        final Rover city=focus.get(term("city"));
-                        final Rover country=focus.get(term("country"));
+                        final Rover city=focus.forward(term("city"));
+                        final Rover country=focus.forward(term("country"));
 
                         final Optional<Wikidata.Point> coordinates=focus
-                                .get(term("coordinates"))
+                                .forward(term("coordinates"))
                                 .lexical()
                                 .flatMap(Wikidata::point);
 
                         final Optional<Wikidata.Point> cityCoordinates=city
-                                .get(term("coordinates"))
+                                .forward(term("coordinates"))
                                 .lexical()
                                 .flatMap(Wikidata::point);
 
                         final Optional<Wikidata.Point> countyCoordinates=country
-                                .get(term("coordinates"))
+                                .forward(term("coordinates"))
                                 .lexical()
                                 .flatMap(Wikidata::point);
 
                         return university
-                                .students(focus.get(term("students")).integral().map(Long::intValue).orElse(0))
-                                .inception(focus.get(term("inception")).year().orElse(null))
+                                .students(focus.forward(term("students")).integral().map(Long::intValue).orElse(0))
+                                .inception(focus.forward(term("inception")).year().orElse(null))
                                 .longitude(coordinates.map(Wikidata.Point::longitude).orElse(0.0D))
                                 .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
                                 .city(new GeoReferenceFrame()
                                         .id(city.uri().orElse(null))
-                                        .label(city.get(term("name")).texts().orElse(null))
+                                        .label(city.forward(term("name")).texts().orElse(null))
                                         .longitude(cityCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
                                         .latitude(cityCoordinates.map(Wikidata.Point::latitude).orElse(0.0D))
                                 )
                                 .country(new GeoReferenceFrame()
                                         .id(country.uri().orElse(null))
-                                        .label(country.get(term("name")).texts().orElse(null))
+                                        .label(country.forward(term("name")).texts().orElse(null))
                                         .longitude(countyCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
                                         .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
                                 );

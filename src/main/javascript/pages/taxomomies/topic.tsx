@@ -120,37 +120,28 @@ export function DataTopic() {
 
 			{definition && <TileMark>{toTextString(definition)}</TileMark>}
 
-			<TilePanel>
+			<TilePanel stack>
 
-				<TilePanel stack>
+				{broaderTransitive?.length &&
+                    <TileLabel name={"Broader Concepts"}>{sort(broaderTransitive).map(entry =>
+						<TileTree key={entry.id} expanded={"force"} label={<TileLink>{entry}</TileLink>}/>
+					)}</TileLabel>}
 
-					{broaderTransitive?.length &&
-                        <TileLabel name={"Broader Concepts"}>{sort(broaderTransitive).map(entry =>
-							<TileTree key={entry.id} expanded={"force"} label={<TileLink>{entry}</TileLink>}/>
-						)}</TileLabel>}
+				{narrower?.length && <TileLabel name={"Narrower Concepts"}>
+                    <TileSKOSConcepts>{narrower}</TileSKOSConcepts>
+                </TileLabel>}
 
-					{narrower?.length && <TileLabel name={"Narrower Concepts"}>
-                        <TileSKOSConcepts>{narrower}</TileSKOSConcepts>
-                    </TileLabel>}
+				{related?.length && <TileLabel name={"Related Concepts"}>
+                    <ul>{related.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><TileLink>{entry}</TileLink></li>
+					)}</ul>
+                </TileLabel>}
 
-
-				</TilePanel>
-
-				<TilePanel stack>
-
-					{related?.length && <TileLabel name={"Related Concepts"}>
-                        <ul>{related.slice().sort(entryCompare).map(entry =>
-							<li key={entry.id}><TileLink>{entry}</TileLink></li>
-						)}</ul>
-                    </TileLabel>}
-
-					{exactMatch?.length && <TileLabel name={"Exact Matches"}>
-                        <ul>{exactMatch.slice().sort(entryCompare).map(entry =>
-							<li key={entry.id}><TileLink>{entry}</TileLink></li>
-						)}</ul>
-                    </TileLabel>}
-
-				</TilePanel>
+				{exactMatch?.length && <TileLabel name={"Exact Matches"}>
+                    <ul>{exactMatch.slice().sort(entryCompare).map(entry =>
+						<li key={entry.id}><TileLink>{entry}</TileLink></li>
+					)}</ul>
+                </TileLabel>}
 
 			</TilePanel>
 

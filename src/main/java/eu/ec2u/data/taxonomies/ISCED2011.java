@@ -58,7 +58,7 @@ public interface ISCED2011 extends Taxonomy {
 
     URI ISCED2011=TAXONOMIES.resolve("isced-2011");
 
-    OrgOrganizationFrame UIS=new OrgOrganizationFrame()
+    OrgOrganizationFrame UNESCO_INSTITUTE_FOR_STATISTICS=new OrgOrganizationFrame()
             .id(uri("http://www.uis.unesco.org/"))
             .prefLabel(map(entry(EN, "UNESCO Institute for Statistics")));
 
@@ -159,7 +159,7 @@ public interface ISCED2011 extends Taxonomy {
 
                 .of(
                         new ISCED2011Frame(),
-                        UIS,
+                        UNESCO_INSTITUTE_FOR_STATISTICS,
 
                         Level0(),
                         Level1(),
@@ -228,7 +228,7 @@ public interface ISCED2011 extends Taxonomy {
 
     @Override
     default OrgOrganization publisher() {
-        return UIS;
+        return UNESCO_INSTITUTE_FOR_STATISTICS;
     }
 
     @Override
