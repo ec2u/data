@@ -21,13 +21,11 @@ the [Describing Linked Datasets with the VoID Vocabulary](https://www.w3.org/TR/
 
 ## Dataset
 
-| term                                                                 | type                                   | #    | description                                                                                                                                               |
-|----------------------------------------------------------------------|----------------------------------------|------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **[void:Dataset](https://www.w3.org/TR/void/#dataset)**              | [ec2u:Asset](assets.md)                |      | EC2U Knowledge Hub dataset                                                                                                                                |
-| [void:rootResource](https://www.w3.org/TR/void/#root-resource)       | [rdfs:Resource](resources.md)          | *    | links to dataset entry points; may be an [rdfs:Class](https://www.w3.org/TR/rdf-schema/#ch_class)                                                         |
-| [void:entities](https://www.w3.org/TR/void/#statistics)              | integer                                | 0..1 | count of the principal entities in the dataset; if `void:rootEntity` is an `rdfs:Class`, the count refers to the resources that are instance of the class |
-| [rdfs:isDefinedBy](https://www.w3.org/TR/rdf-schema/#ch_isdefinedby) | [rdfs:Resource](resources.md)          | 0..1 | link to the data model specification                                                                                                                      |
-| [rdfs:member](https://www.w3.org/TR/rdf-schema/#ch_member)           | [rdfs:Resource](resources.md#resource) | *    | links to the EC2U Knowledge Hub resources included in the dataset                                                                                         |
+| term                                                                 | type                                   | #    | description                                                       |
+|----------------------------------------------------------------------|----------------------------------------|------|-------------------------------------------------------------------|
+| **ec2u:Dataset**                                                     | [ec2u:Asset](assets.md)                |      | EC2U Knowledge Hub dataset                                        |
+| [rdfs:isDefinedBy](https://www.w3.org/TR/rdf-schema/#ch_isdefinedby) | [rdfs:Resource](resources.md)          | 0..1 | link to the data model specification                              |
+| [rdfs:member](https://www.w3.org/TR/rdf-schema/#ch_member)           | [rdfs:Resource](resources.md#resource) | *    | links to the EC2U Knowledge Hub resources included in the dataset |
 
 > [!WARNING]
 > Only datasets with a defined issuance date defined by the `dct:issued` property are exposed through user

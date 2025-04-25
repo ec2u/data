@@ -26,7 +26,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.resources.Catalog;
 
 import java.net.URI;
@@ -41,6 +40,7 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
+import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.resources.Localized.EN;
 
@@ -53,7 +53,7 @@ public interface Datasets extends Dataset, Catalog<Dataset> {
 
 
     static void main(final String... args) {
-        Data.exec(() -> {
+        exec(() -> {
 
             final Value update=array(list(Xtream.of(new DatasetsFrame())
                     .optMap(new Validate<>())

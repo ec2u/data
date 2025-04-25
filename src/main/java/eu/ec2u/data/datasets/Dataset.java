@@ -34,7 +34,7 @@ import static eu.ec2u.data.EC2U.EC2U;
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Dataset extends Asset, VOIDDataset {
+public interface Dataset extends Asset {
 
     @Override
     default Dataset dataset() { return new DatasetsFrame(); }
