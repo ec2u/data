@@ -16,23 +16,18 @@
 
 package eu.ec2u.data.taxonomies;
 
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Stream;
+import java.util.*;
 
 import static com.metreeca.mesh.util.Collections.*;
 
-import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
-import static java.util.function.UnaryOperator.identity;
 
 @Frame
 @Namespace("[ec2u]")
@@ -60,20 +55,13 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
     }
 
 
-    @Override
-    default Set<String> indexed() {
-        return set(Stream
-
-                .of(
-                        prefLabel().values().stream(),
-                        altLabel().entrySet().stream().flatMap(e -> e.getValue().stream()),
-                        hiddenLabel().entrySet().stream().flatMap(e -> e.getValue().stream())
-                )
-
-                .flatMap(identity())
-                .map(v -> v.toLowerCase(ROOT))
-
-        );
+    default Set<String> embeddable() {
+        return set(Xtream.from(
+                prefLabel().values().stream(),
+                altLabel().values().stream().flatMap(Collection::stream),
+                hiddenLabel().values().stream().flatMap(Collection::stream),
+                definition().values().stream()
+        ));
     }
 
 }

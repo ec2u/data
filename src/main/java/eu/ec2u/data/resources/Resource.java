@@ -24,6 +24,8 @@ import eu.ec2u.data.universities.University;
 
 import java.util.Set;
 
+import static com.metreeca.mesh.util.Collections.set;
+
 import static eu.ec2u.data.EC2U.BASE;
 
 @Frame
@@ -39,12 +41,16 @@ public interface Resource extends Reference {
 
     String version();
 
-    @Hidden
-    Set<String> indexed();
-
 
     @Required Collection collection();
 
     University university();
+
+
+    @Hidden
+    String embedding();
+
+    @Internal
+    default Set<String> embeddable() { return set(); }
 
 }
