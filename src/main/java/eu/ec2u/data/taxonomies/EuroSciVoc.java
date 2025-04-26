@@ -137,8 +137,9 @@ public final class EuroSciVoc implements Runnable {
                                 .parallel()
 
                                 .optMap(concept -> concept.uri().map(id -> new TopicFrame()
-                                        .generated(true)
                                         .id(adopt(id))
+                                        .generated(true)
+                                        .isDefinedBy(id)
                                         .inScheme(TAXONOMY)
                                         .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
                                                 .uri().map(v -> TAXONOMY).orElse(null)
@@ -164,7 +165,6 @@ public final class EuroSciVoc implements Runnable {
                                         .broaderTransitive(set(concept.plus(SKOS.BROADER)
                                                 .uris().map(b -> new TopicFrame().id(adopt(b)))
                                         ))
-                                        .exactMatch(set(new TopicFrame().id(id)))
                                 ))
                 )
 

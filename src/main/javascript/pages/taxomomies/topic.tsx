@@ -33,15 +33,17 @@ import { TileFrame } from "@metreeca/view/lenses/frame";
 import { TileInfo } from "@metreeca/view/widgets/info";
 import { TileLink } from "@metreeca/view/widgets/link";
 import { TileMark } from "@metreeca/view/widgets/mark";
+import { TileTree } from "@metreeca/view/widgets/tree";
 import React from "react";
-import { TileTree } from "../../../../../../../../Products/Tile/code/view/widgets/tree";
 
 export const Topic=immutable({
 
-	generated: optional(boolean),
-
-	id: required("/taxonomies/{scheme}/*"),
+	id: required("/taxonomies/{taxonomy}/*"),
 	label: required(text),
+
+
+	generated: optional(boolean),
+	isDefinedBy: optional(id),
 
 	notation: optional(string),
 
@@ -105,6 +107,8 @@ export function DataTopic() {
 
 		<TileFrame placeholder={Taxonomies[icon]} as={({
 
+			isDefinedBy,
+
 			prefLabel,
 			definition,
 
@@ -121,6 +125,10 @@ export function DataTopic() {
 			{definition && <TileMark>{toTextString(definition)}</TileMark>}
 
 			<TilePanel stack>
+
+				{isDefinedBy &&
+                    <TileLabel name={"Source"}><TileLink>{isDefinedBy}</TileLink></TileLabel>
+				}
 
 				{broaderTransitive?.length &&
                     <TileLabel name={"Broader Concepts"}>{sort(broaderTransitive).map(entry =>

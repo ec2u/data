@@ -43,7 +43,7 @@ export const Taxonomy=immutable({
 
 	generated: optional(boolean),
 
-	id: required("/taxonomies/{scheme}"),
+	id: required("/taxonomies/{taxonomy}"),
 
 	title: required(text),
 	alternative: optional(text),
@@ -59,7 +59,9 @@ export const Taxonomy=immutable({
 		label: required(text)
 	}),
 
-	source: optional(id),
+	source: optional({
+		id: required(id)
+	}),
 
 	rights: optional(string),
 	accessRights: optional(text),
@@ -183,7 +185,7 @@ export function DataTaxonomy() {
 						<li key={license.id}><TileLink>{license}</TileLink></li>
 					)}</ul>,
 
-				"Source": source && <TileLink>{source}</TileLink>,
+				"Source": source && <TileLink>{source.id}</TileLink>,
 				"Access": accessRights && <TileMark>{toTextString(accessRights)}</TileMark>
 
 
