@@ -22,6 +22,7 @@ import com.metreeca.mesh.tools.Store;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,10 +37,11 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.taxonomies.Topics.TOPICS;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
+import static java.util.Map.entry;
 
 final class TopicsSupport {
 
-    private static final Map<String, Topic> CACHE=new ConcurrentHashMap<>();
+    private static final Map<Entry<URI, String>, Topic> CACHE=new ConcurrentHashMap<>();
 
 
     static Optional<Topic> topic(final URI taxonomy, final String label) {
@@ -47,7 +49,7 @@ final class TopicsSupport {
         final Store store=service(store());
         final Logger logger=service(Logger.logger());
 
-        return Optional.of(label).map(t -> CACHE.computeIfAbsent(t.toLowerCase(ROOT), key -> store
+        return Optional.of(label).map(t -> CACHE.computeIfAbsent(entry(taxonomy, t.toLowerCase(ROOT)), key -> store
 
                 .retrieve(new TopicsFrame(true)
 
@@ -58,7 +60,7 @@ final class TopicsSupport {
                                 .model(new TopicFrame(true).id(uri()))
 
                                 .where("inScheme", criterion().any(new TaxonomyFrame(true).id(taxonomy).get()))
-                                .where("indexed", criterion().any(string(key)))
+                                .where("indexed", criterion().any(string(key.getValue())))
 
                         ))
 
