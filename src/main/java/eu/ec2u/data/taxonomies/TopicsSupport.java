@@ -59,7 +59,7 @@ final class TopicsSupport {
 
                                 .model(new TopicFrame(true).id(uri()))
 
-                                .where("inScheme", criterion().any(new TaxonomyFrame(true).id(taxonomy).get()))
+                                .where("inScheme", criterion().any(new TaxonomyFrame(true).id(taxonomy)))
                                 .where("indexed", criterion().any(string(key.getValue())))
 
                         ))

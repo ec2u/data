@@ -115,7 +115,7 @@ public interface Resources extends Dataset, Catalog<Resource> {
             delegate(new Router().path("/", new Worker().get(new Driver(new ResourcesFrame()
 
                     .members(stash(query(new ResourceFrame())
-                            .where("dataset.issued", criterion().any(set()))
+                            .where("collection.issued", criterion().any(set()))
                     ))
 
             ))));

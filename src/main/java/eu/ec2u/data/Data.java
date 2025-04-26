@@ -72,9 +72,8 @@ public final class Data extends Delegator {
 
 
     static {
-        logging(FINE, "com.metreeca");
-        logging(INFO, "com.metreeca.mesh.rdf4j.SPARQLFetcher");
-        logging(INFO, "com.metreeca.mesh.rdf4j.SPARQLUpdater");
+        logging(INFO, "com.metreeca");
+        logging(FINE, "com.metreeca.mesh.rdf4j.SPARQLSelector");
     }
 
     static {

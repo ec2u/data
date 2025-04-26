@@ -17,6 +17,7 @@
 package eu.ec2u.data.taxonomies;
 
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.resources.Catalog;
@@ -44,6 +45,15 @@ public interface Topics extends Catalog<Topic> {
         }
 
         return TopicsSupport.topic(taxonomy, label);
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    @Id
+    default URI id() {
+        return TOPICS;
     }
 
 }

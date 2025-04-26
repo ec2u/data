@@ -69,7 +69,7 @@ export function DataUniversity() {
 
 		members: [{
 
-			dataset: required({
+			collection: required({
 				id: required(id),
 				alternative: required(text)
 			}),
@@ -110,11 +110,11 @@ export function DataUniversity() {
 
 			<TileInfo>{stats?.members?.slice()
 				?.sort(({ resources: x }, { resources: y }) => x - y)
-				?.map(({ dataset, resources }) => ({
+				?.map(({ collection, resources }) => ({
 
-					label: <TileLink filter={[dataset, { university }]}>{{
-						id: dataset.id,
-						label: ec2u(dataset.alternative)
+					label: <TileLink filter={[collection, { university }]}>{{
+						id: collection.id,
+						label: ec2u(collection.alternative)
 					}}</TileLink>,
 
 					value: toIntegerString(resources)
