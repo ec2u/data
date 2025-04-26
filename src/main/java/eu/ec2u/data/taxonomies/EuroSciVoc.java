@@ -20,7 +20,6 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.services.Analyzer;
 import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
@@ -50,7 +49,6 @@ import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.LOCALES;
 import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 import static eu.ec2u.work.Rover.rover;
-import static java.util.function.Predicate.not;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 
 /**
@@ -187,9 +185,6 @@ public final class EuroSciVoc implements Runnable {
                         .id(id)
                         .definition(map(entry(ANY, "")))
                 )
-
-                .value()
-                .filter(not(Value::isEmpty))
 
                 .map(value -> value.get("definition"))
                 .map(v -> map(v.texts()))

@@ -36,7 +36,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.taxonomies.Topics.TOPICS;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
-import static java.util.function.Predicate.not;
 
 final class TopicsSupport {
 
@@ -64,9 +63,6 @@ final class TopicsSupport {
                         ))
 
                 )
-
-                .value()
-                .filter(not(Value::isEmpty))
 
                 .flatMap(value -> value.get("members").values()
                         .findFirst()
