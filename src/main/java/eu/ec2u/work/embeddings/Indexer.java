@@ -33,7 +33,6 @@ import java.util.Optional;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -43,11 +42,12 @@ import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
+import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
+import static eu.ec2u.work.embeddings.OpenEmbedder.embedder;
 
 public final class Indexer {
 
-    public static final URI taxonomy=ORGANIZATIONS;
+    public static final URI taxonomy=EUROSCIVOC;
 
 
     public static void main(final String... args) {
@@ -69,6 +69,7 @@ public final class Indexer {
                                 .where("inScheme", criterion()
                                         .any(new TaxonomyFrame(true).id(taxonomy))
                                 )
+
                         ))
 
                 )
@@ -84,7 +85,7 @@ public final class Indexer {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Store store=service(store());
-    private final Embedder embedder=new Embedder(service(vault()).get("openai-key"), "text-embedding-3-small");
+    private final OpenEmbedder embedder=service(embedder());
 
 
     public void index(final Collection<? extends Resource> resources) {
@@ -99,13 +100,13 @@ public final class Indexer {
 
                 .map(topic -> Optional
 
-                        .of(Embedder.embeddable(topic.embeddable()))
+                        .of(Embedding.embeddable(topic.embeddable()))
 
                         .flatMap(embedder)
 
                         .map(e -> new ResourceFrame(true)
                                 .id(topic.id())
-                                .embedding(Embedder.encode(e))
+                                .embedding(Embedding.encode(e))
                         )
 
                 )

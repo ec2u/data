@@ -34,26 +34,25 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.stash;
 import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data.taxonomies.Topics.TOPICS;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 
-final class TopicsSupport {
+final class TopicsResolver {
 
-    private static final Map<Entry<URI, String>, Topic> CACHE=new ConcurrentHashMap<>();
+    private static final Map<Entry<URI, String>, Topic> TOPICS=new ConcurrentHashMap<>();
 
 
-    static Optional<Topic> topic(final URI taxonomy, final String label) {
+    static Optional<Topic> resolve(final URI taxonomy, final String label) {
 
         final Store store=service(store());
         final Logger logger=service(Logger.logger());
 
-        return Optional.of(label).map(t -> CACHE.computeIfAbsent(entry(taxonomy, t.toLowerCase(ROOT)), key -> store
+        return Optional.of(label).map(t -> TOPICS.computeIfAbsent(entry(taxonomy, t.toLowerCase(ROOT)), key -> store
 
                 .retrieve(new TopicsFrame(true)
 
-                        .id(TOPICS)
+                        .id(Topics.TOPICS)
 
                         .members(stash(query()
 
@@ -88,6 +87,6 @@ final class TopicsSupport {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private TopicsSupport() { }
+    private TopicsResolver() { }
 
 }

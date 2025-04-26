@@ -25,11 +25,15 @@ import com.metreeca.mesh.Value;
 import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.PersonsFrame;
+import eu.ec2u.data.taxonomies.Topic;
+import eu.ec2u.data.taxonomies.Topics;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.work.embeddings.OpenEmbedder;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -41,7 +45,9 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Persons.PERSONS;
-import static eu.ec2u.data.units.Units.UNITS;
+import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
+import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
+import static eu.ec2u.data.units.Units.*;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
@@ -57,6 +63,9 @@ public final class UnitsPoitiers implements Runnable {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final OpenEmbedder embedder=service(OpenEmbedder.embedder());
+
 
     @Override public void run() {
 
@@ -84,24 +93,25 @@ public final class UnitsPoitiers implements Runnable {
     private Optional<UnitFrame> unit(final Value json) {
         return json.get("numero_national_de_structure").string().map(id -> new UnitFrame()
 
-                        .id(UNITS.resolve(uuid(University.Poitiers(), id)))
-                        .university(University.Poitiers())
-                        .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
+                .generated(true)
 
-                        .homepage(set(json.get("site_web").uri().stream()))
+                .id(UNITS.resolve(uuid(University.Poitiers(), id)))
+                .university(University.Poitiers())
+                .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
 
-                        .identifier(entry(University.Poitiers().id(), id))
+                .homepage(set(json.get("site_web").uri().stream()))
 
-                        .prefLabel(map(entry(University.Poitiers().locale(), json.get("libelle").string().orElse(""))))
-                        .altLabel(map(entry(ROOT, json.get("sigle").string().orElse(""))))
+                .identifier(entry(University.Poitiers().id(), id))
 
-                        .hasHead(set(heads(json)))
+                .prefLabel(map(entry(University.Poitiers().locale(), json.get("libelle").string().orElse(""))))
+                .altLabel(map(entry(ROOT, json.get("sigle").string().orElse(""))))
 
-                        .unitOf(set(University.Poitiers()))
+                .hasHead(set(heads(json)))
 
-                // !!!field(ORG.CLASSIFICATION, type(json)),
+                .unitOf(set(University.Poitiers()))
 
-                // !!! field(DCTERMS.SUBJECT, subjects(json))
+                .classification(classification(json))
+                .subject(subject(json))
 
         );
     }
@@ -109,45 +119,23 @@ public final class UnitsPoitiers implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // private Optional<Frame> type(final JSONPath json) { // !!! map to standard types
-    //     return json.string("code_de_type_de_structure").map(type -> frame(
-    //
-    //             field(ID, item(OrganizationTypes.UnitTypes, Poitiers, type)),
-    //             field(TYPE, SKOS.CONCEPT),
-    //
-    //             field(SKOS.IN_SCHEME, OrganizationTypes.OrganizationTypes),
-    //             field(SKOS.BROADER, OrganizationTypes.UnitTypes),
-    //
-    //             field(SKOS.PREF_LABEL, json.string("type_de_structure").map(v -> literal(v, Poitiers.language)))
-    //
-    //     ));
-    // }
+    private Set<Topic> classification(final Value json) {
+        return set(json.get("type_de_structure").string().stream()
+                .distinct()
+                .flatMap(topic -> embedder.apply(topic).stream())
+                .flatMap(topic -> Topics.match(ORGANIZATIONS, topic, TYPE_THRESHOLD))
+                .limit(1)
+        );
+    }
 
-
-    // private Stream<Frame> subjects(final JSONPath json) { // !!! map to EuroSciVoc
-    //
-    //     final List<String> codes=json.strings("code_domaine_scientifique.*").toList();
-    //     final List<String> labels=json.strings("domaine_scientifique.*").toList();
-    //
-    //     return IntStream.range(0, codes.size()).mapToObj(index -> {
-    //
-    //         final String code=codes.get(index);
-    //         final String label=labels.get(index);
-    //
-    //         return frame(
-    //
-    //                 field(ID, item(ResearchTopics, Poitiers, code)),
-    //                 field(TYPE, SKOS.CONCEPT),
-    //
-    //                 field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
-    //
-    //                 field(SKOS.NOTATION, literal(code)),
-    //                 field(SKOS.PREF_LABEL, literal(label, Poitiers.language))
-    //
-    //         );
-    //
-    //     });
-    // }
+    private Set<Topic> subject(final Value json) {
+        return set(json.select("domaine_scientifique.*").strings()
+                .distinct()
+                .flatMap(topic -> embedder.apply(topic).stream())
+                .flatMap(topic -> Topics.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                .limit(1)
+        );
+    }
 
     private Stream<FOAFPerson> heads(final Value json) {
 

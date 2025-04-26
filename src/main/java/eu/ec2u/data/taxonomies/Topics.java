@@ -21,11 +21,14 @@ import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.resources.Catalog;
+import eu.ec2u.work.embeddings.Embedding;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static eu.ec2u.data.EC2U.DATA;
+import static java.lang.String.format;
 
 @Frame
 @Virtual
@@ -34,7 +37,7 @@ public interface Topics extends Catalog<Topic> {
     URI TOPICS=DATA.resolve("topics/");
 
 
-    static Optional<Topic> topic(final URI taxonomy, final String label) {
+    static Optional<Topic> resolve(final URI taxonomy, final String label) {
 
         if ( taxonomy == null ) {
             throw new NullPointerException("null taxonomy");
@@ -44,12 +47,33 @@ public interface Topics extends Catalog<Topic> {
             throw new NullPointerException("null label");
         }
 
-        return TopicsSupport.topic(taxonomy, label);
+        return TopicsResolver.resolve(taxonomy, label);
+    }
+
+
+    static Stream<Topic> match(final URI taxonomy, final Embedding query) {
+        return match(taxonomy, query, 0);
+    }
+
+    static Stream<Topic> match(final URI taxonomy, final Embedding query, final double threshold) {
+
+        if ( taxonomy == null ) {
+            throw new NullPointerException("null taxonomy");
+        }
+
+        if ( query == null ) {
+            throw new NullPointerException("null query");
+        }
+
+        if ( threshold < 0 ) {
+            throw new IllegalArgumentException(format("negative threshold <%.3f>", threshold));
+        }
+
+        return TopicsMatcher.match(taxonomy, query, threshold);
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     @Id
     default URI id() {

@@ -23,74 +23,27 @@ import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.ai.openai.models.EmbeddingsOptions;
 import com.azure.core.credential.KeyCredential;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.mesh.util.Collections.list;
 import static com.metreeca.mesh.util.Loggers.time;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.joining;
 
-public class Embedder implements Function<String, Optional<List<Float>>> {
+public class OpenEmbedder implements Function<String, Optional<Embedding>> {
 
-    public static String embeddable(final Collection<String> strings) {
-
-        if ( strings == null || strings.stream().anyMatch(Objects::isNull) ) {
-            throw new NullPointerException("null strings");
-        }
-
-        return strings.stream()
-                .distinct()
-                .filter(not(String::isBlank))
-                .map("- %s\n"::formatted)
-                .collect(joining());
-    }
-
-
-    public static String encode(final List<Float> embedding) {
-
-        if ( embedding == null || embedding.stream().anyMatch(Objects::isNull) ) {
-            throw new NullPointerException("null embedding or embedding values");
-        }
-
-        if ( embedding.stream().anyMatch(not(Float::isFinite)) ) {
-            throw new IllegalArgumentException("non finite embedding values");
-        }
-
-        return embedding
-                .stream()
-                .map(Object::toString)
-                .collect(joining(","));
-    }
-
-    public static List<Float> decode(final String embedding) {
-
-        if ( embedding == null ) {
-            throw new NullPointerException("null embedding");
-        }
-
-        return list(Arrays.stream(embedding.split(","))
-                .map(v -> {
-
-                    try {
-                        return Float.parseFloat(v);
-                    } catch ( final NumberFormatException e ) {
-                        throw new IllegalArgumentException(format("malformed embedding value <%s>", v), e);
-                    }
-
-                })
-                .peek(v -> {
-
-                    if ( !Float.isFinite(v) ) {
-                        throw new IllegalArgumentException(format("non finite embedding value <%s>", v));
-                    }
-
-                })
-        );
+    /**
+     * Retrieves the default text embedder factory.
+     *
+     * @return the default text embedder factory, which throws an exception reporting the service as undefined
+     */
+    public static Supplier<OpenEmbedder> embedder() {
+        return () -> { throw new IllegalStateException("undefined text embedder service"); };
     }
 
 
@@ -102,11 +55,7 @@ public class Embedder implements Function<String, Optional<List<Float>>> {
     private final Logger logger=service(logger());
 
 
-    public Embedder(final String key, final String model) {
-
-        if ( key == null ) {
-            throw new NullPointerException("null key");
-        }
+    public OpenEmbedder(final String model, final String key) {
 
         if ( model == null ) {
             throw new NullPointerException("null model");
@@ -114,6 +63,10 @@ public class Embedder implements Function<String, Optional<List<Float>>> {
 
         if ( model.isBlank() ) {
             throw new IllegalArgumentException("empty model");
+        }
+
+        if ( key == null ) {
+            throw new NullPointerException("null key");
         }
 
         this.model=model;
@@ -124,7 +77,7 @@ public class Embedder implements Function<String, Optional<List<Float>>> {
 
 
     @Override
-    public Optional<List<Float>> apply(final String text) {
+    public Optional<Embedding> apply(final String text) {
 
         if ( text == null ) {
             throw new NullPointerException("null text");
@@ -137,13 +90,13 @@ public class Embedder implements Function<String, Optional<List<Float>>> {
                 return Optional.of(text)
                         .filter(not(String::isBlank))
                         .map(s -> client.getEmbeddings(model, new EmbeddingsOptions(List.of(s))))
-                        .map(embeddings -> list(embeddings.getData().getFirst().getEmbedding()));
+                        .map(embeddings -> new Embedding(embeddings.getData().getFirst().getEmbedding()));
 
             } catch ( final RuntimeException e ) {
 
                 logger.warning(this, e.getMessage());
 
-                return Optional.<List<Float>>empty();
+                return Optional.<Embedding>empty();
 
             }
 

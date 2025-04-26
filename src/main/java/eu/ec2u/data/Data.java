@@ -32,6 +32,7 @@ import com.metreeca.flow.services.Fetcher.URLFetcher;
 import com.metreeca.flow.services.Translator.CacheTranslator;
 import com.metreeca.flow.services.Translator.ComboTranslator;
 
+import eu.ec2u.work.embeddings.OpenEmbedder;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -56,6 +57,7 @@ import static com.metreeca.mesh.util.Loggers.logging;
 
 import static eu.ec2u.data.EC2U.BASE;
 import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.work.embeddings.OpenEmbedder.embedder;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.logging.Level.FINE;
@@ -100,7 +102,10 @@ public final class Data extends Delegator {
                         .base(DATA)
                 )
 
+                // !!! factor OpenAI client
+
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
+                .set(embedder(), () -> new OpenEmbedder("text-embedding-3-small", service(vault()).get("openai-key")))
 
                 .set(translator(), () -> new CacheTranslator(new ComboTranslator(
                         // !!! new GraphTranslator(),

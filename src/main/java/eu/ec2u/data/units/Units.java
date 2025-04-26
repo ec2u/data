@@ -32,9 +32,11 @@ import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Catalog;
+import eu.ec2u.data.taxonomies.Topics;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
 import eu.ec2u.work.Parsers;
+import eu.ec2u.work.embeddings.OpenEmbedder;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
@@ -56,7 +58,6 @@ import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
-import static eu.ec2u.data.taxonomies.Topics.topic;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
@@ -66,6 +67,9 @@ import static java.util.Locale.ROOT;
 public interface Units extends Dataset, Catalog<Unit> {
 
     URI UNITS=DATA.resolve("units/");
+
+    double TYPE_THRESHOLD=0.25;
+    double SUBJECT_THRESHOLD=0.5;
 
 
     static void main(final String... args) {
@@ -151,6 +155,8 @@ public interface Units extends Dataset, Catalog<Unit> {
 
         private final University university;
 
+        private final OpenEmbedder embedder=service(OpenEmbedder.embedder());
+
 
         CSVLoader(final University university) {
 
@@ -164,6 +170,8 @@ public interface Units extends Dataset, Catalog<Unit> {
 
         @Override protected Optional<UnitFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
             return id(record).map(id -> new UnitFrame()
+
+                    .generated(true)
 
                     .id(id)
                     .university(university)
@@ -186,24 +194,28 @@ public interface Units extends Dataset, Catalog<Unit> {
                     )))
 
                     .classification(set(value(record, "Type")
-                            .flatMap(type -> topic(ORGANIZATIONS, type))
+                            .flatMap(type -> Topics.resolve(ORGANIZATIONS, type))
                             .stream()
                     ))
 
-                    .subject(set(value(record, "Sector")
-                            .flatMap(type -> topic(EUROSCIVOC, type))
-                            .stream()
-                    ))
+                    .subject(set(Stream.concat(
 
-                    // field(DCTERMS.SUBJECT, Stream.concat(
-                    //
-                    //         value(record, "Topics (English)").stream()
-                    //                 .flatMap(topics -> topics(topics, "en")),
-                    //
-                    //         value(record, "Topics (Local)").stream()
-                    //                 .flatMap(topics -> topics(topics, university.language))
-                    //
-                    // )),
+                            value(record, "Sector")
+                                    .flatMap(type -> Topics.resolve(EUROSCIVOC, type))
+                                    .stream(),
+
+
+                            Stream.concat(
+                                            value(record, "Topics (English)").stream(),
+                                            value(record, "Topics (Local)").stream()
+                                    )
+                                    .flatMap(topics -> Arrays.stream(topics.split(",")))
+                                    .distinct()
+                                    .flatMap(topic -> embedder.apply(topic).stream())
+                                    .flatMap(topic -> Topics.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                                    .limit(3)
+
+                    )))
 
                     .prefLabel(map(Xtream.from(
                             value(record, "Name (English)").stream().map(v -> entry(EN, v)),
@@ -304,20 +316,6 @@ public interface Units extends Dataset, Catalog<Unit> {
                     .filter(vi -> entry(DATA, code).equals(vi.identifier()))
                     .findFirst();
         }
-
-        // private Stream<eu.ec2u.work._junk.Frame> topics(final String topics, final String language) {
-        //     return Stream.of(topics)
-        //
-        //             .flatMap(Strings::split)
-        //             .map(v -> literal(v, language))
-        //
-        //             .map(label -> frame(
-        //                     field(ID, eu.ec2u.data.EC2U.item(ResearchTopics, label.stringValue())),
-        //                     field(TYPE, SKOS.CONCEPT),
-        //                     field(SKOS.TOP_CONCEPT_OF, ResearchTopics),
-        //                     field(SKOS.PREF_LABEL, label)
-        //             ));
-        // }
 
     }
 
