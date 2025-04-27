@@ -16,8 +16,11 @@
 
 package eu.ec2u.data.taxonomies;
 
+import com.metreeca.mesh.tools.Store;
+
 import eu.ec2u.work.embeddings.Embedding;
 import eu.ec2u.work.embeddings.Index;
+import eu.ec2u.work.embeddings.OpenEmbedder;
 
 import java.net.URI;
 import java.util.Collection;
@@ -32,6 +35,7 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.stash;
 import static com.metreeca.mesh.util.URIs.uri;
 
+import static eu.ec2u.work.embeddings.OpenEmbedder.embedder;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
@@ -40,9 +44,12 @@ final class TopicsMatcher {
     private static final Map<URI, Index<Topic>> INDICES=new ConcurrentHashMap<>();
 
 
-    static Stream<Topic> match(final URI taxonomy, final Embedding query, final double threshold) {
+    static Stream<Topic> match(final URI taxonomy, final String query, final double threshold) {
 
-        final Index<Topic> index=INDICES.computeIfAbsent(taxonomy, t -> new Index<>(service(store())
+        final Store store=service(store());
+        final OpenEmbedder embedder=service(embedder());
+
+        final Index<Topic> index=INDICES.computeIfAbsent(taxonomy, t -> new Index<>(store
 
                 .retrieve(new TopicsFrame(true)
 
@@ -69,8 +76,8 @@ final class TopicsMatcher {
                 .collect(toMap(identity(), topic -> Embedding.decode(topic.embedding())))
         ));
 
-
-        return index.match(query, threshold);
+        return embedder.apply(query).stream()
+                .flatMap(embedding -> index.match(embedding, threshold));
     }
 
 

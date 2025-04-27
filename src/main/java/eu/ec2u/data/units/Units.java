@@ -36,7 +36,6 @@ import eu.ec2u.data.taxonomies.Topics;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
 import eu.ec2u.work.Parsers;
-import eu.ec2u.work.embeddings.OpenEmbedder;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
@@ -155,8 +154,6 @@ public interface Units extends Dataset, Catalog<Unit> {
 
         private final University university;
 
-        private final OpenEmbedder embedder=service(OpenEmbedder.embedder());
-
 
         CSVLoader(final University university) {
 
@@ -211,9 +208,8 @@ public interface Units extends Dataset, Catalog<Unit> {
                                     )
                                     .flatMap(topics -> Arrays.stream(topics.split(",")))
                                     .distinct()
-                                    .flatMap(topic -> embedder.apply(topic).stream())
                                     .flatMap(topic -> Topics.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
-                                    .limit(3)
+                                    .limit(1)
 
                     )))
 

@@ -21,7 +21,6 @@ import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.resources.Catalog;
-import eu.ec2u.work.embeddings.Embedding;
 
 import java.net.URI;
 import java.util.Optional;
@@ -51,11 +50,7 @@ public interface Topics extends Catalog<Topic> {
     }
 
 
-    static Stream<Topic> match(final URI taxonomy, final Embedding query) {
-        return match(taxonomy, query, 0);
-    }
-
-    static Stream<Topic> match(final URI taxonomy, final Embedding query, final double threshold) {
+    static Stream<Topic> match(final URI taxonomy, final String query, final double threshold) {
 
         if ( taxonomy == null ) {
             throw new NullPointerException("null taxonomy");

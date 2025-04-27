@@ -28,7 +28,6 @@ import eu.ec2u.data.persons.PersonsFrame;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.Topics;
 import eu.ec2u.data.universities.University;
-import eu.ec2u.work.embeddings.OpenEmbedder;
 
 import java.net.URI;
 import java.util.List;
@@ -63,9 +62,6 @@ public final class UnitsPoitiers implements Runnable {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private final OpenEmbedder embedder=service(OpenEmbedder.embedder());
-
 
     @Override public void run() {
 
@@ -122,7 +118,6 @@ public final class UnitsPoitiers implements Runnable {
     private Set<Topic> classification(final Value json) {
         return set(json.get("type_de_structure").string().stream()
                 .distinct()
-                .flatMap(topic -> embedder.apply(topic).stream())
                 .flatMap(topic -> Topics.match(ORGANIZATIONS, topic, TYPE_THRESHOLD))
                 .limit(1)
         );
@@ -131,7 +126,6 @@ public final class UnitsPoitiers implements Runnable {
     private Set<Topic> subject(final Value json) {
         return set(json.select("domaine_scientifique.*").strings()
                 .distinct()
-                .flatMap(topic -> embedder.apply(topic).stream())
                 .flatMap(topic -> Topics.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
                 .limit(1)
         );
