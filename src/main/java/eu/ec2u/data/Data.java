@@ -31,11 +31,8 @@ import com.metreeca.flow.services.Fetcher.URLFetcher;
 import com.metreeca.flow.services.Translator.CacheTranslator;
 import com.metreeca.flow.services.Translator.ComboTranslator;
 
-import com.azure.ai.openai.OpenAIClientBuilder;
-import com.azure.core.credential.KeyCredential;
 import eu.ec2u.work.ai.OpenAnalyzer;
 import eu.ec2u.work.ai.OpenEmbedder;
-import eu.ec2u.work.ai.StoreEmbedder;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -106,15 +103,9 @@ public final class Data extends Delegator {
                         .base(DATA)
                 )
 
-                .set(openai(), () -> new OpenAIClientBuilder()
-                        .credential(new KeyCredential(service(vault()).get("openai-key")))
-                        .buildClient()
-                )
-
+                .set(openai(), () -> openai(service(vault()).get("openai-key")))
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini"))
-                .set(embedder(), () -> new StoreEmbedder(new OpenEmbedder("text-embedding-3-small"))
-                        .partition(DATA.resolve("embeddings"))
-                )
+                .set(embedder(), () -> new OpenEmbedder("text-embedding-3-small"))
 
                 .set(translator(), () -> new CacheTranslator(new ComboTranslator(
                         // !!! new StoreTranslator(),

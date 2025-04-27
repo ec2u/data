@@ -196,6 +196,15 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     Set<Topic> subject();
 
 
+    @Override default String embeddable() {
+        return Resource.bullets(Xtream.from(
+                prefLabel().values().stream(),
+                altLabel().values().stream(),
+                definition().values().stream()
+        ));
+    }
+
+
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     final class Handler extends Delegator {

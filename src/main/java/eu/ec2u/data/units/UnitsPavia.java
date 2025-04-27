@@ -19,6 +19,7 @@ package eu.ec2u.data.units;
 import com.metreeca.flow.actions.GET;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 
 import eu.ec2u.data.taxonomies.OrganizationTypes;
@@ -27,7 +28,6 @@ import eu.ec2u.data.taxonomies.Topics;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.Parsers;
 import eu.ec2u.work.ai.Analyzer;
-import eu.ec2u.work.ai.Markdown;
 
 import java.net.URI;
 import java.util.Locale;
@@ -122,7 +122,7 @@ public final class UnitsPavia implements Runnable {
         return Xtream.of(catalog.url().toASCIIString())
 
                 .optMap(new GET<>(new HTML()))
-                .optMap(new Markdown())
+                .map(new Untag())
 
                 .optMap(analyzer.prompt("""
                         The input is a markdown document containing a list of university research units;
@@ -225,7 +225,7 @@ public final class UnitsPavia implements Runnable {
 
                 .map(URI::toASCIIString)
                 .flatMap(new GET<>(new HTML()))
-                .flatMap(new Markdown())
+                .map(new Untag())
 
                 .flatMap(analyzer.prompt("""
                         Extract the following properties from the provided markdown document

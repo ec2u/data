@@ -17,13 +17,13 @@
 package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.services.Analyzer;
 import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
+import eu.ec2u.work.ai.Analyzer;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.model.vocabulary.SKOSXL;
@@ -37,7 +37,6 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.json.services.Analyzer.analyzer;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
@@ -49,6 +48,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.LOCALES;
 import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 import static eu.ec2u.work.Rover.rover;
+import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 
 /**

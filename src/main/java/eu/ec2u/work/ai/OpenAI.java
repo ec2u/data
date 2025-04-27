@@ -17,6 +17,8 @@
 package eu.ec2u.work.ai;
 
 import com.azure.ai.openai.OpenAIClient;
+import com.azure.ai.openai.OpenAIClientBuilder;
+import com.azure.core.credential.KeyCredential;
 
 import java.util.function.Supplier;
 
@@ -29,6 +31,18 @@ public final class OpenAI {
      */
     public static Supplier<OpenAIClient> openai() {
         return () -> { throw new IllegalStateException("undefined OpenAI client service"); };
+    }
+
+
+    public static OpenAIClient openai(final String key) {
+
+        if ( key == null ) {
+            throw new NullPointerException("null key");
+        }
+
+        return new OpenAIClientBuilder()
+                .credential(new KeyCredential(key))
+                .buildClient();
     }
 
 

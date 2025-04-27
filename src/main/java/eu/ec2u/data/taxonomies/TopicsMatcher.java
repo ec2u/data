@@ -25,6 +25,7 @@ import eu.ec2u.work.ai.VectorIndex;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -37,6 +38,7 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.util.function.Function.identity;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
 
 final class TopicsMatcher {
@@ -72,11 +74,14 @@ final class TopicsMatcher {
                 .map(TopicsFrame::members)
                 .stream()
                 .flatMap(Collection::stream)
-                .filter(topic1 -> topic1.embedding() != null)
+                .filter(topic -> topic.embedding() != null)
                 .collect(toMap(identity(), topic -> Vector.decode(topic.embedding())))
         ));
 
-        return embedder.apply(query).stream()
+        return Optional.of(query)
+                .filter(not(String::isBlank))
+                .flatMap(embedder)
+                .stream()
                 .flatMap(embedding -> index.match(embedding, threshold));
     }
 

@@ -22,6 +22,7 @@ import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.resources.Catalog;
+import eu.ec2u.work.ai.StoreEmbedder;
 import eu.ec2u.work.ai.Vector;
 
 import java.net.URI;
@@ -34,6 +35,7 @@ import static com.metreeca.flow.Locator.service;
 import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.lang.String.format;
+import static java.util.function.Predicate.not;
 
 @Frame
 @Virtual
@@ -57,8 +59,9 @@ public interface Topics extends Catalog<Topic> {
             throw new NullPointerException("null topic");
         }
 
-        return service(embedder())
-                .apply(topic.embeddable())
+        return Optional.ofNullable(topic.embeddable())
+                .filter(not(String::isBlank))
+                .flatMap(new StoreEmbedder(service(embedder())).partition(TOPICS.resolve("~embeddings")))
                 .map(vector -> topic.embedding(Vector.encode(vector)))
                 .orElse(topic);
     }
