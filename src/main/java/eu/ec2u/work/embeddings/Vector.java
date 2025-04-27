@@ -29,7 +29,7 @@ import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
-public final class Embedding {
+public final class Vector {
 
     public static String embeddable(final Collection<String> strings) {
 
@@ -45,48 +45,48 @@ public final class Embedding {
     }
 
 
-    public static String encode(final Embedding embedding) {
+    public static String encode(final Vector vector) {
 
-        if ( embedding == null ) {
-            throw new NullPointerException("null embedding or embedding values");
+        if ( vector == null ) {
+            throw new NullPointerException("null vector or vector values");
         }
 
-        return Arrays.stream(embedding.values)
+        return Arrays.stream(vector.values)
                 .mapToObj(Double::toString)
                 .collect(joining(","));
     }
 
-    public static Embedding decode(final String embedding) {
+    public static Vector decode(final String vector) {
 
-        if ( embedding == null ) {
-            throw new NullPointerException("null embedding");
+        if ( vector == null ) {
+            throw new NullPointerException("null vector");
         }
 
-        return new Embedding(list(Arrays.stream(embedding.split(",")).map(v -> {
+        return new Vector(list(Arrays.stream(vector.split(",")).map(v -> {
 
             try {
                 return Float.parseFloat(v);
             } catch ( final NumberFormatException e ) {
-                throw new IllegalArgumentException(format("malformed embedding value <%s>", v), e);
+                throw new IllegalArgumentException(format("malformed vector value <%s>", v), e);
             }
 
         })));
     }
 
 
-    public static double cosine(final Embedding x, final Embedding y) {
+    public static double cosine(final Vector x, final Vector y) {
 
         if ( x == null ) {
-            throw new NullPointerException("null x embedding");
+            throw new NullPointerException("null x vector");
         }
 
         if ( y == null ) {
-            throw new NullPointerException("null y embedding");
+            throw new NullPointerException("null y vector");
         }
 
         if ( x.values.length != y.values.length ) {
             throw new IllegalArgumentException(format(
-                    "mismatched embedding lengths <%d>/<%d>", x.values.length, y.values.length
+                    "mismatched vector lengths <%d>/<%d>", x.values.length, y.values.length
             ));
         }
 
@@ -111,35 +111,35 @@ public final class Embedding {
     private final double[] values;
 
 
-    public Embedding(final double[] values) {
+    public Vector(final double[] values) {
 
         if ( values == null ) {
-            throw new NullPointerException("null embedding values");
+            throw new NullPointerException("null vector values");
         }
 
         if ( values.length == 0 ) {
-            throw new IllegalArgumentException("empty embedding values");
+            throw new IllegalArgumentException("empty vector values");
         }
 
         if ( Arrays.stream(values).anyMatch(v -> !isFinite(v)) ) {
-            throw new IllegalArgumentException("non-finite embedding values");
+            throw new IllegalArgumentException("non-finite vector values");
         }
 
         this.values=values.clone();
     }
 
-    public Embedding(final List<? extends Number> values) {
+    public Vector(final List<? extends Number> values) {
 
         if ( values == null || values.stream().anyMatch(Objects::isNull) ) {
-            throw new NullPointerException("null embedding values");
+            throw new NullPointerException("null vector values");
         }
 
         if ( values.isEmpty() ) {
-            throw new IllegalArgumentException("empty embedding values");
+            throw new IllegalArgumentException("empty vector values");
         }
 
         if ( values.stream().anyMatch(v -> !isFinite(v.doubleValue())) ) {
-            throw new IllegalArgumentException("non-finite embedding values");
+            throw new IllegalArgumentException("non-finite vector values");
         }
 
         this.values=values.stream().mapToDouble(Number::doubleValue).toArray();

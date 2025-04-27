@@ -25,8 +25,6 @@ import com.azure.core.credential.KeyCredential;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
@@ -35,19 +33,7 @@ import static com.metreeca.mesh.util.Loggers.time;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 
-public class OpenEmbedder implements Function<String, Optional<Embedding>> {
-
-    /**
-     * Retrieves the default text embedder factory.
-     *
-     * @return the default text embedder factory, which throws an exception reporting the service as undefined
-     */
-    public static Supplier<OpenEmbedder> embedder() {
-        return () -> { throw new IllegalStateException("undefined text embedder service"); };
-    }
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public class OpenEmbedder implements Embedder {
 
     private final String model;
     private final OpenAIClient client;
@@ -76,8 +62,7 @@ public class OpenEmbedder implements Function<String, Optional<Embedding>> {
     }
 
 
-    @Override
-    public Optional<Embedding> apply(final String text) {
+    @Override public Optional<Vector> apply(final String text) {
 
         if ( text == null ) {
             throw new NullPointerException("null text");
@@ -89,14 +74,14 @@ public class OpenEmbedder implements Function<String, Optional<Embedding>> {
 
                 return Optional.of(text)
                         .filter(not(String::isBlank))
-                        .map(s -> client.getEmbeddings(model, new EmbeddingsOptions(List.of(s))))
-                        .map(embeddings -> new Embedding(embeddings.getData().getFirst().getEmbedding()));
+                        .map(t -> client.getEmbeddings(model, new EmbeddingsOptions(List.of(t))))
+                        .map(embeddings -> new Vector(embeddings.getData().getFirst().getEmbedding()));
 
             } catch ( final RuntimeException e ) {
 
                 logger.warning(this, e.getMessage());
 
-                return Optional.<Embedding>empty();
+                return Optional.<Vector>empty();
 
             }
 

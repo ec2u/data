@@ -43,15 +43,15 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
-import static eu.ec2u.work.embeddings.OpenEmbedder.embedder;
+import static eu.ec2u.work.embeddings.Embedder.embedder;
 
-public final class Indexer {
+public final class _Indexer {
 
     public static final URI taxonomy=EUROSCIVOC;
 
 
     public static void main(final String... args) {
-        exec(() -> new Indexer().index(service(store())
+        exec(() -> new _Indexer().index(service(store())
 
                 .retrieve(new TopicsFrame(true)
 
@@ -85,7 +85,7 @@ public final class Indexer {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Store store=service(store());
-    private final OpenEmbedder embedder=service(embedder());
+    private final Embedder embedder=service(embedder());
 
 
     public void index(final Collection<? extends Resource> resources) {
@@ -100,13 +100,13 @@ public final class Indexer {
 
                 .map(topic -> Optional
 
-                        .of(Embedding.embeddable(topic.embeddable()))
+                        .of(Vector.embeddable(topic.embeddable()))
 
                         .flatMap(embedder)
 
                         .map(e -> new ResourceFrame(true)
                                 .id(topic.id())
-                                .embedding(Embedding.encode(e))
+                                .embedding(Vector.encode(e))
                         )
 
                 )

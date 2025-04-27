@@ -25,12 +25,12 @@ import static com.metreeca.mesh.util.Collections.map;
 
 import static java.lang.String.format;
 
-public final class Index<V> {
+public final class VectorIndex<V> {
 
-    private final Map<V, Embedding> entries;
+    private final Map<V, Vector> entries;
 
 
-    public Index(final Map<V, Embedding> entries) {
+    public VectorIndex(final Map<V, Vector> entries) {
 
         if ( entries == null ) {
             throw new NullPointerException("null entries");
@@ -40,7 +40,7 @@ public final class Index<V> {
     }
 
 
-    public Stream<V> match(final Embedding query) {
+    public Stream<V> match(final Vector query) {
 
         if ( query == null ) {
             throw new NullPointerException("null query");
@@ -49,7 +49,7 @@ public final class Index<V> {
         return match(query, 0);
     }
 
-    public Stream<V> match(final Embedding query, final double threshold) {
+    public Stream<V> match(final Vector query, final double threshold) {
 
         if ( query == null ) {
             throw new NullPointerException("null query");
@@ -60,7 +60,7 @@ public final class Index<V> {
         }
 
         return entries.entrySet().stream()
-                .map(entry -> entry(entry.getKey(), Embedding.cosine(query, entry.getValue())))
+                .map(entry -> entry(entry.getKey(), Vector.cosine(query, entry.getValue())))
                 .sorted(Entry.<V, Double>comparingByValue().reversed())
                 .filter(e -> e.getValue() >= threshold)
                 .map(Entry::getKey);
