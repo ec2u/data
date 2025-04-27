@@ -34,8 +34,6 @@ import static com.metreeca.flow.Locator.service;
 import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.lang.String.format;
-import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.joining;
 
 @Frame
 @Virtual
@@ -60,12 +58,7 @@ public interface Topics extends Catalog<Topic> {
         }
 
         return service(embedder())
-                .apply(topic.embeddable().stream()
-                        .distinct()
-                        .filter(not(String::isBlank))
-                        .map("- %s\n"::formatted)
-                        .collect(joining())
-                )
+                .apply(topic.embeddable())
                 .map(vector -> topic.embedding(Vector.encode(vector)))
                 .orElse(topic);
     }

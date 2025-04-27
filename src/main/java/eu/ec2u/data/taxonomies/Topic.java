@@ -23,10 +23,15 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
-import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Collections.entry;
+import static com.metreeca.mesh.util.Collections.map;
 
+import static eu.ec2u.data.resources.Resource.bullets;
 import static java.util.function.Predicate.not;
 
 @Frame
@@ -55,8 +60,8 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
     }
 
 
-    default Set<String> embeddable() {
-        return set(Xtream.from(
+    default String embeddable() {
+        return bullets(Xtream.from(
                 prefLabel().values().stream(),
                 altLabel().values().stream().flatMap(Collection::stream),
                 hiddenLabel().values().stream().flatMap(Collection::stream),
