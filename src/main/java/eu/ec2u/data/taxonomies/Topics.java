@@ -22,7 +22,7 @@ import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.resources.Catalog;
-import eu.ec2u.work.embeddings.Vector;
+import eu.ec2u.work.ai.Vector;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 
 import static eu.ec2u.data.EC2U.DATA;
-import static eu.ec2u.work.embeddings.Embedder.embedder;
+import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;

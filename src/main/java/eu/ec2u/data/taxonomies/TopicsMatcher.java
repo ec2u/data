@@ -18,9 +18,9 @@ package eu.ec2u.data.taxonomies;
 
 import com.metreeca.mesh.tools.Store;
 
-import eu.ec2u.work.embeddings.Embedder;
-import eu.ec2u.work.embeddings.Vector;
-import eu.ec2u.work.embeddings.VectorIndex;
+import eu.ec2u.work.ai.Embedder;
+import eu.ec2u.work.ai.Vector;
+import eu.ec2u.work.ai.VectorIndex;
 
 import java.net.URI;
 import java.util.Collection;
@@ -35,7 +35,7 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.stash;
 import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.work.embeddings.Embedder.embedder;
+import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 

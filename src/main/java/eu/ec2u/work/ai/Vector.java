@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.embeddings;
+package eu.ec2u.work.ai;
 
 import java.util.Arrays;
 import java.util.List;

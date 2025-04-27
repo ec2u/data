@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.embeddings;
+package eu.ec2u.work.ai;
 
 import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.shapes.Shape;

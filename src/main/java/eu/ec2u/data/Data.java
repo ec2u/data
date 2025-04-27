@@ -22,7 +22,6 @@ import com.metreeca.flow.gcp.GCPServer;
 import com.metreeca.flow.gcp.services.GCPTranslator;
 import com.metreeca.flow.gcp.services.GCPVault;
 import com.metreeca.flow.handlers.*;
-import com.metreeca.flow.openai.services.OpenAnalyzer;
 import com.metreeca.flow.rdf4j.handlers.Graphs;
 import com.metreeca.flow.rdf4j.handlers.SPARQL;
 import com.metreeca.flow.rdf4j.services.Graph;
@@ -32,8 +31,11 @@ import com.metreeca.flow.services.Fetcher.URLFetcher;
 import com.metreeca.flow.services.Translator.CacheTranslator;
 import com.metreeca.flow.services.Translator.ComboTranslator;
 
-import eu.ec2u.work.embeddings.OpenEmbedder;
-import eu.ec2u.work.embeddings.StoreEmbedder;
+import com.azure.ai.openai.OpenAIClientBuilder;
+import com.azure.core.credential.KeyCredential;
+import eu.ec2u.work.ai.OpenAnalyzer;
+import eu.ec2u.work.ai.OpenEmbedder;
+import eu.ec2u.work.ai.StoreEmbedder;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -46,7 +48,6 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.Response.SeeOther;
 import static com.metreeca.flow.json.formats.JSON.codec;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.json.services.Analyzer.analyzer;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Cache.cache;
 import static com.metreeca.flow.services.Fetcher.fetcher;
@@ -58,7 +59,9 @@ import static com.metreeca.mesh.util.Loggers.logging;
 
 import static eu.ec2u.data.EC2U.BASE;
 import static eu.ec2u.data.EC2U.DATA;
-import static eu.ec2u.work.embeddings.Embedder.embedder;
+import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static eu.ec2u.work.ai.Embedder.embedder;
+import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.logging.Level.FINE;
@@ -103,15 +106,18 @@ public final class Data extends Delegator {
                         .base(DATA)
                 )
 
-                // !!! factor OpenAI client
+                .set(openai(), () -> new OpenAIClientBuilder()
+                        .credential(new KeyCredential(service(vault()).get("openai-key")))
+                        .buildClient()
+                )
 
-                .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
-                .set(embedder(), () -> new StoreEmbedder(new OpenEmbedder("text-embedding-3-small", service(vault()).get("openai-key")))
+                .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini"))
+                .set(embedder(), () -> new StoreEmbedder(new OpenEmbedder("text-embedding-3-small"))
                         .partition(DATA.resolve("embeddings"))
                 )
 
                 .set(translator(), () -> new CacheTranslator(new ComboTranslator(
-                        // !!! new GraphTranslator(),
+                        // !!! new StoreTranslator(),
                         new GCPTranslator()
                 )));
 

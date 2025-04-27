@@ -14,34 +14,38 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.embeddings;
+package eu.ec2u.work.ai;
 
 import com.metreeca.flow.services.Logger;
 
 import com.azure.ai.openai.OpenAIClient;
-import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.ai.openai.models.EmbeddingsOptions;
-import com.azure.core.credential.KeyCredential;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.util.Loggers.time;
 
+import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 public class OpenEmbedder implements Embedder {
 
     private final String model;
-    private final OpenAIClient client;
+    private final UnaryOperator<EmbeddingsOptions> setup;
 
+    private final OpenAIClient client=service(openai());
     private final Logger logger=service(logger());
 
 
-    public OpenEmbedder(final String model, final String key) {
+    public OpenEmbedder(final String model) { this(model, options -> options); }
+
+    public OpenEmbedder(final String model, final UnaryOperator<EmbeddingsOptions> setup) {
 
         if ( model == null ) {
             throw new NullPointerException("null model");
@@ -51,14 +55,12 @@ public class OpenEmbedder implements Embedder {
             throw new IllegalArgumentException("empty model");
         }
 
-        if ( key == null ) {
-            throw new NullPointerException("null key");
+        if ( setup == null ) {
+            throw new NullPointerException("null setup");
         }
 
         this.model=model;
-        this.client=new OpenAIClientBuilder()
-                .credential(new KeyCredential(key))
-                .buildClient();
+        this.setup=setup;
     }
 
 
@@ -74,7 +76,9 @@ public class OpenEmbedder implements Embedder {
 
                 return Optional.of(text)
                         .filter(not(String::isBlank))
-                        .map(t -> client.getEmbeddings(model, new EmbeddingsOptions(List.of(t))))
+                        .map(t -> client.getEmbeddings(model, requireNonNull(
+                                setup.apply(new EmbeddingsOptions(List.of(t))), "null setup options"
+                        )))
                         .map(embeddings -> new Vector(embeddings.getData().getFirst().getEmbedding()));
 
             } catch ( final RuntimeException e ) {
