@@ -22,6 +22,7 @@ import com.metreeca.mesh.tools.Store;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -392,36 +393,40 @@ public final class OrganizationTypes implements Runnable {
     @Override public void run() {
         store.partition(ORGANIZATIONS).update(array(list(Xtream
 
-                .of(
+                .from(
 
-                        TAXONOMY,
+                        Stream.of(
+                                TAXONOMY
+                        ),
 
-                        UNIVERSITY,
-                        COLLEGE,
-                        ASSOCIATION,
-                        CITY,
-                        OTHER,
-                        UNIVERSITY_UNIT,
-                        AREA,
-                        NETWORK,
-                        INSTITUTE,
-                        VIRTUAL_INSTITUTE,
-                        DEPARTMENT,
-                        CENTRE,
-                        RESEARCH_CENTRE,
-                        INTERDEPARTMENTAL_RESEARCH_CENTRE,
-                        TRANSFER_CENTRE,
-                        SERVICE_CENTRE,
-                        GROUP,
-                        RECOGNIZED_GROUP,
-                        INFORMAL_GROUP,
-                        STUDENT_GROUP,
-                        LABORATORY,
-                        FACILITY,
-                        LIBRARY_FACILITY,
-                        COLLECTION_FACILITY,
-                        INSTRUMENT_FACILITY,
-                        STATION_FACILITY
+                        Topics.index(
+                                UNIVERSITY,
+                                COLLEGE,
+                                ASSOCIATION,
+                                CITY,
+                                OTHER,
+                                UNIVERSITY_UNIT,
+                                AREA,
+                                NETWORK,
+                                INSTITUTE,
+                                VIRTUAL_INSTITUTE,
+                                DEPARTMENT,
+                                CENTRE,
+                                RESEARCH_CENTRE,
+                                INTERDEPARTMENTAL_RESEARCH_CENTRE,
+                                TRANSFER_CENTRE,
+                                SERVICE_CENTRE,
+                                GROUP,
+                                RECOGNIZED_GROUP,
+                                INFORMAL_GROUP,
+                                STUDENT_GROUP,
+                                LABORATORY,
+                                FACILITY,
+                                LIBRARY_FACILITY,
+                                COLLECTION_FACILITY,
+                                INSTRUMENT_FACILITY,
+                                STATION_FACILITY
+                        )
 
                 )
 

@@ -26,6 +26,7 @@ import java.util.Optional;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.toolkits.Strings.fold;
 import static com.metreeca.mesh.Value.String;
 import static com.metreeca.mesh.Value.field;
 import static com.metreeca.mesh.Value.id;
@@ -106,7 +107,7 @@ public final class StoreEmbedder implements Embedder {
 
                 .map(embedding -> {
 
-                    logger.info(this, format("retrieved embedding for <%s>", text));
+                    logger.info(this, format("retrieved embedding for <%s>", fold(text)));
 
                     return embedding;
 

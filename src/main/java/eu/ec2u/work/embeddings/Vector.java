@@ -17,7 +17,6 @@
 package eu.ec2u.work.embeddings;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,24 +25,9 @@ import static com.metreeca.mesh.util.Collections.list;
 import static java.lang.Double.isFinite;
 import static java.lang.Math.sqrt;
 import static java.lang.String.format;
-import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
 public final class Vector {
-
-    public static String embeddable(final Collection<String> strings) {
-
-        if ( strings == null || strings.stream().anyMatch(Objects::isNull) ) {
-            throw new NullPointerException("null strings");
-        }
-
-        return strings.stream()
-                .distinct()
-                .filter(not(String::isBlank))
-                .map("- %s\n"::formatted)
-                .collect(joining());
-    }
-
 
     public static String encode(final Vector vector) {
 

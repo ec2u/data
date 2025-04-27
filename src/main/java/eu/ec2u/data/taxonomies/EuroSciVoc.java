@@ -166,6 +166,9 @@ public final class EuroSciVoc implements Runnable {
                                                 .uris().map(b -> new TopicFrame().id(adopt(b)))
                                         ))
                                 ))
+
+                                .map(Topics::index)
+
                 )
 
                 .optMap(new Validate<>())

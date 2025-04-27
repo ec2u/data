@@ -25,6 +25,7 @@ import eu.ec2u.data.resources.ReferenceFrame;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -244,21 +245,25 @@ public final class ISCED2011 implements Runnable {
     @Override public void run() {
         store.partition(ISCED2011).update(array(list(Xtream
 
-                .of(
+                .from(
 
-                        TAXONOMY,
-                        UNESCO_INSTITUTE_FOR_STATISTICS,
+                        Stream.of(
+                                TAXONOMY,
+                                UNESCO_INSTITUTE_FOR_STATISTICS
+                        ),
 
-                        LEVEL0,
-                        LEVEL1,
-                        LEVEL2,
-                        LEVEL3,
-                        LEVEL4,
-                        LEVEL5,
-                        LEVEL6,
-                        LEVEL7,
-                        LEVEL8,
-                        LEVEL9
+                        Topics.index(
+                                LEVEL0,
+                                LEVEL1,
+                                LEVEL2,
+                                LEVEL3,
+                                LEVEL4,
+                                LEVEL5,
+                                LEVEL6,
+                                LEVEL7,
+                                LEVEL8,
+                                LEVEL9
+                        )
 
                 )
 
