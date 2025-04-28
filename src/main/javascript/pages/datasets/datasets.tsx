@@ -59,7 +59,7 @@ export const Datasets=immutable({
 		title: required(text),
 		alternative: optional(text),
 
-		resources: [{
+		members: [{
 
 			count: virtual(required(integer)),
 			"count=count:": required(integer)
@@ -99,7 +99,7 @@ export function DataDatasets() {
 
 	>
 
-		<TileSheet placeholder={Datasets[icon]} sorted={(x, y) => x.resources[0].count - y.resources[0].count} as={({
+		<TileSheet placeholder={Datasets[icon]} sorted={(x, y) => x.members[0].count - y.members[0].count} as={({
 
 			id,
 
@@ -107,7 +107,7 @@ export function DataDatasets() {
 			alternative,
 			comment,
 
-			resources
+			members
 
 		}) => <>
 
@@ -115,7 +115,7 @@ export function DataDatasets() {
 
 				title={<TileLink>{{ id, label: ec2u(title) }}</TileLink>}
 
-				tags={toIntegerString(resources[0].count)}
+				tags={toIntegerString(members[0].count)}
 				image={alternative && <span>{ec2u(toTextString(alternative))}</span>}
 
 			>{

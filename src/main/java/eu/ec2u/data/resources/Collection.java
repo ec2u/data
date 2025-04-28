@@ -98,9 +98,8 @@ public interface Collection extends Resource {
 
     Set<Topic> subject();
 
-    @Hidden
     @Foreign
     @Reverse("ec2u:collection")
-    Set<Resource> resources();
+    Set<? extends Resource> members();
 
 }

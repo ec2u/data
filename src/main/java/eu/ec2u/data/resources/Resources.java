@@ -33,6 +33,7 @@ import eu.ec2u.data.units.UnitsFrame;
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -50,7 +51,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
 @Virtual
-public interface Resources extends Dataset, Catalog<Resource> {
+public interface Resources extends Dataset {
 
     URI RESOURCES=DATA.resolve("resources/");
 
@@ -105,6 +106,10 @@ public interface Resources extends Dataset, Catalog<Resource> {
     default OrgOrganization publisher() {
         return EC2U;
     }
+
+
+    @Override
+    Set<Resource> members();
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

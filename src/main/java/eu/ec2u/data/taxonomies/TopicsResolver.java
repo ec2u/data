@@ -52,8 +52,6 @@ final class TopicsResolver {
 
                 .retrieve(new TopicsFrame(true)
 
-                        .id(Topics.TOPICS)
-
                         .members(stash(query()
 
                                 .model(new TopicFrame(true).id(uri()))

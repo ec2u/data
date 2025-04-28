@@ -24,14 +24,13 @@ import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data.resources.Catalog;
 import eu.ec2u.data.resources.Collection;
 
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -46,8 +45,7 @@ import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
-@Virtual
-public interface Taxonomies extends Collection, Catalog<Taxonomy> {
+public interface Taxonomies extends Collection {
 
     URI TAXONOMIES=DATA.resolve("taxonomies/");
 
@@ -92,6 +90,10 @@ public interface Taxonomies extends Collection, Catalog<Taxonomy> {
     default URI isDefinedBy() {
         return DATASETS.resolve("taxonomies");
     }
+
+
+    @Override
+    Set<Taxonomy> members();
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

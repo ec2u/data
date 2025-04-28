@@ -21,13 +21,14 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
-import eu.ec2u.data.resources.Catalog;
+import eu.ec2u.data.resources.Collection;
 import eu.ec2u.work.ai.StoreEmbedder;
 import eu.ec2u.work.ai.Vector;
 
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
@@ -39,7 +40,7 @@ import static java.util.function.Predicate.not;
 
 @Frame
 @Virtual
-public interface Topics extends Catalog<Topic> {
+public interface Topics extends Collection {
 
     URI TOPICS=DATA.resolve("topics/");
 
@@ -104,5 +105,9 @@ public interface Topics extends Catalog<Topic> {
     default URI id() {
         return TOPICS;
     }
+
+
+    @Override
+    Set<Topic> members();
 
 }

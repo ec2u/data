@@ -50,12 +50,12 @@ public final class StoreEmbedder implements Embedder {
     private static final String EMBEDDING="Embedding";
 
     private static final String STRING="string";
-    private static final String VALUES="values";
+    private static final String VECTOR="vector";
 
     private static final Shape EMBEDDING_SHAPE=shape()
             .clazz(type(EMBEDDING))
             .property(property(STRING).forward(true).shape(shape().datatype(String()).required()))
-            .property(property(VALUES).forward(true).shape(shape().datatype(String()).required()));
+            .property(property(VECTOR).forward(true).shape(shape().datatype(String()).required()));
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ public final class StoreEmbedder implements Embedder {
                 .retrieve(value(query()
                         .model(object(
                                 shape(EMBEDDING_SHAPE),
-                                field(VALUES, String())
+                                field(VECTOR, String())
                         ))
                         .where(STRING, criterion().any(string(text)))
                 ))
@@ -119,7 +119,7 @@ public final class StoreEmbedder implements Embedder {
                             shape(EMBEDDING_SHAPE),
                             id(item(uuid(text))),
                             field(STRING, string(text)),
-                            field(VALUES, string(Vector.encode(embedding)))
+                            field(VECTOR, string(Vector.encode(embedding)))
                     ), FORCE);
 
                     return embedding;

@@ -20,15 +20,13 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.resources.Catalog;
-import eu.ec2u.data.units.Unit;
 
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -42,8 +40,7 @@ import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
-@Virtual
-public interface Persons extends Dataset, Catalog<Unit> {
+public interface Persons extends Dataset {
 
     URI PERSONS=DATA.resolve("persons/");
 
@@ -88,5 +85,9 @@ public interface Persons extends Dataset, Catalog<Unit> {
     default URI isDefinedBy() {
         return DATASETS.resolve("persons");
     }
+
+
+    @Override
+    Set<Person> members();
 
 }

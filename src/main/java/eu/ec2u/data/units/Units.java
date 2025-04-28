@@ -25,13 +25,11 @@ import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
-import eu.ec2u.data.resources.Catalog;
 import eu.ec2u.data.taxonomies.Topics;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
@@ -62,8 +60,7 @@ import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 
 @Frame
-@Virtual
-public interface Units extends Dataset, Catalog<Unit> {
+public interface Units extends Dataset {
 
     URI UNITS=DATA.resolve("units/");
 
@@ -121,6 +118,10 @@ public interface Units extends Dataset, Catalog<Unit> {
     default LocalDate issued() {
         return LocalDate.parse("2022-01-01");
     }
+
+
+    @Override
+    Set<Unit> members();
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
