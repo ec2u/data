@@ -27,7 +27,6 @@ import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.PersonsFrame;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.Topics;
-import eu.ec2u.data.universities.University;
 
 import java.net.URI;
 import java.util.List;
@@ -46,7 +45,9 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
+import static eu.ec2u.data.units.Unit.translate;
 import static eu.ec2u.data.units.Units.*;
+import static eu.ec2u.data.universities.University.Poitiers;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
@@ -73,6 +74,7 @@ public final class UnitsPoitiers implements Runnable {
 
                 .flatMap(this::units)
                 .optMap(this::unit)
+                .map(unit -> translate(unit, Poitiers().locale()))
 
                 .optMap(new Validate<>())
 
@@ -91,20 +93,27 @@ public final class UnitsPoitiers implements Runnable {
 
                 .generated(true)
 
-                .id(UNITS.resolve(uuid(University.Poitiers(), id)))
-                .university(University.Poitiers())
+                .id(UNITS.resolve(uuid(Poitiers(), id)))
+                .university(Poitiers())
                 .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
 
                 .homepage(set(json.get("site_web").uri().stream()))
 
-                .identifier(entry(University.Poitiers().id(), id))
+                .identifier(id)
 
-                .prefLabel(map(entry(University.Poitiers().locale(), json.get("libelle").string().orElse(""))))
-                .altLabel(map(entry(ROOT, json.get("sigle").string().orElse(""))))
+                .prefLabel(json.get("libelle").string()
+                        .map(label -> map(entry(Poitiers().locale(), label)))
+                        .orElse(null)
+                )
+
+                .altLabel(json.get("sigle").string()
+                        .map(label -> map(entry(ROOT, label)))
+                        .orElse(null)
+                )
 
                 .hasHead(set(heads(json)))
 
-                .unitOf(set(University.Poitiers()))
+                .unitOf(set(Poitiers()))
 
                 .classification(classification(json))
                 .subject(subject(json))
@@ -145,8 +154,8 @@ public final class UnitsPoitiers implements Runnable {
 
                     return new PersonFrame()
 
-                            .id(PERSONS.resolve(uuid(University.Poitiers(), join(", ", surname, forename))))
-                            .university(University.Poitiers())
+                            .id(PERSONS.resolve(uuid(Poitiers(), join(", ", surname, forename))))
+                            .university(Poitiers())
                             .collection(new PersonsFrame())
 
                             .givenName(forename)

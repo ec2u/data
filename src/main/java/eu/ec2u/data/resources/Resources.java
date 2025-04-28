@@ -27,7 +27,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.units.UnitsFrame;
 
 import java.net.URI;
@@ -44,7 +43,7 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.*;
+import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
@@ -95,16 +94,6 @@ public interface Resources extends Dataset {
     @Override
     default URI isDefinedBy() {
         return DATASETS.resolve("resources");
-    }
-
-    @Override
-    default String rights() {
-        return COPYRIGHT;
-    }
-
-    @Override
-    default OrgOrganization publisher() {
-        return EC2U;
     }
 
 

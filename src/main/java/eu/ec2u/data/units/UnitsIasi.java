@@ -20,8 +20,6 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 
-import eu.ec2u.data.universities.University;
-
 import java.net.URI;
 
 import static com.metreeca.flow.Locator.service;
@@ -32,7 +30,9 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.units.Unit.translate;
 import static eu.ec2u.data.units.Units.UNITS;
+import static eu.ec2u.data.universities.University.Iasi;
 
 public final class UnitsIasi implements Runnable {
 
@@ -57,7 +57,8 @@ public final class UnitsIasi implements Runnable {
 
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new Units.CSVLoader(University.Iasi()))
+                .flatMap(new Units.CSVLoader(Iasi()))
+                .map(unit -> translate(unit, Iasi().locale()))
 
                 .optMap(new Validate<>())
 

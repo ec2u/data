@@ -175,7 +175,6 @@ public interface Units extends Dataset {
                     .university(university)
 
                     .identifier(value(record, "Code")
-                            .map(v -> entry(university.id(), v))
                             .orElse(null)
                     )
 
@@ -310,7 +309,7 @@ public interface Units extends Dataset {
 
         private Optional<Unit> vi(final String code) {
             return VIS.stream()
-                    .filter(vi -> entry(DATA, code).equals(vi.identifier()))
+                    .filter(vi -> code.equals(vi.identifier()))
                     .findFirst();
         }
 

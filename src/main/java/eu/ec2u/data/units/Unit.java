@@ -20,6 +20,7 @@ import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.flow.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
+import com.metreeca.flow.services.Translator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Forward;
@@ -36,17 +37,18 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.services.Translator.translator;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.OrganizationTypes.VIRTUAL_INSTITUTE;
 import static eu.ec2u.data.units.Units.UNITS;
+import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 
 @Frame
@@ -58,9 +60,9 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     static UnitFrame GLADE() {
         return new UnitFrame()
                 .id(UNITS.resolve("glade"))
-                .identifier(entry(DATA, "GLADE"))
+                .identifier("GLADE")
                 .prefLabel(map(entry(EN, "Virtual Institute for Good Health and Well‑Being")))
-                .altLabel(map(entry(Locale.ROOT, "GLADE")))
+                .altLabel(map(entry(ROOT, "GLADE")))
                 .definition(map(entry(EN, """
                         GLADE is the EC2U Alliance’s Virtual Institute aimed to develop specific approaches in education,
                         research, innovation and service transfer to the community in areas of the third UNSDG: Good
@@ -86,7 +88,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     static UnitFrame VIQE() {
         return new UnitFrame()
                 .id(UNITS.resolve("viqe"))
-                .identifier(entry(DATA, "VIQE"))
+                .identifier("VIQE")
                 .prefLabel(map(entry(EN, "Virtual Institute for Quality Education")))
                 .altLabel(map(entry(EN, "VIQE")))
                 .definition(map(entry(EN, """
@@ -110,7 +112,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     static UnitFrame VISCC() {
         return new UnitFrame()
                 .id(UNITS.resolve("viscc"))
-                .identifier(entry(DATA, "VISCC"))
+                .identifier("VISCC")
                 .prefLabel(map(entry(EN, "Virtual Institute for Sustainable Cities and Communities")))
                 .altLabel(map(entry(EN, "VISCC")))
                 .definition(map(entry(EN, """
@@ -138,7 +140,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     static UnitFrame VIPJSI() {
         return new UnitFrame()
                 .id(UNITS.resolve("vipjsi"))
-                .identifier(entry(DATA, "VIPJSI"))
+                .identifier("VIPJSI")
                 .prefLabel(map(entry(EN, "Virtual Institute for Peace, Justice and Strong Institutions")))
                 .altLabel(map(entry(EN, "VIPJSI")))
                 .definition(map(entry(EN, """
@@ -167,6 +169,25 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 .homepage(set(uri("https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-peace-justice-and-strong-institutions/")))
                 .unitOf(set(EC2U))
                 .classification(set(VIRTUAL_INSTITUTE));
+    }
+
+
+    static UnitFrame translate(final UnitFrame unit, final Locale source) {
+
+        if ( unit == null ) {
+            throw new NullPointerException("null unit");
+        }
+
+        if ( source == null ) {
+            throw new NullPointerException("null source");
+        }
+
+        final Translator translator=service(translator());
+
+        return unit
+                .prefLabel(translator.texts(unit.prefLabel(), source, EN))
+                .altLabel(translator.texts(unit.altLabel(), source, EN))
+                .definition(translator.texts(unit.definition(), source, EN));
     }
 
 

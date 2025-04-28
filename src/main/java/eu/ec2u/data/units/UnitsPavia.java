@@ -45,6 +45,7 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
+import static eu.ec2u.data.units.Unit.translate;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Pavia;
@@ -107,8 +108,7 @@ public final class UnitsPavia implements Runnable {
 
                 .flatMap(this::catalog)
                 .map(this::details)
-
-                // !!! .map(model -> translate("en", model))
+                .map(unit -> translate(unit, Pavia().locale()))
 
                 .optMap(new Validate<>())
 

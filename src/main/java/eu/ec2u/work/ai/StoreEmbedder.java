@@ -16,18 +16,20 @@
 
 package eu.ec2u.work.ai;
 
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.flow.toolkits.Strings.fold;
 import static com.metreeca.mesh.Value.String;
+import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.field;
 import static com.metreeca.mesh.Value.id;
 import static com.metreeca.mesh.Value.object;
@@ -40,12 +42,18 @@ import static com.metreeca.mesh.shapes.Property.property;
 import static com.metreeca.mesh.shapes.Shape.shape;
 import static com.metreeca.mesh.shapes.Type.type;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.util.Collections.list;
+import static com.metreeca.mesh.util.Loggers.time;
 import static com.metreeca.mesh.util.URIs.item;
 import static com.metreeca.mesh.util.URIs.uuid;
 
 import static java.lang.String.format;
+import static java.util.function.Predicate.not;
 
 public final class StoreEmbedder implements Embedder {
+
+    private static final String PARTITION="~embeddings";
+
 
     private static final String EMBEDDING="Embedding";
 
@@ -62,7 +70,7 @@ public final class StoreEmbedder implements Embedder {
 
     private final Embedder embedder;
 
-    private URI partition=item("~embeddings");
+    private URI partition=item(PARTITION);
 
     private final Store store=service(store());
     private final Logger logger=service(logger());
@@ -92,39 +100,47 @@ public final class StoreEmbedder implements Embedder {
 
     @Override
     public Optional<Vector> apply(final String text) {
-        return store
 
-                .retrieve(value(query()
-                        .model(object(
-                                shape(EMBEDDING_SHAPE),
-                                field(VECTOR, String())
+        if ( text == null ) {
+            throw new NullPointerException("null text");
+        }
+
+        return Optional.of(text)
+                .filter(not(String::isBlank))
+                .flatMap(t -> time(() -> store
+
+                        .retrieve(value(query()
+                                .model(object(
+                                        shape(EMBEDDING_SHAPE),
+                                        field(VECTOR, String())
+                                ))
+                                .where(STRING, criterion().any(string(t)))
                         ))
-                        .where(STRING, criterion().any(string(text)))
-                ))
 
-                .flatMap(value -> value.select("*.values").strings().findFirst())
-                .map(Vector::decode)
+                        .flatMap(value -> value.select("*.vector").strings().findFirst())
+                        .map(Vector::decode)
 
-                .map(embedding -> {
+                ).apply((elapsed, vector) -> vector.ifPresent(v -> logger.info(this, format(
 
-                    logger.info(this, format("retrieved embedding for <%s>", fold(text)));
+                        "retrieved embedding for <%,d> chars in <%,d> ms", t.length(), elapsed
+
+                )))).or(() -> embedder.apply(t).map(embedding -> {
+
+                    store.partition(partition).update(array(list(Stream
+                            .of(object(
+                                    shape(EMBEDDING_SHAPE),
+                                    id(item(uuid(t))),
+                                    field(STRING, string(t)),
+                                    field(VECTOR, string(Vector.encode(embedding)))
+                            ))
+                            .map(new Validate<>())
+                            .flatMap(Optional::stream)
+                    )), FORCE);
+
 
                     return embedding;
 
-                })
-
-                .or(() -> embedder.apply(text).map(embedding -> {
-
-                    store.partition(partition).update(object(
-                            shape(EMBEDDING_SHAPE),
-                            id(item(uuid(text))),
-                            field(STRING, string(text)),
-                            field(VECTOR, string(Vector.encode(embedding)))
-                    ), FORCE);
-
-                    return embedding;
-
-                }));
+                })));
     }
 
 }

@@ -23,6 +23,7 @@ import { immutable, multiple, optional, repeatable, required } from "@metreeca/c
 import { boolean } from "@metreeca/core/boolean";
 import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
+import { string } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
@@ -39,6 +40,9 @@ export const Unit=immutable({
 	id: required("/units/{code}"),
 
 	generated: optional(boolean),
+
+
+	identifier: optional(string),
 
 	prefLabel: required(text),
 	altLabel: optional(text),
@@ -87,6 +91,10 @@ export function DataUnit() {
 
 		tray={<TileFrame as={({
 
+			identifier,
+
+			altLabel,
+
 			homepage,
 
 			university,
@@ -98,11 +106,20 @@ export function DataUnit() {
 
 			<TileInfo>{{
 
+				"Short": altLabel?.[""]
+
+			}}</TileInfo>
+
+			<TileInfo>{{
+
 				"University": university && <TileLink>{university}</TileLink>,
 
-				"Type": classification?.length && <ul>{classification.map(type =>
-					<li key={type.id}><TileLink>{type}</TileLink></li>
-				)}</ul>
+				"Type": classification?.length === 1 && <TileLink>{classification[0]}</TileLink>
+					|| classification?.length && <ul>{classification.map(type =>
+						<li key={type.id}><TileLink>{type}</TileLink></li>
+					)}</ul>,
+
+				"Code": identifier
 
 			}}</TileInfo>
 

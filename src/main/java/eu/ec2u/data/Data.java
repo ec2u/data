@@ -28,11 +28,10 @@ import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.services.Cache.FileCache;
 import com.metreeca.flow.services.Fetcher.CacheFetcher;
 import com.metreeca.flow.services.Fetcher.URLFetcher;
-import com.metreeca.flow.services.Translator.CacheTranslator;
-import com.metreeca.flow.services.Translator.ComboTranslator;
 
 import eu.ec2u.work.ai.OpenAnalyzer;
 import eu.ec2u.work.ai.OpenEmbedder;
+import eu.ec2u.work.ai.StoreTranslator;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -75,7 +74,7 @@ public final class Data extends Delegator {
 
 
     static {
-        logging(INFO, "com.metreeca");
+        logging(INFO);
         logging(FINE, "com.metreeca.mesh.rdf4j.SPARQLSelector");
     }
 
@@ -107,10 +106,9 @@ public final class Data extends Delegator {
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini"))
                 .set(embedder(), () -> new OpenEmbedder("text-embedding-3-small"))
 
-                .set(translator(), () -> new CacheTranslator(new ComboTranslator(
-                        // !!! new StoreTranslator(),
-                        new GCPTranslator()
-                )));
+                .set(translator(), () -> new StoreTranslator(new GCPTranslator())
+                        .partition(DATA.resolve("~translations"))
+                );
 
     }
 

@@ -32,7 +32,7 @@ import static com.metreeca.mesh.util.Collections.set;
 @Class("skos:Concept")
 public interface SKOSConcept<S extends SKOSConceptScheme<S, C>, C extends SKOSConcept<S, C>> extends SKOS {
 
-    String notation();
+    String notation(); // ;( should be typed as per SKOS best practices
 
 
     @Required
