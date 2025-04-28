@@ -129,6 +129,7 @@ public final class OfferingsLinzCourses implements Runnable {
                         )),
 
                         field(Offerings.numberOfCredits, json.decimal("numberOfCredits").map(Values::literal)),
+                        field(Offerings.educationalLevel, json.string("educationalLevel").map(Values::iri)),
 
                         field(reverse(Programs.hasCourse), json.strings("inProgram.*.identifier.*").map(v ->
                                 item(Programs.Context, Linz, v)

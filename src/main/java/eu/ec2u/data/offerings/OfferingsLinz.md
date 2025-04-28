@@ -5,7 +5,11 @@
 
 # Integration
 
-* data extracted from dedicated REST/JSON API
+* data extracted from dedicated REST/JSON APIs
+
+## 2025-04-28
+
+* Update courses pipeline to read `educationalLevel` directly from the course description
 
 ## 2025-03-24
 
@@ -52,7 +56,7 @@ Accept: application/json
 ```json
 [
   {
-    "courseCode": "296ETECOT3V19",
+    "courseCode": "491ESYNPCHP19",
     "inProgram": [
       {
         "numberOfCredits": 120.0,
@@ -61,26 +65,27 @@ Accept: application/json
           "https://www.jku.at/studium/studienarten/master/"
         ],
         "identifier": [
-          "066/296"
+          "066/491"
         ],
         "name": {
-          "de": "Management in Chemical Technologies"
+          "de": "Chemistry and Chemical Technology"
         },
         "description": {
-          "de": "(1) The English-language Master’s program in \"\"Management in Chemical Technologies\"\" …"
+          "de": "(1) The English-language Master’s program in \"\"Chemistry and Chemical Technology\"\" at the Faculty…"
         }
       }
     ],
-    "numberOfCredits": 3.0,
+    "numberOfCredits": 2.0,
+    "educationalLevel": "https://data.ec2u.eu/concepts/isced-2011/7",
     "url": [
-      "https://studienhandbuch.jku.at/detail.php?lang=en&klaId=296ETECOT3V19"
+      "https://studienhandbuch.jku.at/detail.php?lang=en&klaId=491ESYNPCHP19"
     ],
     "identifier": [
-      "296ETECOT3V19"
+      "491ESYNPCHP19"
     ],
     "name": {
-      "de": "Advanced Organic Technology 3",
-      "en": "Advanced Organic Technology 3"
+      "de": "Practical Photochemistry PR",
+      "en": "Practical Photochemistry PR"
     }
   },
   …
