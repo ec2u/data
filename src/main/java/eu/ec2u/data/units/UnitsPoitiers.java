@@ -112,7 +112,7 @@ public final class UnitsPoitiers implements Runnable {
                         .orElse(null)
                 )
 
-                .hasHead(set(heads(json)))
+                .hasHead(heads(json))
 
                 .unitOf(set(Poitiers()))
 
@@ -143,19 +143,19 @@ public final class UnitsPoitiers implements Runnable {
         );
     }
 
-    private Stream<FOAFPerson> heads(final Value json) {
+    private Set<FOAFPerson> heads(final Value json) {
 
         final List<String> forenames=json.select("prenom_du_responsable.*").strings().toList();
         final List<String> surnames=json.select("nom_du_responsable.*").strings().toList();
 
-        return IntStream
+        return set(IntStream
 
                 .range(0, surnames.size()).mapToObj(index -> {
 
                     final String forename=forenames.get(index);
                     final String surname=surnames.get(index);
 
-                    return new PersonFrame()
+                    return new PersonFrame() // !!! factor
 
                             .id(PERSONS.resolve(uuid(Poitiers(), join(", ", surname, forename))))
                             .university(Poitiers())
@@ -167,7 +167,8 @@ public final class UnitsPoitiers implements Runnable {
                 })
 
                 .map(new Validate<>())
-                .flatMap(Optional::stream);
+                .flatMap(Optional::stream)
+        );
     }
 
 }

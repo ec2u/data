@@ -30,8 +30,6 @@ import org.eclipse.rdf4j.model.vocabulary.SKOSXL;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -112,7 +110,8 @@ public final class EuroSciVoc implements Runnable {
     private final Analyzer analyzer=service(analyzer());
 
 
-    @Override public void run() {
+    @Override
+    public void run() {
         store.partition(EUROSCIVOC).update(array(list(Xtream
 
                 .from(
@@ -153,12 +152,6 @@ public final class EuroSciVoc implements Runnable {
                                         .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
                                                 .textsets(LOCALES).orElse(null)
                                         )
-                                        .definition(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                .texts(LOCALES)
-                                                .map(map -> map.get(EN))
-                                                .flatMap(topic -> define(adopt(id), topic))
-                                                .orElse(null)
-                                        )
                                         .broader(set(concept.forward(SKOS.BROADER)
                                                 .uris().map(b -> new TopicFrame().id(adopt(b)))
                                         ))
@@ -167,9 +160,11 @@ public final class EuroSciVoc implements Runnable {
                                         ))
                                 ))
 
+                                .map(this::define)
                                 .map(Topic::index)
 
                 )
+
 
                 .optMap(new Validate<>())
 
@@ -183,47 +178,52 @@ public final class EuroSciVoc implements Runnable {
         return uri(id.toString().replace(EXTERNAL, INTERNAL));
     }
 
-    private Optional<Map<Locale, String>> define(final URI id, final String topic) {
-        return store.retrieve(new TopicFrame(true)
-                        .id(id)
-                        .definition(map(entry(ANY, "")))
-                )
+    private TopicFrame define(final TopicFrame frame) {
+        return frame.definition(Optional.ofNullable(frame.prefLabel().get(EN))
 
-                .map(value -> value.get("definition"))
-                .map(v -> map(v.texts()))
-
-                .or(() -> analyzer
-
-                        .prompt("""
-                                Provide a definition between 250 and 500 chars for the research activity related \
-                                to the given topic in the European Science Vocabulary (EuroSciVoc) taxonomy of \
-                                fields of science based on OECD's 2015 Frascati Manual taxonomy.
-                                
-                                Respond with a JSON object
-                                """, """
-                                {
-                                   "name": "topic",
-                                   "schema": {
-                                     "type": "object",
-                                     "properties": {
-                                       "definition": {
-                                         "type": "string"
-                                       }
-                                     },
-                                     "required": [
-                                       "definition"
-                                     ],
-                                     "additionalProperties": false
-                                   },
-                                   "strict": true
-                                 }
-                                """
+                .flatMap(topic -> store.retrieve(new TopicFrame(true)
+                                .id(frame.id())
+                                .definition(map(entry(ANY, "")))
                         )
 
-                        .apply(topic)
-                        .flatMap(value -> value.get("definition").string())
-                        .map(definition -> map(entry(EN, definition))));
+                        .flatMap(value -> value.get("definition").value())
+                        .map(v -> map(v.texts()))
 
+                        .or(() -> analyzer
+
+                                .prompt("""
+                                        Provide a definition between 250 and 500 chars for the research activity \
+                                        related to the given topic in the European Science Vocabulary (EuroSciVoc) \
+                                        taxonomy of fields of science based on OECD's 2015 Frascati Manual taxonomy.
+                                        
+                                        Respond with a JSON object
+                                        """, """
+                                        {
+                                           "name": "topic",
+                                           "schema": {
+                                             "type": "object",
+                                             "properties": {
+                                               "definition": {
+                                                 "type": "string"
+                                               }
+                                             },
+                                             "required": [
+                                               "definition"
+                                             ],
+                                             "additionalProperties": false
+                                           },
+                                           "strict": true
+                                         }
+                                        """
+                                )
+
+                                .apply(topic)
+                                .flatMap(value -> value.get("definition").string())
+                                .map(definition -> map(entry(EN, definition)))
+                        ))
+
+                .orElse(null)
+        );
     }
 
 }

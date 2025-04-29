@@ -38,7 +38,7 @@ import static java.util.stream.Collectors.reducing;
 public interface Reference {
 
     int LABEL_LENGTH=100;
-    int COMMENT_LENGTH=1000;
+    int COMMENT_LENGTH=500;
 
 
     @SafeVarargs
