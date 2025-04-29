@@ -199,7 +199,9 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
         final Translator translator=service(translator());
 
-        return unit
+        return unit // translate also customized label/comment
+                .label(translator.texts(unit.label(), source, EN))
+                .comment(translator.texts(unit.comment(), source, EN))
                 .prefLabel(translator.texts(unit.prefLabel(), source, EN))
                 .altLabel(translator.texts(unit.altLabel(), source, EN))
                 .definition(translator.texts(unit.definition(), source, EN));
