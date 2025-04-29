@@ -34,7 +34,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Alias(
 
-        LanguageIn=@LanguageIn({ "", "en", "de", "es", "fi", "fr", "it", "pt", "ro", "sv" })
+        LanguageIn=@LanguageIn({ "", "en", "de", "es", "fi", "fr", "it", "pt", "ro", "se" })
 
 )
 public @interface Localized {
@@ -47,8 +47,8 @@ public @interface Localized {
     Locale IT=locale("it");
     Locale PT=locale("pt");
     Locale RO=locale("ro");
-    Locale SV=locale("sv");
+    Locale SE=locale("se");
 
-    Set<Locale> LOCALES=set(EN, DE, ES, FI, FR, IT, PT, RO, SV);
+    Set<Locale> LOCALES=set(EN, DE, ES, FI, FR, IT, PT, RO, SE);
 
 }
