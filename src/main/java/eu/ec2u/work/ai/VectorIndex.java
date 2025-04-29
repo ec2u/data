@@ -40,16 +40,16 @@ public final class VectorIndex<V> {
     }
 
 
-    public Stream<V> match(final Vector query) {
+    public Stream<V> lookup(final Vector query) {
 
         if ( query == null ) {
             throw new NullPointerException("null query");
         }
 
-        return match(query, 0);
+        return lookup(query, 0);
     }
 
-    public Stream<V> match(final Vector query, final double threshold) {
+    public Stream<V> lookup(final Vector query, final double threshold) {
 
         if ( query == null ) {
             throw new NullPointerException("null query");

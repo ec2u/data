@@ -54,6 +54,15 @@ public interface Topics extends Collection {
         return Arrays.stream(topics).map(Topics::index);
     }
 
+    static Stream<Valuable> index(final java.util.Collection<TopicFrame> topics) {
+
+        if ( topics == null ) {
+            throw new NullPointerException("null topics");
+        }
+
+        return topics.stream().map(Topics::index);
+    }
+
     static TopicFrame index(final TopicFrame topic) {
 
         if ( topic == null ) {

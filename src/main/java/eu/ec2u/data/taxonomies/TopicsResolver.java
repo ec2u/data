@@ -28,12 +28,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.string;
+import static com.metreeca.mesh.Value.text;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.stash;
 import static com.metreeca.mesh.util.URIs.uri;
 
+import static eu.ec2u.data.resources.Localized.EN;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
@@ -57,7 +58,7 @@ final class TopicsResolver {
                                 .model(new TopicFrame(true).id(uri()))
 
                                 .where("inScheme", criterion().any(new TaxonomyFrame(true).id(taxonomy)))
-                                .where("indexed", criterion().any(string(key.getValue())))
+                                .where("prefLabel", criterion().any(text(EN, key.getValue())))
 
                         ))
 

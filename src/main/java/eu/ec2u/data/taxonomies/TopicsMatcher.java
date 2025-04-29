@@ -82,7 +82,7 @@ final class TopicsMatcher {
                 .filter(not(String::isBlank))
                 .flatMap(embedder)
                 .stream()
-                .flatMap(embedding -> index.match(embedding, threshold));
+                .flatMap(embedding -> index.lookup(embedding, threshold));
     }
 
 
