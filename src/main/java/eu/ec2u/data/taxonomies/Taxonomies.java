@@ -25,7 +25,7 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
-import eu.ec2u.data.resources.Collection;
+import eu.ec2u.data.datasets.Dataset;
 
 import java.net.URI;
 import java.util.Locale;
@@ -45,7 +45,7 @@ import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
-public interface Taxonomies extends Collection {
+public interface Taxonomies extends Dataset {
 
     URI TAXONOMIES=DATA.resolve("taxonomies/");
 

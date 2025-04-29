@@ -18,10 +18,9 @@ package eu.ec2u.work.ai;
 
 import com.metreeca.flow.services.Logger;
 
-import com.azure.ai.openai.OpenAIClient;
-import com.azure.ai.openai.models.EmbeddingsOptions;
+import com.openai.client.OpenAIClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
@@ -37,15 +36,17 @@ import static java.util.function.Predicate.not;
 public class OpenEmbedder implements Embedder {
 
     private final String model;
-    private final UnaryOperator<EmbeddingsOptions> setup;
+    private final UnaryOperator<EmbeddingCreateParams.Builder> setup;
 
     private final OpenAIClient client=service(openai());
     private final Logger logger=service(logger());
 
 
-    public OpenEmbedder(final String model) { this(model, options -> options); }
+    public OpenEmbedder(final String model) {
+        this(model, options -> options);
+    }
 
-    public OpenEmbedder(final String model, final UnaryOperator<EmbeddingsOptions> setup) {
+    public OpenEmbedder(final String model, final UnaryOperator<EmbeddingCreateParams.Builder> setup) {
 
         if ( model == null ) {
             throw new NullPointerException("null model");
@@ -64,7 +65,16 @@ public class OpenEmbedder implements Embedder {
     }
 
 
-    @Override public Optional<Vector> apply(final String text) {
+    private EmbeddingCreateParams.Builder params() {
+        return requireNonNull(
+                setup.apply(EmbeddingCreateParams.builder().model(model)), // let setup override the default model
+                "null setup return value"
+        );
+    }
+
+
+    @Override
+    public Optional<Vector> apply(final String text) {
 
         if ( text == null ) {
             throw new NullPointerException("null text");
@@ -76,10 +86,16 @@ public class OpenEmbedder implements Embedder {
 
                 return Optional.of(text)
                         .filter(not(String::isBlank))
-                        .map(t -> client.getEmbeddings(model, requireNonNull(
-                                setup.apply(new EmbeddingsOptions(List.of(t))), "null setup options"
-                        )))
-                        .map(embeddings -> new Vector(embeddings.getData().getFirst().getEmbedding()));
+                        .map(t -> client.embeddings()
+                                .create(params()
+                                        .input(t)
+                                        .build()
+                                )
+                                .data()
+                                .getFirst()
+                                .embedding()
+                        )
+                        .map(Vector::new);
 
             } catch ( final RuntimeException e ) {
 

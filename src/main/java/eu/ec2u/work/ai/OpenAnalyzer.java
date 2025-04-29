@@ -20,25 +20,26 @@ import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.Value;
 
-import com.azure.ai.openai.OpenAIClient;
-import com.azure.ai.openai.models.*;
-import com.azure.json.JsonProviders;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openai.client.OpenAIClient;
+import com.openai.models.ResponseFormatJsonObject;
+import com.openai.models.ResponseFormatJsonSchema;
+import com.openai.models.ResponseFormatJsonSchema.JsonSchema;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.openai.models.chat.completions.ChatCompletionCreateParams.ResponseFormat;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.util.Loggers.time;
 
-import static com.azure.ai.openai.models.ChatCompletionsJsonSchemaResponseFormatJsonSchema.fromJson;
 import static eu.ec2u.work.ai.OpenAI.openai;
-import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
+import static java.util.function.Predicate.not;
 
 /**
  * OpenAI textual analyzer.
@@ -53,15 +54,32 @@ import static java.util.Objects.requireNonNull;
 public final class OpenAnalyzer implements Analyzer {
 
     private final String model;
-    private final UnaryOperator<ChatCompletionsOptions> setup;
+    private final UnaryOperator<ChatCompletionCreateParams.Builder> setup;
 
+    private final String prompt;
+    private final String schema;
+
+    private ResponseFormat format;
 
     private final OpenAIClient client=service(openai());
+    private final Logger logger=service(logger());
 
 
-    public OpenAnalyzer(final String model) { this(model, options -> options); }
+    public OpenAnalyzer(final String model) {
+        this(model, options -> options);
+    }
 
-    public OpenAnalyzer(final String model, final UnaryOperator<ChatCompletionsOptions> setup) {
+    public OpenAnalyzer(final String model, final UnaryOperator<ChatCompletionCreateParams.Builder> setup) {
+        this(model, setup, "", "");
+    }
+
+
+    public OpenAnalyzer(
+            final String model,
+            final UnaryOperator<ChatCompletionCreateParams.Builder> setup,
+            final String prompt,
+            final String schema
+    ) {
 
         if ( model == null ) {
             throw new NullPointerException("null model");
@@ -75,103 +93,119 @@ public final class OpenAnalyzer implements Analyzer {
             throw new NullPointerException("null setup");
         }
 
-        this.model=model;
-        this.setup=setup;
-    }
-
-
-    @Override public Function<String, Optional<Value>> prompt(final String prompt, final String schema) {
-
         if ( prompt == null ) {
             throw new NullPointerException("null prompt");
-        }
-
-        if ( prompt.isBlank() ) {
-            throw new IllegalArgumentException("empty prompt");
         }
 
         if ( schema == null ) {
             throw new NullPointerException("null schema");
         }
 
-        return new Processor(this, prompt, schema);
-
+        this.model=model;
+        this.setup=setup;
+        this.prompt=prompt;
+        this.schema=schema;
     }
 
 
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public Analyzer prompt(final String prompt, final String schema) {
 
-    private static final class Processor implements Function<String, Optional<Value>> {
+        if ( prompt == null ) {
+            throw new NullPointerException("null prompt");
+        }
 
-        private final OpenAnalyzer ai;
-        private final String prompt;
-        private final ChatCompletionsResponseFormat format;
+        if ( schema == null ) {
+            throw new NullPointerException("null schema");
+        }
 
-        private final Logger logger=service(logger());
+        return new OpenAnalyzer(
+                model,
+                setup,
+                prompt,
+                schema
+        );
+    }
 
 
-        private Processor(final OpenAnalyzer ai, final String prompt, final String schema) {
+    private ChatCompletionCreateParams.Builder params() {
+        return requireNonNull(
+                setup.apply(ChatCompletionCreateParams.builder().model(model)), // let setup override the default model
+                "null setup return value"
+        );
+    }
+
+    private ResponseFormat format() {
+        return format != null ? format : (format=Optional.of(schema)
+                .filter(not(String::isBlank))
+                .map(s -> {
+                    try {
+
+                        return ResponseFormat.ofJsonSchema(ResponseFormatJsonSchema.builder()
+                                .jsonSchema(new ObjectMapper().readValue(schema, JsonSchema.class))
+                                .build()
+                        );
+
+                    } catch ( final JsonMappingException e ) {
+
+                        throw new IllegalArgumentException(
+                                String.format("unprocessable JSON schema; %s", e.getMessage()), e
+                        );
+
+                    } catch ( final JsonProcessingException e ) {
+
+                        throw new IllegalArgumentException(
+                                String.format("malformed JSON schema; %s", e.getMessage()), e
+                        );
+
+                    }
+                })
+                .orElseGet(() ->
+                        ResponseFormat.ofJsonObject(ResponseFormatJsonObject.builder().build())
+                )
+        );
+    }
+
+
+    @Override
+    public Optional<Value> apply(final String text) {
+
+        if ( text == null ) {
+            throw new NullPointerException("null text");
+        }
+
+        return time(() -> {
+
             try {
 
-                this.ai=ai;
-                this.prompt=prompt;
-                this.format=schema.isBlank()
-                        ? new ChatCompletionsJsonResponseFormat()
-                        : new ChatCompletionsJsonSchemaResponseFormat(fromJson(JsonProviders.createReader(schema)));
+                return Optional.of(text)
+                        .filter(not(String::isBlank))
+                        .flatMap(t -> client.chat().completions()
+                                .create(params()
+                                        .responseFormat(format())
+                                        .addSystemMessage(prompt)
+                                        .addUserMessage(t)
+                                        .build()
+                                )
+                                .choices()
+                                .getFirst()
+                                .message()
+                                .content()
+                        )
+                        .map(JSON::json);
 
             } catch ( final RuntimeException e ) {
 
-                throw new IllegalArgumentException("invalid JSON schema", e);
+                logger.warning(this, e.getMessage());
 
-            } catch ( final IOException e ) {
-
-                throw new UncheckedIOException(e);
+                return Optional.<Value>empty();
 
             }
-        }
 
+        }).apply((elapsed, value) -> logger.info(this, String.format(
+                "analysed <%,d> chars in <%,d> ms", text.length(), elapsed
+        )));
 
-        @Override public Optional<Value> apply(final String text) {
-
-            if ( text == null ) {
-                throw new NullPointerException("null text");
-            }
-
-            return time(() -> {
-
-                try {
-
-                    final List<ChatRequestMessage> messages=List.of(
-                            new ChatRequestSystemMessage(prompt),
-                            new ChatRequestUserMessage(text)
-                    );
-
-                    final ChatCompletions completions=ai.client.getChatCompletions(ai.model,
-                            requireNonNull(ai.setup.apply(new ChatCompletionsOptions(messages)
-                                    .setTemperature(1.0)
-                                    .setTopP(1.0)
-                                    .setMaxTokens(2048)
-                                    .setFrequencyPenalty(0.0)
-                                    .setPresencePenalty(0.0)
-                            ), "null setup options")
-                                    .setResponseFormat(format)
-                    );
-
-                    return Optional.of(JSON.json(completions.getChoices().getFirst().getMessage().getContent()));
-
-                } catch ( final RuntimeException e ) {
-
-                    logger.warning(this, e.getMessage());
-
-                    return Optional.<Value>empty();
-
-                }
-
-            }).apply((elapsed, value) -> logger.info(this, format(
-                    "analysed <%,d> chars in <%,d> ms", text.length(), elapsed
-            )));
-
-        }
     }
 
 }

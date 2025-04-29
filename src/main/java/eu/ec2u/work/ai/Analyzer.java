@@ -27,47 +27,24 @@ import java.util.function.Supplier;
  *
  * <p>Extracts structured information from texts according to plain language prompts.</p>
  */
-@FunctionalInterface
-public interface Analyzer {
+public interface Analyzer extends Function<String, Optional<Value>> {
 
     /**
      * Retrieves the default text analyzer factory.
      *
      * @return the default text analyzer factory, which throws an exception reporting the service as undefined
      */
-    public static Supplier<Analyzer> analyzer() {
+    static Supplier<Analyzer> analyzer() {
         return () -> { throw new IllegalStateException("undefined text analyzer service"); };
     }
 
 
-    /**
-     * Generates a text analyzer function.
-     *
-     * @param prompt the plain language textual analysis prompt
-     *
-     * @return a text analyzer function that extracts from a textual input a JSON value structured as seen fit
-     *
-     * @throws NullPointerException     if either {@code prompt} or {@code schema} is null
-     * @throws IllegalArgumentException if {@code prompt} is empty
-     */
-    public default Function<String, Optional<Value>> prompt(final String prompt) {
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    default Analyzer prompt(final String prompt) {
         return prompt(prompt, "");
     }
 
-    /**
-     * Generates a text analyzer function.
-     *
-     * @param prompt the plain language textual analysis prompt
-     * @param schema the expected JSON schema for the structured information extracted from the analysed text
-     *
-     * @return a text analyzer function that extracts from a textual input a JSON value structured according the
-     *         provided {@code  schema}
-     *
-     * @throws NullPointerException     if either {@code prompt} o {@code schema} is null
-     * @throws IllegalArgumentException if {@code prompt} is empty
-     * @throws IllegalArgumentException if {@code schema} does not contain a valid JSON schema
-     * @see <a href="https://json-schema.org/docs">JSON Schema</a>
-     */
-    public Function<String, Optional<Value>> prompt(final String prompt, final String schema);
+    Analyzer prompt(final String prompt, final String schema);
 
 }

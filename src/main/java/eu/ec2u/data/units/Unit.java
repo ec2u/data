@@ -189,7 +189,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
         }
 
         return Optional.of(unit)
-                .map(u -> translate(u, source))
+                .map(u -> translate(u, source)) // before English-based classification
                 .map(Unit::classify)
                 .orElse(unit);
     }
@@ -214,11 +214,11 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     }
 
     private static String embeddable(final Unit unit) {
-        return Embedder.embeddable(Xtream.from(
+        return Embedder.embeddable(set(Xtream.from(
                 Optional.ofNullable(unit.prefLabel().get(EN)).stream(),
                 Optional.ofNullable(unit.altLabel().get(EN)).stream(),
                 Optional.ofNullable(unit.definition().get(EN)).stream()
-        ));
+        )));
     }
 
 

@@ -17,43 +17,16 @@
 package eu.ec2u.work.ai;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
 @FunctionalInterface
 public interface Embedder extends Function<String, Optional<Vector>> {
-
-    static String embeddable(final Collection<String> strings) {
-
-        if ( strings == null ) {
-            throw new NullPointerException("null strings");
-        }
-
-        return embeddable(strings.stream());
-    }
-
-    static String embeddable(final Stream<String> strings) {
-
-        if ( strings == null ) {
-            throw new NullPointerException("null strings");
-        }
-
-        return strings
-                .map(string -> requireNonNull(string, "null string"))
-                .distinct()
-                .filter(not(String::isBlank))
-                .map("- %s\n"::formatted)
-                .collect(joining());
-    }
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Retrieves the default text embedder factory.
@@ -62,6 +35,20 @@ public interface Embedder extends Function<String, Optional<Vector>> {
      */
     static Supplier<Embedder> embedder() {
         return () -> { throw new IllegalStateException("undefined text embedder service"); };
+    }
+
+
+    static String embeddable(final Collection<String> strings) {
+
+        if ( strings == null || strings.stream().anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null strings");
+        }
+
+        return strings.stream()
+                .distinct()
+                .filter(not(String::isBlank))
+                .map("- %s\n"::formatted)
+                .collect(joining());
     }
 
 }

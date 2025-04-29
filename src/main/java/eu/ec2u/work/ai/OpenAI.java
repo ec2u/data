@@ -16,9 +16,9 @@
 
 package eu.ec2u.work.ai;
 
-import com.azure.ai.openai.OpenAIClient;
-import com.azure.ai.openai.OpenAIClientBuilder;
-import com.azure.core.credential.KeyCredential;
+
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
 
 import java.util.function.Supplier;
 
@@ -40,9 +40,9 @@ public final class OpenAI {
             throw new NullPointerException("null key");
         }
 
-        return new OpenAIClientBuilder()
-                .credential(new KeyCredential(key))
-                .buildClient();
+        return OpenAIOkHttpClient.builder()
+                .apiKey(key)
+                .build();
     }
 
 

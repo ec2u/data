@@ -23,7 +23,6 @@ import com.metreeca.mesh.meta.shacl.Required;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.taxonomies.Topic;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
@@ -32,6 +31,7 @@ import java.util.Set;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static java.util.Locale.ROOT;
@@ -42,7 +42,7 @@ import static java.util.Locale.ROOT;
 public interface Collection extends Resource {
 
     ReferenceFrame CCBYNCND40=new ReferenceFrame()
-            .id(URI.create("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
+            .id(uri("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
             .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
             .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
 

@@ -20,7 +20,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.EC2U;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.work.ai.Embedder;
@@ -33,9 +32,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.mesh.util.Collections.entry;
-import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.mesh.util.Collections.*;
 
+import static eu.ec2u.data.EC2U.EMBEDDINGS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.util.function.Predicate.not;
@@ -52,19 +51,19 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
 
         return Optional.ofNullable(embeddable(topic))
                 .filter(not(String::isBlank))
-                .flatMap(new StoreEmbedder(service(embedder())).partition(EC2U.EMBEDDINGS))
+                .flatMap(new StoreEmbedder(service(embedder())).partition(EMBEDDINGS))
                 .map(Vector::encode)
                 .map(topic::embedding)
                 .orElse(topic);
     }
 
     static String embeddable(final Topic topic) {
-        return Embedder.embeddable(Xtream.from(
+        return Embedder.embeddable(set(Xtream.from(
                 Optional.ofNullable(topic.prefLabel().get(EN)).stream(),
                 Optional.ofNullable(topic.altLabel().get(EN)).stream().flatMap(Collection::stream),
                 Optional.ofNullable(topic.hiddenLabel().get(EN)).stream().flatMap(Collection::stream),
                 Optional.ofNullable(topic.definition().get(EN)).stream()
-        ));
+        )));
     }
 
 
