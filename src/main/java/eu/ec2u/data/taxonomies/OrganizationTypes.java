@@ -71,7 +71,8 @@ public final class OrganizationTypes implements Runnable {
             .license(set(CCBYNCND40));
 
 
-    public static final TopicFrame UNIVERSITY=new TopicFrame().generated(true)
+    public static final TopicFrame UNIVERSITY=new TopicFrame()
+            .generated(true)
             .id(uri(ORGANIZATIONS+"/university"))
             .topConceptOf(TAXONOMY)
             .inScheme(TAXONOMY)
@@ -82,7 +83,8 @@ public final class OrganizationTypes implements Runnable {
                     Campus of City-Universities collaborative network, sharing resources, expertise, and programs to address \
                     educational, research, and societal challenges across European cities and regions.""")));
 
-    public static final TopicFrame COLLEGE=new TopicFrame().generated(true)
+    public static final TopicFrame COLLEGE=new TopicFrame()
+            .generated(true)
             .id(uri(ORGANIZATIONS+"/college"))
             .topConceptOf(TAXONOMY)
             .inScheme(TAXONOMY)
@@ -93,7 +95,8 @@ public final class OrganizationTypes implements Runnable {
                     alliance universities, offering focused curricula, interdisciplinary studies, or specialized training \
                     complementing broader university programs.""")));
 
-    public static final TopicFrame ASSOCIATION=new TopicFrame().generated(true)
+    public static final TopicFrame ASSOCIATION=new TopicFrame()
+            .generated(true)
             .id(uri(ORGANIZATIONS+"/association"))
             .topConceptOf(TAXONOMY)
             .inScheme(TAXONOMY)
@@ -104,7 +107,8 @@ public final class OrganizationTypes implements Runnable {
                     professional consortia, or cooperative entities that collaborate with the alliance universities \
                     to enhance educational outcomes, research initiatives, or community engagement.""")));
 
-    public static final TopicFrame CITY=new TopicFrame().generated(true)
+    public static final TopicFrame CITY=new TopicFrame()
+            .generated(true)
             .id(uri(ORGANIZATIONS+"/city"))
             .topConceptOf(TAXONOMY)
             .inScheme(TAXONOMY)
@@ -115,7 +119,8 @@ public final class OrganizationTypes implements Runnable {
                     Salamanca, and Turku—provide infrastructure, community resources, and collaboration opportunities for cultural, economic, \
                     and social initiatives linked to alliance activities.""")));
 
-    public static final TopicFrame OTHER=new TopicFrame().generated(true)
+    public static final TopicFrame OTHER=new TopicFrame()
+            .generated(true)
             .id(uri(ORGANIZATIONS+"/other"))
             .topConceptOf(TAXONOMY)
             .inScheme(TAXONOMY)
@@ -126,7 +131,8 @@ public final class OrganizationTypes implements Runnable {
                     cultural institutions, research foundations, startups, or other entities that collaborate with alliance members \
                     on educational programs, research initiatives, knowledge transfer, or community projects.""")));
 
-    public static final TopicFrame UNIVERSITY_UNIT=new TopicFrame().generated(true)
+    public static final TopicFrame UNIVERSITY_UNIT=new TopicFrame()
+            .generated(true)
             .id(uri(ORGANIZATIONS+"/university-unit"))
             .topConceptOf(TAXONOMY)
             .inScheme(TAXONOMY)
@@ -138,7 +144,8 @@ public final class OrganizationTypes implements Runnable {
                     offices, and specialized facilities that collectively enable the university's mission of education, research, \
                     and community service.""")));
 
-    public static final TopicFrame AREA=new TopicFrame().generated(true)
+    public static final TopicFrame AREA=new TopicFrame()
+            .generated(true)
             .id(uri(UNIVERSITY_UNIT.id()+"/area"))
             .broader(set(UNIVERSITY_UNIT))
             .inScheme(TAXONOMY)
@@ -150,7 +157,8 @@ public final class OrganizationTypes implements Runnable {
                     the University with an appointed head/board."""
             )));
 
-    public static final TopicFrame NETWORK=new TopicFrame().generated(true)
+    public static final TopicFrame NETWORK=new TopicFrame()
+            .generated(true)
             .id(uri(UNIVERSITY_UNIT.id()+"/network"))
             .broader(set(UNIVERSITY_UNIT))
             .inScheme(TAXONOMY)
@@ -160,7 +168,8 @@ public final class OrganizationTypes implements Runnable {
                     organization of the University; not limited to the researchers of the University"""
             )));
 
-    public static final TopicFrame INSTITUTE=new TopicFrame().generated(true)
+    public static final TopicFrame INSTITUTE=new TopicFrame()
+            .generated(true)
             .id(uri(UNIVERSITY_UNIT.id()+"/institute"))
             .broader(set(UNIVERSITY_UNIT))
             .inScheme(TAXONOMY)
@@ -171,7 +180,8 @@ public final class OrganizationTypes implements Runnable {
                     offer specialized educational programs, facilitate knowledge exchange, and foster international collaborations. \
                     They may operate with varying degrees of autonomy while maintaining connections to their parent universities.""")));
 
-    public static final TopicFrame VIRTUAL_INSTITUTE=new TopicFrame().generated(true)
+    public static final TopicFrame VIRTUAL_INSTITUTE=new TopicFrame()
+            .generated(true)
             .id(uri(INSTITUTE.id()+"/virtual"))
             .broader(set(INSTITUTE))
             .inScheme(TAXONOMY)
@@ -183,7 +193,8 @@ public final class OrganizationTypes implements Runnable {
                     trainings like internships, summer/winter schools, and workshops. These knowledge-creating teams develop solutions to \
                     local, national, European and global challenges by collaborating across institutional boundaries.""")));
 
-    public static final TopicFrame DEPARTMENT=new TopicFrame().generated(true)
+    public static final TopicFrame DEPARTMENT=new TopicFrame()
+            .generated(true)
             .id(uri(UNIVERSITY_UNIT.id()+"/department"))
             .broader(set(UNIVERSITY_UNIT))
             .inScheme(TAXONOMY)
@@ -195,7 +206,8 @@ public final class OrganizationTypes implements Runnable {
                     discipline. They form the core organizational structure through which academic activities are planned, delivered, \
                     and assessed.""")));
 
-    public static final TopicFrame CENTRE=new TopicFrame().generated(true)
+    public static final TopicFrame CENTRE=new TopicFrame()
+            .generated(true)
             .id(uri(UNIVERSITY_UNIT.id()+"/centre"))
             .broader(set(UNIVERSITY_UNIT))
             .inScheme(TAXONOMY)
@@ -208,7 +220,8 @@ public final class OrganizationTypes implements Runnable {
                     provide specialized services, or engage with external communities, serving as hubs for collaboration across traditional \
                     academic boundaries.""")));
 
-    public static final TopicFrame RESEARCH_CENTRE=new TopicFrame().generated(true)
+    public static final TopicFrame RESEARCH_CENTRE=new TopicFrame()
+            .generated(true)
             .id(uri(CENTRE.id()+"/research"))
             .broader(set(CENTRE))
             .inScheme(TAXONOMY)
@@ -220,7 +233,8 @@ public final class OrganizationTypes implements Runnable {
                     focused research agendas, dedicated research staff, specialized equipment, and external funding sources. They serve as \
                     concentrated environments for research excellence, knowledge creation, and innovation within their domains of specialization.""")));
 
-    public static final TopicFrame INTERDEPARTMENTAL_RESEARCH_CENTRE=new TopicFrame().generated(true)
+    public static final TopicFrame INTERDEPARTMENTAL_RESEARCH_CENTRE=new TopicFrame()
+            .generated(true)
             .id(uri(RESEARCH_CENTRE.id()+"/interdepartmental"))
             .broader(set(RESEARCH_CENTRE))
             .inScheme(TAXONOMY)
@@ -233,7 +247,8 @@ public final class OrganizationTypes implements Runnable {
                     multiple departments, shared research facilities, and funding mechanisms that encourage cross-departmental projects and \
                     knowledge integration.""")));
 
-    public static final TopicFrame TRANSFER_CENTRE=new TopicFrame().generated(true)
+    public static final TopicFrame TRANSFER_CENTRE=new TopicFrame()
+            .generated(true)
             .id(uri(CENTRE.id()+"/transfer"))
             .broader(set(CENTRE))
             .inScheme(TAXONOMY)
@@ -246,7 +261,8 @@ public final class OrganizationTypes implements Runnable {
                     and build partnerships with businesses and other organizations. They serve as bridges between academic research and \
                     practical implementation.""")));
 
-    public static final TopicFrame SERVICE_CENTRE=new TopicFrame().generated(true)
+    public static final TopicFrame SERVICE_CENTRE=new TopicFrame()
+            .generated(true)
             .id(uri(CENTRE.id()+"/service"))
             .broader(set(CENTRE))
             .inScheme(TAXONOMY)
@@ -259,7 +275,8 @@ public final class OrganizationTypes implements Runnable {
                     operate with service-oriented missions, dedicated staff with specialized expertise, and systems for managing \
                     service requests and delivery.""")));
 
-    public static final TopicFrame GROUP=new TopicFrame().generated(true)
+    public static final TopicFrame GROUP=new TopicFrame()
+            .generated(true)
             .id(uri(UNIVERSITY_UNIT.id()+"/group"))
             .broader(set(UNIVERSITY_UNIT))
             .inScheme(TAXONOMY)
@@ -270,7 +287,8 @@ public final class OrganizationTypes implements Runnable {
                     their efforts to advance knowledge in a specialized field or interdisciplinary area. These groups may vary in their \
                     formal recognition, size, structure, and duration while serving as key units for research collaboration.""")));
 
-    public static final TopicFrame RECOGNIZED_GROUP=new TopicFrame().generated(true)
+    public static final TopicFrame RECOGNIZED_GROUP=new TopicFrame()
+            .generated(true)
             .id(uri(GROUP.id()+"/recognized"))
             .broader(set(GROUP))
             .inScheme(TAXONOMY)
@@ -282,7 +300,8 @@ public final class OrganizationTypes implements Runnable {
                     qualify for internal funding. They are integrated into the university's formal research infrastructure and \
                     contribute to the institution's strategic research goals.""")));
 
-    public static final TopicFrame INFORMAL_GROUP=new TopicFrame().generated(true)
+    public static final TopicFrame INFORMAL_GROUP=new TopicFrame()
+            .generated(true)
             .id(uri(GROUP.id()+"/informal"))
             .broader(set(GROUP))
             .inScheme(TAXONOMY)
@@ -294,7 +313,8 @@ public final class OrganizationTypes implements Runnable {
                     and self-determined objectives, allowing for dynamic research collaborations that may evolve into more formal structures \
                     over time.""")));
 
-    public static final TopicFrame STUDENT_GROUP=new TopicFrame().generated(true)
+    public static final TopicFrame STUDENT_GROUP=new TopicFrame()
+            .generated(true)
             .id(uri(GROUP.id()+"/student"))
             .broader(set(GROUP))
             .inScheme(TAXONOMY)
@@ -306,7 +326,8 @@ public final class OrganizationTypes implements Runnable {
                     research questions, participate in competitions, organize workshops, or contribute to larger research initiatives while \
                     developing students' research skills.""")));
 
-    public static final TopicFrame LABORATORY=new TopicFrame().generated(true)
+    public static final TopicFrame LABORATORY=new TopicFrame()
+            .generated(true)
             .id(uri(UNIVERSITY_UNIT.id()+"/laboratory"))
             .broader(set(UNIVERSITY_UNIT))
             .inScheme(TAXONOMY)
@@ -317,7 +338,8 @@ public final class OrganizationTypes implements Runnable {
                     research across various disciplines. They enable practical training for students, support faculty research \
                     initiatives, and often serve as collaborative spaces for interdisciplinary or inter-university research projects.""")));
 
-    public static final TopicFrame FACILITY=new TopicFrame().generated(true)
+    public static final TopicFrame FACILITY=new TopicFrame()
+            .generated(true)
             .id(uri(UNIVERSITY_UNIT.id()+"/facility"))
             .broader(set(UNIVERSITY_UNIT))
             .inScheme(TAXONOMY)
@@ -329,7 +351,8 @@ public final class OrganizationTypes implements Runnable {
                     are typically managed by dedicated staff and serve researchers from various fields, enabling complex research projects \
                     and interdisciplinary collaboration.""")));
 
-    public static final TopicFrame LIBRARY_FACILITY=new TopicFrame().generated(true)
+    public static final TopicFrame LIBRARY_FACILITY=new TopicFrame()
+            .generated(true)
             .id(uri(FACILITY.id()+"/library"))
             .broader(set(FACILITY))
             .inScheme(TAXONOMY)
@@ -341,7 +364,8 @@ public final class OrganizationTypes implements Runnable {
                     They serve as essential infrastructure for researchers across disciplines, preserving knowledge and facilitating its \
                     discovery and use.""")));
 
-    public static final TopicFrame COLLECTION_FACILITY=new TopicFrame().generated(true)
+    public static final TopicFrame COLLECTION_FACILITY=new TopicFrame()
+            .generated(true)
             .id(uri(FACILITY.id()+"/collection"))
             .broader(set(FACILITY))
             .inScheme(TAXONOMY)
@@ -353,7 +377,8 @@ public final class OrganizationTypes implements Runnable {
                     preservation infrastructure, cataloging systems, and access protocols that enable researchers to study unique materials \
                     essential for various disciplines.""")));
 
-    public static final TopicFrame INSTRUMENT_FACILITY=new TopicFrame().generated(true)
+    public static final TopicFrame INSTRUMENT_FACILITY=new TopicFrame()
+            .generated(true)
             .id(uri(FACILITY.id()+"/instrument"))
             .broader(set(FACILITY))
             .inScheme(TAXONOMY)
@@ -366,7 +391,8 @@ public final class OrganizationTypes implements Runnable {
                     that would be impossible without specialized equipment."""
             )));
 
-    public static final TopicFrame STATION_FACILITY=new TopicFrame().generated(true)
+    public static final TopicFrame STATION_FACILITY=new TopicFrame()
+            .generated(true)
             .id(uri(FACILITY.id()+"/station"))
             .broader(set(FACILITY))
             .inScheme(TAXONOMY)
@@ -399,7 +425,7 @@ public final class OrganizationTypes implements Runnable {
                                 TAXONOMY
                         ),
 
-                        Topics.index(
+                        Stream.of(
                                 UNIVERSITY,
                                 COLLEGE,
                                 ASSOCIATION,
@@ -426,6 +452,8 @@ public final class OrganizationTypes implements Runnable {
                                 COLLECTION_FACILITY,
                                 INSTRUMENT_FACILITY,
                                 STATION_FACILITY
+                        ).map(
+                                Topic::index
                         )
 
                 )

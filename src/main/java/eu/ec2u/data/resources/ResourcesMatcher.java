@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.resources;
 
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.work.ai.Embedder;
+import eu.ec2u.work.ai.StoreEmbedder;
 import eu.ec2u.work.ai.Vector;
 import eu.ec2u.work.ai.VectorIndex;
 
@@ -36,46 +37,51 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.stash;
 import static com.metreeca.mesh.util.URIs.uri;
 
+import static eu.ec2u.data.EC2U.EMBEDDINGS;
 import static eu.ec2u.work.ai.Embedder.embedder;
-import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
 
-final class TopicsMatcher {
+final class ResourcesMatcher {
 
-    private static final Map<URI, VectorIndex<Topic>> INDICES=new ConcurrentHashMap<>();
+    private static final int CACHING_SIZE_LIMIT=100;
 
 
-    static Stream<Topic> match(final URI taxonomy, final String query, final double threshold) {
+    private static final Map<URI, VectorIndex<URI>> INDICES=new ConcurrentHashMap<>();
+
+
+    static Stream<URI> match(final URI collection, final String query, final double threshold) {
 
         final Store store=service(store());
-        final Embedder embedder=service(embedder());
+        final Embedder embedder=new StoreEmbedder(service(embedder()))
+                .partition(EMBEDDINGS)
+                .limit(CACHING_SIZE_LIMIT);
 
-        final VectorIndex<Topic> index=INDICES.computeIfAbsent(taxonomy, t -> new VectorIndex<>(store
+        final VectorIndex<URI> index=INDICES.computeIfAbsent(collection, t -> new VectorIndex<URI>(store
 
-                .retrieve(new TopicsFrame(true)
+                .retrieve(new ResourcesFrame(true)
 
                         .members(stash(query()
 
-                                .model(new TopicFrame()
+                                .model(new ResourceFrame()
                                         .id(uri())
                                         .embedding("")
                                 )
 
-                                .where("inScheme", criterion()
-                                        .any(new TaxonomyFrame(true).id(t))
+                                .where("collection", criterion()
+                                        .any(new CollectionFrame(true).id(t))
                                 )
 
                         ))
 
                 )
 
-                .map(TopicsFrame::new)
-                .map(TopicsFrame::members)
+                .map(ResourcesFrame::new)
+                .map(ResourcesFrame::members)
                 .stream()
                 .flatMap(Collection::stream)
-                .filter(topic -> topic.embedding() != null)
-                .collect(toMap(identity(), topic -> Vector.decode(topic.embedding())))
+                .filter(resource -> resource.embedding() != null)
+                .collect(toMap(Reference::id, resource -> Vector.decode(resource.embedding())))
         ));
 
         return Optional.of(query)
@@ -88,6 +94,6 @@ final class TopicsMatcher {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private TopicsMatcher() { }
+    private ResourcesMatcher() { }
 
 }

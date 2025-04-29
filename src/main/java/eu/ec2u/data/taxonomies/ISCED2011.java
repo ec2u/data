@@ -252,7 +252,7 @@ public final class ISCED2011 implements Runnable {
                                 UNESCO_INSTITUTE_FOR_STATISTICS
                         ),
 
-                        Topics.index(
+                        Stream.of(
                                 LEVEL0,
                                 LEVEL1,
                                 LEVEL2,
@@ -263,6 +263,8 @@ public final class ISCED2011 implements Runnable {
                                 LEVEL7,
                                 LEVEL8,
                                 LEVEL9
+                        ).map(
+                                Topic::index
                         )
 
                 )

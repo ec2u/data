@@ -32,7 +32,9 @@ import eu.ec2u.data.units.UnitsFrame;
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -46,6 +48,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static java.lang.String.format;
 
 
 @Frame
@@ -53,6 +56,37 @@ import static eu.ec2u.data.resources.Localized.EN;
 public interface Resources extends Dataset {
 
     URI RESOURCES=DATA.resolve("resources/");
+
+
+    static Optional<URI> match(final URI collection, final String query) {
+
+        if ( collection == null ) {
+            throw new NullPointerException("null collection");
+        }
+
+        if ( query == null ) {
+            throw new NullPointerException("null query");
+        }
+
+        return match(collection, query, 0).findFirst();
+    }
+
+    static Stream<URI> match(final URI collection, final String query, final double threshold) {
+
+        if ( collection == null ) {
+            throw new NullPointerException("null collection");
+        }
+
+        if ( query == null ) {
+            throw new NullPointerException("null query");
+        }
+
+        if ( threshold < 0 ) {
+            throw new IllegalArgumentException(format("negative threshold <%.3f>", threshold));
+        }
+
+        return ResourcesMatcher.match(collection, query, threshold);
+    }
 
 
     static void main(final String... args) {

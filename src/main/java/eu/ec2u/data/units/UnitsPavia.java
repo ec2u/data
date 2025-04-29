@@ -24,7 +24,6 @@ import com.metreeca.flow.xml.formats.HTML;
 
 import eu.ec2u.data.taxonomies.OrganizationTypes;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.Topics;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.Parsers;
 import eu.ec2u.work.ai.Analyzer;
@@ -44,9 +43,7 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
-import static eu.ec2u.data.units.Unit.translate;
-import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
+import static eu.ec2u.data.units.Unit.refine;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
@@ -108,7 +105,7 @@ public final class UnitsPavia implements Runnable {
 
                 .flatMap(this::catalog)
                 .map(this::details)
-                .map(unit -> translate(unit, Pavia().locale()))
+                .map(unit -> refine(unit, Pavia().locale()))
 
                 .optMap(new Validate<>())
 
@@ -291,11 +288,8 @@ public final class UnitsPavia implements Runnable {
 
                 ))
 
-                .map(frame -> frame.subject(set(Topics.match(EUROSCIVOC, frame.embeddable(), SUBJECT_THRESHOLD)
-                        .limit(1)
-                )))
-
                 .orElse(unit);
     }
+
 
 }

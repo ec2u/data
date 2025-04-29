@@ -167,7 +167,7 @@ public final class EuroSciVoc implements Runnable {
                                         ))
                                 ))
 
-                                .map(Topics::index)
+                                .map(Topic::index)
 
                 )
 

@@ -70,7 +70,9 @@ public final class StoreEmbedder implements Embedder {
 
     private final Embedder embedder;
 
+    private int limit; // length limit for cached embeddings (short texts are likely to be repeating labels)
     private URI partition=item(PARTITION);
+
 
     private final Store store=service(store());
     private final Logger logger=service(logger());
@@ -85,6 +87,16 @@ public final class StoreEmbedder implements Embedder {
         this.embedder=embedder;
     }
 
+    public StoreEmbedder limit(final int limit) {
+
+        if ( limit < 0 ) {
+            throw new IllegalArgumentException(format("negative limit <%d>", limit));
+        }
+
+        this.limit=limit;
+
+        return this;
+    }
 
     public StoreEmbedder partition(final URI partition) {
 
@@ -126,17 +138,18 @@ public final class StoreEmbedder implements Embedder {
 
                 )))).or(() -> embedder.apply(t).map(embedding -> {
 
-                    store.partition(partition).update(array(list(Stream
-                            .of(object(
-                                    shape(EMBEDDING_SHAPE),
-                                    id(item(uuid(t))),
-                                    field(STRING, string(t)),
-                                    field(VECTOR, string(Vector.encode(embedding)))
-                            ))
-                            .map(new Validate<>())
-                            .flatMap(Optional::stream)
-                    )), FORCE);
-
+                    if ( limit == 0 || text.length() <= limit ) {
+                        store.partition(partition).update(array(list(Stream
+                                .of(object(
+                                        shape(EMBEDDING_SHAPE),
+                                        id(item(uuid(t))),
+                                        field(STRING, string(t)),
+                                        field(VECTOR, string(Vector.encode(embedding)))
+                                ))
+                                .map(new Validate<>())
+                                .flatMap(Optional::stream)
+                        )), FORCE);
+                    }
 
                     return embedding;
 

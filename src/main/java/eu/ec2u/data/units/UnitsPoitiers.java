@@ -25,8 +25,9 @@ import com.metreeca.mesh.Value;
 import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.PersonsFrame;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.Topics;
+import eu.ec2u.data.taxonomies.TopicFrame;
 
 import java.net.URI;
 import java.util.List;
@@ -45,7 +46,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
-import static eu.ec2u.data.units.Unit.translate;
+import static eu.ec2u.data.units.Unit.refine;
 import static eu.ec2u.data.units.Units.*;
 import static eu.ec2u.data.universities.University.Poitiers;
 import static eu.ec2u.data.universities.University.uuid;
@@ -74,7 +75,7 @@ public final class UnitsPoitiers implements Runnable {
 
                 .flatMap(this::units)
                 .optMap(this::unit)
-                .map(unit -> translate(unit, Poitiers().locale()))
+                .map(unit -> refine(unit, Poitiers().locale()))
 
                 .optMap(new Validate<>())
 
@@ -127,7 +128,8 @@ public final class UnitsPoitiers implements Runnable {
     private Set<Topic> classification(final Value json) {
         return set(json.get("type_de_structure").string().stream()
                 .distinct()
-                .flatMap(topic -> Topics.match(ORGANIZATIONS, topic, TYPE_THRESHOLD))
+                .flatMap(topic -> Resources.match(ORGANIZATIONS, topic, TYPE_THRESHOLD))
+                .map(uri -> new TopicFrame(true).id(uri))
                 .limit(1)
         );
     }
@@ -135,7 +137,8 @@ public final class UnitsPoitiers implements Runnable {
     private Set<Topic> subject(final Value json) {
         return set(json.select("domaine_scientifique.*").strings()
                 .distinct()
-                .flatMap(topic -> Topics.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                .map(uri -> new TopicFrame(true).id(uri))
                 .limit(1)
         );
     }

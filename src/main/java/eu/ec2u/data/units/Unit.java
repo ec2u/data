@@ -30,9 +30,13 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Resource;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Topic;
+import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
@@ -46,7 +50,9 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.taxonomies.OrganizationTypes.VIRTUAL_INSTITUTE;
+import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.units.Units.UNITS;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
@@ -172,7 +178,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     }
 
 
-    static UnitFrame translate(final UnitFrame unit, final Locale source) {
+    static UnitFrame refine(final UnitFrame unit, final Locale source) {
 
         if ( unit == null ) {
             throw new NullPointerException("null unit");
@@ -182,12 +188,37 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
             throw new NullPointerException("null source");
         }
 
+        return Optional.of(unit)
+                .map(u -> translate(u, source))
+                .map(Unit::classify)
+                .orElse(unit);
+    }
+
+
+    private static UnitFrame translate(final UnitFrame unit, final Locale source) {
+
         final Translator translator=service(translator());
 
         return unit
                 .prefLabel(translator.texts(unit.prefLabel(), source, EN))
                 .altLabel(translator.texts(unit.altLabel(), source, EN))
                 .definition(translator.texts(unit.definition(), source, EN));
+    }
+
+    private static UnitFrame classify(final UnitFrame unit) {
+        return unit.subject().isEmpty() ? unit.subject(set(Resources
+                .match(EUROSCIVOC, embeddable(unit), SUBJECT_THRESHOLD)
+                .map(uri -> new TopicFrame(true).id(uri))
+                .limit(1)
+        )) : unit;
+    }
+
+    private static String embeddable(final Unit unit) {
+        return Embedder.embeddable(Xtream.from(
+                Optional.ofNullable(unit.prefLabel().get(EN)).stream(),
+                Optional.ofNullable(unit.altLabel().get(EN)).stream(),
+                Optional.ofNullable(unit.definition().get(EN)).stream()
+        ));
     }
 
 
@@ -215,15 +246,6 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     @Forward("dct:")
     Set<Topic> subject();
-
-
-    @Override default String embeddable() {
-        return Resource.bullets(Xtream.from(
-                prefLabel().values().stream(),
-                altLabel().values().stream(),
-                definition().values().stream()
-        ));
-    }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

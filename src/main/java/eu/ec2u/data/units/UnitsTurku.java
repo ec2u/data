@@ -30,7 +30,7 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.units.Unit.translate;
+import static eu.ec2u.data.units.Unit.refine;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Turku;
 
@@ -58,7 +58,7 @@ public final class UnitsTurku implements Runnable {
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
                 .flatMap(new Units.CSVLoader(Turku()))
-                .map(unit -> translate(unit, Turku().locale()))
+                .map(unit -> refine(unit, Turku().locale()))
 
                 .optMap(new Validate<>())
 

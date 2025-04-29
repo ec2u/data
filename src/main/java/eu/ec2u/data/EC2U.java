@@ -44,6 +44,8 @@ public final class EC2U extends Delegator {
     public static final String BASE="https://data.ec2u.eu/";
 
     public static final URI DATA=uri(BASE);
+    public static final URI EMBEDDINGS=DATA.resolve("~embeddings");
+
     public static final String COPYRIGHT="Copyright © 2022‑2025 EC2U Alliance";
 
     public static final OrgOrganizationFrame EC2U=new OrgOrganizationFrame()

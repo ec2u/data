@@ -109,7 +109,7 @@ public final class SDGs implements Runnable {
 
                         Stream.of(resource(SDGs.class, ".csv").toString())
                                 .flatMap(new Loader())
-                                .map(Topics::index)
+                                .map(Topic::index)
 
                 )
 
