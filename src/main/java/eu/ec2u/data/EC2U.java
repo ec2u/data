@@ -16,8 +16,8 @@
 
 package eu.ec2u.data;
 
-import com.metreeca.flow.handlers.Delegator;
-import com.metreeca.flow.handlers.Router;
+import com.metreeca.flow.http.handlers.Delegator;
+import com.metreeca.flow.http.handlers.Router;
 
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;

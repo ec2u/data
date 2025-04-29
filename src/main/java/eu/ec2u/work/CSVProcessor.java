@@ -17,8 +17,8 @@
 package eu.ec2u.work;
 
 
-import com.metreeca.flow.actions.GET;
 import com.metreeca.flow.csv.formats.CSV;
+import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;

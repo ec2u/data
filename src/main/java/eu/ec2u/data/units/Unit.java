@@ -16,11 +16,11 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.flow.handlers.Delegator;
-import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.http.handlers.Delegator;
+import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
-import com.metreeca.flow.services.Translator;
+import com.metreeca.flow.text.services.Translator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Forward;
@@ -41,7 +41,7 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.services.Translator.translator;
+import static com.metreeca.flow.text.services.Translator.translator;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;

@@ -16,16 +16,16 @@
 
 package eu.ec2u.data;
 
-import com.metreeca.flow.Handler;
-import com.metreeca.flow.handlers.Delegator;
-import com.metreeca.flow.handlers.Router;
-import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.http.Handler;
+import com.metreeca.flow.http.handlers.Delegator;
+import com.metreeca.flow.http.handlers.Router;
+import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.services.Logger;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.Response.BadGateway;
-import static com.metreeca.flow.Response.OK;
 import static com.metreeca.flow.gcp.GCPServer.cron;
+import static com.metreeca.flow.http.Response.BadGateway;
+import static com.metreeca.flow.http.Response.OK;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.util.Loggers.time;
 

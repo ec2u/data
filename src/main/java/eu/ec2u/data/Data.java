@@ -17,17 +17,17 @@
 package eu.ec2u.data;
 
 import com.metreeca.flow.Locator;
-import com.metreeca.flow.Request;
 import com.metreeca.flow.gcp.GCPServer;
 import com.metreeca.flow.gcp.services.GCPTranslator;
 import com.metreeca.flow.gcp.services.GCPVault;
-import com.metreeca.flow.handlers.*;
+import com.metreeca.flow.http.Request;
+import com.metreeca.flow.http.handlers.*;
+import com.metreeca.flow.http.services.Fetcher.CacheFetcher;
+import com.metreeca.flow.http.services.Fetcher.URLFetcher;
 import com.metreeca.flow.rdf4j.handlers.Graphs;
 import com.metreeca.flow.rdf4j.handlers.SPARQL;
 import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.services.Cache.FileCache;
-import com.metreeca.flow.services.Fetcher.CacheFetcher;
-import com.metreeca.flow.services.Fetcher.URLFetcher;
 
 import eu.ec2u.work.ai.OpenAnalyzer;
 import eu.ec2u.work.ai.OpenEmbedder;
@@ -38,17 +38,17 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import java.net.URI;
 import java.nio.file.Paths;
 
-import static com.metreeca.flow.Handler.handler;
 import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.Response.SeeOther;
+import static com.metreeca.flow.http.Handler.handler;
+import static com.metreeca.flow.http.Response.SeeOther;
+import static com.metreeca.flow.http.services.Fetcher.fetcher;
 import static com.metreeca.flow.json.formats.JSON.codec;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.rdf4j.services.Graph.graph;
 import static com.metreeca.flow.services.Cache.cache;
-import static com.metreeca.flow.services.Fetcher.fetcher;
-import static com.metreeca.flow.services.Translator.translator;
 import static com.metreeca.flow.services.Vault.vault;
+import static com.metreeca.flow.text.services.Translator.translator;
 import static com.metreeca.mesh.json.JSONCodec.json;
 import static com.metreeca.mesh.rdf4j.RDF4J.rdf4j;
 import static com.metreeca.mesh.util.Loggers.logging;

@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.universities;
 
-import com.metreeca.flow.handlers.Delegator;
-import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.http.handlers.Delegator;
+import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.lod.actions.Wikidata;

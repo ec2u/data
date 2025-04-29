@@ -18,7 +18,7 @@ package eu.ec2u.work.ai;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.flow.services.Translator;
+import com.metreeca.flow.text.services.Translator;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.flow.services.Translator.preprocess;
+import static com.metreeca.flow.text.services.Translator.preprocess;
 import static com.metreeca.mesh.Value.Text;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.field;

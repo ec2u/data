@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Untag;

@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.taxonomies;
 
-import com.metreeca.flow.handlers.Delegator;
-import com.metreeca.flow.handlers.Router;
-import com.metreeca.flow.handlers.Worker;
+import com.metreeca.flow.http.handlers.Delegator;
+import com.metreeca.flow.http.handlers.Router;
+import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
