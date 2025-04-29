@@ -100,13 +100,16 @@ export function DataUnit() {
 			university,
 			classification,
 
-			hasHead
+			hasHead,
+
+			subject
 
 		}) => <>
 
 			<TileInfo>{{
 
-				"Short": altLabel?.[""]
+				"Short": altLabel?.[""],
+				"Code": identifier
 
 			}}</TileInfo>
 
@@ -117,9 +120,7 @@ export function DataUnit() {
 				"Type": classification?.length === 1 && <TileLink>{classification[0]}</TileLink>
 					|| classification?.length && <ul>{classification.map(type =>
 						<li key={type.id}><TileLink>{type}</TileLink></li>
-					)}</ul>,
-
-				"Code": identifier
+					)}</ul>
 
 			}}</TileInfo>
 
@@ -139,6 +140,14 @@ export function DataUnit() {
 					|| homepage?.length && <ul>{homepage.map(url =>
 						<li key={url}><a href={url}>{toIdString(url, { compact: true })}</a></li>
 					)}</ul>
+
+			}}</TileInfo>
+
+			<TileInfo>{{
+
+				"Topics": subject?.length && <ul>{subject.slice().sort(entryCompare).map(subject =>
+					<li key={subject.id}><TileLink>{subject}</TileLink></li>
+				)}</ul>
 
 			}}</TileInfo>
 
@@ -185,12 +194,6 @@ export function DataUnit() {
 							.map(unit =>
 								<li key={unit.id}><TileLink>{unit}</TileLink></li>
 							)}</ul>
-                    </TileLabel>}
-
-					{subject && <TileLabel name={"Topics"} wide>
-                        <ul>{subject.slice().sort(entryCompare).map(subject =>
-							<li key={subject.id}><TileLink>{subject}</TileLink></li>
-						)}</ul>
                     </TileLabel>}
 
                 </TilePanel>}

@@ -127,7 +127,7 @@ export function DataTopic() {
 			<TilePanel stack>
 
 				{isDefinedBy &&
-                    <TileLabel name={"Source"}><TileLink>{isDefinedBy}</TileLink></TileLabel>
+                    <TileLabel name={"Source"}><a href={isDefinedBy}>{isDefinedBy}</a></TileLabel>
 				}
 
 				{broaderTransitive?.length &&
