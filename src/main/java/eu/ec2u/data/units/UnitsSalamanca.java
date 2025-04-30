@@ -111,6 +111,8 @@ public final class UnitsSalamanca implements Runnable {
     private Stream<? extends Valuable> unit(final Value json) {
         return json.get("id").string().map(id -> new UnitFrame()
 
+                .generated(true)
+
                 .id(UNITS.resolve(uuid(Salamanca(), id)))
 
                 .university(Salamanca())

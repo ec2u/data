@@ -182,6 +182,8 @@ public final class UnitsPavia implements Runnable {
 
                             return new UnitFrame()
 
+                                    .generated(true)
+
                                     .id(UNITS.resolve(University.uuid(Pavia(), url
                                             .map(URI::toString)
                                             .or(() -> json.get("name").string())

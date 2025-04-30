@@ -124,6 +124,8 @@ public final class UnitsCoimbra implements Runnable {
     private Optional<UnitFrame> unit(final Value json) {
         return json.get("id").string().map(id -> new UnitFrame()
 
+                .generated(true)
+
                 .id(UNITS.resolve(uuid(Coimbra(), id)))
                 .university(Coimbra())
 
