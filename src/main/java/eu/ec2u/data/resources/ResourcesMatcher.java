@@ -19,6 +19,7 @@ package eu.ec2u.data.resources;
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.work.ai.Embedder;
+import eu.ec2u.work.ai.Embedder.CacheEmbedder;
 import eu.ec2u.work.ai.StoreEmbedder;
 import eu.ec2u.work.ai.Vector;
 import eu.ec2u.work.ai.VectorIndex;
@@ -49,13 +50,18 @@ final class ResourcesMatcher {
 
     private static final Map<URI, VectorIndex<URI>> INDICES=new ConcurrentHashMap<>();
 
+    private static final ThreadLocal<Embedder> EMMBEDER=ThreadLocal.withInitial(() -> new CacheEmbedder(
+                    new StoreEmbedder(service(embedder()))
+                            .partition(EMBEDDINGS)
+                            .limit(CACHING_SIZE_LIMIT)
+            )
+    );
+
 
     static Stream<URI> match(final URI collection, final String query, final double threshold) {
 
         final Store store=service(store());
-        final Embedder embedder=new StoreEmbedder(service(embedder()))
-                .partition(EMBEDDINGS)
-                .limit(CACHING_SIZE_LIMIT);
+        final Embedder embedder=EMMBEDER.get();
 
         final VectorIndex<URI> index=INDICES.computeIfAbsent(collection, t -> new VectorIndex<URI>(store
 
