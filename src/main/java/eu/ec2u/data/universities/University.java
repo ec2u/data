@@ -34,7 +34,6 @@ import com.metreeca.mesh.meta.shacl.Required;
 import com.metreeca.mesh.util.Locales;
 import com.metreeca.mesh.util.URIs;
 
-import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgFormalOrganization;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.GeoReference;
@@ -472,7 +471,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
 
     @Override
-    default Dataset collection() { return new UniversitiesFrame(); }
+    default Universities collection() { return new UniversitiesFrame(); }
 
     @Override
     default Set<OrgOrganization> subOrganizationOf() { return set(EC2U); }

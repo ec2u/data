@@ -49,9 +49,9 @@ public interface OrgOrganization extends FOAFOrganization {
         return Reference.label(Optional.ofNullable(altLabel().get(ROOT))
                 .filter(not(String::isEmpty))
                 .map(acronym -> map(prefLabel().entrySet().stream().map(e ->
-                        entry(e.getKey(), "%s - %s".formatted(acronym, e.getValue()))
+                        entry(e.getKey(), "%s - %s".formatted(acronym, Reference.label(e.getValue())))
                 )))
-                .orElseGet(this::prefLabel)
+                .orElseGet(() -> Reference.label(prefLabel()))
         );
     }
 

@@ -27,7 +27,6 @@ import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
@@ -243,7 +242,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    default Dataset collection() { return new UnitsFrame(); }
+    default Units collection() { return new UnitsFrame(); }
 
 
     @Forward("dct:")

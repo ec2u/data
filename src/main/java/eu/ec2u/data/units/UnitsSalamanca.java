@@ -28,6 +28,7 @@ import com.metreeca.mesh.util.URIs;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.work.Parsers;
 
 import java.net.URI;
 import java.time.Instant;
@@ -196,10 +197,11 @@ public final class UnitsSalamanca implements Runnable {
                 .classification(set(DEPARTMENT))
 
                 .homepage(set(Xtream.from(
-                        json.get("department_web_usal_url").string().filter(not(String::isBlank)).map(URIs::uri).stream(),
-                        json.get("department_scientific_portal_url").string().filter(not(String::isBlank)).map(URIs::uri).stream()
+                        json.get("department_web_usal_url").string().flatMap(Parsers::uri).stream(),
+                        json.get("department_scientific_portal_url").string().flatMap(Parsers::uri).stream()
 
                 )))
+
         ).flatMap(u -> review(u, Salamanca().locale()));
     }
 
@@ -216,8 +218,8 @@ public final class UnitsSalamanca implements Runnable {
                 .classification(set(INSTITUTE))
 
                 .homepage(set(Xtream.from(
-                        json.get("institute_webusal_url").string().filter(not(String::isBlank)).map(URIs::uri).stream(),
-                        json.get("institute_scientific_portal_url").string().filter(not(String::isBlank)).map(URIs::uri).stream()
+                        json.get("institute_webusal_url").string().flatMap(Parsers::uri).stream(),
+                        json.get("institute_scientific_portal_url").string().flatMap(Parsers::uri).stream()
                 )))
 
         ).flatMap(u -> review(u, Salamanca().locale()));

@@ -41,11 +41,20 @@ public interface Reference {
     int COMMENT_LENGTH=500;
 
 
+    static String label(final String label) {
+        return clip(label, LABEL_LENGTH);
+    }
+
+    static String comment(final String comment) {
+        return clip(comment, COMMENT_LENGTH);
+    }
+
+
     @SafeVarargs
     static Map<Locale, String> label(final Map<Locale, String>... labels) {
         return map(Arrays.stream(labels)
                 .flatMap(m -> m.entrySet().stream())
-                .map(e -> entry(e.getKey(), clip(e.getValue(), LABEL_LENGTH)))
+                .map(e -> entry(e.getKey(), label(e.getValue())))
                 .collect(groupingBy(Map.Entry::getKey, reducing(null, Map.Entry::getValue, (x, y) -> x == null ? y : x)))
         );
     }
@@ -54,7 +63,7 @@ public interface Reference {
     static Map<Locale, String> comment(final Map<Locale, String>... labels) {
         return map(Arrays.stream(labels)
                 .flatMap(m -> m.entrySet().stream())
-                .map(e -> entry(e.getKey(), clip(e.getValue(), COMMENT_LENGTH)))
+                .map(e -> entry(e.getKey(), comment(e.getValue())))
                 .collect(groupingBy(Map.Entry::getKey, reducing(null, Map.Entry::getValue, (x, y) -> x == null ? y : x)))
         );
     }
