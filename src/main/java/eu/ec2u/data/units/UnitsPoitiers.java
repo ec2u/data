@@ -17,16 +17,15 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.flow.http.actions.GET;
-import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
 
-import eu.ec2u.data.agents.FOAFPerson;
+import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.PersonsFrame;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
 
 import java.net.URI;
@@ -67,15 +66,14 @@ public final class UnitsPoitiers implements Runnable {
 
     @Override public void run() {
 
-        final String url="https://data.enseignementsup-recherche.gouv.fr"+
-                         "/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"+
-                         "?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
+        final String url="https://data.enseignementsup-recherche.gouv.fr"
+                         +"/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"
+                         +"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
 
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
                 .flatMap(this::units)
-                .optMap(this::unit)
-                .optMap(unit -> review(unit, Poitiers().locale()))
+                .flatMap(this::unit)
 
         )), FORCE);
     }
@@ -87,7 +85,7 @@ public final class UnitsPoitiers implements Runnable {
                 .flatMap(Value::values);
     }
 
-    private Optional<UnitFrame> unit(final Value json) {
+    private Stream<? extends Valuable> unit(final Value json) {
         return json.get("numero_national_de_structure").string().map(id -> new UnitFrame()
 
                 .generated(true)
@@ -110,45 +108,36 @@ public final class UnitsPoitiers implements Runnable {
                         .orElse(null)
                 )
 
-                .hasHead(heads(json))
-
                 .unitOf(set(Poitiers()))
 
-                .classification(classification(json))
-                .subject(subject(json))
+                .classification(set(classification(json)))
+                .subject(set(subject(json)))
 
-        );
+        ).flatMap(unit -> review(unit, Poitiers().locale())).stream().flatMap(unit -> {
+
+            final Set<PersonFrame> heads=set(heads(json)
+                    .map(p -> p.headOf(set(unit)).memberOf(set(unit)))
+            );
+
+            return Xtream.from(
+                    Stream.of(unit),
+                    heads.stream()
+            );
+
+        });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Set<Topic> classification(final Value json) {
-        return set(json.get("type_de_structure").string().stream()
-                .distinct()
-                .flatMap(topic -> Resources.match(ORGANIZATIONS, topic, TYPE_THRESHOLD))
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(1)
-        );
-    }
-
-    private Set<Topic> subject(final Value json) {
-        return set(json.select("domaine_scientifique.*").strings()
-                .distinct()
-                .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(1)
-        );
-    }
-
-    private Set<FOAFPerson> heads(final Value json) {
+    private Stream<PersonFrame> heads(final Value json) {
 
         final List<String> forenames=json.select("prenom_du_responsable.*").strings().toList();
         final List<String> surnames=json.select("nom_du_responsable.*").strings().toList();
 
-        return set(IntStream
+        return IntStream.range(0, surnames.size())
 
-                .range(0, surnames.size()).mapToObj(index -> {
+                .mapToObj(index -> {
 
                     final String forename=forenames.get(index);
                     final String surname=surnames.get(index);
@@ -164,9 +153,24 @@ public final class UnitsPoitiers implements Runnable {
 
                 })
 
-                .map(new Validate<>())
-                .flatMap(Optional::stream)
-        );
+                .map(Person::review)
+                .flatMap(Optional::stream);
+    }
+
+    private Stream<TopicFrame> classification(final Value json) {
+        return json.get("type_de_structure").string().stream()
+                .distinct()
+                .flatMap(topic -> Resources.match(ORGANIZATIONS, topic, TYPE_THRESHOLD))
+                .map(uri -> new TopicFrame(true).id(uri))
+                .limit(1);
+    }
+
+    private Stream<TopicFrame> subject(final Value json) {
+        return json.select("domaine_scientifique.*").strings()
+                .distinct()
+                .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                .map(uri -> new TopicFrame(true).id(uri))
+                .limit(1);
     }
 
 }

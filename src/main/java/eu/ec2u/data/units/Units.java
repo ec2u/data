@@ -26,7 +26,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
-import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
@@ -248,10 +247,7 @@ public interface Units extends Dataset {
                             value(record, "Email", Parsers::email).stream()
                     ))
 
-                    .hasHead(set(value(record, "Head", person -> person(person, university))
-                            .map(FOAFPerson.class::cast)
-                            .stream()
-                    ))
+                    .hasHead(set(value(record, "Head", person -> person(person, university)).stream())) // !!!
 
             ).flatMap(unit -> review(unit, university.locale()));
         }

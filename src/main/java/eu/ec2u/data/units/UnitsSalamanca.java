@@ -159,17 +159,17 @@ public final class UnitsSalamanca implements Runnable {
 
                 )))
 
-        ).flatMap(u -> review(u, Salamanca().locale())).stream().flatMap(u -> {
+        ).flatMap(unit -> review(unit, Salamanca().locale())).stream().flatMap(unit -> {
 
             final Optional<PersonFrame> head=json.get("head").string()
                     .flatMap(p -> person(p, Salamanca()))
-                    .map(p -> p.headOf(set(u)).memberOf(set(u)));
+                    .map(p -> p.headOf(set(unit)).memberOf(set(unit)));
 
             final Optional<UnitFrame> department=department(json);
             final Optional<UnitFrame> institute=institute(json);
 
             return Xtream.from(
-                    Stream.of(u.unitOf(set(Xtream.from(
+                    Stream.of(unit.unitOf(set(Xtream.from(
                             department.isEmpty() && institute.isEmpty() ? Stream.of(Salamanca()) : Stream.empty(),
                             department.stream(),
                             institute.stream()
@@ -204,7 +204,7 @@ public final class UnitsSalamanca implements Runnable {
 
                 )))
 
-        ).flatMap(u -> review(u, Salamanca().locale()));
+        ).flatMap(unit -> review(unit, Salamanca().locale()));
     }
 
     private Optional<UnitFrame> institute(final Value json) {
@@ -224,7 +224,7 @@ public final class UnitsSalamanca implements Runnable {
                         json.get("institute_scientific_portal_url").string().flatMap(Parsers::uri).stream()
                 )))
 
-        ).flatMap(u -> review(u, Salamanca().locale()));
+        ).flatMap(unit -> review(unit, Salamanca().locale()));
     }
 
 }
