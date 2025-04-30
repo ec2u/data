@@ -104,12 +104,12 @@ export function DataUnit() {
 
 		}) => <>
 
-			<TileInfo>{{
+			{(altLabel || identifier) && <TileInfo>{{
 
 				"Short": altLabel?.[""],
 				"Code": identifier
 
-			}}</TileInfo>
+			}}</TileInfo>}
 
 			<TileInfo>{{
 

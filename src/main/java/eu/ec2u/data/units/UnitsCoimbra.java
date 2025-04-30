@@ -22,6 +22,7 @@ import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.util.URIs;
 
@@ -55,7 +56,8 @@ import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.units.Units.UNITS;
-import static eu.ec2u.data.universities.University.*;
+import static eu.ec2u.data.universities.University.Coimbra;
+import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
@@ -83,7 +85,7 @@ public final class UnitsCoimbra implements Runnable {
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(Instant.EPOCH)
 
                 .flatMap(this::units)
-                .optMap(this::unit)
+                .flatMap(this::unit)
 
         )), FORCE);
     }
@@ -121,7 +123,7 @@ public final class UnitsCoimbra implements Runnable {
                 .flatMap(Value::values);
     }
 
-    private Optional<UnitFrame> unit(final Value json) {
+    private Stream<? extends Valuable> unit(final Value json) {
         return json.get("id").string().map(id -> new UnitFrame()
 
                 .generated(true)
@@ -182,18 +184,28 @@ public final class UnitsCoimbra implements Runnable {
                         subjects(json)
                 )))
 
-        ).flatMap(unit -> review(unit, Coimbra().locale()));
+        ).flatMap(unit -> review(unit, Coimbra().locale())).stream().flatMap(unit -> {
+
+            final Optional<PersonFrame> heads=head(json)
+                    .map(p -> p.headOf(set(unit)).memberOf(set(unit)));
+
+            return Xtream.from(
+                    Stream.of(unit),
+                    heads.stream()
+            );
+
+        });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Optional<Person> head(final Value json) {
+    private Optional<PersonFrame> head(final Value json) {
         return json.get("surname").string()
                 .flatMap(surname ->
                         json.get("forename").string().map(forename -> new PersonFrame() // !!! factor
 
-                                .id(PERSONS.resolve(uuid(Poitiers(), join(", ", surname, forename))))
+                                .id(PERSONS.resolve(uuid(Coimbra(), join(", ", surname, forename))))
                                 .university(Coimbra())
                                 .collection(new PersonsFrame())
 
