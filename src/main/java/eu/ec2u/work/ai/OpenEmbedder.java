@@ -74,7 +74,7 @@ public class OpenEmbedder implements Embedder {
 
 
     @Override
-    public Optional<Vector> apply(final String text) {
+    public Optional<Vector> embed(final String text) {
 
         if ( text == null ) {
             throw new NullPointerException("null text");

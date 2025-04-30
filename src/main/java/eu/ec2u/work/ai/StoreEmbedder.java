@@ -111,7 +111,7 @@ public final class StoreEmbedder implements Embedder {
 
 
     @Override
-    public Optional<Vector> apply(final String text) {
+    public Optional<Vector> embed(final String text) {
 
         if ( text == null ) {
             throw new NullPointerException("null text");
@@ -136,7 +136,7 @@ public final class StoreEmbedder implements Embedder {
 
                         "retrieved embedding for <%,d> chars in <%,d> ms", t.length(), elapsed
 
-                )))).or(() -> embedder.apply(t).map(embedding -> {
+                )))).or(() -> embedder.embed(t).map(embedding -> {
 
                     if ( limit == 0 || text.length() <= limit ) {
                         store.partition(partition).update(array(list(Stream

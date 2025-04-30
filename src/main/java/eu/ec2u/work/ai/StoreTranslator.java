@@ -79,7 +79,6 @@ public final class StoreTranslator implements Translator {
 
     private URI partition=item(PARTITION);
 
-
     private final Store store=service(store());
     private final Logger logger=service(logger());
 

@@ -28,7 +28,9 @@ import com.metreeca.flow.rdf4j.handlers.Graphs;
 import com.metreeca.flow.rdf4j.handlers.SPARQL;
 import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.services.Cache.FileCache;
+import com.metreeca.flow.text.services.Translator.CacheTranslator;
 
+import eu.ec2u.work.ai.Embedder.CacheEmbedder;
 import eu.ec2u.work.ai.OpenAnalyzer;
 import eu.ec2u.work.ai.OpenEmbedder;
 import eu.ec2u.work.ai.StoreTranslator;
@@ -60,7 +62,6 @@ import static eu.ec2u.work.ai.Embedder.embedder;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 
 public final class Data extends Delegator {
@@ -75,7 +76,7 @@ public final class Data extends Delegator {
 
     static {
         logging(INFO);
-        logging(FINE, "com.metreeca.mesh.rdf4j.SPARQLSelector");
+        // logging(FINE, "com.metreeca.mesh.rdf4j.SPARQLSelector");
     }
 
     static {
@@ -104,11 +105,14 @@ public final class Data extends Delegator {
 
                 .set(openai(), () -> openai(service(vault()).get("openai-key")))
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini"))
-                .set(embedder(), () -> new OpenEmbedder("text-embedding-3-small"))
 
-                .set(translator(), () -> new StoreTranslator(new GCPTranslator())
-                        .partition(DATA.resolve("~translations"))
-                );
+                .set(embedder(), () -> new CacheEmbedder(
+                        new OpenEmbedder("text-embedding-3-small")
+                ))
+
+                .set(translator(), () -> new CacheTranslator(
+                        new StoreTranslator(new GCPTranslator()).partition(DATA.resolve("~translations"))
+                ));
 
     }
 

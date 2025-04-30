@@ -86,7 +86,7 @@ final class ResourcesMatcher {
 
         return Optional.of(query)
                 .filter(not(String::isBlank))
-                .flatMap(embedder)
+                .flatMap(embedder::embed)
                 .stream()
                 .flatMap(embedding -> index.lookup(embedding, threshold));
     }

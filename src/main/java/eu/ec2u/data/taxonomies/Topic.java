@@ -49,9 +49,11 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
             throw new NullPointerException("null topic");
         }
 
+        final StoreEmbedder embedder=new StoreEmbedder(service(embedder())).partition(EMBEDDINGS);
+
         return Optional.ofNullable(embeddable(topic))
                 .filter(not(String::isBlank))
-                .flatMap(new StoreEmbedder(service(embedder())).partition(EMBEDDINGS))
+                .flatMap(embedder::embed)
                 .map(Vector::encode)
                 .map(topic::embedding)
                 .orElse(topic);
