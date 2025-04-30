@@ -28,6 +28,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.organizations.OrgOrganizationalUnit;
+import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Topic;
@@ -62,10 +63,17 @@ import static java.util.Map.entry;
 @Namespace(prefix="dct", value="http://purl.org/dc/terms/")
 public interface Unit extends Resource, OrgOrganizationalUnit {
 
+    Set<Unit> VIS=set(
+            GLADE(),
+            VIQE(),
+            VISCC(),
+            VIPJSI()
+    );
+
+
     static UnitFrame GLADE() {
         return new UnitFrame()
                 .id(UNITS.resolve("glade"))
-                .identifier("GLADE")
                 .prefLabel(map(entry(EN, "Virtual Institute for Good Health and Well‑Being")))
                 .altLabel(map(entry(ROOT, "GLADE")))
                 .definition(map(entry(EN, """
@@ -93,9 +101,8 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     static UnitFrame VIQE() {
         return new UnitFrame()
                 .id(UNITS.resolve("viqe"))
-                .identifier("VIQE")
                 .prefLabel(map(entry(EN, "Virtual Institute for Quality Education")))
-                .altLabel(map(entry(EN, "VIQE")))
+                .altLabel(map(entry(ROOT, "VIQE")))
                 .definition(map(entry(EN, """
                         Virtual Institutes are a completely new way of approaching and solving a given challenge. The
                         VIQE, Virtual Institue for Quality Edication combines education, research and innovation for
@@ -117,9 +124,8 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     static UnitFrame VISCC() {
         return new UnitFrame()
                 .id(UNITS.resolve("viscc"))
-                .identifier("VISCC")
                 .prefLabel(map(entry(EN, "Virtual Institute for Sustainable Cities and Communities")))
-                .altLabel(map(entry(EN, "VISCC")))
+                .altLabel(map(entry(ROOT, "VISCC")))
                 .definition(map(entry(EN, """
                         The Virtual Institute for Sustainable Cities and Communities (VISCC) aims at bringing together
                         research, education and innovation, and outreaching in the field of the United Nation’s
@@ -145,9 +151,8 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     static UnitFrame VIPJSI() {
         return new UnitFrame()
                 .id(UNITS.resolve("vipjsi"))
-                .identifier("VIPJSI")
                 .prefLabel(map(entry(EN, "Virtual Institute for Peace, Justice and Strong Institutions")))
-                .altLabel(map(entry(EN, "VIPJSI")))
+                .altLabel(map(entry(ROOT, "VIPJSI")))
                 .definition(map(entry(EN, """
                         The Virtual Institute for Peace, Justice and Strong Institutions (VIPJSI) carries out scientific
                         activities that promote interdisciplinarity, collaborative work and mobility between the EC2U
@@ -177,6 +182,13 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     }
 
 
+    static Optional<Unit> vi(final String code) {
+        return VIS.stream()
+                .filter(vi -> code.equalsIgnoreCase(vi.altLabel().get(ROOT)))
+                .findFirst();
+    }
+
+
     static Optional<UnitFrame> review(final UnitFrame unit, final Locale source) {
 
         if ( unit == null ) {
@@ -198,9 +210,9 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
         final Translator translator=service(translator());
 
-        return unit // translate also customized label/comment
-                .label(translator.texts(unit.label(), source, EN))
-                .comment(translator.texts(unit.comment(), source, EN))
+        return unit // translate also customized labels/comments ;(translated text must be clipped again)
+                .label(Reference.label(translator.texts(unit.label(), source, EN)))
+                .comment(Reference.comment(translator.texts(unit.comment(), source, EN)))
                 .prefLabel(translator.texts(unit.prefLabel(), source, EN))
                 .altLabel(translator.texts(unit.altLabel(), source, EN))
                 .definition(translator.texts(unit.definition(), source, EN));

@@ -146,14 +146,6 @@ public interface Units extends Dataset {
 
     final class CSVLoader extends CSVProcessor<UnitFrame> {
 
-        private static final Set<Unit> VIS=set(
-                Unit.GLADE(),
-                Unit.VIQE(),
-                Unit.VISCC(),
-                Unit.VIPJSI()
-        );
-
-
         private final University university;
 
 
@@ -186,7 +178,7 @@ public interface Units extends Dataset {
                                     .orElseGet(() -> Stream.of(university)),
 
                             value(record, "VI")
-                                    .flatMap(this::vi)
+                                    .flatMap(Unit::vi)
                                     .stream()
 
                     )))
@@ -306,12 +298,6 @@ public interface Units extends Dataset {
                     .toList();
 
             return parents.isEmpty() ? Stream.of(university) : parents.stream();
-        }
-
-        private Optional<Unit> vi(final String code) {
-            return VIS.stream()
-                    .filter(vi -> code.equals(vi.identifier()))
-                    .findFirst();
         }
 
     }

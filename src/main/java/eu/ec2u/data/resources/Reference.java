@@ -24,6 +24,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import static com.metreeca.flow.toolkits.Strings.clip;
@@ -55,7 +56,7 @@ public interface Reference {
         return map(Arrays.stream(labels)
                 .flatMap(m -> m.entrySet().stream())
                 .map(e -> entry(e.getKey(), label(e.getValue())))
-                .collect(groupingBy(Map.Entry::getKey, reducing(null, Map.Entry::getValue, (x, y) -> x == null ? y : x)))
+                .collect(groupingBy(Entry::getKey, reducing(null, Entry::getValue, (x, y) -> x == null ? y : x)))
         );
     }
 
@@ -64,7 +65,7 @@ public interface Reference {
         return map(Arrays.stream(labels)
                 .flatMap(m -> m.entrySet().stream())
                 .map(e -> entry(e.getKey(), comment(e.getValue())))
-                .collect(groupingBy(Map.Entry::getKey, reducing(null, Map.Entry::getValue, (x, y) -> x == null ? y : x)))
+                .collect(groupingBy(Entry::getKey, reducing(null, Entry::getValue, (x, y) -> x == null ? y : x)))
         );
     }
 

@@ -46,14 +46,15 @@ public interface OrgOrganization extends FOAFOrganization {
 
     @Override
     default Map<Locale, String> label() {
-        return Reference.label(Optional.ofNullable(altLabel().get(ROOT))
+        return Reference.label(Optional.ofNullable(acronym())
                 .filter(not(String::isEmpty))
                 .map(acronym -> map(prefLabel().entrySet().stream().map(e ->
-                        entry(e.getKey(), "%s - %s".formatted(acronym, Reference.label(e.getValue())))
+                        entry(e.getKey(), "%s - %s".formatted(acronym, e.getValue()))
                 )))
-                .orElseGet(() -> Reference.label(prefLabel()))
+                .orElseGet(this::prefLabel)
         );
     }
+
 
     @Override
     default Map<Locale, String> comment() {
@@ -62,6 +63,12 @@ public interface OrgOrganization extends FOAFOrganization {
 
 
     String identifier(); // ;( should be typed as per SKOS best practices
+
+
+    @Internal
+    default String acronym() {
+        return altLabel().get(ROOT);
+    }
 
 
     @Required

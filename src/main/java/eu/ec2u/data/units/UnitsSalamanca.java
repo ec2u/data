@@ -17,8 +17,10 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.flow.actions.Fill;
+import com.metreeca.flow.csv.formats.CSV;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Valuable;
@@ -29,20 +31,25 @@ import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.Parsers;
+import org.apache.commons.csv.CSVFormat;
 
 import java.net.URI;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Strings.split;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Person.person;
@@ -62,8 +69,10 @@ public final class UnitsSalamanca implements Runnable {
 
     private static final URI CONTEXT=UNITS.resolve("salamanca");
 
-    private static final String APIUrl="units-salamanca-url"; // vault label
-    private static final String APIKey="units-salamanca-key"; // vault label
+    private static final String API_URL="units-salamanca-url"; // vault label
+    private static final String API_KEY="units-salamanca-key"; // vault label
+
+    private static final String VIS_URL="units-salamanca-vis-url";
 
 
     public static void main(final String... args) {
@@ -74,6 +83,47 @@ public final class UnitsSalamanca implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Vault vault=service(vault());
+    private final Logger logger=service(logger());
+
+
+    private final Collection<Entry<URI, Unit>> vis=Xtream.of(vault.get(VIS_URL))
+
+            .optMap(new GET<>(new CSV(CSVFormat.Builder.create()
+                    .setHeader()
+                    .setSkipHeaderRecord(true)
+                    .setIgnoreHeaderCase(true)
+                    .build()
+            )))
+
+            .flatMap(Collection::stream)
+
+            .map(record -> entry(
+                    record.get("Work"),
+                    record.get("VI") // !!! Unit
+            ))
+
+            .filter(e -> !e.getKey().isEmpty())
+            .filter(e -> !e.getValue().isEmpty())
+
+            .map(e -> {
+
+                final Optional<Unit> vi=Unit.vi(e.getValue());
+
+                if ( vi.isEmpty() ) {
+                    logger.warning(UnitsSalamanca.class, format(
+                            "unknown VI <%s>", e.getValue()
+                    ));
+                }
+
+                return entry(uri(e.getKey()), vi);
+
+            })
+
+            .filter(e -> e.getValue().isPresent())
+
+            .map(e -> entry(e.getKey(), e.getValue().get()))
+
+            .toList();
 
 
     @Override public void run() {
@@ -90,8 +140,8 @@ public final class UnitsSalamanca implements Runnable {
 
     private Stream<Value> units(final Instant updated) {
 
-        final String url=vault.get(APIUrl);
-        final String key=service(vault()).get(APIKey);
+        final String url=vault.get(API_URL);
+        final String key=vault.get(API_KEY);
 
         return Xtream.of(updated)
 
@@ -172,8 +222,10 @@ public final class UnitsSalamanca implements Runnable {
                     Stream.of(unit.unitOf(set(Xtream.from(
                             department.isEmpty() && institute.isEmpty() ? Stream.of(Salamanca()) : Stream.empty(),
                             department.stream(),
-                            institute.stream()
-                            // !!! VIs
+                            institute.stream(),
+                            vis.stream()
+                                    .filter(e -> e.getKey().equals(unit.id()))
+                                    .map(Entry::getValue)
                     )))),
                     head.stream(),
                     department.stream(),
