@@ -100,9 +100,7 @@ export function DataUnit() {
 			university,
 			classification,
 
-			hasHead,
-
-			subject
+			hasHead
 
 		}) => <>
 
@@ -143,14 +141,6 @@ export function DataUnit() {
 
 			}}</TileInfo>
 
-			<TileInfo>{{
-
-				"Topics": subject?.length && <ul>{subject.slice().sort(entryCompare).map(subject =>
-					<li key={subject.id}><TileLink>{subject}</TileLink></li>
-				)}</ul>
-
-			}}</TileInfo>
-
 		</>}>{unit}</TileFrame>}
 	>
 
@@ -177,18 +167,25 @@ export function DataUnit() {
 
 				{description && <TileMark>{toTextString(description)}</TileMark>}
 
-				{(parent.length || hasUnit || subject) && <TilePanel>
+				{(subject?.length || parent.length || hasUnit?.length) && <TilePanel stack>
+
+					{subject && subject.length > 0 && <TileLabel name={"Topics"} wide>
+                        <ul>{subject.slice()
+							.sort(entryCompare)
+							.map(subject =>
+								<li key={subject.id}><TileLink>{subject}</TileLink></li>
+							)}</ul>
+                    </TileLabel>}
 
 					{parent.length > 0 && <TileLabel name={"Parent Organizations"} wide>
                         <ul>{parent.slice()
 							.sort(entryCompare)
 							.map(parent =>
-								<li key={parent.id}><TileLink>{parent}</TileLink>
-								</li>
+								<li key={parent.id}><TileLink>{parent}</TileLink></li>
 							)}</ul>
                     </TileLabel>}
 
-					{hasUnit && <TileLabel name={"Organizational Units"} wide>
+					{hasUnit && hasUnit.length > 0 && <TileLabel name={"Organizational Units"} wide>
                         <ul>{hasUnit.slice()
 							.sort(entryCompare)
 							.map(unit =>
@@ -199,6 +196,7 @@ export function DataUnit() {
                 </TilePanel>}
 
 			</>;
+
 		}}>{unit}</TileFrame>
 
 	</DataPage>;

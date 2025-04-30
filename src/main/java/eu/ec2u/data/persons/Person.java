@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.persons;
 
+import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -40,10 +41,12 @@ import static java.lang.String.format;
 @Namespace("[ec2u]")
 public interface Person extends Resource, FOAFPerson {
 
-    Pattern PERSON_PATTERN=Pattern.compile("([^,]+),([^(]+)(?:\\(([^)]+)\\))?");
+    Pattern PERSON_PATTERN=Pattern.compile(
+            "\\s*(?<family>[^,]+)\\s*,\\s*(?<given>[^(]+)\\s*(?:\\((?<title>[^)]+)\\))?"
+    );
 
 
-    static Optional<Person> person(final String string, final University university) {
+    static Optional<PersonFrame> person(final String string, final University university) {
         return Optional.of(string)
 
                 .map(PERSON_PATTERN::matcher)
@@ -55,14 +58,35 @@ public interface Person extends Resource, FOAFPerson {
                     final String givenName=normalize(matcher.group(2));
 
                     return new PersonFrame()
+
                             .id(PERSONS.resolve(uuid(university, format("%s, %s", familyName, givenName))))
+
                             .university(university)
 
                             .title(title.orElse(null))
                             .givenName(givenName)
                             .familyName(familyName);
 
-                });
+                })
+
+                .flatMap(Person::review);
     }
+
+
+    static Optional<PersonFrame> review(final PersonFrame person) {
+
+        if ( person == null ) {
+            throw new NullPointerException("null person");
+        }
+
+        return Optional.of(person)
+                .flatMap(new Validate<>());
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    default Persons collection() { return new PersonsFrame(); }
 
 }

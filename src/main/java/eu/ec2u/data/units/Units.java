@@ -66,7 +66,7 @@ public interface Units extends Dataset {
     URI UNITS=DATA.resolve("units/");
 
     double TYPE_THRESHOLD=0.25;
-    double SUBJECT_THRESHOLD=0.5;
+    double SUBJECT_THRESHOLD=0.25;
 
 
     static void main(final String... args) {

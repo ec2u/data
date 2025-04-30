@@ -18,7 +18,6 @@ package eu.ec2u.data.units;
 
 import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.http.actions.GET;
-import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
@@ -37,7 +36,6 @@ import eu.ec2u.work.Parsers;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
@@ -86,7 +84,6 @@ public final class UnitsCoimbra implements Runnable {
 
                 .flatMap(this::units)
                 .optMap(this::unit)
-                .optMap(unit -> review(unit, Coimbra().locale()))
 
         )), FORCE);
     }
@@ -127,75 +124,75 @@ public final class UnitsCoimbra implements Runnable {
     private Optional<UnitFrame> unit(final Value json) {
         return json.get("id").string().map(id -> new UnitFrame()
 
-                        .id(UNITS.resolve(uuid(Coimbra(), id)))
-                        .university(Coimbra())
+                .id(UNITS.resolve(uuid(Coimbra(), id)))
+                .university(Coimbra())
 
-                        .homepage(set(json.get("web_url").string().flatMap(Parsers::url).map(URIs::uri).stream()))
-                        .mbox(set(json.get("email").string().flatMap(Parsers::email).stream()))
+                .homepage(set(json.get("web_url").string().flatMap(Parsers::url).map(URIs::uri).stream()))
+                .mbox(set(json.get("email").string().flatMap(Parsers::email).stream()))
 
-                        .identifier(id)
+                .identifier(id)
 
-                        .altLabel(map(json.get("acronym_en").string()
+                .altLabel(map(json.get("acronym_en").string()
+                        .filter(not(String::isEmpty))
+                        .map(v -> entry(ROOT, v))
+                        .stream()
+                ))
+
+                .prefLabel(map(Stream.concat(
+
+                        json.get("name_en").string()
                                 .filter(not(String::isEmpty))
-                                .map(v -> entry(ROOT, v))
+                                .map(v -> entry(EN, v))
+                                .stream(),
+
+                        json.get("name_pt").string()
+                                .filter(not(String::isEmpty))
+                                .map(v -> entry(PT, v))
                                 .stream()
-                        ))
 
-                        .prefLabel(map(Stream.concat(
+                )))
 
-                                json.get("name_en").string()
-                                        .filter(not(String::isEmpty))
-                                        .map(v -> entry(EN, v))
-                                        .stream(),
+                .definition(map(Stream.concat(
 
-                                json.get("name_pt").string()
-                                        .filter(not(String::isEmpty))
-                                        .map(v -> entry(PT, v))
-                                        .stream()
+                        json.get("description_en").string()
+                                .filter(not(String::isEmpty))
+                                .map(v -> entry(EN, v))
+                                .stream(),
 
-                        )))
-
-                        .definition(map(Stream.concat(
-
-                                json.get("description_en").string()
-                                        .filter(not(String::isEmpty))
-                                        .map(v -> entry(EN, v))
-                                        .stream(),
-
-                                json.get("description_pt").string()
-                                        .filter(not(String::isEmpty))
-                                        .map(v -> entry(PT, v))
-                                        .stream()
-
-                        )))
-
-                        .hasHead(heads(json))
-                        .unitOf(set(Coimbra()))
-
-                        .classification(set(json.get("type_en").string()
-                                .flatMap(type2 -> Resources.match(ORGANIZATIONS, type2))
-                                .map(uri -> new TopicFrame(true).id(uri))
+                        json.get("description_pt").string()
+                                .filter(not(String::isEmpty))
+                                .map(v -> entry(PT, v))
                                 .stream()
-                        ))
+
+                )))
+
+                .hasHead(set(head(json).stream()))
+                .unitOf(set(Coimbra()))
+
+                .classification(set(json.get("type_en").string()
+                        .flatMap(type2 -> Resources.match(ORGANIZATIONS, type2))
+                        .map(uri -> new TopicFrame(true).id(uri))
+                        .stream()
+                ))
 
                 .subject(set(Stream.concat(
                         sector(json).stream(), // !!! review property
                         subjects(json)
                 )))
 
-        );
+        ).flatMap(unit -> review(unit, Coimbra().locale()));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Set<Person> heads(final Value json) {
-        return set(json.get("surname").string()
+    private Optional<Person> head(final Value json) {
+        return json.get("surname").string()
                 .flatMap(surname ->
                         json.get("forename").string().map(forename -> new PersonFrame() // !!! factor
 
                                 .id(PERSONS.resolve(uuid(Poitiers(), join(", ", surname, forename))))
-                                .university(Poitiers())
+                                .university(Coimbra())
                                 .collection(new PersonsFrame())
 
                                 .givenName(forename)
@@ -203,9 +200,7 @@ public final class UnitsCoimbra implements Runnable {
 
                         )
                 )
-                .flatMap(new Validate<>())
-                .stream()
-        );
+                .flatMap(Person::review);
     }
 
     private Optional<Topic> sector(final Value json) {
