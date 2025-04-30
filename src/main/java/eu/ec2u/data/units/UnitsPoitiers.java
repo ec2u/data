@@ -46,7 +46,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
-import static eu.ec2u.data.units.Unit.refine;
+import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.*;
 import static eu.ec2u.data.universities.University.Poitiers;
 import static eu.ec2u.data.universities.University.uuid;
@@ -75,9 +75,7 @@ public final class UnitsPoitiers implements Runnable {
 
                 .flatMap(this::units)
                 .optMap(this::unit)
-                .map(unit -> refine(unit, Poitiers().locale()))
-
-                .optMap(new Validate<>())
+                .optMap(unit -> review(unit, Poitiers().locale()))
 
         )), FORCE);
     }

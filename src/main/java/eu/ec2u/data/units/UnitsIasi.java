@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 
@@ -30,7 +29,7 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.units.Unit.refine;
+import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Iasi;
 
@@ -58,9 +57,7 @@ public final class UnitsIasi implements Runnable {
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
                 .flatMap(new Units.CSVLoader(Iasi()))
-                .map(unit -> refine(unit, Iasi().locale()))
-
-                .optMap(new Validate<>())
+                .optMap(unit -> review(unit, Iasi().locale()))
 
         )), FORCE);
     }

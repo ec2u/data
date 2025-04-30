@@ -17,7 +17,6 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.flow.http.actions.GET;
-import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
@@ -43,7 +42,7 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.units.Unit.refine;
+import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
@@ -105,9 +104,7 @@ public final class UnitsPavia implements Runnable {
 
                 .flatMap(this::catalog)
                 .map(this::details)
-                .map(unit -> refine(unit, Pavia().locale()))
-
-                .optMap(new Validate<>())
+                .optMap(unit -> review(unit, Pavia().locale()))
 
         )), FORCE);
     }

@@ -178,7 +178,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     }
 
 
-    static UnitFrame refine(final UnitFrame unit, final Locale source) {
+    static Optional<UnitFrame> review(final UnitFrame unit, final Locale source) {
 
         if ( unit == null ) {
             throw new NullPointerException("null unit");
@@ -191,7 +191,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
         return Optional.of(unit)
                 .map(u -> translate(u, source)) // before English-based classification
                 .map(Unit::classify)
-                .orElse(unit);
+                .flatMap(new Validate<>());
     }
 
 

@@ -54,7 +54,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.PT;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
-import static eu.ec2u.data.units.Unit.refine;
+import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.*;
@@ -86,9 +86,7 @@ public final class UnitsCoimbra implements Runnable {
 
                 .flatMap(this::units)
                 .optMap(this::unit)
-                .map(unit -> refine(unit, Poitiers().locale()))
-
-                .optMap(new Validate<>())
+                .optMap(unit -> review(unit, Coimbra().locale()))
 
         )), FORCE);
     }
