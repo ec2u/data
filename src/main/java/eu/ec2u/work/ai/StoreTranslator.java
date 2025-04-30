@@ -154,8 +154,8 @@ public final class StoreTranslator implements Translator {
 
                 ).apply((elapsed, translation) -> translation.ifPresent(v -> logger.info(this, format(
 
-                        "retrieved translation for <%,d> chars from <%s> to <%s> in <%,d> ms",
-                        text.length(), source.toLanguageTag(), target.toLanguageTag(), elapsed
+                        "retrieved translation for <%s> (<%,d> chars) from <%s> to <%s> in <%,d> ms",
+                        _Texts.clip(text), text.length(), source.toLanguageTag(), target.toLanguageTag(), elapsed
 
                 )))).or(() -> translator.translate(text, source, target).map(translation -> {
 

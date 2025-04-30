@@ -203,7 +203,7 @@ public final class OpenAnalyzer implements Analyzer {
             }
 
         }).apply((elapsed, value) -> logger.info(this, String.format(
-                "analysed <%,d> chars in <%,d> ms", text.length(), elapsed
+                "analysed <%s> (<%,d> chars) in <%,d> ms", _Texts.clip(text), text.length(), elapsed
         )));
 
     }

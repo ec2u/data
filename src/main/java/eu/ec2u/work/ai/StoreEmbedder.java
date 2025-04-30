@@ -134,7 +134,7 @@ public final class StoreEmbedder implements Embedder {
 
                 ).apply((elapsed, vector) -> vector.ifPresent(v -> logger.info(this, format(
 
-                        "retrieved embedding for <%,d> chars in <%,d> ms", t.length(), elapsed
+                        "retrieved embedding for <%s> (<%,d> chars) in <%,d> ms", _Texts.clip(t), t.length(), elapsed
 
                 )))).or(() -> embedder.embed(t).map(embedding -> {
 

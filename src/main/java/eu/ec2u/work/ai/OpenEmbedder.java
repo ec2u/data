@@ -106,7 +106,7 @@ public class OpenEmbedder implements Embedder {
             }
 
         }).apply((elapsed, value) -> logger.info(this, format(
-                "embedded <%,d> chars in <%,d> ms", text.length(), elapsed
+                "embedded <%s> (<%,d> chars) in <%,d> ms", _Texts.clip(text), text.length(), elapsed
         )));
 
     }
