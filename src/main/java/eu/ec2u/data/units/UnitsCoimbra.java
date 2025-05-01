@@ -28,6 +28,7 @@ import com.metreeca.mesh.util.URIs;
 
 import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
+import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.persons.PersonsFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Topic;
@@ -48,7 +49,6 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.PT;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.ORGANIZATIONS;
@@ -204,7 +204,7 @@ public final class UnitsCoimbra implements Runnable {
                 .flatMap(surname ->
                         json.get("forename").string().map(forename -> new PersonFrame() // !!! factor
 
-                                .id(PERSONS.resolve(uuid(Coimbra(), join(", ", surname, forename))))
+                                .id(Persons.PERSONS.id().resolve(uuid(Coimbra(), join(", ", surname, forename))))
                                 .university(Coimbra())
                                 .collection(new PersonsFrame())
 

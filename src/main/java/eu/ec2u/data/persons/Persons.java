@@ -18,15 +18,11 @@ package eu.ec2u.data.persons;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.datasets.Datasets;
 
-import java.net.URI;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
@@ -36,56 +32,34 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
 public interface Persons extends Dataset {
 
-    URI PERSONS=DATA.resolve("persons/");
+    Persons PERSONS=new PersonsFrame()
+            .id(DATA.resolve("persons/"))
+            .isDefinedBy(Datasets.DATASETS.id().resolve("persons"))
+            .title(map(entry(EN, "EC2U Faculty, Researchers and Staff")))
+            .alternative(map(entry(EN, "EC2U People")))
+            .description(map(entry(EN, "Staff involved in teaching and research activities at EC2U allied universities.")))
+            .publisher(EC2U)
+            .rights(COPYRIGHT)
+            .license(set(CCBYNCND40));
 
 
     static void main(final String... args) {
-        exec(() -> {
+        exec(() -> service(store()).partition(PERSONS.id()).update(array(list(
 
-            final Value update=array(list(Xtream.of(new PersonsFrame())
-                    .optMap(new Validate<>())
-            ));
+                Xtream.of(new PersonsFrame())
+                        .optMap(new Validate<>())
 
-            service(store()).partition(PERSONS).update(update, FORCE);
-
-        });
+        )), FORCE));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default URI id() {
-        return PERSONS;
-    }
-
-
-    @Override
-    default Map<Locale, String> title() {
-        return map(entry(EN, "EC2U Faculty, Researchers and Staff"));
-    }
-
-    @Override
-    default Map<Locale, String> alternative() {
-        return map(entry(EN, "EC2U People"));
-    }
-
-    @Override
-    default Map<Locale, String> description() {
-        return map(entry(EN, "Persons involved in teaching and research activities\nat EC2U allied universities."));
-    }
-
-    @Override
-    default URI isDefinedBy() {
-        return Datasets.DATASETS.id().resolve("persons");
-    }
-
 
     @Override
     Set<Person> members();

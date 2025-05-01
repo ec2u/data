@@ -32,7 +32,6 @@ import java.util.regex.Pattern;
 
 import static com.metreeca.flow.toolkits.Strings.normalize;
 
-import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
 
@@ -59,7 +58,7 @@ public interface Person extends Resource, FOAFPerson {
 
                     return new PersonFrame()
 
-                            .id(PERSONS.resolve(uuid(university, format("%s, %s", familyName, givenName))))
+                            .id(Persons.PERSONS.id().resolve(uuid(university, format("%s, %s", familyName, givenName))))
 
                             .university(university)
 

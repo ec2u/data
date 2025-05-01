@@ -24,6 +24,7 @@ import com.metreeca.mesh.Value;
 
 import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
+import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.persons.PersonsFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
@@ -42,7 +43,6 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
@@ -144,7 +144,7 @@ public final class UnitsPoitiers implements Runnable {
 
                     return new PersonFrame() // !!! factor
 
-                            .id(PERSONS.resolve(uuid(Poitiers(), join(", ", surname, forename))))
+                            .id(Persons.PERSONS.id().resolve(uuid(Poitiers(), join(", ", surname, forename))))
                             .university(Poitiers())
                             .collection(new PersonsFrame())
 
