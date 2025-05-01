@@ -18,6 +18,7 @@ package eu.ec2u.data.units;
 
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.tools.Store;
 
 import java.net.URI;
 
@@ -45,6 +46,7 @@ public final class UnitsIasi implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Store store=service(store());
     private final Vault vault=service(vault());
 
 
@@ -52,9 +54,9 @@ public final class UnitsIasi implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
+        store.partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new Units.CSVLoader(Iasi()))
+                .flatMap(new Units.Loader(Iasi()))
 
         )), FORCE);
     }

@@ -50,7 +50,7 @@ import static com.metreeca.mesh.util.Collections.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.PT;
-import static eu.ec2u.data.taxonomies.EC2UOrganizations.ORGANIZATIONS;
+import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
@@ -172,7 +172,7 @@ public final class UnitsCoimbra implements Runnable {
                 .unitOf(set(Coimbra()))
 
                 .classification(set(json.get("type_en").string()
-                        .flatMap(type2 -> Resources.match(ORGANIZATIONS, type2))
+                        .flatMap(type2 -> Resources.match(EC2U_ORGANIZATIONS, type2))
                         .map(uri -> new TopicFrame(true).id(uri))
                         .stream()
                 ))

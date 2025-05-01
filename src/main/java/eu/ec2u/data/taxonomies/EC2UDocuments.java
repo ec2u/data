@@ -38,10 +38,10 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 public final class EC2UDocuments implements Runnable {
 
-    private static final URI DOCUMENTS=Taxonomies.TAXONOMIES.id().resolve("documents");
+    public static final URI EC2U_DOCUMENTS=Taxonomies.TAXONOMIES.id().resolve("documents");
 
     private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(DOCUMENTS)
+            .id(EC2U_DOCUMENTS)
             .title(map(entry(EN, "EC2U Document Types")))
             .alternative(map(entry(EN, "EC2U Documents")))
             .description(map(entry(EN, """
@@ -61,7 +61,7 @@ public final class EC2UDocuments implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(DOCUMENTS).update(array(list(Xtream.from(
+        service(store()).partition(EC2U_DOCUMENTS).update(array(list(Xtream.from(
 
                 Xtream.of(
                         TAXONOMY

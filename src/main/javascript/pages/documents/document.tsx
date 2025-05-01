@@ -22,8 +22,7 @@ import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
-import { toDateString } from "@metreeca/core/date";
-import { dateTime } from "@metreeca/core/dateTime";
+import { date, toDateString } from "@metreeca/core/date";
 import { toEntryString } from "@metreeca/core/entry";
 import { sortFrames } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
@@ -54,11 +53,11 @@ export const Document=immutable({
 	license: optional(string),
 	rights: optional(string),
 
-	issued: optional(dateTime),
-	modified: optional(dateTime),
-	valid: optional(dateTime),
+	issued: optional(date),
+	modified: optional(date),
+	valid: optional(string),
 
-	type: multiple({
+	_type: multiple({
 		id: required(id),
 		label: required(text)
 	}),
@@ -122,7 +121,7 @@ export function DataDocument() {
 
 			university,
 
-			type,
+			_type,
 			subject,
 			audience,
 
@@ -156,7 +155,7 @@ export function DataDocument() {
 
 			<TileInfo>{{
 
-				"Type": type && type.length && <ul>{sortFrames(type).map(type =>
+				"Type": _type && _type.length && <ul>{sortFrames(_type).map(type =>
 					<li key={type.id}>
 						<TileLink filter={[Documents, { university, subject: type }]}>{type}</TileLink>
 					</li>

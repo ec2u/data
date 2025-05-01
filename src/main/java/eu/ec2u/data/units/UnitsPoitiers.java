@@ -42,7 +42,7 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.taxonomies.EC2UOrganizations.ORGANIZATIONS;
+import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.*;
@@ -159,7 +159,7 @@ public final class UnitsPoitiers implements Runnable {
     private Stream<TopicFrame> classification(final Value json) {
         return json.get("type_de_structure").string().stream()
                 .distinct()
-                .flatMap(topic -> Resources.match(ORGANIZATIONS, topic, TYPE_THRESHOLD))
+                .flatMap(topic -> Resources.match(EC2U_ORGANIZATIONS, topic, TYPE_THRESHOLD))
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(1);
     }

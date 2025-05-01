@@ -51,7 +51,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.EC2UOrganizations.ORGANIZATIONS;
+import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.uuid;
@@ -114,12 +114,12 @@ public interface Units extends Dataset {
 
     }
 
-    final class CSVLoader extends CSVProcessor<UnitFrame> {
+    final class Loader extends CSVProcessor<UnitFrame> {
 
         private final University university;
 
 
-        CSVLoader(final University university) {
+        Loader(final University university) {
 
             if ( university == null ) {
                 throw new NullPointerException("null university");
@@ -129,7 +129,8 @@ public interface Units extends Dataset {
         }
 
 
-        @Override protected Optional<UnitFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
+        @Override
+        protected Optional<UnitFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
             return id(record).map(id -> new UnitFrame()
 
                     .generated(true)
@@ -154,7 +155,7 @@ public interface Units extends Dataset {
                     )))
 
                     .classification(set(value(record, "Type")
-                            .flatMap(type2 -> Resources.match(ORGANIZATIONS, type2))
+                            .flatMap(type2 -> Resources.match(EC2U_ORGANIZATIONS, type2))
                             .map(uri -> new TopicFrame(true).id(uri))
                             .stream()
                     ))

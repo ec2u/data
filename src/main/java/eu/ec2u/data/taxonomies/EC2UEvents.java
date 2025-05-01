@@ -38,11 +38,11 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 public final class EC2UEvents implements Runnable {
 
-    public static final URI EVENTS=Taxonomies.TAXONOMIES.id().resolve("events");
+    public static final URI EC2U_EVENTS=Taxonomies.TAXONOMIES.id().resolve("events");
 
 
     private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(EVENTS)
+            .id(EC2U_EVENTS)
             .title(map(entry(EN, "EC2U Event Types")))
             .alternative(map(entry(EN, "EC2U Events")))
             .description(map(entry(EN, """
@@ -62,7 +62,7 @@ public final class EC2UEvents implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(EVENTS).update(array(list(Xtream.from(
+        service(store()).partition(EC2U_EVENTS).update(array(list(Xtream.from(
 
                 Xtream.of(
                         TAXONOMY

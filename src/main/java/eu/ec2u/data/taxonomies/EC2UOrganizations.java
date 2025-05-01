@@ -39,11 +39,11 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 public final class EC2UOrganizations implements Runnable {
 
-    public static final URI ORGANIZATIONS=Taxonomies.TAXONOMIES.id().resolve("organizations");
+    public static final URI EC2U_ORGANIZATIONS=Taxonomies.TAXONOMIES.id().resolve("organizations");
 
 
     private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(ORGANIZATIONS)
+            .id(EC2U_ORGANIZATIONS)
             .title(map(entry(EN, "EC2U Organization Types")))
             .alternative(map(entry(EN, "EC2U Organizations")))
             .description(map(entry(EN, """
@@ -56,27 +56,27 @@ public final class EC2UOrganizations implements Runnable {
 
 
     public static final TopicFrame INSTITUTE=new TopicFrame().id(uri(
-            ORGANIZATIONS+"/university-unit/institute"
+            EC2U_ORGANIZATIONS+"/university-unit/institute"
     ));
 
     public static final TopicFrame VIRTUAL_INSTITUTE=new TopicFrame().id(uri(
-            ORGANIZATIONS+"/university-unit/institute/virtual"
+            EC2U_ORGANIZATIONS+"/university-unit/institute/virtual"
     ));
 
     public static final TopicFrame DEPARTMENT=new TopicFrame().id(uri(
-            ORGANIZATIONS+"/university-unit/department"
+            EC2U_ORGANIZATIONS+"/university-unit/department"
     ));
 
     public static final TopicFrame SERVICE_CENTRE=new TopicFrame().id(uri(
-            ORGANIZATIONS+"/university-unit/centre/service"
+            EC2U_ORGANIZATIONS+"/university-unit/centre/service"
     ));
 
     public static final TopicFrame INTERDEPARTMENTAL_RESEARCH_CENTRE=new TopicFrame().id(uri(
-            ORGANIZATIONS+"/university-unit/centre/research/interdepartmental"
+            EC2U_ORGANIZATIONS+"/university-unit/centre/research/interdepartmental"
     ));
 
     public static final TopicFrame RECOGNIZED_GROUP=new TopicFrame().id(uri(
-            ORGANIZATIONS+"/university-unit/group/recognized"
+            EC2U_ORGANIZATIONS+"/university-unit/group/recognized"
     ));
 
 
@@ -88,7 +88,7 @@ public final class EC2UOrganizations implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(ORGANIZATIONS).update(array(list(Xtream.from(
+        service(store()).partition(EC2U_ORGANIZATIONS).update(array(list(Xtream.from(
 
                 Xtream.of(
                         TAXONOMY

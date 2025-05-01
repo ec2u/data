@@ -39,6 +39,7 @@ import static com.metreeca.mesh.util.Collections.stash;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.EC2U.EMBEDDINGS;
+import static eu.ec2u.data.resources.Resources.RESOURCES;
 import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
@@ -65,22 +66,18 @@ final class ResourcesMatcher {
 
         final VectorIndex<URI> index=INDICES.computeIfAbsent(collection, t -> new VectorIndex<URI>(store
 
-                .retrieve(new ResourcesFrame(true)
+                .retrieve(new ResourcesFrame(true).id(RESOURCES.id()).members(stash(query()
 
-                        .members(stash(query()
+                        .model(new ResourceFrame()
+                                .id(uri())
+                                .embedding("")
+                        )
 
-                                .model(new ResourceFrame()
-                                        .id(uri())
-                                        .embedding("")
-                                )
+                        .where("collection", criterion()
+                                .any(new CollectionFrame(true).id(t))
+                        )
 
-                                .where("collection", criterion()
-                                        .any(new CollectionFrame(true).id(t))
-                                )
-
-                        ))
-
-                )
+                )))
 
                 .map(ResourcesFrame::new)
                 .map(ResourcesFrame::members)

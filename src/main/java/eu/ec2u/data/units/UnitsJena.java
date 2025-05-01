@@ -53,7 +53,7 @@ public final class UnitsJena implements Runnable {
 
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new Units.CSVLoader(Jena()))
+                .flatMap(new Units.Loader(Jena()))
 
         )), FORCE);
 

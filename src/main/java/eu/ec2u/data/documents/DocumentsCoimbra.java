@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.units;
+package eu.ec2u.data.documents;
 
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.tools.Store;
 
 import java.net.URI;
 
@@ -29,37 +30,37 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.units.Unit.review;
-import static eu.ec2u.data.universities.University.Turku;
+import static eu.ec2u.data.documents.Documents.DOCUMENTS;
+import static eu.ec2u.data.universities.University.Coimbra;
 
-public final class UnitsTurku implements Runnable {
+public final class DocumentsCoimbra implements Runnable {
 
-    private static final URI CONTEXT=Units.UNITS.id().resolve("turku");
+    private static final URI CONTEXT=DOCUMENTS.id().resolve("coimbra");
 
-    private static final String DATA_URL="units-turku-url"; // vault label
+    private static final String DATA_URL="documents-coimbra-url"; // vault label
 
 
     public static void main(final String... args) {
-        exec(() -> new UnitsTurku().run());
+        exec(() -> new DocumentsCoimbra().run());
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Store store=service(store());
     private final Vault vault=service(vault());
 
 
-    @Override public void run() {
+    @Override
+    public void run() {
 
         final String url=vault.get(DATA_URL);
 
-        service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
+        store.partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new Units.Loader(Turku()))
-                .optMap(unit -> review(unit, Turku().locale()))
+                .flatMap(new Documents.Loader(Coimbra()))
 
         )), FORCE);
     }
-
 
 }

@@ -16,6 +16,9 @@
 
 package eu.ec2u.data.documents;
 
+import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.flow.text.services.Translator;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -25,15 +28,26 @@ import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.persons.Person;
-import eu.ec2u.data.resources.Localized;
-import eu.ec2u.data.resources.Reference;
-import eu.ec2u.data.resources.Resource;
+import eu.ec2u.data.resources.*;
 import eu.ec2u.data.taxonomies.Topic;
+import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.work.ai.Embedder;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.text.services.Translator.translator;
+import static com.metreeca.mesh.util.Collections.set;
+
+import static eu.ec2u.data.documents.Documents.DOCUMENTS;
+import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.EC2UDocuments.EC2U_DOCUMENTS;
+import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 
 @Frame
 @Class("ec2u:")
@@ -41,8 +55,92 @@ import java.util.Set;
 @Namespace(prefix="schema", value="https://schema.org/")
 public interface Document extends Resource {
 
+    int TITLE_LENGTH=500;
+    int DESCRIPTION_LENGTH=5000;
+
+    double TYPE_THRESHOLD=0.4;
+    double SUBJECT_THRESHOLD=0.4;
+    double AUDIENCE_THRESHOLD=0.4;
+
+
+    static Optional<DocumentFrame> review(final DocumentFrame document, final Locale source) {
+
+        if ( document == null ) {
+            throw new NullPointerException("null document");
+        }
+
+        if ( source == null ) {
+            throw new NullPointerException("null source");
+        }
+
+        return Optional.of(document)
+                .map(d -> translate(d, source)) // before English-based classification
+                .map(v -> _type(v))
+                .map(v -> audience(v))
+                .flatMap(new Validate<>());
+    }
+
+
+    private static DocumentFrame translate(final DocumentFrame document, final Locale source) {
+
+        final Translator translator=service(translator());
+
+        return document // translate also customized labels/comments ;(translated text must be clipped again)
+                .label(Reference.label(translator.texts(document.label(), source, EN)))
+                .comment(Reference.comment(translator.texts(document.comment(), source, EN)))
+                .title(translator.texts(document.title(), source, EN))
+                .description(translator.texts(document.description(), source, EN));
+    }
+
+    private static DocumentFrame _type(final DocumentFrame document) {
+        return document._type().isEmpty() ? document._type(set(Resources
+                .match(EC2U_DOCUMENTS, embeddable(document), TYPE_THRESHOLD)
+                .map(uri -> new TopicFrame(true).id(uri))
+                .limit(3)
+        )) : document;
+    }
+
+    private static DocumentFrame subject(final DocumentFrame document) {
+        return document;
+    }
+
+    private static DocumentFrame audience(final DocumentFrame document) {
+        return document.audience().isEmpty() ? document.audience(set(Resources
+                .match(EC2U_STAKEHOLDERS, embeddable(document), AUDIENCE_THRESHOLD)
+                .map(uri -> new TopicFrame(true).id(uri))
+                .limit(1)
+        )) : document;
+    }
+
+    private static String embeddable(final Document document) {
+        return Embedder.embeddable(set(Xtream.from(
+                Optional.ofNullable(document.title().get(EN)).stream(),
+                Optional.ofNullable(document.description().get(EN)).stream()
+        )));
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    default Map<Locale, String> label() {
+        return Reference.label(title());
+    }
+
+    @Override
+    default Map<Locale, String> comment() {
+        return Reference.comment(description());
+    }
+
+
+    @Override
+    default Collection collection() {
+        return DOCUMENTS;
+    }
+
+
     @Forward("schema:")
-    Set<String> url();
+    Set<URI> url();
 
 
     String identifier();
@@ -52,11 +150,11 @@ public interface Document extends Resource {
 
     @Required
     @Localized
-    @MaxLength(100)
+    @MaxLength(TITLE_LENGTH)
     Map<Locale, String> title();
 
     @Localized
-    @MaxLength(5000)
+    @MaxLength(DESCRIPTION_LENGTH)
     Map<Locale, String> description();
 
 
@@ -84,7 +182,7 @@ public interface Document extends Resource {
     Reference license();
 
 
-    // !!! Set<Topic> type();
+    Set<Topic> _type(); // !!! conflict
 
     Set<Topic> subject();
 

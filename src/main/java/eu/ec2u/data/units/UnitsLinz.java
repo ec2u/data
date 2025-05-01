@@ -19,7 +19,7 @@ package eu.ec2u.data.units;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 
-import eu.ec2u.data.units.Units.CSVLoader;
+import eu.ec2u.data.units.Units.Loader;
 
 import java.net.URI;
 
@@ -55,7 +55,7 @@ public final class UnitsLinz implements Runnable {
 
         service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
 
-                .flatMap(new CSVLoader(Linz()))
+                .flatMap(new Loader(Linz()))
 
         )), FORCE);
     }

@@ -38,11 +38,11 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 public final class EC2UStakeholders implements Runnable {
 
-    public static final URI STAKEHOLDERS=Taxonomies.TAXONOMIES.id().resolve("stakeholders");
+    public static final URI EC2U_STAKEHOLDERS=Taxonomies.TAXONOMIES.id().resolve("stakeholders");
 
 
     private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(STAKEHOLDERS)
+            .id(EC2U_STAKEHOLDERS)
             .title(map(entry(EN, "EC2U Stakeholder Types")))
             .alternative(map(entry(EN, "EC2U Stakeholders")))
             .description(map(entry(EN, """
@@ -62,7 +62,7 @@ public final class EC2UStakeholders implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(STAKEHOLDERS).update(array(list(Xtream.from(
+        service(store()).partition(EC2U_STAKEHOLDERS).update(array(list(Xtream.from(
 
                 Xtream.of(
                         TAXONOMY
