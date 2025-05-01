@@ -22,6 +22,7 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.datasets.Datasets;
 
 import java.net.URI;
 import java.util.Locale;
@@ -36,7 +37,6 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
-import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
@@ -83,7 +83,7 @@ public interface Persons extends Dataset {
 
     @Override
     default URI isDefinedBy() {
-        return DATASETS.resolve("persons");
+        return Datasets.DATASETS.id().resolve("persons");
     }
 
 

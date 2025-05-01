@@ -25,6 +25,7 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.datasets.Datasets;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -38,7 +39,6 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
@@ -46,7 +46,7 @@ public interface Documents extends Dataset {
 
     DocumentsFrame DOCUMENTS=new DocumentsFrame()
             .id(DATA.resolve("documents/"))
-            .isDefinedBy(DATASETS.resolve("documents"))
+            .isDefinedBy(Datasets.DATASETS.id().resolve("documents"))
             .title(map(entry(EN, "EC2U Institutional Documents")))
             .alternative(map(entry(EN, "EC2U Documents")))
             .description(map(entry(EN, "Institutional documents shared by EC2U allied partners.")))

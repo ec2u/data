@@ -37,7 +37,9 @@ import static eu.ec2u.data.EC2U.EC2U;
 public interface Dataset extends Collection {
 
     @Override
-    default Datasets collection() { return new DatasetsFrame(); }
+    default Datasets collection() {
+        return new DatasetsFrame();
+    }
 
 
     @Override

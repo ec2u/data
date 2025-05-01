@@ -27,6 +27,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.datasets.Datasets;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -40,7 +41,6 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
@@ -49,7 +49,7 @@ public interface Universities extends Dataset {
 
     UniversitiesFrame UNIVERSITIES=new UniversitiesFrame()
             .id(DATA.resolve("universities/"))
-            .isDefinedBy(DATASETS.resolve("universities"))
+            .isDefinedBy(Datasets.DATASETS.id().resolve("universities"))
             .title(map(entry(EN, "EC2U Allied Universities")))
             .alternative(map(entry(EN, "EC2U Universities")))
             .description(map(entry(EN, "Background information about EC2U allied universities.")))

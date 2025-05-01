@@ -27,11 +27,10 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.units.Units;
 
 import java.net.URI;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -45,8 +44,7 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.DATA;
-import static eu.ec2u.data.datasets.Datasets.DATASETS;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
 import static java.lang.String.format;
 
@@ -55,7 +53,15 @@ import static java.lang.String.format;
 @Virtual
 public interface Resources extends Dataset {
 
-    URI RESOURCES=DATA.resolve("resources/");
+    Resources RESOURCES=new ResourcesFrame()
+            .id(DATA.resolve("resources/"))
+            .isDefinedBy(Datasets.DATASETS.id().resolve("resources"))
+            .title(map(entry(EN, "EC2U Knowledge Hub Resources")))
+            .alternative(map(entry(EN, "EC2U Resources")))
+            .description(map(entry(EN, "Shared resources published on the EC2U Knowledge Hub.")))
+            .publisher(EC2U)
+            .rights(COPYRIGHT)
+            .license(set(CCBYNCND40));
 
 
     static Optional<URI> match(final URI collection, final String query) {
@@ -96,40 +102,13 @@ public interface Resources extends Dataset {
                     .optMap(new Validate<>())
             ));
 
-            service(store()).partition(RESOURCES).update(update, FORCE);
+            service(store()).partition(RESOURCES.id()).update(update, FORCE);
 
         });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default URI id() {
-        return RESOURCES;
-    }
-
-
-    @Override
-    default Map<Locale, String> title() {
-        return map(entry(EN, "EC2U Knowledge Hub Resources"));
-    }
-
-    @Override
-    default Map<Locale, String> alternative() {
-        return map(entry(EN, "EC2U Resources"));
-    }
-
-    @Override
-    default Map<Locale, String> description() {
-        return map(entry(EN, "Shared resources published on the EC2U Knowledge Hub."));
-    }
-
-    @Override
-    default URI isDefinedBy() {
-        return DATASETS.resolve("resources");
-    }
-
 
     @Override
     Set<Resource> members();

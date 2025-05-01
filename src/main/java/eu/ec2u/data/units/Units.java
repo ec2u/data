@@ -26,6 +26,7 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Resources;
@@ -49,7 +50,6 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.ORGANIZATIONS;
@@ -68,7 +68,7 @@ public interface Units extends Dataset {
 
     UnitsFrame UNITS=new UnitsFrame()
             .id(DATA.resolve("units/"))
-            .isDefinedBy(DATASETS.resolve("units"))
+            .isDefinedBy(Datasets.DATASETS.id().resolve("units"))
             .title(map(entry(EN, "EC2U Research Units and Facilities")))
             .alternative(map(entry(EN, "EC2U Units")))
             .description(map(entry(EN, """

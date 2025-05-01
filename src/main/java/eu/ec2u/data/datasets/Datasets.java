@@ -25,9 +25,7 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import java.net.URI;
-import java.util.Locale;
-import java.util.Map;
+import java.time.LocalDate;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
@@ -39,14 +37,23 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
 @Namespace("[ec2u]")
 public interface Datasets extends Dataset {
 
-    URI DATASETS=DATA.resolve("datasets/");
+    Datasets DATASETS=new DatasetsFrame()
+            .id(DATA.resolve("datasets/"))
+            .isDefinedBy(DATA.resolve("datasets"))
+            .title(map(entry(EN, "EC2U Dataset Catalog")))
+            .alternative(map(entry(EN, "EC2U Datasets")))
+            .description(map(entry(EN, "Datasets published on the EC2U Knowledge Hub.")))
+            .publisher(EC2U)
+            .rights(COPYRIGHT)
+            .license(set(CCBYNCND40))
+            .issued(LocalDate.parse("2023-07-15"));
 
 
     static void main(final String... args) {
@@ -56,40 +63,13 @@ public interface Datasets extends Dataset {
                     .optMap(new Validate<>())
             ));
 
-            service(store()).partition(DATASETS).update(update, FORCE);
+            service(store()).partition(DATASETS.id()).update(update, FORCE);
 
         });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default URI id() {
-        return DATA;
-    }
-
-
-    @Override
-    default Map<Locale, String> title() {
-        return map(entry(EN, "EC2U Dataset Catalog"));
-    }
-
-    @Override
-    default Map<Locale, String> alternative() {
-        return map(entry(EN, "EC2U Datasets"));
-    }
-
-    @Override
-    default Map<Locale, String> description() {
-        return map(entry(EN, "Datasets published on the EC2U Knowledge Hub."));
-    }
-
-    @Override
-    default URI isDefinedBy() {
-        return DATASETS;
-    }
-
 
     @Override
     Set<Dataset> members();

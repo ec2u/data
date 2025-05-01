@@ -26,6 +26,7 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.datasets.Datasets;
 
 import java.util.Set;
 
@@ -38,7 +39,6 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
-import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
@@ -46,7 +46,7 @@ public interface Taxonomies extends Dataset {
 
     TaxonomiesFrame TAXONOMIES=new TaxonomiesFrame()
             .id(DATA.resolve("taxonomies/"))
-            .isDefinedBy(DATASETS.resolve("taxonomies"))
+            .isDefinedBy(Datasets.DATASETS.id().resolve("taxonomies"))
             .title(map(entry(EN, "EC2U Classification Taxonomies")))
             .alternative(map(entry(EN, "EC2U Taxonomies")))
             .description(map(entry(EN, "Topic taxonomies and other concept schemes for classifying resources.")))
