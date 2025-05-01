@@ -53,8 +53,8 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Person.person;
+import static eu.ec2u.data.taxonomies.EC2UOrganizations.*;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
-import static eu.ec2u.data.taxonomies.OrganizationTypes.*;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.units.Units.UNITS;

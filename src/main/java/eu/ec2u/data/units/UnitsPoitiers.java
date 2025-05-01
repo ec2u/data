@@ -43,8 +43,8 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Persons.PERSONS;
+import static eu.ec2u.data.taxonomies.EC2UOrganizations.ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
-import static eu.ec2u.data.taxonomies.OrganizationTypes.ORGANIZATIONS;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.*;
 import static eu.ec2u.data.universities.University.Poitiers;

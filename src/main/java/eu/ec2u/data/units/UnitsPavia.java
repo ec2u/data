@@ -21,7 +21,7 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 
-import eu.ec2u.data.taxonomies.OrganizationTypes;
+import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.Parsers;
@@ -90,15 +90,15 @@ public final class UnitsPavia implements Runnable {
                 .of(
                         new Catalog(
                                 uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti"),
-                                OrganizationTypes.DEPARTMENT
+                                EC2UOrganizations.DEPARTMENT
                         ),
                         new Catalog(
                                 uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo"),
-                                OrganizationTypes.SERVICE_CENTRE
+                                EC2UOrganizations.SERVICE_CENTRE
                         ),
                         new Catalog(
                                 uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali"),
-                                OrganizationTypes.INTERDEPARTMENTAL_RESEARCH_CENTRE
+                                EC2UOrganizations.INTERDEPARTMENTAL_RESEARCH_CENTRE
                         )
                 )
 

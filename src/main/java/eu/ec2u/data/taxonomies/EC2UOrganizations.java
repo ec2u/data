@@ -38,22 +38,7 @@ import static eu.ec2u.data.resources.Collection.CCBYNCND40;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 
-/**
- * EC2U Organization Type SKOS Concept Scheme.
- * <p>
- * This taxonomy defines a hierarchical classification of organization types in the EC2U alliance context. The taxonomy
- * structure consists of:
- * <p>
- * - Top-level taxonomies (University, College, Association, City, Other) representing main organization categories -
- * University Unit as a special top-level concept with a rich hierarchy of specialized academic structures -
- * Second-level taxonomies under University Unit (Area, Network, Institute, Department, Centre, Group, Laboratory,
- * Facility) - Further specializations at the third and fourth levels (e.g., Virtual Institute, Research Centre, Library
- * Facility)
- * <p>
- * This scheme provides standardized terminology for categorizing organizations and their units within the EC2U
- * alliance, ensuring consistent classification across institutions.
- */
-public final class OrganizationTypes implements Runnable {
+public final class EC2UOrganizations implements Runnable {
 
     public static final URI ORGANIZATIONS=TAXONOMIES.resolve("organizations");
 
@@ -62,9 +47,9 @@ public final class OrganizationTypes implements Runnable {
             .id(ORGANIZATIONS)
             .title(map(entry(EN, "EC2U Organization Types")))
             .alternative(map(entry(EN, "EC2U Organizations")))
-            .description(map(entry(EN,
-                    "Standardized terminology for categorizing organizations and their units within the EC2U Alliance"
-            )))
+            .description(map(entry(EN, """
+                    Standardized terminology for categorizing organizations and their units within the EC2U Alliance.
+                    """)))
             .issued(LocalDate.parse("2024-01-01"))
             .rights(COPYRIGHT)
             .publisher(EC2U)
@@ -97,12 +82,11 @@ public final class OrganizationTypes implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new OrganizationTypes().run());
+        exec(() -> new EC2UOrganizations().run());
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     @Override public void run() {
         service(store()).partition(ORGANIZATIONS).update(array(list(Xtream.from(
@@ -111,7 +95,7 @@ public final class OrganizationTypes implements Runnable {
                         TAXONOMY
                 ).optMap(new Validate<>()),
 
-                Stream.of(resource(OrganizationTypes.class, ".csv").toString())
+                Stream.of(resource(EC2UOrganizations.class, ".csv").toString())
                         .flatMap(new Topic.Loader(TAXONOMY))
 
         ))), FORCE);
