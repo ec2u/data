@@ -23,6 +23,7 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Value;
 
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Taxonomies;
@@ -83,7 +84,7 @@ public final class EC2U extends Delegator {
                 // !!! .path("/offerings/*", new Offerings())
                 // !!! .path("/programs/*", new Programs())
                 // !!! .path("/courses/*", new Courses())
-                // !!! .path("/documents/*", new Documents())
+                        .path("/documents/*", new Documents.Handler())
                 // !!! .path("/events/*", new Events())
                 // !!! .path("/actors/*", new Actors())
 
