@@ -36,7 +36,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 
 /**
  * United Nations Sustainable Development Goals (SDGs) SKOS Concept Scheme.
@@ -51,7 +50,7 @@ import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
  */
 public final class SDGs implements Runnable {
 
-    private static final URI SDGS=TAXONOMIES.resolve("sdgs");
+    private static final URI SDGS=Taxonomies.TAXONOMIES.id().resolve("sdgs");
 
 
     private static final OrgOrganizationFrame UNITED_NATIONS=new OrgOrganizationFrame()

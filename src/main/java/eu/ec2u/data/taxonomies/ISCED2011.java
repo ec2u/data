@@ -36,7 +36,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 
 /**
  * International Standard Classification of Education 2011 (ISCED 2011) SKOS Concept Scheme.
@@ -50,7 +49,7 @@ import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
  */
 public final class ISCED2011 implements Runnable {
 
-    private static final URI ISCED2011=TAXONOMIES.resolve("isced-2011");
+    private static final URI ISCED2011=Taxonomies.TAXONOMIES.id().resolve("isced-2011");
 
     private static final OrgOrganizationFrame UNESCO_INSTITUTE_FOR_STATISTICS=new OrgOrganizationFrame()
             .id(uri("http://www.uis.unesco.org/"))

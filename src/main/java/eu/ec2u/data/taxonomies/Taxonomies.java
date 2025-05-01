@@ -27,9 +27,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
 
-import java.net.URI;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
@@ -40,57 +37,38 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
 public interface Taxonomies extends Dataset {
 
-    URI TAXONOMIES=DATA.resolve("taxonomies/");
+    TaxonomiesFrame TAXONOMIES=new TaxonomiesFrame()
+            .id(DATA.resolve("taxonomies/"))
+            .isDefinedBy(DATASETS.resolve("taxonomies"))
+            .title(map(entry(EN, "EC2U Classification Taxonomies")))
+            .alternative(map(entry(EN, "EC2U Taxonomies")))
+            .description(map(entry(EN, "Topic taxonomies and other concept schemes for classifying resources.")))
+            .publisher(EC2U)
+            .rights(COPYRIGHT)
+            .license(set(CCBYNCND40));
 
 
     static void main(final String... args) {
         exec(() -> {
 
-            final Value update=array(list(Xtream.of(new TaxonomiesFrame())
+            final Value update=array(list(Xtream.of(TAXONOMIES)
                     .optMap(new Validate<>())
             ));
 
-            service(store()).partition(TAXONOMIES).update(update, FORCE);
+            service(store()).partition(TAXONOMIES.id()).update(update, FORCE);
 
         });
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default URI id() {
-        return TAXONOMIES;
-    }
-
-
-    @Override
-    default Map<Locale, String> title() {
-        return map(entry(EN, "EC2U Classification Taxonomies"));
-    }
-
-    @Override
-    default Map<Locale, String> alternative() {
-        return map(entry(EN, "EC2U Taxonomies"));
-    }
-
-    @Override
-    default Map<Locale, String> description() {
-        return map(entry(EN, "Topic taxonomies and other concept schemes for classifying resources."));
-    }
-
-    @Override
-    default URI isDefinedBy() {
-        return DATASETS.resolve("taxonomies");
-    }
-
 
     @Override
     Set<Taxonomy> members();
@@ -103,7 +81,7 @@ public interface Taxonomies extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new TaxonomiesFrame()
+                    .path("/", new Worker().get(new Driver(TAXONOMIES
                             .members(stash(query(new TaxonomyFrame())))
                     )))
 

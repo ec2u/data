@@ -43,7 +43,9 @@ import static java.util.function.Predicate.not;
 public interface Taxonomy extends Collection, SKOSConceptScheme<Taxonomy, Topic> {
 
     @Override
-    default Taxonomies collection() { return new TaxonomiesFrame(); }
+    default Taxonomies collection() {
+        return Taxonomies.TAXONOMIES;
+    }
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

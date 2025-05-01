@@ -43,7 +43,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.LOCALES;
-import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 import static eu.ec2u.work.Rover.rover;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
@@ -61,7 +60,7 @@ import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
  */
 public final class EuroSciVoc implements Runnable {
 
-    public static final URI EUROSCIVOC=TAXONOMIES.resolve("euroscivoc");
+    public static final URI EUROSCIVOC=Taxonomies.TAXONOMIES.id().resolve("euroscivoc");
 
 
     private static final String VERSION="1.5";

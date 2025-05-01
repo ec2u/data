@@ -35,11 +35,10 @@ import static eu.ec2u.data.EC2U.COPYRIGHT;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Collection.CCBYNCND40;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 
 public final class EC2UDocuments implements Runnable {
 
-    private static final URI DOCUMENTS=TAXONOMIES.resolve("documents");
+    private static final URI DOCUMENTS=Taxonomies.TAXONOMIES.id().resolve("documents");
 
     private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
             .id(DOCUMENTS)
