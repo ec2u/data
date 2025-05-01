@@ -70,7 +70,7 @@ public final class EC2UEvents implements Runnable {
                 ).optMap(new Validate<>()),
 
                 Stream.of(resource(EC2UEvents.class, ".csv").toString())
-                        .flatMap(new Topic.Loader(TAXONOMY))
+                        .flatMap(new Taxonomy.Loader(TAXONOMY))
 
         ))), FORCE);
     }

@@ -93,7 +93,7 @@ public final class ISCED2011 implements Runnable {
                 ).optMap(new Validate<>()),
 
                 Stream.of(resource(ISCED2011.class, ".csv").toString())
-                        .flatMap(new Topic.Loader(TAXONOMY))
+                        .flatMap(new Taxonomy.Loader(TAXONOMY))
 
         ))), FORCE);
     }

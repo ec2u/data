@@ -69,7 +69,7 @@ public final class EC2UDocuments implements Runnable {
                 ).optMap(new Validate<>()),
 
                 Stream.of(resource(EC2UDocuments.class, ".csv").toString())
-                        .flatMap(new Topic.Loader(TAXONOMY))
+                        .flatMap(new Taxonomy.Loader(TAXONOMY))
 
         ))), FORCE);
     }

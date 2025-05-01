@@ -102,7 +102,7 @@ public final class SDGs implements Runnable {
                 ).optMap(new Validate<>()),
 
                 Stream.of(resource(SDGs.class, ".csv").toString())
-                        .flatMap(new Topic.Loader(TAXONOMY))
+                        .flatMap(new Taxonomy.Loader(TAXONOMY))
 
         ))), FORCE);
     }
