@@ -53,7 +53,6 @@ import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.VIRTUAL_INSTITUTE;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
-import static eu.ec2u.data.units.Units.UNITS;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 
@@ -73,7 +72,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static UnitFrame GLADE() {
         return new UnitFrame()
-                .id(UNITS.resolve("glade"))
+                .id(Units.UNITS.id().resolve("glade"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Good Health and Well‑Being")))
                 .altLabel(map(entry(ROOT, "GLADE")))
                 .definition(map(entry(EN, """
@@ -100,7 +99,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static UnitFrame VIQE() {
         return new UnitFrame()
-                .id(UNITS.resolve("viqe"))
+                .id(Units.UNITS.id().resolve("viqe"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Quality Education")))
                 .altLabel(map(entry(ROOT, "VIQE")))
                 .definition(map(entry(EN, """
@@ -123,7 +122,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static UnitFrame VISCC() {
         return new UnitFrame()
-                .id(UNITS.resolve("viscc"))
+                .id(Units.UNITS.id().resolve("viscc"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Sustainable Cities and Communities")))
                 .altLabel(map(entry(ROOT, "VISCC")))
                 .definition(map(entry(EN, """
@@ -150,7 +149,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static UnitFrame VIPJSI() {
         return new UnitFrame()
-                .id(UNITS.resolve("vipjsi"))
+                .id(Units.UNITS.id().resolve("vipjsi"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Peace, Justice and Strong Institutions")))
                 .altLabel(map(entry(ROOT, "VIPJSI")))
                 .definition(map(entry(EN, """
@@ -236,7 +235,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(UNITS).update(array(list(Xtream
+        exec(() -> service(store()).partition(Units.UNITS.id()).update(array(list(Xtream
 
                 .of(
                         GLADE(),
@@ -254,7 +253,9 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    default Units collection() { return new UnitsFrame(); }
+    default Units collection() {
+        return Units.UNITS;
+    }
 
 
     @Forward("dct:")

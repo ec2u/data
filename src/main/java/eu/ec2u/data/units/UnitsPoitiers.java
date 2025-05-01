@@ -54,7 +54,7 @@ import static java.util.Locale.ROOT;
 
 public final class UnitsPoitiers implements Runnable {
 
-    private static final URI CONTEXT=UNITS.resolve("poitiers");
+    private static final URI CONTEXT=UNITS.id().resolve("poitiers");
 
 
     public static void main(final String... args) {
@@ -90,7 +90,7 @@ public final class UnitsPoitiers implements Runnable {
 
                 .generated(true)
 
-                .id(UNITS.resolve(uuid(Poitiers(), id)))
+                .id(UNITS.id().resolve(uuid(Poitiers(), id)))
                 .university(Poitiers())
                 .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
 

@@ -55,7 +55,6 @@ import static eu.ec2u.data.taxonomies.EC2UOrganizations.ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
-import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Coimbra;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
@@ -64,7 +63,7 @@ import static java.util.function.Predicate.not;
 
 public final class UnitsCoimbra implements Runnable {
 
-    private static final URI CONTEXT=UNITS.resolve("coimbra");
+    private static final URI CONTEXT=Units.UNITS.id().resolve("coimbra");
 
     private static final String APIUrl="units-coimbra-url";
     private static final String APIKey="units-coimbra-key";
@@ -128,7 +127,7 @@ public final class UnitsCoimbra implements Runnable {
 
                 .generated(true)
 
-                .id(UNITS.resolve(uuid(Coimbra(), id)))
+                .id(Units.UNITS.id().resolve(uuid(Coimbra(), id)))
                 .university(Coimbra())
 
                 .homepage(set(json.get("web_url").string().flatMap(Parsers::url).map(URIs::uri).stream()))

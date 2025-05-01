@@ -43,7 +43,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.units.Unit.review;
-import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.util.Locale.ROOT;
@@ -52,7 +51,7 @@ import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
 
-    private static final URI CONTEXT=UNITS.resolve("pavia");
+    private static final URI CONTEXT=Units.UNITS.id().resolve("pavia");
 
 
     private record Catalog(
@@ -184,7 +183,7 @@ public final class UnitsPavia implements Runnable {
 
                                     .generated(true)
 
-                                    .id(UNITS.resolve(University.uuid(Pavia(), url
+                                    .id(Units.UNITS.id().resolve(University.uuid(Pavia(), url
                                             .map(URI::toString)
                                             .or(() -> json.get("name").string())
                                             .orElse(null) // !!! don't generate if missing

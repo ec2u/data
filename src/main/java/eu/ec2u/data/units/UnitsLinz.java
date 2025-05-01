@@ -31,12 +31,11 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Linz;
 
 public final class UnitsLinz implements Runnable {
 
-    private static final URI CONTEXT=UNITS.resolve("linz");
+    private static final URI CONTEXT=Units.UNITS.id().resolve("linz");
 
     private static final String DATA_URL="units-linz-url"; // vault label
 

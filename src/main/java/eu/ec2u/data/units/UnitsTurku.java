@@ -30,12 +30,11 @@ import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.units.Unit.review;
-import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Turku;
 
 public final class UnitsTurku implements Runnable {
 
-    private static final URI CONTEXT=UNITS.resolve("turku");
+    private static final URI CONTEXT=Units.UNITS.id().resolve("turku");
 
     private static final String DATA_URL="units-turku-url"; // vault label
 

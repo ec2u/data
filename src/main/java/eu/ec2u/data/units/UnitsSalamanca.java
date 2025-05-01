@@ -57,7 +57,6 @@ import static eu.ec2u.data.taxonomies.EC2UOrganizations.*;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
-import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Salamanca;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
@@ -67,7 +66,7 @@ import static java.util.function.Predicate.not;
 
 public final class UnitsSalamanca implements Runnable {
 
-    private static final URI CONTEXT=UNITS.resolve("salamanca");
+    private static final URI CONTEXT=Units.UNITS.id().resolve("salamanca");
 
     private static final String API_URL="units-salamanca-url"; // vault label
     private static final String API_KEY="units-salamanca-key"; // vault label
@@ -163,7 +162,7 @@ public final class UnitsSalamanca implements Runnable {
 
                 .generated(true)
 
-                .id(UNITS.resolve(uuid(Salamanca(), id)))
+                .id(Units.UNITS.id().resolve(uuid(Salamanca(), id)))
 
                 .university(Salamanca())
 
@@ -241,7 +240,7 @@ public final class UnitsSalamanca implements Runnable {
     private Optional<UnitFrame> department(final Value json) {
         return json.get("department").string().filter(not(String::isBlank)).map(name -> new UnitFrame()
 
-                .id(UNITS.resolve(uuid(Salamanca(), name)))
+                .id(Units.UNITS.id().resolve(uuid(Salamanca(), name)))
 
                 .university(Salamanca())
                 .unitOf(set(Salamanca()))
@@ -262,7 +261,7 @@ public final class UnitsSalamanca implements Runnable {
     private Optional<UnitFrame> institute(final Value json) {
         return json.get("institute").string().filter(not(String::isBlank)).map(name -> new UnitFrame()
 
-                .id(UNITS.resolve(uuid(Salamanca(), name)))
+                .id(Units.UNITS.id().resolve(uuid(Salamanca(), name)))
 
                 .university(Salamanca())
                 .unitOf(set(Salamanca()))

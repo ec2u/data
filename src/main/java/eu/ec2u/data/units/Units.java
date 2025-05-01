@@ -23,7 +23,6 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
@@ -63,63 +62,33 @@ import static java.util.Locale.ROOT;
 @Frame
 public interface Units extends Dataset {
 
-    URI UNITS=DATA.resolve("units/");
-
     double TYPE_THRESHOLD=0.25;
     double SUBJECT_THRESHOLD=0.25;
 
 
+    UnitsFrame UNITS=new UnitsFrame()
+            .id(DATA.resolve("units/"))
+            .title(map(entry(EN, "EC2U Research Units and Facilities")))
+            .alternative(map(entry(EN, "EC2U Units")))
+            .description(map(entry(EN, """
+                    Identifying and background information about research and innovation units and supporting structures
+                    at EC2U allied universities."""
+            )))
+            .isDefinedBy(DATASETS.resolve("units"))
+            .issued(LocalDate.parse("2022-01-01"));
+
+
     static void main(final String... args) {
-        exec(() -> {
+        exec(() -> service(store()).partition(UNITS.id()).update(array(list(
 
-            final Value update=array(list(Xtream.of(new UnitsFrame())
-                    .optMap(new Validate<>())
-            ));
+                Xtream.of(UNITS)
+                        .optMap(new Validate<>())
 
-            service(store()).partition(UNITS).update(update, FORCE);
-
-        });
+        )), FORCE));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default URI id() {
-        return UNITS;
-    }
-
-
-    @Override
-    default Map<Locale, String> title() {
-        return map(entry(EN, "EC2U Research Units and Facilities"));
-    }
-
-    @Override
-    default Map<Locale, String> alternative() {
-        return map(entry(EN, "EC2U Units"));
-    }
-
-    @Override
-    default Map<Locale, String> description() {
-        return map(entry(EN, """
-                Identifying and background information about research and innovation units and supporting structures
-                at EC2U allied universities."""
-        ));
-    }
-
-
-    @Override
-    default URI isDefinedBy() {
-        return DATASETS.resolve("units");
-    }
-
-
-    @Override
-    default LocalDate issued() {
-        return LocalDate.parse("2022-01-01");
-    }
-
 
     @Override
     Set<Unit> members();
@@ -132,7 +101,7 @@ public interface Units extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new UnitsFrame()
+                    .path("/", new Worker().get(new Driver(UNITS
 
                             .members(stash(query(new UnitFrame())))
 
@@ -259,7 +228,7 @@ public interface Units extends Dataset {
 
             } else {
 
-                return Optional.of(UNITS.resolve(uuid(university, code
+                return Optional.of(UNITS.id().resolve(uuid(university, code
                         .or(() -> nameEnglish)
                         .or(() -> nameLocal)
                         .orElse("") // unexpected

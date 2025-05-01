@@ -29,12 +29,11 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.Jena;
 
 public final class UnitsJena implements Runnable {
 
-    private static final URI CONTEXT=UNITS.resolve("jena");
+    private static final URI CONTEXT=Units.UNITS.id().resolve("jena");
 
     private static final String DATA_URL="units-jena-url"; // vault label
 

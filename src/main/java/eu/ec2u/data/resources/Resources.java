@@ -27,7 +27,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.units.UnitsFrame;
+import eu.ec2u.data.units.Units;
 
 import java.net.URI;
 import java.util.Locale;
@@ -92,7 +92,7 @@ public interface Resources extends Dataset {
     static void main(final String... args) {
         exec(() -> {
 
-            final Value update=array(list(Xtream.of(new UnitsFrame())
+            final Value update=array(list(Xtream.of(Units.UNITS)
                     .optMap(new Validate<>())
             ));
 
