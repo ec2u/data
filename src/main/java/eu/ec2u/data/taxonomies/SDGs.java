@@ -21,13 +21,9 @@ import com.metreeca.flow.work.Xtream;
 
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
-import eu.ec2u.work.CSVProcessor;
-import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
@@ -66,16 +62,15 @@ public final class SDGs implements Runnable {
             .id(SDGS)
             .title(map(entry(EN, "United Nations Sustainable Development Goals")))
             .alternative(map(entry(EN, "UN SDGs")))
-            .description(map(entry(EN,
-                    """
-                            [The 2030 Agenda for Sustainable Development](https://sdgs.un.org/2030agenda), adopted by all \
-                            United Nations Member States in 2015, provides a shared blueprint for peace and prosperity for \
-                            people and the planet, now and into the future. At its heart are the 17 Sustainable Development \
-                            Goals (SDGs), which are an urgent call for action by all countries - developed and developing - \
-                            in a global partnership. They recognize that ending poverty and other deprivations must go \
-                            hand-in-hand with strategies that improve health and education, reduce inequality, and spur \
-                            economic growth – all while tackling climate change and working to preserve our oceans \
-                            and forests."""
+            .description(map(entry(EN, """
+                    [The 2030 Agenda for Sustainable Development](https://sdgs.un.org/2030agenda), adopted by all \
+                    United Nations Member States in 2015, provides a shared blueprint for peace and prosperity for \
+                    people and the planet, now and into the future. At its heart are the 17 Sustainable Development \
+                    Goals (SDGs), which are an urgent call for action by all countries - developed and developing - \
+                    in a global partnership. They recognize that ending poverty and other deprivations must go \
+                    hand-in-hand with strategies that improve health and education, reduce inequality, and spur \
+                    economic growth – all while tackling climate change and working to preserve our oceans \
+                    and forests."""
             )))
             .created(LocalDate.parse("2015-09-25"))
             .issued(LocalDate.parse("2019-12-19"))
@@ -88,8 +83,7 @@ public final class SDGs implements Runnable {
                     New York, NY. http://metadata.un.org/sdg"""
             )))
             .publisher(UNITED_NATIONS)
-            .source(new ReferenceFrame()
-                    .id(uri("https://sdgs.un.org/goals")));
+            .source(new ReferenceFrame().id(uri("https://sdgs.un.org/goals")));
 
 
     public static void main(final String... args) {
@@ -97,45 +91,20 @@ public final class SDGs implements Runnable {
     }
 
 
-    @Override public void run() {
-        service(store()).partition(SDGS).update(array(list(Xtream
-
-                .from(
-
-                        Stream.of(
-                                TAXONOMY,
-                                UNITED_NATIONS
-                        ),
-
-                        Stream.of(resource(SDGs.class, ".csv").toString())
-                                .flatMap(new Loader())
-                                .map(Topic::index)
-
-                )
-
-                .optMap(new Validate<>())
-
-        )), FORCE);
-    }
-
-
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final class Loader extends CSVProcessor<TopicFrame> {
+    @Override public void run() {
+        service(store()).partition(SDGS).update(array(list(Xtream.from(
 
-        @Override protected Optional<TopicFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
-            return value(record, "Goal Number").map(number -> new TopicFrame()
+                Xtream.of(
+                        TAXONOMY,
+                        UNITED_NATIONS
+                ).optMap(new Validate<>()),
 
-                    .id(uri(SDGS+"/"+number))
-                    .notation(number)
+                Stream.of(resource(SDGs.class, ".csv").toString())
+                        .flatMap(new Topic.Loader(TAXONOMY))
 
-                    .prefLabel(value(record, "Short Label").map(v -> map(entry(EN, v))).orElse(null))
-                    .definition(value(record, "Extended Description").map(v -> map(entry(EN, v))).orElse(null))
-
-                    .inScheme(TAXONOMY)
-                    .topConceptOf(TAXONOMY));
-        }
-
+        ))), FORCE);
     }
 
 }
