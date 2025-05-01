@@ -48,7 +48,7 @@ import static com.metreeca.mesh.tools.Store.Options.FORCE;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.DATA;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
@@ -68,14 +68,16 @@ public interface Units extends Dataset {
 
     UnitsFrame UNITS=new UnitsFrame()
             .id(DATA.resolve("units/"))
+            .isDefinedBy(DATASETS.resolve("units"))
             .title(map(entry(EN, "EC2U Research Units and Facilities")))
             .alternative(map(entry(EN, "EC2U Units")))
             .description(map(entry(EN, """
                     Identifying and background information about research and innovation units and supporting structures
                     at EC2U allied universities."""
             )))
-            .isDefinedBy(DATASETS.resolve("units"))
-            .issued(LocalDate.parse("2022-01-01"));
+            .publisher(EC2U)
+            .rights(COPYRIGHT)
+            .license(set(CCBYNCND40)).issued(LocalDate.parse("2022-01-01"));
 
 
     static void main(final String... args) {
