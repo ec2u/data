@@ -20,7 +20,6 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { date } from "@metreeca/core/date";
 import { id } from "@metreeca/core/id";
-import { integer, toIntegerString } from "@metreeca/core/integer";
 import { string } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
 import { useRouter } from "@metreeca/data/contexts/router";
@@ -69,8 +68,6 @@ export const Dataset=immutable({
 		id: required(id),
 		label: required(text)
 	}),
-
-	entities: required(integer),
 
 	isDefinedBy: optional(id)
 
@@ -133,8 +130,6 @@ export function DataMeta() {
 			license,
 			rights,
 
-			entities,
-
 			isDefinedBy
 
 		}) => <>
@@ -150,12 +145,6 @@ export function DataMeta() {
 				"License": license?.length && <ul>{license.map(license =>
 					<li key={license.id}><TileLink>{license}</TileLink></li>
 				)}</ul>
-
-			}}</TileInfo>
-
-			<TileInfo>{{
-
-				"Resources": toIntegerString(entities)
 
 			}}</TileInfo>
 

@@ -25,7 +25,6 @@ import com.metreeca.mesh.Value;
 import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.persons.PersonsFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
 
@@ -146,7 +145,7 @@ public final class UnitsPoitiers implements Runnable {
 
                             .id(Persons.PERSONS.id().resolve(uuid(Poitiers(), join(", ", surname, forename))))
                             .university(Poitiers())
-                            .collection(new PersonsFrame())
+                            .collection(Persons.PERSONS)
 
                             .givenName(forename)
                             .familyName(surname);

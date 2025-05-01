@@ -16,10 +16,7 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.flow.http.handlers.Delegator;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.text.services.Translator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
@@ -261,15 +258,5 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     @Forward("dct:")
     Set<Topic> subject();
 
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    final class Handler extends Delegator {
-
-        public Handler() {
-            delegate(new Worker().get(new Driver(new UnitFrame())));
-        }
-
-    }
 
 }

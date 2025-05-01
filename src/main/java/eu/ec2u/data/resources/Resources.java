@@ -22,13 +22,10 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.units.Units;
 
 import java.net.URI;
 import java.util.Optional;
@@ -53,15 +50,15 @@ import static java.lang.String.format;
 @Virtual
 public interface Resources extends Dataset {
 
-    Resources RESOURCES=new ResourcesFrame()
+    ResourcesFrame RESOURCES=new ResourcesFrame()
             .id(DATA.resolve("resources/"))
-            .isDefinedBy(Datasets.DATASETS.id().resolve("resources"))
+            .isDefinedBy(DATA.resolve("datasets/resources"))
             .title(map(entry(EN, "EC2U Knowledge Hub Resources")))
             .alternative(map(entry(EN, "EC2U Resources")))
             .description(map(entry(EN, "Shared resources published on the EC2U Knowledge Hub.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(CCBYNCND40));
+            .license(set(LICENSE));
 
 
     static Optional<URI> match(final URI collection, final String query) {
@@ -96,15 +93,12 @@ public interface Resources extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> {
+        exec(() -> service(store()).partition(RESOURCES.id()).update(array(list(
 
-            final Value update=array(list(Xtream.of(Units.UNITS)
-                    .optMap(new Validate<>())
-            ));
+                Xtream.of(RESOURCES)
+                        .optMap(new Validate<>())
 
-            service(store()).partition(RESOURCES.id()).update(update, FORCE);
-
-        });
+        )), FORCE));
     }
 
 
@@ -119,9 +113,9 @@ public interface Resources extends Dataset {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Router().path("/", new Worker().get(new Driver(new ResourcesFrame()
+            delegate(new Router().path("/", new Worker().get(new Driver(new ResourcesFrame(true)
 
-                    .members(stash(query(new ResourceFrame())
+                    .members(stash(query(new ResourceFrame(true))
                             .where("collection.issued", criterion().any(set()))
                     ))
 

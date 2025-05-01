@@ -86,6 +86,8 @@ public interface Person extends Resource, FOAFPerson {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    default Persons collection() { return new PersonsFrame(); }
+    default Persons collection() {
+        return Persons.PERSONS;
+    }
 
 }

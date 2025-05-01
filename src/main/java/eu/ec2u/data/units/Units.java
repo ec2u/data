@@ -26,7 +26,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Resources;
@@ -68,7 +67,7 @@ public interface Units extends Dataset {
 
     UnitsFrame UNITS=new UnitsFrame()
             .id(DATA.resolve("units/"))
-            .isDefinedBy(Datasets.DATASETS.id().resolve("units"))
+            .isDefinedBy(DATA.resolve("datasets/units"))
             .title(map(entry(EN, "EC2U Research Units and Facilities")))
             .alternative(map(entry(EN, "EC2U Units")))
             .description(map(entry(EN, """
@@ -77,7 +76,7 @@ public interface Units extends Dataset {
             )))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(CCBYNCND40)).issued(LocalDate.parse("2022-01-01"));
+            .license(set(LICENSE)).issued(LocalDate.parse("2022-01-01"));
 
 
     static void main(final String... args) {
@@ -103,13 +102,13 @@ public interface Units extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(UNITS
+                    .path("/", new Worker().get(new Driver(new UnitsFrame(true)
 
-                            .members(stash(query(new UnitFrame())))
+                            .members(stash(query(new UnitFrame(true))))
 
                     )))
 
-                    .path("/{code}", new Unit.Handler())
+                    .path("/{code}", new Worker().get(new Driver(new UnitFrame(true))))
             );
         }
 

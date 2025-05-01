@@ -21,11 +21,9 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
@@ -44,28 +42,24 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Datasets extends Dataset {
 
-    Datasets DATASETS=new DatasetsFrame()
-            .id(DATA.resolve("datasets/"))
+    DatasetsFrame DATASETS=new DatasetsFrame()
+            .id(DATA.resolve("/"))
             .isDefinedBy(DATA.resolve("datasets"))
             .title(map(entry(EN, "EC2U Dataset Catalog")))
             .alternative(map(entry(EN, "EC2U Datasets")))
             .description(map(entry(EN, "Datasets published on the EC2U Knowledge Hub.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(CCBYNCND40))
-            .issued(LocalDate.parse("2023-07-15"));
+            .license(set(LICENSE));
 
 
     static void main(final String... args) {
-        exec(() -> {
+        exec(() -> service(store()).partition(DATASETS.id()).update(array(list(
 
-            final Value update=array(list(Xtream.of(new DatasetsFrame())
-                    .optMap(new Validate<>())
-            ));
+                Xtream.of(DATASETS)
+                        .optMap(new Validate<>())
 
-            service(store()).partition(DATASETS.id()).update(update, FORCE);
-
-        });
+        )), FORCE));
     }
 
 
@@ -81,9 +75,9 @@ public interface Datasets extends Dataset {
 
         public Handler() {
 
-            delegate(new Worker().get(new Driver(new DatasetsFrame()
+            delegate(new Worker().get(new Driver(new DatasetsFrame(true)
 
-                    .members(stash(query(new DatasetFrame())
+                    .members(stash(query(new DatasetFrame(true))
                             .where("issued", criterion().any(set()))
                     ))
 

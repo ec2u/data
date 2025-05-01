@@ -16,10 +16,7 @@
 
 package eu.ec2u.data.universities;
 
-import com.metreeca.flow.http.handlers.Delegator;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.lod.actions.Wikidata;
 import com.metreeca.flow.rdf4j.actions.GraphQuery;
 import com.metreeca.flow.rdf4j.services.Graph;
@@ -504,16 +501,5 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     @Internal
     ZoneId zone();
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    final class Handler extends Delegator {
-
-        public Handler() {
-            delegate(new Worker().get(new Driver(new UniversityFrame())));
-        }
-
-    }
 
 }

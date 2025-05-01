@@ -21,7 +21,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.datasets.Datasets;
 
 import java.util.Set;
 
@@ -38,21 +37,21 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Frame
 public interface Persons extends Dataset {
 
-    Persons PERSONS=new PersonsFrame()
+    PersonsFrame PERSONS=new PersonsFrame()
             .id(DATA.resolve("persons/"))
-            .isDefinedBy(Datasets.DATASETS.id().resolve("persons"))
+            .isDefinedBy(DATA.resolve("datasets/persons"))
             .title(map(entry(EN, "EC2U Faculty, Researchers and Staff")))
             .alternative(map(entry(EN, "EC2U People")))
             .description(map(entry(EN, "Staff involved in teaching and research activities at EC2U allied universities.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(CCBYNCND40));
+            .license(set(LICENSE));
 
 
     static void main(final String... args) {
         exec(() -> service(store()).partition(PERSONS.id()).update(array(list(
 
-                Xtream.of(new PersonsFrame())
+                Xtream.of(PERSONS)
                         .optMap(new Validate<>())
 
         )), FORCE));

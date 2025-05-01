@@ -22,12 +22,10 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.datasets.Datasets;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -49,26 +47,23 @@ public interface Universities extends Dataset {
 
     UniversitiesFrame UNIVERSITIES=new UniversitiesFrame()
             .id(DATA.resolve("universities/"))
-            .isDefinedBy(Datasets.DATASETS.id().resolve("universities"))
+            .isDefinedBy(DATA.resolve("datasets/universities"))
             .title(map(entry(EN, "EC2U Allied Universities")))
             .alternative(map(entry(EN, "EC2U Universities")))
             .description(map(entry(EN, "Background information about EC2U allied universities.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(CCBYNCND40))
+            .license(set(LICENSE))
             .issued(LocalDate.parse("2022-01-01"));
 
 
     static void main(final String... args) {
-        exec(() -> {
+        exec(() -> service(store()).partition(UNIVERSITIES.id()).update(array(list(
 
-            final Value update=array(list(Xtream.of(UNIVERSITIES)
-                    .optMap(new Validate<>())
-            ));
+                Xtream.of(UNIVERSITIES)
+                        .optMap(new Validate<>())
 
-            service(store()).partition(UNIVERSITIES.id()).update(update, FORCE);
-
-        });
+        )), FORCE));
     }
 
 
@@ -85,12 +80,12 @@ public interface Universities extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(UNIVERSITIES
-                            .members(stash(query(new UniversityFrame())))
+                    .path("/", new Worker().get(new Driver(new UniversitiesFrame(true)
+                            .members(stash(query(new UniversityFrame(true))))
 
                     )))
 
-                    .path("/{code}", new University.Handler())
+                    .path("/{code}", new Worker().get(new Driver(new UniversityFrame(true))))
 
             );
         }

@@ -25,6 +25,8 @@ import com.metreeca.mesh.Value;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
+import eu.ec2u.data.resources.Collection;
+import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.units.Units;
@@ -50,12 +52,14 @@ public final class EC2U extends Delegator {
     public static final URI DATA=uri(BASE);
     public static final URI EMBEDDINGS=DATA.resolve("~embeddings");
 
-    public static final String COPYRIGHT="Copyright © 2022‑2025 EC2U Alliance";
 
     public static final OrgOrganizationFrame EC2U=new OrgOrganizationFrame()
             .id(uri("https://ec2u.eu/"))
             .prefLabel(map(entry(EN, "European Campus of City-Universities")))
             .altLabel(map(entry(EN, "EC2U")));
+
+    public static final String COPYRIGHT="Copyright © 2022‑2025 EC2U Alliance";
+    public static final Reference LICENSE=Collection.CCBYNCND40;
 
 
     public static void main(final String... args) {

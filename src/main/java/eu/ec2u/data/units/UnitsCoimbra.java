@@ -29,7 +29,6 @@ import com.metreeca.mesh.util.URIs;
 import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.persons.PersonsFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
@@ -206,7 +205,7 @@ public final class UnitsCoimbra implements Runnable {
 
                                 .id(Persons.PERSONS.id().resolve(uuid(Coimbra(), join(", ", surname, forename))))
                                 .university(Coimbra())
-                                .collection(new PersonsFrame())
+                                .collection(Persons.PERSONS)
 
                                 .givenName(forename)
                                 .familyName(surname)

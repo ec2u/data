@@ -22,11 +22,9 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.datasets.Datasets;
 
 import java.util.Set;
 
@@ -46,25 +44,22 @@ public interface Taxonomies extends Dataset {
 
     TaxonomiesFrame TAXONOMIES=new TaxonomiesFrame()
             .id(DATA.resolve("taxonomies/"))
-            .isDefinedBy(Datasets.DATASETS.id().resolve("taxonomies"))
+            .isDefinedBy(DATA.resolve("datasets/taxonomies"))
             .title(map(entry(EN, "EC2U Classification Taxonomies")))
             .alternative(map(entry(EN, "EC2U Taxonomies")))
             .description(map(entry(EN, "Topic taxonomies and other concept schemes for classifying resources.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(CCBYNCND40));
+            .license(set(LICENSE));
 
 
     static void main(final String... args) {
-        exec(() -> {
+        exec(() -> service(store()).partition(TAXONOMIES.id()).update(array(list(
 
-            final Value update=array(list(Xtream.of(TAXONOMIES)
-                    .optMap(new Validate<>())
-            ));
+                Xtream.of(TAXONOMIES)
+                        .optMap(new Validate<>())
 
-            service(store()).partition(TAXONOMIES.id()).update(update, FORCE);
-
-        });
+        )), FORCE));
     }
 
 
@@ -81,12 +76,12 @@ public interface Taxonomies extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(TAXONOMIES
-                            .members(stash(query(new TaxonomyFrame())))
+                    .path("/", new Worker().get(new Driver(new TaxonomyFrame(true)
+                            .members(stash(query(new TaxonomyFrame(true))))
                     )))
 
-                    .path("/{taxonomy}", new Worker().get(new Driver(new TaxonomyFrame())))
-                    .path("/{taxonomy}/*", new Worker().get(new Driver(new TopicFrame())))
+                    .path("/{taxonomy}", new Worker().get(new Driver(new TaxonomyFrame(true))))
+                    .path("/{taxonomy}/*", new Worker().get(new Driver(new TopicFrame(true))))
 
             );
         }

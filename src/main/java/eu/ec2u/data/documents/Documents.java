@@ -25,7 +25,6 @@ import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.datasets.Datasets;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -46,13 +45,13 @@ public interface Documents extends Dataset {
 
     DocumentsFrame DOCUMENTS=new DocumentsFrame()
             .id(DATA.resolve("documents/"))
-            .isDefinedBy(Datasets.DATASETS.id().resolve("documents"))
+            .isDefinedBy(DATA.resolve("datasets/documents"))
             .title(map(entry(EN, "EC2U Institutional Documents")))
             .alternative(map(entry(EN, "EC2U Documents")))
             .description(map(entry(EN, "Institutional documents shared by EC2U allied partners.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(CCBYNCND40))
+            .license(set(LICENSE))
             .issued(LocalDate.parse("2023-07-15"));
 
 
@@ -79,13 +78,13 @@ public interface Documents extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(DOCUMENTS
+                    .path("/", new Worker().get(new Driver(new DocumentsFrame(true)
 
-                            .members(stash(query(new DocumentFrame())))
+                            .members(stash(query(new DocumentFrame(true))))
 
                     )))
 
-                    .path("/{code}", new Document.Handler())
+                    .path("/{code}", new Worker().get(new Driver(new DocumentFrame(true))))
             );
         }
 

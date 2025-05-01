@@ -16,9 +16,6 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.flow.http.handlers.Delegator;
-import com.metreeca.flow.http.handlers.Worker;
-import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -94,16 +91,5 @@ public interface Document extends Resource {
     Set<Topic> audience();
 
     Set<Document> relation();
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    final class Handler extends Delegator {
-
-        public Handler() {
-            delegate(new Worker().get(new Driver(new DocumentFrame())));
-        }
-
-    }
 
 }
