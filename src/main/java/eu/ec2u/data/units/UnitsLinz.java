@@ -27,7 +27,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
@@ -57,7 +57,7 @@ public final class UnitsLinz implements Runnable {
 
                 .flatMap(new Loader(Linz()))
 
-        )), FORCE);
+        )), FORCED);
     }
 
 

@@ -27,7 +27,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -97,7 +97,7 @@ public final class EC2UOrganizations implements Runnable {
                 Stream.of(resource(EC2UOrganizations.class, ".csv").toString())
                         .flatMap(new Taxonomy.Loader(TAXONOMY))
 
-        ))), FORCE);
+        ))), FORCED);
     }
 
 }

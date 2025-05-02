@@ -30,7 +30,7 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -48,7 +48,7 @@ public interface Collection extends Resource {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).update(CCBYNCND40, FORCE));
+        exec(() -> service(store()).update(CCBYNCND40, FORCED));
     }
 
 

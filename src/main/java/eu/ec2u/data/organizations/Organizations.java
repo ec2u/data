@@ -28,7 +28,7 @@ import java.util.Set;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -55,7 +55,7 @@ public interface Organizations extends Dataset {
                 Xtream.of(ORGANIZATIONS)
                         .optMap(new Validate<>())
 
-        )), FORCE));
+        )), FORCED));
     }
 
 

@@ -44,7 +44,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -85,7 +85,7 @@ public final class UnitsCoimbra implements Runnable {
                 .flatMap(this::units)
                 .flatMap(this::unit)
 
-        )), FORCE);
+        )), FORCED);
     }
 
 

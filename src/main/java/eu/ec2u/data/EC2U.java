@@ -37,7 +37,7 @@ import java.net.URI;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -69,7 +69,7 @@ public final class EC2U extends Delegator {
                     .optMap(new Validate<>())
             ));
 
-            service(store()).update(update, FORCE);
+            service(store()).update(update, FORCED);
 
         });
     }

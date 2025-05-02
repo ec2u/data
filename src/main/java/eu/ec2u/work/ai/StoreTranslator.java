@@ -46,7 +46,7 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.shapes.Property.property;
 import static com.metreeca.mesh.shapes.Shape.shape;
 import static com.metreeca.mesh.shapes.Type.type;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.list;
 import static com.metreeca.mesh.util.Collections.set;
 import static com.metreeca.mesh.util.Locales.ANY;
@@ -167,7 +167,7 @@ public final class StoreTranslator implements Translator {
                             ))
                             .map(new Validate<>())
                             .flatMap(Optional::stream)
-                    )), FORCE);
+                    )), FORCED);
 
                     return translation;
 

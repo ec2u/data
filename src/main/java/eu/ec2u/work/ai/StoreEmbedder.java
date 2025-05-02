@@ -41,7 +41,7 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.shapes.Property.property;
 import static com.metreeca.mesh.shapes.Shape.shape;
 import static com.metreeca.mesh.shapes.Type.type;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.list;
 import static com.metreeca.mesh.util.Loggers.time;
 import static com.metreeca.mesh.util.URIs.item;
@@ -148,7 +148,7 @@ public final class StoreEmbedder implements Embedder {
                                 ))
                                 .map(new Validate<>())
                                 .flatMap(Optional::stream)
-                        )), FORCE);
+                        )), FORCED);
                     }
 
                     return embedding;

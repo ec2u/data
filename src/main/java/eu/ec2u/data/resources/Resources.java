@@ -37,7 +37,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -98,7 +98,7 @@ public interface Resources extends Dataset {
                 Xtream.of(RESOURCES)
                         .optMap(new Validate<>())
 
-        )), FORCE));
+        )), FORCED));
     }
 
 

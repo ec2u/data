@@ -40,7 +40,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.text.services.Translator.translator;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -243,7 +243,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
                 .optMap(new Validate<>())
 
-        )), FORCE));
+        )), FORCED));
     }
 
 

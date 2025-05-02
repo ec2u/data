@@ -48,7 +48,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Strings.lower;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.tools.Store.Options.FORCE;
+import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.locale;
 
@@ -83,7 +83,7 @@ public interface Documents extends Dataset {
                 Xtream.of(DOCUMENTS)
                         .optMap(new Validate<>())
 
-        )), FORCE));
+        )), FORCED));
     }
 
 
