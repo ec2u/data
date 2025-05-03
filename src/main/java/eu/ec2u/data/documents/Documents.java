@@ -158,7 +158,6 @@ public interface Documents extends Dataset {
                             value(record, "Description (Local)").map(v -> entry(university.locale(), v)).stream()
                     )))
 
-
                     .created(value(record, "Created", Parsers::localDate)
                             .orElse(null)
                     )

@@ -24,6 +24,7 @@ import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
+import com.metreeca.mesh.util.Collections;
 import com.metreeca.mesh.util.URIs;
 
 import eu.ec2u.data.persons.Person;
@@ -167,7 +168,6 @@ public final class UnitsCoimbra implements Runnable {
 
                 )))
 
-                .hasHead(set(head(json).stream()))
                 .unitOf(set(Coimbra()))
 
                 .classification(set(json.get("type_en").string()
@@ -187,12 +187,17 @@ public final class UnitsCoimbra implements Runnable {
 
         ).stream().flatMap(unit -> {
 
-            final Optional<PersonFrame> heads=head(json)
-                    .map(p -> p.headOf(set(unit)).memberOf(set(unit)));
+            final Optional<PersonFrame> head=head(json);
 
             return Xtream.from(
-                    Stream.of(unit),
-                    heads.stream()
+
+                    Stream.of(unit
+                            .hasHead(head.map(Collections::set).orElse(null))
+                            .hasMember(head.map(Collections::set).orElse(null))
+                    ),
+
+                    head.stream()
+
             );
 
         });

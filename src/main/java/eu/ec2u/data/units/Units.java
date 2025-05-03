@@ -24,6 +24,7 @@ import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.util.Collections;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
@@ -210,12 +211,17 @@ public interface Units extends Dataset {
 
             ).stream().flatMap(unit -> {
 
-                final Optional<PersonFrame> head=value(record, "Head", person -> person(person, university))
-                        .map(p -> p.headOf(set(unit)).memberOf(set(unit)));
+                final Optional<PersonFrame> head=head(record);
 
                 return Xtream.from(
-                        Stream.of(unit),
+
+                        Stream.of(unit
+                                .hasHead(head.map(Collections::set).orElse(null))
+                                .hasMember(head.map(Collections::set).orElse(null))
+                        ),
+
                         head.stream()
+
                 );
 
             });
@@ -277,6 +283,10 @@ public interface Units extends Dataset {
                     .toList();
 
             return parents.isEmpty() ? Stream.of(university) : parents.stream();
+        }
+
+        private Optional<PersonFrame> head(final CSVRecord record) {
+            return value(record, "Head", person -> person(person, university));
         }
 
     }

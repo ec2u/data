@@ -46,7 +46,7 @@ import static java.util.stream.Collectors.toMap;
 
 final class ResourcesMatcher {
 
-    private static final int CACHING_SIZE_LIMIT=100;
+    private static final int CACHING_SIZE_LIMIT=10_000;
 
 
     private static final Map<URI, VectorIndex<URI>> INDICES=new ConcurrentHashMap<>();
