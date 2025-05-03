@@ -21,6 +21,7 @@ import com.metreeca.flow.http.handlers.Router;
 
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
+import eu.ec2u.data.events.Events;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.Collection;
 import eu.ec2u.data.resources.Reference;
@@ -73,11 +74,10 @@ public final class EC2U extends Delegator {
                         .path("/taxonomies/*", new Taxonomies.Handler())
                         .path("/universities/*", new Universities.Handler())
                         .path("/units/*", new Units.Handler())
-                // !!! .path("/offerings/*", new Offerings())
-                // !!! .path("/programs/*", new Programs())
-                // !!! .path("/courses/*", new Courses())
+                        // !!! .path("/programs/*", new Programs())
+                        // !!! .path("/courses/*", new Courses())
                         .path("/documents/*", new Documents.Handler())
-                // !!! .path("/events/*", new Events())
+                        .path("/events/*", new Events.Handler())
                 // !!! .path("/actors/*", new Actors())
 
         );

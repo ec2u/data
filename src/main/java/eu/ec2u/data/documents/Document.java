@@ -28,7 +28,10 @@ import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.persons.Person;
-import eu.ec2u.data.resources.*;
+import eu.ec2u.data.resources.Localized;
+import eu.ec2u.data.resources.Reference;
+import eu.ec2u.data.resources.Resource;
+import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.ai.Embedder;
@@ -135,7 +138,7 @@ public interface Document extends Resource {
 
 
     @Override
-    default Collection collection() {
+    default Documents collection() {
         return DOCUMENTS;
     }
 

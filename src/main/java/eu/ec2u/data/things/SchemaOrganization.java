@@ -14,32 +14,24 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.agents;
+package eu.ec2u.data.things;
 
-import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Pattern;
 
-import eu.ec2u.data.resources.Reference;
-
-import java.net.URI;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 @Frame
-@Class("foaf:Agent")
-@Namespace(prefix="[foaf]", value="http://xmlns.com/foaf/0.1/")
-public interface FOAFAgent extends Reference {
+public interface SchemaOrganization extends SchemaThing {
 
-    Set<URI> depiction();
-
-    Set<URI> homepage();
-
+    Map<Locale, String> legalName();
 
     @Pattern(EMAIl_PATTERN)
-    Set<String> mbox();
+    Set<String> email();
 
     @Pattern(PHONE_PATTERN)
-    Set<String> phone();
+    Set<String> telephone();
 
 }

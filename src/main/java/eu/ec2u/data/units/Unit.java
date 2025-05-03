@@ -255,5 +255,4 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     @Forward("dct:")
     Set<Topic> subject();
 
-
 }

@@ -44,6 +44,9 @@ public interface Reference {
     int LABEL_LENGTH=100;
     int COMMENT_LENGTH=500;
 
+    String EMAIl_PATTERN="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+    String PHONE_PATTERN="^\\+?[1-9]\\d{1,14}$";
+
 
     static String label(final String label) {
         return clip(label, LABEL_LENGTH);
