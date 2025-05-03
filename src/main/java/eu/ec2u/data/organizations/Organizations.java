@@ -19,7 +19,6 @@ package eu.ec2u.data.organizations;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.persons.PersonsFrame;
 
 import java.util.Set;
 
@@ -34,7 +33,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Frame
 public interface Organizations extends Dataset {
 
-    PersonsFrame ORGANIZATIONS=new PersonsFrame()
+    OrganizationsFrame ORGANIZATIONS=new OrganizationsFrame()
             .id(DATA.resolve("organizations/"))
             .isDefinedBy(DATA.resolve("datasets/organizations"))
             .title(map(entry(EN, "EC2U Related Organizations")))
@@ -46,7 +45,7 @@ public interface Organizations extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(ORGANIZATIONS.id()).insert(ORGANIZATIONS));
+        exec(() -> service(store()).partition(ORGANIZATIONS.id()).clear().insert(ORGANIZATIONS));
     }
 
 

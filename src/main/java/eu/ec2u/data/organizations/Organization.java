@@ -26,21 +26,25 @@ import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.data.things.SchemaOrganization;
 import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
-import static com.metreeca.mesh.util.Collections.set;
+import static com.metreeca.mesh.util.Collections.*;
 
+import static eu.ec2u.data.organizations.Organizations.ORGANIZATIONS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
+import static java.util.function.Predicate.not;
 
 @Frame
 @Namespace("[ec2u]")
-public interface Organization extends Resource, OrgOrganization {
+public interface Organization extends Resource, OrgOrganization, SchemaOrganization {
 
     double CLASSIFICATIOION_THRESHOLD=0.4;
 
@@ -86,6 +90,38 @@ public interface Organization extends Resource, OrgOrganization {
                 Optional.ofNullable(document.prefLabel().get(EN)).stream(),
                 Optional.ofNullable(document.definition().get(EN)).stream()
         )));
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    default Map<Locale, String> label() {
+        return Reference.label(
+                Optional.ofNullable(acronym()).filter(not(String::isEmpty))
+                        .map(acronym -> map(prefLabel().entrySet().stream().map(e ->
+                                entry(e.getKey(), "%s - %s".formatted(acronym, e.getValue()))
+                        )))
+                        .orElseGet(this::prefLabel)
+        );
+    }
+
+    @Override
+    default Map<Locale, String> comment() {
+        return Reference.comment(definition());
+    }
+
+
+    @Override
+    default Map<Locale, String> name() { return prefLabel(); }
+
+    @Override
+    default Map<Locale, String> description() { return definition(); }
+
+
+    @Override
+    default Organizations collection() {
+        return ORGANIZATIONS;
     }
 
 }

@@ -22,7 +22,7 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
-import { entryCompare, isEntry, toEntryString } from "@metreeca/core/entry";
+import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
@@ -58,15 +58,8 @@ export const Event=immutable({
 	inLanguage: optional(string),
 	isAccessibleForFree: optional(boolean),
 
-	eventAttendanceMode: optional({
-		id: required(id),
-		label: required(text)
-	}),
-
-	eventStatus: optional({
-		id: required(id),
-		label: required(text)
-	}),
+	eventAttendanceMode: optional(string),
+	eventStatus: optional(string),
 
 	about: multiple({
 		id: required(id),
@@ -97,32 +90,32 @@ export const Event=immutable({
 
 	}),
 
-	location: multiple({
-
-		Text: optional(string),
-
-		Place: optional({
-			label: required(text),
-			url: optional(id),
-			address: optional({
-				streetAddress: optional(string),
-				postalCode: optional(string),
-				addressLocality: optional(string)
-			})
-		}),
-
-		PostalAddress: optional({
-			streetAddress: optional(string),
-			postalCode: optional(string),
-			addressLocality: optional(string)
-		}),
-
-		VirtualLocation: optional({
-			label: required(text),
-			url: required(id)
-		})
-
-	}),
+	// location: multiple({
+	//
+	// 	Text: optional(string),
+	//
+	// 	Place: optional({
+	// 		label: required(text),
+	// 		url: optional(id),
+	// 		address: optional({
+	// 			streetAddress: optional(string),
+	// 			postalCode: optional(string),
+	// 			addressLocality: optional(string)
+	// 		})
+	// 	}),
+	//
+	// 	PostalAddress: optional({
+	// 		streetAddress: optional(string),
+	// 		postalCode: optional(string),
+	// 		addressLocality: optional(string)
+	// 	}),
+	//
+	// 	VirtualLocation: optional({
+	// 		label: required(text),
+	// 		url: required(id)
+	// 	})
+	//
+	// }),
 
 	university: optional({
 		id: required(id),
@@ -132,26 +125,26 @@ export const Event=immutable({
 });
 
 
-type Place=Exclude<Exclude<typeof Event.location, undefined>[number]["Place"], undefined>
-type PostalAddress=Exclude<Exclude<typeof Event.location, undefined>[number]["PostalAddress"], undefined>
-
-function asPlace(place: Place) {
-	return <div>
-		<span>{toTextString(place.label)}</span>
-		{place.address && asPostalAddress(place.address)}
-	</div>;
-}
-
-function asPostalAddress(address: PostalAddress) {
-	return <div>
-		{address.streetAddress && <span>{address.streetAddress}</span>}
-		{address.addressLocality && <span>{address.postalCode} {
-			isEntry(address.addressLocality)
-				? <TileLink>{address.addressLocality}</TileLink>
-				: address.addressLocality}</span>
-		}
-	</div>;
-}
+// type Place=Exclude<Exclude<typeof Event.location, undefined>[number]["Place"], undefined>
+// type PostalAddress=Exclude<Exclude<typeof Event.location, undefined>[number]["PostalAddress"], undefined>
+//
+// function asPlace(place: Place) {
+// 	return <div>
+// 		<span>{toTextString(place.label)}</span>
+// 		{place.address && asPostalAddress(place.address)}
+// 	</div>;
+// }
+//
+// function asPostalAddress(address: PostalAddress) {
+// 	return <div>
+// 		{address.streetAddress && <span>{address.streetAddress}</span>}
+// 		{address.addressLocality && <span>{address.postalCode} {
+// 			isEntry(address.addressLocality)
+// 				? <TileLink>{address.addressLocality}</TileLink>
+// 				: address.addressLocality}</span>
+// 		}
+// 	</div>;
+// }
 
 
 export function DataEvent() {
@@ -178,7 +171,7 @@ export function DataEvent() {
 
 			organizer,
 			publisher,
-			location,
+			// location,
 
 			university
 
@@ -230,22 +223,13 @@ export function DataEvent() {
 				"Entry": isAccessibleForFree === true ? "Free" : isAccessibleForFree === false ? "Paid" : undefined,
 				"Language": inLanguage && toTextString(Languages[inLanguage]),
 
-				"Attendance": eventAttendanceMode && toEntryString(eventAttendanceMode),
-				"Status": eventStatus && toEntryString(eventStatus),
+				"Attendance": eventAttendanceMode && eventAttendanceMode, // !!! map to user-readable label
+				"Status": eventStatus && eventStatus // !!! map to user-readable label
 
-				"Location": location && <ul>{location?.map(({ Text, Place, PostalAddress, VirtualLocation }, index) =>
-
-					<li key={index}>{
-
-						Text ? <span>{Text}</span>
-							: Place ? asPlace(Place)
-								: PostalAddress ? asPostalAddress(PostalAddress)
-									: VirtualLocation ?
-										<a href={VirtualLocation.url}>{toTextString(VirtualLocation.label)}</a>
-										: null
-
-					}</li>
-				)}</ul>
+				// "Location": location && <ul>{location?.map(({ Text, Place, PostalAddress, VirtualLocation }, index)
+				// =>  <li key={index}>{  Text ? <span>{Text}</span> : Place ? asPlace(Place) : PostalAddress ?
+				// asPostalAddress(PostalAddress) : VirtualLocation ? <a
+				// href={VirtualLocation.url}>{toTextString(VirtualLocation.label)}</a> : null  }</li> )}</ul>
 
 			}}</TileInfo>
 
@@ -295,7 +279,7 @@ export function DataEvent() {
 
 			}}>
 
-                <img src={image.url}
+                <img src={image.id}
 
                     alt={image.description && toTextString(image.description) || `Image of ${toTextString(name)}`}
 

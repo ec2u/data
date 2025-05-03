@@ -53,6 +53,10 @@ public final class EC2UOrganizations implements Runnable {
             .license(set(CCBYNCND40));
 
 
+    public static final TopicFrame UNIVERSITY=new TopicFrame().id(uri(
+            EC2U_ORGANIZATIONS+"/university"
+    ));
+
     public static final TopicFrame INSTITUTE=new TopicFrame().id(uri(
             EC2U_ORGANIZATIONS+"/university-unit/institute"
     ));

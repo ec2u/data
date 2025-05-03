@@ -82,7 +82,7 @@ public final class UnitsPavia implements Runnable {
 
 
     @Override public void run() {
-        service(store()).partition(CONTEXT).insert(array(list(Xtream
+        service(store()).partition(CONTEXT).clear().insert(array(list(Xtream
 
                 .of(
                         new Catalog(

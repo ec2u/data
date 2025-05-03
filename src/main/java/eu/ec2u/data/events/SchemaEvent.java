@@ -26,7 +26,7 @@ import eu.ec2u.data.things.SchemaThing;
 
 import java.net.URI;
 import java.time.Duration;
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 @Frame
@@ -56,11 +56,13 @@ public interface SchemaEvent extends SchemaThing {
     Set<URI> url();
 
     @Required
-    OffsetDateTime startDate();
+    ZonedDateTime startDate();
 
-    OffsetDateTime endDate();
+    ZonedDateTime endDate();
 
-    Duration duration();
+    default Duration duration() {
+        return startDate() == null || endDate() == null ? null : Duration.between(startDate(), endDate());
+    }
 
 
     String inLanguage();

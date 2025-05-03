@@ -45,7 +45,7 @@ public interface Persons extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(PERSONS.id()).insert(PERSONS));
+        exec(() -> service(store()).partition(PERSONS.id()).clear().insert(PERSONS));
     }
 
 

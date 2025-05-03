@@ -79,8 +79,9 @@ public final class UnitsCoimbra implements Runnable {
     private final Logger logger=service(logger());
 
 
-    @Override public void run() {
-        service(store()).partition(CONTEXT).insert(array(list(Xtream.of(Instant.EPOCH)
+    @Override
+    public void run() {
+        service(store()).partition(CONTEXT).clear().insert(array(list(Xtream.of(Instant.EPOCH)
 
                 .flatMap(this::units)
                 .flatMap(this::unit)

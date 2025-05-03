@@ -34,13 +34,13 @@ import java.util.Set;
 public interface SchemaThing extends Reference {
 
     int NAME_LENGTH=100;
-    int DESCRIPTION_LENGTH=1000;
-    int DISAMBIGUATING_DESCRIPTION_LENGTH=1000;
+    int DESCRIPTION_LENGTH=10_000;
+    int DISAMBIGUATING_DESCRIPTION_LENGTH=500;
 
 
     Set<URI> url();
 
-    Set<String> identifier();
+    String identifier(); // single strinug value for compatibility with org:Organization
 
 
     @Localized
@@ -48,17 +48,16 @@ public interface SchemaThing extends Reference {
     Map<Locale, String> name();
 
     @Localized
-    @MaxLength(DISAMBIGUATING_DESCRIPTION_LENGTH)
-    Map<Locale, String> disambiguatingDescription();
-
-    @Localized
     @MaxLength(DESCRIPTION_LENGTH)
     Map<Locale, String> description();
+
+    @Localized
+    @MaxLength(DISAMBIGUATING_DESCRIPTION_LENGTH)
+    Map<Locale, String> disambiguatingDescription();
 
 
     Set<Topic> about();
 
     SchemaImageObject image();
-
 
 }

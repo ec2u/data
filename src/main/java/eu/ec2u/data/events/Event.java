@@ -32,6 +32,7 @@ import eu.ec2u.work.ai.Embedder;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
@@ -39,14 +40,16 @@ import static com.metreeca.mesh.util.Collections.set;
 
 import static eu.ec2u.data.events.Events.EVENTS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.EC2UEvents.EC2U_EVENTS;
 import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
+import static java.util.function.Predicate.not;
 
 @Frame
 @Class("ec2u:")
 @Namespace("[ec2u]")
 public interface Event extends Resource, SchemaEvent {
 
-    double SUBJECT_THRESHOLD=0.4;
+    double ABOUT_THRESHOLD=0.4;
     double AUDIENCE_THRESHOLD=0.4;
 
 
@@ -62,7 +65,7 @@ public interface Event extends Resource, SchemaEvent {
 
         return Optional.of(event)
                 .map(d -> translate(d, source)) // before English-based classification
-                .map(v -> subject(v))
+                .map(v -> about(v))
                 .map(v -> audience(v))
                 .flatMap(new Validate<>());
     }
@@ -79,16 +82,26 @@ public interface Event extends Resource, SchemaEvent {
                 .description(translator.texts(event.description(), source, EN));
     }
 
-    private static EventFrame subject(final EventFrame event) {
-        return event;
+    private static EventFrame about(final EventFrame event) {
+        return event.about(Optional.ofNullable(event.about())
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(Resources
+                        .match(EC2U_EVENTS, embeddable(event), ABOUT_THRESHOLD)
+                        .map(uri -> new TopicFrame(true).id(uri))
+                        .limit(1)
+                ))
+        );
     }
 
     private static EventFrame audience(final EventFrame event) {
-        return event.audience().isEmpty() ? event.audience(set(Resources
-                .match(EC2U_STAKEHOLDERS, embeddable(event), AUDIENCE_THRESHOLD)
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(1)
-        )) : event;
+        return event.about(Optional.ofNullable(event.about())
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(Resources
+                        .match(EC2U_STAKEHOLDERS, embeddable(event), AUDIENCE_THRESHOLD)
+                        .map(uri -> new TopicFrame(true).id(uri))
+                        .limit(1)
+                ))
+        );
     }
 
     private static String embeddable(final Event event) {

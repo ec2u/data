@@ -81,7 +81,7 @@ public interface Units extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(UNITS.id()).insert(UNITS));
+        exec(() -> service(store()).partition(UNITS.id()).clear().insert(UNITS));
     }
 
 
