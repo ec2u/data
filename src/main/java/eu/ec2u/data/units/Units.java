@@ -40,6 +40,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
@@ -133,77 +134,19 @@ public interface Units extends Dataset {
                     .id(id)
                     .university(university)
 
-                    .identifier(value(record, "Code")
-                            .orElse(null)
-                    )
+                    .identifier(identifier(record).orElse(null))
 
-                    .unitOf(set(Stream.concat(
+                    .prefLabel(map(prefLabel(record)))
+                    .altLabel(map(altLabel(record)))
+                    .definition(map(definition(record)))
 
-                            value(record, "Parent")
-                                    .map(parent -> parents(parent, records))
-                                    .orElseGet(() -> Stream.of(university)),
+                    .homepage(set(homepage(record)))
+                    .mbox(set(mbox(record)))
 
-                            value(record, "VI")
-                                    .flatMap(Unit::vi)
-                                    .stream()
+                    .classification(set(classification(record)))
+                    .subject(set(subject(record)))
 
-                    )))
-
-                    .classification(set(value(record, "Type")
-                            .flatMap(type2 -> Resources.match(EC2U_ORGANIZATIONS, type2))
-                            .map(uri -> new TopicFrame(true).id(uri))
-                            .stream()
-                    ))
-
-                    .subject(set(Stream.concat(
-
-                            value(record, "Sector")
-                                    .flatMap(type -> Resources.match(EUROSCIVOC, type))
-                                    .map(uri -> new TopicFrame(true).id(uri))
-                                    .stream(),
-
-
-                            Stream.concat(
-                                            value(record, "Topics (English)").stream(),
-                                            value(record, "Topics (Local)").stream()
-                                    )
-                                    .flatMap(topics -> Arrays.stream(topics.split(";")))
-                                    .distinct()
-                                    .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
-                                    .map(uri -> new TopicFrame(true).id(uri))
-                                    .limit(1)
-
-                    )))
-
-                    .prefLabel(map(Xtream.from(
-                            value(record, "Name (English)").stream().map(v -> entry(EN, v)),
-                            value(record, "Name (Local)").stream().map(v -> entry(university.locale(), v))
-                    )))
-
-                    .altLabel(map(Xtream.from(
-                            value(record, "Acronym").stream().map(v -> entry(ROOT, v))
-                    )))
-
-                    .definition(map(Xtream.from(
-                            value(record, "Description (English)").stream().map(v -> entry(EN, v)),
-                            value(record, "Description (Local)").stream().map(v -> entry(university.locale(), v))
-                    )))
-
-                    .homepage(set(Xtream.from(
-
-                            value(record, "Factsheet", Parsers::uri).stream(),
-                            value(record, "Factsheet (English)", Parsers::uri).stream(), // !!! track language
-                            value(record, "Factsheet (Local)", Parsers::uri).stream(), // !!! track language
-
-                            value(record, "Homepage", Parsers::uri).stream(),
-                            value(record, "Homepage (English)", Parsers::uri).stream(), // !!! track language
-                            value(record, "Homepage (Local)", Parsers::uri).stream() // !!! track language
-
-                    )))
-
-                    .mbox(set(
-                            value(record, "Email", Parsers::email).stream()
-                    ))
+                    .unitOf(set(unitOf(record, records)))
 
             ).flatMap(unit ->
 
@@ -251,6 +194,91 @@ public interface Units extends Dataset {
                 )));
 
             }
+        }
+
+        private Optional<String> identifier(final CSVRecord record) {
+            return value(record, "Code");
+        }
+
+        private Stream<Entry<Locale, String>> prefLabel(final CSVRecord record) {
+            return Xtream.from(
+                    value(record, "Name (English)").stream().map(v -> entry(EN, v)),
+                    value(record, "Name (Local)").stream().map(v -> entry(university.locale(), v))
+            );
+        }
+
+        private Stream<Entry<Locale, String>> altLabel(final CSVRecord record) {
+            return Xtream.from(
+                    value(record, "Acronym").stream().map(v -> entry(ROOT, v))
+            );
+        }
+
+        private Stream<Entry<Locale, String>> definition(final CSVRecord record) {
+            return Xtream.from(
+                    value(record, "Description (English)").stream().map(v -> entry(EN, v)),
+                    value(record, "Description (Local)").stream().map(v -> entry(university.locale(), v))
+            );
+        }
+
+        private Stream<URI> homepage(final CSVRecord record) {
+            return Xtream.from(
+
+                    value(record, "Factsheet", Parsers::uri).stream(),
+                    value(record, "Factsheet (English)", Parsers::uri).stream(), // !!! track language
+                    value(record, "Factsheet (Local)", Parsers::uri).stream(), // !!! track language
+
+                    value(record, "Homepage", Parsers::uri).stream(),
+                    value(record, "Homepage (English)", Parsers::uri).stream(), // !!! track language
+                    value(record, "Homepage (Local)", Parsers::uri).stream() // !!! track language
+
+            );
+        }
+
+        private Stream<String> mbox(final CSVRecord record) {
+            return value(record, "Email", Parsers::email).stream();
+        }
+
+        private Stream<TopicFrame> classification(final CSVRecord record) {
+            return value(record, "Type")
+                    .flatMap(type2 -> Resources.match(EC2U_ORGANIZATIONS, type2))
+                    .map(uri -> new TopicFrame(true).id(uri))
+                    .stream();
+        }
+
+        private Stream<TopicFrame> subject(final CSVRecord record) {
+            return Stream.concat(
+
+                    value(record, "Sector")
+                            .flatMap(type -> Resources.match(EUROSCIVOC, type))
+                            .map(uri -> new TopicFrame(true).id(uri))
+                            .stream(),
+
+
+                    Stream.concat(
+                                    value(record, "Topics (English)").stream(),
+                                    value(record, "Topics (Local)").stream()
+                            )
+                            .flatMap(topics -> Arrays.stream(topics.split(";")))
+                            .distinct()
+                            .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                            .map(uri -> new TopicFrame(true).id(uri))
+                            .limit(1)
+
+            );
+        }
+
+        private Stream<OrgOrganization> unitOf(final CSVRecord record, final Collection<CSVRecord> records) {
+            return Stream.concat(
+
+                    value(record, "Parent")
+                            .map(parent -> parents(parent, records))
+                            .orElseGet(() -> Stream.of(university)),
+
+                    value(record, "VI")
+                            .flatMap(Unit::vi)
+                            .stream()
+
+            );
         }
 
         private Stream<OrgOrganization> parents(final String parent, final Collection<CSVRecord> records) {
