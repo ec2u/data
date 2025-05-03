@@ -82,7 +82,7 @@ public final class ISCED2011 implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(ISCED2011).insert(array(list(Xtream.from(
+        service(store()).partition(ISCED2011).clear().insert(array(list(Xtream.from(
 
                 Stream.of(
                         TAXONOMY,

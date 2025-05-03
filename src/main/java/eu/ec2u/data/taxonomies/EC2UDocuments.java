@@ -59,7 +59,7 @@ public final class EC2UDocuments implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(EC2U_DOCUMENTS).insert(array(list(Xtream.from(
+        service(store()).partition(EC2U_DOCUMENTS).clear().insert(array(list(Xtream.from(
 
                 Stream.of(
                         TAXONOMY

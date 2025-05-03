@@ -60,7 +60,7 @@ public final class EC2UStakeholders implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(EC2U_STAKEHOLDERS).insert(array(list(Xtream.from(
+        service(store()).partition(EC2U_STAKEHOLDERS).clear().insert(array(list(Xtream.from(
 
                 Stream.of(
                         TAXONOMY

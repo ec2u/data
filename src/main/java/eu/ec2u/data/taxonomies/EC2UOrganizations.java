@@ -86,7 +86,7 @@ public final class EC2UOrganizations implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(EC2U_ORGANIZATIONS).insert(array(list(Xtream.from(
+        service(store()).partition(EC2U_ORGANIZATIONS).clear().insert(array(list(Xtream.from(
 
                 Stream.of(
                         TAXONOMY

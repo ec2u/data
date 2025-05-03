@@ -91,7 +91,7 @@ public final class SDGs implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(SDGS).insert(array(list(Xtream.from(
+        service(store()).partition(SDGS).clear().insert(array(list(Xtream.from(
 
                 Stream.of(
                         TAXONOMY,

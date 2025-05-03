@@ -60,7 +60,7 @@ public final class EC2UEvents implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(EC2U_EVENTS).insert(array(list(Xtream.from(
+        service(store()).partition(EC2U_EVENTS).clear().insert(array(list(Xtream.from(
 
                 Stream.of(
                         TAXONOMY

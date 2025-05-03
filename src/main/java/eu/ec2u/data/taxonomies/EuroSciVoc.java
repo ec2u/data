@@ -109,7 +109,7 @@ public final class EuroSciVoc implements Runnable {
 
     @Override
     public void run() {
-        store.partition(EUROSCIVOC).insert(array(list(Xtream.from(
+        store.partition(EUROSCIVOC).clear().insert(array(list(Xtream.from(
 
                 Stream.of(
                         TAXONOMY,
