@@ -21,7 +21,6 @@ import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
-import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -39,9 +38,8 @@ import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -59,7 +57,6 @@ import static eu.ec2u.data.organizations.Organizations.ORGANIZATIONS;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.uuid;
-import static eu.ec2u.work.Parsers.url;
 import static java.lang.String.format;
 
 @Frame
@@ -123,77 +120,30 @@ public interface Documents extends Dataset {
         @Override
         protected Stream<Valuable> process(final CSVRecord record, final Collection<CSVRecord> records) {
 
-            final Optional<String> titleEnglish=value(record, "Title (English)");
-            final Optional<String> titleLocal=value(record, "Title (Local)");
-
             return id(record).map(id -> new DocumentFrame()
 
                     .generated(true)
 
                     .id(id)
-
                     .university(university)
 
-                    .url(set(Stream.concat(
-                            value(record, "URL (English)", Parsers::uri).stream(),
-                            value(record, "URL (Local)", Parsers::uri).stream()
-                    )))
+                    .url(set(url(record)))
+                    .identifier(identifier(record).orElse(null))
+                    .language(set(language(record)))
 
-                    .identifier(value(record, "Identifier")
-                            .orElse(null)
-                    )
+                    .title(map(title(record)))
+                    .description(map(description(record)))
 
-                    .language(set(Stream.concat(
-                            titleEnglish.map(v -> locale(EN)).stream(),
-                            titleLocal.map(v -> locale(university.locale())).stream()
-                    )))
+                    .created(created(record).orElse(null))
+                    .issued(issued(record).orElse(null))
+                    .modified(modified(record).orElse(null))
+                    .valid(valid(record).orElse(null))
 
-                    .title(map(Stream.concat(
-                            titleEnglish.map(v -> entry(EN, v)).stream(),
-                            titleLocal.map(v -> entry(university.locale(), v)).stream()
-                    )))
+                    .rights(rights(record).orElse(null))
+                    .accessRights(accessRights(record).orElse(null))
+                    .license(license(record).orElse(null))
 
-                    .description(map(Stream.concat(
-                            value(record, "Description (English)").map(v -> entry(EN, v)).stream(),
-                            value(record, "Description (Local)").map(v -> entry(university.locale(), v)).stream()
-                    )))
-
-                    .created(value(record, "Created", Parsers::localDate)
-                            .orElse(null)
-                    )
-
-                    .issued(value(record, "Issued", Parsers::localDate)
-                            .orElse(null)
-                    )
-
-                    .modified(value(record, "Modified", Parsers::localDate)
-                            .orElse(null)
-                    )
-
-                    .valid(value(record, "Valid", this::valid)
-                            .orElse(null)
-                    )
-
-                    .rights(value(record, "Rights")
-                            .orElse(null)
-                    )
-
-                    .accessRights(value(record, "License", this::license)
-                            .map(license -> url(license).isEmpty() ? map(entry(EN, license)) : null) // !!! language
-                            .orElse(null)
-                    )
-
-                    .license(value(record, "License", this::license)
-                            .flatMap(Parsers::url)
-                            .map(URIs::uri)
-                            .map(v -> new ReferenceFrame(true).id(v))
-                            .orElse(null)
-                    )
-
-                    .relation(set(values(record, "Related", related ->
-                            related(related, records)
-                                    .map(r -> new DocumentFrame(true).id(r))
-                    )))
+                    .relation(set(relation(record, records)))
 
             ).flatMap(document ->
 
@@ -247,6 +197,106 @@ public interface Documents extends Dataset {
             }
         }
 
+
+        private Stream<URI> url(final CSVRecord record) {
+            return Stream.concat(
+                    value(record, "URL (English)", Parsers::uri).stream(),
+                    value(record, "URL (Local)", Parsers::uri).stream()
+            );
+        }
+
+        private Optional<String> identifier(final CSVRecord record) {
+            return value(record, "Identifier");
+        }
+
+        private Stream<String> language(final CSVRecord record) {
+            return Stream.concat(
+                    value(record, "Title (English)").map(v -> locale(EN)).stream(),
+                    value(record, "Title (Local)").map(v -> locale(university.locale())).stream()
+            );
+        }
+
+
+        private Stream<Entry<Locale, String>> title(final CSVRecord record) {
+            return Stream.concat(
+                    value(record, "Title (English)").map(v -> entry(EN, v)).stream(),
+                    value(record, "Title (Local)").map(v -> entry(university.locale(), v)).stream()
+            );
+        }
+
+        private Stream<Entry<Locale, String>> description(final CSVRecord record) {
+            return Stream.concat(
+                    value(record, "Description (English)").map(v -> entry(EN, v)).stream(),
+                    value(record, "Description (Local)").map(v -> entry(university.locale(), v)).stream()
+            );
+        }
+
+
+        private Optional<LocalDate> created(final CSVRecord record) {
+            return value(record, "Created", Parsers::localDate);
+        }
+
+        private Optional<LocalDate> issued(final CSVRecord record) {
+            return value(record, "Issued", Parsers::localDate);
+        }
+
+        private Optional<LocalDate> modified(final CSVRecord record) {
+            return value(record, "Modified", Parsers::localDate);
+        }
+
+        private Optional<String> valid(final CSVRecord record) {
+            return value(record, "Valid", value -> Optional.of(value)
+                    .filter(VALID_PATTERN.asMatchPredicate()));
+        }
+
+
+        private Optional<String> rights(final CSVRecord record) {
+            return value(record, "Rights");
+        }
+
+        private Optional<Map<Locale, String>> accessRights(final CSVRecord record) {
+            return value(record, "License")
+                    .map(license -> license(record).isEmpty() ? map(entry(EN, license)) : null); // !!! language
+        }
+
+        private Optional<ReferenceFrame> license(final CSVRecord record) {
+            return value(record, "License")
+                    .flatMap(Parsers::url)
+                    .map(URIs::uri)
+                    .map(v -> new ReferenceFrame(true).id(v));
+        }
+
+
+        private Stream<DocumentFrame> relation(final CSVRecord record, final Collection<CSVRecord> records) {
+            return values(record, "Related", related -> {
+
+                final Collection<URI> matches=records.stream()
+
+                        .filter(record1 -> value(record1, "Identifier").filter(related::equalsIgnoreCase)
+                                .or(() -> value(record1, "Title (English)").filter(related::equalsIgnoreCase))
+                                .or(() -> value(record1, "Title (Local)").filter(related::equalsIgnoreCase))
+                                .isPresent()
+                        )
+
+                        .map(this::id)
+                        .flatMap(Optional::stream)
+
+                        .toList();
+
+                if ( matches.isEmpty() ) {
+                    warning(format("no matches for reference <%s>", related));
+                }
+
+                if ( matches.size() > 1 ) {
+                    warning(format("multiple matches for reference <%s>", related));
+                }
+
+                return matches.stream().findFirst()
+                        .map(r -> new DocumentFrame(true).id(r));
+            });
+        }
+
+
         private Optional<OrgOrganizationFrame> publisher(final CSVRecord record) {
 
             final Optional<URI> home=value(record, "Home", Parsers::uri);
@@ -293,43 +343,6 @@ public interface Documents extends Dataset {
         private Optional<Set<PersonFrame>> contributor(final CSVRecord record) {
             return Optional.of(values(record, "Contributor", person -> person(person, university)))
                     .map(Collections::set);
-        }
-
-        private Optional<URI> related(final String reference, final Collection<CSVRecord> records) {
-
-            final Collection<URI> matches=records.stream()
-
-                    .filter(record -> value(record, "Identifier").filter(reference::equalsIgnoreCase)
-                            .or(() -> value(record, "Title (English)").filter(reference::equalsIgnoreCase))
-                            .or(() -> value(record, "Title (Local)").filter(reference::equalsIgnoreCase))
-                            .isPresent()
-                    )
-
-                    .map(this::id)
-                    .flatMap(Optional::stream)
-
-                    .toList();
-
-            if ( matches.isEmpty() ) {
-                warning(format("no matches for reference <%s>", reference));
-            }
-
-            if ( matches.size() > 1 ) {
-                warning(format("multiple matches for reference <%s>", reference));
-            }
-
-            return matches.stream().findFirst();
-        }
-
-
-        private Optional<String> valid(final String value) {
-            return Optional.of(value)
-                    .filter(VALID_PATTERN.asMatchPredicate());
-        }
-
-        private Optional<String> license(final String value) {
-            return Optional.of(value)
-                    .map(Strings::title);
         }
 
     }
