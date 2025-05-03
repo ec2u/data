@@ -16,7 +16,10 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.mesh.meta.jsonld.*;
+import com.metreeca.mesh.meta.jsonld.Forward;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Id;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MaxLength;
 import com.metreeca.mesh.meta.shacl.Required;
 
@@ -74,9 +77,6 @@ public interface Reference {
 
     @Id
     URI id();
-
-    @Type
-    String type();
 
 
     @Required

@@ -75,7 +75,8 @@ public interface Document extends Resource {
 
         return Optional.of(document)
                 .map(d -> translate(d, source)) // before English-based classification
-                .map(v -> _type(v))
+                .map(v -> type(v))
+                .map(v -> subject(v))
                 .map(v -> audience(v))
                 .flatMap(new Validate<>());
     }
@@ -92,8 +93,8 @@ public interface Document extends Resource {
                 .description(translator.texts(document.description(), source, EN));
     }
 
-    private static DocumentFrame _type(final DocumentFrame document) {
-        return document._type().isEmpty() ? document._type(set(Resources
+    private static DocumentFrame type(final DocumentFrame document) {
+        return document.type().isEmpty() ? document.type(set(Resources
                 .match(EC2U_DOCUMENTS, embeddable(document), TYPE_THRESHOLD)
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(3)
@@ -182,7 +183,7 @@ public interface Document extends Resource {
     Reference license();
 
 
-    Set<Topic> _type(); // !!! conflict
+    Set<Topic> type();
 
     Set<Topic> subject();
 
