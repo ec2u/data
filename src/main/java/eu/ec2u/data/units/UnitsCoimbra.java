@@ -33,6 +33,7 @@ import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.data.universities.University;
 import eu.ec2u.work.Parsers;
 
 import java.net.URI;
@@ -54,7 +55,6 @@ import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
-import static eu.ec2u.data.universities.University.Coimbra;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
@@ -126,8 +126,8 @@ public final class UnitsCoimbra implements Runnable {
 
                 .generated(true)
 
-                .id(Units.UNITS.id().resolve(uuid(Coimbra(), id)))
-                .university(Coimbra())
+                .id(Units.UNITS.id().resolve(uuid(University.COIMBRA, id)))
+                .university(University.COIMBRA)
 
                 .homepage(set(json.get("web_url").string().flatMap(Parsers::url).map(URIs::uri).stream()))
                 .mbox(set(json.get("email").string().flatMap(Parsers::email).stream()))
@@ -168,7 +168,7 @@ public final class UnitsCoimbra implements Runnable {
 
                 )))
 
-                .unitOf(set(Coimbra()))
+                .unitOf(set(University.COIMBRA))
 
                 .classification(set(json.get("type_en").string()
                         .flatMap(type -> Resources.match(EC2U_ORGANIZATIONS, type))
@@ -183,7 +183,7 @@ public final class UnitsCoimbra implements Runnable {
 
         ).flatMap(unit ->
 
-                review(unit, Coimbra().locale())
+                review(unit, University.COIMBRA.locale())
 
         ).stream().flatMap(unit -> {
 
@@ -211,8 +211,8 @@ public final class UnitsCoimbra implements Runnable {
                 .flatMap(surname ->
                         json.get("forename").string().map(forename -> new PersonFrame() // !!! factor
 
-                                .id(Persons.PERSONS.id().resolve(uuid(Coimbra(), join(", ", surname, forename))))
-                                .university(Coimbra())
+                                .id(Persons.PERSONS.id().resolve(uuid(University.COIMBRA, join(", ", surname, forename))))
+                                .university(University.COIMBRA)
                                 .collection(Persons.PERSONS)
 
                                 .givenName(forename)

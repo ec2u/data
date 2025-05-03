@@ -56,7 +56,7 @@ import static eu.ec2u.data.taxonomies.EC2UOrganizations.*;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
-import static eu.ec2u.data.universities.University.Salamanca;
+import static eu.ec2u.data.universities.University.SALAMANCA;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -161,13 +161,13 @@ public final class UnitsSalamanca implements Runnable {
 
                 .generated(true)
 
-                .id(Units.UNITS.id().resolve(uuid(Salamanca(), id)))
+                .id(Units.UNITS.id().resolve(uuid(SALAMANCA, id)))
 
-                .university(Salamanca())
+                .university(SALAMANCA)
 
                 .prefLabel(json.get("name").string()
                         .filter(not(String::isEmpty))
-                        .map(v -> map(entry(Salamanca().locale(), v)))
+                        .map(v -> map(entry(SALAMANCA.locale(), v)))
                         .orElse(null)
                 )
 
@@ -179,13 +179,13 @@ public final class UnitsSalamanca implements Runnable {
 
                 .definition(json.get("topics").string()
                         .filter(not(String::isEmpty))
-                        .map(v -> map(entry(Salamanca().locale(), v)))
+                        .map(v -> map(entry(SALAMANCA.locale(), v)))
                         .orElse(null)
                 )
 
                 .classification(set(RECOGNIZED_GROUP))
 
-                .unitOf(set(Salamanca()))
+                .unitOf(set(SALAMANCA))
 
                 .homepage(set(json.get("group_scientific_portal_url").string()
                         .filter(not(String::isEmpty))
@@ -207,10 +207,10 @@ public final class UnitsSalamanca implements Runnable {
 
                 )))
 
-        ).flatMap(unit -> review(unit, Salamanca().locale())).stream().flatMap(unit -> {
+        ).flatMap(unit -> review(unit, SALAMANCA.locale())).stream().flatMap(unit -> {
 
             final Optional<PersonFrame> head=json.get("head").string()
-                    .flatMap(p -> person(p, Salamanca()))
+                    .flatMap(p -> person(p, SALAMANCA))
                     .map(p -> p.headOf(set(unit)).memberOf(set(unit)));
 
             final Optional<UnitFrame> department=department(json);
@@ -218,7 +218,7 @@ public final class UnitsSalamanca implements Runnable {
 
             return Xtream.from(
                     Stream.of(unit.unitOf(set(Xtream.from(
-                            department.isEmpty() && institute.isEmpty() ? Stream.of(Salamanca()) : Stream.empty(),
+                            department.isEmpty() && institute.isEmpty() ? Stream.of(SALAMANCA) : Stream.empty(),
                             department.stream(),
                             institute.stream(),
                             vis.stream()
@@ -239,12 +239,12 @@ public final class UnitsSalamanca implements Runnable {
     private Optional<UnitFrame> department(final Value json) {
         return json.get("department").string().filter(not(String::isBlank)).map(name -> new UnitFrame()
 
-                .id(Units.UNITS.id().resolve(uuid(Salamanca(), name)))
+                .id(Units.UNITS.id().resolve(uuid(SALAMANCA, name)))
 
-                .university(Salamanca())
-                .unitOf(set(Salamanca()))
+                .university(SALAMANCA)
+                .unitOf(set(SALAMANCA))
 
-                .prefLabel(map(entry(Salamanca().locale(), name)))
+                .prefLabel(map(entry(SALAMANCA.locale(), name)))
 
                 .classification(set(DEPARTMENT))
 
@@ -254,18 +254,18 @@ public final class UnitsSalamanca implements Runnable {
 
                 )))
 
-        ).flatMap(unit -> review(unit, Salamanca().locale()));
+        ).flatMap(unit -> review(unit, SALAMANCA.locale()));
     }
 
     private Optional<UnitFrame> institute(final Value json) {
         return json.get("institute").string().filter(not(String::isBlank)).map(name -> new UnitFrame()
 
-                .id(Units.UNITS.id().resolve(uuid(Salamanca(), name)))
+                .id(Units.UNITS.id().resolve(uuid(SALAMANCA, name)))
 
-                .university(Salamanca())
-                .unitOf(set(Salamanca()))
+                .university(SALAMANCA)
+                .unitOf(set(SALAMANCA))
 
-                .prefLabel(map(entry(Salamanca().locale(), name)))
+                .prefLabel(map(entry(SALAMANCA.locale(), name)))
 
                 .classification(set(INSTITUTE))
 
@@ -274,7 +274,7 @@ public final class UnitsSalamanca implements Runnable {
                         json.get("institute_scientific_portal_url").string().flatMap(Parsers::uri).stream()
                 )))
 
-        ).flatMap(unit -> review(unit, Salamanca().locale()));
+        ).flatMap(unit -> review(unit, SALAMANCA.locale()));
     }
 
 }

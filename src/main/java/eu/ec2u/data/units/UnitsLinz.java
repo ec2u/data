@@ -19,6 +19,7 @@ package eu.ec2u.data.units;
 import com.metreeca.flow.services.Vault;
 
 import eu.ec2u.data.units.Units.Loader;
+import eu.ec2u.data.universities.University;
 
 import java.net.URI;
 import java.util.stream.Stream;
@@ -30,7 +31,6 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.universities.University.Linz;
 
 public final class UnitsLinz implements Runnable {
 
@@ -54,7 +54,7 @@ public final class UnitsLinz implements Runnable {
 
         service(store()).partition(CONTEXT).insert(array(list(Stream.of(url)
 
-                .flatMap(new Loader(Linz()))
+                .flatMap(new Loader(University.LINZ))
 
         )));
     }

@@ -19,6 +19,8 @@ package eu.ec2u.data.documents;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.mesh.tools.Store;
 
+import eu.ec2u.data.universities.University;
+
 import java.net.URI;
 import java.util.stream.Stream;
 
@@ -30,7 +32,6 @@ import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.documents.Documents.DOCUMENTS;
-import static eu.ec2u.data.universities.University.Salamanca;
 
 public final class DocumentsSalamanca implements Runnable {
 
@@ -57,7 +58,7 @@ public final class DocumentsSalamanca implements Runnable {
 
         store.partition(CONTEXT).clear().insert(array(list(Stream.of(url)
 
-                .flatMap(new Documents.Loader(Salamanca()))
+                .flatMap(new Documents.Loader(University.SALAMANCA))
 
         )));
     }

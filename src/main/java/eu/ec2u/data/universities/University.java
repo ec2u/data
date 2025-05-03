@@ -51,276 +51,260 @@ import static eu.ec2u.data.universities.Universities.UNIVERSITIES;
 @Namespace("[ec2u]")
 public interface University extends Resource, GeoReference, OrgFormalOrganization {
 
-    static UniversityFrame Coimbra() {
-        return new UniversityFrame()
-                .id(UNIVERSITIES.id().resolve("coimbra"))
-                .prefLabel(map(
-                        entry(EN, "University of Coimbra"),
-                        entry(PT, "Universidade de Coimbra")
-                ))
-                .altLabel(map(
-                        entry(EN, "Coimbra"),
-                        entry(PT, "Coimbra")
-                ))
-                .definition(map(
-                        entry(EN, """
-                                Focused on the future and recognized as major promoter of change, the University of \
-                                Coimbra has more than 7 centuries of experience in the creation and dissemination of \
-                                knowledge, culture, science and technology through study, teaching, cutting-edge \
-                                research and innovation in the most diverse areas of knowledge."""
-                        )
-                ))
-                .homepage(set(
-                        uri("https://www.uc.pt/en/"),
-                        uri("https://www.uc.pt/pt")
-                ))
-                .depiction(set(
-                        uri("/blobs/coimbra.png")
-                ))
-                .seeAlso(set(
-                        uri("http://www.wikidata.org/entity/Q368643")
-                ))
-                .locale(PT)
-                .zone(ZoneId.of("Europe/Lisbon"));
-    }
+    UniversityFrame COIMBRA=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("coimbra"))
+            .prefLabel(map(
+                    entry(EN, "University of Coimbra"),
+                    entry(PT, "Universidade de Coimbra")
+            ))
+            .altLabel(map(
+                    entry(EN, "Coimbra"),
+                    entry(PT, "Coimbra")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            Focused on the future and recognized as major promoter of change, the University of \
+                            Coimbra has more than 7 centuries of experience in the creation and dissemination of \
+                            knowledge, culture, science and technology through study, teaching, cutting-edge \
+                            research and innovation in the most diverse areas of knowledge."""
+                    )
+            ))
+            .homepage(set(
+                    uri("https://www.uc.pt/en/"),
+                    uri("https://www.uc.pt/pt")
+            ))
+            .depiction(set(
+                    uri("/blobs/coimbra.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q368643")
+            ))
+            .locale(PT)
+            .zone(ZoneId.of("Europe/Lisbon"));
 
-    static UniversityFrame Iasi() {
-        return new UniversityFrame()
-                .id(UNIVERSITIES.id().resolve("iasi"))
-                .prefLabel(map(
-                        entry(EN, "Alexandru Ioan Cuza University of Iaşi"),
-                        entry(RO, "Universitatea Alexandru Ioan Cuza din Iași")
-                ))
-                .altLabel(map(
-                        entry(EN, "Iași"),
-                        entry(RO, "Iași")
-                ))
-                .definition(map(
-                        entry(EN, """
-                                Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania \
-                                (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of \
-                                research, education and institutional transparency. With about 23000 students and 2000 \
-                                full-time staff in its 15 faculties, our university's academic offer includes 80 \
-                                degrees at bachelor level (4 in English, 1 in French), 116 master level programmes \
-                                (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered \
-                                in English as well)."""
-                        )
-                ))
-                .homepage(set(
-                        uri("https://www.uaic.ro/en/"),
-                        uri("https://www.uaic.ro/")
-                ))
-                .depiction(set(
-                        uri("/blobs/iasi.png")
-                ))
-                .seeAlso(set(
-                        uri("http://www.wikidata.org/entity/Q1523902")
-                ))
-                .locale(RO)
-                .zone(ZoneId.of("Europe/Bucharest"));
-    }
+    UniversityFrame IASI=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("iasi"))
+            .prefLabel(map(
+                    entry(EN, "Alexandru Ioan Cuza University of Iaşi"),
+                    entry(RO, "Universitatea Alexandru Ioan Cuza din Iași")
+            ))
+            .altLabel(map(
+                    entry(EN, "Iași"),
+                    entry(RO, "Iași")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            Alexandru Ioan Cuza University of Iași, the first modern university founded in Romania \
+                            (in 1860), is constantly ranked 1 – 3 among Romanian universities in terms of \
+                            research, education and institutional transparency. With about 23000 students and 2000 \
+                            full-time staff in its 15 faculties, our university's academic offer includes 80 \
+                            degrees at bachelor level (4 in English, 1 in French), 116 master level programmes \
+                            (14 in English, 1 in French) and 27 fields of study at the doctoral level (all offered \
+                            in English as well)."""
+                    )
+            ))
+            .homepage(set(
+                    uri("https://www.uaic.ro/en/"),
+                    uri("https://www.uaic.ro/")
+            ))
+            .depiction(set(
+                    uri("/blobs/iasi.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q1523902")
+            ))
+            .locale(RO)
+            .zone(ZoneId.of("Europe/Bucharest"));
 
-    static UniversityFrame Jena() {
-        return new UniversityFrame()
-                .id(UNIVERSITIES.id().resolve("jena"))
-                .prefLabel(map(
-                        entry(EN, "Friedrich Schiller University Jena"),
-                        entry(DE, "Friedrich-Schiller-Universität Jena")
-                ))
-                .altLabel(map(
-                        entry(EN, "Jena"),
-                        entry(DE, "Jena")
-                ))
-                .definition(map(
-                        entry(EN, """
-                                Founded in 1558, the Friedrich Schiller University Jena is one of the oldest \
-                                universities in Germany. Once the centre of German philosophical thought, it has \
-                                become a broad-based, research-intensive institution with a global reach and a \
-                                thriving international community of more than 18,000 undergraduate and postgraduate \
-                                students from over 110 countries worldwide."""
-                        )
-                ))
-                .homepage(set(
-                        uri("https://www.uni-jena.de/en"),
-                        uri("https://www.uni-jena.de/")
-                ))
-                .depiction(set(
-                        uri("/blobs/jena.png")
-                ))
-                .seeAlso(set(
-                        uri("http://www.wikidata.org/entity/Q154561")
-                ))
-                .locale(DE)
-                .zone(ZoneId.of("Europe/Berlin"));
-    }
+    UniversityFrame JENA=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("jena"))
+            .prefLabel(map(
+                    entry(EN, "Friedrich Schiller University Jena"),
+                    entry(DE, "Friedrich-Schiller-Universität Jena")
+            ))
+            .altLabel(map(
+                    entry(EN, "Jena"),
+                    entry(DE, "Jena")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            Founded in 1558, the Friedrich Schiller University Jena is one of the oldest \
+                            universities in Germany. Once the centre of German philosophical thought, it has \
+                            become a broad-based, research-intensive institution with a global reach and a \
+                            thriving international community of more than 18,000 undergraduate and postgraduate \
+                            students from over 110 countries worldwide."""
+                    )
+            ))
+            .homepage(set(
+                    uri("https://www.uni-jena.de/en"),
+                    uri("https://www.uni-jena.de/")
+            ))
+            .depiction(set(
+                    uri("/blobs/jena.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q154561")
+            ))
+            .locale(DE)
+            .zone(ZoneId.of("Europe/Berlin"));
 
-    static UniversityFrame Linz() {
-        return new UniversityFrame()
-                .id(UNIVERSITIES.id().resolve("linz"))
-                .prefLabel(map(
-                        entry(EN, "Johannes Kepler University Linz (JKU)"),
-                        entry(DE, "Johannes Kepler Universität Linz (JKU)")
-                ))
-                .altLabel(map(
-                        entry(EN, "Linz"),
-                        entry(DE, "Linz")
-                ))
-                .definition(map(
-                        entry(EN, """
-                                The Johannes Kepler University Linz (JKU), with 24,000 students, offers diverse \
-                                programs in law, business, social sciences, engineering, natural sciences, and \
-                                medicine. It prioritizes impactful research in AI, medical tech, and sustainable \
-                                polymers, with a focus on social and environmental responsibility. The university \
-                                aims for climate neutrality by 2030 and actively engages students in groundbreaking \
-                                endeavors, fostering a passion for shaping the future."""
-                        )
-                ))
-                .homepage(set(
-                        uri("https://www.jku.at/en"),
-                        uri("https://www.jku.at")
-                ))
-                .depiction(set(
-                        uri("/blobs/linz.png")
-                ))
-                .seeAlso(set(
-                        uri("http://www.wikidata.org/entity/Q682739")
-                ))
-                .locale(DE)
-                .zone(ZoneId.of("Europe/Vienna"));
-    }
+    UniversityFrame LINZ=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("linz"))
+            .prefLabel(map(
+                    entry(EN, "Johannes Kepler University Linz (JKU)"),
+                    entry(DE, "Johannes Kepler Universität Linz (JKU)")
+            ))
+            .altLabel(map(
+                    entry(EN, "Linz"),
+                    entry(DE, "Linz")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            The Johannes Kepler University Linz (JKU), with 24,000 students, offers diverse \
+                            programs in law, business, social sciences, engineering, natural sciences, and \
+                            medicine. It prioritizes impactful research in AI, medical tech, and sustainable \
+                            polymers, with a focus on social and environmental responsibility. The university \
+                            aims for climate neutrality by 2030 and actively engages students in groundbreaking \
+                            endeavors, fostering a passion for shaping the future."""
+                    )
+            ))
+            .homepage(set(
+                    uri("https://www.jku.at/en"),
+                    uri("https://www.jku.at")
+            ))
+            .depiction(set(
+                    uri("/blobs/linz.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q682739")
+            ))
+            .locale(DE)
+            .zone(ZoneId.of("Europe/Vienna"));
 
-    static UniversityFrame Pavia() {
-        return new UniversityFrame()
-                .id(UNIVERSITIES.id().resolve("pavia"))
-                .prefLabel(map(
-                        entry(EN, "University of Pavia"),
-                        entry(IT, "Università di Pavia")
-                ))
-                .altLabel(map(
-                        entry(EN, "Pavia"),
-                        entry(IT, "Pavia")
-                ))
-                .definition(map(
-                        entry(EN, """
-                                The University of Pavia (UNIPV) is one of the world's oldest academic institutions: \
-                                it was founded in 1361 and until the 20th century it was the only University in the \
-                                Milan Area and the region of Lombardy."""
-                        )
-                ))
-                .homepage(set(
-                        uri("https://web-en.unipv.it"),
-                        uri("https://portale.unipv.it/it")
-                ))
-                .depiction(set(
-                        uri("/blobs/pavia.png")
-                ))
-                .seeAlso(set(
-                        uri("http://www.wikidata.org/entity/Q219317")
-                ))
-                .locale(IT)
-                .zone(ZoneId.of("Europe/Rome"));
-    }
+    UniversityFrame PAVIA=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("pavia"))
+            .prefLabel(map(
+                    entry(EN, "University of Pavia"),
+                    entry(IT, "Università di Pavia")
+            ))
+            .altLabel(map(
+                    entry(EN, "Pavia"),
+                    entry(IT, "Pavia")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            The University of Pavia (UNIPV) is one of the world's oldest academic institutions: \
+                            it was founded in 1361 and until the 20th century it was the only University in the \
+                            Milan Area and the region of Lombardy."""
+                    )
+            ))
+            .homepage(set(
+                    uri("https://web-en.unipv.it"),
+                    uri("https://portale.unipv.it/it")
+            ))
+            .depiction(set(
+                    uri("/blobs/pavia.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q219317")
+            ))
+            .locale(IT)
+            .zone(ZoneId.of("Europe/Rome"));
 
-    static UniversityFrame Poitiers() {
-        return new UniversityFrame()
-                .id(UNIVERSITIES.id().resolve("poitiers"))
-                .prefLabel(map(
-                        entry(EN, "University of Poitiers"),
-                        entry(FR, "Université de Poitiers")
-                ))
-                .altLabel(map(
-                        entry(EN, "Poitiers"),
-                        entry(FR, "Poitiers")
-                ))
-                .definition(map(
-                        entry(EN, """
-                                Founded in 1431, the University of Poitiers is a multidisciplinary university which \
-                                enrols 29,000 students, 4200 of which are international students from 120 different \
-                                countries, supervised by 2700 staff members (administrative, teaching staff and \
-                                researchers). Poitiers ranks 2nd in the overall ranking of major student cities in \
-                                France in 2018-2019 and is above the national average with 16% of foreign students."""
-                        )
-                ))
-                .homepage(set(
-                        uri("https://www.univ-poitiers.fr/en/"),
-                        uri("https://www.univ-poitiers.fr")
-                ))
-                .depiction(set(
-                        uri("/blobs/poitiers.png")
-                ))
-                .seeAlso(set(
-                        uri("http://www.wikidata.org/entity/Q661056")
-                ))
-                .locale(FR)
-                .zone(ZoneId.of("Europe/Paris"));
-    }
+    UniversityFrame POITIERS=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("poitiers"))
+            .prefLabel(map(
+                    entry(EN, "University of Poitiers"),
+                    entry(FR, "Université de Poitiers")
+            ))
+            .altLabel(map(
+                    entry(EN, "Poitiers"),
+                    entry(FR, "Poitiers")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            Founded in 1431, the University of Poitiers is a multidisciplinary university which \
+                            enrols 29,000 students, 4200 of which are international students from 120 different \
+                            countries, supervised by 2700 staff members (administrative, teaching staff and \
+                            researchers). Poitiers ranks 2nd in the overall ranking of major student cities in \
+                            France in 2018-2019 and is above the national average with 16% of foreign students."""
+                    )
+            ))
+            .homepage(set(
+                    uri("https://www.univ-poitiers.fr/en/"),
+                    uri("https://www.univ-poitiers.fr")
+            ))
+            .depiction(set(
+                    uri("/blobs/poitiers.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q661056")
+            ))
+            .locale(FR)
+            .zone(ZoneId.of("Europe/Paris"));
 
-    static UniversityFrame Salamanca() {
-        return new UniversityFrame()
-                .id(UNIVERSITIES.id().resolve("salamanca"))
-                .prefLabel(map(
-                        entry(EN, "University of Salamanca"),
-                        entry(ES, "Universidad de Salamanca")
-                ))
-                .altLabel(map(
-                        entry(EN, "Salamanca"),
-                        entry(ES, "Salamanca")
-                ))
-                .definition(map(
-                        entry(EN, """
-                                The University of Salamanca was founded in 1218 and is one of the three oldest \
-                                universities in Europe, boasting a wide range of Faculties and Research Institutes \
-                                in Sciences and Arts. In 2011, it was awarded the Campus of International Excellence \
-                                status. It is the university of reference in its region and beyond (Castile and León) \
-                                and the "Alma Mater" of nearly all historical Latin American universities."""
-                        )
-                ))
-                .homepage(set(
-                        uri("https://www.usal.es")
-                ))
-                .depiction(set(
-                        uri("/blobs/salamanca.png")
-                ))
-                .seeAlso(set(
-                        uri("http://www.wikidata.org/entity/Q308963")
-                ))
-                .locale(ES)
-                .zone(ZoneId.of("Europe/Madrid"));
-    }
+    UniversityFrame SALAMANCA=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("salamanca"))
+            .prefLabel(map(
+                    entry(EN, "University of Salamanca"),
+                    entry(ES, "Universidad de Salamanca")
+            ))
+            .altLabel(map(
+                    entry(EN, "Salamanca"),
+                    entry(ES, "Salamanca")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            The University of Salamanca was founded in 1218 and is one of the three oldest \
+                            universities in Europe, boasting a wide range of Faculties and Research Institutes \
+                            in Sciences and Arts. In 2011, it was awarded the Campus of International Excellence \
+                            status. It is the university of reference in its region and beyond (Castile and León) \
+                            and the "Alma Mater" of nearly all historical Latin American universities."""
+                    )
+            ))
+            .homepage(set(
+                    uri("https://www.usal.es")
+            ))
+            .depiction(set(
+                    uri("/blobs/salamanca.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q308963")
+            ))
+            .locale(ES)
+            .zone(ZoneId.of("Europe/Madrid"));
 
-    static UniversityFrame Turku() {
-        return new UniversityFrame()
-                .id(UNIVERSITIES.id().resolve("turku"))
-                .prefLabel(map(
-                        entry(EN, "University of Turku"),
-                        entry(FI, "Turun Yliopisto")
-                ))
-                .altLabel(map(
-                        entry(EN, "Turku"),
-                        entry(FI, "Turku")
-                ))
-                .definition(map(
-                        entry(EN, """
-                                The University of Turku (UTU) is a renowned research institution with a diverse \
-                                community of 25,000 individuals from over 100 countries. Situated in Turku's historic \
-                                city center, it offers study and research options across seven faculties and special \
-                                units. With its convenient campus, exceptional services, and vibrant academic \
-                                environment, UTU ensures that international students and scholars feel welcomed and \
-                                supported throughout their time in Finland.""")
-                ))
-                .homepage(set(
-                        uri("https://www.utu.fi/en"),
-                        uri("https://www.utu.fi/fi")
-                ))
-                .depiction(set(
-                        uri("/blobs/turku.png")
-                ))
-                .seeAlso(set(
-                        uri("http://www.wikidata.org/entity/Q501841")
-                ))
-                .locale(FI)
-                .zone(ZoneId.of("Europe/Helsinki"));
-    }
+    UniversityFrame TURKU=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("turku"))
+            .prefLabel(map(
+                    entry(EN, "University of Turku"),
+                    entry(FI, "Turun Yliopisto")
+            ))
+            .altLabel(map(
+                    entry(EN, "Turku"),
+                    entry(FI, "Turku")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            The University of Turku (UTU) is a renowned research institution with a diverse \
+                            community of 25,000 individuals from over 100 countries. Situated in Turku's historic \
+                            city center, it offers study and research options across seven faculties and special \
+                            units. With its convenient campus, exceptional services, and vibrant academic \
+                            environment, UTU ensures that international students and scholars feel welcomed and \
+                            supported throughout their time in Finland.""")
+            ))
+            .homepage(set(
+                    uri("https://www.utu.fi/en"),
+                    uri("https://www.utu.fi/fi")
+            ))
+            .depiction(set(
+                    uri("/blobs/turku.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q501841")
+            ))
+            .locale(FI)
+            .zone(ZoneId.of("Europe/Helsinki"));
 
 
     static String uuid(final University university, final String name) {

@@ -20,6 +20,8 @@ import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.tools.Store;
 
+import eu.ec2u.data.universities.University;
+
 import java.net.URI;
 
 import static com.metreeca.flow.Locator.service;
@@ -30,7 +32,6 @@ import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.documents.Documents.DOCUMENTS;
-import static eu.ec2u.data.universities.University.Pavia;
 
 public final class DocumentsPavia implements Runnable {
 
@@ -57,7 +58,7 @@ public final class DocumentsPavia implements Runnable {
 
         store.partition(CONTEXT).clear().insert(array(list(Xtream.of(url)
 
-                .flatMap(new Documents.Loader(Pavia()))
+                .flatMap(new Documents.Loader(University.PAVIA))
 
         )));
     }

@@ -45,7 +45,7 @@ import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.*;
-import static eu.ec2u.data.universities.University.Poitiers;
+import static eu.ec2u.data.universities.University.POITIERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
@@ -88,8 +88,8 @@ public final class UnitsPoitiers implements Runnable {
 
                 .generated(true)
 
-                .id(UNITS.id().resolve(uuid(Poitiers(), id)))
-                .university(Poitiers())
+                .id(UNITS.id().resolve(uuid(POITIERS, id)))
+                .university(POITIERS)
                 .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
 
                 .homepage(set(json.get("site_web").uri().stream()))
@@ -97,7 +97,7 @@ public final class UnitsPoitiers implements Runnable {
                 .identifier(id)
 
                 .prefLabel(json.get("libelle").string()
-                        .map(label -> map(entry(Poitiers().locale(), label)))
+                        .map(label -> map(entry(POITIERS.locale(), label)))
                         .orElse(null)
                 )
 
@@ -106,12 +106,12 @@ public final class UnitsPoitiers implements Runnable {
                         .orElse(null)
                 )
 
-                .unitOf(set(Poitiers()))
+                .unitOf(set(POITIERS))
 
                 .classification(set(classification(json)))
                 .subject(set(subject(json)))
 
-        ).flatMap(unit -> review(unit, Poitiers().locale())).stream().flatMap(unit -> {
+        ).flatMap(unit -> review(unit, POITIERS.locale())).stream().flatMap(unit -> {
 
             final Set<PersonFrame> heads=set(heads(json)
                     .map(p -> p.headOf(set(unit)).memberOf(set(unit)))
@@ -142,8 +142,8 @@ public final class UnitsPoitiers implements Runnable {
 
                     return new PersonFrame() // !!! factor
 
-                            .id(Persons.PERSONS.id().resolve(uuid(Poitiers(), join(", ", surname, forename))))
-                            .university(Poitiers())
+                            .id(Persons.PERSONS.id().resolve(uuid(POITIERS, join(", ", surname, forename))))
+                            .university(POITIERS)
                             .collection(Persons.PERSONS)
 
                             .givenName(forename)

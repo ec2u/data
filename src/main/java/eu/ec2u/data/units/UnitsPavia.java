@@ -42,7 +42,6 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.units.Unit.review;
-import static eu.ec2u.data.universities.University.Pavia;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
@@ -102,7 +101,7 @@ public final class UnitsPavia implements Runnable {
 
                 .flatMap(this::catalog)
                 .map(this::details)
-                .optMap(unit -> review(unit, Pavia().locale()))
+                .optMap(unit -> review(unit, University.PAVIA.locale()))
 
         )));
     }
@@ -178,19 +177,19 @@ public final class UnitsPavia implements Runnable {
                                     .flatMap(Parsers::uri)
                                     .map(catalog.url()::resolve);
 
-                            return new UnitFrame()
+                    return new UnitFrame()
 
                                     .generated(true)
 
-                                    .id(Units.UNITS.id().resolve(University.uuid(Pavia(), url
+                            .id(Units.UNITS.id().resolve(University.uuid(University.PAVIA, url
                                             .map(URI::toString)
                                             .or(() -> json.get("name").string())
                                             .orElse(null) // !!! don't generate if missing
                                     )))
 
                                     .generated(true)
-                                    .university(Pavia())
-                                    .unitOf(set(Pavia()))
+                            .university(University.PAVIA)
+                            .unitOf(set(University.PAVIA))
 
                                     .altLabel(json.get("acronym").string()
                                             .map(acronym -> map(entry(ROOT, acronym)))

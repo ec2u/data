@@ -74,14 +74,14 @@ public interface Universities extends Dataset {
         exec(() -> exec(() -> {
 
             final Set<UniversityFrame> universities=set(
-                    Coimbra(),
-                    Iasi(),
-                    Jena(),
-                    Linz(),
-                    Pavia(),
-                    Poitiers(),
-                    Salamanca(),
-                    Turku()
+                    COIMBRA,
+                    IASI,
+                    JENA,
+                    LINZ,
+                    PAVIA,
+                    POITIERS,
+                    SALAMANCA,
+                    TURKU
             );
 
             final Rover wikidata=rover(Stream.of(text(resource(University.class, ".qlt")))
