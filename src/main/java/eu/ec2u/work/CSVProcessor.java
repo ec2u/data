@@ -38,7 +38,7 @@ import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 
-public abstract class CSVProcessor<V> implements Function<String, Xtream<V>> {
+public abstract class CSVProcessor<V> implements Function<String, Stream<V>> {
 
     private static final CSVFormat Format=CSVFormat.Builder.create()
             .setHeader()
@@ -53,22 +53,22 @@ public abstract class CSVProcessor<V> implements Function<String, Xtream<V>> {
     private final Logger logger=service(logger());
 
 
-    @Override public Xtream<V> apply(final String url) {
+    @Override
+    public Stream<V> apply(final String url) {
 
         final Collection<CSVRecord> records=Xtream.of(url)
                 .optMap(new GET<>(new CSV(Format)))
                 .flatMap(Collection::stream)
                 .collect(toList());
 
-        return Xtream.from(records)
-                .optMap(record -> process(record, records));
+        return records.stream().flatMap(record -> process(record, records));
 
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected abstract Optional<V> process(final CSVRecord record, final Collection<CSVRecord> records);
+    protected abstract Stream<V> process(final CSVRecord record, final Collection<CSVRecord> records);
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

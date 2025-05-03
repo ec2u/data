@@ -55,7 +55,7 @@ public final class DocumentsJena implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        store.partition(CONTEXT).insert(array(list(Stream.of(url)
+        store.partition(CONTEXT).clear().insert(array(list(Stream.of(url)
 
                 .flatMap(new Documents.Loader(Jena()))
 

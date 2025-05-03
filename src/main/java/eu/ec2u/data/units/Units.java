@@ -22,11 +22,13 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
+import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.universities.University;
@@ -106,7 +108,7 @@ public interface Units extends Dataset {
 
     }
 
-    final class Loader extends CSVProcessor<UnitFrame> {
+    final class Loader extends CSVProcessor<Valuable> {
 
         private final University university;
 
@@ -122,7 +124,7 @@ public interface Units extends Dataset {
 
 
         @Override
-        protected Optional<UnitFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
+        protected Stream<Valuable> process(final CSVRecord record, final Collection<CSVRecord> records) {
             return id(record).map(id -> new UnitFrame()
 
                     .generated(true)
@@ -189,12 +191,12 @@ public interface Units extends Dataset {
                     .homepage(set(Xtream.from(
 
                             value(record, "Factsheet", Parsers::uri).stream(),
-                            value(record, "Factsheet (English)", Parsers::uri).stream(), // !!! record language
-                            value(record, "Factsheet (Local)", Parsers::uri).stream(), // !!! record language
+                            value(record, "Factsheet (English)", Parsers::uri).stream(), // !!! track language
+                            value(record, "Factsheet (Local)", Parsers::uri).stream(), // !!! track language
 
                             value(record, "Homepage", Parsers::uri).stream(),
-                            value(record, "Homepage (English)", Parsers::uri).stream(), // !!! record language
-                            value(record, "Homepage (Local)", Parsers::uri).stream() // !!! record language
+                            value(record, "Homepage (English)", Parsers::uri).stream(), // !!! track language
+                            value(record, "Homepage (Local)", Parsers::uri).stream() // !!! track language
 
                     )))
 
@@ -202,11 +204,25 @@ public interface Units extends Dataset {
                             value(record, "Email", Parsers::email).stream()
                     ))
 
-                    .hasHead(set(value(record, "Head", person -> person(person, university)).stream())) // !!!
+            ).flatMap(unit ->
 
-            ).flatMap(unit -> review(unit, university.locale()));
+                    review(unit, university.locale())
+
+            ).stream().flatMap(unit -> {
+
+                final Optional<PersonFrame> head=value(record, "Head", person -> person(person, university))
+                        .map(p -> p.headOf(set(unit)).memberOf(set(unit)));
+
+                return Xtream.from(
+                        Stream.of(unit),
+                        head.stream()
+                );
+
+            });
         }
 
+
+        //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private Optional<URI> id(final CSVRecord record) {
 

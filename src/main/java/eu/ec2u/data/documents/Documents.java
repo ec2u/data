@@ -22,12 +22,15 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.toolkits.Strings;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.util.Collections;
 import com.metreeca.mesh.util.URIs;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
+import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
@@ -104,7 +107,7 @@ public interface Documents extends Dataset {
 
     }
 
-    final class Loader extends CSVProcessor<DocumentFrame> {
+    final class Loader extends CSVProcessor<Valuable> {
 
         private static final Pattern VALID_PATTERN=Pattern.compile("\\d{4}(?:/\\d{4})?");
 
@@ -118,7 +121,7 @@ public interface Documents extends Dataset {
 
 
         @Override
-        protected Optional<DocumentFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
+        protected Stream<Valuable> process(final CSVRecord record, final Collection<CSVRecord> records) {
 
             final Optional<String> titleEnglish=value(record, "Title (English)");
             final Optional<String> titleLocal=value(record, "Title (Local)");
@@ -172,16 +175,6 @@ public interface Documents extends Dataset {
                             .orElse(null)
                     )
 
-                    .publisher(publisher(record)
-                            .orElse(null)
-                    )
-
-                    .creator(value(record, "Contact", person -> person(person, university))
-                            .orElse(null)
-                    )
-
-                    .contributor(set(values(record, "Contributor", person -> person(person, university))))
-
                     .rights(value(record, "Rights")
                             .orElse(null)
                     )
@@ -203,7 +196,30 @@ public interface Documents extends Dataset {
                                     .map(r -> new DocumentFrame(true).id(r))
                     )))
 
-            ).flatMap(document -> review(document, university.locale()));
+            ).flatMap(document ->
+
+                    review(document, university.locale())
+
+            ).stream().flatMap(document -> {
+
+                final Optional<OrgOrganizationFrame> publisher=publisher(record);
+                final Optional<PersonFrame> creator=creator(record);
+                final Optional<Set<PersonFrame>> contributor=contributor(record);
+
+                return Xtream.from(
+
+                        Stream.of(document
+                                .publisher(publisher.orElse(null))
+                                .creator(creator.orElse(null))
+                                .contributor(contributor.orElse(null))
+                        ),
+
+                        publisher.stream(),
+                        creator.stream(),
+                        contributor.stream().flatMap(Collection::stream)
+
+                );
+            });
         }
 
 
@@ -232,7 +248,7 @@ public interface Documents extends Dataset {
             }
         }
 
-        private Optional<OrgOrganization> publisher(final CSVRecord record) {
+        private Optional<OrgOrganizationFrame> publisher(final CSVRecord record) {
 
             final Optional<URI> home=value(record, "Home", Parsers::uri);
             final Optional<String> nameEnglish=value(record, "Publisher (English)");
@@ -269,6 +285,15 @@ public interface Documents extends Dataset {
                     .flatMap(new Validate<>());
 
 
+        }
+
+        private Optional<PersonFrame> creator(final CSVRecord record) {
+            return value(record, "Contact", person -> person(person, university));
+        }
+
+        private Optional<Set<PersonFrame>> contributor(final CSVRecord record) {
+            return Optional.of(values(record, "Contributor", person -> person(person, university)))
+                    .map(Collections::set);
         }
 
         private Optional<URI> related(final String reference, final Collection<CSVRecord> records) {

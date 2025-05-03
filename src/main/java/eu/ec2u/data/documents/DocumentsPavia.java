@@ -55,7 +55,7 @@ public final class DocumentsPavia implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        store.partition(CONTEXT).insert(array(list(Xtream.of(url)
+        store.partition(CONTEXT).clear().insert(array(list(Xtream.of(url)
 
                 .flatMap(new Documents.Loader(Pavia()))
 

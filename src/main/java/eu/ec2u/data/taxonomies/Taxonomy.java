@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.toolkits.Strings.split;
 import static com.metreeca.mesh.util.Collections.*;
@@ -67,7 +68,7 @@ public interface Taxonomy extends Collection, SKOSConceptScheme<Taxonomy, Topic>
         }
 
 
-        @Override protected Optional<TopicFrame> process(final CSVRecord record, final java.util.Collection<CSVRecord> records) {
+        @Override protected Stream<TopicFrame> process(final CSVRecord record, final java.util.Collection<CSVRecord> records) {
             return value(record, "id").filter(not(String::isBlank))
 
                     .map(id -> {
@@ -129,7 +130,8 @@ public interface Taxonomy extends Collection, SKOSConceptScheme<Taxonomy, Topic>
 
                     })
 
-                    .flatMap(Topic::review);
+                    .flatMap(Topic::review)
+                    .stream();
         }
 
     }

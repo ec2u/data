@@ -171,7 +171,7 @@ public final class UnitsCoimbra implements Runnable {
                 .unitOf(set(Coimbra()))
 
                 .classification(set(json.get("type_en").string()
-                        .flatMap(type2 -> Resources.match(EC2U_ORGANIZATIONS, type2))
+                        .flatMap(type -> Resources.match(EC2U_ORGANIZATIONS, type))
                         .map(uri -> new TopicFrame(true).id(uri))
                         .stream()
                 ))
@@ -181,7 +181,11 @@ public final class UnitsCoimbra implements Runnable {
                         subjects(json)
                 )))
 
-        ).flatMap(unit -> review(unit, Coimbra().locale())).stream().flatMap(unit -> {
+        ).flatMap(unit ->
+
+                review(unit, Coimbra().locale())
+
+        ).stream().flatMap(unit -> {
 
             final Optional<PersonFrame> heads=head(json)
                     .map(p -> p.headOf(set(unit)).memberOf(set(unit)));
