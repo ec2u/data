@@ -22,7 +22,6 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.toolkits.Strings;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.util.URIs;
 
@@ -46,9 +45,7 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Strings.lower;
-import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.locale;
 
@@ -78,12 +75,7 @@ public interface Documents extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(DOCUMENTS.id()).update(array(list(
-
-                Xtream.of(DOCUMENTS)
-                        .optMap(new Validate<>())
-
-        )), FORCED));
+        exec(() -> service(store()).partition(DOCUMENTS.id()).insert(DOCUMENTS));
     }
 
 

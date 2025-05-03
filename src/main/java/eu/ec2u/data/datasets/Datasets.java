@@ -18,9 +18,7 @@ package eu.ec2u.data.datasets;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Worker;
-import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
@@ -28,10 +26,8 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -54,12 +50,7 @@ public interface Datasets extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(DATASETS.id()).update(array(list(
-
-                Xtream.of(DATASETS)
-                        .optMap(new Validate<>())
-
-        )), FORCED));
+        exec(() -> service(store()).partition(DATASETS.id()).insert(DATASETS));
     }
 
 

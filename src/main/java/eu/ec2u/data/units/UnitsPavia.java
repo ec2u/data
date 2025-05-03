@@ -37,7 +37,6 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.rdf.Values.guarded;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -84,7 +83,7 @@ public final class UnitsPavia implements Runnable {
 
 
     @Override public void run() {
-        service(store()).partition(CONTEXT).update(array(list(Xtream
+        service(store()).partition(CONTEXT).insert(array(list(Xtream
 
                 .of(
                         new Catalog(
@@ -105,7 +104,7 @@ public final class UnitsPavia implements Runnable {
                 .map(this::details)
                 .optMap(unit -> review(unit, Pavia().locale()))
 
-        )), FORCED);
+        )));
     }
 
 

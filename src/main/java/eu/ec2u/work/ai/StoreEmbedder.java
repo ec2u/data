@@ -41,7 +41,6 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.shapes.Property.property;
 import static com.metreeca.mesh.shapes.Shape.shape;
 import static com.metreeca.mesh.shapes.Type.type;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.list;
 import static com.metreeca.mesh.util.Loggers.time;
 import static com.metreeca.mesh.util.URIs.item;
@@ -139,7 +138,7 @@ public final class StoreEmbedder implements Embedder {
                 )))).or(() -> embedder.embed(t).map(embedding -> {
 
                     if ( limit == 0 || text.length() <= limit ) {
-                        store.partition(partition).update(array(list(Stream
+                        store.partition(partition).insert(array(list(Stream
                                 .of(object(
                                         shape(EMBEDDING_SHAPE),
                                         id(item(uuid(t))),
@@ -148,7 +147,7 @@ public final class StoreEmbedder implements Embedder {
                                 ))
                                 .map(new Validate<>())
                                 .flatMap(Optional::stream)
-                        )), FORCED);
+                        )));
                     }
 
                     return embedding;

@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.taxonomies;
 
-import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
 
 import java.net.URI;
@@ -27,7 +26,6 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -61,16 +59,16 @@ public final class EC2UDocuments implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(EC2U_DOCUMENTS).update(array(list(Xtream.from(
+        service(store()).partition(EC2U_DOCUMENTS).insert(array(list(Xtream.from(
 
-                Xtream.of(
+                Stream.of(
                         TAXONOMY
-                ).optMap(new Validate<>()),
+                ),
 
                 Stream.of(resource(EC2UDocuments.class, ".csv").toString())
                         .flatMap(new Taxonomy.Loader(TAXONOMY))
 
-        ))), FORCED);
+        ))));
     }
 
 }

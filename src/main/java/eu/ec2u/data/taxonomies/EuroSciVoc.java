@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.taxonomies;
 
-import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.tools.Store;
@@ -31,11 +30,11 @@ import org.eclipse.rdf4j.model.vocabulary.SKOSXL;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
@@ -110,12 +109,12 @@ public final class EuroSciVoc implements Runnable {
 
     @Override
     public void run() {
-        store.partition(EUROSCIVOC).update(array(list(Xtream.from(
+        store.partition(EUROSCIVOC).insert(array(list(Xtream.from(
 
-                Xtream.of(
+                Stream.of(
                         TAXONOMY,
                         EU_PUBLICATION_OFFICE
-                ).optMap(new Validate<>()),
+                ),
 
                 Xtream.of(URL)
 
@@ -159,7 +158,7 @@ public final class EuroSciVoc implements Runnable {
                         .map(this::define)
                         .optMap(Topic::review)
 
-        ))), FORCED);
+        ))));
     }
 
 

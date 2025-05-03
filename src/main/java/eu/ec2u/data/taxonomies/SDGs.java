@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.taxonomies;
 
-import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.work.Xtream;
 
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
@@ -30,7 +29,6 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -93,17 +91,17 @@ public final class SDGs implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(SDGS).update(array(list(Xtream.from(
+        service(store()).partition(SDGS).insert(array(list(Xtream.from(
 
-                Xtream.of(
+                Stream.of(
                         TAXONOMY,
                         UNITED_NATIONS
-                ).optMap(new Validate<>()),
+                ),
 
                 Stream.of(resource(SDGs.class, ".csv").toString())
                         .flatMap(new Taxonomy.Loader(TAXONOMY))
 
-        ))), FORCED);
+        ))));
     }
 
 }

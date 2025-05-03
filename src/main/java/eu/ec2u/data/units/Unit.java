@@ -40,8 +40,8 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.text.services.Translator.translator;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
-import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.mesh.util.Collections.set;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -50,6 +50,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.VIRTUAL_INSTITUTE;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
+import static eu.ec2u.data.units.Units.UNITS;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 
@@ -69,7 +70,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static UnitFrame GLADE() {
         return new UnitFrame()
-                .id(Units.UNITS.id().resolve("glade"))
+                .id(UNITS.id().resolve("glade"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Good Health and Well‑Being")))
                 .altLabel(map(entry(ROOT, "GLADE")))
                 .definition(map(entry(EN, """
@@ -96,7 +97,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static UnitFrame VIQE() {
         return new UnitFrame()
-                .id(Units.UNITS.id().resolve("viqe"))
+                .id(UNITS.id().resolve("viqe"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Quality Education")))
                 .altLabel(map(entry(ROOT, "VIQE")))
                 .definition(map(entry(EN, """
@@ -119,7 +120,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static UnitFrame VISCC() {
         return new UnitFrame()
-                .id(Units.UNITS.id().resolve("viscc"))
+                .id(UNITS.id().resolve("viscc"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Sustainable Cities and Communities")))
                 .altLabel(map(entry(ROOT, "VISCC")))
                 .definition(map(entry(EN, """
@@ -146,7 +147,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static UnitFrame VIPJSI() {
         return new UnitFrame()
-                .id(Units.UNITS.id().resolve("vipjsi"))
+                .id(UNITS.id().resolve("vipjsi"))
                 .prefLabel(map(entry(EN, "Virtual Institute for Peace, Justice and Strong Institutions")))
                 .altLabel(map(entry(ROOT, "VIPJSI")))
                 .definition(map(entry(EN, """
@@ -232,18 +233,14 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(Units.UNITS.id()).update(array(list(Xtream
+        exec(() -> service(store()).partition(UNITS.id()).insert(array(
 
-                .of(
-                        GLADE(),
-                        VIQE(),
-                        VISCC(),
-                        VIPJSI()
-                )
+                GLADE(),
+                VIQE(),
+                VISCC(),
+                VIPJSI()
 
-                .optMap(new Validate<>())
-
-        )), FORCED));
+        )));
     }
 
 
@@ -251,7 +248,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     @Override
     default Units collection() {
-        return Units.UNITS;
+        return UNITS;
     }
 
 

@@ -17,17 +17,16 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.flow.services.Vault;
-import com.metreeca.flow.work.Xtream;
 
 import eu.ec2u.data.units.Units.Loader;
 
 import java.net.URI;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
@@ -53,11 +52,11 @@ public final class UnitsLinz implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
+        service(store()).partition(CONTEXT).insert(array(list(Stream.of(url)
 
                 .flatMap(new Loader(Linz()))
 
-        )), FORCED);
+        )));
     }
 
 

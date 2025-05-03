@@ -47,7 +47,6 @@ import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Strings.split;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -126,12 +125,12 @@ public final class UnitsSalamanca implements Runnable {
 
 
     @Override public void run() {
-        service(store()).partition(CONTEXT).update(array(list(Xtream.of(Instant.EPOCH)
+        service(store()).partition(CONTEXT).insert(array(list(Stream.of(Instant.EPOCH)
 
                 .flatMap(this::units)
                 .flatMap(this::unit)
 
-        )), FORCED);
+        )));
     }
 
 

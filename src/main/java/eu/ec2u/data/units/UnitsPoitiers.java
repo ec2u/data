@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -69,12 +68,12 @@ public final class UnitsPoitiers implements Runnable {
                          +"/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"
                          +"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
 
-        service(store()).partition(CONTEXT).update(array(list(Xtream.of(url)
+        service(store()).partition(CONTEXT).insert(array(list(Stream.of(url)
 
                 .flatMap(this::units)
                 .flatMap(this::unit)
 
-        )), FORCED);
+        )));
     }
 
 

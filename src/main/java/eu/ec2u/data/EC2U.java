@@ -18,9 +18,6 @@ package eu.ec2u.data;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
@@ -36,9 +33,8 @@ import java.net.URI;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
-import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Collections.entry;
+import static com.metreeca.mesh.util.Collections.map;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -63,15 +59,7 @@ public final class EC2U extends Delegator {
 
 
     public static void main(final String... args) {
-        exec(() -> {
-
-            final Value update=array(list(Xtream.of(EC2U)
-                    .optMap(new Validate<>())
-            ));
-
-            service(store()).update(update, FORCED);
-
-        });
+        exec(() -> service(store()).insert(EC2U));
     }
 
 

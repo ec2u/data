@@ -16,8 +16,6 @@
 
 package eu.ec2u.data.persons;
 
-import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
@@ -26,8 +24,6 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -49,12 +45,7 @@ public interface Persons extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(PERSONS.id()).update(array(list(
-
-                Xtream.of(PERSONS)
-                        .optMap(new Validate<>())
-
-        )), FORCED));
+        exec(() -> service(store()).partition(PERSONS.id()).insert(PERSONS));
     }
 
 

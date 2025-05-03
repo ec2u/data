@@ -21,7 +21,6 @@ import com.metreeca.flow.lod.actions.Wikidata;
 import com.metreeca.flow.rdf4j.actions.GraphQuery;
 import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Internal;
@@ -54,7 +53,6 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.tools.Store.Option.FORCED;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Strings.fill;
 import static com.metreeca.mesh.util.URIs.term;
@@ -63,6 +61,7 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.*;
+import static eu.ec2u.data.universities.Universities.UNIVERSITIES;
 import static eu.ec2u.work.Rover.rover;
 import static java.util.stream.Collectors.joining;
 
@@ -73,7 +72,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     static UniversityFrame Coimbra() {
         return new UniversityFrame()
-                .id(Universities.UNIVERSITIES.id().resolve("coimbra"))
+                .id(UNIVERSITIES.id().resolve("coimbra"))
                 .prefLabel(map(
                         entry(EN, "University of Coimbra"),
                         entry(PT, "Universidade de Coimbra")
@@ -106,7 +105,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     static UniversityFrame Iasi() {
         return new UniversityFrame()
-                .id(Universities.UNIVERSITIES.id().resolve("iasi"))
+                .id(UNIVERSITIES.id().resolve("iasi"))
                 .prefLabel(map(
                         entry(EN, "Alexandru Ioan Cuza University of Iaşi"),
                         entry(RO, "Universitatea Alexandru Ioan Cuza din Iași")
@@ -142,7 +141,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     static UniversityFrame Jena() {
         return new UniversityFrame()
-                .id(Universities.UNIVERSITIES.id().resolve("jena"))
+                .id(UNIVERSITIES.id().resolve("jena"))
                 .prefLabel(map(
                         entry(EN, "Friedrich Schiller University Jena"),
                         entry(DE, "Friedrich-Schiller-Universität Jena")
@@ -176,7 +175,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     static UniversityFrame Linz() {
         return new UniversityFrame()
-                .id(Universities.UNIVERSITIES.id().resolve("linz"))
+                .id(UNIVERSITIES.id().resolve("linz"))
                 .prefLabel(map(
                         entry(EN, "Johannes Kepler University Linz (JKU)"),
                         entry(DE, "Johannes Kepler Universität Linz (JKU)")
@@ -211,7 +210,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     static UniversityFrame Pavia() {
         return new UniversityFrame()
-                .id(Universities.UNIVERSITIES.id().resolve("pavia"))
+                .id(UNIVERSITIES.id().resolve("pavia"))
                 .prefLabel(map(
                         entry(EN, "University of Pavia"),
                         entry(IT, "Università di Pavia")
@@ -243,7 +242,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     static UniversityFrame Poitiers() {
         return new UniversityFrame()
-                .id(Universities.UNIVERSITIES.id().resolve("poitiers"))
+                .id(UNIVERSITIES.id().resolve("poitiers"))
                 .prefLabel(map(
                         entry(EN, "University of Poitiers"),
                         entry(FR, "Université de Poitiers")
@@ -277,7 +276,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     static UniversityFrame Salamanca() {
         return new UniversityFrame()
-                .id(Universities.UNIVERSITIES.id().resolve("salamanca"))
+                .id(UNIVERSITIES.id().resolve("salamanca"))
                 .prefLabel(map(
                         entry(EN, "University of Salamanca"),
                         entry(ES, "Universidad de Salamanca")
@@ -310,7 +309,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     static UniversityFrame Turku() {
         return new UniversityFrame()
-                .id(Universities.UNIVERSITIES.id().resolve("turku"))
+                .id(UNIVERSITIES.id().resolve("turku"))
                 .prefLabel(map(
                         entry(EN, "University of Turku"),
                         entry(FI, "Turun Yliopisto")
@@ -396,7 +395,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
                     .toList()
             );
 
-            final Value update=array(list(Xtream.from(universities)
+            service(store()).partition(UNIVERSITIES.id()).insert(array(list(Xtream.from(universities)
 
                     .flatMap(university -> {
 
@@ -448,9 +447,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
                     .optMap(new Validate<>())
 
-            ));
-
-            service(store()).partition(Universities.UNIVERSITIES.id()).update(update, FORCED);
+            )));
 
         }));
     }
@@ -468,7 +465,7 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
 
     @Override
     default Universities collection() {
-        return Universities.UNIVERSITIES;
+        return UNIVERSITIES;
     }
 
     @Override
