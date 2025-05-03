@@ -17,27 +17,19 @@
 package eu.ec2u.data.universities;
 
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.lod.actions.Wikidata;
-import com.metreeca.flow.rdf4j.actions.GraphQuery;
-import com.metreeca.flow.rdf4j.services.Graph;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Internal;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
-import com.metreeca.mesh.util.Locales;
 import com.metreeca.mesh.util.URIs;
 
 import eu.ec2u.data.organizations.OrgFormalOrganization;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.GeoReference;
-import eu.ec2u.data.resources.GeoReferenceFrame;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
-import eu.ec2u.work.Rover;
-import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
 import java.net.URI;
 import java.time.Year;
@@ -46,24 +38,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
-import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.toolkits.Resources.resource;
-import static com.metreeca.flow.toolkits.Resources.text;
-import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Strings.fill;
-import static com.metreeca.mesh.util.URIs.term;
 import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.*;
 import static eu.ec2u.data.universities.Universities.UNIVERSITIES;
-import static eu.ec2u.work.Rover.rover;
-import static java.util.stream.Collectors.joining;
 
 @Frame
 @Class
@@ -355,101 +336,14 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
         return URIs.uuid(university.id()+"@"+name);
     }
 
+    static Optional<UniversityFrame> review(final UniversityFrame university) {
 
-    static void main(final String... args) {
-        exec(() -> exec(() -> {
+        if ( university == null ) {
+            throw new NullPointerException("null university");
+        }
 
-            final Set<UniversityFrame> universities=set(
-                    Coimbra(),
-                    Iasi(),
-                    Jena(),
-                    Linz(),
-                    Pavia(),
-                    Poitiers(),
-                    Salamanca(),
-                    Turku()
-            );
-
-            final Rover wikidata=rover(Stream.of(text(resource(University.class, ".qlt")))
-
-                    .map(query -> fill(query, map(
-
-                            entry("universities", universities.stream()
-                                    .map(u -> u.seeAlso().stream().findFirst().orElseThrow())
-                                    .map("<%s>"::formatted)
-                                    .collect(joining("\n"))
-                            ),
-
-                            entry("languages", LOCALES.stream()
-                                    .map(Locales::locale)
-                                    .map("\"%s\""::formatted)
-                                    .collect(joining(", "))
-                            )
-
-                    )))
-
-                    .flatMap(new GraphQuery()
-                            .graph(new Graph(new SPARQLRepository("https://query.wikidata.org/sparql")))
-                    )
-
-                    .toList()
-            );
-
-            service(store()).partition(UNIVERSITIES.id()).insert(array(list(Xtream.from(universities)
-
-                    .flatMap(university -> {
-
-                        final Rover focus=wikidata.focus(university.seeAlso().stream().findFirst().orElseThrow());
-                        final Rover city=focus.forward(term("city"));
-                        final Rover country=focus.forward(term("country"));
-
-                        final Optional<Wikidata.Point> coordinates=focus
-                                .forward(term("coordinates"))
-                                .lexical()
-                                .flatMap(Wikidata::point);
-
-                        final Optional<Wikidata.Point> cityCoordinates=city
-                                .forward(term("coordinates"))
-                                .lexical()
-                                .flatMap(Wikidata::point);
-
-                        final Optional<Wikidata.Point> countyCoordinates=country
-                                .forward(term("coordinates"))
-                                .lexical()
-                                .flatMap(Wikidata::point);
-
-                        final GeoReferenceFrame cityFrame=new GeoReferenceFrame()
-                                .id(city.uri().orElse(null))
-                                .label(city.forward(term("name")).texts().orElse(null))
-                                .longitude(cityCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
-                                .latitude(cityCoordinates.map(Wikidata.Point::latitude).orElse(0.0D));
-
-                        final GeoReferenceFrame countryFrame=new GeoReferenceFrame()
-                                .id(country.uri().orElse(null))
-                                .label(country.forward(term("name")).texts().orElse(null))
-                                .longitude(countyCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
-                                .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D));
-
-                        final UniversityFrame universityFrame=university
-                                .students(focus.forward(term("students")).integral().map(Long::intValue).orElse(0))
-                                .inception(focus.forward(term("inception")).year().orElse(null))
-                                .longitude(coordinates.map(Wikidata.Point::longitude).orElse(0.0D))
-                                .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
-                                .city(cityFrame)
-                                .country(countryFrame);
-
-                        return Stream.of(
-                                universityFrame,
-                                cityFrame,
-                                countryFrame
-                        );
-                    })
-
-                    .optMap(new Validate<>())
-
-            )));
-
-        }));
+        return Optional.of(university)
+                .flatMap(new Validate<>());
     }
 
 

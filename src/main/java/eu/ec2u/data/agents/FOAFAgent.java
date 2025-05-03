@@ -31,10 +31,8 @@ import java.util.Set;
 @Namespace(prefix="[foaf]", value="http://xmlns.com/foaf/0.1/")
 public interface FOAFAgent extends Reference {
 
-    @Pattern("^https?://\\S+$")
     Set<URI> depiction();
 
-    @Pattern("^https?://\\S+$")
     Set<URI> homepage();
 
 
