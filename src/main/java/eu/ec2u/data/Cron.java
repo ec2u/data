@@ -22,6 +22,11 @@ import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.services.Logger;
 
+import eu.ec2u.data.documents.*;
+import eu.ec2u.data.events.Events;
+import eu.ec2u.data.events.EventsPaviaUniversity;
+import eu.ec2u.data.units.*;
+
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.gcp.GCPServer.cron;
 import static com.metreeca.flow.http.Response.BadGateway;
@@ -41,13 +46,13 @@ public final class Cron extends Delegator {
     public Cron() {
         delegate(cron(new Router()
 
-                // .path("/units/coimbra", execute(new UnitsCoimbra()))
-                // .path("/units/iasi", execute(new UnitsIasi()))
-                // .path("/units/jena", execute(new UnitsJena()))
-                // .path("/units/pavia", execute(new UnitsPavia()))
-                // .path("/units/poitiers", execute(new UnitsPoitiers()))
-                // .path("/units/salamanca", execute(new UnitsSalamanca()))
-                // .path("/units/turku", execute(new UnitsTurku()))
+                        .path("/units/coimbra", execute(new UnitsCoimbra()))
+                        .path("/units/iasi", execute(new UnitsIasi()))
+                        .path("/units/jena", execute(new UnitsJena()))
+                        .path("/units/pavia", execute(new UnitsPavia()))
+                        .path("/units/poitiers", execute(new UnitsPoitiers()))
+                        .path("/units/salamanca", execute(new UnitsSalamanca()))
+                        .path("/units/turku", execute(new UnitsTurku()))
 
                 // .path("/offerings/coimbra", execute(new OfferingsCoimbra()))
                 // .path("/offerings/jena", execute(new OfferingsJena()))
@@ -60,20 +65,22 @@ public final class Cron extends Delegator {
                 // .path("/offerings/salamanca", execute(new OfferingsSalamanca()))
                 // .path("/offerings/lll", execute(new OfferingsLLL()))
 
-                // .path("/documents/coimbra", execute(new DocumentsCoimbra()))
-                // .path("/documents/iasi", execute(new DocumentsIasi()))
-                // .path("/documents/jena", execute(new DocumentsJena()))
-                // .path("/documents/pavia", execute(new DocumentsPavia()))
-                // .path("/documents/poitiers", execute(new DocumentsPoitiers()))
-                // .path("/documents/salamanca", execute(new DocumentsSalamanca()))
-                // .path("/documents/turku", execute(new DocumentsTurku()))
+                        .path("/documents/coimbra", execute(new DocumentsCoimbra()))
+                        .path("/documents/iasi", execute(new DocumentsIasi()))
+                        .path("/documents/jena", execute(new DocumentsJena()))
+                        .path("/documents/pavia", execute(new DocumentsPavia()))
+                        .path("/documents/poitiers", execute(new DocumentsPoitiers()))
+                        .path("/documents/salamanca", execute(new DocumentsSalamanca()))
+                        .path("/documents/turku", execute(new DocumentsTurku()))
+
+                        .path("/events/", execute(new Events.Reaper()))
 
                 // .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
                 // .path("/events/iasi/university", execute(new EventsIasiUniversity()))
                 // .path("/events/iasi/university/360", execute(new EventsIasiUniversity360()))
                 // .path("/events/jena/university", execute(new EventsJenaUniversity()))
                 // .path("/events/linz/university", execute(new EventsLinzUniversity()))
-                // .path("/events/pavia/university", execute(new EventsPaviaUniversity()))
+                        .path("/events/pavia/university", execute(new EventsPaviaUniversity()))
                 // .path("/events/pavia/borromeo", execute(new EventsPaviaBorromeo()))
                 // .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
                 // .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))

@@ -57,7 +57,7 @@ public final class EC2UEvents implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).curate(
+        service(store()).modify(
 
                 array(list(Xtream.from(
 

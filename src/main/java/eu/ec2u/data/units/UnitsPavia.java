@@ -83,7 +83,7 @@ public final class UnitsPavia implements Runnable {
 
 
     @Override public void run() {
-        service(store()).curate(
+        service(store()).modify(
 
                 array(list(Xtream
 
@@ -104,7 +104,7 @@ public final class UnitsPavia implements Runnable {
 
                         .flatMap(this::catalog)
                         .map(this::details)
-                        .optMap(unit -> review(unit, University.PAVIA.locale()))
+                        .optMap(unit -> review(unit, PAVIA.locale()))
 
                 )),
 
@@ -188,15 +188,15 @@ public final class UnitsPavia implements Runnable {
 
                                     .generated(true)
 
-                            .id(Units.UNITS.id().resolve(University.uuid(University.PAVIA, url
+                            .id(Units.UNITS.id().resolve(University.uuid(PAVIA, url
                                             .map(URI::toString)
                                             .or(() -> json.get("name").string())
                                             .orElse(null) // !!! don't generate if missing
                                     )))
 
                                     .generated(true)
-                            .university(University.PAVIA)
-                            .unitOf(set(University.PAVIA))
+                            .university(PAVIA)
+                            .unitOf(set(PAVIA))
 
                                     .altLabel(json.get("acronym").string()
                                             .map(acronym -> map(entry(ROOT, acronym)))

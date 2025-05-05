@@ -110,7 +110,7 @@ public interface Universities extends Dataset {
                     .toList()
             );
 
-            service(store()).curate(
+            service(store()).modify(
 
                     array(list(Stream.concat(
 

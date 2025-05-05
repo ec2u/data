@@ -90,7 +90,7 @@ public final class SDGs implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).curate(
+        service(store()).modify(
 
                 array(list(Xtream.from(
 

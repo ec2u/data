@@ -23,6 +23,7 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
 
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -49,7 +50,7 @@ import static com.metreeca.mesh.util.Collections.list;
 import static com.metreeca.mesh.util.Collections.set;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.Loggers.time;
-import static com.metreeca.mesh.util.URIs.item;
+import static com.metreeca.mesh.util.URIs.base;
 import static com.metreeca.mesh.util.URIs.uuid;
 
 import static java.lang.String.format;
@@ -61,6 +62,7 @@ public final class StoreTranslator implements Translator {
 
 
     private static final String TRANSLATION="Translation";
+    private static final URI TRANSLATIONS=base().resolve("~translations");
 
     private static final String TEXT="text";
 
@@ -141,10 +143,10 @@ public final class StoreTranslator implements Translator {
 
                 )))).or(() -> translator.translate(text, source, target).map(translation -> {
 
-                    store.curate(array(list(Stream
+                    store.modify(array(list(Stream
                             .of(object(
                                     shape(TRANSLATION_SHAPE),
-                                    id(item(uuid("- %s\n-%s\n".formatted(text, translation)))),
+                                    id(TRANSLATIONS.resolve(uuid("- %s\n-%s\n".formatted(text, translation)))),
                                     field(TEXT, array(text(source, text), text(target, translation)))
                             ))
                             .map(new Validate<>())

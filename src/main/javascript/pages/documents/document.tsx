@@ -57,7 +57,7 @@ export const Document=immutable({
 	modified: optional(date),
 	valid: optional(string),
 
-	_type: multiple({
+	type: multiple({
 		id: required(id),
 		label: required(text)
 	}),

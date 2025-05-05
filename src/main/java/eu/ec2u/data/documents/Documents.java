@@ -75,7 +75,7 @@ public interface Documents extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).curate(DOCUMENTS));
+        exec(() -> service(store()).modify(DOCUMENTS));
     }
 
 

@@ -67,7 +67,7 @@ public final class EventsPaviaUniversity implements Runnable {
 
     @Override
     public void run() {
-        service(store()).curate(
+        service(store()).modify(
 
                 array(list(Stream
 

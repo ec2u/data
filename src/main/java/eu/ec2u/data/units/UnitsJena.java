@@ -53,7 +53,7 @@ public final class UnitsJena implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        store.curate(
+        store.modify(
                 array(list(Stream.of(url).flatMap(new Units.Loader(JENA)))),
                 value(query(new UnitFrame(true)).where("university", criterion().any(JENA)))
         );

@@ -21,6 +21,7 @@ import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
 
+import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -42,7 +43,7 @@ import static com.metreeca.mesh.shapes.Shape.shape;
 import static com.metreeca.mesh.shapes.Type.type;
 import static com.metreeca.mesh.util.Collections.list;
 import static com.metreeca.mesh.util.Loggers.time;
-import static com.metreeca.mesh.util.URIs.item;
+import static com.metreeca.mesh.util.URIs.base;
 import static com.metreeca.mesh.util.URIs.uuid;
 
 import static java.lang.String.format;
@@ -51,6 +52,7 @@ import static java.util.function.Predicate.not;
 public final class StoreEmbedder implements Embedder {
 
     private static final String EMBEDDING="Embedding";
+    private static final URI EMBEDDINGS=base().resolve("~embeddings/");
 
     private static final String STRING="string";
     private static final String VECTOR="vector";
@@ -121,10 +123,10 @@ public final class StoreEmbedder implements Embedder {
                 )))).or(() -> embedder.embed(t).map(embedding -> {
 
                     if ( limit == 0 || text.length() <= limit ) {
-                        store.curate(array(list(Stream
+                        store.modify(array(list(Stream
                                 .of(object(
                                         shape(EMBEDDING_SHAPE),
-                                        id(item(uuid(t))),
+                                        id(EMBEDDINGS.resolve(uuid(t))),
                                         field(STRING, string(t)),
                                         field(VECTOR, string(Vector.encode(embedding)))
                                 ))

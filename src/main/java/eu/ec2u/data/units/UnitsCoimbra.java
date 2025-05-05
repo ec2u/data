@@ -82,7 +82,7 @@ public final class UnitsCoimbra implements Runnable {
 
     @Override
     public void run() {
-        service(store()).curate(
+        service(store()).modify(
 
                 array(list(Xtream.of(Instant.EPOCH)
                         .flatMap(this::units)

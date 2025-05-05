@@ -128,7 +128,7 @@ public final class UnitsSalamanca implements Runnable {
 
 
     @Override public void run() {
-        service(store()).curate(
+        service(store()).modify(
 
                 array(list(Stream.of(Instant.EPOCH)
                 .flatMap(this::units)

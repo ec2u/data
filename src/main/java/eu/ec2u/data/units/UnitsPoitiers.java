@@ -67,7 +67,7 @@ public final class UnitsPoitiers implements Runnable {
                          +"/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"
                          +"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
 
-        service(store()).curate(
+        service(store()).modify(
 
                 array(list(Stream.of(url)
                         .flatMap(this::units)

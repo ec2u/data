@@ -111,7 +111,7 @@ public final class EuroSciVoc implements Runnable {
 
     @Override
     public void run() {
-        store.curate(
+        store.modify(
 
                 array(list(Xtream.from(
 

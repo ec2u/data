@@ -54,7 +54,7 @@ public final class DocumentsTurku implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        store.curate(
+        store.modify(
                 array(list(Stream.of(url).flatMap(new Documents.Loader(TURKU)))),
                 value(query(new DocumentFrame(true)).where("university", criterion().any(TURKU)))
         );

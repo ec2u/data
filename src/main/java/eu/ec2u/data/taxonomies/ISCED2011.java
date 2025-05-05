@@ -83,7 +83,7 @@ public final class ISCED2011 implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).curate(
+        service(store()).modify(
 
                 array(list(Xtream.from(
 

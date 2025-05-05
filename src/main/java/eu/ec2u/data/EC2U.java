@@ -65,7 +65,7 @@ public final class EC2U extends Delegator {
 
 
     public static void main(final String... args) {
-        exec(() -> service(store()).curate(array(EC2U, CCBYNCND40)));
+        exec(() -> service(store()).modify(array(EC2U, CCBYNCND40)));
     }
 
 

@@ -53,7 +53,7 @@ public final class UnitsIasi implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        store.curate(
+        store.modify(
                 array(list(Stream.of(url).flatMap(new Units.Loader(IASI)))),
                 value(query(new UnitFrame(true)).where("university", criterion().any(IASI)))
         );

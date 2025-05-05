@@ -53,7 +53,7 @@ public final class UnitsTurku implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        store.curate(
+        store.modify(
                 array(list(Stream.of(url).flatMap(new Units.Loader(TURKU)))),
                 value(query(new UnitFrame(true)).where("university", criterion().any(TURKU)))
         );
