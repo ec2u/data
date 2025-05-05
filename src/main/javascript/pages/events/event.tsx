@@ -147,6 +147,47 @@ export const Event=immutable({
 // }
 
 
+export const EventStatusType: { [mode: string]: typeof text.model }={
+
+	EventCancelled: {
+		en: "Cancelled"
+	},
+
+	EventMovedOnline: {
+		en: "Moved Online"
+	},
+
+	EventPostponed: {
+		en: "Postponed"
+	},
+
+	EventRescheduled: {
+		en: "Rescheduled"
+	},
+
+	EventScheduled: {
+		en: "Scheduled"
+	}
+
+};
+
+export const EventAttendanceModeEnumeration: { [mode: string]: typeof text.model }={
+
+	MixedEventAttendanceMode: {
+		en: "Mixed"
+	},
+
+	OfflineEventAttendanceMode: {
+		en: "Offline"
+	},
+
+	OnlineEventAttendanceMode: {
+		en: "Online"
+	}
+
+};
+
+
 export function DataEvent() {
 
 	const [event]=useResource(Event);
@@ -223,12 +264,12 @@ export function DataEvent() {
 				"Entry": isAccessibleForFree === true ? "Free" : isAccessibleForFree === false ? "Paid" : undefined,
 				"Language": inLanguage && toTextString(Languages[inLanguage]),
 
-				"Attendance": eventAttendanceMode && eventAttendanceMode, // !!! map to user-readable label
-				"Status": eventStatus && eventStatus // !!! map to user-readable label
+				"Attendance": eventAttendanceMode && toTextString(EventAttendanceModeEnumeration[eventAttendanceMode]),
+				"Status": eventStatus && toTextString(EventStatusType[eventStatus])
 
-				// "Location": location && <ul>{location?.map(({ Text, Place, PostalAddress, VirtualLocation }, index)
-				// =>  <li key={index}>{  Text ? <span>{Text}</span> : Place ? asPlace(Place) : PostalAddress ?
-				// asPostalAddress(PostalAddress) : VirtualLocation ? <a
+				// "Location": location && <ul>{location?.map(({ Text, Place, PostalAddress, VirtualLocation },
+				// index) =>  <li key={index}>{  Text ? <span>{Text}</span> : Place ? asPlace(Place) :
+				// PostalAddress ? asPostalAddress(PostalAddress) : VirtualLocation ? <a
 				// href={VirtualLocation.url}>{toTextString(VirtualLocation.label)}</a> : null  }</li> )}</ul>
 
 			}}</TileInfo>
