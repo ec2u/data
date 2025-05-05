@@ -16,14 +16,17 @@
 
 
 import { DataLogo } from "@ec2u/data/views/logo";
-import { asArray } from "@metreeca/core";
+import { asArray, isArray } from "@metreeca/core";
 import { title } from "@metreeca/data/contexts/router";
+import { useTrace } from "@metreeca/data/contexts/trace";
 import { app } from "@metreeca/view";
 import { TilePage } from "@metreeca/view/layouts/page";
-import { Github } from "@metreeca/view/widgets/icon";
+import { TileHint } from "@metreeca/view/widgets/hint";
+import { Github, NotFoundIcon } from "@metreeca/view/widgets/icon";
 import { Path, TilePath } from "@metreeca/view/widgets/path";
 import React, { ReactNode, useEffect } from "react";
 
+export const NotFound="404 | Not Found";
 
 export function DataPage({
 
@@ -55,13 +58,21 @@ export function DataPage({
 
 }) {
 
+	const [trace]=useTrace();
+
 	useEffect(() => { title(name); }, asArray(name) ?? [name]);
+
+
+	const is404=trace && trace.status === 404;
 
 	return <TilePage
 
 		logo={<DataLogo/>}
 
-		name={<TilePath>{name}</TilePath>}
+		name={is404
+			? <TilePath>{isArray(name) && name.length > 1 ? [name[0], NotFound] : NotFound}</TilePath>
+			: <TilePath>{name}</TilePath>
+		}
 		menu={menu}
 
 		done={done}
@@ -77,7 +88,7 @@ export function DataPage({
 
 	>{
 
-		children
+		is404 ? <TileHint><NotFoundIcon/></TileHint> : children
 
 	}</TilePage>;
 

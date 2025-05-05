@@ -15,7 +15,7 @@
  */
 
 import { Datasets } from "@ec2u/data/pages/datasets/datasets";
-import { DataPage } from "@ec2u/data/views/page";
+import { DataPage, NotFound } from "@ec2u/data/views/page";
 import { immutable } from "@metreeca/core";
 import { useRouter } from "@metreeca/data/contexts/router";
 import { TileHint } from "@metreeca/view/widgets/hint";
@@ -49,7 +49,7 @@ export default function DataWild() {
 
 	return (
 
-		<DataPage name={"404 | Not Found"}
+		<DataPage name={NotFound}
 
 			menu={<button title="Remove from History" onClick={dismiss}><CancelIcon/></button>}
 
