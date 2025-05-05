@@ -94,6 +94,7 @@ public final class EventsPaviaUniversity implements Runnable {
                         path.links("//a[contains(concat(' ', normalize-space(@class), ' '), ' page-link ')]/@href"),
                         path.links("//*[contains(concat(' ', normalize-space(@class), ' '), ' eventi-card ')]//a//@href")
                 ))
+
         );
     }
 
