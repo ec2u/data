@@ -151,7 +151,7 @@ public interface Units extends Dataset {
 
             ).flatMap(unit ->
 
-                    review(unit, university.locale())
+                    review(unit, university.locale()) // !!! review after setting linked objects
 
             ).stream().flatMap(unit -> {
 

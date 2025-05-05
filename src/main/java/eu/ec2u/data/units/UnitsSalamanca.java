@@ -214,7 +214,11 @@ public final class UnitsSalamanca implements Runnable {
 
                 )))
 
-        ).flatMap(unit -> review(unit, SALAMANCA.locale())).stream().flatMap(unit -> {
+        ).flatMap(unit ->
+
+                review(unit, SALAMANCA.locale()) // !!! review after setting linked objects
+
+        ).stream().flatMap(unit -> {
 
             final Optional<PersonFrame> head=json.get("head").string()
                     .flatMap(p -> person(p, SALAMANCA))

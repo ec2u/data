@@ -104,7 +104,7 @@ public final class UnitsPavia implements Runnable {
 
                         .flatMap(this::catalog)
                         .map(this::details)
-                        .optMap(unit -> review(unit, PAVIA.locale()))
+                        .optMap(unit -> review(unit, PAVIA.locale())) // !!! review after setting linked objects
 
                 )),
 
@@ -194,7 +194,6 @@ public final class UnitsPavia implements Runnable {
                                             .orElse(null) // !!! don't generate if missing
                                     )))
 
-                                    .generated(true)
                             .university(PAVIA)
                             .unitOf(set(PAVIA))
 

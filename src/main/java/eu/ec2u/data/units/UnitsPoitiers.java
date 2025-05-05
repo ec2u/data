@@ -114,7 +114,11 @@ public final class UnitsPoitiers implements Runnable {
                 .classification(set(classification(json)))
                 .subject(set(subject(json)))
 
-        ).flatMap(unit -> review(unit, POITIERS.locale())).stream().flatMap(unit -> {
+        ).flatMap(unit ->
+
+                review(unit, POITIERS.locale()) // !!! review after setting linked objects
+
+        ).stream().flatMap(unit -> {
 
             final Set<PersonFrame> heads=set(heads(json)
                     .map(p -> p.headOf(set(unit)).memberOf(set(unit)))

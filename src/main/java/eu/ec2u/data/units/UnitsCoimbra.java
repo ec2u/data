@@ -35,7 +35,6 @@ import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
-import eu.ec2u.data.universities.University;
 import eu.ec2u.work.Parsers;
 
 import java.time.Instant;
@@ -132,8 +131,8 @@ public final class UnitsCoimbra implements Runnable {
 
                 .generated(true)
 
-                .id(Units.UNITS.id().resolve(uuid(University.COIMBRA, id)))
-                .university(University.COIMBRA)
+                .id(Units.UNITS.id().resolve(uuid(COIMBRA, id)))
+                .university(COIMBRA)
 
                 .homepage(set(json.get("web_url").string().flatMap(Parsers::url).map(URIs::uri).stream()))
                 .mbox(set(json.get("email").string().flatMap(Parsers::email).stream()))
@@ -174,7 +173,7 @@ public final class UnitsCoimbra implements Runnable {
 
                 )))
 
-                .unitOf(set(University.COIMBRA))
+                .unitOf(set(COIMBRA))
 
                 .classification(set(json.get("type_en").string()
                         .flatMap(type -> Resources.match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), type))
@@ -189,7 +188,7 @@ public final class UnitsCoimbra implements Runnable {
 
         ).flatMap(unit ->
 
-                review(unit, University.COIMBRA.locale())
+                review(unit, COIMBRA.locale()) // !!! review after setting linked objects
 
         ).stream().flatMap(unit -> {
 
@@ -217,8 +216,8 @@ public final class UnitsCoimbra implements Runnable {
                 .flatMap(surname ->
                         json.get("forename").string().map(forename -> new PersonFrame() // !!! factor
 
-                                .id(Persons.PERSONS.id().resolve(uuid(University.COIMBRA, join(", ", surname, forename))))
-                                .university(University.COIMBRA)
+                                .id(Persons.PERSONS.id().resolve(uuid(COIMBRA, join(", ", surname, forename))))
+                                .university(COIMBRA)
                                 .collection(Persons.PERSONS)
 
                                 .givenName(forename)

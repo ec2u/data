@@ -37,7 +37,6 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.events.Event.review;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.PAVIA;
 import static java.util.Map.entry;
@@ -99,16 +98,7 @@ public final class EventsPaviaUniversity implements Runnable {
     }
 
     private Stream<Valuable> event(final String url) {
-        return Xtream.of(url)
-
-                .optMap(new Events.Scanner(PAVIA))
-
-                .optMap(event -> review(event, PAVIA.locale()))
-
-                .flatMap(event -> Stream.of(
-                        event.publisher(PUBLISHER),
-                        PUBLISHER
-                ));
+        return Stream.of(url).flatMap(new Events.Scanner(PAVIA, PUBLISHER));
     }
 
 }
