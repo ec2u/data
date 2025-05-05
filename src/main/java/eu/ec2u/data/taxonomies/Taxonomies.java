@@ -46,7 +46,7 @@ public interface Taxonomies extends Dataset {
             .description(map(entry(EN, "Topic taxonomies and other concept schemes for classifying resources.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(LICENSE));
+            .license(set(CCBYNCND40));
 
 
     static void main(final String... args) {

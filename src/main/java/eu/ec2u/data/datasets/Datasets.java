@@ -46,7 +46,7 @@ public interface Datasets extends Dataset {
             .description(map(entry(EN, "Datasets published on the EC2U Knowledge Hub.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(LICENSE));
+            .license(set(CCBYNCND40));
 
 
     static void main(final String... args) {

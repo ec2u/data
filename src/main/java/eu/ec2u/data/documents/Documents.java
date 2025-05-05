@@ -70,7 +70,7 @@ public interface Documents extends Dataset {
             .description(map(entry(EN, "Institutional documents shared by EC2U allied partners.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(LICENSE))
+            .license(set(CCBYNCND40))
             .issued(LocalDate.parse("2023-07-15"));
 
 

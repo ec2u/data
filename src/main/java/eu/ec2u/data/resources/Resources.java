@@ -54,7 +54,7 @@ public interface Resources extends Dataset {
             .description(map(entry(EN, "Shared resources published on the EC2U Knowledge Hub.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(LICENSE));
+            .license(set(CCBYNCND40));
 
 
     static Optional<URI> match(final URI collection, final String query) {

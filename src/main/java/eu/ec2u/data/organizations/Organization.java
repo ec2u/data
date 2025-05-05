@@ -36,11 +36,10 @@ import java.util.Optional;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
-import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Collections.set;
 
 import static eu.ec2u.data.organizations.Organizations.ORGANIZATIONS;
 import static eu.ec2u.data.resources.Localized.EN;
-import static java.util.function.Predicate.not;
 
 @Frame
 @Namespace("[ec2u]")
@@ -94,23 +93,6 @@ public interface Organization extends Resource, OrgOrganization, SchemaOrganizat
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default Map<Locale, String> label() {
-        return Reference.label(
-                Optional.ofNullable(acronym()).filter(not(String::isEmpty))
-                        .map(acronym -> map(prefLabel().entrySet().stream().map(e ->
-                                entry(e.getKey(), "%s - %s".formatted(acronym, e.getValue()))
-                        )))
-                        .orElseGet(this::prefLabel)
-        );
-    }
-
-    @Override
-    default Map<Locale, String> comment() {
-        return Reference.comment(definition());
-    }
-
 
     @Override
     default Map<Locale, String> name() { return prefLabel(); }

@@ -41,7 +41,7 @@ public interface Organizations extends Dataset {
             .description(map(entry(EN, "Organizations involved in activities related to EC2U allied universities.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(LICENSE));
+            .license(set(CCBYNCND40));
 
 
     static void main(final String... args) {

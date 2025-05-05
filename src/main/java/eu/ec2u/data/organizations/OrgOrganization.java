@@ -23,13 +23,19 @@ import com.metreeca.mesh.meta.shacl.Required;
 import eu.ec2u.data.agents.FOAFOrganization;
 import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.resources.Localized;
+import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.taxonomies.Topic;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import static com.metreeca.mesh.util.Collections.entry;
+import static com.metreeca.mesh.util.Collections.map;
+
 import static java.util.Locale.ROOT;
+import static java.util.function.Predicate.not;
 
 @Frame
 @Class("org:Organization")
@@ -37,6 +43,24 @@ import static java.util.Locale.ROOT;
 @Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
 @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
 public interface OrgOrganization extends FOAFOrganization {
+
+    @Override
+    default Map<Locale, String> label() {
+        return Reference.label(
+                Optional.ofNullable(acronym()).filter(not(String::isEmpty))
+                        .map(acronym -> map(prefLabel().entrySet().stream().map(e ->
+                                entry(e.getKey(), "%s - %s".formatted(acronym, e.getValue()))
+                        )))
+                        .orElseGet(this::prefLabel)
+        );
+    }
+
+    @Override
+    default Map<Locale, String> comment() {
+        return Reference.comment(definition());
+    }
+
+
 
     String identifier(); // ;( should be typed as per SKOS best practices
 

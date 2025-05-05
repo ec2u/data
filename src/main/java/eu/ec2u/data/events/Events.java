@@ -66,7 +66,8 @@ public interface Events extends Dataset {
                     """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(LICENSE)).issued(LocalDate.parse("2022-01-01"));
+            .license(set(CCBYNCND40))
+            .issued(LocalDate.parse("2022-01-01"));
 
 
     static void main(final String... args) {

@@ -68,7 +68,7 @@ public interface Universities extends Dataset {
             .description(map(entry(EN, "Background information about EC2U allied universities.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(LICENSE))
+            .license(set(CCBYNCND40))
             .issued(LocalDate.parse("2022-01-01"));
 
     static void main(final String... args) {

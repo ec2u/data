@@ -41,7 +41,7 @@ public interface Persons extends Dataset {
             .description(map(entry(EN, "Staff involved in teaching and research activities at EC2U allied universities.")))
             .publisher(EC2U)
             .rights(COPYRIGHT)
-            .license(set(LICENSE));
+            .license(set(CCBYNCND40));
 
 
     static void main(final String... args) {

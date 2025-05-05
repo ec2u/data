@@ -28,30 +28,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.util.URIs.uri;
-
-import static eu.ec2u.data.Data.exec;
-import static java.util.Locale.ROOT;
-
 @Frame
 @Class("ec2u:")
 @Namespace(prefix="[dct]", value="http://purl.org/dc/terms/")
 public interface Collection extends Resource {
-
-    ReferenceFrame CCBYNCND40=new ReferenceFrame()
-            .id(uri("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
-            .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
-            .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
-
-
-    static void main(final String... args) {
-        exec(() -> service(store()).curate(CCBYNCND40));
-    }
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     default Map<Locale, String> label() {

@@ -32,9 +32,7 @@ import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.COPYRIGHT;
-import static eu.ec2u.data.EC2U.EC2U;
-import static eu.ec2u.data.resources.Collection.CCBYNCND40;
+import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
 
 public final class EC2UOrganizations implements Runnable {
