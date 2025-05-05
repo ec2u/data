@@ -1,31 +1,7 @@
 prefix schema: <https://schema.org/>
 
 
-#### Purge Stale Events ################################################################################################
-
-delete {
-
-    ?e ?p ?o.
-    ?s ?q ?e.
-
-} where {
-
-    ?e a schema:Event .
-
-    optional { ?e schema:startDate ?start }
-    optional { ?e schema:endDate ?end }
-
-    bind (coalesce(?end, ?start) as ?date)
-
-    filter (?date < now())
-
-    optional { ?e ?p ?o }
-    optional { ?s ?q ?e }
-
-};
-
-
-    #### Purge Unreferenced Resources ######################################################################################
+#### Purge Unreferenced Resources ######################################################################################
 
 delete {
 

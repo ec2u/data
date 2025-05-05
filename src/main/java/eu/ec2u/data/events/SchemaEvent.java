@@ -61,7 +61,8 @@ public interface SchemaEvent extends SchemaThing {
     ZonedDateTime endDate();
 
     default Duration duration() {
-        return startDate() == null || endDate() == null ? null : Duration.between(startDate(), endDate());
+        return startDate() == null || endDate() == null || startDate().compareTo(endDate()) >= 0 ?
+                null : Duration.between(startDate(), endDate());
     }
 
 

@@ -24,6 +24,7 @@ import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.tools.Store;
 import com.metreeca.mesh.util.Locales;
 
 import eu.ec2u.data.datasets.Dataset;
@@ -42,8 +43,13 @@ import java.util.function.Function;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.rdf.Values.guarded;
+import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.Value.zonedDateTime;
+import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Loggers.time;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -52,6 +58,8 @@ import static eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static java.lang.String.format;
+import static java.time.ZoneOffset.UTC;
 
 @Frame
 public interface Events extends Dataset {
@@ -102,20 +110,23 @@ public interface Events extends Dataset {
 
     final class Reaper implements Runnable {
 
+        private final Store store=service(store());
+
+
+        public static void main(final String... args) {
+            exec(() -> new Reaper().run());
+        }
+
+
         @Override public void run() {
 
-            // time(() -> Stream.of(text(resource(Events_.class, ".ul")))
-            //
-            //         .forEach(new Update()
-            //                 .base(BASE)
-            //                 .dflt(context)
-            //                 .insert(context)
-            //                 .remove(context)
-            //         )
-            //
-            // ).apply(elapsed -> service(logger()).info(Events.class, format(
-            //         "purged stale events from <%s> in <%d> ms", context, elapsed
-            // )));
+            time(() -> store.delete(value(query()
+                    .model(new EventFrame(true).id(uri()))
+                    .where("validDate", criterion().lt(zonedDateTime(LocalDate.now().atStartOfDay(UTC))))
+
+            ))).apply((elapsed, count) -> service(logger()).info(Events.class, format(
+                    "purged <%,d> stale events in <%d> ms", count, elapsed
+            )));
 
         }
 

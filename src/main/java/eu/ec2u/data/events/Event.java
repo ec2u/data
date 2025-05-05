@@ -21,6 +21,7 @@ import com.metreeca.flow.text.services.Translator;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Hidden;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.resources.Reference;
@@ -31,6 +32,7 @@ import eu.ec2u.data.taxonomies.EC2UStakeholders;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.ai.Embedder;
 
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -128,6 +130,19 @@ public interface Event extends Resource, SchemaEvent {
     @Override
     default Events collection() {
         return EVENTS;
+    }
+
+
+    /**
+     * Last validity dateTime.
+     *
+     * <p>Supports stale event {@linkplain Events.Reaper reaping}.</p>
+     *
+     * @return the latest between {@link #startDate()} and {@link #endDate()}
+     */
+    @Hidden
+    default ZonedDateTime validDate() {
+        return endDate() != null ? endDate() : startDate();
     }
 
 }
