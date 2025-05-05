@@ -21,7 +21,6 @@ import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
 
-import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -51,9 +50,6 @@ import static java.util.function.Predicate.not;
 
 public final class StoreEmbedder implements Embedder {
 
-    private static final String PARTITION="~embeddings";
-
-
     private static final String EMBEDDING="Embedding";
 
     private static final String STRING="string";
@@ -70,8 +66,6 @@ public final class StoreEmbedder implements Embedder {
     private final Embedder embedder;
 
     private int limit; // length limit for cached embeddings (short texts are likely to be repeating labels)
-    private URI partition=item(PARTITION);
-
 
     private final Store store=service(store());
     private final Logger logger=service(logger());
@@ -93,17 +87,6 @@ public final class StoreEmbedder implements Embedder {
         }
 
         this.limit=limit;
-
-        return this;
-    }
-
-    public StoreEmbedder partition(final URI partition) {
-
-        if ( partition == null ) {
-            throw new NullPointerException("null partition");
-        }
-
-        this.partition=partition;
 
         return this;
     }
@@ -138,7 +121,7 @@ public final class StoreEmbedder implements Embedder {
                 )))).or(() -> embedder.embed(t).map(embedding -> {
 
                     if ( limit == 0 || text.length() <= limit ) {
-                        store.partition(partition).insert(array(list(Stream
+                        store.curate(array(list(Stream
                                 .of(object(
                                         shape(EMBEDDING_SHAPE),
                                         id(item(uuid(t))),

@@ -35,7 +35,6 @@ import java.util.Optional;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.mesh.util.Collections.*;
 
-import static eu.ec2u.data.EC2U.EMBEDDINGS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.util.function.Predicate.not;
@@ -62,7 +61,7 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
             throw new NullPointerException("null topic");
         }
 
-        final StoreEmbedder embedder=new StoreEmbedder(service(embedder())).partition(EMBEDDINGS);
+        final StoreEmbedder embedder=new StoreEmbedder(service(embedder()));
 
         return Optional.ofNullable(embeddable(topic))
                 .filter(not(String::isBlank))

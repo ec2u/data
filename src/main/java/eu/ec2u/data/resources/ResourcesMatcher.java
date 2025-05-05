@@ -38,7 +38,6 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.stash;
 import static com.metreeca.mesh.util.URIs.uri;
 
-import static eu.ec2u.data.EC2U.EMBEDDINGS;
 import static eu.ec2u.data.resources.Resources.RESOURCES;
 import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.util.function.Predicate.not;
@@ -52,11 +51,8 @@ final class ResourcesMatcher {
     private static final Map<URI, VectorIndex<URI>> INDICES=new ConcurrentHashMap<>();
 
     private static final ThreadLocal<Embedder> EMMBEDER=ThreadLocal.withInitial(() -> new CacheEmbedder(
-                    new StoreEmbedder(service(embedder()))
-                            .partition(EMBEDDINGS)
-                            .limit(CACHING_SIZE_LIMIT)
-            )
-    );
+            new StoreEmbedder(service(embedder())).limit(CACHING_SIZE_LIMIT)
+    ));
 
 
     static Stream<URI> match(final URI collection, final String query, final double threshold) {

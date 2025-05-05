@@ -45,7 +45,7 @@ public interface Organizations extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(ORGANIZATIONS.id()).clear().insert(ORGANIZATIONS));
+        exec(() -> service(store()).curate(ORGANIZATIONS));
     }
 
 

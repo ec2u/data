@@ -26,9 +26,10 @@ import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.EC2UOrganizations;
+import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.TopicFrame;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,11 +39,12 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.*;
 import static eu.ec2u.data.universities.University.POITIERS;
@@ -51,9 +53,6 @@ import static java.lang.String.join;
 import static java.util.Locale.ROOT;
 
 public final class UnitsPoitiers implements Runnable {
-
-    private static final URI CONTEXT=UNITS.id().resolve("poitiers");
-
 
     public static void main(final String... args) {
         exec(() -> new UnitsPoitiers().run());
@@ -68,12 +67,16 @@ public final class UnitsPoitiers implements Runnable {
                          +"/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"
                          +"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
 
-        service(store()).partition(CONTEXT).clear().insert(array(list(Stream.of(url)
+        service(store()).curate(
 
-                .flatMap(this::units)
-                .flatMap(this::unit)
+                array(list(Stream.of(url)
+                        .flatMap(this::units)
+                        .flatMap(this::unit)
+                )),
 
-        )));
+                value(query(new UnitFrame(true)).where("university", criterion().any(POITIERS)))
+
+        );
     }
 
 
@@ -158,7 +161,7 @@ public final class UnitsPoitiers implements Runnable {
     private Stream<TopicFrame> classification(final Value json) {
         return json.get("type_de_structure").string().stream()
                 .distinct()
-                .flatMap(topic -> Resources.match(EC2U_ORGANIZATIONS, topic, TYPE_THRESHOLD))
+                .flatMap(topic -> Resources.match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), topic, TYPE_THRESHOLD))
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(1);
     }
@@ -166,7 +169,7 @@ public final class UnitsPoitiers implements Runnable {
     private Stream<TopicFrame> subject(final Value json) {
         return json.select("domaine_scientifique.*").strings()
                 .distinct()
-                .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD))
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(1);
     }

@@ -28,6 +28,7 @@ import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.ai.Embedder;
@@ -48,7 +49,6 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.VIRTUAL_INSTITUTE;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.units.Units.UNITS;
 import static java.util.Locale.ROOT;
@@ -217,7 +217,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     private static UnitFrame classify(final UnitFrame unit) {
         return unit.subject().isEmpty() ? unit.subject(set(Resources
-                .match(EUROSCIVOC, embeddable(unit), SUBJECT_THRESHOLD)
+                .match(EuroSciVoc.EUROSCIVOC.id(), embeddable(unit), SUBJECT_THRESHOLD)
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(1)
         )) : unit;
@@ -233,7 +233,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(UNITS.id()).insert(array(
+        exec(() -> service(store()).curate(array(
 
                 GLADE(),
                 VIQE(),

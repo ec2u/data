@@ -18,7 +18,6 @@ package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.work.Xtream;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -26,6 +25,9 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -36,10 +38,8 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 public final class EC2UDocuments implements Runnable {
 
-    public static final URI EC2U_DOCUMENTS=Taxonomies.TAXONOMIES.id().resolve("documents");
-
-    private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(EC2U_DOCUMENTS)
+    public static final TaxonomyFrame EC2U_DOCUMENTS=new TaxonomyFrame()
+            .id(Taxonomies.TAXONOMIES.id().resolve("documents"))
             .title(map(entry(EN, "EC2U Document Types")))
             .alternative(map(entry(EN, "EC2U Documents")))
             .description(map(entry(EN, """
@@ -59,16 +59,22 @@ public final class EC2UDocuments implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(EC2U_DOCUMENTS).clear().insert(array(list(Xtream.from(
+        service(store()).curate(
 
-                Stream.of(
-                        TAXONOMY
-                ),
+                array(list(Xtream.from(
 
-                Stream.of(resource(EC2UDocuments.class, ".csv").toString())
-                        .flatMap(new Taxonomy.Loader(TAXONOMY))
+                        Stream.of(
+                                EC2U_DOCUMENTS
+                        ),
 
-        ))));
+                        Stream.of(resource(EC2UDocuments.class, ".csv").toString())
+                                .flatMap(new Taxonomy.Loader(EC2U_DOCUMENTS))
+
+                ))),
+
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_DOCUMENTS)))
+
+        );
     }
 
 }

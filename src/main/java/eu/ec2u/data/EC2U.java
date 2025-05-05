@@ -60,7 +60,7 @@ public final class EC2U extends Delegator {
 
 
     public static void main(final String... args) {
-        exec(() -> service(store()).insert(EC2U));
+        exec(() -> service(store()).curate(EC2U));
     }
 
 

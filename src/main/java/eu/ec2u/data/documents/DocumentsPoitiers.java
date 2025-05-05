@@ -19,23 +19,21 @@ package eu.ec2u.data.documents;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.mesh.tools.Store;
 
-import eu.ec2u.data.universities.University;
-
-import java.net.URI;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.documents.Documents.DOCUMENTS;
+import static eu.ec2u.data.universities.University.POITIERS;
 
 public final class DocumentsPoitiers implements Runnable {
-
-    private static final URI CONTEXT=DOCUMENTS.id().resolve("poitiers");
 
     private static final String DATA_URL="documents-poitiers-url"; // vault label
 
@@ -56,11 +54,10 @@ public final class DocumentsPoitiers implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        store.partition(CONTEXT).clear().insert(array(list(Stream.of(url)
-
-                .flatMap(new Documents.Loader(University.POITIERS))
-
-        )));
+        store.curate(
+                array(list(Stream.of(url).flatMap(new Documents.Loader(POITIERS)))),
+                value(query(new DocumentFrame(true)).where("university", criterion().any(POITIERS)))
+        );
     }
 
 }

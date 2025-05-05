@@ -23,7 +23,6 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
 
-import java.net.URI;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -58,8 +57,6 @@ import static java.util.stream.Collectors.toSet;
 
 public final class StoreTranslator implements Translator {
 
-    private static final String PARTITION="~translations";
-
     private static final int LENGTH_LIMIT=7*1024;
 
 
@@ -76,22 +73,8 @@ public final class StoreTranslator implements Translator {
 
     private final Translator translator;
 
-    private URI partition=item(PARTITION);
-
     private final Store store=service(store());
     private final Logger logger=service(logger());
-
-
-    public StoreTranslator partition(final URI partition) {
-
-        if ( partition == null ) {
-            throw new NullPointerException("null partition");
-        }
-
-        this.partition=partition;
-
-        return this;
-    }
 
 
     public StoreTranslator(final Translator translator) {
@@ -158,7 +141,7 @@ public final class StoreTranslator implements Translator {
 
                 )))).or(() -> translator.translate(text, source, target).map(translation -> {
 
-                    store.partition(partition).insert(array(list(Stream
+                    store.curate(array(list(Stream
                             .of(object(
                                     shape(TRANSLATION_SHAPE),
                                     id(item(uuid("- %s\n-%s\n".formatted(text, translation)))),

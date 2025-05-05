@@ -47,7 +47,7 @@ public interface Collection extends Resource {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).insert(CCBYNCND40));
+        exec(() -> service(store()).curate(CCBYNCND40));
     }
 
 

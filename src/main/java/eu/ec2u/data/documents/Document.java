@@ -32,6 +32,8 @@ import eu.ec2u.data.resources.Localized;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.EC2UDocuments;
+import eu.ec2u.data.taxonomies.EC2UStakeholders;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.ai.Embedder;
@@ -49,8 +51,6 @@ import static com.metreeca.mesh.util.Collections.set;
 
 import static eu.ec2u.data.documents.Documents.DOCUMENTS;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.EC2UDocuments.EC2U_DOCUMENTS;
-import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 
 @Frame
 @Class("ec2u:")
@@ -98,7 +98,7 @@ public interface Document extends Resource {
 
     private static DocumentFrame type(final DocumentFrame document) {
         return document.type().isEmpty() ? document.type(set(Resources
-                .match(EC2U_DOCUMENTS, embeddable(document), TYPE_THRESHOLD)
+                .match(EC2UDocuments.EC2U_DOCUMENTS.id(), embeddable(document), TYPE_THRESHOLD)
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(3)
         )) : document;
@@ -110,7 +110,7 @@ public interface Document extends Resource {
 
     private static DocumentFrame audience(final DocumentFrame document) {
         return document.audience().isEmpty() ? document.audience(set(Resources
-                .match(EC2U_STAKEHOLDERS, embeddable(document), AUDIENCE_THRESHOLD)
+                .match(EC2UStakeholders.EC2U_STAKEHOLDERS.id(), embeddable(document), AUDIENCE_THRESHOLD)
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(1)
         )) : document;

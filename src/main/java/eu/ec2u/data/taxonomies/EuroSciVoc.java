@@ -35,6 +35,9 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.ANY;
 import static com.metreeca.mesh.util.URIs.uri;
@@ -42,6 +45,7 @@ import static com.metreeca.mesh.util.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.LOCALES;
+import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 import static eu.ec2u.work.Rover.rover;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
@@ -59,13 +63,7 @@ import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
  */
 public final class EuroSciVoc implements Runnable {
 
-    public static final URI EUROSCIVOC=Taxonomies.TAXONOMIES.id().resolve("euroscivoc");
-
-
     private static final String VERSION="1.5";
-
-    private static final String EXTERNAL="http://data.europa.eu/8mn/euroscivoc/";
-    private static final String INTERNAL=EUROSCIVOC+"/";
 
     private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
                                     +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution%2Feuroscivoc%2F20241002-0%2Fttl%2Fskos_xl%2FEuroSciVoc.ttl"
@@ -76,8 +74,8 @@ public final class EuroSciVoc implements Runnable {
             .id(uri("https://op.europa.eu/"))
             .prefLabel(map(entry(EN, "Publications Office of the European Union")));
 
-    private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(EUROSCIVOC)
+    public static final TaxonomyFrame EUROSCIVOC=new TaxonomyFrame()
+            .id(TAXONOMIES.id().resolve("euroscivoc"))
             .version(VERSION)
             .title(map(entry(EN, "European Science Vocabulary")))
             .alternative(map(entry(EN, "EuroSciVoc")))
@@ -96,6 +94,10 @@ public final class EuroSciVoc implements Runnable {
                     )));
 
 
+    private static final String EXTERNAL="http://data.europa.eu/8mn/euroscivoc/";
+    private static final String INTERNAL=EUROSCIVOC.id()+"/";
+
+
     public static void main(final String... args) {
         exec(() -> new EuroSciVoc().run());
     }
@@ -109,10 +111,12 @@ public final class EuroSciVoc implements Runnable {
 
     @Override
     public void run() {
-        store.partition(EUROSCIVOC).clear().insert(array(list(Xtream.from(
+        store.curate(
+
+                array(list(Xtream.from(
 
                 Stream.of(
-                        TAXONOMY,
+                        EUROSCIVOC,
                         EU_PUBLICATION_OFFICE
                 ),
 
@@ -134,9 +138,9 @@ public final class EuroSciVoc implements Runnable {
                                 .id(adopt(id))
                                 .generated(true)
                                 .isDefinedBy(id)
-                                .inScheme(TAXONOMY)
+                                .inScheme(EUROSCIVOC)
                                 .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
-                                        .uri().map(v -> TAXONOMY).orElse(null)
+                                        .uri().map(v -> EUROSCIVOC).orElse(null)
                                 )
                                 .notation(concept.forward(SKOS.NOTATION)
                                         .string().orElse(null)
@@ -158,7 +162,11 @@ public final class EuroSciVoc implements Runnable {
                         .map(this::define)
                         .optMap(Topic::review)
 
-        ))));
+                ))),
+
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EUROSCIVOC)))
+
+        );
     }
 
 

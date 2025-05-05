@@ -25,25 +25,24 @@ import com.metreeca.mesh.Valuable;
 import eu.ec2u.data.organizations.OrganizationFrame;
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
 
-import java.net.URI;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.events.Event.review;
-import static eu.ec2u.data.events.Events.EVENTS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.PAVIA;
 import static java.util.Map.entry;
 
 public final class EventsPaviaUniversity implements Runnable {
-
-    private static final URI CONTEXT=EVENTS.id().resolve("pavia/university");
 
     private static final OrganizationFrame PUBLISHER=new OrganizationFrame()
 
@@ -68,17 +67,23 @@ public final class EventsPaviaUniversity implements Runnable {
 
     @Override
     public void run() {
-        service(store()).partition(CONTEXT).clear().insert(array(list(Stream
+        service(store()).curate(
 
-                .of("https://www.unipv.news/eventi")
-                .flatMap(this::events)
+                array(list(Stream
 
-                .skip(10)
-                .limit(1) // !!!
+                        .of("https://www.unipv.news/eventi")
+                        .flatMap(this::events)
 
-                .flatMap(this::event)
+                        .skip(10)
+                        .limit(1) // !!!
 
-        )));
+                        .flatMap(this::event)
+
+                )),
+
+                value(query(new EventFrame(true)).where("university", criterion().any(PAVIA)))
+
+        );
     }
 
 

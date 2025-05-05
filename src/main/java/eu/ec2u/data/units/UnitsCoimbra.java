@@ -31,12 +31,13 @@ import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.EC2UOrganizations;
+import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.Parsers;
 
-import java.net.URI;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -46,23 +47,23 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.PT;
-import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
+import static eu.ec2u.data.universities.University.COIMBRA;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
 
 public final class UnitsCoimbra implements Runnable {
-
-    private static final URI CONTEXT=Units.UNITS.id().resolve("coimbra");
 
     private static final String APIUrl="units-coimbra-url";
     private static final String APIKey="units-coimbra-key";
@@ -81,12 +82,16 @@ public final class UnitsCoimbra implements Runnable {
 
     @Override
     public void run() {
-        service(store()).partition(CONTEXT).clear().insert(array(list(Xtream.of(Instant.EPOCH)
+        service(store()).curate(
 
-                .flatMap(this::units)
-                .flatMap(this::unit)
+                array(list(Xtream.of(Instant.EPOCH)
+                        .flatMap(this::units)
+                        .flatMap(this::unit)
+                )),
 
-        )));
+                value(query(new UnitFrame(true)).where("university", criterion().any(COIMBRA)))
+
+        );
     }
 
 
@@ -172,7 +177,7 @@ public final class UnitsCoimbra implements Runnable {
                 .unitOf(set(University.COIMBRA))
 
                 .classification(set(json.get("type_en").string()
-                        .flatMap(type -> Resources.match(EC2U_ORGANIZATIONS, type))
+                        .flatMap(type -> Resources.match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), type))
                         .map(uri -> new TopicFrame(true).id(uri))
                         .stream()
                 ))
@@ -227,13 +232,13 @@ public final class UnitsCoimbra implements Runnable {
     private Optional<Topic> sector(final Value json) {
         return json.get("knowledge_branch_en").string()
                 .or(() -> json.get("knowledge_branch_pt").string())
-                .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD).findFirst())
+                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD).findFirst())
                 .map(uri -> new TopicFrame(true).id(uri));
     }
 
     private Stream<Topic> subjects(final Value json) {
         return json.select("topics.*.name_en").strings()
-                .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD))
                 .map(uri -> new TopicFrame(true).id(uri));
     }
 

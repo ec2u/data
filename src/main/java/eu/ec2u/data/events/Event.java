@@ -26,6 +26,8 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.EC2UEvents;
+import eu.ec2u.data.taxonomies.EC2UStakeholders;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.ai.Embedder;
 
@@ -40,8 +42,6 @@ import static com.metreeca.mesh.util.Collections.set;
 
 import static eu.ec2u.data.events.Events.EVENTS;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.EC2UEvents.EC2U_EVENTS;
-import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static java.util.function.Predicate.not;
 
 @Frame
@@ -86,7 +86,7 @@ public interface Event extends Resource, SchemaEvent {
         return event.about(Optional.ofNullable(event.about())
                 .filter(not(Set::isEmpty))
                 .orElseGet(() -> set(Resources
-                        .match(EC2U_EVENTS, embeddable(event), ABOUT_THRESHOLD)
+                        .match(EC2UEvents.EC2U_EVENTS.id(), embeddable(event), ABOUT_THRESHOLD)
                         .map(uri -> new TopicFrame(true).id(uri))
                         .limit(1)
                 ))
@@ -97,7 +97,7 @@ public interface Event extends Resource, SchemaEvent {
         return event.about(Optional.ofNullable(event.about())
                 .filter(not(Set::isEmpty))
                 .orElseGet(() -> set(Resources
-                        .match(EC2U_STAKEHOLDERS, embeddable(event), AUDIENCE_THRESHOLD)
+                        .match(EC2UStakeholders.EC2U_STAKEHOLDERS.id(), embeddable(event), AUDIENCE_THRESHOLD)
                         .map(uri -> new TopicFrame(true).id(uri))
                         .limit(1)
                 ))

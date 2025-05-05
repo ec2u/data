@@ -25,6 +25,7 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.things.SchemaOrganization;
 import eu.ec2u.work.ai.Embedder;
@@ -39,7 +40,6 @@ import static com.metreeca.mesh.util.Collections.*;
 
 import static eu.ec2u.data.organizations.Organizations.ORGANIZATIONS;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
 import static java.util.function.Predicate.not;
 
 @Frame
@@ -79,7 +79,7 @@ public interface Organization extends Resource, OrgOrganization, SchemaOrganizat
 
     private static OrganizationFrame classification(final OrganizationFrame document) {
         return document.classification().isEmpty() ? document.classification(set(Resources
-                .match(EC2U_ORGANIZATIONS, embeddable(document), CLASSIFICATIOION_THRESHOLD)
+                .match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), embeddable(document), CLASSIFICATIOION_THRESHOLD)
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(3)
         )) : document;

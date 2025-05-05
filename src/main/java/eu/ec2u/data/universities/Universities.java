@@ -42,6 +42,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Strings.fill;
@@ -109,59 +110,65 @@ public interface Universities extends Dataset {
                     .toList()
             );
 
-            service(store()).partition(UNIVERSITIES.id()).clear().insert(array(list(Stream.concat(
+            service(store()).curate(
 
-                    Stream.of(UNIVERSITIES),
+                    array(list(Stream.concat(
 
-                    universities.stream().flatMap(university -> {
+                            Stream.of(UNIVERSITIES),
 
-                        final Rover focus=wikidata.focus(university.seeAlso().stream().findFirst().orElseThrow());
-                        final Rover city=focus.forward(term("city"));
-                        final Rover country=focus.forward(term("country"));
+                            universities.stream().flatMap(university -> {
 
-                        final Optional<Wikidata.Point> coordinates=focus
-                                .forward(term("coordinates"))
-                                .lexical()
-                                .flatMap(Wikidata::point);
+                                final Rover focus=wikidata.focus(university.seeAlso().stream().findFirst().orElseThrow());
+                                final Rover city=focus.forward(term("city"));
+                                final Rover country=focus.forward(term("country"));
 
-                        final Optional<Wikidata.Point> cityCoordinates=city
-                                .forward(term("coordinates"))
-                                .lexical()
-                                .flatMap(Wikidata::point);
+                                final Optional<Wikidata.Point> coordinates=focus
+                                        .forward(term("coordinates"))
+                                        .lexical()
+                                        .flatMap(Wikidata::point);
 
-                        final Optional<Wikidata.Point> countyCoordinates=country
-                                .forward(term("coordinates"))
-                                .lexical()
-                                .flatMap(Wikidata::point);
+                                final Optional<Wikidata.Point> cityCoordinates=city
+                                        .forward(term("coordinates"))
+                                        .lexical()
+                                        .flatMap(Wikidata::point);
 
-                        final GeoReferenceFrame cityFrame=new GeoReferenceFrame()
-                                .id(city.uri().orElse(null))
-                                .label(city.forward(term("name")).texts().orElse(null))
-                                .longitude(cityCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
-                                .latitude(cityCoordinates.map(Wikidata.Point::latitude).orElse(0.0D));
+                                final Optional<Wikidata.Point> countyCoordinates=country
+                                        .forward(term("coordinates"))
+                                        .lexical()
+                                        .flatMap(Wikidata::point);
 
-                        final GeoReferenceFrame countryFrame=new GeoReferenceFrame()
-                                .id(country.uri().orElse(null))
-                                .label(country.forward(term("name")).texts().orElse(null))
-                                .longitude(countyCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
-                                .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D));
+                                final GeoReferenceFrame cityFrame=new GeoReferenceFrame()
+                                        .id(city.uri().orElse(null))
+                                        .label(city.forward(term("name")).texts().orElse(null))
+                                        .longitude(cityCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
+                                        .latitude(cityCoordinates.map(Wikidata.Point::latitude).orElse(0.0D));
 
-                        final UniversityFrame universityFrame=university
-                                .students(focus.forward(term("students")).integral().map(Long::intValue).orElse(0))
-                                .inception(focus.forward(term("inception")).year().orElse(null))
-                                .longitude(coordinates.map(Wikidata.Point::longitude).orElse(0.0D))
-                                .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
-                                .city(cityFrame)
-                                .country(countryFrame);
+                                final GeoReferenceFrame countryFrame=new GeoReferenceFrame()
+                                        .id(country.uri().orElse(null))
+                                        .label(country.forward(term("name")).texts().orElse(null))
+                                        .longitude(countyCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
+                                        .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D));
 
-                        return Stream.of(
-                                universityFrame,
-                                cityFrame,
-                                countryFrame
-                        );
-                    })
+                                final UniversityFrame universityFrame=university
+                                        .students(focus.forward(term("students")).integral().map(Long::intValue).orElse(0))
+                                        .inception(focus.forward(term("inception")).year().orElse(null))
+                                        .longitude(coordinates.map(Wikidata.Point::longitude).orElse(0.0D))
+                                        .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
+                                        .city(cityFrame)
+                                        .country(countryFrame);
 
-            ))));
+                                return Stream.of(
+                                        universityFrame,
+                                        cityFrame,
+                                        countryFrame
+                                );
+                            })
+
+                    ))),
+
+                    value(query(new UniversityFrame(true)))
+
+            );
 
         }));
     }

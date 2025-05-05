@@ -18,7 +18,6 @@ package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.work.Xtream;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -26,6 +25,9 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -37,11 +39,8 @@ import static eu.ec2u.data.resources.Localized.EN;
 
 public final class EC2UOrganizations implements Runnable {
 
-    public static final URI EC2U_ORGANIZATIONS=Taxonomies.TAXONOMIES.id().resolve("organizations");
-
-
-    private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(EC2U_ORGANIZATIONS)
+    public static final TaxonomyFrame EC2U_ORGANIZATIONS=new TaxonomyFrame()
+            .id(Taxonomies.TAXONOMIES.id().resolve("organizations"))
             .title(map(entry(EN, "EC2U Organization Types")))
             .alternative(map(entry(EN, "EC2U Organizations")))
             .description(map(entry(EN, """
@@ -54,31 +53,31 @@ public final class EC2UOrganizations implements Runnable {
 
 
     public static final TopicFrame UNIVERSITY=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS+"/university"
+            EC2U_ORGANIZATIONS.id()+"/university"
     ));
 
     public static final TopicFrame INSTITUTE=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS+"/university-unit/institute"
+            EC2U_ORGANIZATIONS.id()+"/university-unit/institute"
     ));
 
     public static final TopicFrame VIRTUAL_INSTITUTE=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS+"/university-unit/institute/virtual"
+            EC2U_ORGANIZATIONS.id()+"/university-unit/institute/virtual"
     ));
 
     public static final TopicFrame DEPARTMENT=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS+"/university-unit/department"
+            EC2U_ORGANIZATIONS.id()+"/university-unit/department"
     ));
 
     public static final TopicFrame SERVICE_CENTRE=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS+"/university-unit/centre/service"
+            EC2U_ORGANIZATIONS.id()+"/university-unit/centre/service"
     ));
 
     public static final TopicFrame INTERDEPARTMENTAL_RESEARCH_CENTRE=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS+"/university-unit/centre/research/interdepartmental"
+            EC2U_ORGANIZATIONS.id()+"/university-unit/centre/research/interdepartmental"
     ));
 
     public static final TopicFrame RECOGNIZED_GROUP=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS+"/university-unit/group/recognized"
+            EC2U_ORGANIZATIONS.id()+"/university-unit/group/recognized"
     ));
 
 
@@ -90,16 +89,22 @@ public final class EC2UOrganizations implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(EC2U_ORGANIZATIONS).clear().insert(array(list(Xtream.from(
+        service(store()).curate(
 
-                Stream.of(
-                        TAXONOMY
-                ),
+                array(list(Xtream.from(
 
-                Stream.of(resource(EC2UOrganizations.class, ".csv").toString())
-                        .flatMap(new Taxonomy.Loader(TAXONOMY))
+                        Stream.of(
+                                EC2U_ORGANIZATIONS
+                        ),
 
-        ))));
+                        Stream.of(resource(EC2UOrganizations.class, ".csv").toString())
+                                .flatMap(new Taxonomy.Loader(EC2U_ORGANIZATIONS))
+
+                ))),
+
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_ORGANIZATIONS)))
+
+        );
     }
 
 }

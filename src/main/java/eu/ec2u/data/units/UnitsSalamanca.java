@@ -29,6 +29,7 @@ import com.metreeca.mesh.util.URIs;
 
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.Parsers;
 import org.apache.commons.csv.CSVFormat;
@@ -47,13 +48,15 @@ import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.toolkits.Strings.split;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.*;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.universities.University.SALAMANCA;
@@ -125,12 +128,16 @@ public final class UnitsSalamanca implements Runnable {
 
 
     @Override public void run() {
-        service(store()).partition(CONTEXT).clear().insert(array(list(Stream.of(Instant.EPOCH)
+        service(store()).curate(
 
+                array(list(Stream.of(Instant.EPOCH)
                 .flatMap(this::units)
                 .flatMap(this::unit)
+                )),
 
-        )));
+                value(query(new UnitFrame(true)).where("university", criterion().any(SALAMANCA)))
+
+        );
     }
 
 
@@ -197,12 +204,12 @@ public final class UnitsSalamanca implements Runnable {
 
                         json.get("knowledge_branch").string().stream()
                                 .flatMap(v -> split(v, "[,;]"))
-                                .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD).findFirst().stream())
+                                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD).findFirst().stream())
                                 .map(uri -> new TopicFrame(true).id(uri)),
 
                         json.get("RIS3").string().stream()
                                 .flatMap(v -> split(v, "[,;]"))
-                                .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD).findFirst().stream())
+                                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD).findFirst().stream())
                                 .map(uri -> new TopicFrame(true).id(uri))
 
                 )))

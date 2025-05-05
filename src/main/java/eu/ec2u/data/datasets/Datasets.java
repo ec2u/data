@@ -50,7 +50,7 @@ public interface Datasets extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(DATASETS.id()).clear().insert(DATASETS));
+        exec(() -> service(store()).curate(DATASETS));
     }
 
 

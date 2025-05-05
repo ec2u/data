@@ -70,7 +70,7 @@ public interface Events extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(EVENTS.id()).clear().insert(EVENTS));
+        exec(() -> service(store()).curate(EVENTS));
     }
 
 

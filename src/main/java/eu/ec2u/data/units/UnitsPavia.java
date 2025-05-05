@@ -37,20 +37,21 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.rdf.Values.guarded;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.units.Unit.review;
+import static eu.ec2u.data.universities.University.PAVIA;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
-
-    private static final URI CONTEXT=Units.UNITS.id().resolve("pavia");
-
 
     private record Catalog(
             URI url,
@@ -82,28 +83,34 @@ public final class UnitsPavia implements Runnable {
 
 
     @Override public void run() {
-        service(store()).partition(CONTEXT).clear().insert(array(list(Xtream
+        service(store()).curate(
 
-                .of(
-                        new Catalog(
-                                uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti"),
-                                EC2UOrganizations.DEPARTMENT
-                        ),
-                        new Catalog(
-                                uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo"),
-                                EC2UOrganizations.SERVICE_CENTRE
-                        ),
-                        new Catalog(
-                                uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali"),
-                                EC2UOrganizations.INTERDEPARTMENTAL_RESEARCH_CENTRE
+                array(list(Xtream
+
+                        .of(
+                                new Catalog(
+                                        uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti"),
+                                        EC2UOrganizations.DEPARTMENT
+                                ),
+                                new Catalog(
+                                        uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo"),
+                                        EC2UOrganizations.SERVICE_CENTRE
+                                ),
+                                new Catalog(
+                                        uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali"),
+                                        EC2UOrganizations.INTERDEPARTMENTAL_RESEARCH_CENTRE
+                                )
                         )
-                )
 
-                .flatMap(this::catalog)
-                .map(this::details)
-                .optMap(unit -> review(unit, University.PAVIA.locale()))
+                        .flatMap(this::catalog)
+                        .map(this::details)
+                        .optMap(unit -> review(unit, University.PAVIA.locale()))
 
-        )));
+                )),
+
+                value(query(new UnitFrame(true)).where("university", criterion().any(PAVIA)))
+
+        );
     }
 
 

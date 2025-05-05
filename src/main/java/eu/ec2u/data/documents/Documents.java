@@ -75,7 +75,7 @@ public interface Documents extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(DOCUMENTS.id()).clear().insert(DOCUMENTS));
+        exec(() -> service(store()).curate(DOCUMENTS));
     }
 
 

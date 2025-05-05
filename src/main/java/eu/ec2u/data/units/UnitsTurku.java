@@ -17,23 +17,23 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.flow.services.Vault;
+import com.metreeca.mesh.tools.Store;
 
-import eu.ec2u.data.universities.University;
-
-import java.net.URI;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.universities.University.TURKU;
 
 public final class UnitsTurku implements Runnable {
-
-    private static final URI CONTEXT=Units.UNITS.id().resolve("turku");
 
     private static final String DATA_URL="units-turku-url"; // vault label
 
@@ -45,6 +45,7 @@ public final class UnitsTurku implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Store store=service(store());
     private final Vault vault=service(vault());
 
 
@@ -52,12 +53,10 @@ public final class UnitsTurku implements Runnable {
 
         final String url=vault.get(DATA_URL);
 
-        service(store()).partition(CONTEXT).insert(array(list(Stream.of(url)
-
-                .flatMap(new Units.Loader(University.TURKU))
-
-        )));
+        store.curate(
+                array(list(Stream.of(url).flatMap(new Units.Loader(TURKU)))),
+                value(query(new UnitFrame(true)).where("university", criterion().any(TURKU)))
+        );
     }
-
 
 }

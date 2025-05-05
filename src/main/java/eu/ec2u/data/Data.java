@@ -111,7 +111,7 @@ public final class Data extends Delegator {
                 ))
 
                 .set(translator(), () -> new CacheTranslator(
-                        new StoreTranslator(new GCPTranslator()).partition(DATA.resolve("~translations"))
+                        new StoreTranslator(new GCPTranslator())
                 ));
 
     }

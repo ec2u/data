@@ -21,7 +21,6 @@ import com.metreeca.flow.work.Xtream;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -29,6 +28,9 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -48,15 +50,12 @@ import static eu.ec2u.data.resources.Localized.EN;
  */
 public final class SDGs implements Runnable {
 
-    private static final URI SDGS=Taxonomies.TAXONOMIES.id().resolve("sdgs");
-
-
     private static final OrgOrganizationFrame UNITED_NATIONS=new OrgOrganizationFrame()
             .id(uri("http://un.org/"))
             .prefLabel(map(entry(EN, "United Nations")));
 
-    private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(SDGS)
+    public static final TaxonomyFrame SDGS=new TaxonomyFrame()
+            .id(Taxonomies.TAXONOMIES.id().resolve("sdgs"))
             .title(map(entry(EN, "United Nations Sustainable Development Goals")))
             .alternative(map(entry(EN, "UN SDGs")))
             .description(map(entry(EN, """
@@ -91,17 +90,23 @@ public final class SDGs implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(SDGS).clear().insert(array(list(Xtream.from(
+        service(store()).curate(
+
+                array(list(Xtream.from(
 
                 Stream.of(
-                        TAXONOMY,
+                        SDGS,
                         UNITED_NATIONS
                 ),
 
                 Stream.of(resource(SDGs.class, ".csv").toString())
-                        .flatMap(new Taxonomy.Loader(TAXONOMY))
+                        .flatMap(new Taxonomy.Loader(SDGS))
 
-        ))));
+                ))),
+
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(SDGS)))
+
+        );
     }
 
 }

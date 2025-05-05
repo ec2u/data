@@ -21,7 +21,6 @@ import com.metreeca.flow.work.Xtream;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -29,11 +28,15 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.value;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 
 /**
  * International Standard Classification of Education 2011 (ISCED 2011) SKOS Concept Scheme.
@@ -47,14 +50,12 @@ import static eu.ec2u.data.resources.Localized.EN;
  */
 public final class ISCED2011 implements Runnable {
 
-    private static final URI ISCED2011=Taxonomies.TAXONOMIES.id().resolve("isced-2011");
-
     private static final OrgOrganizationFrame UNESCO_INSTITUTE_FOR_STATISTICS=new OrgOrganizationFrame()
             .id(uri("http://www.uis.unesco.org/"))
             .prefLabel(map(entry(EN, "UNESCO Institute for Statistics")));
 
-    private static final TaxonomyFrame TAXONOMY=new TaxonomyFrame()
-            .id(ISCED2011)
+    private static final TaxonomyFrame ISCED2011=new TaxonomyFrame()
+            .id(TAXONOMIES.id().resolve("isced-2011"))
             .title(map(entry(EN, "International Standard Classification of Education 2011")))
             .alternative(map(entry(EN, "ISCED 2011")))
             .description(map(entry(EN, """
@@ -82,17 +83,23 @@ public final class ISCED2011 implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override public void run() {
-        service(store()).partition(ISCED2011).clear().insert(array(list(Xtream.from(
+        service(store()).curate(
 
-                Stream.of(
-                        TAXONOMY,
-                        UNESCO_INSTITUTE_FOR_STATISTICS
-                ),
+                array(list(Xtream.from(
 
-                Stream.of(resource(ISCED2011.class, ".csv").toString())
-                        .flatMap(new Taxonomy.Loader(TAXONOMY))
+                        Stream.of(
+                                ISCED2011,
+                                UNESCO_INSTITUTE_FOR_STATISTICS
+                        ),
 
-        ))));
+                        Stream.of(resource(ISCED2011.class, ".csv").toString())
+                                .flatMap(new Taxonomy.Loader(ISCED2011))
+
+                ))),
+
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(ISCED2011)))
+
+        );
     }
 
 }

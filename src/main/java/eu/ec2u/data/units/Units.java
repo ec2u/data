@@ -31,6 +31,8 @@ import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.EC2UOrganizations;
+import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
@@ -52,8 +54,6 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
@@ -81,7 +81,7 @@ public interface Units extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).partition(UNITS.id()).clear().insert(UNITS));
+        exec(() -> service(store()).curate(UNITS));
     }
 
 
@@ -240,7 +240,7 @@ public interface Units extends Dataset {
 
         private Stream<TopicFrame> classification(final CSVRecord record) {
             return value(record, "Type")
-                    .flatMap(type2 -> Resources.match(EC2U_ORGANIZATIONS, type2))
+                    .flatMap(type2 -> Resources.match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), type2))
                     .map(uri -> new TopicFrame(true).id(uri))
                     .stream();
         }
@@ -249,7 +249,7 @@ public interface Units extends Dataset {
             return Stream.concat(
 
                     value(record, "Sector")
-                            .flatMap(type -> Resources.match(EUROSCIVOC, type))
+                            .flatMap(type -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), type))
                             .map(uri -> new TopicFrame(true).id(uri))
                             .stream(),
 
@@ -260,7 +260,7 @@ public interface Units extends Dataset {
                             )
                             .flatMap(topics -> Arrays.stream(topics.split(";")))
                             .distinct()
-                            .flatMap(topic -> Resources.match(EUROSCIVOC, topic, SUBJECT_THRESHOLD))
+                            .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD))
                             .map(uri -> new TopicFrame(true).id(uri))
                             .limit(1)
 
