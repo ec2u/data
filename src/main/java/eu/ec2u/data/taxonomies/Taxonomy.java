@@ -48,6 +48,7 @@ public interface Taxonomy extends Collection, SKOSConceptScheme<Taxonomy, Topic>
         return Taxonomies.TAXONOMIES;
     }
 
+
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     final class Loader extends CSVProcessor<TopicFrame> {

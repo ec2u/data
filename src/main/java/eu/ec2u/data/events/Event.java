@@ -51,8 +51,8 @@ import static java.util.function.Predicate.not;
 @Namespace("[ec2u]")
 public interface Event extends Resource, SchemaEvent {
 
-    double ABOUT_THRESHOLD=0.4;
-    double AUDIENCE_THRESHOLD=0.4;
+    double ABOUT_THRESHOLD=0.6;
+    double AUDIENCE_THRESHOLD=0.6;
 
 
     static Optional<EventFrame> review(final EventFrame event, final Locale source) {

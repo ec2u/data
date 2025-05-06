@@ -24,6 +24,7 @@ import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
 
 import static java.lang.String.format;
+import static java.util.Map.Entry.comparingByValue;
 
 public final class VectorIndex<V> {
 
@@ -61,8 +62,8 @@ public final class VectorIndex<V> {
 
         return entries.entrySet().stream()
                 .map(entry -> entry(entry.getKey(), Vector.cosine(query, entry.getValue())))
-                .sorted(Entry.<V, Double>comparingByValue().reversed())
-                .filter(e -> e.getValue() >= threshold)
+                .sorted(comparingByValue())
+                .filter(e -> threshold == 0 || e.getValue() <= threshold)
                 .map(Entry::getKey);
     }
 

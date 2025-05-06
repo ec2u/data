@@ -60,7 +60,7 @@ final class ResourcesMatcher {
         final Store store=service(store());
         final Embedder embedder=EMMBEDER.get();
 
-        final VectorIndex<URI> index=INDICES.computeIfAbsent(collection, t -> new VectorIndex<URI>(store
+        final VectorIndex<URI> index=INDICES.computeIfAbsent(collection, t -> new VectorIndex<>(store
 
                 .retrieve(new ResourcesFrame(true).id(RESOURCES.id()).members(stash(query()
 

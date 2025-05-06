@@ -45,7 +45,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Organization extends Resource, OrgOrganization, SchemaOrganization {
 
-    double CLASSIFICATIOION_THRESHOLD=0.4;
+    double CLASSIFICATIOION_THRESHOLD=0.6;
 
 
     static Optional<OrganizationFrame> review(final OrganizationFrame document, final Locale source) {

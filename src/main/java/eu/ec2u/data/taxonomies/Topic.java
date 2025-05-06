@@ -55,7 +55,7 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
     }
 
 
-    static TopicFrame index(final TopicFrame topic) {
+    private static TopicFrame index(final TopicFrame topic) {
 
         if ( topic == null ) {
             throw new NullPointerException("null topic");
@@ -71,7 +71,7 @@ public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
                 .orElse(topic);
     }
 
-    static String embeddable(final Topic topic) {
+    private static String embeddable(final Topic topic) {
         return Embedder.embeddable(set(Xtream.from(
                 Optional.ofNullable(topic.prefLabel().get(EN)).stream(),
                 Optional.ofNullable(topic.altLabel().get(EN)).stream().flatMap(Collection::stream),

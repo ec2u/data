@@ -62,8 +62,8 @@ import static java.util.Locale.ROOT;
 @Frame
 public interface Units extends Dataset {
 
-    double TYPE_THRESHOLD=0.25;
-    double SUBJECT_THRESHOLD=0.25;
+    double TYPE_THRESHOLD=0.6;
+    double SUBJECT_THRESHOLD=0.6;
 
 
     UnitsFrame UNITS=new UnitsFrame()

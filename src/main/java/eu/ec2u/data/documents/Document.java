@@ -61,9 +61,9 @@ public interface Document extends Resource {
     int TITLE_LENGTH=500;
     int DESCRIPTION_LENGTH=5000;
 
-    double TYPE_THRESHOLD=0.4;
-    double SUBJECT_THRESHOLD=0.4;
-    double AUDIENCE_THRESHOLD=0.4;
+    double TYPE_THRESHOLD=0.6;
+    double SUBJECT_THRESHOLD=0.6;
+    double AUDIENCE_THRESHOLD=0.6;
 
 
     static Optional<DocumentFrame> review(final DocumentFrame document, final Locale source) {

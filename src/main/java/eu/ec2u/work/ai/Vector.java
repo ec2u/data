@@ -58,6 +58,12 @@ public final class Vector {
     }
 
 
+    /**
+     * @param x
+     * @param y
+     *
+     * @return the cosine distance between {@code x} and {@code y}
+     */
     public static double cosine(final Vector x, final Vector y) {
 
         if ( x == null ) {
@@ -86,7 +92,15 @@ public final class Vector {
             ynorm+=yi*yi;
         }
 
-        return dot/(sqrt(xnorm)*sqrt(ynorm));
+        if ( xnorm == 0 ) {
+            throw new IllegalArgumentException("zero-length x vector");
+        }
+
+        if ( ynorm == 0 ) {
+            throw new IllegalArgumentException("zero-length y vector");
+        }
+
+        return 1-dot/(sqrt(xnorm)*sqrt(ynorm));
     }
 
 
