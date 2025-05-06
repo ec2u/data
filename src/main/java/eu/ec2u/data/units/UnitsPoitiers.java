@@ -16,11 +16,11 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.json.JSONPath;
-import com.metreeca.http.json.formats.JSON;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.json.JSONPath;
+import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;

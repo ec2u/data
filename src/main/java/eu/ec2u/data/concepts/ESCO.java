@@ -16,12 +16,12 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.http.rdf4j.actions.GraphQuery;
-import com.metreeca.http.rdf4j.actions.Update;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.rdf4j.services.Graph;
-import com.metreeca.http.services.Logger;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.rdf4j.actions.GraphQuery;
+import com.metreeca.flow.rdf4j.actions.Update;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.rdf4j.services.Graph;
+import com.metreeca.flow.services.Logger;
+import com.metreeca.flow.work.Xtream;
 
 import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.model.IRI;
@@ -41,11 +41,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.formats.RDF.rdf;
+import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.toolkits.Resources.resource;
+import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;

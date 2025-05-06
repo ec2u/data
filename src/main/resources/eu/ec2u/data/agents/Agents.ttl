@@ -12,6 +12,6 @@
     dct:alternative "EC2U Agents"@en ;
     dct:description "Background information about EC2U organizations and people."@en ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:rights "Copyright © 2022-2025 EC2U Alliance" ;
     void:rootResource foaf:Agent ;
     rdfs:isDefinedBy </datasets/agents> .

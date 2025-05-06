@@ -16,12 +16,12 @@
 
 package eu.ec2u.data.things;
 
-import com.metreeca.http.rdf.Frame;
+import com.metreeca.flow.rdf.Frame;
 
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import static com.metreeca.http.rdf.Frame.frame;
-import static com.metreeca.http.rdf.Shift.Seq.seq;
+import static com.metreeca.flow.rdf.Frame.frame;
+import static com.metreeca.flow.rdf.Shift.Seq.seq;
 
 import static eu.ec2u.data.EC2U.item;
 

@@ -16,13 +16,13 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.json.JSONPath;
-import com.metreeca.http.json.services.Analyzer;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.work.Xtream;
-import com.metreeca.http.xml.actions.Untag;
-import com.metreeca.http.xml.formats.HTML;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.json.JSONPath;
+import com.metreeca.flow.json.services.Analyzer;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.xml.actions.Untag;
+import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.OrganizationTypes;
@@ -34,9 +34,9 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.json.services.Analyzer.analyzer;
-import static com.metreeca.http.rdf.Values.guarded;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.services.Analyzer.analyzer;
+import static com.metreeca.flow.rdf.Values.guarded;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;

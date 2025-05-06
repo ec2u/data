@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.http.rdf4j.services.Graph;
-import com.metreeca.http.toolkits.Strings;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.rdf4j.services.Graph;
+import com.metreeca.flow.toolkits.Strings;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.EC2U;
@@ -42,9 +42,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf4j.services.Graph.graph;
-import static com.metreeca.http.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf4j.services.Graph.graph;
+import static com.metreeca.flow.toolkits.Formats.ISO_LOCAL_DATE_COMPACT;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;

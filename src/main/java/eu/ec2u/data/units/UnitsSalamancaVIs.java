@@ -16,10 +16,10 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.csv.formats.CSV;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.csv.formats.CSV;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.link.Frame;
 
 import org.apache.commons.csv.CSVFormat;
@@ -30,8 +30,8 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.stream.Stream;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;

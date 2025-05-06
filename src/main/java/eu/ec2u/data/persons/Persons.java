@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.persons;
 
-import com.metreeca.http.handlers.Delegator;
+import com.metreeca.flow.handlers.Delegator;
 import com.metreeca.link.Shape;
 
 import org.eclipse.rdf4j.model.IRI;

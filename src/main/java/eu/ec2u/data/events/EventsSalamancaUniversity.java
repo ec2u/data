@@ -16,13 +16,13 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.http.actions.Fill;
-import com.metreeca.http.actions.GET;
-import com.metreeca.http.ical.formats.iCal;
-import com.metreeca.http.toolkits.Identifiers;
-import com.metreeca.http.toolkits.Strings;
-import com.metreeca.http.work.Xtream;
-import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.flow.actions.Fill;
+import com.metreeca.flow.actions.GET;
+import com.metreeca.flow.ical.formats.iCal;
+import com.metreeca.flow.toolkits.Identifiers;
+import com.metreeca.flow.toolkits.Strings;
+import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.Data;
@@ -40,8 +40,8 @@ import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalQueries;
 import java.util.Optional;
 
-import static com.metreeca.http.toolkits.Identifiers.AbsoluteIRIPattern;
-import static com.metreeca.http.toolkits.Strings.TextLength;
+import static com.metreeca.flow.toolkits.Identifiers.AbsoluteIRIPattern;
+import static com.metreeca.flow.toolkits.Strings.TextLength;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.update;

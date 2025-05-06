@@ -24,6 +24,7 @@ data-ai {
     align-items: center;
     justify-content: space-between;
 
+    font-weight: 700;
     color: red;
 
     & > span:first-child {

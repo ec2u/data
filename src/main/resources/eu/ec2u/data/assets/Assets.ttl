@@ -10,7 +10,7 @@
     dct:alternative "EC2U Assets"@en ;
     dct:description "Knowledge sharing assets managed by the EC2U Knowledge Hub."@en ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
-    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:rights "" ;
     void:rootResource ec2u:Asset ;
     rdfs:isDefinedBy </datasets/assets> .
 

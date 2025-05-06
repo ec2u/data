@@ -16,22 +16,21 @@
 
 package eu.ec2u.data;
 
-import com.metreeca.http.Locator;
-import com.metreeca.http.Request;
-import com.metreeca.http.gcp.GCPServer;
-import com.metreeca.http.gcp.services.GCPTranslator;
-import com.metreeca.http.gcp.services.GCPVault;
-import com.metreeca.http.handlers.*;
-import com.metreeca.http.openai.services.OpenAnalyzer;
-import com.metreeca.http.rdf4j.handlers.Graphs;
-import com.metreeca.http.rdf4j.handlers.SPARQL;
-import com.metreeca.http.rdf4j.services.Graph;
-import com.metreeca.http.rdf4j.services.GraphTranslator;
-import com.metreeca.http.services.Cache.FileCache;
-import com.metreeca.http.services.Fetcher.CacheFetcher;
-import com.metreeca.http.services.Fetcher.URLFetcher;
-import com.metreeca.http.services.Translator.CacheTranslator;
-import com.metreeca.http.services.Translator.ComboTranslator;
+import com.metreeca.flow.Locator;
+import com.metreeca.flow.Request;
+import com.metreeca.flow.gcp.GCPServer;
+import com.metreeca.flow.gcp.services.GCPTranslator;
+import com.metreeca.flow.gcp.services.GCPVault;
+import com.metreeca.flow.handlers.*;
+import com.metreeca.flow.openai.services.OpenAnalyzer;
+import com.metreeca.flow.rdf4j.handlers.Graphs;
+import com.metreeca.flow.rdf4j.handlers.SPARQL;
+import com.metreeca.flow.rdf4j.services.Graph;
+import com.metreeca.flow.services.Cache.FileCache;
+import com.metreeca.flow.services.Fetcher.CacheFetcher;
+import com.metreeca.flow.services.Fetcher.URLFetcher;
+import com.metreeca.flow.services.Translator.CacheTranslator;
+import com.metreeca.flow.services.Translator.ComboTranslator;
 
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
@@ -39,19 +38,19 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import java.net.URI;
 import java.nio.file.Paths;
 
-import static com.metreeca.http.Handler.handler;
-import static com.metreeca.http.Locator.path;
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.Response.SeeOther;
-import static com.metreeca.http.json.services.Analyzer.analyzer;
-import static com.metreeca.http.jsonld.formats.JSONLD.codec;
-import static com.metreeca.http.jsonld.formats.JSONLD.store;
-import static com.metreeca.http.rdf4j.services.Graph.graph;
-import static com.metreeca.http.services.Cache.cache;
-import static com.metreeca.http.services.Fetcher.fetcher;
-import static com.metreeca.http.services.Logger.Level.debug;
-import static com.metreeca.http.services.Translator.translator;
-import static com.metreeca.http.services.Vault.vault;
+import static com.metreeca.flow.Handler.handler;
+import static com.metreeca.flow.Locator.path;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.Response.SeeOther;
+import static com.metreeca.flow.json.services.Analyzer.analyzer;
+import static com.metreeca.flow.jsonld.formats.JSONLD.codec;
+import static com.metreeca.flow.jsonld.formats.JSONLD.store;
+import static com.metreeca.flow.rdf4j.services.Graph.graph;
+import static com.metreeca.flow.services.Cache.cache;
+import static com.metreeca.flow.services.Fetcher.fetcher;
+import static com.metreeca.flow.services.Logger.Level.debug;
+import static com.metreeca.flow.services.Translator.translator;
+import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.link.json.JSON.json;
 import static com.metreeca.link.rdf4j.RDF4J.rdf4j;
 
@@ -95,7 +94,7 @@ public final class Data extends Delegator {
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
 
                 .set(translator(), () -> new CacheTranslator(new ComboTranslator(
-                        new GraphTranslator(),
+                        // !!! new GraphTranslator(),
                         new GCPTranslator()
                 )));
 

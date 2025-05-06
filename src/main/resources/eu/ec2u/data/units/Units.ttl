@@ -15,7 +15,7 @@
     dct:description
         "Identifying and background information about research and innovation units and supporting structures at EC2U allied universities."@en ;
     dct:publisher <https://ec2u.eu/> ;
-    dct:rights "Copyright © 2022-2024 EC2U Alliance" ;
+    dct:rights "Copyright © 2022-2025 EC2U Alliance" ;
     dct:license <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
     dct:issued "2022-01-01"^^xsd:date ;
     void:rootResource ec2u:Unit ;
@@ -25,7 +25,7 @@
     dct:issued "2024-01-01"^^xsd:date ;
     dct:title "EC2U Research Unit Topics"@en ;
     dct:description "> [!WARNING]\n> To be migrated to [EuroSCiVoc](euroscivoc)"@en ;
-    dct:rights "Copyright © 2022-2024 EC2U Alliance" .
+    dct:rights "Copyright © 2022-2025 EC2U Alliance" .
 
 
 #### ;( include to prevent SHACL validaton errors during bootstrap #####################################################

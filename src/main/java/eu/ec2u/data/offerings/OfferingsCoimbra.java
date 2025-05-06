@@ -16,17 +16,17 @@
 
 package eu.ec2u.data.offerings;
 
-import com.metreeca.http.actions.Fetch;
-import com.metreeca.http.actions.Fill;
-import com.metreeca.http.actions.Parse;
-import com.metreeca.http.actions.Query;
-import com.metreeca.http.formats.Text;
-import com.metreeca.http.json.JSONPath;
-import com.metreeca.http.json.formats.JSON;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.services.Vault;
-import com.metreeca.http.toolkits.Strings;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.actions.Fetch;
+import com.metreeca.flow.actions.Fill;
+import com.metreeca.flow.actions.Parse;
+import com.metreeca.flow.actions.Query;
+import com.metreeca.flow.formats.Text;
+import com.metreeca.flow.json.JSONPath;
+import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.services.Vault;
+import com.metreeca.flow.toolkits.Strings;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.concepts.ISCED2011;
@@ -49,12 +49,12 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.Request.POST;
-import static com.metreeca.http.Request.query;
-import static com.metreeca.http.services.Logger.logger;
-import static com.metreeca.http.services.Vault.vault;
-import static com.metreeca.http.toolkits.Strings.lenient;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.Request.POST;
+import static com.metreeca.flow.Request.query;
+import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.services.Vault.vault;
+import static com.metreeca.flow.toolkits.Strings.lenient;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.Data.exec;

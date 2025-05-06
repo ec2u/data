@@ -16,14 +16,14 @@
 
 package eu.ec2u.data.concepts;
 
-import com.metreeca.http.rdf4j.actions.Upload;
+import com.metreeca.flow.rdf4j.actions.Upload;
 
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.stream.Stream;
 
-import static com.metreeca.http.rdf.formats.RDF.rdf;
-import static com.metreeca.http.toolkits.Resources.resource;
+import static com.metreeca.flow.rdf.formats.RDF.rdf;
+import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;

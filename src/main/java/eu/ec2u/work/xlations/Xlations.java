@@ -16,10 +16,10 @@
 
 package eu.ec2u.work.xlations;
 
-import com.metreeca.http.rdf4j.actions.TupleQuery;
-import com.metreeca.http.rdf4j.actions.Upload;
-import com.metreeca.http.services.Translator;
-import com.metreeca.http.work.Xtream;
+import com.metreeca.flow.rdf4j.actions.TupleQuery;
+import com.metreeca.flow.rdf4j.actions.Upload;
+import com.metreeca.flow.services.Translator;
+import com.metreeca.flow.work.Xtream;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -29,12 +29,12 @@ import org.eclipse.rdf4j.model.Statement;
 import java.util.Collection;
 import java.util.List;
 
-import static com.metreeca.http.Locator.service;
-import static com.metreeca.http.rdf.Values.literal;
-import static com.metreeca.http.rdf.Values.statement;
-import static com.metreeca.http.services.Translator.translator;
-import static com.metreeca.http.toolkits.Resources.resource;
-import static com.metreeca.http.toolkits.Resources.text;
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.rdf.Values.literal;
+import static com.metreeca.flow.rdf.Values.statement;
+import static com.metreeca.flow.services.Translator.translator;
+import static com.metreeca.flow.toolkits.Resources.resource;
+import static com.metreeca.flow.toolkits.Resources.text;
 
 import static eu.ec2u.data.Data.exec;
 import static java.util.Map.entry;

@@ -16,7 +16,7 @@
 
 package eu.ec2u.data.persons;
 
-import com.metreeca.http.toolkits.Strings;
+import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.universities.University;
@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.http.toolkits.Strings.normalize;
+import static com.metreeca.flow.toolkits.Strings.normalize;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;

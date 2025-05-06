@@ -16,7 +16,7 @@
 
 package eu.ec2u.work.feeds;
 
-import com.metreeca.http.xml.actions.Untag;
+import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.link.Frame;
 
 import eu.ec2u.data.events.Events;
@@ -27,8 +27,8 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import java.util.Optional;
 
-import static com.metreeca.http.toolkits.Strings.TextLength;
-import static com.metreeca.http.toolkits.Strings.clip;
+import static com.metreeca.flow.toolkits.Strings.TextLength;
+import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.link.Frame.*;
 
 import static eu.ec2u.data.EC2U.item;
