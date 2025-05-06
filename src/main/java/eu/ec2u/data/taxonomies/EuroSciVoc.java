@@ -134,8 +134,6 @@ public final class EuroSciVoc implements Runnable {
                                         .split()
                                 )
 
-                                .parallel()
-
                                 .optMap(concept -> concept.uri().map(id -> new TopicFrame()
                                         .id(adopt(id))
                                         .generated(true)

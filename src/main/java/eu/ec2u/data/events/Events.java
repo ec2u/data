@@ -191,8 +191,8 @@ public interface Events extends Dataset {
                             - title
                             - plain text summary of strictly less 500 characters with strictly no markdown formatting
                             - complete descriptive text as included in the document in markdown format; make absolutely
-                              sure to exclude the document title and other ancillary matters like page headers, footers,
-                              and navigation sections
+                              sure not to include the document title in the description and to ignore other ancillary matters
+                              such as page headers, footers, and navigation sections
                             - start date in ISO format
                             - start time in ISO format without seconds
                             - end date in ISO format
@@ -204,6 +204,7 @@ public interface Events extends Dataset {
                             - venue street address
                             - venue city name
                             - image URL
+                            - image credits or copyright
                             - major topic
                             - intended audience
                             - language as guessed from the description as a 2-letter ISO tag
@@ -261,6 +262,9 @@ public interface Events extends Dataset {
                                   "imageURL": {
                                     "type": "string",
                                     "format": "uri"
+                                  },
+                                  "imageCredits": {
+                                    "type": "string"
                                   },
                                   "topic": {
                                     "type": "string"
@@ -491,12 +495,12 @@ public interface Events extends Dataset {
 
 
         private Optional<SchemaImageObjectFrame> image(final Value json, final URI base) {
-            return json.get("imageURL")
-                    .string()
+            return json.get("imageURL").string()
                     .map(guarded(base::resolve))
                     .map(uri -> new SchemaImageObjectFrame()
                             .id(uri)
                             .url(set(uri))
+                            .copyrightNotice(json.get("imageCredits").string().orElse(null))
                     );
         }
 

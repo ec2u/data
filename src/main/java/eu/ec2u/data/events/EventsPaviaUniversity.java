@@ -69,8 +69,7 @@ public final class EventsPaviaUniversity implements Runnable {
                 .flatMap(this::events)
 
                 .sorted()
-                .skip(1)
-                .limit(4)
+                .limit(10)
 
                 .flatMap(this::event)
 

@@ -48,8 +48,8 @@ export const Event=immutable({
 	image: optional({
 		id: required(id),
 		url: required(id),
-		author: optional(string),
-		description: optional(text)
+		description: optional(text),
+		copyrightNotice: optional(string)
 	}),
 
 	startDate: optional(dateTime),
@@ -329,12 +329,12 @@ export function DataEvent() {
 					}}
                 />
 
-				{image.author && <figcaption style={{
+				{image.copyrightNotice && <figcaption style={{
 					marginTop: "0.75em",
 					textAlign: "right",
 					fontStyle: "italic",
 					fontSize: "90%"
-				}}>Photo by {image.author}</figcaption>}
+				}}>{image.copyrightNotice}</figcaption>}
 
             </figure>}
 

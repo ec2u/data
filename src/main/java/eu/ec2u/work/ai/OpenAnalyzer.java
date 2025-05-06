@@ -198,6 +198,8 @@ public final class OpenAnalyzer implements Analyzer {
 
                 logger.warning(this, e.getMessage());
 
+                e.printStackTrace(); // !!!
+
                 return Optional.<Value>empty();
 
             }
