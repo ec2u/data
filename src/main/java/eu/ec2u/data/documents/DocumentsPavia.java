@@ -55,8 +55,8 @@ public final class DocumentsPavia implements Runnable {
         final String url=vault.get(DATA_URL);
 
         store.modify(
-                array(list(Stream.of(url).flatMap(new Documents.Loader(PAVIA)))),
-                value(query(new DocumentFrame(true)).where("university", criterion().any(PAVIA)))
+                value(query(new DocumentFrame(true)).where("university", criterion().any(PAVIA))),
+                array(list(Stream.of(url).flatMap(new Documents.Loader(PAVIA))))
         );
     }
 

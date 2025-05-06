@@ -59,6 +59,8 @@ public final class EC2UDocuments implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_DOCUMENTS))),
+
                 array(list(Xtream.from(
 
                         Stream.of(
@@ -68,9 +70,7 @@ public final class EC2UDocuments implements Runnable {
                         Stream.of(resource(EC2UDocuments.class, ".csv").toString())
                                 .flatMap(new Taxonomy.Loader(EC2U_DOCUMENTS))
 
-                ))),
-
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_DOCUMENTS)))
+                )))
 
         );
     }

@@ -55,8 +55,8 @@ public final class DocumentsCoimbra implements Runnable {
         final String url=vault.get(DATA_URL);
 
         store.modify(
-                array(list(Stream.of(url).flatMap(new Documents.Loader(COIMBRA)))),
-                value(query(new DocumentFrame(true)).where("university", criterion().any(COIMBRA)))
+                value(query(new DocumentFrame(true)).where("university", criterion().any(COIMBRA))),
+                array(list(Stream.of(url).flatMap(new Documents.Loader(COIMBRA))))
         );
     }
 

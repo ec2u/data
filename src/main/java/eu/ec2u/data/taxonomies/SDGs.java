@@ -92,6 +92,8 @@ public final class SDGs implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(SDGS))),
+
                 array(list(Xtream.from(
 
                 Stream.of(
@@ -102,9 +104,7 @@ public final class SDGs implements Runnable {
                 Stream.of(resource(SDGs.class, ".csv").toString())
                         .flatMap(new Taxonomy.Loader(SDGS))
 
-                ))),
-
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(SDGS)))
+                )))
 
         );
     }

@@ -130,12 +130,12 @@ public final class UnitsSalamanca implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
-                array(list(Stream.of(Instant.EPOCH)
-                .flatMap(this::units)
-                .flatMap(this::unit)
-                )),
+                value(query(new UnitFrame(true)).where("university", criterion().any(SALAMANCA))),
 
-                value(query(new UnitFrame(true)).where("university", criterion().any(SALAMANCA)))
+                array(list(Stream.of(Instant.EPOCH)
+                        .flatMap(this::units)
+                        .flatMap(this::unit)
+                ))
 
         );
     }

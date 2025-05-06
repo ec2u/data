@@ -85,6 +85,8 @@ public final class UnitsPavia implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
+                value(query(new UnitFrame(true)).where("university", criterion().any(PAVIA))),
+
                 array(list(Xtream
 
                         .of(
@@ -106,9 +108,7 @@ public final class UnitsPavia implements Runnable {
                         .map(this::details)
                         .optMap(unit -> review(unit, PAVIA.locale())) // !!! review after setting linked objects
 
-                )),
-
-                value(query(new UnitFrame(true)).where("university", criterion().any(PAVIA)))
+                ))
 
         );
     }

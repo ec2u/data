@@ -55,8 +55,8 @@ public final class DocumentsIasi implements Runnable {
         final String url=vault.get(DATA_URL);
 
         store.modify(
-                array(list(Stream.of(url).flatMap(new Documents.Loader(IASI)))),
-                value(query(new DocumentFrame(true)).where("university", criterion().any(IASI)))
+                value(query(new DocumentFrame(true)).where("university", criterion().any(IASI))),
+                array(list(Stream.of(url).flatMap(new Documents.Loader(IASI))))
         );
     }
 

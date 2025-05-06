@@ -54,8 +54,8 @@ public final class UnitsLinz implements Runnable {
         final String url=vault.get(DATA_URL);
 
         store.modify(
-                array(list(Stream.of(url).flatMap(new Units.Loader(LINZ)))),
-                value(query(new UnitFrame(true)).where("university", criterion().any(LINZ)))
+                value(query(new UnitFrame(true)).where("university", criterion().any(LINZ))),
+                array(list(Stream.of(url).flatMap(new Units.Loader(LINZ))))
         );
     }
 

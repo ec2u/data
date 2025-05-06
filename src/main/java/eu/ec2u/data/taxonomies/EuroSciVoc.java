@@ -113,58 +113,58 @@ public final class EuroSciVoc implements Runnable {
     public void run() {
         store.modify(
 
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EUROSCIVOC))),
+
                 array(list(Xtream.from(
 
-                Stream.of(
-                        EUROSCIVOC,
-                        EU_PUBLICATION_OFFICE
-                ),
+                        Stream.of(
+                                EUROSCIVOC,
+                                EU_PUBLICATION_OFFICE
+                        ),
 
-                Xtream.of(URL)
+                        Xtream.of(URL)
 
-                        .map(new Retrieve()
-                                .format(TURTLE)
-                        )
-
-                        .flatMap(model -> rover(model)
-                                .focus(SKOS.CONCEPT)
-                                .reverse(RDF.TYPE)
-                                .split()
-                        )
-
-                        .parallel()
-
-                        .optMap(concept -> concept.uri().map(id -> new TopicFrame()
-                                .id(adopt(id))
-                                .generated(true)
-                                .isDefinedBy(id)
-                                .inScheme(EUROSCIVOC)
-                                .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
-                                        .uri().map(v -> EUROSCIVOC).orElse(null)
+                                .map(new Retrieve()
+                                        .format(TURTLE)
                                 )
-                                .notation(concept.forward(SKOS.NOTATION)
-                                        .string().orElse(null)
+
+                                .flatMap(model -> rover(model)
+                                        .focus(SKOS.CONCEPT)
+                                        .reverse(RDF.TYPE)
+                                        .split()
                                 )
-                                .prefLabel(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                        .texts(LOCALES).orElse(null)
-                                )
-                                .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                        .textsets(LOCALES).orElse(null)
-                                )
-                                .broader(set(concept.forward(SKOS.BROADER)
-                                        .uris().map(b -> new TopicFrame().id(adopt(b)))
+
+                                .parallel()
+
+                                .optMap(concept -> concept.uri().map(id -> new TopicFrame()
+                                        .id(adopt(id))
+                                        .generated(true)
+                                        .isDefinedBy(id)
+                                        .inScheme(EUROSCIVOC)
+                                        .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
+                                                .uri().map(v -> EUROSCIVOC).orElse(null)
+                                        )
+                                        .notation(concept.forward(SKOS.NOTATION)
+                                                .string().orElse(null)
+                                        )
+                                        .prefLabel(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
+                                                .texts(LOCALES).orElse(null)
+                                        )
+                                        .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
+                                                .textsets(LOCALES).orElse(null)
+                                        )
+                                        .broader(set(concept.forward(SKOS.BROADER)
+                                                .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                        ))
+                                        .broaderTransitive(set(concept.plus(SKOS.BROADER)
+                                                .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                        ))
                                 ))
-                                .broaderTransitive(set(concept.plus(SKOS.BROADER)
-                                        .uris().map(b -> new TopicFrame().id(adopt(b)))
-                                ))
-                        ))
 
-                        .map(this::define)
-                        .optMap(Topic::review)
+                                .map(this::define)
+                                .optMap(Topic::review)
 
-                ))),
-
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EUROSCIVOC)))
+                )))
 
         );
     }

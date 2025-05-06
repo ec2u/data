@@ -55,8 +55,8 @@ public final class DocumentsSalamanca implements Runnable {
         final String url=vault.get(DATA_URL);
 
         store.modify(
-                array(list(Stream.of(url).flatMap(new Documents.Loader(SALAMANCA)))),
-                value(query(new DocumentFrame(true)).where("university", criterion().any(SALAMANCA)))
+                value(query(new DocumentFrame(true)).where("university", criterion().any(SALAMANCA))),
+                array(list(Stream.of(url).flatMap(new Documents.Loader(SALAMANCA))))
         );
     }
 

@@ -143,7 +143,7 @@ public final class StoreTranslator implements Translator {
 
                 )))).or(() -> translator.translate(text, source, target).map(translation -> {
 
-                    store.modify(array(list(Stream
+                    store.insert(array(list(Stream
                             .of(object(
                                     shape(TRANSLATION_SHAPE),
                                     id(TRANSLATIONS.resolve(uuid("- %s\n-%s\n".formatted(text, translation)))),

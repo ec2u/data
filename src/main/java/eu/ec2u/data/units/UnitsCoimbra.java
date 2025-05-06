@@ -83,12 +83,12 @@ public final class UnitsCoimbra implements Runnable {
     public void run() {
         service(store()).modify(
 
+                value(query(new UnitFrame(true)).where("university", criterion().any(COIMBRA))),
+
                 array(list(Xtream.of(Instant.EPOCH)
                         .flatMap(this::units)
                         .flatMap(this::unit)
-                )),
-
-                value(query(new UnitFrame(true)).where("university", criterion().any(COIMBRA)))
+                ))
 
         );
     }

@@ -50,7 +50,7 @@ public interface Taxonomies extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).modify(TAXONOMIES));
+        exec(() -> service(store()).insert(TAXONOMIES));
     }
 
 

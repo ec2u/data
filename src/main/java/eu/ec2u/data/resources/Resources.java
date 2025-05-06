@@ -89,7 +89,7 @@ public interface Resources extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).modify(RESOURCES));
+        exec(() -> service(store()).insert(RESOURCES));
     }
 
 

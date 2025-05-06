@@ -68,15 +68,15 @@ public final class EventsPaviaUniversity implements Runnable {
     public void run() {
         service(store()).modify(
 
+                value(query(new EventFrame(true)).where("university", criterion().any(PAVIA))),
+
                 array(list(Stream
 
                         .of("https://www.unipv.news/eventi")
                         .flatMap(this::events)
                         .flatMap(this::event)
 
-                )),
-
-                value(query(new EventFrame(true)).where("university", criterion().any(PAVIA)))
+                ))
 
         );
     }

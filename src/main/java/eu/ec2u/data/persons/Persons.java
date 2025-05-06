@@ -45,7 +45,7 @@ public interface Persons extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).modify(PERSONS));
+        exec(() -> service(store()).insert(PERSONS));
     }
 
 

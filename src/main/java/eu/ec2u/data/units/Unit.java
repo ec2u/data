@@ -225,7 +225,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).modify(array(
+        exec(() -> service(store()).insert(array(
 
                 GLADE,
                 VIQE,

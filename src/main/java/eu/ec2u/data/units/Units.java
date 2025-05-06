@@ -82,7 +82,7 @@ public interface Units extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).modify(UNITS));
+        exec(() -> service(store()).insert(UNITS));
     }
 
 

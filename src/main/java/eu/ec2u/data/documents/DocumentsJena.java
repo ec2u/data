@@ -55,8 +55,8 @@ public final class DocumentsJena implements Runnable {
         final String url=vault.get(DATA_URL);
 
         store.modify(
-                array(list(Stream.of(url).flatMap(new Documents.Loader(JENA)))),
-                value(query(new DocumentFrame(true)).where("university", criterion().any(JENA)))
+                value(query(new DocumentFrame(true)).where("university", criterion().any(JENA))),
+                array(list(Stream.of(url).flatMap(new Documents.Loader(JENA))))
         );
     }
 }

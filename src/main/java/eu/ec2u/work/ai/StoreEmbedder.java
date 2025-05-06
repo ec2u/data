@@ -123,7 +123,7 @@ public final class StoreEmbedder implements Embedder {
                 )))).or(() -> embedder.embed(t).map(embedding -> {
 
                     if ( limit == 0 || text.length() <= limit ) {
-                        store.modify(array(list(Stream
+                        store.insert(array(list(Stream
                                 .of(object(
                                         shape(EMBEDDING_SHAPE),
                                         id(EMBEDDINGS.resolve(uuid(t))),

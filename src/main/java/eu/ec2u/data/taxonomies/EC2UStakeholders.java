@@ -59,6 +59,8 @@ public final class EC2UStakeholders implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_STAKEHOLDERS))),
+
                 array(list(Xtream.from(
 
                         Stream.of(
@@ -68,9 +70,7 @@ public final class EC2UStakeholders implements Runnable {
                         Stream.of(resource(EC2UStakeholders.class, ".csv").toString())
                                 .flatMap(new Taxonomy.Loader(EC2U_STAKEHOLDERS))
 
-                ))),
-
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_STAKEHOLDERS)))
+                )))
 
 
         );

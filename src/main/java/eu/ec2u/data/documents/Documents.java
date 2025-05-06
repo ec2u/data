@@ -75,7 +75,7 @@ public interface Documents extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).modify(DOCUMENTS));
+        exec(() -> service(store()).insert(DOCUMENTS));
     }
 
 

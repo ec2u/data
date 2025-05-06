@@ -85,6 +85,8 @@ public final class ISCED2011 implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(ISCED2011))),
+
                 array(list(Xtream.from(
 
                         Stream.of(
@@ -95,9 +97,7 @@ public final class ISCED2011 implements Runnable {
                         Stream.of(resource(ISCED2011.class, ".csv").toString())
                                 .flatMap(new Taxonomy.Loader(ISCED2011))
 
-                ))),
-
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(ISCED2011)))
+                )))
 
         );
     }

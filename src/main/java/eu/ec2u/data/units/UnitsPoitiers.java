@@ -69,12 +69,12 @@ public final class UnitsPoitiers implements Runnable {
 
         service(store()).modify(
 
+                value(query(new UnitFrame(true)).where("university", criterion().any(POITIERS))),
+
                 array(list(Stream.of(url)
                         .flatMap(this::units)
                         .flatMap(this::unit)
-                )),
-
-                value(query(new UnitFrame(true)).where("university", criterion().any(POITIERS)))
+                ))
 
         );
     }

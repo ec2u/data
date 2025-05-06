@@ -112,6 +112,8 @@ public interface Universities extends Dataset {
 
             service(store()).modify(
 
+                    value(query(new UniversityFrame(true))),
+
                     array(list(Stream.concat( // !!! University.review()
 
                             Stream.of(UNIVERSITIES),
@@ -164,9 +166,7 @@ public interface Universities extends Dataset {
                                 );
                             })
 
-                    ))),
-
-                    value(query(new UniversityFrame(true)))
+                    )))
 
             );
 
