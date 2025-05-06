@@ -30,9 +30,6 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.Value.value;
-import static com.metreeca.mesh.queries.Criterion.criterion;
-import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -66,23 +63,18 @@ public final class EventsPaviaUniversity implements Runnable {
 
     @Override
     public void run() {
-        service(store()).modify(
+        service(store()).insert(array(list(Stream
 
-                value(query(new EventFrame(true)).where("university", criterion().any(PAVIA))),
+                .of("https://www.unipv.news/eventi")
+                .flatMap(this::events)
 
-                array(list(Stream
+                .sorted()
+                .skip(1)
+                .limit(4)
 
-                        .of("https://www.unipv.news/eventi")
-                        .flatMap(this::events)
+                .flatMap(this::event)
 
-                        .skip(1)
-                        .limit(3)
-
-                        .flatMap(this::event)
-
-                ))
-
-        );
+        )));
     }
 
 

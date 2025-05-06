@@ -152,6 +152,7 @@ public interface Events extends Dataset {
         private final University university;
         private final OrganizationFrame publisher;
 
+        private final Store store=service(store());
         private final Analyzer analyzer=service(analyzer());
 
 
@@ -174,6 +175,13 @@ public interface Events extends Dataset {
         public Stream<Valuable> apply(final String url) {
             return Xtream.of(url)
 
+                    // ;( ignore all known URLs: Last-Modified and ETag headers are usually not consistent
+
+                    .filter(v -> store.retrieve(value(query()
+                            .model(new EventFrame())
+                            .where("url", criterion().any(Value.uri(uri(v))))
+                    )).isEmpty())
+
                     .optMap(new GET<>(new HTML()))
                     .map(new Untag())
 
@@ -182,9 +190,9 @@ public interface Events extends Dataset {
                             
                             - title
                             - plain text summary of strictly less 500 characters with strictly no markdown formatting
-                            - complete descriptive text as included in the document in markdown format; make sure to
-                              exclude the document title and other ancillary matters like page headers, footers, 
-                              and navigation sections 
+                            - complete descriptive text as included in the document in markdown format; make absolutely
+                              sure to exclude the document title and other ancillary matters like page headers, footers,
+                              and navigation sections
                             - start date in ISO format
                             - start time in ISO format without seconds
                             - end date in ISO format
