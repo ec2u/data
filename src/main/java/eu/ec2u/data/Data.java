@@ -39,6 +39,7 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.function.Supplier;
 
 import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
@@ -135,7 +136,11 @@ public final class Data extends Delegator {
     }
 
     public static void exec(final Runnable... tasks) {
-        services(new Locator()).exec(tasks).clear();
+        try ( final Locator locator=services(new Locator()) ) { locator.exec(tasks); }
+    }
+
+    public static <V> V exec(final Supplier<V> task) {
+        try ( final Locator locator=services(new Locator()) ) { return locator.exec(task); }
     }
 
 

@@ -74,6 +74,10 @@ public final class EventsPaviaUniversity implements Runnable {
 
                         .of("https://www.unipv.news/eventi")
                         .flatMap(this::events)
+
+                        .skip(1)
+                        .limit(3)
+
                         .flatMap(this::event)
 
                 ))

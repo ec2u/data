@@ -33,7 +33,10 @@ import com.metreeca.mesh.util.Locales;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.organizations.OrganizationFrame;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.things.SchemaImageObjectFrame;
+import eu.ec2u.data.things.SchemaThing;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.ai.Analyzer;
 
@@ -52,6 +55,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.rdf.Values.guarded;
 import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.Value.zonedDateTime;
 import static com.metreeca.mesh.queries.Criterion.criterion;
@@ -65,6 +69,8 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Event.review;
 import static eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.EC2UEvents.EC2U_EVENTS;
+import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.lang.String.format;
@@ -176,7 +182,9 @@ public interface Events extends Dataset {
                             
                             - title
                             - plain text summary of strictly less 500 characters with strictly no markdown formatting
-                            - complete descriptive text as included in the document in markdown format (don't include the title)
+                            - complete descriptive text as included in the document in markdown format; make sure to
+                              exclude the document title and other ancillary matters like page headers, footers, 
+                              and navigation sections 
                             - start date in ISO format
                             - start time in ISO format without seconds
                             - end date in ISO format
@@ -188,7 +196,8 @@ public interface Events extends Dataset {
                             - venue street address
                             - venue city name
                             - image URL
-                            - tags
+                            - major topic
+                            - intended audience
                             - language as guessed from the description as a 2-letter ISO tag
                             
                             Don't include properties if not defined in the document.
@@ -245,11 +254,11 @@ public interface Events extends Dataset {
                                     "type": "string",
                                     "format": "uri"
                                   },
-                                  "tags": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "string"
-                                    }
+                                  "topic": {
+                                    "type": "string"
+                                  },
+                                  "audience": {
+                                    "type": "string"
                                   },
                                   "language": {
                                     "type": "string",
@@ -285,8 +294,6 @@ public interface Events extends Dataset {
                         final Optional<String> venueName=venueName(json);
                         final Optional<String> venueAddress=venueAddress(json);
 
-                        final Optional<SchemaImageObjectFrame> image=image(json, uri);
-
                         final EventFrame event=new EventFrame()
 
                                 .generated(true)
@@ -296,7 +303,7 @@ public interface Events extends Dataset {
 
                                 .url(set(uri))
 
-                                .name(title(json, language).orElse(null))
+                                .name(name(json, language).orElse(null))
                                 .description(description(json, language).orElse(null))
                                 .disambiguatingDescription(disambiguatingDescription(json, language).orElse(null))
 
@@ -345,7 +352,11 @@ public interface Events extends Dataset {
                                 //
                                 // )
 
-                                ;
+                                .about(set(topic(json).stream()))
+                                .audience(set(audience(json).stream()));
+
+
+                        final Optional<SchemaImageObjectFrame> image=image(json, uri);
 
 
                         return Xtream.<Valuable>from(
@@ -378,21 +389,21 @@ public interface Events extends Dataset {
         }
 
 
-        private Optional<Map<Locale, String>> title(final Value json, final Locale language) {
-            return json.get("title")
-                    .string()
+        private Optional<Map<Locale, String>> name(final Value json, final Locale language) {
+            return json.get("title").string()
+                    .map(t -> clip(t, SchemaThing.NAME_LENGTH))
                     .map(t -> map(entry(language, t)));
         }
 
         private Optional<Map<Locale, String>> description(final Value json, final Locale language) {
-            return json.get("description")
-                    .string()
+            return json.get("description").string()
+                    .map(t -> clip(t, SchemaThing.DESCRIPTION_LENGTH))
                     .map(t -> map(entry(language, t)));
         }
 
         private Optional<Map<Locale, String>> disambiguatingDescription(final Value json, final Locale language) {
-            return json.get("summary")
-                    .string()
+            return json.get("summary").string()
+                    .map(t -> clip(t, SchemaThing.DISAMBIGUATING_DESCRIPTION_LENGTH))
                     .map(t -> map(entry(language, t)));
         }
 
@@ -479,6 +490,19 @@ public interface Events extends Dataset {
                             .id(uri)
                             .url(set(uri))
                     );
+        }
+
+
+        private Optional<TopicFrame> topic(final Value json) {
+            return json.get("topic").string()
+                    .flatMap(t -> Resources.match(EC2U_EVENTS.id(), t))
+                    .map(t -> new TopicFrame(true).id(t));
+        }
+
+        private Optional<TopicFrame> audience(final Value json) {
+            return json.get("audience").string()
+                    .flatMap(t -> Resources.match(EC2U_STAKEHOLDERS.id(), t))
+                    .map(t -> new TopicFrame(true).id(t));
         }
 
     }
