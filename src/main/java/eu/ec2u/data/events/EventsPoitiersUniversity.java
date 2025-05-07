@@ -36,27 +36,27 @@ import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.universities.University.PAVIA;
+import static eu.ec2u.data.universities.University.POITIERS;
 import static java.lang.String.format;
 import static java.util.Map.entry;
 
-public final class EventsPaviaUniversity implements Runnable {
+public final class EventsPoitiersUniversity implements Runnable {
 
     private static final OrganizationFrame PUBLISHER=new OrganizationFrame()
 
-            .id(uri("https://www.unipv.news/eventi"))
-            .university(PAVIA)
+            .id(uri("https://www.univ-poitiers.fr/c/actualites/"))
+            .university(POITIERS)
 
             .prefLabel(map(
-                    entry(EN, "University of Pavia / Events"),
-                    entry(PAVIA.locale(), "Università di Pavia / Eventi")
+                    entry(EN, "University of Poitiers / News and Events"),
+                    entry(POITIERS.locale(), "Université de Poitiers / Actualités et événements")
             ))
 
             .about(set(EC2UOrganizations.UNIVERSITY));
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsPaviaUniversity().run());
+        exec(() -> new EventsPoitiersUniversity().run());
     }
 
 
@@ -70,7 +70,7 @@ public final class EventsPaviaUniversity implements Runnable {
     public void run() {
         time(() -> store.insert(array(list(Xtream
 
-                .of(PUBLISHER.id().toString())
+                .of("https://www.univ-poitiers.fr/searchevents/")
 
                 .flatMap(home -> Xtream.of(home).crawl(url -> Xtream.of(url)
 
@@ -78,15 +78,15 @@ public final class EventsPaviaUniversity implements Runnable {
                         .map(XPath::new)
 
                         .map(path -> entry(
-                                path.links("//a[contains(concat(' ', normalize-space(@class), ' '), ' page-link ')]/@href"),
-                                path.links("//*[contains(concat(' ', normalize-space(@class), ' '), ' eventi-card ')]//a//@href")
+                                path.links("//div[@class='wp-pagenavi']//a/@href"),
+                                path.links("//li[@class='post']/a/@href")
                         ))
 
                 ))
 
-                .pipe(new Events.Scanner(PAVIA, PUBLISHER))
+                .pipe(new Events.Scanner(POITIERS, PUBLISHER))
 
-        )))).apply((elapsed, count) -> logger.info(EventsPaviaUniversity.class, format(
+        )))).apply((elapsed, count) -> logger.info(EventsPoitiersUniversity.class, format(
                 "inserted <%,d> resources in <%,d> ms", count, elapsed
         )));
     }
