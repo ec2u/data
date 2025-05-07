@@ -39,7 +39,6 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
-import java.util.function.Supplier;
 
 import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
@@ -136,12 +135,8 @@ public final class Data extends Delegator {
         new GCPServer().delegate(locator -> services(locator).get(Data::new)).start();
     }
 
-    public static void exec(final Runnable... tasks) {
-        try ( final Locator locator=services(new Locator()) ) { locator.exec(tasks); }
-    }
-
-    public static <V> V exec(final Supplier<V> task) {
-        try ( final Locator locator=services(new Locator()) ) { return locator.exec(task); }
+    public static void exec(final Runnable task) {
+        try ( final Locator locator=services(new Locator()) ) { locator.exec(task); }
     }
 
 

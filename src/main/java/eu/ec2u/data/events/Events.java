@@ -28,6 +28,7 @@ import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.util.Futures;
 import com.metreeca.mesh.util.Locales;
 
 import eu.ec2u.data.datasets.Dataset;
@@ -44,13 +45,11 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.rdf.Values.guarded;
@@ -147,13 +146,116 @@ public interface Events extends Dataset {
 
     }
 
-    final class Scanner implements Function<String, Stream<Valuable>> {
+    final class Scanner implements Function<Stream<String>, Stream<Valuable>> {
 
         private final University university;
         private final OrganizationFrame publisher;
 
         private final Store store=service(store());
-        private final Analyzer analyzer=service(analyzer());
+
+        private final Analyzer analyzer=service(analyzer()).prompt("""
+                Extract the following properties from the provided markdown document describing an academic event:
+                
+                - title
+                - plain text summary of strictly less 500 characters with strictly no markdown formatting
+                - complete descriptive text as included in the document in markdown format; make absolutely
+                  sure not to include the document title in the description and to ignore other ancillary matters
+                  such as page headers, footers, and navigation sections
+                - start date in ISO format
+                - start time in ISO format without seconds
+                - end date in ISO format
+                - end time in ISO format without seconds
+                - entry fees (free, paid)
+                - attendance mode (offline, online, mixed)
+                - attendance URL
+                - venue name
+                - venue street address
+                - venue city name
+                - image URL
+                - image credits or copyright
+                - major topic
+                - intended audience
+                - language as guessed from the description as a 2-letter ISO tag
+                
+                Don't include properties if not defined in the document.
+                Don't include empty properties.
+                Respond with a JSON object
+                """, """
+                {
+                  "name": "event",
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "summary": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "startDate": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "format": "time"
+                      },
+                      "endDate": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "format": "time"
+                      },
+                      "entryFees": {
+                        "type": "string"
+                      },
+                      "attendanceMode": {
+                        "type": "string"
+                      },
+                       "attendanceURL": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "venueName": {
+                        "type": "string"
+                      },
+                      "venueAddress": {
+                        "type": "string"
+                      },
+                      "imageURL": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "imageCredits": {
+                        "type": "string"
+                      },
+                      "topic": {
+                        "type": "string"
+                      },
+                      "audience": {
+                        "type": "string"
+                      },
+                      "language": {
+                        "type": "string",
+                        "pattern": "^[a-z]{2}$"
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "description",
+                      "start date",
+                      "language"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+                """
+        );
 
 
         Scanner(final University university, final OrganizationFrame publisher) {
@@ -172,122 +274,37 @@ public interface Events extends Dataset {
 
 
         @Override
-        public Stream<Valuable> apply(final String url) {
+        public Stream<Valuable> apply(final Stream<String> urls) {
+
+            return Futures
+                    .allOfItems(urls.map(url -> async(() -> Xtream.of(url)
+
+                            // ;( ignore all known URLs: Last-Modified and ETag headers are not reliable
+
+                            .filter(v -> store.retrieve(value(query()
+                                    .model(new EventFrame())
+                                    .where("url", criterion().any(Value.uri(uri(v))))
+                            )).isEmpty())
+
+                            .flatMap(this::event)
+
+                            // consume stream within async to ensure parallel processing
+
+                            .toList()
+
+                    )))
+                    .thenApply(s -> s.flatMap(Collection::stream))
+                    .join();
+
+        }
+
+
+        private Xtream<Valuable> event(final String url) {
             return Xtream.of(url)
-
-                    // ;( ignore all known URLs: Last-Modified and ETag headers are usually not consistent
-
-                    .filter(v -> store.retrieve(value(query()
-                            .model(new EventFrame())
-                            .where("url", criterion().any(Value.uri(uri(v))))
-                    )).isEmpty())
 
                     .optMap(new GET<>(new HTML()))
                     .map(new Untag())
-
-                    .optMap(analyzer.prompt("""
-                            Extract the following properties from the provided markdown document describing an academic event:
-                            
-                            - title
-                            - plain text summary of strictly less 500 characters with strictly no markdown formatting
-                            - complete descriptive text as included in the document in markdown format; make absolutely
-                              sure not to include the document title in the description and to ignore other ancillary matters
-                              such as page headers, footers, and navigation sections
-                            - start date in ISO format
-                            - start time in ISO format without seconds
-                            - end date in ISO format
-                            - end time in ISO format without seconds
-                            - entry fees (free, paid)
-                            - attendance mode (offline, online, mixed)
-                            - attendance URL
-                            - venue name
-                            - venue street address
-                            - venue city name
-                            - image URL
-                            - image credits or copyright
-                            - major topic
-                            - intended audience
-                            - language as guessed from the description as a 2-letter ISO tag
-                            
-                            Don't include properties if not defined in the document.
-                            Don't include empty properties.
-                            Respond with a JSON object
-                            """, """
-                            {
-                              "name": "event",
-                              "schema": {
-                                "type": "object",
-                                "properties": {
-                                  "title": {
-                                    "type": "string"
-                                  },
-                                  "summary": {
-                                    "type": "string"
-                                  },
-                                  "description": {
-                                    "type": "string"
-                                  },
-                                  "startDate": {
-                                    "type": "string",
-                                    "format": "date"
-                                  },
-                                  "startTime": {
-                                    "type": "string",
-                                    "format": "time"
-                                  },
-                                  "endDate": {
-                                    "type": "string",
-                                    "format": "date"
-                                  },
-                                  "endTime": {
-                                    "type": "string",
-                                    "format": "time"
-                                  },
-                                  "entryFees": {
-                                    "type": "string"
-                                  },
-                                  "attendanceMode": {
-                                    "type": "string"
-                                  },
-                                   "attendanceURL": {
-                                    "type": "string",
-                                    "format": "uri"
-                                  },
-                                  "venueName": {
-                                    "type": "string"
-                                  },
-                                  "venueAddress": {
-                                    "type": "string"
-                                  },
-                                  "imageURL": {
-                                    "type": "string",
-                                    "format": "uri"
-                                  },
-                                  "imageCredits": {
-                                    "type": "string"
-                                  },
-                                  "topic": {
-                                    "type": "string"
-                                  },
-                                  "audience": {
-                                    "type": "string"
-                                  },
-                                  "language": {
-                                    "type": "string",
-                                    "pattern": "^[a-z]{2}$"
-                                  }
-                                },
-                                "required": [
-                                  "title",
-                                  "description",
-                                  "start date",
-                                  "language"
-                                ],
-                                "additionalProperties": false
-                              }
-                            }
-                            """
-                    ))
+                    .optMap(analyzer)
 
                     .flatMap(json -> {
 
