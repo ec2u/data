@@ -39,6 +39,7 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
+import java.time.Duration;
 
 import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
@@ -103,7 +104,10 @@ public final class Data extends Delegator {
                         .base(DATA)
                 )
 
-                .set(openai(), () -> openai(service(vault()).get("openai-key")))
+                .set(openai(), () -> openai(service(vault()).get("openai-key"), builder ->
+                        builder.timeout(Duration.ofSeconds(20))
+                ))
+
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini"))
 
                 .set(embedder(), () -> new CacheEmbedder(

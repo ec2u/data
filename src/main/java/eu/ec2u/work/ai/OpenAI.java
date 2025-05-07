@@ -20,6 +20,7 @@ package eu.ec2u.work.ai;
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class OpenAI {
@@ -40,9 +41,24 @@ public final class OpenAI {
             throw new NullPointerException("null key");
         }
 
-        return OpenAIOkHttpClient.builder()
-                .apiKey(key)
-                .build();
+        return openai(key, client -> { });
+    }
+
+    public static OpenAIClient openai(final String key, final Consumer<OpenAIOkHttpClient.Builder> setup) {
+
+        if ( key == null ) {
+            throw new NullPointerException("null key");
+        }
+
+        if ( setup == null ) {
+            throw new NullPointerException("null setup");
+        }
+
+        final OpenAIOkHttpClient.Builder builder=OpenAIOkHttpClient.builder().apiKey(key);
+
+        setup.accept(builder);
+
+        return builder.build();
     }
 
 
