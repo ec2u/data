@@ -275,7 +275,6 @@ public interface Events extends Dataset {
 
         @Override
         public Stream<Valuable> apply(final Stream<String> urls) {
-
             return Futures
                     .allOfItems(urls.map(url -> async(() -> Xtream.of(url)
 
@@ -295,7 +294,6 @@ public interface Events extends Dataset {
                     )))
                     .thenApply(s -> s.flatMap(Collection::stream))
                     .join();
-
         }
 
 

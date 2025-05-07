@@ -20,6 +20,7 @@ import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
+import com.metreeca.mesh.util.Futures;
 
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.Topic;
@@ -28,11 +29,15 @@ import eu.ec2u.work.Parsers;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.rdf.Values.guarded;
@@ -70,6 +75,15 @@ public final class UnitsPavia implements Runnable {
     }
 
 
+    private static <V, R> Xtream<R> parallel(final Stream<V> values, final Function<V, Stream<R>> mapper) {
+        return Futures // collect stream within async to ensure parallel processing
+                .allOfItems(values.map(value -> async(() -> mapper.apply(value).toList())))
+                .thenApply(s -> Xtream.from(s.flatMap(Collection::stream)))
+                .join(); // !!! avoid inter-stage joins
+    }
+
+
+
     /// ̸//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(final String... args) {
@@ -104,9 +118,8 @@ public final class UnitsPavia implements Runnable {
                                 )
                         )
 
-                        .flatMap(this::catalog)
-                        .map(this::details)
-                        .optMap(unit -> review(unit, PAVIA.locale())) // !!! review after setting linked objects
+                        .pipe(catalogs -> parallel(catalogs, this::catalog))
+                        .<Xtream<UnitFrame>>pipe(units -> parallel(units, this::details))
 
                 ))
 
@@ -114,9 +127,7 @@ public final class UnitsPavia implements Runnable {
     }
 
 
-    /// ̸//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Xtream<UnitFrame> catalog(final Catalog catalog) {
+    private Stream<UnitFrame> catalog(final Catalog catalog) {
         return Xtream.of(catalog.url().toASCIIString())
 
                 .optMap(new GET<>(new HTML()))
@@ -177,25 +188,24 @@ public final class UnitsPavia implements Runnable {
 
                 .flatMap(json -> json.select("units.*").values())
 
-
                 .map(json -> {
 
                             final Optional<URI> url=json.get("url").string()
                                     .flatMap(Parsers::uri)
                                     .map(catalog.url()::resolve);
 
-                    return new UnitFrame()
+                            return new UnitFrame()
 
                                     .generated(true)
 
-                            .id(Units.UNITS.id().resolve(University.uuid(PAVIA, url
+                                    .id(Units.UNITS.id().resolve(University.uuid(PAVIA, url
                                             .map(URI::toString)
                                             .or(() -> json.get("name").string())
                                             .orElse(null) // !!! don't generate if missing
                                     )))
 
-                            .university(PAVIA)
-                            .unitOf(set(PAVIA))
+                                    .university(PAVIA)
+                                    .unitOf(set(PAVIA))
 
                                     .altLabel(json.get("acronym").string()
                                             .map(acronym -> map(entry(ROOT, acronym)))
@@ -219,79 +229,84 @@ public final class UnitsPavia implements Runnable {
                 );
     }
 
-    private UnitFrame details(final UnitFrame unit) {
-        return unit.homepage().stream().findFirst()
+    private Stream<UnitFrame> details(final UnitFrame unit) {
+        return review(
 
-                .map(URI::toASCIIString)
-                .flatMap(new GET<>(new HTML()))
-                .map(new Untag())
+                unit.homepage().stream().findFirst()
 
-                .flatMap(analyzer.prompt("""
-                        Extract the following properties from the provided markdown document
-                        describing a university research unit:
-                        
-                        - acronym (don't include if not explicitly defined in the document)
-                        - plain text summary of about 500 characters in the document language
-                        - full description as included in the document in markdown format
-                        - document language as a 2-letter ISO tag
-                        
-                        Remove personal email addresses.
-                        Respond with a JSON object.
-                        """, """
-                        {
-                          "name": "unit",
-                          "schema": {
-                            "type": "object",
-                            "properties": {
-                              "acronym": {
-                                "type": "string"
-                              },
-                              "summary": {
-                                "type": "string"
-                              },
-                              "description": {
-                                "type": "string"
-                              },
-                              "language": {
-                                "type": "string",
-                                "pattern": "^[a-zA-Z]{2}$"
-                              }
-                            },
-                            "required": []
-                          }
-                        }
-                        """
-                ))
+                        .map(URI::toASCIIString)
+                        .flatMap(new GET<>(new HTML()))
+                        .map(new Untag())
 
-                .flatMap(json -> locale(json.get("language").string()).map(locale -> unit
+                        .flatMap(analyzer.prompt("""
+                                Extract the following properties from the provided markdown document
+                                describing a university research unit:
+                                
+                                - acronym (don't include if not explicitly defined in the document)
+                                - plain text summary of about 500 characters in the document language
+                                - full description as included in the document in markdown format
+                                - document language as a 2-letter ISO tag
+                                
+                                Remove personal email addresses.
+                                Respond with a JSON object.
+                                """, """
+                                {
+                                  "name": "unit",
+                                  "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                      "acronym": {
+                                        "type": "string"
+                                      },
+                                      "summary": {
+                                        "type": "string"
+                                      },
+                                      "description": {
+                                        "type": "string"
+                                      },
+                                      "language": {
+                                        "type": "string",
+                                        "pattern": "^[a-zA-Z]{2}$"
+                                      }
+                                    },
+                                    "required": []
+                                  }
+                                }
+                                """
+                        ))
 
-                        .altLabel(Optional.of(unit.altLabel())
-                                .filter(not(Map::isEmpty))
-                                .or(() -> json.get("acronym").string()
-                                        .map(acronym -> map(entry(ROOT, acronym)))
+                        .flatMap(json -> locale(json.get("language").string()).map(locale -> unit
+
+                                .altLabel(Optional.of(unit.altLabel())
+                                        .filter(not(Map::isEmpty))
+                                        .or(() -> json.get("acronym").string()
+                                                .map(acronym -> map(entry(ROOT, acronym)))
+                                        )
+                                        .orElse(null)
                                 )
-                                .orElse(null)
-                        )
 
-                        .altLabel(json.get("acronym").string()
-                                .map(acronym -> map(entry(ROOT, acronym)))
-                                .orElse(null)
-                        )
+                                .altLabel(json.get("acronym").string()
+                                        .map(acronym -> map(entry(ROOT, acronym)))
+                                        .orElse(null)
+                                )
 
-                        .comment(json.get("summary").string()
-                                .map(summary -> map(entry(locale, summary)))
-                                .orElse(null)
-                        )
+                                .comment(json.get("summary").string()
+                                        .map(summary -> map(entry(locale, summary)))
+                                        .orElse(null)
+                                )
 
-                        .definition(json.get("description").string()
-                                .map(description -> map(entry(locale, description)))
-                                .orElse(null)
-                        )
+                                .definition(json.get("description").string()
+                                        .map(description -> map(entry(locale, description)))
+                                        .orElse(null)
+                                )
 
-                ))
+                        ))
 
-                .orElse(unit);
+                        .orElse(unit),
+
+                PAVIA.locale()
+
+        ).stream();
     }
-
 
 }
