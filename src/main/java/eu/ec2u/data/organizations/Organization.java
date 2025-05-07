@@ -45,7 +45,7 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Namespace("[ec2u]")
 public interface Organization extends Resource, OrgOrganization, SchemaOrganization {
 
-    double CLASSIFICATIOION_THRESHOLD=0.6;
+    double CLASSIFICATION_THRESHOLD=0.6;
 
 
     static Optional<OrganizationFrame> review(final OrganizationFrame document, final Locale source) {
@@ -78,7 +78,7 @@ public interface Organization extends Resource, OrgOrganization, SchemaOrganizat
 
     private static OrganizationFrame classification(final OrganizationFrame document) {
         return document.classification().isEmpty() ? document.classification(set(Resources
-                .match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), embeddable(document), CLASSIFICATIOION_THRESHOLD)
+                .match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), embeddable(document), CLASSIFICATION_THRESHOLD)
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(3)
         )) : document;

@@ -92,8 +92,8 @@ public interface Document extends Resource {
         return document // translate also customized labels/comments ;(translated text must be clipped again)
                 .label(Reference.label(translator.texts(document.label(), source, EN)))
                 .comment(Reference.comment(translator.texts(document.comment(), source, EN)))
-                .title(translator.texts(document.title(), source, EN))
-                .description(translator.texts(document.description(), source, EN));
+                .title(Reference.clip(TITLE_LENGTH, translator.texts(document.title(), source, EN)))
+                .description(Reference.clip(DESCRIPTION_LENGTH, translator.texts(document.description(), source, EN)));
     }
 
     private static DocumentFrame type(final DocumentFrame document) {

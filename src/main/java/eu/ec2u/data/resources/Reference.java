@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.resources;
 
+import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Id;
@@ -29,7 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
 
@@ -47,29 +47,22 @@ public interface Reference {
     String PHONE_PATTERN="^\\+?[1-9]\\d{1,14}$";
 
 
-    static String label(final String label) {
-        return clip(label, LABEL_LENGTH);
-    }
-
-    static String comment(final String comment) {
-        return clip(comment, COMMENT_LENGTH);
-    }
-
-
     @SafeVarargs
     static Map<Locale, String> label(final Map<Locale, String>... labels) {
-        return map(Arrays.stream(labels)
-                .flatMap(m -> m.entrySet().stream())
-                .map(e -> entry(e.getKey(), label(e.getValue())))
-                .collect(groupingBy(Entry::getKey, reducing(null, Entry::getValue, (x, y) -> x == null ? y : x)))
-        );
+        return clip(LABEL_LENGTH, labels);
     }
 
     @SafeVarargs
-    static Map<Locale, String> comment(final Map<Locale, String>... labels) {
-        return map(Arrays.stream(labels)
+    static Map<Locale, String> comment(final Map<Locale, String>... comments) {
+        return clip(COMMENT_LENGTH, comments);
+    }
+
+
+    @SafeVarargs
+    static Map<Locale, String> clip(final int length, final Map<Locale, String>... texts) {
+        return map(Arrays.stream(texts)
                 .flatMap(m -> m.entrySet().stream())
-                .map(e -> entry(e.getKey(), comment(e.getValue())))
+                .map(e -> entry(e.getKey(), Strings.clip(e.getValue(), length)))
                 .collect(groupingBy(Entry::getKey, reducing(null, Entry::getValue, (x, y) -> x == null ? y : x)))
         );
     }

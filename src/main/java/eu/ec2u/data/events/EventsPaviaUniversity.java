@@ -84,13 +84,10 @@ public final class EventsPaviaUniversity implements Runnable {
 
                 ))
 
-                .sorted()
-                .limit(10)
-
                 .pipe(new Events.Scanner(PAVIA, PUBLISHER))
 
         )))).apply((elapsed, count) -> logger.info(EventsPaviaUniversity.class, format(
-                "inserted <%d,d> events in <%,d> ms", count, elapsed
+                "inserted <%,d> events in <%,d> ms", count, elapsed
         )));
     }
 

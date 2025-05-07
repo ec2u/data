@@ -80,8 +80,9 @@ public interface Event extends Resource, SchemaEvent {
         return event // translate also customized labels/comments ;(translated text must be clipped again)
                 .label(Reference.label(translator.texts(event.label(), source, EN)))
                 .comment(Reference.comment(translator.texts(event.comment(), source, EN)))
-                .name(translator.texts(event.name(), source, EN))
-                .description(translator.texts(event.description(), source, EN));
+                .name(Reference.clip(NAME_LENGTH, translator.texts(event.name(), source, EN)))
+                .description(Reference.clip(DESCRIPTION_LENGTH, translator.texts(event.description(), source, EN)))
+                .disambiguatingDescription(Reference.clip(DISAMBIGUATING_DESCRIPTION_LENGTH, translator.texts(event.disambiguatingDescription(), source, EN)));
     }
 
     private static EventFrame about(final EventFrame event) {
