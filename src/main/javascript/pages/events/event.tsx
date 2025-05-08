@@ -90,32 +90,32 @@ export const Event=immutable({
 
 	}),
 
-	// location: multiple({
-	//
-	// 	Text: optional(string),
-	//
-	// 	Place: optional({
-	// 		label: required(text),
-	// 		url: optional(id),
-	// 		address: optional({
-	// 			streetAddress: optional(string),
-	// 			postalCode: optional(string),
-	// 			addressLocality: optional(string)
-	// 		})
-	// 	}),
-	//
-	// 	PostalAddress: optional({
-	// 		streetAddress: optional(string),
-	// 		postalCode: optional(string),
-	// 		addressLocality: optional(string)
-	// 	}),
-	//
-	// 	VirtualLocation: optional({
-	// 		label: required(text),
-	// 		url: required(id)
-	// 	})
-	//
-	// }),
+	location: optional({
+
+		String: optional(string),
+
+		Place: optional({
+			label: required(text),
+			url: optional(id),
+			address: optional({
+				streetAddress: optional(string),
+				postalCode: optional(string),
+				addressLocality: optional(string)
+			})
+		}),
+
+		PostalAddress: optional({
+			streetAddress: optional(string),
+			postalCode: optional(string),
+			addressLocality: optional(string)
+		}),
+
+		VirtualLocation: optional({
+			label: required(text),
+			url: required(id)
+		})
+
+	}),
 
 	university: optional({
 		id: required(id),
@@ -124,27 +124,29 @@ export const Event=immutable({
 
 });
 
+type Location=Exclude<typeof Event.location, undefined>
+type Place=Exclude<Location["Place"], undefined>
+type PostalAddress=Exclude<Location["PostalAddress"], undefined>
+type VirtualLocation=Exclude<Location["VirtualLocation"], undefined>
 
-// type Place=Exclude<Exclude<typeof Event.location, undefined>[number]["Place"], undefined>
-// type PostalAddress=Exclude<Exclude<typeof Event.location, undefined>[number]["PostalAddress"], undefined>
-//
-// function asPlace(place: Place) {
-// 	return <div>
-// 		<span>{toTextString(place.label)}</span>
-// 		{place.address && asPostalAddress(place.address)}
-// 	</div>;
-// }
-//
-// function asPostalAddress(address: PostalAddress) {
-// 	return <div>
-// 		{address.streetAddress && <span>{address.streetAddress}</span>}
-// 		{address.addressLocality && <span>{address.postalCode} {
-// 			isEntry(address.addressLocality)
-// 				? <TileLink>{address.addressLocality}</TileLink>
-// 				: address.addressLocality}</span>
-// 		}
-// 	</div>;
-// }
+function asPlace(place: Place) {
+	return <div>
+		<span>{toTextString(place.label)}</span>
+		{place.address && asPostalAddress(place.address)}
+	</div>;
+}
+
+function asPostalAddress(address: PostalAddress) {
+	return <div>
+		{address.streetAddress && <span>{address.streetAddress}</span>}
+		{address.addressLocality && <span>{address.postalCode} {address.addressLocality}</span>}
+	</div>;
+}
+
+
+function asVirtualLocation(location: VirtualLocation) {
+	return <a href={location.url}>{toTextString(location.label)}</a>;
+}
 
 
 export const EventStatusType: { [mode: string]: typeof text.model }={
@@ -188,6 +190,7 @@ export const EventAttendanceModeEnumeration: { [mode: string]: typeof text.model
 };
 
 
+
 export function DataEvent() {
 
 	const [event]=useResource(Event);
@@ -212,7 +215,7 @@ export function DataEvent() {
 
 			organizer,
 			publisher,
-			// location,
+			location,
 
 			university
 
@@ -265,12 +268,15 @@ export function DataEvent() {
 				"Language": inLanguage && toTextString(Languages[inLanguage]),
 
 				"Attendance": eventAttendanceMode && toTextString(EventAttendanceModeEnumeration[eventAttendanceMode]),
-				"Status": eventStatus && toTextString(EventStatusType[eventStatus])
+				"Status": eventStatus && toTextString(EventStatusType[eventStatus]),
 
-				// "Location": location && <ul>{location?.map(({ Text, Place, PostalAddress, VirtualLocation },
-				// index) =>  <li key={index}>{  Text ? <span>{Text}</span> : Place ? asPlace(Place) :
-				// PostalAddress ? asPostalAddress(PostalAddress) : VirtualLocation ? <a
-				// href={VirtualLocation.url}>{toTextString(VirtualLocation.label)}</a> : null  }</li> )}</ul>
+				"Location": location && (
+					location.String ? <span>{location.String}</span>
+						: location.Place ? asPlace(location.Place)
+							: location.PostalAddress ? asPostalAddress(location.PostalAddress) :
+								location.VirtualLocation ? asVirtualLocation(location.VirtualLocation)
+									: null
+				)
 
 			}}</TileInfo>
 

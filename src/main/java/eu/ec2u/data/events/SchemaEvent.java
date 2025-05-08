@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.events;
 
+import com.metreeca.mesh.meta.jsonld.Embedded;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.Required;
 
@@ -51,6 +52,9 @@ public interface SchemaEvent extends SchemaThing {
     }
 
 
+    SchemaOrganization publisher();
+
+
     @Required
     @Override
     Set<URI> url();
@@ -71,12 +75,8 @@ public interface SchemaEvent extends SchemaThing {
     boolean isAccessibleForFree();
 
 
-    SchemaOrganization publisher();
-
-    Set<SchemaOrganization> organizer();
-
-
-    Set<SchemaLocation> location();
+    @Embedded
+    SchemaLocation location();
 
 
     Set<Topic> audience();

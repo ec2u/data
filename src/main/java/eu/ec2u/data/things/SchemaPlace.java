@@ -16,28 +16,19 @@
 
 package eu.ec2u.data.things;
 
-import com.metreeca.mesh.meta.jsonld.Embedded;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Id;
-
-import java.net.URI;
+import com.metreeca.mesh.meta.shacl.Required;
 
 @Frame
-public interface SchemaLocation {
+public interface SchemaPlace extends SchemaThing {
 
-    @Id
-    URI id(); // !!! remove
+    SchemaPostalAddress address();
 
 
-    String String();
+    @Required
+    double latitude();
 
-    @Embedded
-    SchemaPlace Place();
-
-    @Embedded
-    SchemaPostalAddress PostalAddress();
-
-    @Embedded
-    SchemaVirtualLocation VirtualLocation();
+    @Required
+    double longitude();
 
 }
