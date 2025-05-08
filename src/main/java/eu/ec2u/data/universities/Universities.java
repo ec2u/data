@@ -23,6 +23,7 @@ import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.lod.actions.Wikidata;
 import com.metreeca.flow.rdf4j.actions.GraphQuery;
 import com.metreeca.flow.rdf4j.services.Graph;
+import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.util.Locales;
@@ -114,7 +115,7 @@ public interface Universities extends Dataset {
 
                     value(query(new UniversityFrame(true))),
 
-                    array(list(Stream.concat( // !!! University.review()
+                    array(list(Stream.concat(
 
                             Stream.of(UNIVERSITIES),
 
@@ -159,10 +160,10 @@ public interface Universities extends Dataset {
                                         .city(cityFrame)
                                         .country(countryFrame);
 
-                                return Stream.of(
-                                        universityFrame,
-                                        cityFrame,
-                                        countryFrame
+                                return Xtream.from(
+                                        review(universityFrame).stream(),
+                                        Stream.of(cityFrame),
+                                        Stream.of(countryFrame)
                                 );
                             })
 
