@@ -36,7 +36,8 @@ import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.organizations.OrganizationFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
-import eu.ec2u.data.things.*;
+import eu.ec2u.data.things.SchemaImageObjectFrame;
+import eu.ec2u.data.things.SchemaThing;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.ai.Analyzer;
 
@@ -60,9 +61,7 @@ import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Loggers.time;
-import static com.metreeca.mesh.util.URIs.item;
 import static com.metreeca.mesh.util.URIs.uri;
-import static com.metreeca.mesh.util.URIs.uuid;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
@@ -75,7 +74,6 @@ import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
-import static java.util.Locale.ROOT;
 
 @Frame
 public interface Events extends Dataset {
@@ -173,7 +171,7 @@ public interface Events extends Dataset {
                 - venue name
                 - venue street address
                 - venue city name
-                - image URL
+                - image URL, only if absolutely certain about it
                 - image credits or copyright
                 - major topic
                 - intended audience
@@ -368,45 +366,40 @@ public interface Events extends Dataset {
                         final Optional<String> venueName=venueName(json);
                         final Optional<String> venueAddress=venueAddress(json);
 
-                        final Optional<SchemaLocationFrame> location=attendanceURL.map(au -> new SchemaLocationFrame()
-                                        .id(item(uuid())) // !!! remove when embedded properties are supported
-                                        .VirtualLocation(new SchemaVirtualLocationFrame()
-                                                .id(item(uuid())) // !!! remove when embedded properties are supported
-                                                .url(set(au))
-                                        )
-                                )
-
-                                .or(() -> venueAddress.map(va -> new SchemaLocationFrame()
-                                        .id(item(uuid())) // !!! remove when embedded properties are supported
-                                        .PostalAddress(new SchemaPostalAddressFrame()
-                                                .id(item(uuid())) // !!! remove when embedded properties are supported
-                                                .name(venueName.map(vn -> map(entry(ROOT, vn))).orElse(null))
-                                                .streetAddress(va)
-                                        )
-                                ))
-
-                                .or(() -> venueName.map(vn -> new SchemaLocationFrame()
-                                        .id(item(uuid())) // !!! remove when embedded properties are supported
-                                        .String(vn)
-                                ));
+                        // final Optional<SchemaLocationFrame> location=attendanceURL.map(au -> new SchemaLocationFrame()
+                        //                 .VirtualLocation(new SchemaVirtualLocationFrame()
+                        //                         .url(set(au))
+                        //                 )
+                        //         )
+                        //
+                        //         .or(() -> venueAddress.map(va -> new SchemaLocationFrame()
+                        //                 .PostalAddress(new SchemaPostalAddressFrame()
+                        //                         .name(venueName.map(vn -> map(entry(ROOT, vn))).orElse(null))
+                        //                         .streetAddress(va)
+                        //                 )
+                        //         ))
+                        //
+                        //         .or(() -> venueName.map(vn -> new SchemaLocationFrame()
+                        //                 .String(vn)
+                        //         ));
 
 
-                        return Xtream.<Valuable>from(
+                        return Xtream.from(
 
                                 review(
 
                                         event
                                                 .publisher(publisher)
-                                                .image(image.orElse(null))
-                                                .location(location.orElse(null)),
+                                                .image(image.orElse(null)),
+                                        // !!! .location(location.orElse(null)),
 
                                         university.locale()
 
                                 ).stream(),
 
                                 Stream.of(publisher),
-                                image.stream(),
-                                location.stream()
+                                image.stream()
+                                // !!! location.stream()
 
                         );
 

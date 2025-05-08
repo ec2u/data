@@ -18,16 +18,9 @@ package eu.ec2u.data.things;
 
 import com.metreeca.mesh.meta.jsonld.Embedded;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Id;
-
-import java.net.URI;
 
 @Frame
 public interface SchemaLocation {
-
-    @Id
-    URI id(); // !!! remove
-
 
     String String();
 

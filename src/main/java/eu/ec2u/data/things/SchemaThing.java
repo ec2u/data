@@ -40,7 +40,7 @@ public interface SchemaThing extends Reference {
 
     Set<URI> url();
 
-    String identifier(); // single strinug value for compatibility with org:Organization
+    String identifier(); // single string value for compatibility with org:Organization
 
 
     @Localized
