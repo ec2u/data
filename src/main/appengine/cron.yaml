@@ -1,32 +1,32 @@
 cron:
 
-  - description: "units › coimbra - nightly crawling"
+  - description: "units › coimbra - monthly crawling"
     url: /cron/units/coimbra
     schedule: every day 00:00
 
-  - description: "units › jena - nightly crawling"
-    url: /cron/units/jena
-    schedule: every day 00:00
-
-  - description: "units › iasi - nightly crawling"
+  - description: "units › iasi - monthly crawling"
     url: /cron/units/iasi
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
+
+  - description: "units › jena - monthly crawling"
+    url: /cron/units/jena
+    schedule: every 1 of month 00:00
 
   - description: "units › pavia - monthly crawling"
     url: /cron/units/pavia
     schedule: every 1 of month 00:00
 
-  - description: "units › poitiers - nightly crawling"
+  - description: "units › poitiers - monthly crawling"
     url: /cron/units/poitiers
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
-  - description: "units › salamanca - nightly crawling"
+  - description: "units › salamanca - monthly crawling"
     url: /cron/units/salamanca
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
-  - description: "units › turku - nightly crawling"
+  - description: "units › turku - monthly crawling"
     url: /cron/units/turku
-    schedule: every day 00:00
+    schedule: every 1 of month 00:00
 
 
   - description: "offerings › coimbra - monthly crawling"
@@ -107,8 +107,8 @@ cron:
     schedule: every day 00:00
 
 
-  - description: "events › iasi › university - nightly crawling"
-    url: /cron/events/iasi/university
+  - description: "events › coimbra › university - nightly crawling"
+    url: /cron/events/iasi/university/360
     schedule: every day 00:00
 
   - description: "events › iasi › university › 360 - nightly crawling"
@@ -121,10 +121,6 @@ cron:
 
   - description: "events › linz › university - nightly crawling"
     url: /cron/events/linz/university
-    schedule: every day 00:00
-
-  - description: "events › pavia › borromeo - nightly crawling"
-    url: /cron/events/pavia/borromeo
     schedule: every day 00:00
 
   - description: "events › pavia › university - nightly crawling"
@@ -142,3 +138,7 @@ cron:
   - description: "events › turku › university - nightly crawling"
     url: /cron/events/turku/university
     schedule: every day 00:00
+
+  - description: "events - nightly housekeeping"
+    url: /cron/events
+    schedule: every day 00:05
