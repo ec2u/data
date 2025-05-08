@@ -38,10 +38,12 @@ import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.things.SchemaImageObjectFrame;
 import eu.ec2u.data.things.SchemaThing;
+import eu.ec2u.data.things.SchemaWebPageFrame;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -278,12 +280,11 @@ public interface Events extends Dataset {
             return Futures
                     .allOfItems(urls.map(url -> async(() -> Xtream.of(url)
 
-                            // ;( ignore all known URLs: Last-Modified and ETag headers are not reliable
+                            // ;( ignore all visited web pages: Last-Modified and ETag headers are not reliable
 
-                            .filter(v -> store.retrieve(value(query()
-                                    .model(new EventFrame())
-                                    .where("url", criterion().any(Value.uri(uri(v))))
-                            )).isEmpty())
+                            .filter(v -> store.retrieve(new SchemaWebPageFrame(true)
+                                    .id(uri(v))
+                            ).isEmpty())
 
                             .flatMap(this::event)
 
@@ -396,6 +397,13 @@ public interface Events extends Dataset {
                                         university.locale()
 
                                 ).stream(),
+
+                                // ;( keep track of all visited web pages to handle sources that expose stale events
+
+                                Stream.of(new SchemaWebPageFrame()
+                                        .id(uri)
+                                        .dateRetrieved(Instant.now())
+                                ),
 
                                 Stream.of(publisher),
                                 image.stream()

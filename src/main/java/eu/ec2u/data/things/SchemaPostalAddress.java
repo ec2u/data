@@ -16,10 +16,12 @@
 
 package eu.ec2u.data.things;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.Pattern;
 
 @Frame
+@Class
 public interface SchemaPostalAddress extends SchemaThing {
 
     String addressCountry();

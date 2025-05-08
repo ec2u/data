@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.things;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.MaxCount;
 import com.metreeca.mesh.meta.shacl.MinCount;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Frame
+@Class
 public interface SchemaImageObject extends SchemaThing {
 
     @Override

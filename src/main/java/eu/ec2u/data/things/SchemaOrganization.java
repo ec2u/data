@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.things;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.Pattern;
 
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Frame
+@Class
 public interface SchemaOrganization extends SchemaThing {
 
     Map<Locale, String> legalName();

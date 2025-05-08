@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.things;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.MinCount;
 
@@ -23,6 +24,7 @@ import java.net.URI;
 import java.util.Set;
 
 @Frame
+@Class
 public interface SchemaVirtualLocation extends SchemaThing {
 
     @Override

@@ -18,19 +18,13 @@ package eu.ec2u.data.things;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.shacl.Required;
+
+import java.time.Instant;
 
 @Frame
 @Class
-public interface SchemaPlace extends SchemaThing {
+public interface SchemaWebPage extends SchemaThing {
 
-    SchemaPostalAddress address();
-
-
-    @Required
-    double latitude();
-
-    @Required
-    double longitude();
+    Instant dateRetrieved();
 
 }
