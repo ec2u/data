@@ -12,9 +12,9 @@ cron:
     url: /cron/units/jena
     schedule: every 1 of month 00:02
 
-  #  - description: "units › linz - monthly crawling"
-  #    url: /cron/units/linz
-  #    schedule: every 1 of month 00:03
+  - description: "units › linz - monthly crawling"
+    url: /cron/units/linz
+    schedule: every 1 of month 00:03
 
   - description: "units › pavia - monthly crawling"
     url: /cron/units/pavia
