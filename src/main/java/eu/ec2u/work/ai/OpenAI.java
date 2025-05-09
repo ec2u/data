@@ -25,6 +25,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.services.Logger.logger;
+
 import static eu.ec2u.work.Work.guard;
 import static java.lang.Math.min;
 import static java.lang.String.format;
@@ -111,6 +114,10 @@ public final class OpenAI {
 
                     final long jitter=ThreadLocalRandom.current().nextLong(0, delay);
 
+                    service(logger()).warning(OpenAI.class, format(
+                            "task delayed by <%,d> ms after <%,d> attempts", delay+jitter, attempt+1
+                    ));
+
                     Thread.sleep(delay+jitter);
 
                 } catch ( final InterruptedException ignored ) { }
@@ -118,7 +125,7 @@ public final class OpenAI {
             }
         }
 
-        throw new OpenAIException(format("request aborted after <%d> attempts", attempts));
+        throw new OpenAIException(format("request aborted after <%,d> attempts", attempts));
 
     }
 
