@@ -17,14 +17,15 @@
 package eu.ec2u.data.events;
 
 import com.metreeca.flow.http.actions.GET;
+import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.work.Xtream;
-import com.metreeca.flow.xml.XPath;
-import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.organizations.OrganizationFrame;
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
+
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -48,8 +49,8 @@ public final class EventsCoimbraUniversity implements Runnable {
             .university(COIMBRA)
 
             .prefLabel(map(
-                    entry(EN, "University of Coimbra / News"),
-                    entry(COIMBRA.locale(), "Universidade de Coimbra / Noticias")
+                    entry(EN, "Coimbra Agenda"),
+                    entry(COIMBRA.locale(), "Agenda Coimbra")
             ))
 
             .about(set(EC2UOrganizations.UNIVERSITY));
@@ -68,21 +69,30 @@ public final class EventsCoimbraUniversity implements Runnable {
 
     @Override
     public void run() {
-        time(() -> store.insert(array(list(Xtream
 
-                .of(PUBLISHER.id().toString())
+        final String search="https://content.fw.uc.pt/v1/agenda/events/search";
+        final String event="https://agenda.coimbra.pt/event/%s";
 
-                .flatMap(home -> Xtream.of(home).crawl(url -> Xtream.of(url)
+        time(() -> store.insert(array(list(Xtream.of(search)
 
-                        .optMap(new GET<>(new HTML()))
-                        .map(XPath::new)
+                .crawl(url -> Xtream.of(url)
 
-                        .map(path -> entry(
-                                path.links("//ul[contains(@class, 'MarkupPagerNav')]/li/a/@href"),
-                                path.links("//div[contains(concat(' ', normalize-space(@class), ' '), ' grid ')]/a/@href")
-                        ))
+                        .optMap(new GET<>(new JSON()))
 
-                ))
+                        .map(json -> {
+
+                            final long current=json.select("pagination.current_page").integral().orElse(0L);
+                            final long total=json.select("pagination.total_pages").integral().orElse(0L);
+
+                            return entry(
+                                    current < total ? Stream.of(format("%s?page=%d", search, current+1)) : Stream.empty(),
+                                    json.select("events.*.key").strings()
+                            );
+                        })
+
+                )
+
+                .map(event::formatted)
 
                 .pipe(new Events.Scanner(COIMBRA, PUBLISHER))
 

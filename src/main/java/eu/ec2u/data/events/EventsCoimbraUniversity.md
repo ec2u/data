@@ -1,14 +1,14 @@
 # Site
 
-* https://www.uc.pt/dri/noticias/eventos
-    * University of Coimbra / News
-    * Universidade de Coimbra / Noticias
+* https://agenda.coimbra.pt/
+  * Coimbra Agenda
+  * Agenda Coimbra
 
 # Integration
 
-* Event info extracted by LLM from event catalog and linked event pages
+* Event catalog extracted by scanning the site event search service
+* Event info extracted by LLM from event pages
 
 ## 2025-05-08
 
-* migrated from https://agenda.uc.pt/ to https://www.uc.pt/dri/noticias/eventos
-    * https://agenda.uc.pt/in not responding any longer and appears to be decommissioned
+* migrated from https://agenda.uc.pt/ to https://agenda.coimbra.pt/

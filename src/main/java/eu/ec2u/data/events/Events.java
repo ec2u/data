@@ -163,9 +163,9 @@ public interface Events extends Dataset {
                 - complete descriptive text as included in the document in markdown format; make absolutely
                   sure not to include the document title in the description and to ignore other ancillary matters
                   such as page headers, footers, and navigation sections
-                - start date in ISO format
+                - start date in ISO format, taking into account that the current date is %s
                 - start time in ISO format without seconds
-                - end date in ISO format
+                - end date in ISO format, taking into account that the current date is %s
                 - end time in ISO format without seconds
                 - entry fees (free, paid); make sure not to mix up registration required with paid entry fees
                 - attendance mode (offline, online, mixed)
@@ -173,7 +173,7 @@ public interface Events extends Dataset {
                 - venue name
                 - venue street address
                 - venue city name
-                - image URL, only if absolutely certain about it
+                - image URL, only if confident about it
                 - image credits or copyright
                 - major topic
                 - intended audience
@@ -182,7 +182,7 @@ public interface Events extends Dataset {
                 Don't include properties if not defined in the document.
                 Don't include empty properties.
                 Respond with a JSON object
-                """, """
+                """.formatted(LocalDate.now(), LocalDate.now()), """
                 {
                   "name": "event",
                   "schema": {
