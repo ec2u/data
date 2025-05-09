@@ -18,7 +18,6 @@ package eu.ec2u.data;
 
 import com.metreeca.flow.Locator;
 import com.metreeca.flow.gcp.GCPServer;
-import com.metreeca.flow.gcp.services.GCPTranslator;
 import com.metreeca.flow.gcp.services.GCPVault;
 import com.metreeca.flow.http.Request;
 import com.metreeca.flow.http.handlers.*;
@@ -33,6 +32,7 @@ import com.metreeca.flow.text.services.Translator.CacheTranslator;
 import eu.ec2u.work.ai.Embedder.CacheEmbedder;
 import eu.ec2u.work.ai.OpenAnalyzer;
 import eu.ec2u.work.ai.OpenEmbedder;
+import eu.ec2u.work.ai.OpenTranslator;
 import eu.ec2u.work.ai.StoreTranslator;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
@@ -108,14 +108,14 @@ public final class Data extends Delegator {
                         builder.timeout(Duration.ofSeconds(20))
                 ))
 
+                .set(translator(), () -> new CacheTranslator(
+                        new StoreTranslator(new OpenTranslator("gpt-4o-mini"))
+                ))
+
                 .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini"))
 
                 .set(embedder(), () -> new CacheEmbedder(
                         new OpenEmbedder("text-embedding-3-small")
-                ))
-
-                .set(translator(), () -> new CacheTranslator(
-                        new StoreTranslator(new GCPTranslator())
                 ));
 
     }

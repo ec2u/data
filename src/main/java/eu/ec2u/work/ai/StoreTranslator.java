@@ -106,7 +106,7 @@ public final class StoreTranslator implements Translator {
 
         return preprocess(text, source, target)
 
-                // ;( looking up very long texts breaks SPARQL queries over HTTP using the GET method
+                // ;( looking up very long texts breaks SPARQL queries set over HTTP using the GET method
 
                 .or(() -> text.length() > LENGTH_LIMIT ? Optional.of(Optional.empty()) : Optional.empty())
 

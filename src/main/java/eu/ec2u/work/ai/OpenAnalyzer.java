@@ -47,9 +47,7 @@ import static java.util.function.Predicate.not;
  * <p>Extracts structured information from texts according to plain language prompts processed by the OpenAI
  * platform.</p>
  *
- * @see <a href="https://openai.com/api/">OpenAI Platform</a>
- * @see <a href="https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/openai/azure-ai-openai">Azure OpenAI
- *         client library for Java</a>
+ * @see OpenAI
  */
 public final class OpenAnalyzer implements Analyzer {
 

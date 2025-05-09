@@ -23,6 +23,10 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * @see <a href="https://openai.com/api/">OpenAI Platform</a>
+ * @see <a href="https://github.com/openai/openai-java">OpenAI Java API Library</a>
+ */
 public final class OpenAI {
 
     /**

@@ -33,6 +33,13 @@ import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
+/**
+ * OpenAI text embedding generator.
+ *
+ * <p>Generates ext embedding using models provided by the OpenAI platform.</p>
+ *
+ * @see OpenAI
+ */
 public class OpenEmbedder implements Embedder {
 
     private final String model;
