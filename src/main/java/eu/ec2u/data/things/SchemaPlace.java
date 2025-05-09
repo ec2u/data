@@ -21,7 +21,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.Required;
 
 @Frame
-@Class
+@Class("schema:Place")
 public interface SchemaPlace extends SchemaThing {
 
     SchemaPostalAddress address();

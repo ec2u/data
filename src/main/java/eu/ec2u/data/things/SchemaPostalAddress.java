@@ -21,7 +21,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.Pattern;
 
 @Frame
-@Class
+@Class("schema:PostalAddress")
 public interface SchemaPostalAddress extends SchemaThing {
 
     String addressCountry();

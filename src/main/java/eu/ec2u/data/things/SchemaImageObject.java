@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Frame
-@Class
+@Class("schema:ImageObject")
 public interface SchemaImageObject extends SchemaThing {
 
     @Override

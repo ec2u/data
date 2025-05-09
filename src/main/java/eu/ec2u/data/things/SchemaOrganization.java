@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Frame
-@Class
+@Class("schema:Organization")
 public interface SchemaOrganization extends SchemaThing {
 
     Map<Locale, String> legalName();

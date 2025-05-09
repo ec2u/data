@@ -24,7 +24,7 @@ import java.net.URI;
 import java.util.Set;
 
 @Frame
-@Class
+@Class("schema:VirtualLocation")
 public interface SchemaVirtualLocation extends SchemaThing {
 
     @Override

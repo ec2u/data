@@ -22,7 +22,7 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import java.time.Instant;
 
 @Frame
-@Class
+@Class("schema:WebPage")
 public interface SchemaWebPage extends SchemaThing {
 
     Instant dateRetrieved();
