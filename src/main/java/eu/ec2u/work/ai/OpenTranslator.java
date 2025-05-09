@@ -35,6 +35,7 @@ import static com.metreeca.flow.text.services.Translator.preprocess;
 import static com.metreeca.mesh.util.Loggers.time;
 
 import static com.openai.models.chat.completions.ChatCompletionCreateParams.builder;
+import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
@@ -107,22 +108,21 @@ public final class OpenTranslator implements Translator {
 
             try {
 
-                return Optional.of(text)
-                        .flatMap(t -> client.chat().completions()
-                                .create(params
-                                        .responseFormat(FORMAT)
-                                        .addSystemMessage(format(PROMPT,
-                                                source.equals(Locales.ANY) ? "" : target.getDisplayLanguage(ENGLISH),
-                                                target.getDisplayLanguage(ENGLISH)
-                                        ))
-                                        .addUserMessage(t)
-                                        .build()
-                                )
-                                .choices()
-                                .getFirst()
-                                .message()
-                                .content()
-                        );
+                return backoff(0, () -> Optional.of(text).flatMap(t -> client.chat().completions()
+                        .create(params
+                                .responseFormat(FORMAT)
+                                .addSystemMessage(format(PROMPT,
+                                        source.equals(Locales.ANY) ? "" : target.getDisplayLanguage(ENGLISH),
+                                        target.getDisplayLanguage(ENGLISH)
+                                ))
+                                .addUserMessage(t)
+                                .build()
+                        )
+                        .choices()
+                        .getFirst()
+                        .message()
+                        .content()
+                ));
 
             } catch ( final RuntimeException e ) {
 

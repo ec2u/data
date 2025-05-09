@@ -14,22 +14,46 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.ai;
+package eu.ec2u.work;
 
 import com.metreeca.flow.toolkits.Strings;
 
-final class _Texts {
+import java.util.function.Function;
+
+public final class Work {
 
     private static final int CLIP_LIMIT=25;
 
 
-    static String clip(final String text) {
+    public static String clip(final String text) {
         return Strings.clip(text.replace('\n', ' '), CLIP_LIMIT);
     }
 
 
+    public static <V, R> Function<V, R> guard(final Function<V, R> converter) {
+
+        if ( converter == null ) {
+            throw new NullPointerException("null converter");
+        }
+
+        return value -> {
+
+            try {
+
+                return converter.apply(value);
+
+            } catch ( final RuntimeException ignored ) {
+
+                return null;
+
+            }
+
+        };
+    }
+
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private _Texts() { }
+    private Work() { }
+
 
 }

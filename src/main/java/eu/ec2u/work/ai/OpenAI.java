@@ -16,18 +16,28 @@
 
 package eu.ec2u.work.ai;
 
-
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.errors.OpenAIException;
+import com.openai.errors.RateLimitException;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static eu.ec2u.work.Work.guard;
+import static java.lang.Math.min;
+import static java.lang.String.format;
 
 /**
  * @see <a href="https://openai.com/api/">OpenAI Platform</a>
  * @see <a href="https://github.com/openai/openai-java">OpenAI Java API Library</a>
  */
 public final class OpenAI {
+
+    private static final int MIN_DELAY=100;
+    private static final int MAX_DELAY=10_000;
+
 
     /**
      * Retrieves the default OpenAI client factory.
@@ -63,6 +73,53 @@ public final class OpenAI {
         setup.accept(builder);
 
         return builder.build();
+    }
+
+
+    //
+
+    /*
+     * @see <a href="https://platform.openai.com/docs/guides/rate-limits#error-mitigation">Rate limits - Error mitigation</a>
+     */
+    static <V> V backoff(final int attempts, final Supplier<V> task) {
+
+        if ( attempts < 0 ) {
+            throw new IllegalArgumentException(format("negative attempt limit <%d>", attempts));
+        }
+
+        if ( task == null ) {
+            throw new NullPointerException("null task");
+        }
+
+        for (int attempt=0; attempts == 0 || attempt < attempts; attempt++) {
+            try {
+
+                return task.get();
+
+            } catch ( final RateLimitException e ) {
+
+                try {
+
+                    final int exponent=attempt;
+
+                    final long delay=e.headers()
+                            .values("retry-after-ms")
+                            .stream()
+                            .findFirst()
+                            .map(guard(Long::parseLong))
+                            .orElseGet(() -> min(MIN_DELAY*(1L << min(exponent, 30)), MAX_DELAY)); // prevent overflow
+
+                    final long jitter=ThreadLocalRandom.current().nextLong(0, delay);
+
+                    Thread.sleep(delay+jitter);
+
+                } catch ( final InterruptedException ignored ) { }
+
+            }
+        }
+
+        throw new OpenAIException(format("request aborted after <%d> attempts", attempts));
+
     }
 
 

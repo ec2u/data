@@ -23,6 +23,8 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
 
+import eu.ec2u.work.Work;
+
 import java.net.URI;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -139,7 +141,7 @@ public final class StoreTranslator implements Translator {
                 ).apply((elapsed, translation) -> translation.ifPresent(v -> logger.info(this, format(
 
                         "retrieved translation for <%s> (<%,d> chars) from <%s> to <%s> in <%,d> ms",
-                        _Texts.clip(text), text.length(), source.toLanguageTag(), target.toLanguageTag(), elapsed
+                        Work.clip(text), text.length(), source.toLanguageTag(), target.toLanguageTag(), elapsed
 
                 )))).or(() -> translator.translate(text, source, target).map(translation -> {
 

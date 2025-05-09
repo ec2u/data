@@ -20,6 +20,7 @@ import com.metreeca.flow.services.Logger;
 
 import com.openai.client.OpenAIClient;
 import com.openai.models.embeddings.EmbeddingCreateParams;
+import eu.ec2u.work.Work;
 
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -28,6 +29,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.util.Loggers.time;
 
+import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -91,7 +93,7 @@ public class OpenEmbedder implements Embedder {
 
             try {
 
-                return Optional.of(text)
+                return backoff(0, () -> Optional.of(text)
                         .filter(not(String::isBlank))
                         .map(t -> client.embeddings()
                                 .create(params()
@@ -102,7 +104,8 @@ public class OpenEmbedder implements Embedder {
                                 .getFirst()
                                 .embedding()
                         )
-                        .map(Vector::new);
+                        .map(Vector::new)
+                );
 
             } catch ( final RuntimeException e ) {
 
@@ -113,7 +116,7 @@ public class OpenEmbedder implements Embedder {
             }
 
         }).apply((elapsed, value) -> logger.info(this, format(
-                "embedded <%s> (<%,d> chars) in <%,d> ms", _Texts.clip(text), text.length(), elapsed
+                "embedded <%s> (<%,d> chars) in <%,d> ms", Work.clip(text), text.length(), elapsed
         )));
 
     }

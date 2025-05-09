@@ -29,11 +29,11 @@ import java.time.OffsetDateTime;
 import java.time.Year;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.metreeca.mesh.util.Collections.*;
 
+import static eu.ec2u.work.Work.guard;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.*;
 import static org.eclipse.rdf4j.model.util.Values.iri;
@@ -312,22 +312,6 @@ public final class Rover {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static <V, R> Function<V, R> guard(final Function<V, R> converter) {
-        return value -> {
-
-            try {
-
-                return converter.apply(value);
-
-            } catch ( final RuntimeException ignored ) {
-
-                return null;
-
-            }
-
-        };
-    }
 
 
     private Number number(final Literal literal) {
