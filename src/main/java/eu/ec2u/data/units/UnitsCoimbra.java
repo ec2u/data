@@ -30,12 +30,12 @@ import com.metreeca.mesh.util.URIs;
 import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
-import eu.ec2u.work.Parsers;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -135,7 +135,7 @@ public final class UnitsCoimbra implements Runnable {
                 .university(COIMBRA)
 
                 .homepage(set(json.get("web_url").string().flatMap(URIs::fuzzy).stream()))
-                .mbox(set(json.get("email").string().flatMap(Parsers::email).stream()))
+                .mbox(set(json.get("email").string().flatMap(Reference::email).stream()))
 
                 .identifier(id)
 

@@ -36,7 +36,7 @@ public interface SchemaPostalAddress extends SchemaThing {
     String streetAddress();
 
 
-    @Pattern(EMAIl_PATTERN)
+    @Pattern(EMAIL_PATTERN)
     String email();
 
     @Pattern(PHONE_PATTERN)

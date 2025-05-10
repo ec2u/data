@@ -33,7 +33,6 @@ import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
-import eu.ec2u.work.Parsers;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
@@ -47,6 +46,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Lambdas.lenient;
 import static com.metreeca.mesh.util.Locales.locale;
 
 import static eu.ec2u.data.Data.exec;
@@ -233,15 +233,15 @@ public interface Documents extends Dataset {
 
 
         private Optional<LocalDate> created(final CSVRecord record) {
-            return value(record, "Created", Parsers::localDate);
+            return value(record, "Created", lenient(v -> LocalDate.parse(v)));
         }
 
         private Optional<LocalDate> issued(final CSVRecord record) {
-            return value(record, "Issued", Parsers::localDate);
+            return value(record, "Issued", lenient(v -> LocalDate.parse(v)));
         }
 
         private Optional<LocalDate> modified(final CSVRecord record) {
-            return value(record, "Modified", Parsers::localDate);
+            return value(record, "Modified", lenient(v -> LocalDate.parse(v)));
         }
 
         private Optional<String> valid(final CSVRecord record) {

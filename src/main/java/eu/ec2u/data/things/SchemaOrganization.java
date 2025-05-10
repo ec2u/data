@@ -30,7 +30,7 @@ public interface SchemaOrganization extends SchemaThing {
 
     Map<Locale, String> legalName();
 
-    @Pattern(EMAIl_PATTERN)
+    @Pattern(EMAIL_PATTERN)
     Set<String> email();
 
     @Pattern(PHONE_PATTERN)

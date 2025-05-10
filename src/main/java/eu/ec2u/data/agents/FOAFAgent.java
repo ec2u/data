@@ -36,7 +36,7 @@ public interface FOAFAgent extends Reference {
     Set<URI> homepage();
 
 
-    @Pattern(EMAIl_PATTERN)
+    @Pattern(EMAIL_PATTERN)
     Set<String> mbox();
 
     @Pattern(PHONE_PATTERN)

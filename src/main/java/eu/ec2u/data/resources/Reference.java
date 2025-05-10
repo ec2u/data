@@ -24,11 +24,8 @@ import com.metreeca.mesh.meta.shacl.MaxLength;
 import com.metreeca.mesh.util.Strings;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import static com.metreeca.mesh.util.Collections.entry;
 import static com.metreeca.mesh.util.Collections.map;
@@ -43,7 +40,7 @@ public interface Reference {
     int LABEL_LENGTH=100;
     int COMMENT_LENGTH=500;
 
-    String EMAIl_PATTERN="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+    String EMAIL_PATTERN="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
     String PHONE_PATTERN="^\\+?[1-9]\\d{1,14}$";
 
 
@@ -65,6 +62,12 @@ public interface Reference {
                 .map(e -> entry(e.getKey(), Strings.clip(e.getValue(), length)))
                 .collect(groupingBy(Entry::getKey, reducing(null, Entry::getValue, (x, y) -> x == null ? y : x)))
         );
+    }
+
+
+    static Optional<String> email(final String text) {
+        return Optional.of(text)
+                .filter(t -> t.matches(EMAIL_PATTERN));
     }
 
 

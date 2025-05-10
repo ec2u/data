@@ -419,7 +419,7 @@ public interface Events extends Dataset {
             return json
                     .get("language")
                     .string()
-                    .map(lenient(Locales::locale))
+                    .flatMap(lenient(Locales::locale))
                     .orElseGet(university::locale); // unexpected
         }
 
@@ -447,14 +447,14 @@ public interface Events extends Dataset {
             return json
                     .get("startDate")
                     .string()
-                    .map(lenient(LocalDate::parse));
+                    .flatMap(lenient(LocalDate::parse));
         }
 
         private Optional<LocalTime> startTime(final Value json) {
             return json
                     .get("startTime")
                     .string()
-                    .map(lenient(LocalTime::parse));
+                    .flatMap(lenient(LocalTime::parse));
         }
 
 
@@ -462,14 +462,14 @@ public interface Events extends Dataset {
             return json
                     .get("endTime")
                     .string()
-                    .map(lenient(LocalTime::parse));
+                    .flatMap(lenient(LocalTime::parse));
         }
 
         private Optional<LocalDate> endDate(final Value json) {
             return json
                     .get("endDate")
                     .string()
-                    .map(lenient(LocalDate::parse));
+                    .flatMap(lenient(LocalDate::parse));
         }
 
 
@@ -501,7 +501,7 @@ public interface Events extends Dataset {
             return json
                     .get("attendanceURL")
                     .string()
-                    .map(lenient(base::resolve));
+                    .flatMap(lenient(base::resolve));
         }
 
         private Optional<String> venueName(final Value json) {
@@ -519,7 +519,7 @@ public interface Events extends Dataset {
 
         private Optional<SchemaImageObjectFrame> image(final Value json, final URI base) {
             return json.get("imageURL").string()
-                    .map(lenient(base::resolve))
+                    .flatMap(lenient(base::resolve))
                     .map(uri -> new SchemaImageObjectFrame()
                             .id(uri)
                             .url(set(uri))

@@ -71,7 +71,7 @@ public final class UnitsPavia implements Runnable {
     private static Optional<Locale> locale(final Optional<String> locale) {
         return locale
                 .filter(LanguagePattern.asMatchPredicate())
-                .map(lenient(Locale::forLanguageTag));
+                .flatMap(lenient(Locale::forLanguageTag));
     }
 
 

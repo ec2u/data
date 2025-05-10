@@ -30,13 +30,13 @@ import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.persons.PersonFrame;
+import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
-import eu.ec2u.work.Parsers;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
@@ -237,7 +237,7 @@ public interface Units extends Dataset {
         }
 
         private Stream<String> mbox(final CSVRecord record) {
-            return value(record, "Email", Parsers::email).stream();
+            return value(record, "Email", Reference::email).stream();
         }
 
         private Stream<TopicFrame> classification(final CSVRecord record) {

@@ -19,34 +19,17 @@ package eu.ec2u.work;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.mesh.util.Lambdas.lenient;
-
 public final class Parsers {
 
-    private static final Pattern EmailPattern=Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
     private static final Pattern FuzzyIntegerPattern=Pattern.compile("^\\s*(\\d+)(?![.\\d])");
     private static final Pattern FuzzyDecimalPattern=Pattern.compile("^\\s*(\\d+(?:\\.\\d+)?)");
 
 
     private Parsers() { }
-
-
-
-    public static Optional<String> email(final String text) {
-        return Optional.of(text)
-                .filter(EmailPattern.asMatchPredicate());
-    }
-
-
-    public static Optional<LocalDate> localDate(final String text) {
-        return Optional.of(text)
-                .map(lenient(LocalDate::parse));
-    }
 
 
     public static Optional<BigInteger> integer(final String text) {

@@ -109,7 +109,7 @@ public final class OpenAI {
                             .values("retry-after-ms")
                             .stream()
                             .findFirst()
-                            .map(lenient(Long::parseLong))
+                            .flatMap(lenient(Long::parseLong))
                             .orElseGet(() -> min(MIN_DELAY*(1L << min(exponent, 30)), MAX_DELAY)); // prevent overflow
 
                     final long jitter=ThreadLocalRandom.current().nextLong(0, delay);

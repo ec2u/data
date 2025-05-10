@@ -193,7 +193,8 @@ public final class Rover {
         return focus.stream()
                 .filter(Literal.class::isInstance)
                 .map(Literal.class::cast)
-                .map(lenient(Value::stringValue));
+                .map(lenient(Value::stringValue))
+                .flatMap(Optional::stream);
     }
 
     public Stream<String> strings() {
@@ -221,7 +222,8 @@ public final class Rover {
                 )
 
                 .map(Value::stringValue)
-                .map(lenient(URI::create));
+                .map(lenient(URI::create))
+                .flatMap(Optional::stream);
     }
 
     public Stream<Long> integrals() {
@@ -238,7 +240,8 @@ public final class Rover {
                 .filter(Literal.class::isInstance)
                 .map(Literal.class::cast)
                 .filter(v -> v.getDatatype().equals(XSD.GYEAR) || v.getDatatype().equals(XSD.DATETIME)) // !!! complete
-                .map(lenient(v -> Year.from(v.temporalAccessorValue())));
+                .map(lenient(v -> Year.from(v.temporalAccessorValue())))
+                .flatMap(Optional::stream);
     }
 
     public Stream<OffsetDateTime> offsetDateTimes() {
@@ -246,7 +249,8 @@ public final class Rover {
                 .filter(Literal.class::isInstance)
                 .map(Literal.class::cast)
                 .filter(v -> v.getDatatype().equals(XSD.DATETIME))
-                .map(lenient(v -> OffsetDateTime.from(v.temporalAccessorValue())));
+                .map(lenient(v -> OffsetDateTime.from(v.temporalAccessorValue())))
+                .flatMap(Optional::stream);
     }
 
 
