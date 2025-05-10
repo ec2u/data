@@ -111,13 +111,6 @@
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>mesh-mint</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.metreeca</groupId>
             <artifactId>flow-json</artifactId>
         </dependency>
 
@@ -193,19 +186,13 @@
 
         <repository>
 
-            <id>central-releases</id>
-            <url>https://oss.sonatype.org/content/repositories/releases</url>
+            <name>Central Portal Snapshots</name>
+            <id>central-portal-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
 
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
-
-        </repository>
-
-        <repository>
-
-            <id>central-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
 
             <snapshots>
                 <enabled>true</enabled>
@@ -290,73 +277,84 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
 
+                    <annotationProcessorPaths>
+
+                        <path>
+                            <groupId>com.metreeca</groupId>
+                            <artifactId>mesh-mint</artifactId>
+                        </path>
+
+                    </annotationProcessorPaths>
+
                 </configuration>
 
             </plugin>
 
-            <plugin> <!-- https://github.com/eirslett/frontend-maven-plugin -->
+            <!--
+                        <plugin> &lt;!&ndash; https://github.com/eirslett/frontend-maven-plugin &ndash;&gt;
 
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.15.0</version>
+                            <groupId>com.github.eirslett</groupId>
+                            <artifactId>frontend-maven-plugin</artifactId>
+                            <version>1.15.0</version>
 
-                <configuration>
+                            <configuration>
 
-                    <installDirectory>${project.build.directory}</installDirectory>
+                                <installDirectory>${project.build.directory}</installDirectory>
 
-                </configuration>
+                            </configuration>
 
-                <executions>
+                            <executions>
 
-                    <execution>
+                                <execution>
 
-                        <id>install-node-and-npm</id>
-                        <phase>validate</phase>
+                                    <id>install-node-and-npm</id>
+                                    <phase>validate</phase>
 
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
+                                    <goals>
+                                        <goal>install-node-and-npm</goal>
+                                    </goals>
 
-                        <configuration>
-                            <nodeVersion>v${node.version}</nodeVersion>
-                            <npmVersion>${npm.version}</npmVersion>
-                        </configuration>
+                                    <configuration>
+                                        <nodeVersion>v${node.version}</nodeVersion>
+                                        <npmVersion>${npm.version}</npmVersion>
+                                    </configuration>
 
-                    </execution>
+                                </execution>
 
-                    <execution>
+                                <execution>
 
-                        <id>npm-install</id>
-                        <phase>initialize</phase>
+                                    <id>npm-install</id>
+                                    <phase>initialize</phase>
 
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
+                                    <goals>
+                                        <goal>npm</goal>
+                                    </goals>
 
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
+                                    <configuration>
+                                        <arguments>install</arguments>
+                                    </configuration>
 
-                    </execution>
+                                </execution>
 
-                    <execution>
+                                <execution>
 
-                        <id>npm-build</id>
-                        <phase>compile</phase>
+                                    <id>npm-build</id>
+                                    <phase>compile</phase>
 
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
+                                    <goals>
+                                        <goal>npm</goal>
+                                    </goals>
 
-                        <configuration>
-                            <arguments>run build</arguments>
-                        </configuration>
+                                    <configuration>
+                                        <arguments>run build</arguments>
+                                    </configuration>
 
-                    </execution>
+                                </execution>
 
-                </executions>
+                            </executions>
 
-            </plugin>
+                        </plugin>
+            -->
 
             <plugin>  <!-- https://maven.apache.org/plugins/maven-jar-plugin/ -->
 
