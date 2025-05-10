@@ -24,6 +24,7 @@ import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.util.Collections;
+import com.metreeca.mesh.util.URIs;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
@@ -224,13 +225,13 @@ public interface Units extends Dataset {
         private Stream<URI> homepage(final CSVRecord record) {
             return Xtream.from(
 
-                    value(record, "Factsheet", Parsers::uri).stream(),
-                    value(record, "Factsheet (English)", Parsers::uri).stream(), // !!! track language
-                    value(record, "Factsheet (Local)", Parsers::uri).stream(), // !!! track language
+                    value(record, "Factsheet", URIs::fuzzy).stream(),
+                    value(record, "Factsheet (English)", URIs::fuzzy).stream(), // !!! track language
+                    value(record, "Factsheet (Local)", URIs::fuzzy).stream(), // !!! track language
 
-                    value(record, "Homepage", Parsers::uri).stream(),
-                    value(record, "Homepage (English)", Parsers::uri).stream(), // !!! track language
-                    value(record, "Homepage (Local)", Parsers::uri).stream() // !!! track language
+                    value(record, "Homepage", URIs::fuzzy).stream(),
+                    value(record, "Homepage (English)", URIs::fuzzy).stream(), // !!! track language
+                    value(record, "Homepage (Local)", URIs::fuzzy).stream() // !!! track language
 
             );
         }

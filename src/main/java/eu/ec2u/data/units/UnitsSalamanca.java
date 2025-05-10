@@ -31,7 +31,6 @@ import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.TopicFrame;
-import eu.ec2u.work.Parsers;
 import org.apache.commons.csv.CSVFormat;
 
 import java.net.URI;
@@ -221,8 +220,8 @@ public final class UnitsSalamanca implements Runnable {
                 .classification(set(DEPARTMENT))
 
                 .homepage(set(Xtream.from(
-                        json.get("department_web_usal_url").string().flatMap(Parsers::uri).stream(),
-                        json.get("department_scientific_portal_url").string().flatMap(Parsers::uri).stream()
+                        json.get("department_web_usal_url").string().flatMap(URIs::fuzzy).stream(),
+                        json.get("department_scientific_portal_url").string().flatMap(URIs::fuzzy).stream()
 
                 )))
 
@@ -242,8 +241,8 @@ public final class UnitsSalamanca implements Runnable {
                 .classification(set(INSTITUTE))
 
                 .homepage(set(Xtream.from(
-                        json.get("institute_webusal_url").string().flatMap(Parsers::uri).stream(),
-                        json.get("institute_scientific_portal_url").string().flatMap(Parsers::uri).stream()
+                        json.get("institute_webusal_url").string().flatMap(URIs::fuzzy).stream(),
+                        json.get("institute_scientific_portal_url").string().flatMap(URIs::fuzzy).stream()
                 )))
 
         ).flatMap(unit -> review(unit, SALAMANCA.locale()));

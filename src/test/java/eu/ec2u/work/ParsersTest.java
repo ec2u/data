@@ -23,40 +23,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static eu.ec2u.work.Parsers.decimal;
-import static eu.ec2u.work.Parsers.url;
 import static org.assertj.core.api.Assertions.assertThat;
 
 final class ParsersTest {
-
-    @Nested
-    final class URLs {
-
-        @Test void absolute() {
-            assertThat(url("http://example.com/"))
-                    .contains("http://example.com/");
-        }
-
-        @Test void relative() {
-            assertThat(url("www.example.com"))
-                    .contains("https://www.example.com");
-        }
-
-        @Test void garbage() {
-            assertThat(url("https://utu.zoom.us/j/69048613177 Joachim Schlabach"))
-                    .contains("https://utu.zoom.us/j/69048613177");
-        }
-
-        @Test void malformedEscape() {
-            assertThat(url("https://example.com/%2"))
-                    .isEmpty();
-        }
-
-        @Test void none() {
-            assertThat(url("none"))
-                    .isEmpty();
-        }
-
-    }
 
 
     @Nested

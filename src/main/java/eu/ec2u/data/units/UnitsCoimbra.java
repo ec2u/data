@@ -134,7 +134,7 @@ public final class UnitsCoimbra implements Runnable {
                 .id(Units.UNITS.id().resolve(uuid(COIMBRA, id)))
                 .university(COIMBRA)
 
-                .homepage(set(json.get("web_url").string().flatMap(Parsers::url).map(URIs::uri).stream()))
+                .homepage(set(json.get("web_url").string().flatMap(URIs::fuzzy).stream()))
                 .mbox(set(json.get("email").string().flatMap(Parsers::email).stream()))
 
                 .identifier(id)

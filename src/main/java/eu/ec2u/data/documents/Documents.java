@@ -200,8 +200,8 @@ public interface Documents extends Dataset {
 
         private Stream<URI> url(final CSVRecord record) {
             return Stream.concat(
-                    value(record, "URL (English)", Parsers::uri).stream(),
-                    value(record, "URL (Local)", Parsers::uri).stream()
+                    value(record, "URL (English)", URIs::fuzzy).stream(),
+                    value(record, "URL (Local)", URIs::fuzzy).stream()
             );
         }
 
@@ -261,8 +261,7 @@ public interface Documents extends Dataset {
 
         private Optional<ReferenceFrame> license(final CSVRecord record) {
             return value(record, "License")
-                    .flatMap(Parsers::url)
-                    .map(URIs::uri)
+                    .flatMap(URIs::fuzzy)
                     .map(v -> new ReferenceFrame(true).id(v));
         }
 
@@ -299,7 +298,7 @@ public interface Documents extends Dataset {
 
         private Optional<OrgOrganizationFrame> publisher(final CSVRecord record) {
 
-            final Optional<URI> home=value(record, "Home", Parsers::uri);
+            final Optional<URI> home=value(record, "Home", URIs::fuzzy);
             final Optional<String> nameEnglish=value(record, "Publisher (English)");
             final Optional<String> nameLocal=value(record, "Publisher (Local)");
 

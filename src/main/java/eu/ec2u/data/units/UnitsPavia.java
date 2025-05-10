@@ -21,11 +21,11 @@ import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.util.Futures;
+import com.metreeca.mesh.util.URIs;
 
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.universities.University;
-import eu.ec2u.work.Parsers;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
@@ -191,7 +191,7 @@ public final class UnitsPavia implements Runnable {
                 .map(json -> {
 
                             final Optional<URI> url=json.get("url").string()
-                                    .flatMap(Parsers::uri)
+                                    .flatMap(URIs::fuzzy)
                                     .map(catalog.url()::resolve);
 
                             return new UnitFrame()
