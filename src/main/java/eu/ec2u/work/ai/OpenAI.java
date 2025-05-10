@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.mesh.util.Lambdas.lenient;
 
-import static eu.ec2u.work.Lambdas.guard;
 import static java.lang.Math.min;
 import static java.lang.String.format;
 
@@ -109,7 +109,7 @@ public final class OpenAI {
                             .values("retry-after-ms")
                             .stream()
                             .findFirst()
-                            .map(guard(Long::parseLong))
+                            .map(lenient(Long::parseLong))
                             .orElseGet(() -> min(MIN_DELAY*(1L << min(exponent, 30)), MAX_DELAY)); // prevent overflow
 
                     final long jitter=ThreadLocalRandom.current().nextLong(0, delay);

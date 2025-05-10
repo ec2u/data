@@ -32,8 +32,8 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Lambdas.lenient;
 
-import static eu.ec2u.work.Lambdas.guard;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.*;
 import static org.eclipse.rdf4j.model.util.Values.iri;
@@ -193,7 +193,7 @@ public final class Rover {
         return focus.stream()
                 .filter(Literal.class::isInstance)
                 .map(Literal.class::cast)
-                .map(guard(Value::stringValue));
+                .map(lenient(Value::stringValue));
     }
 
     public Stream<String> strings() {
@@ -221,7 +221,7 @@ public final class Rover {
                 )
 
                 .map(Value::stringValue)
-                .map(guard(URI::create));
+                .map(lenient(URI::create));
     }
 
     public Stream<Long> integrals() {
@@ -238,7 +238,7 @@ public final class Rover {
                 .filter(Literal.class::isInstance)
                 .map(Literal.class::cast)
                 .filter(v -> v.getDatatype().equals(XSD.GYEAR) || v.getDatatype().equals(XSD.DATETIME)) // !!! complete
-                .map(guard(v -> Year.from(v.temporalAccessorValue())));
+                .map(lenient(v -> Year.from(v.temporalAccessorValue())));
     }
 
     public Stream<OffsetDateTime> offsetDateTimes() {
@@ -246,7 +246,7 @@ public final class Rover {
                 .filter(Literal.class::isInstance)
                 .map(Literal.class::cast)
                 .filter(v -> v.getDatatype().equals(XSD.DATETIME))
-                .map(guard(v -> OffsetDateTime.from(v.temporalAccessorValue())));
+                .map(lenient(v -> OffsetDateTime.from(v.temporalAccessorValue())));
     }
 
 
