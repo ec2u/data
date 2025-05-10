@@ -38,6 +38,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -68,8 +69,6 @@ import static java.util.function.Predicate.not;
 
 public final class UnitsSalamanca implements Runnable {
 
-    private static final URI CONTEXT=Units.UNITS.id().resolve("salamanca");
-
     private static final String API_URL="units-salamanca-url"; // vault label
     private static final String API_KEY="units-salamanca-key"; // vault label
 
@@ -85,46 +84,6 @@ public final class UnitsSalamanca implements Runnable {
 
     private final Vault vault=service(vault());
     private final Logger logger=service(logger());
-
-
-    private final Collection<Entry<URI, Unit>> vis=Xtream.of(vault.get(VIS_URL))
-
-            .optMap(new GET<>(new CSV(CSVFormat.Builder.create()
-                    .setHeader()
-                    .setSkipHeaderRecord(true)
-                    .setIgnoreHeaderCase(true)
-                    .build()
-            )))
-
-            .flatMap(Collection::stream)
-
-            .map(record -> entry(
-                    record.get("Work"),
-                    record.get("VI") // !!! Unit
-            ))
-
-            .filter(e -> !e.getKey().isEmpty())
-            .filter(e -> !e.getValue().isEmpty())
-
-            .map(e -> {
-
-                final Optional<Unit> vi=Unit.vi(e.getValue());
-
-                if ( vi.isEmpty() ) {
-                    logger.warning(UnitsSalamanca.class, format(
-                            "unknown VI <%s>", e.getValue()
-                    ));
-                }
-
-                return entry(uri(e.getKey()), vi);
-
-            })
-
-            .filter(e -> e.getValue().isPresent())
-
-            .map(e -> entry(e.getKey(), e.getValue().get()))
-
-            .toList();
 
 
     @Override public void run() {
@@ -227,6 +186,8 @@ public final class UnitsSalamanca implements Runnable {
             final Optional<UnitFrame> department=department(json);
             final Optional<UnitFrame> institute=institute(json);
 
+            final List<Entry<URI, Unit>> vis=vis().toList();
+
             return Xtream.from(
                     Stream.of(unit.unitOf(set(Xtream.from(
                             department.isEmpty() && institute.isEmpty() ? Stream.of(SALAMANCA) : Stream.empty(),
@@ -286,6 +247,45 @@ public final class UnitsSalamanca implements Runnable {
                 )))
 
         ).flatMap(unit -> review(unit, SALAMANCA.locale()));
+    }
+
+    private Stream<Entry<URI, Unit>> vis() {
+        return Xtream.of(vault.get(VIS_URL))
+
+                .optMap(new GET<>(new CSV(CSVFormat.Builder.create()
+                        .setHeader()
+                        .setSkipHeaderRecord(true)
+                        .setIgnoreHeaderCase(true)
+                        .build()
+                )))
+
+                .flatMap(Collection::stream)
+
+                .map(record -> entry(
+                        record.get("Work"),
+                        record.get("VI") // !!! Unit
+                ))
+
+                .filter(e -> !e.getKey().isEmpty())
+                .filter(e -> !e.getValue().isEmpty())
+
+                .map(e -> {
+
+                    final Optional<Unit> vi=Unit.vi(e.getValue());
+
+                    if ( vi.isEmpty() ) {
+                        logger.warning(UnitsSalamanca.class, format(
+                                "unknown VI <%s>", e.getValue()
+                        ));
+                    }
+
+                    return entry(uri(e.getKey()), vi);
+
+                })
+
+                .filter(e -> e.getValue().isPresent())
+
+                .map(e -> entry(e.getKey(), e.getValue().get()));
     }
 
 }
