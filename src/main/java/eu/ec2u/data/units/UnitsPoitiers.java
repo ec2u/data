@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.units;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.json.formats.JSON;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
 

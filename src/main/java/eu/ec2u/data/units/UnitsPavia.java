@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.units;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.util.Futures;
@@ -40,12 +40,12 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.rdf.Values.guarded;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Lambdas.lenient;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -71,7 +71,7 @@ public final class UnitsPavia implements Runnable {
     private static Optional<Locale> locale(final Optional<String> locale) {
         return locale
                 .filter(LanguagePattern.asMatchPredicate())
-                .map(guarded(Locale::forLanguageTag));
+                .map(lenient(Locale::forLanguageTag));
     }
 
 

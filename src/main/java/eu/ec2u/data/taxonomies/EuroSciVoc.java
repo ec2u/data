@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.taxonomies;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.rdf.actions.Retrieve;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.organizations.OrgOrganizationFrame;

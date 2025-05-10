@@ -30,8 +30,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.metreeca.flow.toolkits.Strings.split;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Strings.split;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.resources.Localized.EN;

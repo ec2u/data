@@ -16,9 +16,9 @@
 
 package eu.ec2u.data.units;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.text.services.Translator;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;

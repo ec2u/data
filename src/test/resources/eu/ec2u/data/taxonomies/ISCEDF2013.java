@@ -18,7 +18,7 @@ package eu.ec2u.data.concepts;
 
 import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.rdf4j.actions.Upload;
-import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.Xtream;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.OWL;

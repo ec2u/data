@@ -16,10 +16,10 @@
 
 package eu.ec2u.data.events;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.ical.formats.iCal;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.organizations.OrganizationFrame;
@@ -28,9 +28,9 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Description;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.http.Message.ABSOLUTE_PATTERN;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.flow.toolkits.Identifiers.AbsoluteIRIPattern;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Loggers.time;
@@ -80,7 +80,7 @@ public final class EventsSalamancaUniversity implements Runnable {
 
                 .optMap(v -> v.getDescription()
                         .map(Description::getValue)
-                        .filter(AbsoluteIRIPattern.asMatchPredicate())
+                        .filter(ABSOLUTE_PATTERN.asMatchPredicate())
                 )
 
                 .pipe(new Events.Scanner(SALAMANCA, PUBLISHER))

@@ -16,12 +16,12 @@
 
 package eu.ec2u.data.events;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.Valuable;
@@ -54,15 +54,15 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.rdf.Values.guarded;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.flow.toolkits.Strings.clip;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.Value.zonedDateTime;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Lambdas.lenient;
 import static com.metreeca.mesh.util.Loggers.time;
+import static com.metreeca.mesh.util.Strings.clip;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -419,7 +419,7 @@ public interface Events extends Dataset {
             return json
                     .get("language")
                     .string()
-                    .map(guarded(Locales::locale))
+                    .map(lenient(Locales::locale))
                     .orElseGet(university::locale); // unexpected
         }
 
@@ -447,14 +447,14 @@ public interface Events extends Dataset {
             return json
                     .get("startDate")
                     .string()
-                    .map(guarded(LocalDate::parse));
+                    .map(lenient(LocalDate::parse));
         }
 
         private Optional<LocalTime> startTime(final Value json) {
             return json
                     .get("startTime")
                     .string()
-                    .map(guarded(LocalTime::parse));
+                    .map(lenient(LocalTime::parse));
         }
 
 
@@ -462,14 +462,14 @@ public interface Events extends Dataset {
             return json
                     .get("endTime")
                     .string()
-                    .map(guarded(LocalTime::parse));
+                    .map(lenient(LocalTime::parse));
         }
 
         private Optional<LocalDate> endDate(final Value json) {
             return json
                     .get("endDate")
                     .string()
-                    .map(guarded(LocalDate::parse));
+                    .map(lenient(LocalDate::parse));
         }
 
 
@@ -501,7 +501,7 @@ public interface Events extends Dataset {
             return json
                     .get("attendanceURL")
                     .string()
-                    .map(guarded(base::resolve));
+                    .map(lenient(base::resolve));
         }
 
         private Optional<String> venueName(final Value json) {
@@ -519,7 +519,7 @@ public interface Events extends Dataset {
 
         private Optional<SchemaImageObjectFrame> image(final Value json, final URI base) {
             return json.get("imageURL").string()
-                    .map(guarded(base::resolve))
+                    .map(lenient(base::resolve))
                     .map(uri -> new SchemaImageObjectFrame()
                             .id(uri)
                             .url(set(uri))

@@ -21,21 +21,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
-import static com.metreeca.flow.rdf.Values.guarded;
+import static com.metreeca.mesh.util.Lambdas.lenient;
 
 import static java.lang.String.format;
-import static java.util.Locale.ENGLISH;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toSet;
 
 public final class Parsers {
 
@@ -83,7 +76,7 @@ public final class Parsers {
 
     public static Optional<LocalDate> localDate(final String text) {
         return Optional.of(text)
-                .map(guarded(LocalDate::parse));
+                .map(lenient(LocalDate::parse));
     }
 
     public static Optional<BigInteger> integer(final String text) {
@@ -114,31 +107,6 @@ public final class Parsers {
                 .map(matcher -> matcher.group(1))
 
                 .map(BigDecimal::new);
-    }
-
-
-    public static Stream<String> languages(final String text) {
-
-        if ( text == null ) {
-            throw new NullPointerException("null text");
-        }
-
-        final Set<String> languages=LanguagePattern
-                .matcher(text)
-                .results()
-                .map(MatchResult::group)
-                .map(s -> s.toUpperCase(Locale.ROOT))
-                .collect(toSet());
-
-        return Arrays.stream(Locale.getAvailableLocales())
-                .filter(locale
-                        -> languages.contains(locale.getLanguage().toUpperCase(Locale.ROOT))
-                        || languages.contains(locale.getISO3Language().toUpperCase(Locale.ROOT))
-                        || languages.contains(locale.getDisplayLanguage(locale).toUpperCase(Locale.ROOT))
-                        || languages.contains(locale.getDisplayLanguage(ENGLISH).toUpperCase(Locale.ROOT))
-                )
-                .map(Locale::getLanguage)
-                .distinct();
     }
 
 }

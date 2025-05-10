@@ -16,12 +16,12 @@
 
 package eu.ec2u.data.resources;
 
-import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MaxLength;
+import com.metreeca.mesh.util.Strings;
 
 import java.net.URI;
 import java.util.Arrays;

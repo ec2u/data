@@ -16,19 +16,19 @@
 
 package eu.ec2u.data.taxonomies;
 
-import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.Xtream;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.toolkits.Resources.resource;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Resources.resource;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;

@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.taxonomies;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 

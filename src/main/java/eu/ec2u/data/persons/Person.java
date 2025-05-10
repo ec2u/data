@@ -17,10 +17,10 @@
 package eu.ec2u.data.persons;
 
 import com.metreeca.flow.json.actions.Validate;
-import com.metreeca.flow.toolkits.Strings;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.util.Strings;
 
 import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.resources.Resource;
@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.metreeca.flow.toolkits.Strings.normalize;
+import static com.metreeca.mesh.util.Strings.normalize;
 
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;

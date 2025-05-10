@@ -16,12 +16,11 @@
 
 package eu.ec2u.data.units;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
-import com.metreeca.flow.toolkits.Strings;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.util.Collections;
@@ -49,6 +48,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Strings.split;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
@@ -285,7 +285,7 @@ public interface Units extends Dataset {
         private Stream<OrgOrganization> parents(final String parent, final Collection<CSVRecord> records) {
 
             final List<OrgOrganization> parents=Xtream.of(parent)
-                    .flatMap(Strings::split)
+                    .flatMap(v -> split(v, ";"))
                     .optMap(ref -> {
 
                         final Optional<URI> id=records.stream()

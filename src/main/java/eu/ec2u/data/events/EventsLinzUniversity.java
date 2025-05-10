@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.events;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.tools.Store;

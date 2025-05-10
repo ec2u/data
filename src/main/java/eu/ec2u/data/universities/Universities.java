@@ -16,14 +16,13 @@
 
 package eu.ec2u.data.universities;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
-import com.metreeca.flow.lod.actions.Wikidata;
+import com.metreeca.flow.lod.Wikidata;
 import com.metreeca.flow.rdf4j.actions.GraphQuery;
-import com.metreeca.flow.rdf4j.services.Graph;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.util.Locales;
@@ -31,7 +30,6 @@ import com.metreeca.mesh.util.Locales;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.GeoReferenceFrame;
 import eu.ec2u.work.Rover;
-import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -40,12 +38,12 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.toolkits.Resources.resource;
-import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.mesh.util.Resources.resource;
+import static com.metreeca.mesh.util.Resources.text;
 import static com.metreeca.mesh.util.Strings.fill;
 import static com.metreeca.mesh.util.URIs.term;
 
@@ -105,7 +103,7 @@ public interface Universities extends Dataset {
                     )))
 
                     .flatMap(new GraphQuery()
-                            .graph(new Graph(new SPARQLRepository("https://query.wikidata.org/sparql")))
+                            .repository(Wikidata.repository())
                     )
 
                     .toList()

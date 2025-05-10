@@ -21,7 +21,7 @@ import com.metreeca.flow.rdf4j.actions.Update;
 import com.metreeca.flow.rdf4j.actions.Upload;
 import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.flow.work.Xtream;
+import com.metreeca.flow.Xtream;
 
 import eu.ec2u.data.universities.University;
 import org.eclipse.rdf4j.model.IRI;
@@ -49,7 +49,7 @@ import static com.metreeca.flow.toolkits.Resources.text;
 import static com.metreeca.link.Frame.iri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.Data.repository;
+import static eu.ec2u.data.Data.gdb;
 import static eu.ec2u.data.EC2U.BASE;
 import static eu.ec2u.data.EC2U.update;
 import static java.lang.String.format;
@@ -78,7 +78,7 @@ public final class ESCO implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Graph esco=new Graph(repository("esco"));
+    private final Graph esco=new Graph(gdb("esco"));
     private final Logger logger=service(logger());
 
 

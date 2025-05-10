@@ -25,8 +25,8 @@ import com.metreeca.flow.http.services.Fetcher.CacheFetcher;
 import com.metreeca.flow.http.services.Fetcher.URLFetcher;
 import com.metreeca.flow.rdf4j.handlers.Graphs;
 import com.metreeca.flow.rdf4j.handlers.SPARQL;
-import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.services.Cache.FileCache;
+import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.text.services.Translator.CacheTranslator;
 
 import eu.ec2u.work.ai.Embedder.CacheEmbedder;
@@ -48,7 +48,7 @@ import static com.metreeca.flow.http.Response.SeeOther;
 import static com.metreeca.flow.http.services.Fetcher.fetcher;
 import static com.metreeca.flow.json.formats.JSON.codec;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.rdf4j.services.Graph.graph;
+import static com.metreeca.flow.rdf4j.RDF4J.repository;
 import static com.metreeca.flow.services.Cache.cache;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.text.services.Translator.translator;
@@ -69,10 +69,10 @@ public final class Data extends Delegator {
 
     private static final boolean Production=GCPServer.production();
 
-    private static final String GraphDBServer="http://base.ec2u.net"; // !!! https
-    private static final String GraphDBRepository="data-work";
-    private static final String GraphDBUsr="server";
-    private static final String GraphDBPwd="graphdb-server-pwd";
+    private static final String GDB_SERVER="http://base.ec2u.net"; // !!! https
+    private static final String GDB_REPOSITORY="data-work";
+    private static final String GDB_USR="gdb-server-usr";
+    private static final String GDB_PWD="gdb-server-pwd";
 
 
     static {
@@ -96,8 +96,9 @@ public final class Data extends Delegator {
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
                 .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
 
-                .set(graph(), () -> new Graph(service(Data::repository)))
-                .set(store(), () -> rdf4j(service(Data::repository)))
+                .set(repository(), () -> gdb(GDB_REPOSITORY))
+
+                .set(store(), () -> rdf4j(service(repository())))
                 .set(codec(), () -> json()
                         .prune(true)
                         .indent(true)
@@ -121,15 +122,13 @@ public final class Data extends Delegator {
     }
 
 
-    private static Repository repository() {
-        return repository(GraphDBRepository);
-    }
+    public static Repository gdb(final String name) {
 
-    public static Repository repository(final String name) {
+        final Vault vault=service(vault());
 
-        final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GraphDBServer, name));
+        final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GDB_SERVER, name));
 
-        repository.setUsernameAndPassword(GraphDBUsr, service(vault()).get(GraphDBPwd));
+        repository.setUsernameAndPassword(vault.get(GDB_USR), vault.get(GDB_PWD));
 
         return repository;
     }

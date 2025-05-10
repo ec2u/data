@@ -16,12 +16,12 @@
 
 package eu.ec2u.data.documents;
 
+import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
-import com.metreeca.flow.work.Xtream;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.util.Collections;
@@ -45,7 +45,6 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.toolkits.Strings.lower;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Locales.locale;
@@ -58,6 +57,7 @@ import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
+import static java.util.Locale.ROOT;
 
 @Frame
 public interface Documents extends Dataset {
@@ -320,7 +320,7 @@ public interface Documents extends Dataset {
 
                         return new OrgOrganizationFrame()
 
-                                .id(ORGANIZATIONS.id().resolve(uuid(university, lower(id))))
+                                .id(ORGANIZATIONS.id().resolve(uuid(university, id.toLowerCase(ROOT))))
 
                                 .prefLabel(map(Stream.concat(
                                         nameEnglish.map(v -> entry(EN, v)).stream(),
