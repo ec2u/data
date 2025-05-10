@@ -21,8 +21,6 @@ import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
 
-import eu.ec2u.work.Work;
-
 import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -44,6 +42,7 @@ import static com.metreeca.mesh.shapes.Property.property;
 import static com.metreeca.mesh.shapes.Shape.shape;
 import static com.metreeca.mesh.shapes.Type.type;
 import static com.metreeca.mesh.util.Collections.list;
+import static com.metreeca.mesh.util.Loggers.elide;
 import static com.metreeca.mesh.util.Loggers.time;
 import static com.metreeca.mesh.util.URIs.base;
 import static com.metreeca.mesh.util.URIs.uuid;
@@ -120,7 +119,7 @@ public final class StoreEmbedder implements Embedder {
 
                 ).apply((elapsed, vector) -> vector.ifPresent(v -> logger.info(this, format(
 
-                        "retrieved embedding for <%s> (<%,d> chars) in <%,d> ms", Work.clip(t), t.length(), elapsed
+                        "retrieved embedding for <%s> (<%,d> chars) in <%,d> ms", elide(t), t.length(), elapsed
 
                 )))).or(() -> embedder.embed(t).map(embedding -> {
 

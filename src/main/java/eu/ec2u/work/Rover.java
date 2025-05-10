@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 
 import static com.metreeca.mesh.util.Collections.*;
 
-import static eu.ec2u.work.Work.guard;
+import static eu.ec2u.work.Lambdas.guard;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.*;
 import static org.eclipse.rdf4j.model.util.Values.iri;

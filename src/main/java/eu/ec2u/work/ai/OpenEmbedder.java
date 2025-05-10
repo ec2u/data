@@ -20,13 +20,13 @@ import com.metreeca.flow.services.Logger;
 
 import com.openai.client.OpenAIClient;
 import com.openai.models.embeddings.EmbeddingCreateParams;
-import eu.ec2u.work.Work;
 
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.mesh.util.Loggers.elide;
 import static com.metreeca.mesh.util.Loggers.time;
 
 import static eu.ec2u.work.ai.OpenAI.backoff;
@@ -116,7 +116,7 @@ public class OpenEmbedder implements Embedder {
             }
 
         }).apply((elapsed, value) -> logger.info(this, format(
-                "embedded <%s> (<%,d> chars) in <%,d> ms", Work.clip(text), text.length(), elapsed
+                "embedded <%s> (<%,d> chars) in <%,d> ms", elide(text), text.length(), elapsed
         )));
 
     }

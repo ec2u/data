@@ -35,9 +35,9 @@ import java.util.function.UnaryOperator;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.mesh.util.Loggers.elide;
 import static com.metreeca.mesh.util.Loggers.time;
 
-import static eu.ec2u.work.Work.clip;
 import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.util.Objects.requireNonNull;
@@ -204,7 +204,7 @@ public final class OpenAnalyzer implements Analyzer {
             }
 
         }).apply((elapsed, value) -> logger.info(this, String.format(
-                "analysed <%s> (<%,d> chars) in <%,d> ms", clip(text), text.length(), elapsed
+                "analysed <%s> (<%,d> chars) in <%,d> ms", elide(text), text.length(), elapsed
         )));
 
     }

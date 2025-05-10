@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 
-import static eu.ec2u.work.Work.guard;
+import static eu.ec2u.work.Lambdas.guard;
 import static java.lang.Math.min;
 import static java.lang.String.format;
 
