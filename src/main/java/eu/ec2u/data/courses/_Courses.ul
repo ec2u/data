@@ -1,0 +1,22 @@
+prefix schema: <https://schema.org/>
+
+insert {
+
+    ?course schema:educationalLevel ?min
+
+} where {
+
+    select ?course (min(?level) as ?min) {
+
+        ?course a schema:Course ;
+            ^schema:hasCourse ?program .
+
+        ?program schema:educationalLevel ?level .
+
+        filter not exists { ?course schema:educationalLevel ?_level }
+
+    }
+
+    group by ?course
+
+} # courses wihout a level are assigned to the level of the lowest program
