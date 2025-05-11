@@ -18,7 +18,7 @@ package eu.ec2u.work.ai;
 
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.text.services.Translator;
-import com.metreeca.mesh.util.Locales;
+import com.metreeca.shim.Locales;
 
 import com.openai.client.OpenAIClient;
 import com.openai.models.ResponseFormatText;
@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.text.services.Translator.preprocess;
-import static com.metreeca.mesh.util.Loggers.time;
+import static com.metreeca.shim.Loggers.time;
 
 import static com.openai.models.chat.completions.ChatCompletionCreateParams.builder;
 import static eu.ec2u.work.ai.OpenAI.backoff;

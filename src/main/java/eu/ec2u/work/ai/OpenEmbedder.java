@@ -26,8 +26,8 @@ import java.util.function.UnaryOperator;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.mesh.util.Loggers.elide;
-import static com.metreeca.mesh.util.Loggers.time;
+import static com.metreeca.shim.Loggers.elide;
+import static com.metreeca.shim.Loggers.time;
 
 import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;

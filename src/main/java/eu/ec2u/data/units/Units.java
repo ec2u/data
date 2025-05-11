@@ -23,8 +23,8 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.util.Collections;
-import com.metreeca.mesh.util.URIs;
+import com.metreeca.shim.Collections;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.organizations.OrgOrganization;
@@ -48,8 +48,8 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Strings.split;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Strings.split;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;

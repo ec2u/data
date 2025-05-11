@@ -40,7 +40,7 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
-import static com.metreeca.mesh.util.Collections.set;
+import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.events.Events.EVENTS;
 import static eu.ec2u.data.resources.Localized.EN;

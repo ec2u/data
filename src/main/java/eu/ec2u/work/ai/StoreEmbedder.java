@@ -41,11 +41,11 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.shapes.Property.property;
 import static com.metreeca.mesh.shapes.Shape.shape;
 import static com.metreeca.mesh.shapes.Type.type;
-import static com.metreeca.mesh.util.Collections.list;
-import static com.metreeca.mesh.util.Loggers.elide;
-import static com.metreeca.mesh.util.Loggers.time;
-import static com.metreeca.mesh.util.URIs.base;
-import static com.metreeca.mesh.util.URIs.uuid;
+import static com.metreeca.shim.Collections.list;
+import static com.metreeca.shim.Loggers.elide;
+import static com.metreeca.shim.Loggers.time;
+import static com.metreeca.shim.URIs.base;
+import static com.metreeca.shim.URIs.uuid;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;

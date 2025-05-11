@@ -30,9 +30,9 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Resources.resource;
-import static com.metreeca.mesh.util.URIs.uri;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Resources.resource;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
@@ -92,8 +92,6 @@ public final class SDGs implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(SDGS))),
-
                 array(list(Xtream.from(
 
                 Stream.of(
@@ -104,7 +102,9 @@ public final class SDGs implements Runnable {
                 Stream.of(resource(SDGs.class, ".csv").toString())
                         .flatMap(new Taxonomy.Loader(SDGS))
 
-                )))
+                ))),
+
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(SDGS)))
 
         );
     }

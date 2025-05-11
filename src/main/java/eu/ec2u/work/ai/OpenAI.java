@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.mesh.util.Lambdas.lenient;
+import static com.metreeca.shim.Lambdas.lenient;
 
 import static java.lang.Math.min;
 import static java.lang.String.format;

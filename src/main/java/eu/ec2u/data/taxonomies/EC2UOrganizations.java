@@ -27,9 +27,9 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Resources.resource;
-import static com.metreeca.mesh.util.URIs.uri;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Resources.resource;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
@@ -89,8 +89,6 @@ public final class EC2UOrganizations implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_ORGANIZATIONS))),
-
                 array(list(Xtream.from(
 
                         Stream.of(
@@ -100,7 +98,9 @@ public final class EC2UOrganizations implements Runnable {
                         Stream.of(resource(EC2UOrganizations.class, ".csv").toString())
                                 .flatMap(new Taxonomy.Loader(EC2U_ORGANIZATIONS))
 
-                )))
+                ))),
+
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_ORGANIZATIONS)))
 
         );
     }

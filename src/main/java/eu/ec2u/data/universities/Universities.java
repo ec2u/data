@@ -25,7 +25,7 @@ import com.metreeca.flow.lod.Wikidata;
 import com.metreeca.flow.rdf4j.actions.GraphQuery;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.util.Locales;
+import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.resources.GeoReferenceFrame;
@@ -41,11 +41,11 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Resources.resource;
-import static com.metreeca.mesh.util.Resources.text;
-import static com.metreeca.mesh.util.Strings.fill;
-import static com.metreeca.mesh.util.URIs.term;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Resources.resource;
+import static com.metreeca.shim.Resources.text;
+import static com.metreeca.shim.Strings.fill;
+import static com.metreeca.shim.URIs.term;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
@@ -111,8 +111,6 @@ public interface Universities extends Dataset {
 
             service(store()).modify(
 
-                    value(query(new UniversityFrame(true))),
-
                     array(list(Stream.concat(
 
                             Stream.of(UNIVERSITIES),
@@ -165,7 +163,9 @@ public interface Universities extends Dataset {
                                 );
                             })
 
-                    )))
+                    ))),
+
+                    value(query(new UniversityFrame(true)))
 
             );
 

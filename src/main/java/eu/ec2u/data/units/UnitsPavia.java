@@ -20,8 +20,8 @@ import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.mesh.util.Futures;
-import com.metreeca.mesh.util.URIs;
+import com.metreeca.shim.Futures;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.Topic;
@@ -44,9 +44,9 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Lambdas.lenient;
-import static com.metreeca.mesh.util.URIs.uri;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Lambdas.lenient;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.units.Unit.review;
@@ -99,8 +99,6 @@ public final class UnitsPavia implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
-                value(query(new UnitFrame(true)).where("university", criterion().any(PAVIA))),
-
                 array(list(Xtream
 
                         .of(
@@ -121,7 +119,9 @@ public final class UnitsPavia implements Runnable {
                         .pipe(catalogs -> parallel(catalogs, this::catalog))
                         .<Xtream<UnitFrame>>pipe(units -> parallel(units, this::details))
 
-                ))
+                )),
+
+                value(query(new UnitFrame(true)).where("university", criterion().any(PAVIA)))
 
         );
     }

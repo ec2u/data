@@ -38,9 +38,9 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Locales.ANY;
-import static com.metreeca.mesh.util.URIs.uri;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Locales.ANY;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
@@ -113,8 +113,6 @@ public final class EuroSciVoc implements Runnable {
     public void run() {
         store.modify(
 
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EUROSCIVOC))),
-
                 array(list(Xtream.from(
 
                         Stream.of(
@@ -162,7 +160,9 @@ public final class EuroSciVoc implements Runnable {
                                 .map(this::define)
                                 .optMap(Topic::review)
 
-                )))
+                ))),
+
+                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EUROSCIVOC)))
 
         );
     }

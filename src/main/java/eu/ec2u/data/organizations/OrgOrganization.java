@@ -31,8 +31,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.metreeca.mesh.util.Collections.entry;
-import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.shim.Collections.entry;
+import static com.metreeca.shim.Collections.map;
 
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;

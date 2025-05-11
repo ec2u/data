@@ -23,7 +23,7 @@ import com.metreeca.mesh.meta.jsonld.Internal;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
-import com.metreeca.mesh.util.URIs;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.organizations.OrgFormalOrganization;
 import eu.ec2u.data.organizations.OrgOrganization;
@@ -39,8 +39,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.URIs.uri;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.*;

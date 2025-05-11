@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
 import java.util.Locale;
 import java.util.Set;
 
-import static com.metreeca.mesh.util.Collections.set;
-import static com.metreeca.mesh.util.Locales.locale;
+import static com.metreeca.shim.Collections.set;
+import static com.metreeca.shim.Locales.locale;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

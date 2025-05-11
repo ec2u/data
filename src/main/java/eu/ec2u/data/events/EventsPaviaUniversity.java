@@ -28,9 +28,9 @@ import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.util.Collections.map;
-import static com.metreeca.mesh.util.Collections.set;
-import static com.metreeca.mesh.util.URIs.uri;
+import static com.metreeca.shim.Collections.map;
+import static com.metreeca.shim.Collections.set;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;

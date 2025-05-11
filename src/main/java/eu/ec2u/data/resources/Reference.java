@@ -21,14 +21,14 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MaxLength;
-import com.metreeca.mesh.util.Strings;
+import com.metreeca.shim.Strings;
 
 import java.net.URI;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static com.metreeca.mesh.util.Collections.entry;
-import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.shim.Collections.entry;
+import static com.metreeca.shim.Collections.map;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.reducing;

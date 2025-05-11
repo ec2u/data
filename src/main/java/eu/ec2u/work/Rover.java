@@ -16,7 +16,7 @@
 
 package eu.ec2u.work;
 
-import com.metreeca.mesh.util.Locales;
+import com.metreeca.shim.Locales;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -31,8 +31,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Lambdas.lenient;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Lambdas.lenient;
 
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.*;

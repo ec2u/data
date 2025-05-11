@@ -28,8 +28,8 @@ import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.tools.Store;
-import com.metreeca.mesh.util.Futures;
-import com.metreeca.mesh.util.Locales;
+import com.metreeca.shim.Futures;
+import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
@@ -58,10 +58,10 @@ import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.Value.zonedDateTime;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Lambdas.lenient;
-import static com.metreeca.mesh.util.Strings.clip;
-import static com.metreeca.mesh.util.URIs.uri;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Lambdas.lenient;
+import static com.metreeca.shim.Strings.clip;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;

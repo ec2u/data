@@ -21,7 +21,7 @@ import com.metreeca.flow.Xtream;
 import com.metreeca.flow.csv.formats.CSV;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.mesh.util.Strings;
+import com.metreeca.shim.Strings;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
-import static com.metreeca.mesh.util.Strings.split;
+import static com.metreeca.shim.Strings.split;
 
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;

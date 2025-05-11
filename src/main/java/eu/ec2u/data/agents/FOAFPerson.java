@@ -26,7 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.shim.Collections.map;
 
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;

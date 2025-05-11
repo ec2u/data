@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static com.metreeca.mesh.util.Collections.list;
+import static com.metreeca.shim.Collections.list;
 
 import static java.lang.Double.isFinite;
 import static java.lang.Math.sqrt;

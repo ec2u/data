@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.metreeca.mesh.util.Collections.set;
+import static com.metreeca.shim.Collections.set;
 
 @Class("skos:Concept")
 public interface SKOSConcept<S extends SKOSConceptScheme<S, C>, C extends SKOSConcept<S, C>> extends SKOS {

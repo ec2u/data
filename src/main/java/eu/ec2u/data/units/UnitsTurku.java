@@ -28,7 +28,7 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.list;
+import static com.metreeca.shim.Collections.list;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.universities.University.TURKU;
@@ -54,8 +54,8 @@ public final class UnitsTurku implements Runnable {
         final String url=vault.get(DATA_URL);
 
         store.modify(
-                value(query(new UnitFrame(true)).where("university", criterion().any(TURKU))),
-                array(list(Stream.of(url).flatMap(new Units.Loader(TURKU))))
+                array(list(Stream.of(url).flatMap(new Units.Loader(TURKU)))),
+                value(query(new UnitFrame(true)).where("university", criterion().any(TURKU)))
         );
     }
 

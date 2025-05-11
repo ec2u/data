@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.work.ai.Embedder.embedder;

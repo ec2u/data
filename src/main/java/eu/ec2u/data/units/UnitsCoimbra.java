@@ -24,8 +24,8 @@ import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
-import com.metreeca.mesh.util.Collections;
-import com.metreeca.mesh.util.URIs;
+import com.metreeca.shim.Collections;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
@@ -49,7 +49,7 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.mesh.util.Collections.*;
+import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
@@ -83,12 +83,12 @@ public final class UnitsCoimbra implements Runnable {
     public void run() {
         service(store()).modify(
 
-                value(query(new UnitFrame(true)).where("university", criterion().any(COIMBRA))),
-
                 array(list(Xtream.of(Instant.EPOCH)
                         .flatMap(this::units)
                         .flatMap(this::unit)
-                ))
+                )),
+
+                value(query(new UnitFrame(true)).where("university", criterion().any(COIMBRA)))
 
         );
     }

@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
-import static com.metreeca.mesh.util.Collections.entry;
-import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.shim.Collections.entry;
+import static com.metreeca.shim.Collections.map;
 
 import static java.lang.String.format;
 import static java.util.Map.Entry.comparingByValue;
