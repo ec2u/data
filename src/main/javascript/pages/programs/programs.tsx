@@ -20,7 +20,6 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { duration, toDurationString } from "@metreeca/core/duration";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
-import { string } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
@@ -88,7 +87,7 @@ export function DataPrograms() {
 			}</TileOptions>
 
 			<TileOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
-				useOptions(programs, "timeToComplete", { type: string }) // !!! duration >> range
+				useOptions(programs, "timeToComplete", { type: duration }) // !!! duration >> range
 			}</TileOptions>
 
 			<TileOptions placeholder={"Title Awarded"} compact>{

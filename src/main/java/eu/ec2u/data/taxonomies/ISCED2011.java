@@ -74,6 +74,17 @@ public final class ISCED2011 implements Runnable {
                             "/international-standard-classification-of-education-isced-2011-en.pdf"
                     )));
 
+    public static final TopicFrame LEVEL_0=new TopicFrame(true).id(ISCED2011.id().resolve("0"));
+    public static final TopicFrame LEVEL_1=new TopicFrame(true).id(ISCED2011.id().resolve("1"));
+    public static final TopicFrame LEVEL_2=new TopicFrame(true).id(ISCED2011.id().resolve("2"));
+    public static final TopicFrame LEVEL_3=new TopicFrame(true).id(ISCED2011.id().resolve("3"));
+    public static final TopicFrame LEVEL_4=new TopicFrame(true).id(ISCED2011.id().resolve("4"));
+    public static final TopicFrame LEVEL_5=new TopicFrame(true).id(ISCED2011.id().resolve("5"));
+    public static final TopicFrame LEVEL_6=new TopicFrame(true).id(ISCED2011.id().resolve("6"));
+    public static final TopicFrame LEVEL_7=new TopicFrame(true).id(ISCED2011.id().resolve("7"));
+    public static final TopicFrame LEVEL_8=new TopicFrame(true).id(ISCED2011.id().resolve("8"));
+    public static final TopicFrame LEVEL_9=new TopicFrame(true).id(ISCED2011.id().resolve("9"));
+
 
     public static void main(final String... args) {
         exec(() -> new ISCED2011().run());

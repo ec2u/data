@@ -24,7 +24,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.units.UnitFrame;
-import eu.ec2u.data.units.UnitsFrame;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -41,13 +40,15 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Frame
 public interface Courses extends Dataset {
 
-    UnitsFrame COURSES=new UnitsFrame()
+    CoursesFrame COURSES=new CoursesFrame()
             .id(DATA.resolve("courses/"))
             .isDefinedBy(DATA.resolve("datasets/offerings"))
             .title(map(entry(EN, "EC2U Academic and Occupational Courses")))
             .alternative(map(entry(EN, "EC2U Courses")))
             .description(map(entry(EN, """
-                    Academic and occupational standalone courses offered by EC2U allied universities. These include flexible, non-degree learning opportunities aimed at upskilling, reskilling, or exploring specialized topics across various domains.
+                    Academic and occupational standalone courses offered by EC2U allied universities. \
+                    These include flexible, non-degree learning opportunities aimed at upskilling, reskilling, \
+                    or exploring specialized topics across various domains.
                     """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)

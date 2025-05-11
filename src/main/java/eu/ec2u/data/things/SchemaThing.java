@@ -38,6 +38,33 @@ public interface SchemaThing extends Reference {
     int DISAMBIGUATING_DESCRIPTION_LENGTH=500;
 
 
+    static Map<Locale, String> name(final Map<Locale, String> name) {
+        return Reference.clip(NAME_LENGTH, name);
+    }
+
+    static Map<Locale, String> description(final Map<Locale, String> description) {
+        return Reference.clip(DESCRIPTION_LENGTH, description);
+    }
+
+    static Map<Locale, String> disambiguatingDescription(final Map<Locale, String> disambiguatingDescription) {
+        return Reference.clip(DISAMBIGUATING_DESCRIPTION_LENGTH, disambiguatingDescription);
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    default Map<Locale, String> label() {
+        return Reference.label(name());
+    }
+
+    @Override
+    default Map<Locale, String> comment() {
+        return Reference.comment(disambiguatingDescription(), description());
+    }
+
+
+
     Set<URI> url();
 
     String identifier(); // single string value for compatibility with org:Organization

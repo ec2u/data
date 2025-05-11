@@ -34,7 +34,6 @@ import eu.ec2u.work.ai.Embedder;
 
 import java.time.ZonedDateTime;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -116,17 +115,6 @@ public interface Event extends Resource, SchemaEvent {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default Map<Locale, String> label() {
-        return Reference.label(name());
-    }
-
-    @Override
-    default Map<Locale, String> comment() {
-        return Reference.comment(description());
-    }
-
 
     @Override
     default Events collection() {

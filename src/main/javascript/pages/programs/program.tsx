@@ -50,7 +50,7 @@ export const Program=immutable({
 	url: multiple(string),
 
 	numberOfCredits: optional(decimal),
-	timeToComplete: optional(string),
+	timeToComplete: optional(duration),
 
 	teaches: optional(text),
 	assesses: optional(text),

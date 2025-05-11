@@ -26,11 +26,19 @@ import eu.ec2u.data.resources.Resource;
 
 import java.util.Set;
 
+import static eu.ec2u.data.courses.Courses.COURSES;
+
 
 @Frame
 @Class
 @Namespace("[ec2u]")
 public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
+
+    @Override
+    default Courses collection() {
+        return COURSES;
+    }
+
 
     @Reverse("schema:hasCourse")
     Set<Program> inProgram();

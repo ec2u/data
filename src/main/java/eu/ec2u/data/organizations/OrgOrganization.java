@@ -61,8 +61,7 @@ public interface OrgOrganization extends FOAFOrganization {
     }
 
 
-
-    String identifier(); // ;( should be typed as per SKOS best practices
+    String identifier(); // ;( string value for compatibility with schema:identifier (per SKOS should be typed)
 
 
     @Internal

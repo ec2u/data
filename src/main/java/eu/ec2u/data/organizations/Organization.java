@@ -21,25 +21,31 @@ import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.text.services.Translator;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.shim.Collections;
 
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.data.things.SchemaImageObject;
 import eu.ec2u.data.things.SchemaOrganization;
 import eu.ec2u.work.ai.Embedder;
 
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
+import static com.metreeca.shim.Collections.map;
 import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.organizations.Organizations.ORGANIZATIONS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
+import static java.util.function.Predicate.not;
 
 @Frame
 @Namespace("[ec2u]")
@@ -78,7 +84,7 @@ public interface Organization extends Resource, OrgOrganization, SchemaOrganizat
 
     private static OrganizationFrame classification(final OrganizationFrame document) {
         return document.classification().isEmpty() ? document.classification(set(Resources
-                .match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), embeddable(document), CLASSIFICATION_THRESHOLD)
+                .match(EC2U_ORGANIZATIONS.id(), embeddable(document), CLASSIFICATION_THRESHOLD)
                 .map(uri -> new TopicFrame(true).id(uri))
                 .limit(3)
         )) : document;
@@ -94,11 +100,56 @@ public interface Organization extends Resource, OrgOrganization, SchemaOrganizat
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    default Map<Locale, String> name() { return prefLabel(); }
+
+    @Override default Map<Locale, String> label() {
+        return SchemaOrganization.super.label();
+    }
+
+    @Override default Map<Locale, String> comment() {
+        return SchemaOrganization.super.comment();
+    }
+
 
     @Override
-    default Map<Locale, String> description() { return definition(); }
+    default Map<Locale, String> prefLabel() {
+        return Optional.ofNullable(legalName()).filter(not(Map::isEmpty))
+                .or(() -> Optional.ofNullable(name()).filter(not(Map::isEmpty)))
+                .orElseGet(Collections::map);
+    }
+
+    @Override
+    default Map<Locale, String> altLabel() {
+        return legalName().isEmpty() ? map() : name();
+    }
+
+    @Override
+    default Map<Locale, String> definition() {
+        return description();
+    }
+
+
+    @Override
+    default Set<URI> homepage() {
+        return url();
+    }
+
+    @Override
+    default Set<String> mbox() {
+        return email();
+    }
+
+    @Override
+    default Set<String> phone() {
+        return telephone();
+    }
+
+
+    @Override
+    default Set<URI> depiction() {
+        return Optional.ofNullable(image())
+                .map(SchemaImageObject::url)
+                .orElseGet(Collections::set);
+    }
 
 
     @Override

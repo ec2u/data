@@ -24,7 +24,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.units.UnitFrame;
-import eu.ec2u.data.units.UnitsFrame;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -41,13 +40,15 @@ import static eu.ec2u.data.resources.Localized.EN;
 @Frame
 public interface Programs extends Dataset {
 
-    UnitsFrame PROGRAMS=new UnitsFrame()
+    ProgramsFrame PROGRAMS=new ProgramsFrame()
             .id(DATA.resolve("programs/"))
             .isDefinedBy(DATA.resolve("datasets/offerings"))
             .title(map(entry(EN, "EC2U Degree and Occupational Programs")))
             .alternative(map(entry(EN, "EC2U Programs")))
             .description(map(entry(EN, """
-                    Formal degree and vocational qualification programs offered by EC2U allied universities. Programs span undergraduate and postgraduate levels, featuring interdisciplinary and cross-border academic structures.
+                    Formal degree and vocational qualification programs offered by EC2U allied universities. \
+                    Programs span undergraduate and postgraduate levels, featuring interdisciplinary and cross-border \
+                    academic structures.
                     """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)
