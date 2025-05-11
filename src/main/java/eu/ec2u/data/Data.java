@@ -53,7 +53,7 @@ import static com.metreeca.flow.services.Cache.cache;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.flow.text.services.Translator.translator;
 import static com.metreeca.mesh.json.JSONCodec.json;
-import static com.metreeca.mesh.rdf4j.RDF4J.rdf4j;
+import static com.metreeca.mesh.rdf4j.RDF4JStore.rdf4j;
 import static com.metreeca.mesh.util.Loggers.logging;
 
 import static eu.ec2u.data.EC2U.BASE;

@@ -233,15 +233,15 @@ public interface Documents extends Dataset {
 
 
         private Optional<LocalDate> created(final CSVRecord record) {
-            return value(record, "Created", lenient(v -> LocalDate.parse(v)));
+            return value(record, "Created", lenient(LocalDate::parse));
         }
 
         private Optional<LocalDate> issued(final CSVRecord record) {
-            return value(record, "Issued", lenient(v -> LocalDate.parse(v)));
+            return value(record, "Issued", lenient(LocalDate::parse));
         }
 
         private Optional<LocalDate> modified(final CSVRecord record) {
-            return value(record, "Modified", lenient(v -> LocalDate.parse(v)));
+            return value(record, "Modified", lenient(LocalDate::parse));
         }
 
         private Optional<String> valid(final CSVRecord record) {

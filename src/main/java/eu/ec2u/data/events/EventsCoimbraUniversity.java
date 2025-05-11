@@ -19,7 +19,6 @@ package eu.ec2u.data.events;
 import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.json.formats.JSON;
-import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.organizations.OrganizationFrame;
@@ -29,10 +28,9 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Loggers.time;
+import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.mesh.util.Collections.set;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -64,7 +62,6 @@ public final class EventsCoimbraUniversity implements Runnable {
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Store store=service(store());
-    private final Logger logger=service(logger());
 
 
     @Override
@@ -73,7 +70,7 @@ public final class EventsCoimbraUniversity implements Runnable {
         final String search="https://content.fw.uc.pt/v1/agenda/events/search";
         final String event="https://agenda.coimbra.pt/event/%s";
 
-        time(() -> store.insert(array(list(Xtream.of(search)
+        store.insert(array(Xtream.of(search)
 
                 .crawl(url -> Xtream.of(url)
 
@@ -94,11 +91,7 @@ public final class EventsCoimbraUniversity implements Runnable {
 
                 .map(event::formatted)
 
-                .pipe(new Events.Scanner(COIMBRA, PUBLISHER))
-
-        )))).apply((elapsed, count) -> logger.info(EventsCoimbraUniversity.class, format(
-                "inserted <%,d> resources in <%,d> ms", count, elapsed
-        )));
+                .pipe(new Events.Scanner(COIMBRA, PUBLISHER))));
     }
 
 }

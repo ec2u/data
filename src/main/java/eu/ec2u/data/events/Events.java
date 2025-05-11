@@ -54,14 +54,12 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.Value.zonedDateTime;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.mesh.util.Collections.*;
 import static com.metreeca.mesh.util.Lambdas.lenient;
-import static com.metreeca.mesh.util.Loggers.time;
 import static com.metreeca.mesh.util.Strings.clip;
 import static com.metreeca.mesh.util.URIs.uri;
 
@@ -74,7 +72,6 @@ import static eu.ec2u.data.taxonomies.EC2UEvents.EC2U_EVENTS;
 import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
-import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
 
 @Frame
@@ -135,15 +132,11 @@ public interface Events extends Dataset {
 
 
         @Override public void run() {
-
-            time(() -> store.delete(value(query()
+            store.delete(value(query()
                     .model(new EventFrame(true).id(uri()))
                     .where("validDate", criterion().lt(zonedDateTime(LocalDate.now().atStartOfDay(UTC))))
 
-            ))).apply((elapsed, count) -> service(logger()).info(Events.class, format(
-                    "purged <%,d> stale events in <%d> ms", count, elapsed
-            )));
-
+            ));
         }
 
     }

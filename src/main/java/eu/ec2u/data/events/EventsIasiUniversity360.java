@@ -18,7 +18,6 @@ package eu.ec2u.data.events;
 
 import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
-import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.tools.Store;
@@ -28,16 +27,14 @@ import eu.ec2u.data.taxonomies.EC2UOrganizations;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.util.Collections.*;
-import static com.metreeca.mesh.util.Loggers.time;
+import static com.metreeca.mesh.util.Collections.map;
+import static com.metreeca.mesh.util.Collections.set;
 import static com.metreeca.mesh.util.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.IASI;
-import static java.lang.String.format;
 import static java.util.Map.entry;
 
 public final class EventsIasiUniversity360 implements Runnable {
@@ -63,12 +60,11 @@ public final class EventsIasiUniversity360 implements Runnable {
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Store store=service(store());
-    private final Logger logger=service(logger());
 
 
     @Override
     public void run() {
-        time(() -> store.insert(array(list(Xtream
+        store.insert(array(Xtream
 
                 .of(PUBLISHER.id().toString())
 
@@ -84,11 +80,7 @@ public final class EventsIasiUniversity360 implements Runnable {
 
                 ))
 
-                .pipe(new Events.Scanner(IASI, PUBLISHER))
-
-        )))).apply((elapsed, count) -> logger.info(EventsIasiUniversity360.class, format(
-                "inserted <%,d> resources in <%,d> ms", count, elapsed
-        )));
+                .pipe(new Events.Scanner(IASI, PUBLISHER))));
     }
 
 }
