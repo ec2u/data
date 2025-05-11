@@ -64,7 +64,7 @@ public final class Data extends Delegator {
     private static final String GraphDBServer="http://base.ec2u.net"; // !!! https
     private static final String GraphDBRepository="data-next";
     private static final String GraphDBUsr="server";
-    private static final String GraphDBPwd="graphdb-server-pwd";
+    private static final String GraphDBPwd="gdb-server-pwd";
 
 
     static {
