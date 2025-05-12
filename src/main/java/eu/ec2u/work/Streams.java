@@ -16,15 +16,15 @@
 
 package eu.ec2u.work;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 public final class Streams {
 
@@ -55,6 +55,97 @@ public final class Streams {
         return collectingAndThen(toList(), futures ->
                 futures.stream().map(CompletableFuture::join)
         );
+    }
+
+
+    /**
+     * Collects stream elements performing recursive breadth-first traversal.
+     *
+     * @param mapper a function mapping input elements to streams of elements of the same type
+     *
+     * @return a collector that collects input elements and recursively applies {@code mapper} to discover and collect
+     *         new elements until no new elements are discovered; results are returned as a stream in traversal order
+     *         with no duplicates
+     *
+     * @throws NullPointerException if {@code mapper} is {@code null}
+     */
+    public static <V> Collector<V, ?, Stream<V>> traversing(
+            final Function<? super V, ? extends Stream<V>> mapper
+    ) {
+
+        if ( mapper == null ) {
+            throw new NullPointerException("null mapper");
+        }
+
+        return collectingAndThen(toCollection(ArrayDeque::new), pending -> {
+
+            final Collection<V> traversed=new LinkedHashSet<>();
+
+            while ( !pending.isEmpty() ) {
+
+                Stream.of(pending.pop())
+                        .filter(traversed::add)
+                        .flatMap(mapper)
+                        .forEach(pending::add);
+
+            }
+
+
+            return traversed.stream();
+
+        });
+    }
+
+
+    /**
+     * Collects stream elements performing recursive breadth-first traversal while extracting results.
+     *
+     * @param mapper a function mapping input elements to streams of map entries where:
+     *
+     *               <ul>
+     *                 <li>each entry's key contains a stream of elements of the same type as the input to be
+     *                 recursively traversed</li>
+     *                 <li>each entry's value contains a stream of result elements to be included in the final
+     *                 output stream</li>
+     *               </ul>
+     *
+     * @return a collector that collects input elements, recursively applies {@code mapper} to discover new elements
+     *         while accumulating result elements, and returns the accumulated results as a stream with in traversal
+     *         order no duplicates
+     *
+     * @throws NullPointerException if {@code mapper} is {@code null}
+     */
+    public static <V, R> Collector<V, ?, Stream<R>> extracting(
+            final Function<? super V, Stream<Entry<? extends Stream<V>, ? extends Stream<R>>>> mapper
+    ) {
+
+        if ( mapper == null ) {
+            throw new NullPointerException("null mapper");
+        }
+
+        return collectingAndThen(toCollection(ArrayDeque::new), pending -> {
+
+            final Collection<V> traversed=new HashSet<>();
+            final Collection<R> extracted=new LinkedHashSet<>();
+
+            while ( !pending.isEmpty() ) {
+
+                mapper.apply(pending.pop()).forEach(entry -> {
+
+                    entry.getKey().forEach(element -> {
+
+                        if ( traversed.add(element) ) { pending.add(element); }
+
+                    });
+
+                    entry.getValue().forEach(extracted::add);
+
+                });
+            }
+
+            return extracted.stream();
+
+        });
     }
 
 
