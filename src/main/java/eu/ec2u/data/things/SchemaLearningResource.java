@@ -30,6 +30,10 @@ import java.util.Set;
 @Frame
 public interface SchemaLearningResource extends SchemaThing {
 
+    @Override
+    default Map<Locale, String> description() { return teaches(); }
+
+
     @Localized
     Map<Locale, String> teaches();
 

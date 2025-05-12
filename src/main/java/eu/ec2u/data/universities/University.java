@@ -307,6 +307,18 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
             .zone(ZoneId.of("Europe/Helsinki"));
 
 
+    Set<UniversityFrame> PARTNERS=set(
+            COIMBRA,
+            IASI,
+            JENA,
+            LINZ,
+            PAVIA,
+            POITIERS,
+            SALAMANCA,
+            TURKU
+    );
+
+
     static String uuid(final University university, final String name) {
 
         if ( university == null ) {

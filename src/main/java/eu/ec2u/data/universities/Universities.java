@@ -51,7 +51,8 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.LOCALES;
-import static eu.ec2u.data.universities.University.*;
+import static eu.ec2u.data.universities.University.PARTNERS;
+import static eu.ec2u.data.universities.University.review;
 import static eu.ec2u.work.Rover.rover;
 import static java.util.stream.Collectors.joining;
 
@@ -70,25 +71,15 @@ public interface Universities extends Dataset {
             .license(set(CCBYNCND40))
             .issued(LocalDate.parse("2022-01-01"));
 
+
     static void main(final String... args) {
         exec(() -> exec(() -> {
-
-            final Set<UniversityFrame> universities=set(
-                    COIMBRA,
-                    IASI,
-                    JENA,
-                    LINZ,
-                    PAVIA,
-                    POITIERS,
-                    SALAMANCA,
-                    TURKU
-            );
 
             final Rover wikidata=rover(Stream.of(text(resource(University.class, ".qlt")))
 
                     .map(query -> fill(query, map(
 
-                            entry("universities", universities.stream()
+                            entry("universities", PARTNERS.stream()
                                     .map(u -> u.seeAlso().stream().findFirst().orElseThrow())
                                     .map("<%s>"::formatted)
                                     .collect(joining("\n"))
@@ -115,7 +106,7 @@ public interface Universities extends Dataset {
 
                             Stream.of(UNIVERSITIES),
 
-                            universities.stream().flatMap(university -> {
+                            PARTNERS.stream().flatMap(university -> {
 
                                 final Rover focus=wikidata.focus(university.seeAlso().stream().findFirst().orElseThrow());
                                 final Rover city=focus.forward(term("city"));
