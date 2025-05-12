@@ -21,10 +21,11 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
-import { duration, toDurationString } from "@metreeca/core/duration";
+import { duration } from "@metreeca/core/duration";
 import { entryCompare } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
+import { period, toPeriodString } from "@metreeca/core/period";
 import { string } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
 import { useResource } from "@metreeca/data/models/resource";
@@ -50,7 +51,7 @@ export const Program=immutable({
 	url: multiple(string),
 
 	numberOfCredits: optional(decimal),
-	timeToComplete: optional(duration),
+	timeToComplete: optional(period),
 
 	teaches: optional(text),
 	assesses: optional(text),
@@ -101,11 +102,8 @@ export function DataProgram() {
 			url,
 			educationalLevel,
 			numberOfCredits,
-			timeToComplete,
-			about,
+			timeToComplete
 
-			educationalCredentialAwarded,
-			occupationalCredentialAwarded
 
 		}) => <>
 
@@ -122,7 +120,7 @@ export function DataProgram() {
 
 				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeToComplete && <span>{toDurationString(duration.decode(timeToComplete))}</span>
+				"Duration": timeToComplete && <span>{toPeriodString(duration.decode(timeToComplete))}</span>
 
 			}}</TileInfo>
 
@@ -141,7 +139,7 @@ export function DataProgram() {
 		<TileFrame placeholder={Programs[icon]} as={({
 
 			name,
-				description,
+			description,
 
 			hasCourse,
 			about,
@@ -149,12 +147,10 @@ export function DataProgram() {
 			teaches,
 			assesses,
 			programPrerequisites,
-			// competencyRequired,
 			educationalCredentialAwarded,
 			occupationalCredentialAwarded
 
-			}
-		) => {
+		}) => {
 
 			return <>
 

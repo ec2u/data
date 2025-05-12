@@ -17,9 +17,10 @@
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
-import { duration, toDurationString } from "@metreeca/core/duration";
+import { duration } from "@metreeca/core/duration";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
+import { period, toPeriodString } from "@metreeca/core/period";
 import { text, toTextString } from "@metreeca/core/text";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
@@ -86,12 +87,16 @@ export function DataPrograms() {
 				useOptions(programs, "educationalLevel", { type: entry({ id: "", label: required(text) }) })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
-				useOptions(programs, "timeToComplete", { type: duration }) // !!! duration >> range
+			<TileOptions placeholder={"Duration"} compact as={value => toPeriodString(duration.decode(value))}>{
+				useOptions(programs, "timeToComplete", { type: period }) // !!! period >> range
 			}</TileOptions>
 
 			<TileOptions placeholder={"Title Awarded"} compact>{
 				useOptions(programs, "educationalCredentialAwarded", { type: text, size: 10 })
+			}</TileOptions>
+
+			<TileOptions placeholder={"Topics"} compact as={value => toEntryString(value)}>{
+				useOptions(programs, "about", { type: entry({ id: "", label: required(text) }), size: 10 })
 			}</TileOptions>
 
 			<TileOptions placeholder={"Provider"} compact as={value => toEntryString(value)}>{
