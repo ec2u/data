@@ -16,23 +16,97 @@
 
 package eu.ec2u.data.courses;
 
+import com.metreeca.flow.Xtream;
+import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.flow.text.services.Translator;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.jsonld.Reverse;
 
 import eu.ec2u.data.programs.Program;
+import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
+import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.data.things.SchemaThing;
+import eu.ec2u.work.ai.Embedder;
 
+import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.text.services.Translator.translator;
+import static com.metreeca.shim.Collections.set;
+
 import static eu.ec2u.data.courses.Courses.COURSES;
+import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 
 
 @Frame
 @Class
 @Namespace("[ec2u]")
 public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
+
+    double ABOUT_THRESHOLD=0.6;
+
+
+    static Optional<CourseFrame> review(final CourseFrame course, final Locale source) {
+
+        if ( course == null ) {
+            throw new NullPointerException("null course");
+        }
+
+        if ( source == null ) {
+            throw new NullPointerException("null source");
+        }
+
+        return Optional.of(course)
+                .map(u -> translate(u, source)) // before English-based classification
+                .map(Course::classify)
+                .flatMap(new Validate<>());
+    }
+
+
+    private static CourseFrame translate(final CourseFrame course, final Locale source) {
+
+        final Translator translator=service(translator());
+
+        return course // translate also customized labels/comments ;(translated text must be clipped again)
+                .label(Reference.label(translator.texts(course.label(), source, EN)))
+                .comment(Reference.comment(translator.texts(course.comment(), source, EN)))
+                .name(SchemaThing.name(translator.texts(course.name(), source, EN)))
+                .description(SchemaThing.description(translator.texts(course.description(), source, EN)))
+                .disambiguatingDescription(SchemaThing.disambiguatingDescription(translator.texts(course.disambiguatingDescription(), source, EN)))
+                .teaches(Reference.clip(0, translator.texts(course.teaches(), source, EN)))
+                .assesses(Reference.clip(0, translator.texts(course.assesses(), source, EN)))
+                .educationalCredentialAwarded(Reference.clip(0, translator.texts(course.educationalCredentialAwarded(), source, EN)))
+                .occupationalCredentialAwarded(Reference.clip(0, translator.texts(course.occupationalCredentialAwarded(), source, EN)))
+                .coursePrerequisites(Reference.clip(0, translator.texts(course.coursePrerequisites(), source, EN)));
+    }
+
+    private static CourseFrame classify(final CourseFrame program) {
+        return program.about().isEmpty() ? program.about(set(Resources
+                .match(EUROSCIVOC.id(), embeddable(program), ABOUT_THRESHOLD)
+                .map(uri -> new TopicFrame(true).id(uri))
+                .limit(1)
+        )) : program;
+    }
+
+    private static String embeddable(final Course course) {
+        return Embedder.embeddable(set(Xtream.from(
+                Optional.ofNullable(course.name().get(EN)).stream(),
+                Optional.ofNullable(course.description().get(EN)).stream(),
+                Optional.ofNullable(course.disambiguatingDescription().get(EN)).stream(),
+                Optional.ofNullable(course.teaches().get(EN)).stream()
+        )));
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     @Override
     default Courses collection() {

@@ -76,7 +76,12 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
                 .comment(Reference.comment(translator.texts(program.comment(), source, EN)))
                 .name(SchemaThing.name(translator.texts(program.name(), source, EN)))
                 .description(SchemaThing.description(translator.texts(program.description(), source, EN)))
-                .disambiguatingDescription(SchemaThing.disambiguatingDescription(translator.texts(program.disambiguatingDescription(), source, EN)));
+                .disambiguatingDescription(SchemaThing.disambiguatingDescription(translator.texts(program.disambiguatingDescription(), source, EN)))
+                .teaches(Reference.clip(0, translator.texts(program.teaches(), source, EN)))
+                .assesses(Reference.clip(0, translator.texts(program.assesses(), source, EN)))
+                .educationalCredentialAwarded(Reference.clip(0, translator.texts(program.educationalCredentialAwarded(), source, EN)))
+                .occupationalCredentialAwarded(Reference.clip(0, translator.texts(program.occupationalCredentialAwarded(), source, EN)))
+                .programPrerequisites(Reference.clip(0, translator.texts(program.programPrerequisites(), source, EN)));
     }
 
     private static ProgramFrame classify(final ProgramFrame program) {
