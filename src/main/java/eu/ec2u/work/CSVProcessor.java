@@ -31,13 +31,15 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Strings.split;
 
+import static eu.ec2u.work.Streams.joining;
 import static java.lang.String.format;
+import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toList;
 
 public abstract class CSVProcessor<V> implements Function<String, Stream<V>> {
 
@@ -60,10 +62,12 @@ public abstract class CSVProcessor<V> implements Function<String, Stream<V>> {
         final Collection<CSVRecord> records=Xtream.of(url)
                 .optMap(new GET<>(new CSV(Format)))
                 .flatMap(Collection::stream)
-                .collect(toList());
+                .toList();
 
-        return records.stream().flatMap(record -> process(record, records));
-
+        return records.stream()
+                .map(record -> async(() -> process(record, records)))
+                .collect(joining())
+                .flatMap(identity());
     }
 
 
