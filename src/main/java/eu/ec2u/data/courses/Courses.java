@@ -23,7 +23,6 @@ import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.units.UnitFrame;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -76,7 +75,7 @@ public interface Courses extends Dataset {
 
                     .path("/", new Worker().get(new Driver(new CoursesFrame(true)
 
-                            .members(stash(query(new UnitFrame(true))))
+                            .members(stash(query(new CourseFrame(true))))
 
                     )))
 
