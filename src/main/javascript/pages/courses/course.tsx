@@ -17,13 +17,14 @@
 
 import { Languages } from "@ec2u/data/languages";
 import { Courses } from "@ec2u/data/pages/courses/courses";
+import { toEventAttendanceModeString } from "@ec2u/data/pages/things/things";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
-import { entryCompare, toEntryString } from "@metreeca/core/entry";
+import { entryCompare } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
@@ -51,8 +52,8 @@ export const Course=immutable({
 	courseCode: optional(string),
 	inLanguage: multiple(string),
 	numberOfCredits: optional(decimal),
-	timeRequired: optional(string),
-	courseWorkload: optional(string),
+	// !!! timeRequired: optional(string),
+	courseWorkload: optional(duration),
 
 	teaches: optional(text),
 	assesses: optional(text),
@@ -75,25 +76,19 @@ export const Course=immutable({
 		label: required(text)
 	}),
 
-	audience: multiple(string),
-	isAccessibleForFree: optional(boolean),
-
-	// learningResourceType: multiple({
-	// 	id: required(id),
-	// 	label: required(text)
-	// }),
-
-	courseMode: optional({
+	audience: multiple({
 		id: required(id),
 		label: required(text)
 	}),
+
+	isAccessibleForFree: optional(boolean),
+
+	courseMode: optional(string),
 
 	about: multiple({
 		id: required(id),
 		label: required(text)
 	}),
-
-	// competencyRequired: optional(text),
 
 	inProgram: multiple({
 		id: required(id),
@@ -113,21 +108,20 @@ export function DataCourse() {
 		tray={<TileFrame as={({
 
 			university,
-				provider,
+			provider,
 
-				url,
-				courseCode,
-				educationalLevel,
+			url,
+			courseCode,
+			educationalLevel,
 			audience,
-				inLanguage,
-				numberOfCredits,
-				timeRequired,
+			inLanguage,
+			numberOfCredits,
+			// !!! timeRequired,
 			courseWorkload,
 			courseMode,
 			isAccessibleForFree
 
-			}
-		) => <>
+		}) => <>
 
 			<TileInfo>{{
 
@@ -149,9 +143,9 @@ export function DataCourse() {
 					.map(language => <li key={language}>{language}</li>)
 				}</ul>,
 
-				"Attendance": courseMode && <span>{toEntryString(courseMode)}</span>,
+				"Attendance": courseMode && <span>{toEventAttendanceModeString(courseMode)}</span>,
 
-				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
+				// !!! "Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
 				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>
 
@@ -159,10 +153,9 @@ export function DataCourse() {
 
 			<TileInfo>{{
 
-				"Audience": audience?.length && <ul>{audience
-					.sort((x, y) => x.localeCompare(y))
-					.map(audience => <li key={audience}>{audience}</li>)
-				}</ul>,
+				"Audience": audience?.length && <ul>{audience.slice().sort(entryCompare).map(audience =>
+					<li key={audience.id}><TileLink>{audience}</TileLink></li>
+				)}</ul>,
 
 				"Fees": isAccessibleForFree === true ? "Free for Externals"
 					: isAccessibleForFree === false ? "Paid for Externals"
@@ -229,8 +222,7 @@ export function DataCourse() {
 					"General Objectives": teaches,
 					"Learning Objectives and Intended Skills": assesses,
 					"Admission Requirements": coursePrerequisites
-					// !!! "Teaching Methods and Mode of Study": learningResourceType,
-					// "Graduation Requirements": competencyRequired,
+					// !!! "Graduation Requirements": competencyRequired,
 
 				}).map(([
 

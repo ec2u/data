@@ -16,6 +16,7 @@
 
 import { Languages } from "@ec2u/data/languages";
 import { Events } from "@ec2u/data/pages/events/events";
+import { toEventAttendanceModeString, toEventStatusTypeString } from "@ec2u/data/pages/things/things";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -143,52 +144,9 @@ function asPostalAddress(address: PostalAddress) {
 	</div>;
 }
 
-
 function asVirtualLocation(location: VirtualLocation) {
 	return <a href={location.url}>{toTextString(location.label)}</a>;
 }
-
-
-export const EventStatusType: { [mode: string]: typeof text.model }={
-
-	EventCancelled: {
-		en: "Cancelled"
-	},
-
-	EventMovedOnline: {
-		en: "Moved Online"
-	},
-
-	EventPostponed: {
-		en: "Postponed"
-	},
-
-	EventRescheduled: {
-		en: "Rescheduled"
-	},
-
-	EventScheduled: {
-		en: "Scheduled"
-	}
-
-};
-
-export const EventAttendanceModeEnumeration: { [mode: string]: typeof text.model }={
-
-	MixedEventAttendanceMode: {
-		en: "Mixed"
-	},
-
-	OfflineEventAttendanceMode: {
-		en: "Offline"
-	},
-
-	OnlineEventAttendanceMode: {
-		en: "Online"
-	}
-
-};
-
 
 
 export function DataEvent() {
@@ -267,8 +225,8 @@ export function DataEvent() {
 				"Entry": isAccessibleForFree === true ? "Free" : isAccessibleForFree === false ? "Paid" : undefined,
 				"Language": inLanguage && toTextString(Languages[inLanguage]),
 
-				"Attendance": eventAttendanceMode && toTextString(EventAttendanceModeEnumeration[eventAttendanceMode]),
-				"Status": eventStatus && toTextString(EventStatusType[eventStatus]),
+				"Attendance": eventAttendanceMode && toEventAttendanceModeString(eventAttendanceMode),
+				"Status": eventStatus && toEventStatusTypeString(eventStatus),
 
 				"Location": location && (
 					location.String ? <span>{location.String}</span>

@@ -16,11 +16,12 @@
 
 import { Languages } from "@ec2u/data/languages";
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
+import { toEventAttendanceModeString } from "@ec2u/data/pages/things/things";
+
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
-import { duration, toDurationString } from "@metreeca/core/duration";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
@@ -59,10 +60,9 @@ export const Courses=immutable({
 		comment: optional((text)),
 
 		university: optional({
-				id: required(id),
+			id: required(id),
 			label: required(text)
-			}
-		)
+		})
 
 	})
 
@@ -93,13 +93,13 @@ export function DataCourses() {
 				useOptions(courses, "inLanguage", { type: string })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Attendance"} compact>{
-				useOptions(courses, "courseMode", { type: entry({ id: "", label: required(text) }) })
+			<TileOptions placeholder={"Attendance"} compact as={toEventAttendanceModeString}>{
+				useOptions(courses, "courseMode", { type: string })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
-				useOptions(courses, "timeRequired", { type: string, size: 10 }) // !!! duration >> range
-			}</TileOptions>
+			{/* !!! <TileOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
+			 useOptions(courses, "timeRequired", { type: string, size: 10 }) // !!! duration >> range
+			 }</TileOptions> */}
 
 			<TileRange placeholder={"Credits"} compact>{
 				useRange(courses, "numberOfCredits", { type: decimal })
@@ -110,7 +110,7 @@ export function DataCourses() {
 			}</TileOptions>
 
 			<TileOptions placeholder={"Audience"} compact>{
-				useOptions(courses, "audience", { type: string })
+				useOptions(courses, "audience", { type: entry({ id: "", label: required(text) }) })
 			}</TileOptions>
 
 			<TileOptions placeholder={"Free for Externals"} compact>{
