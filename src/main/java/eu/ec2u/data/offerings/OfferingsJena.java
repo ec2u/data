@@ -17,7 +17,6 @@
 package eu.ec2u.data.offerings;
 
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.FormatException;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.lod.Schema;
@@ -104,7 +103,7 @@ public final class OfferingsJena implements Runnable {
     @Override public void run() {
         time(() -> store.modify(
 
-                array(Xtream.of(SITE_URL)
+                array(Stream.of(SITE_URL)
                         .flatMap(this::programs)
                 ),
 
@@ -112,7 +111,7 @@ public final class OfferingsJena implements Runnable {
                         .where("university", criterion().any(JENA))
                 )
 
-        )).apply((elapsed, resources) -> service(logger()).info(OfferingsJena.class, format(
+        )).apply((elapsed, resources) -> logger.info(OfferingsJena.class, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
         )));
     }

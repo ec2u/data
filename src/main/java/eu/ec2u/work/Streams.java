@@ -96,7 +96,6 @@ public final class Streams {
         });
     }
 
-
     /**
      * Collects stream elements performing recursive breadth-first traversal while extracting results.
      *
