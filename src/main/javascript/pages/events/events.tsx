@@ -111,10 +111,6 @@ export function DataEvents() {
 				useOptions(events, "audience", { type: entry({ id: "", label: required(text) }), size: 10 })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Organizer"} compact>{
-				useOptions(events, "organizer", { type: entry({ id: "", label: required(text) }), size: 10 })
-			}</TileOptions>
-
 			<TileOptions placeholder={"Publisher"} compact>{
 				useOptions(events, "publisher", { type: entry({ id: "", label: required(text) }), size: 10 })
 			}</TileOptions>

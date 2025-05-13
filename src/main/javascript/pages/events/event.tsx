@@ -72,12 +72,6 @@ export const Event=immutable({
 		label: required(text)
 	}),
 
-	organizer: multiple({
-		id: required(id),
-		label: required(text),
-		url: optional(id)
-	}),
-
 	publisher: optional({
 
 		id: required(id),
@@ -171,7 +165,6 @@ export function DataEvent() {
 			eventAttendanceMode,
 			eventStatus,
 
-			organizer,
 			publisher,
 			location,
 
@@ -243,13 +236,6 @@ export function DataEvent() {
 				"Info": url && url.map(item => <a key={item} href={item}>{
 					toIdString(item, { compact: true })
 				}</a>),
-
-				"Organizer": organizer && organizer.slice().sort(entryCompare).map(({
-						id, label, url
-					}) => url
-					? <a key={id} href={url}>{toTextString(label)}</a>
-					: <span key={id}>{toTextString(label)}</span>
-				),
 
 				"Publisher": publisher && [publisher].map(({ id, label, url }) =>
 					<a key={id} href={url || id}>{toTextString(label)}</a>
