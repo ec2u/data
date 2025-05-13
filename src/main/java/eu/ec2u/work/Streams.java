@@ -19,7 +19,9 @@ package eu.ec2u.work;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
@@ -27,6 +29,37 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.*;
 
 public final class Streams {
+
+    /**
+     * Creates a filter predicate that removes duplicate elements based on a key.
+     *
+     * @param key a function mapping stream elements to values used for equality comparison; must return non-null values
+     *
+     * @return a stateful predicate that returns true only for elements whose key was not seen before,
+     *         suitable for use with {@link Stream#filter(Predicate)}
+     *
+     * @throws NullPointerException if {@code key} is null or returns null values
+     *
+     * @see Stream#filter(Predicate)
+     */
+    public static <T> Predicate<T> distinct(final Function<? super T, Object> key) {
+
+        if ( key == null ) {
+            throw new NullPointerException("null key extractor");
+        }
+
+        return new Predicate<>() {
+
+            private final Set<Object> processed=ConcurrentHashMap.newKeySet();
+
+            @Override
+            public boolean test(final T value) {
+                return processed.add(requireNonNull(key.apply(value), "null key"));
+            }
+
+        };
+    }
+
 
     public static <V, R> Function<V, Stream<R>> nullable(final Function<V, R> mapper) {
 
