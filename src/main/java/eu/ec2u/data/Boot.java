@@ -16,11 +16,13 @@
 
 package eu.ec2u.data;
 
+import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
 import eu.ec2u.data.organizations.Organizations;
 import eu.ec2u.data.persons.Persons;
+import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.units.Units;
@@ -46,6 +48,8 @@ public final class Boot implements Runnable {
         Units.main();
         Organizations.main();
         Persons.main();
+        Programs.main();
+        Courses.main();
         Documents.main();
         Events.main();
     }

@@ -16,8 +16,8 @@
 
 package eu.ec2u.data.taxonomies;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.rdf.actions.Retrieve;
+import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
@@ -34,12 +34,14 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Locales.ANY;
+import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -48,6 +50,7 @@ import static eu.ec2u.data.resources.Localized.LOCALES;
 import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 import static eu.ec2u.work.Rover.rover;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static java.lang.String.format;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 
 /**
@@ -66,8 +69,8 @@ public final class EuroSciVoc implements Runnable {
     private static final String VERSION="1.5";
 
     private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
-                                    +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution%2Feuroscivoc%2F20241002-0%2Fttl%2Fskos_xl%2FEuroSciVoc.ttl"
-                                    +"&fileName=EuroSciVoc.ttl";
+            +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution%2Feuroscivoc%2F20241002-0%2Fttl%2Fskos_xl%2FEuroSciVoc.ttl"
+            +"&fileName=EuroSciVoc.ttl";
 
 
     private static final OrgOrganizationFrame EU_PUBLICATION_OFFICE=new OrgOrganizationFrame()
@@ -91,7 +94,8 @@ public final class EuroSciVoc implements Runnable {
             .source(new ReferenceFrame()
                     .id(uri("https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource"
                             +"?uri=http://publications.europa.eu/resource/dataset/euroscivoc"
-                    )));
+                    ))
+            );
 
 
     private static final String EXTERNAL="http://data.europa.eu/8mn/euroscivoc/";
@@ -107,20 +111,21 @@ public final class EuroSciVoc implements Runnable {
 
     private final Store store=service(store());
     private final Analyzer analyzer=service(analyzer());
+    private final Logger logger=service(logger());
 
 
     @Override
     public void run() {
-        store.modify(
+        time(() -> store.modify(
 
-                array(list(Xtream.from(
+                array(list(Stream.concat(
 
                         Stream.of(
                                 EUROSCIVOC,
                                 EU_PUBLICATION_OFFICE
                         ),
 
-                        Xtream.of(URL)
+                        Stream.of(URL)
 
                                 .map(new Retrieve()
                                         .format(TURTLE)
@@ -132,39 +137,49 @@ public final class EuroSciVoc implements Runnable {
                                         .split()
                                 )
 
-                                .optMap(concept -> concept.uri().map(id -> new TopicFrame()
-                                        .id(adopt(id))
-                                        .generated(true)
-                                        .isDefinedBy(id)
-                                        .inScheme(EUROSCIVOC)
-                                        .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
-                                                .uri().map(v -> EUROSCIVOC).orElse(null)
-                                        )
-                                        .notation(concept.forward(SKOS.NOTATION)
-                                                .string().orElse(null)
-                                        )
-                                        .prefLabel(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                .texts(LOCALES).orElse(null)
-                                        )
-                                        .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                .textsets(LOCALES).orElse(null)
-                                        )
-                                        .broader(set(concept.forward(SKOS.BROADER)
-                                                .uris().map(b -> new TopicFrame().id(adopt(b)))
-                                        ))
-                                        .broaderTransitive(set(concept.plus(SKOS.BROADER)
-                                                .uris().map(b -> new TopicFrame().id(adopt(b)))
-                                        ))
-                                ))
+                                .map(concept -> concept.uri()
 
-                                .map(this::define)
-                                .optMap(Topic::review)
+                                        .map(id -> new TopicFrame()
+                                                .id(adopt(id))
+                                                .generated(true)
+                                                .isDefinedBy(id)
+                                                .inScheme(EUROSCIVOC)
+                                                .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
+                                                        .uri().map(v -> EUROSCIVOC).orElse(null)
+                                                )
+                                                .notation(concept.forward(SKOS.NOTATION)
+                                                        .string().orElse(null)
+                                                )
+                                                .prefLabel(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
+                                                        .texts(LOCALES).orElse(null)
+                                                )
+                                                .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
+                                                        .textsets(LOCALES).orElse(null)
+                                                )
+                                                .broader(set(concept.forward(SKOS.BROADER)
+                                                        .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                                ))
+                                                .broaderTransitive(set(concept.plus(SKOS.BROADER)
+                                                        .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                                ))
+                                        )
+
+                                        .map(this::define)
+                                        .flatMap(Topic::review)
+                                )
+
+                                .flatMap(Optional::stream)
 
                 ))),
 
-                value(query(new TopicFrame(true)).where("inScheme", criterion().any(EUROSCIVOC)))
+                value(query()
+                        .model(new TopicFrame(true))
+                        .where("inScheme", criterion().any(EUROSCIVOC))
+                )
 
-        );
+        )).apply((elapsed, resources) -> logger.info(this, format(
+                "synced <%,d> resources in <%,d> ms", resources, elapsed
+        )));
     }
 
 
