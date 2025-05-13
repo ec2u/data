@@ -63,7 +63,7 @@ public final class StoreTranslator implements Translator {
 
 
     private static final String TRANSLATION="Translation";
-    private static final URI TRANSLATIONS=base().resolve("~translations");
+    private static final URI TRANSLATIONS=base().resolve("~translations/");
 
     private static final String TEXT="text";
 
