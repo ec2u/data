@@ -106,11 +106,7 @@ export function DataCourses() {
 				useRange(courses, "numberOfCredits", { type: decimal })
 			}</TileRange>
 
-			<TileOptions placeholder={"Title Awarded"} compact>{
-				useOptions(courses, "educationalCredentialAwarded", { type: text, size: 10 })
-			}</TileOptions>
-
-			<TileOptions placeholder={"Topics"} compact as={value => toEntryString(value)}>{
+			<TileOptions placeholder={"Subjects"} compact as={value => toEntryString(value)}>{
 				useOptions(courses, "about", { type: entry({ id: "", label: required(text) }), size: 10 })
 			}</TileOptions>
 

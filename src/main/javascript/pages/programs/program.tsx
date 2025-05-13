@@ -162,19 +162,19 @@ export function DataProgram() {
 					&& <TileMark>{toTextString(description)}</TileMark>
 				}
 
-				<TilePanel>
+				<TilePanel stack>
 
-					{hasCourse && <TileLabel name={"Courses"}>
+					{about && <TileLabel name={"Subjects"}>
 
-                        <ul>{hasCourse.slice().sort(entryCompare).map(course =>
+                        <ul>{about.slice().sort(entryCompare).map(course =>
 							<li key={course.id}><TileLink>{course}</TileLink></li>
 						)}</ul>
 
                     </TileLabel>}
 
-					{about && <TileLabel name={"Subjects"}>
+					{hasCourse && <TileLabel name={"Courses"}>
 
-                        <ul>{about.slice().sort(entryCompare).map(course =>
+                        <ul>{hasCourse.slice().sort(entryCompare).map(course =>
 							<li key={course.id}><TileLink>{course}</TileLink></li>
 						)}</ul>
 

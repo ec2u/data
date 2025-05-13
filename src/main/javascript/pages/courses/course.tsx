@@ -196,20 +196,20 @@ export function DataCourse() {
 
 				<dfn>{toTextString(name)}</dfn>
 
-				<TilePanel>
-
-					{inProgram && <TileLabel name={"Programs"}>{
-
-						<ul>{inProgram.slice().sort(entryCompare).map(program =>
-							<li key={program.id}><TileLink>{program}</TileLink></li>
-						)}</ul>
-
-					}</TileLabel>}
+				<TilePanel stack>
 
 					{about && <TileLabel name={"Subjects"}>{
 
 						<ul>{about.slice().sort(entryCompare).map(about =>
 							<li key={about.id}><TileLink>{about}</TileLink></li>
+						)}</ul>
+
+					}</TileLabel>}
+
+					{inProgram && <TileLabel name={"Programs"}>{
+
+						<ul>{inProgram.slice().sort(entryCompare).map(program =>
+							<li key={program.id}><TileLink>{program}</TileLink></li>
 						)}</ul>
 
 					}</TileLabel>}

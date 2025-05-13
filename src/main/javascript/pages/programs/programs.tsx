@@ -54,10 +54,9 @@ export const Programs=immutable({
 		comment: optional(text),
 
 		university: optional({
-				id: required(id),
+			id: required(id),
 			label: required(text)
-			}
-		)
+		})
 
 	})
 
@@ -90,11 +89,7 @@ export function DataPrograms() {
 				useOptions(programs, "timeToComplete", { type: period }) // !!! period >> range
 			}</TileOptions>
 
-			<TileOptions placeholder={"Title Awarded"} compact>{
-				useOptions(programs, "educationalCredentialAwarded", { type: text, size: 10 })
-			}</TileOptions>
-
-			<TileOptions placeholder={"Topics"} compact as={value => toEntryString(value)}>{
+			<TileOptions placeholder={"Subjects"} compact as={value => toEntryString(value)}>{
 				useOptions(programs, "about", { type: entry({ id: "", label: required(text) }), size: 10 })
 			}</TileOptions>
 
