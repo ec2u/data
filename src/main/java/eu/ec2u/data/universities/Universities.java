@@ -66,7 +66,7 @@ public interface Universities extends Dataset {
             .title(map(entry(EN, "EC2U Partner Universities")))
             .alternative(map(entry(EN, "EC2U Universities")))
             .description(map(entry(EN, """
-                    Background, historical context, and statistical data about EC2U partner universities.
+                    Background, historical context and statistical data about EC2U partner universities.
                     """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)

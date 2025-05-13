@@ -22,6 +22,7 @@ import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
@@ -84,6 +85,19 @@ public final class ISCED2011 implements Runnable {
     public static final TopicFrame LEVEL_7=new TopicFrame(true).id(uri(ISCED2011.id()+"/7"));
     public static final TopicFrame LEVEL_8=new TopicFrame(true).id(uri(ISCED2011.id()+"/8"));
     public static final TopicFrame LEVEL_9=new TopicFrame(true).id(uri(ISCED2011.id()+"/9"));
+
+
+    public static final Map<Integer, Topic> LEVELS=map(
+            entry(1, LEVEL_1),
+            entry(2, LEVEL_2),
+            entry(3, LEVEL_3),
+            entry(4, LEVEL_4),
+            entry(5, LEVEL_5),
+            entry(6, LEVEL_6),
+            entry(7, LEVEL_7),
+            entry(8, LEVEL_8),
+            entry(9, LEVEL_9)
+    );
 
 
     public static void main(final String... args) {
