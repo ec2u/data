@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
@@ -47,8 +48,10 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Loggers.time;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.DATA;
 import static eu.ec2u.data.courses.Course.review;
 import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.programs.Program.review;
@@ -90,48 +93,54 @@ public final class OfferingsSalamanca implements Runnable {
 
     @Override
     public void run() {
-        time(() -> Stream
+        time(() -> {
 
-                .of(
+            final int modified=Stream
 
-                        async(() -> store.modify(
+                    .of(
 
-                                array(Stream.of(vault.get(PROGRAMS_URL))
-                                        .flatMap(this::programs)
-                                ),
+                            async(() -> store.modify(
 
-                                value(query(new ProgramFrame(true))
-                                        .where("university", criterion().any(SALAMANCA))
-                                )
+                                    array(Stream.of(vault.get(PROGRAMS_URL))
+                                            .flatMap(this::programs)
+                                    ),
 
-                        )),
+                                    value(query(new ProgramFrame(true))
+                                            .where("university", criterion().any(SALAMANCA))
+                                    )
 
-                        async(() -> store.modify(
+                            )),
 
-                                array(Stream.of(vault.get(COURSES_URL))
-                                        .flatMap(this::courses)
-                                ),
+                            async(() -> store.modify(
 
-                                value(query(new CourseFrame(true))
-                                        .where("university", criterion().any(SALAMANCA))
-                                )
+                                    array(Stream.of(vault.get(COURSES_URL))
+                                            .flatMap(this::courses)
+                                    ),
 
-                        )),
+                                    value(query(new CourseFrame(true))
+                                            .where("university", criterion().any(SALAMANCA))
+                                    )
 
-                        async(() -> store.mutate(
+                            ))
 
-                                array(Stream.of(vault.get(PROGRAMS_COURSES_URL))
-                                        .flatMap(this::coursePrograms)
-                                )
+                    )
 
-                        ))
+                    .collect(joining())
+                    .reduce(0, Integer::sum);
 
-                )
+            // after programs and courses are uploaded
 
-                .collect(joining())
-                .reduce(0, Integer::sum)
+            final int mutated=store.mutate(
 
-        ).apply((elapsed, resources) -> logger.info(this, format(
+                    array(Stream.of(vault.get(PROGRAMS_COURSES_URL))
+                            .flatMap(this::coursePrograms)
+                    )
+
+            );
+
+            return modified+mutated;
+
+        }).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
         )));
     }
@@ -254,29 +263,79 @@ public final class OfferingsSalamanca implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<CourseFrame> coursePrograms(final String url) { // !!! review integrity
+    private Stream<CourseFrame> coursePrograms(final String url) {
+
+        final Set<URI> courses=set(store
+
+                .retrieve(value(query()
+                        .model(new CourseFrame(true).id(uri()))
+                        .where("university", criterion().any(SALAMANCA))
+                ))
+
+                .stream()
+                .flatMap(Value::values)
+                .map(CourseFrame::new)
+                .map(CourseFrame::id)
+                .map(DATA::resolve)
+        );
+
+        final Set<URI> programs=set(store
+
+                .retrieve(value(query()
+                        .model(new ProgramFrame(true).id(uri()))
+                        .where("university", criterion().any(SALAMANCA))
+                ))
+
+                .stream()
+                .flatMap(Value::values)
+                .map(ProgramFrame::new)
+                .map(ProgramFrame::id)
+                .map(DATA::resolve)
+        );
+
         return Stream.of(url)
 
                 .flatMap(optional(new GET<>(new JSON())))
 
                 .flatMap(Value::values)
 
-                .map(json -> async(() -> courseProgram(json)))
+                .map(json -> async(() -> json.get("code").string().flatMap(course ->
+                        json.get("programCode").string().flatMap(program -> {
+
+                            final URI courseId=courseId(course);
+                            final URI programId=programID(program);
+
+                            if ( !courses.contains(courseId) ) {
+
+                                logger.warning(this, format(
+                                        "unknown course id course <%s> to program <%s> mapping",
+                                        course, program
+                                ));
+
+                                return Optional.empty();
+
+                            } else if ( !programs.contains(programId) ) {
+
+                                logger.warning(this, format(
+                                        "unknown program id course <%s> to program <%s> mapping", course, program
+                                ));
+
+                                return Optional.empty();
+
+                            } else {
+
+                                return Optional.of(new CourseFrame(true)
+                                        .id(courseId)
+                                        .inProgram(set(new ProgramFrame(true).id(programId)))
+                                );
+
+                            }
+
+                        })
+                )))
 
                 .collect(joining())
                 .flatMap(Optional::stream);
-    }
-
-    private Optional<CourseFrame> courseProgram(final Value json) {
-        return json.get("code").string().flatMap(course ->
-                json.get("programCode").string().map(program ->
-
-                        new CourseFrame(true)
-                                .id(courseId(course))
-                                .inProgram(set(new ProgramFrame(true).id(programID(program))))
-
-                )
-        );
     }
 
 }
