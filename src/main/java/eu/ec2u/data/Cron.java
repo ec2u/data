@@ -24,6 +24,7 @@ import com.metreeca.flow.services.Logger;
 
 import eu.ec2u.data.documents.*;
 import eu.ec2u.data.events.*;
+import eu.ec2u.data.offerings.*;
 import eu.ec2u.data.units.*;
 
 import static com.metreeca.flow.Locator.service;
@@ -54,16 +55,15 @@ public final class Cron extends Delegator {
                 .path("/units/salamanca", execute(new UnitsSalamanca()))
                 .path("/units/turku", execute(new UnitsTurku()))
 
-                // .path("/offerings/coimbra", execute(new OfferingsCoimbra()))
-                // .path("/offerings/jena", execute(new OfferingsJena()))
-                // .path("/offerings/linz/programs", execute(new OfferingsLinzPrograms()))
-                // .path("/offerings/linz/courses", execute(new OfferingsLinzCourses()))
-                // .path("/offerings/pavia", execute(new OfferingsPavia()))
-                // .path("/offerings/pavia/doctorates", execute(new OfferingsPaviaDoctorates()))
-                // .path("/offerings/pavia/schools", execute(new OfferingsPaviaSchools()))
-                // .path("/offerings/poitiers", execute(new OfferingsPoitiers()))
-                // .path("/offerings/salamanca", execute(new OfferingsSalamanca()))
-                // .path("/offerings/lll", execute(new OfferingsLLL()))
+                .path("/offerings/coimbra", execute(new OfferingsCoimbra()))
+                .path("/offerings/jena", execute(new OfferingsJena()))
+                .path("/offerings/linz", execute(new OfferingsLinz()))
+                .path("/offerings/pavia", execute(new OfferingsPavia()))
+                .path("/offerings/pavia/doctorates", execute(new OfferingsPaviaDoctorates()))
+                .path("/offerings/pavia/schools", execute(new OfferingsPaviaSchools()))
+                .path("/offerings/poitiers", execute(new OfferingsPoitiers()))
+                .path("/offerings/salamanca", execute(new OfferingsSalamanca()))
+                .path("/offerings/lll", execute(new OfferingsLLL()))
 
                 .path("/documents/coimbra", execute(new DocumentsCoimbra()))
                 .path("/documents/iasi", execute(new DocumentsIasi()))
