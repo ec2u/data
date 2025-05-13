@@ -34,15 +34,19 @@ public interface SchemaLearningResource extends SchemaThing {
     default Map<Locale, String> description() { return teaches(); }
 
 
+    @MinInclusive("0.0")
+    double numberOfCredits();
+
+
     @Localized
     Map<Locale, String> teaches();
 
     @Localized
     Map<Locale, String> assesses();
 
+    @Localized
+    Map<Locale, String> competencyRequired();
 
-    @MinInclusive("0.0")
-    double numberOfCredits();
 
 
     @Localized
@@ -54,13 +58,8 @@ public interface SchemaLearningResource extends SchemaThing {
 
     Organization provider();
 
-    Topic educationalLevel();
-
+    Topic educationalLevel(); // !!! ISCED-2011
 
     Set<Topic> about(); // !!! EuroSciVoc
-
-    Set<Topic> occupationalCategory(); // !!! ESCO Occupations
-
-    Set<Topic> competencyRequired(); // !!! ESCO SKills
 
 }

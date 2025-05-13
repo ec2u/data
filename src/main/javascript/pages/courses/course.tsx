@@ -52,12 +52,13 @@ export const Course=immutable({
 	courseCode: optional(string),
 	inLanguage: multiple(string),
 	numberOfCredits: optional(decimal),
-	// !!! timeRequired: optional(string),
+	timeRequired: optional(duration),
 	courseWorkload: optional(duration),
 
 	teaches: optional(text),
 	assesses: optional(text),
 	coursePrerequisites: optional(text),
+	competencyRequired: optional(text),
 	educationalCredentialAwarded: optional(text),
 	occupationalCredentialAwarded: optional(text),
 
@@ -116,7 +117,7 @@ export function DataCourse() {
 			audience,
 			inLanguage,
 			numberOfCredits,
-			// !!! timeRequired,
+			timeRequired,
 			courseWorkload,
 			courseMode,
 			isAccessibleForFree
@@ -145,7 +146,7 @@ export function DataCourse() {
 
 				"Attendance": courseMode && <span>{toEventAttendanceModeString(courseMode)}</span>,
 
-				// !!! "Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
+				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
 				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>
 
@@ -185,7 +186,7 @@ export function DataCourse() {
 			teaches,
 			assesses,
 			coursePrerequisites,
-			// competencyRequired,
+			competencyRequired,
 			educationalCredentialAwarded,
 			occupationalCredentialAwarded
 
@@ -221,8 +222,8 @@ export function DataCourse() {
 					"Occupational Credential Awarded": occupationalCredentialAwarded,
 					"General Objectives": teaches,
 					"Learning Objectives and Intended Skills": assesses,
-					"Admission Requirements": coursePrerequisites
-					// !!! "Graduation Requirements": competencyRequired,
+					"Admission Requirements": coursePrerequisites,
+					"Examination Requirements": competencyRequired
 
 				}).map(([
 

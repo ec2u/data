@@ -108,7 +108,7 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                         .where("seeAlso", criterion().any(uri(LLL.id()))) // ;( hack to clear the LL set
                 )
 
-        )).apply((elapsed, resources) -> logger.info(OfferingsLLL.class, format(
+        )).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
         )));
 

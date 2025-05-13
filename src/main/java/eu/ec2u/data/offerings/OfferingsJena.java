@@ -111,7 +111,7 @@ public final class OfferingsJena implements Runnable {
                         .where("university", criterion().any(JENA))
                 )
 
-        )).apply((elapsed, resources) -> logger.info(OfferingsJena.class, format(
+        )).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
         )));
     }

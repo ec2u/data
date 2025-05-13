@@ -133,7 +133,7 @@ public final class OfferingsSalamanca implements Runnable {
                 .collect(joining())
                 .reduce(0, Integer::sum)
 
-        ).apply((elapsed, resources) -> logger.info(OfferingsSalamanca.class, format(
+        ).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
         )));
     }

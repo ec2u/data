@@ -28,7 +28,9 @@ import eu.ec2u.data.programs.Program;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.data.things.SchemaLearningResource;
 import eu.ec2u.data.things.SchemaThing;
 import eu.ec2u.work.ai.Embedder;
 
@@ -43,6 +45,8 @@ import static com.metreeca.shim.Collections.set;
 import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
+import static eu.ec2u.work.Streams.nullable;
+import static java.util.Comparator.comparing;
 
 
 @Frame
@@ -82,6 +86,7 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
                 .disambiguatingDescription(SchemaThing.disambiguatingDescription(translator.texts(course.disambiguatingDescription(), source, EN)))
                 .teaches(Reference.clip(0, translator.texts(course.teaches(), source, EN)))
                 .assesses(Reference.clip(0, translator.texts(course.assesses(), source, EN)))
+                .competencyRequired(Reference.clip(0, translator.texts(course.competencyRequired(), source, EN)))
                 .educationalCredentialAwarded(Reference.clip(0, translator.texts(course.educationalCredentialAwarded(), source, EN)))
                 .occupationalCredentialAwarded(Reference.clip(0, translator.texts(course.occupationalCredentialAwarded(), source, EN)))
                 .coursePrerequisites(Reference.clip(0, translator.texts(course.coursePrerequisites(), source, EN)));
@@ -107,10 +112,17 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     @Override
     default Courses collection() {
         return COURSES;
+    }
+
+    @Override
+    default Topic educationalLevel() { // !!! won't work s long as references are clipped
+        return inProgram().stream()
+                .flatMap(nullable(SchemaLearningResource::educationalLevel))
+                .min(comparing(Reference::id))
+                .orElse(null);
     }
 
 

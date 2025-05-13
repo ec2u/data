@@ -21,7 +21,6 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
-import { duration } from "@metreeca/core/duration";
 import { entryCompare } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
@@ -56,6 +55,7 @@ export const Program=immutable({
 	teaches: optional(text),
 	assesses: optional(text),
 	programPrerequisites: optional(text),
+	competencyRequired: optional(text),
 	educationalCredentialAwarded: optional(text),
 	occupationalCredentialAwarded: optional(text),
 
@@ -90,6 +90,7 @@ export const Program=immutable({
 export function DataProgram() {
 
 	const [program]=useResource(Program);
+	;
 
 	return <DataPage name={[Programs, {}]} info={<DataAI>{program?.generated}</DataAI>}
 
@@ -120,7 +121,7 @@ export function DataProgram() {
 
 				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
-				"Duration": timeToComplete && <span>{toPeriodString(duration.decode(timeToComplete))}</span>
+				"Duration": timeToComplete && <span>{toPeriodString(period.decode(timeToComplete))}</span>
 
 			}}</TileInfo>
 
@@ -147,6 +148,7 @@ export function DataProgram() {
 			teaches,
 			assesses,
 			programPrerequisites,
+			competencyRequired,
 			educationalCredentialAwarded,
 			occupationalCredentialAwarded
 
@@ -186,9 +188,8 @@ export function DataProgram() {
 					"Occupational Credential Awarded": occupationalCredentialAwarded,
 					"General Objectives": teaches,
 					"Learning Objectives and Intended Skills": assesses,
-					"Admission Requirements": programPrerequisites
-					// !!! "Teaching Methods and Mode of Study": learningResourceType,
-					// "Graduation Requirements": competencyRequired,
+					"Admission Requirements": programPrerequisites,
+					"Graduation Requirements": competencyRequired
 
 				}).map(([
 

@@ -79,6 +79,7 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
                 .disambiguatingDescription(SchemaThing.disambiguatingDescription(translator.texts(program.disambiguatingDescription(), source, EN)))
                 .teaches(Reference.clip(0, translator.texts(program.teaches(), source, EN)))
                 .assesses(Reference.clip(0, translator.texts(program.assesses(), source, EN)))
+                .competencyRequired(Reference.clip(0, translator.texts(program.competencyRequired(), source, EN)))
                 .educationalCredentialAwarded(Reference.clip(0, translator.texts(program.educationalCredentialAwarded(), source, EN)))
                 .occupationalCredentialAwarded(Reference.clip(0, translator.texts(program.occupationalCredentialAwarded(), source, EN)))
                 .programPrerequisites(Reference.clip(0, translator.texts(program.programPrerequisites(), source, EN)));
@@ -95,9 +96,7 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
     private static String embeddable(final Program program) {
         return Embedder.embeddable(set(Xtream.from(
                 Optional.ofNullable(program.name().get(EN)).stream(),
-                Optional.ofNullable(program.description().get(EN)).stream(),
-                Optional.ofNullable(program.disambiguatingDescription().get(EN)).stream(),
-                Optional.ofNullable(program.teaches().get(EN)).stream()
+                Optional.ofNullable(program.description().get(EN)).stream()
         )));
     }
 

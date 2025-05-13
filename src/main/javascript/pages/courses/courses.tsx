@@ -22,6 +22,7 @@ import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
+import { duration } from "@metreeca/core/duration";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
@@ -97,9 +98,9 @@ export function DataCourses() {
 				useOptions(courses, "courseMode", { type: string })
 			}</TileOptions>
 
-			{/* !!! <TileOptions placeholder={"Duration"} compact as={value => toDurationString(duration.decode(value))}>{
-			 useOptions(courses, "timeRequired", { type: string, size: 10 }) // !!! duration >> range
-			 }</TileOptions> */}
+			<TileOptions placeholder={"Duration"} compact>{
+				useOptions(courses, "timeRequired", { type: duration, size: 10 }) // !!! duration >> range
+			}</TileOptions>
 
 			<TileRange placeholder={"Credits"} compact>{
 				useRange(courses, "numberOfCredits", { type: decimal })
@@ -107,6 +108,10 @@ export function DataCourses() {
 
 			<TileOptions placeholder={"Title Awarded"} compact>{
 				useOptions(courses, "educationalCredentialAwarded", { type: text, size: 10 })
+			}</TileOptions>
+
+			<TileOptions placeholder={"Topics"} compact as={value => toEntryString(value)}>{
+				useOptions(courses, "about", { type: entry({ id: "", label: required(text) }), size: 10 })
 			}</TileOptions>
 
 			<TileOptions placeholder={"Audience"} compact>{
