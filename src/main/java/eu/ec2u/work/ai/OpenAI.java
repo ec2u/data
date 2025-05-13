@@ -38,8 +38,8 @@ import static java.lang.String.format;
  */
 public final class OpenAI {
 
-    private static final int MIN_DELAY=100;
-    private static final int MAX_DELAY=10_000;
+    private static final long MIN_DELAY=100;
+    private static final long MAX_DELAY=5*60_000;
 
 
     /**
@@ -103,16 +103,15 @@ public final class OpenAI {
 
                 try {
 
-                    final int exponent=attempt;
-
                     final long delay=e.headers()
                             .values("retry-after-ms")
                             .stream()
                             .findFirst()
                             .flatMap(lenient(Long::parseLong))
-                            .orElseGet(() -> min(MIN_DELAY*(1L << min(exponent, 30)), MAX_DELAY)); // prevent overflow
+                            .orElse(MIN_DELAY);
 
-                    final long jitter=ThreadLocalRandom.current().nextLong(0, delay);
+                    final long backoff=min(delay*(1L << min(attempt, 30)), MAX_DELAY);// prevent overflow
+                    final long jitter=ThreadLocalRandom.current().nextLong(0, backoff);
 
                     service(logger()).warning(OpenAI.class, format(
                             "task delayed by <%,d> ms after <%,d> attempts", delay+jitter, attempt+1
