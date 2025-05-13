@@ -24,7 +24,7 @@ import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.courses.CourseFrame;
-import eu.ec2u.data.events.SchemaEvent;
+import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.universities.University;
@@ -32,6 +32,7 @@ import eu.ec2u.work.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -65,6 +66,8 @@ import static eu.ec2u.data.taxonomies.SDGs.SDGS;
 import static eu.ec2u.data.universities.Universities.UNIVERSITIES;
 import static eu.ec2u.data.universities.University.PARTNERS;
 import static eu.ec2u.data.universities.University.uuid;
+import static java.lang.Math.floor;
+import static java.lang.Math.round;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
@@ -140,8 +143,8 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
 
                         // !!! Semester (First/Second)
 
-                        // !!! .timeRequired(timeRequired(record).orElse(null))
-                        // !!! .courseWorkload(courseWorkload(record).orElse(null))
+                        .timeRequired(timeRequired(record).orElse(null))
+                        .courseWorkload(courseWorkload(record).orElse(null))
 
                         // !!! Test type (Written/Oral/Both)
                         // !!! Type evaluation (Vote/Judgement)
@@ -239,15 +242,15 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                 .map(value -> value.equalsIgnoreCase("no"));
     }
 
-    // private Optional<Object> timeRequired(final CSVRecord record) {
-    //     return value(record, "Teaching hours", Parsers::decimal)
-    //             .map(OfferingsLLL::duration);
-    // }
+    private Optional<Duration> timeRequired(final CSVRecord record) {
+        return value(record, "Teaching hours", OfferingsLLL::decimal)
+                .map(this::duration);
+    }
 
-    // private Optional<Object> courseWorkload(final CSVRecord record) {
-    //     return value(record, "Individual study hours", Parsers::decimal)
-    //             .map(OfferingsLLL::duration);
-    // }
+    private Optional<Duration> courseWorkload(final CSVRecord record) {
+        return value(record, "Individual study hours", OfferingsLLL::decimal)
+                .map(this::duration);
+    }
 
     private Optional<PersonFrame> instructor(final CSVRecord record, final University university) {
         return value(record, "Professor Surname")
@@ -275,7 +278,7 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                 .map(n -> new TopicFrame(true).id(uri("%s/%s".formatted(SDGS.id(), n))));
     }
 
-    private Optional<SchemaEvent.EventAttendanceModeEnumeration> courseMode(final CSVRecord record) {
+    private Optional<EventAttendanceModeEnumeration> courseMode(final CSVRecord record) {
         return value(record, "Teaching method (on-line/ in presence/ hybrid)")
                 .map(mode -> mode.toUpperCase(ROOT))
                 .map(mode -> mode.contains("LINE") ? OnlineEventAttendanceMode
@@ -297,30 +300,31 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
     }
 
     private Optional<Double> numberOfCredits(final CSVRecord record) {
-        return value(record, "Number of ECTS", text -> Optional.of(text)
-
-                .map(FuzzyDecimalPattern::matcher)
-                .filter(Matcher::find)
-                .map(matcher -> matcher.group(1))
-
-                .map(Double::parseDouble)
-        );
+        return value(record, "Number of ECTS", OfferingsLLL::decimal);
     }
 
     private Optional<URI> url(final CSVRecord record) {
         return value(record, "Link to the course site/description", URIs::fuzzy);
     }
 
-    // private Literal duration(final BigDecimal value) {
-    //
-    //     final int hours=value.intValue();
-    //     final int minutes=value.remainder(BigDecimal.ONE).multiply(new BigDecimal(60)).intValue();
-    //
-    //     return literal(
-    //             minutes == 0 ? format("PT%dH", hours) : format("PT%dH%dM", hours, minutes),
-    //             XSD.DURATION
-    //     );
-    // }
+
+    private static Optional<Double> decimal(final String text) {
+        return Optional.of(text)
+
+                .map(FuzzyDecimalPattern::matcher)
+                .filter(Matcher::find)
+                .map(matcher -> matcher.group(1))
+
+                .map(Double::parseDouble);
+    }
+
+    private Duration duration(final double value) {
+
+        final long hours=round(floor(value));
+        final long minutes=round(floor(60*value));
+
+        return minutes == 0 ? Duration.ofHours(hours) : Duration.ofHours(hours).plus(Duration.ofMinutes(minutes));
+    }
 
 
     // private Stream<IRI> subjects(final String text) {

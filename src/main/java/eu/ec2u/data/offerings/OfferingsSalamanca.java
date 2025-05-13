@@ -28,7 +28,7 @@ import eu.ec2u.data.courses.CourseFrame;
 import eu.ec2u.data.programs.ProgramFrame;
 
 import java.net.URI;
-import java.time.Period;
+import java.time.Duration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -44,8 +44,7 @@ import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.shim.Collections.map;
-import static com.metreeca.shim.Collections.set;
+import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Loggers.time;
 
@@ -60,7 +59,6 @@ import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.Streams.joining;
 import static eu.ec2u.work.Streams.optional;
 import static java.lang.String.format;
-import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
 public final class OfferingsSalamanca implements Runnable {
@@ -70,11 +68,11 @@ public final class OfferingsSalamanca implements Runnable {
     private static final String PROGRAMS_COURSES_URL="offerings-salamanca-programs-courses-url";
 
 
-    private static final Map<String, Period> Durations=Map.ofEntries(
-            entry("A", Period.ofYears(1)),
-            entry("S", Period.ofMonths(6)),
-            entry("Q", Period.ofMonths(4)),
-            entry("T", Period.ofMonths(3))
+    private static final Map<String, Duration> DURATIONS=map(
+            entry("A", Duration.ofDays(365)),
+            entry("S", Duration.ofDays(180)),
+            entry("Q", Duration.ofDays(120)),
+            entry("T", Duration.ofDays(90))
     );
 
 
@@ -204,16 +202,16 @@ public final class OfferingsSalamanca implements Runnable {
     private Optional<CourseFrame> course(final Value json) {
         return json.get("code").string().map(code -> new CourseFrame()
 
-                        .id(courseId(code))
-                        .university(SALAMANCA)
+                .id(courseId(code))
+                .university(SALAMANCA)
 
-                        .url(set(courseUrl(json).stream()))
-                        .courseCode(code)
+                .url(set(courseUrl(json).stream()))
+                .courseCode(code)
 
-                        .name(map(courseName(json)))
+                .name(map(courseName(json)))
 
-                        .numberOfCredits(courseNumberOfCredits(json).orElse(null))
-                // !!! .timeRequired(courseTimeRequired(json).orElse(null))
+                .numberOfCredits(courseNumberOfCredits(json).orElse(null))
+                .timeRequired(courseTimeRequired(json).orElse(null))
 
         );
     }
@@ -248,9 +246,9 @@ public final class OfferingsSalamanca implements Runnable {
                 .flatMap(lenient(Double::parseDouble));
     }
 
-    private Optional<Period> courseTimeRequired(final Value json) {
+    private Optional<Duration> courseTimeRequired(final Value json) {
         return json.get("field_guias_asig_tdu_value").string()
-                .map(Durations::get);
+                .map(DURATIONS::get);
     }
 
 
