@@ -198,7 +198,7 @@ public final class OfferingsPoitiers implements Runnable {
                 .map(name -> new OrganizationFrame()
                         .id(ORGANIZATIONS.id().resolve(uuid(POITIERS, name)))
                         .university(POITIERS)
-                        .name(map(entry(POITIERS.locale(), name)))
+                        .prefLabel(map(entry(POITIERS.locale(), name)))
                 );
     }
 

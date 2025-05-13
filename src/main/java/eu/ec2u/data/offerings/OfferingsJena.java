@@ -100,7 +100,8 @@ public final class OfferingsJena implements Runnable {
     private final Logger logger=service(logger());
 
 
-    @Override public void run() {
+    @Override
+    public void run() {
         time(() -> store.modify(
 
                 array(Stream.of(SITE_URL)
