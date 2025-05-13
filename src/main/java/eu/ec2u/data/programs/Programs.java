@@ -45,9 +45,7 @@ public interface Programs extends Dataset {
             .title(map(entry(EN, "EC2U Degree and Occupational Programs")))
             .alternative(map(entry(EN, "EC2U Programs")))
             .description(map(entry(EN, """
-                    Formal degree and vocational qualification programs offered by EC2U allied universities. \
-                    Programs span undergraduate and postgraduate levels, featuring interdisciplinary and cross-border \
-                    academic structures.
+                    Formal degree and vocational qualification programs offered by EC2U partner universities.
                     """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)

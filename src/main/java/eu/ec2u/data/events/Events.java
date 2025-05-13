@@ -80,10 +80,10 @@ public interface Events extends Dataset {
     EventsFrame EVENTS=new EventsFrame()
             .id(DATA.resolve("events/"))
             .isDefinedBy(DATA.resolve("datasets/events"))
-            .title(map(entry(EN, "EC2U Local Events")))
+            .title(map(entry(EN, "EC2U Academic and Local Events")))
             .alternative(map(entry(EN, "EC2U Events")))
             .description(map(entry(EN, """
-                    Information about events at EC2U allied universities and associated local organizations.
+                    Information about events at EC2U partner universities and associated local organizations.
                     """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)

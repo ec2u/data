@@ -45,9 +45,7 @@ public interface Courses extends Dataset {
             .title(map(entry(EN, "EC2U Academic and Occupational Courses")))
             .alternative(map(entry(EN, "EC2U Courses")))
             .description(map(entry(EN, """
-                    Academic and occupational standalone courses offered by EC2U allied universities. \
-                    These include flexible, non-degree learning opportunities aimed at upskilling, reskilling, \
-                    or exploring specialized topics across various domains.
+                    Degree, vocational and personal development courses offered by EC2U partner universities.
                     """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)

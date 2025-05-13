@@ -73,8 +73,8 @@ public interface Units extends Dataset {
             .title(map(entry(EN, "EC2U Research Units and Facilities")))
             .alternative(map(entry(EN, "EC2U Units")))
             .description(map(entry(EN, """
-                    Identifying and background information about research and innovation units and supporting structures
-                    at EC2U allied universities."""
+                    Information about research units and supporting structures at EC2U partner universities.
+                    """
             )))
             .publisher(EC2U)
             .rights(COPYRIGHT)

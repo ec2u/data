@@ -67,7 +67,9 @@ public interface Documents extends Dataset {
             .isDefinedBy(DATA.resolve("datasets/documents"))
             .title(map(entry(EN, "EC2U Institutional Documents")))
             .alternative(map(entry(EN, "EC2U Documents")))
-            .description(map(entry(EN, "Institutional documents shared by EC2U allied partners.")))
+            .description(map(entry(EN, """
+                    Regulations, policies and other governance documents shared by EC2U partner universities.
+                    """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)
             .license(set(CCBYNCND40))

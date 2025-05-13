@@ -63,9 +63,11 @@ public interface Universities extends Dataset {
     UniversitiesFrame UNIVERSITIES=new UniversitiesFrame()
             .id(DATA.resolve("universities/"))
             .isDefinedBy(DATA.resolve("datasets/universities"))
-            .title(map(entry(EN, "EC2U Allied Universities")))
+            .title(map(entry(EN, "EC2U Partner Universities")))
             .alternative(map(entry(EN, "EC2U Universities")))
-            .description(map(entry(EN, "Background information about EC2U allied universities.")))
+            .description(map(entry(EN, """
+                    Background, historical context, and statistical data about EC2U partner universities.
+                    """)))
             .publisher(EC2U)
             .rights(COPYRIGHT)
             .license(set(CCBYNCND40))
