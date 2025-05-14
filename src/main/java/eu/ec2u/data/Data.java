@@ -105,15 +105,23 @@ public final class Data extends Delegator {
                         .base(DATA)
                 )
 
-                .set(openai(), () -> openai(service(vault()).get("openai-key"), builder ->
-                        builder.timeout(Duration.ofSeconds(20))
+                .set(openai(), () -> openai(service(vault()).get("openai-key"), builder -> builder
+                        .timeout(Duration.ofSeconds(20))
                 ))
 
                 .set(translator(), () -> new CacheTranslator(
-                        new StoreTranslator(new OpenTranslator("gpt-4o-mini"))
+                        new StoreTranslator(new OpenTranslator("gpt-4.1-nano", builder -> builder
+                                .topP(1)
+                                .temperature(1)
+                                .maxCompletionTokens(4096)
+                        ))
                 ))
 
-                .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini"))
+                .set(analyzer(), () -> new OpenAnalyzer("gpt-4.1-nano", builder -> builder
+                        .topP(1)
+                        .temperature(1)
+                        .maxCompletionTokens(4096)
+                ))
 
                 .set(embedder(), () -> new CacheEmbedder(
                         new OpenEmbedder("text-embedding-3-small")
