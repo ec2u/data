@@ -104,15 +104,18 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                 .map(new Untag())
 
                 .flatMap(optional(analyzer.prompt("""
-                        Extract from a provided markdown document describing a list of doctorate programs:
+                        The provided markdown document contains a list of doctorate programs;
+                        for each listed program extract the following properties:
+                        
                         - name
                         - language as guessed from name as a 2-letter ISO tag
                         - URL
-                        Report as a JSON object
+                        
+                        Respond with a JSON object.
                         """, """
                         {
                           "name": "programs",
-                          "strict": false,
+                          "strict": true,
                           "schema": {
                             "type": "object",
                             "properties": {
@@ -128,21 +131,22 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                                       "type": "string"
                                     },
                                     "url": {
-                                      "type": "string",
-                                      "format": "uri"
+                                      "type": "string"
                                     }
                                   },
                                   "required": [
                                     "name",
                                     "nameLanguage",
                                     "url"
-                                  ]
+                                  ],
+                                  "additionalProperties": false
                                 }
                               }
                             },
                             "required": [
                               "programs"
-                            ]
+                            ],
+                            "additionalProperties": false
                           }
                         }
                         """
@@ -195,38 +199,44 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         - document language as guessed from its content as a 2-letter ISO tag
                         - general objectives
                         - acquired competency or intended learning outcomes
-                        - admission requirements (omit if not specified in the document)
+                        - admission requirements
                         
                         Describe properties extensively.
+                        Make absolutely sure to generate properties only if they are explicitly specified in the document.
+                        
                         Respond with a JSON object.
                         """, """
                         {
-                                 "name": "program",
-                                 "strict": false,
-                                 "schema": {
-                                   "type": "object",
-                                   "properties": {
-                                     "language": {
-                                       "type": "string"
-                                     },
-                                     "objectives": {
-                                       "type": "string"
-                                     },
-                                     "competencies": {
-                                       "type": "string"
-                                     },
-                                     "requirements": {
-                                       "type": "string"
-                                     }
-                                   },
-                                   "required": [
-                                     "objectives",
-                                     "competencies"
-                                   ]
-                                 }
-                               }
-                        """
+                          "name": "program",
+                          "strict": true,
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "language": {
+                                "type": "string"
+                              },
+                              "objectives": {
+                                "type": "string"
+                              },
+                              "competencies": {
+                                "type": "string"
+                              },
+                              "requirements": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "language",
+                              "objectives",
+                              "competencies",
+                              "requirements"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }"""
                 ))
+
+                .map(value -> value)
 
                 .map(json -> {
 
