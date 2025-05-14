@@ -22,6 +22,8 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.resources.Collection;
 
+import java.util.Set;
+
 @Frame
 @Class
 @Namespace("[ec2u]")
@@ -31,5 +33,8 @@ public interface Taxonomy extends Collection, SKOSConceptScheme<Taxonomy, Topic>
     default Taxonomies collection() {
         return Taxonomies.TAXONOMIES;
     }
+
+    @Override
+    Set<Topic> members();
 
 }

@@ -18,6 +18,7 @@ package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.Xtream;
 import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
@@ -40,6 +41,7 @@ import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.util.function.Predicate.not;
 
 @Frame
+@Class
 @Namespace("[ec2u]")
 public interface Topic extends Resource, SKOSConcept<Taxonomy, Topic> {
 
