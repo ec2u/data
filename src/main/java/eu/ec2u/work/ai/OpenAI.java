@@ -79,8 +79,6 @@ public final class OpenAI {
     }
 
 
-    //
-
     /*
      * @see <a href="https://platform.openai.com/docs/guides/rate-limits#error-mitigation">Rate limits - Error mitigation</a>
      */
@@ -103,23 +101,27 @@ public final class OpenAI {
 
                 try {
 
-                    final long delay=e.headers()
+                    final long minimum=e.headers()
                             .values("retry-after-ms")
                             .stream()
                             .findFirst()
                             .flatMap(lenient(Long::parseLong))
                             .orElse(MIN_DELAY);
 
-                    final long backoff=min(delay*(1L << min(attempt, 30)), MAX_DELAY);// prevent overflow
-                    final long jitter=ThreadLocalRandom.current().nextLong(0, backoff);
+                    final long maximum=minimum+min(minimum*(1L << min(attempt, 30)), MAX_DELAY);// prevent overflow
+                    final long delay=ThreadLocalRandom.current().nextLong(minimum, maximum);
 
                     service(logger()).warning(OpenAI.class, format(
-                            "task delayed by <%,d> ms after <%,d> attempts", delay+jitter, attempt+1
+                            "task delayed by <%,d> ms after <%,d> attempts", delay, attempt+1
                     ));
 
-                    Thread.sleep(delay+jitter);
+                    Thread.sleep(delay);
 
-                } catch ( final InterruptedException ignored ) { }
+                } catch ( final InterruptedException ignored ) {
+
+                    Thread.currentThread().interrupt();
+
+                }
 
             }
         }
