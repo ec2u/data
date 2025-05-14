@@ -34,7 +34,6 @@ import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.text.services.Translator.preprocess;
 import static com.metreeca.shim.Loggers.time;
 
-import static com.openai.models.chat.completions.ChatCompletionCreateParams.builder;
 import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
@@ -59,33 +58,23 @@ public final class OpenTranslator implements Translator {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final ChatCompletionCreateParams.Builder params;
+    private Consumer<ChatCompletionCreateParams.Builder> setup;
 
     private final OpenAIClient client=service(openai());
     private final Logger logger=service(logger());
 
 
     public OpenTranslator(final String model) {
-        this(model, options -> { });
+        this(builder -> builder.model(model));
     }
 
-    public OpenTranslator(final String model, final Consumer<ChatCompletionCreateParams.Builder> setup) {
-
-        if ( model == null ) {
-            throw new NullPointerException("null model");
-        }
-
-        if ( model.isBlank() ) {
-            throw new IllegalArgumentException("empty model");
-        }
+    public OpenTranslator(final Consumer<ChatCompletionCreateParams.Builder> setup) {
 
         if ( setup == null ) {
             throw new NullPointerException("null setup");
         }
 
-        this.params=builder().model(model); // allow setup to override the default model
-
-        setup.accept(params);
+        this.setup=setup;
     }
 
 
@@ -108,8 +97,12 @@ public final class OpenTranslator implements Translator {
 
             try {
 
+                final ChatCompletionCreateParams.Builder builder=new ChatCompletionCreateParams.Builder();
+
+                setup.accept(builder);
+
                 return backoff(0, () -> Optional.of(text).flatMap(t -> client.chat().completions()
-                        .create(params
+                        .create(builder
                                 .responseFormat(FORMAT)
                                 .addSystemMessage(format(PROMPT,
                                         source.equals(Locales.ANY) ? "" : target.getDisplayLanguage(ENGLISH),

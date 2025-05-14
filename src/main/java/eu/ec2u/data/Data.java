@@ -29,6 +29,7 @@ import com.metreeca.flow.services.Cache.FileCache;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.text.services.Translator.CacheTranslator;
 
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import eu.ec2u.work.ai.Embedder.CacheEmbedder;
 import eu.ec2u.work.ai.OpenAnalyzer;
 import eu.ec2u.work.ai.OpenEmbedder;
@@ -85,6 +86,25 @@ public final class Data extends Delegator {
     }
 
 
+    private static Repository gdb() {
+
+        final Vault vault=service(vault());
+
+        final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GDB_SERVER, GDB_REPOSITORY));
+
+        repository.setUsernameAndPassword(vault.get(GDB_USR), vault.get(GDB_PWD));
+
+        return repository;
+    }
+
+    private static void chat(final ChatCompletionCreateParams.Builder builder) {
+        builder.model("gpt-4.1-nano")
+                .seed(0)
+                .temperature(0)
+                .maxCompletionTokens(4096);
+    }
+
+
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static Locator services(final Locator locator) {
@@ -96,7 +116,7 @@ public final class Data extends Delegator {
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
                 .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
 
-                .set(repository(), () -> gdb(GDB_REPOSITORY))
+                .set(repository(), Data::gdb)
 
                 .set(store(), () -> rdf4j(service(repository())))
                 .set(codec(), () -> json()
@@ -110,35 +130,15 @@ public final class Data extends Delegator {
                 ))
 
                 .set(translator(), () -> new CacheTranslator(
-                        new StoreTranslator(new OpenTranslator("gpt-4.1-nano", builder -> builder
-                                .topP(1)
-                                .temperature(1)
-                                .maxCompletionTokens(4096)
-                        ))
+                        new StoreTranslator(new OpenTranslator(Data::chat))
                 ))
 
-                .set(analyzer(), () -> new OpenAnalyzer("gpt-4.1-nano", builder -> builder
-                        .topP(1)
-                        .temperature(1)
-                        .maxCompletionTokens(4096)
-                ))
+                .set(analyzer(), () -> new OpenAnalyzer(Data::chat))
 
                 .set(embedder(), () -> new CacheEmbedder(
                         new OpenEmbedder("text-embedding-3-small")
                 ));
 
-    }
-
-
-    public static Repository gdb(final String name) {
-
-        final Vault vault=service(vault());
-
-        final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GDB_SERVER, name));
-
-        repository.setUsernameAndPassword(vault.get(GDB_USR), vault.get(GDB_PWD));
-
-        return repository;
     }
 
 

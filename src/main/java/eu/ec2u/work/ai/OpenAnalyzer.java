@@ -31,7 +31,7 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import com.openai.models.chat.completions.ChatCompletionCreateParams.ResponseFormat;
 
 import java.util.Optional;
-import java.util.function.UnaryOperator;
+import java.util.function.Consumer;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
@@ -40,7 +40,6 @@ import static com.metreeca.shim.Loggers.time;
 
 import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -53,8 +52,7 @@ import static java.util.function.Predicate.not;
  */
 public final class OpenAnalyzer implements Analyzer {
 
-    private final String model;
-    private final UnaryOperator<ChatCompletionCreateParams.Builder> setup;
+    private final Consumer<ChatCompletionCreateParams.Builder> setup;
 
     private final String prompt;
     private final String schema;
@@ -66,28 +64,19 @@ public final class OpenAnalyzer implements Analyzer {
 
 
     public OpenAnalyzer(final String model) {
-        this(model, options -> options);
+        this(builder -> builder.model(model));
     }
 
-    public OpenAnalyzer(final String model, final UnaryOperator<ChatCompletionCreateParams.Builder> setup) {
-        this(model, setup, "", "");
+    public OpenAnalyzer(final Consumer<ChatCompletionCreateParams.Builder> setup) {
+        this(setup, "", "");
     }
 
 
     public OpenAnalyzer(
-            final String model,
-            final UnaryOperator<ChatCompletionCreateParams.Builder> setup,
+            final Consumer<ChatCompletionCreateParams.Builder> setup,
             final String prompt,
             final String schema
     ) {
-
-        if ( model == null ) {
-            throw new NullPointerException("null model");
-        }
-
-        if ( model.isBlank() ) {
-            throw new IllegalArgumentException("empty model");
-        }
 
         if ( setup == null ) {
             throw new NullPointerException("null setup");
@@ -101,7 +90,6 @@ public final class OpenAnalyzer implements Analyzer {
             throw new NullPointerException("null schema");
         }
 
-        this.model=model;
         this.setup=setup;
         this.prompt=prompt;
         this.schema=schema;
@@ -120,20 +108,12 @@ public final class OpenAnalyzer implements Analyzer {
         }
 
         return new OpenAnalyzer(
-                model,
                 setup,
                 prompt,
                 schema
         );
     }
 
-
-    private ChatCompletionCreateParams.Builder params() {
-        return requireNonNull(
-                setup.apply(ChatCompletionCreateParams.builder().model(model)), // let setup override the default model
-                "null setup return value"
-        );
-    }
 
     private ResponseFormat format() {
         return format != null ? format : (format=Optional.of(schema)
@@ -178,10 +158,14 @@ public final class OpenAnalyzer implements Analyzer {
 
             try {
 
+                final ChatCompletionCreateParams.Builder builder=new ChatCompletionCreateParams.Builder();
+
+                setup.accept(builder);
+
                 return backoff(0, () -> Optional.of(text)
                         .filter(not(String::isBlank))
                         .flatMap(t -> client.chat().completions()
-                                .create(params()
+                                .create(builder
                                         .responseFormat(format())
                                         .addSystemMessage(prompt)
                                         .addUserMessage(t)
