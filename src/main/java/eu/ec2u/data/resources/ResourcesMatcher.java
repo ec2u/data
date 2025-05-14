@@ -50,7 +50,7 @@ final class ResourcesMatcher {
 
     private static final Map<URI, VectorIndex<URI>> INDICES=new ConcurrentHashMap<>();
 
-    private static final ThreadLocal<Embedder> EMMBEDER=ThreadLocal.withInitial(() -> new CacheEmbedder(
+    private static final ThreadLocal<Embedder> EMBEDDER=ThreadLocal.withInitial(() -> new CacheEmbedder(
             new StoreEmbedder(service(embedder())).limit(CACHING_SIZE_LIMIT)
     ));
 
@@ -58,7 +58,7 @@ final class ResourcesMatcher {
     static Stream<URI> match(final URI collection, final String query, final double threshold) {
 
         final Store store=service(store());
-        final Embedder embedder=EMMBEDER.get();
+        final Embedder embedder=EMBEDDER.get();
 
         final VectorIndex<URI> index=INDICES.computeIfAbsent(collection, t -> new VectorIndex<>(store
 
@@ -87,7 +87,9 @@ final class ResourcesMatcher {
                 .filter(not(String::isBlank))
                 .flatMap(embedder::embed)
                 .stream()
-                .flatMap(embedding -> index.lookup(embedding, threshold));
+                .flatMap(index::lookup)
+                .filter(e -> threshold == 0 || e.getValue() <= threshold)
+                .map(Map.Entry::getKey);
     }
 
 

@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import static com.metreeca.shim.Collections.entry;
 import static com.metreeca.shim.Collections.map;
 
-import static java.lang.String.format;
 import static java.util.Map.Entry.comparingByValue;
 
 public final class VectorIndex<V> {
@@ -41,30 +40,15 @@ public final class VectorIndex<V> {
     }
 
 
-    public Stream<V> lookup(final Vector query) {
+    public Stream<Entry<V, Double>> lookup(final Vector query) {
 
         if ( query == null ) {
             throw new NullPointerException("null query");
-        }
-
-        return lookup(query, 0);
-    }
-
-    public Stream<V> lookup(final Vector query, final double threshold) {
-
-        if ( query == null ) {
-            throw new NullPointerException("null query");
-        }
-
-        if ( threshold < 0 ) {
-            throw new IllegalArgumentException(format("negative threshold <%.3f>", threshold));
         }
 
         return entries.entrySet().stream()
                 .map(entry -> entry(entry.getKey(), Vector.cosine(query, entry.getValue())))
-                .sorted(comparingByValue())
-                .filter(e -> threshold == 0 || e.getValue() <= threshold)
-                .map(Entry::getKey);
+                .sorted(comparingByValue());
     }
 
 }

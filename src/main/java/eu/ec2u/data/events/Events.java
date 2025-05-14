@@ -350,7 +350,7 @@ public interface Events extends Dataset {
                                 .eventAttendanceMode(attendanceMode(json).orElse(null))
                                 .isAccessibleForFree(entryFees(json).orElse(null))
 
-                                .about(set(topic(json).stream()))
+                                .about(set(about(json).stream()))
                                 .audience(set(audience(json).stream()));
 
 
@@ -525,7 +525,7 @@ public interface Events extends Dataset {
         }
 
 
-        private Optional<TopicFrame> topic(final Value json) {
+        private Optional<TopicFrame> about(final Value json) {
             return json.get("topic").string()
                     .flatMap(t -> Resources.match(EC2U_EVENTS.id(), t))
                     .map(t -> new TopicFrame(true).id(t));
