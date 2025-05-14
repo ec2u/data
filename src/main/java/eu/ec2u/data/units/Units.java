@@ -33,7 +33,8 @@ import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
-import eu.ec2u.data.taxonomies.EuroSciVoc;
+import eu.ec2u.data.taxonomies.Taxonomies;
+import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
@@ -55,16 +56,18 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
+import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
+import static java.util.function.Function.identity;
 
 @Frame
 public interface Units extends Dataset {
 
     double TYPE_THRESHOLD=0.6;
-    double SUBJECT_THRESHOLD=0.6;
 
 
     UnitsFrame UNITS=new UnitsFrame()
@@ -247,24 +250,25 @@ public interface Units extends Dataset {
                     .stream();
         }
 
-        private Stream<TopicFrame> subject(final CSVRecord record) {
+        private Stream<Topic> subject(final CSVRecord record) {
             return Stream.concat(
 
-                    value(record, "Sector")
-                            .flatMap(type -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), type))
-                            .map(uri -> new TopicFrame(true).id(uri))
-                            .stream(),
+                    value(record, "Sector").stream()
+                            .flatMap(new Taxonomies.Matcher(EUROSCIVOC).narrowing(2))
+                            .limit(1),
 
 
-                    Stream.concat(
+                    Stream.of(
+                                    value(record, "Name (English)").stream(),
+                                    value(record, "Name (Local)").stream(),
                                     value(record, "Topics (English)").stream(),
                                     value(record, "Topics (Local)").stream()
                             )
+                            .flatMap(identity())
                             .flatMap(topics -> Arrays.stream(topics.split(";")))
                             .distinct()
-                            .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD))
-                            .map(uri -> new TopicFrame(true).id(uri))
-                            .limit(1)
+                            .flatMap(euroscivoc())
+                            .limit(3)
 
             );
         }

@@ -27,7 +27,7 @@ import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
-import eu.ec2u.data.taxonomies.EuroSciVoc;
+import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
 
 import java.util.List;
@@ -45,8 +45,10 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
-import static eu.ec2u.data.units.Units.*;
+import static eu.ec2u.data.units.Units.TYPE_THRESHOLD;
+import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.POITIERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
@@ -170,11 +172,10 @@ public final class UnitsPoitiers implements Runnable {
                 .limit(1);
     }
 
-    private Stream<TopicFrame> subject(final Value json) {
+    private Stream<Topic> subject(final Value json) {
         return json.select("domaine_scientifique.*").strings()
                 .distinct()
-                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD))
-                .map(uri -> new TopicFrame(true).id(uri))
+                .flatMap(euroscivoc())
                 .limit(1);
     }
 

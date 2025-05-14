@@ -21,14 +21,26 @@ import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.work.CSVProcessor;
+import eu.ec2u.work.ai.Embedder;
+import eu.ec2u.work.ai.StoreEmbedder;
+import eu.ec2u.work.ai.Vector;
+import eu.ec2u.work.ai.VectorIndex;
 import org.apache.commons.csv.CSVRecord;
 
+import java.net.URI;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -36,14 +48,22 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Locales.ANY;
 import static com.metreeca.shim.Strings.split;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.StrictMath.pow;
+import static java.lang.String.format;
+import static java.util.Map.Entry.comparingByValue;
+import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toMap;
 
 @Frame
 public interface Taxonomies extends Dataset {
@@ -171,6 +191,147 @@ public interface Taxonomies extends Dataset {
 
                     .flatMap(Topic::review)
                     .stream();
+        }
+
+    }
+
+    final class Matcher implements Function<String, Stream<Topic>> {
+
+        private static final int CACHING_SIZE_LIMIT=10_000;
+
+
+        private static final Map<URI, VectorIndex<Topic>> INDICES=new ConcurrentHashMap<>();
+
+        private static final ThreadLocal<Embedder> EMBEDDER=ThreadLocal.withInitial(() -> new Embedder.CacheEmbedder(
+                new StoreEmbedder(service(embedder())).limit(CACHING_SIZE_LIMIT)
+        ));
+
+
+        private final Taxonomy taxonomy;
+
+        private double threshold;
+        private double tolerance;
+        private double narrowing;
+
+        private final Store store=service(store());
+        private final Embedder embedder=EMBEDDER.get();
+
+
+        public Matcher(final Taxonomy taxonomy) {
+
+            if ( taxonomy == null ) {
+                throw new NullPointerException("null taxonomy");
+            }
+
+            this.taxonomy=taxonomy;
+        }
+
+
+        public Matcher threshold(final double threshold) {
+
+            if ( threshold < 0 ) {
+                throw new IllegalArgumentException(format("negative distance threshold <%.3f>", threshold));
+            }
+
+            this.threshold=threshold;
+
+            return this;
+        }
+
+        public Matcher tolerance(final double tolerance) {
+
+            if ( tolerance < 0 ) {
+                throw new IllegalArgumentException(format("negative distance tolerance <%.3f>", tolerance));
+            }
+
+            this.tolerance=tolerance;
+
+            return this;
+        }
+
+        public Matcher narrowing(final double narrowing) {
+
+            if ( tolerance < 0 ) {
+                throw new IllegalArgumentException(format("negative narrowing penalty <%.3f>", narrowing));
+            }
+
+            this.narrowing=narrowing;
+
+            return this;
+        }
+
+
+        @Override
+        public Stream<Topic> apply(final String query) {
+
+            final VectorIndex<Topic> index=index();
+
+            return Optional.of(query)
+                    .filter(not(String::isBlank))
+                    .flatMap(embedder::embed)
+                    .stream()
+                    .flatMap(index::lookup)
+                    .map(narrowing())
+                    .sorted(comparingByValue())
+                    .filter(threshold())
+                    .filter(tolerance())
+                    .map(Entry::getKey);
+        }
+
+
+        private UnaryOperator<Entry<Topic, Double>> narrowing() {
+            return narrowing == 0 ? UnaryOperator.identity() : e ->
+                    entry(e.getKey(), e.getValue()*pow(narrowing, e.getKey().broaderTransitive().size()));
+        }
+
+        private Predicate<Entry<Topic, Double>> threshold() {
+            return threshold == 0 ? e -> true : e -> e.getValue() <= threshold;
+        }
+
+        private Predicate<Entry<Topic, Double>> tolerance() {
+            return tolerance == 0 ? e -> true : new Predicate<>() {
+
+                private double best=Double.MAX_VALUE;
+
+                @Override public boolean test(final Entry<Topic, Double> entry) {
+
+                    final double value=entry.getValue();
+
+                    best=min(best, value);
+
+                    return value <= best+max(1-best, 0)*tolerance;
+                }
+
+            };
+        }
+
+
+        private VectorIndex<Topic> index() {
+            return INDICES.computeIfAbsent(taxonomy.id(), t -> new VectorIndex<>(store
+
+                    .retrieve(new TaxonomyFrame(true).id(taxonomy.id()).members(stash(query()
+
+                            .model(new TopicFrame(true)
+                                    .id(uri())
+                                    .label(map(entry(ANY, "")))
+                                    .broaderTransitive(set(new TopicFrame(true).id(uri())))
+                                    .embedding("")
+                            )
+
+                    )))
+
+                    .map(TaxonomyFrame::new)
+                    .map(TaxonomyFrame::members)
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .filter(resource -> resource.embedding() != null)
+
+                    .collect(toMap(
+                            topic -> topic,
+                            topic -> Vector.decode(topic.embedding())
+                    ))
+
+            ));
         }
 
     }

@@ -77,7 +77,10 @@ export const Unit=immutable({
 
 	subject: multiple({
 		id: required(id),
-		label: required(text)
+		label: required(text),
+		broaderTransitive: multiple({
+			id: required(id)
+		})
 	})
 
 });
@@ -171,7 +174,14 @@ export function DataUnit() {
 
 					{subject && subject.length > 0 && <TileLabel name={"Topics"} wide>
                         <ul>{subject.slice()
-							.sort(entryCompare)
+							.sort((x, y) => {
+
+								const xdepth=x.broaderTransitive?.length || 0;
+								const ydepth=y.broaderTransitive?.length || 0;
+
+								return xdepth !== ydepth ? xdepth - ydepth : entryCompare(x, y);
+
+							})
 							.map(subject =>
 								<li key={subject.id}><TileLink>{subject}</TileLink></li>
 							)}</ul>

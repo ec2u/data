@@ -28,9 +28,6 @@ import com.metreeca.mesh.Value;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.persons.PersonFrame;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EuroSciVoc;
-import eu.ec2u.data.taxonomies.TopicFrame;
 import org.apache.commons.csv.CSVFormat;
 
 import java.net.URI;
@@ -57,8 +54,8 @@ import static com.metreeca.shim.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.*;
+import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
-import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.universities.University.SALAMANCA;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
@@ -162,13 +159,13 @@ public final class UnitsSalamanca implements Runnable {
 
                         json.get("knowledge_branch").string().stream()
                                 .flatMap(v -> split(v, "[,;]"))
-                                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD).findFirst().stream())
-                                .map(uri -> new TopicFrame(true).id(uri)),
+                                .flatMap(euroscivoc())
+                                .limit(1),
 
                         json.get("RIS3").string().stream()
                                 .flatMap(v -> split(v, "[,;]"))
-                                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD).findFirst().stream())
-                                .map(uri -> new TopicFrame(true).id(uri))
+                                .flatMap(euroscivoc())
+                                .limit(1)
 
                 )))
 

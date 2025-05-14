@@ -33,7 +33,6 @@ import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
-import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
 
@@ -54,8 +53,8 @@ import static com.metreeca.shim.Collections.*;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.PT;
+import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
-import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
 import static eu.ec2u.data.universities.University.COIMBRA;
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.join;
@@ -231,14 +230,14 @@ public final class UnitsCoimbra implements Runnable {
     private Optional<Topic> sector(final Value json) {
         return json.get("knowledge_branch_en").string()
                 .or(() -> json.get("knowledge_branch_pt").string())
-                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD).findFirst())
-                .map(uri -> new TopicFrame(true).id(uri));
+                .stream()
+                .flatMap(euroscivoc())
+                .findFirst();
     }
 
     private Stream<Topic> subjects(final Value json) {
         return json.select("topics.*.name_en").strings()
-                .flatMap(topic -> Resources.match(EuroSciVoc.EUROSCIVOC.id(), topic, SUBJECT_THRESHOLD))
-                .map(uri -> new TopicFrame(true).id(uri));
+                .flatMap(euroscivoc());
     }
 
 }

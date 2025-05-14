@@ -27,10 +27,8 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EuroSciVoc;
+import eu.ec2u.data.taxonomies.Taxonomies.Matcher;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;
@@ -49,10 +47,11 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.VIRTUAL_INSTITUTE;
-import static eu.ec2u.data.units.Units.SUBJECT_THRESHOLD;
+import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Units.UNITS;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
+import static java.util.function.Predicate.not;
 
 @Frame
 @Class
@@ -208,11 +207,10 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     }
 
     private static UnitFrame classify(final UnitFrame unit) {
-        return unit.subject().isEmpty() ? unit.subject(set(Resources
-                .match(EuroSciVoc.EUROSCIVOC.id(), embeddable(unit), SUBJECT_THRESHOLD)
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(1)
-        )) : unit;
+        return unit.subject(Optional.of(unit.subject()).filter(not(Set::isEmpty)).orElseGet(() -> set(euroscivoc()
+                .apply(embeddable(unit))
+                .limit(3)
+        )));
     }
 
     private static String embeddable(final Unit unit) {
@@ -221,6 +219,14 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
                 Optional.ofNullable(unit.altLabel().get(EN)).stream(),
                 Optional.ofNullable(unit.definition().get(EN)).stream()
         )));
+    }
+
+
+    static Matcher euroscivoc() {
+        return new Matcher(EUROSCIVOC)
+                .narrowing(1.1)
+                // !!! .threshold(0.75)
+                .tolerance(0.1);
     }
 
 
