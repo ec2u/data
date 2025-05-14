@@ -58,7 +58,9 @@ export const Topic=immutable({
 	broaderTransitive: multiple({
 		id: required(id),
 		label: required(text),
-		broader: optional(id)
+		broader: multiple({
+			id: required(id)
+		})
 	}),
 
 	narrower: multiple(SKOSConcept),
@@ -131,7 +133,7 @@ export function DataTopic() {
 				}
 
 				{broaderTransitive?.length &&
-                    <TileLabel name={"Broader Concepts"}>{sort(broaderTransitive).map(entry =>
+                    <TileLabel name={"Broader Concepts"}>{tsort(broaderTransitive).map(entry =>
 						<TileTree key={entry.id} expanded={"force"} label={<TileLink>{entry}</TileLink>}/>
 					)}</TileLabel>}
 
@@ -160,20 +162,34 @@ export function DataTopic() {
 }
 
 
-function sort(concepts: NonNullable<typeof Topic.broaderTransitive>) {
+function tsort(topics: NonNullable<typeof Topic.broaderTransitive>) {
 
-	const links: { [id: string]: undefined | string }=concepts.reduce((index, concept) => ({
+	const byId=new Map(topics.map(t => [t.id, t]));
 
-		[concept.id]: concept.broader, ...index
+	const visited=new Set<string>();
+	const sorted: typeof topics=[];
 
-	}), {});
+	function visit(id: string) {
+		if ( !visited.has(id) ) {
 
+			visited.add(id);
 
-	return concepts?.slice().sort((x, y) => depth(x.id) - depth(y.id));
+			const topic=byId.get(id);
 
+			if ( topic ) {
 
-	function depth(concept: undefined | string): number {
-		return concept === undefined ? 0 : depth(links[concept]) + 1;
+				for (const broader of topic.broader ?? []) { visit(broader.id); }
+
+				sorted.push(topic);
+
+			}
+		}
 	}
+
+	for (const topic of topics) {
+		visit(topic.id);
+	}
+
+	return sorted;
 
 }
