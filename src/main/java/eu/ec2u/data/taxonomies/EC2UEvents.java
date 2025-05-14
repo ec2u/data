@@ -66,7 +66,7 @@ public final class EC2UEvents implements Runnable {
                         ),
 
                         Stream.of(resource(EC2UEvents.class, ".csv").toString())
-                                .flatMap(new Taxonomy.Loader(EC2U_EVENTS))
+                                .flatMap(new Taxonomies.Loader(EC2U_EVENTS))
 
                 ))),
 

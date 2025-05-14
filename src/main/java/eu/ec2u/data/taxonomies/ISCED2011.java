@@ -118,7 +118,7 @@ public final class ISCED2011 implements Runnable {
                         ),
 
                         Stream.of(resource(ISCED2011.class, ".csv").toString())
-                                .flatMap(new Taxonomy.Loader(ISCED2011))
+                                .flatMap(new Taxonomies.Loader(ISCED2011))
 
                 ))),
 

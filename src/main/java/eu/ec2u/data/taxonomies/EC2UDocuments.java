@@ -66,7 +66,7 @@ public final class EC2UDocuments implements Runnable {
                         ),
 
                         Stream.of(resource(EC2UDocuments.class, ".csv").toString())
-                                .flatMap(new Taxonomy.Loader(EC2U_DOCUMENTS))
+                                .flatMap(new Taxonomies.Loader(EC2U_DOCUMENTS))
 
                 ))),
 

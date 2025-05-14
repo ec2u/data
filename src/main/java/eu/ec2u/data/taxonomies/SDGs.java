@@ -100,7 +100,7 @@ public final class SDGs implements Runnable {
                 ),
 
                 Stream.of(resource(SDGs.class, ".csv").toString())
-                        .flatMap(new Taxonomy.Loader(SDGS))
+                        .flatMap(new Taxonomies.Loader(SDGS))
 
                 ))),
 
