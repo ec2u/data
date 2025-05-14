@@ -102,11 +102,11 @@ public interface Organization extends Resource, OrgOrganization, SchemaOrganizat
 
 
     @Override default Map<Locale, String> label() {
-        return SchemaOrganization.super.label();
+        return Reference.label(OrgOrganization.super.label(), SchemaOrganization.super.label());
     }
 
     @Override default Map<Locale, String> comment() {
-        return SchemaOrganization.super.comment();
+        return Reference.comment(OrgOrganization.super.comment(), SchemaOrganization.super.comment());
     }
 
 

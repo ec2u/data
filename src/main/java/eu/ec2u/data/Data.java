@@ -128,7 +128,7 @@ public final class Data extends Delegator {
                 )
 
                 .set(openai(), () -> openai(service(vault()).get("openai-key"), builder -> builder
-                        .timeout(Duration.ofSeconds(60))
+                        .timeout(Duration.ofSeconds(20))
                 ))
 
                 .set(translator(), () -> new CacheTranslator(

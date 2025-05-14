@@ -73,6 +73,7 @@ import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.time.ZoneOffset.UTC;
+import static java.util.function.Predicate.not;
 
 @Frame
 public interface Events extends Dataset {
@@ -516,7 +517,10 @@ public interface Events extends Dataset {
                     .map(uri -> new SchemaImageObjectFrame()
                             .id(uri)
                             .url(set(uri))
-                            .copyrightNotice(json.get("imageCredits").string().orElse(null))
+                            .copyrightNotice(json.get("imageCredits").string()
+                                    .filter(not(String::isBlank))
+                                    .orElse(null)
+                            )
                     );
         }
 
