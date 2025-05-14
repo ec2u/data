@@ -22,7 +22,7 @@ import com.openai.client.OpenAIClient;
 import com.openai.models.embeddings.EmbeddingCreateParams;
 
 import java.util.Optional;
-import java.util.function.UnaryOperator;
+import java.util.function.Consumer;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
@@ -32,7 +32,6 @@ import static com.metreeca.shim.Loggers.time;
 import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -44,41 +43,23 @@ import static java.util.function.Predicate.not;
  */
 public class OpenEmbedder implements Embedder {
 
-    private final String model;
-    private final UnaryOperator<EmbeddingCreateParams.Builder> setup;
+    private final Consumer<EmbeddingCreateParams.Builder> setup;
 
     private final OpenAIClient client=service(openai());
     private final Logger logger=service(logger());
 
 
     public OpenEmbedder(final String model) {
-        this(model, options -> options);
+        this(builder -> builder.model(model));
     }
 
-    public OpenEmbedder(final String model, final UnaryOperator<EmbeddingCreateParams.Builder> setup) {
-
-        if ( model == null ) {
-            throw new NullPointerException("null model");
-        }
-
-        if ( model.isBlank() ) {
-            throw new IllegalArgumentException("empty model");
-        }
+    public OpenEmbedder(final Consumer<EmbeddingCreateParams.Builder> setup) {
 
         if ( setup == null ) {
             throw new NullPointerException("null setup");
         }
 
-        this.model=model;
         this.setup=setup;
-    }
-
-
-    private EmbeddingCreateParams.Builder params() {
-        return requireNonNull(
-                setup.apply(EmbeddingCreateParams.builder().model(model)), // let setup override the default model
-                "null setup return value"
-        );
     }
 
 
@@ -93,10 +74,14 @@ public class OpenEmbedder implements Embedder {
 
             try {
 
+                final EmbeddingCreateParams.Builder builder=new EmbeddingCreateParams.Builder();
+
+                setup.accept(builder);
+
                 return backoff(0, () -> Optional.of(text)
                         .filter(not(String::isBlank))
                         .map(t -> client.embeddings()
-                                .create(params()
+                                .create(builder
                                         .input(t)
                                         .build()
                                 )

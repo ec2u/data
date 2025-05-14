@@ -30,6 +30,7 @@ import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.text.services.Translator.CacheTranslator;
 
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.openai.models.embeddings.EmbeddingCreateParams;
 import eu.ec2u.work.ai.Embedder.CacheEmbedder;
 import eu.ec2u.work.ai.OpenAnalyzer;
 import eu.ec2u.work.ai.OpenEmbedder;
@@ -106,6 +107,10 @@ public final class Data extends Delegator {
                 .maxCompletionTokens(4096);
     }
 
+    private static void embedding(final EmbeddingCreateParams.Builder builder) {
+        builder.model("text-embedding-3-small");
+    }
+
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -131,15 +136,9 @@ public final class Data extends Delegator {
                         .timeout(Duration.ofSeconds(20))
                 ))
 
-                .set(translator(), () -> new CacheTranslator(
-                        new StoreTranslator(new OpenTranslator(Data::chat))
-                ))
-
+                .set(translator(), () -> new CacheTranslator(new StoreTranslator(new OpenTranslator(Data::chat))))
                 .set(analyzer(), () -> new OpenAnalyzer(Data::chat))
-
-                .set(embedder(), () -> new CacheEmbedder(
-                        new OpenEmbedder("text-embedding-3-small")
-                ));
+                .set(embedder(), () -> new CacheEmbedder(new OpenEmbedder(Data::embedding)));
 
     }
 
