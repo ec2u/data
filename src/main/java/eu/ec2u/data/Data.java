@@ -98,7 +98,9 @@ public final class Data extends Delegator {
     }
 
     private static void chat(final ChatCompletionCreateParams.Builder builder) {
-        builder.model("gpt-4.1-nano")
+        builder
+                // .model("gpt-4o-mini")
+                .model("gpt-4.1-nano")
                 .seed(0)
                 .temperature(0)
                 .maxCompletionTokens(4096);
@@ -126,7 +128,7 @@ public final class Data extends Delegator {
                 )
 
                 .set(openai(), () -> openai(service(vault()).get("openai-key"), builder -> builder
-                        .timeout(Duration.ofSeconds(20))
+                        .timeout(Duration.ofSeconds(60))
                 ))
 
                 .set(translator(), () -> new CacheTranslator(

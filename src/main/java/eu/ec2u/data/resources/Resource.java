@@ -45,6 +45,9 @@ public interface Resource extends Reference {
 
 
     @Hidden
+    Reference loader();
+
+    @Hidden
     String embedding();
 
 }

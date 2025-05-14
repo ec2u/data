@@ -26,6 +26,7 @@ import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.programs.ProgramFrame;
+import eu.ec2u.data.resources.ReferenceFrame;
 import eu.ec2u.data.taxonomies.ISCED2011;
 import eu.ec2u.work.ai.Analyzer;
 
@@ -46,8 +47,10 @@ import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.EC2U.LOADERS;
 import static eu.ec2u.data.programs.Program.review;
 import static eu.ec2u.data.programs.Programs.PROGRAMS;
+import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.PAVIA;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.Streams.joining;
@@ -57,6 +60,10 @@ import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 
 public final class OfferingsPaviaDoctorates implements Runnable {
+
+    private static final ReferenceFrame LOADER=new ReferenceFrame()
+            .id(LOADERS.resolve("offerings/pavia/doctorates"))
+            .label(map(entry(EN, "Offerings › Pavia › Doctorates")));
 
     private static final String PAGE_URL="https://phd.unipv.it/la-scuola-di-alta-formazione-dottorale-di-pavia-safd/";
 
@@ -83,7 +90,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
                         value(query(new ProgramFrame(true))
                                 .where("university", criterion().any(PAVIA))
-                                .where("educationalLevel", criterion().any(ISCED2011.LEVEL_8)) // !!!
+                                .where("loader", criterion().any(LOADER))
                         )
 
                 )
@@ -166,6 +173,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
                                     .id(PROGRAMS.id().resolve(uuid(PAVIA, url)))
                                     .university(PAVIA)
+                                    .loader(LOADER)
 
                                     .name(map(json.get("name").string().stream().map(name ->
                                             entry(locale, (locale.equals(PAVIA.locale()) ? "Dottorato in" : "Doctorate in ")+name)
@@ -201,9 +209,8 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         - acquired competency or intended learning outcomes
                         - admission requirements
                         
+                        Make absolutely sure to leave empty properties that are not explicitly specified in the document.
                         Describe properties extensively.
-                        Make absolutely sure to generate properties only if they are explicitly specified in the document.
-                        
                         Respond with a JSON object.
                         """, """
                         {
