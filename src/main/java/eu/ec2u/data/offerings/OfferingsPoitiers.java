@@ -62,7 +62,7 @@ import static eu.ec2u.data.programs.Program.review;
 import static eu.ec2u.data.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.universities.University.POITIERS;
 import static eu.ec2u.data.universities.University.uuid;
-import static eu.ec2u.work.Streams.joining;
+import static eu.ec2u.work.shim.Futures.joining;
 import static java.lang.String.format;
 
 public final class OfferingsPoitiers implements Runnable {

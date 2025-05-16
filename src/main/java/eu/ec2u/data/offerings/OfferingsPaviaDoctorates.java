@@ -53,9 +53,9 @@ import static eu.ec2u.data.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.PAVIA;
 import static eu.ec2u.data.universities.University.uuid;
-import static eu.ec2u.work.Streams.joining;
-import static eu.ec2u.work.Streams.optional;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static eu.ec2u.work.shim.Futures.joining;
+import static eu.ec2u.work.shim.Streams.optional;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 

@@ -36,7 +36,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Strings.split;
 
-import static eu.ec2u.work.Streams.joining;
+import static eu.ec2u.work.shim.Futures.joining;
 import static java.lang.String.format;
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;

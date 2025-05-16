@@ -40,6 +40,7 @@ import eu.ec2u.data.programs.ProgramFrame;
 import eu.ec2u.data.taxonomies.ISCED2011;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.work.shim.Futures;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -78,7 +79,8 @@ import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.SDGs.SDGS;
 import static eu.ec2u.data.universities.University.PAVIA;
 import static eu.ec2u.data.universities.University.uuid;
-import static eu.ec2u.work.Streams.*;
+import static eu.ec2u.work.shim.Streams.distinct;
+import static eu.ec2u.work.shim.Streams.optional;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
 import static java.util.function.UnaryOperator.identity;
@@ -169,7 +171,7 @@ public final class OfferingsPavia implements Runnable {
 
                                     array(programs.stream()
                                             .map(program -> async(() -> program(program)))
-                                            .collect(joining())
+                                            .collect(Futures.joining())
                                             .flatMap(Optional::stream)
                                     ),
 
@@ -182,7 +184,7 @@ public final class OfferingsPavia implements Runnable {
 
                                     array(programs.stream()
                                             .map(program -> async(() -> courses(program)))
-                                            .collect(joining())
+                                            .collect(Futures.joining())
                                             .flatMap(identity())
                                     ),
 
@@ -194,7 +196,7 @@ public final class OfferingsPavia implements Runnable {
 
                     )
 
-                    .collect(joining())
+                    .collect(Futures.joining())
                     .reduce(0, Integer::sum);
 
         }).apply((elapsed, resources) -> logger.info(this, format(
@@ -327,7 +329,7 @@ public final class OfferingsPavia implements Runnable {
 
                 }))
 
-                .collect(joining())
+                .collect(Futures.joining())
                 .flatMap(Optional::stream);
 
     }

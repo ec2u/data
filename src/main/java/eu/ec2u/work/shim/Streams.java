@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work;
+package eu.ec2u.work.shim;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -26,20 +25,91 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.*;
+import static java.util.function.UnaryOperator.identity;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 public final class Streams {
+
+    //̸// Factories ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static <T> Stream<T> stream() {
+
+        return Stream.empty();
+    }
+
+    public static <T> Stream<T> stream(final T value) {
+
+        if ( value == null ) {
+            throw new NullPointerException("null value");
+        }
+
+        return Stream.of(value);
+    }
+
+    @SafeVarargs
+    public static <T> Stream<T> stream(final T... values) {
+
+        if ( values == null ) {
+            throw new NullPointerException("null values");
+        }
+
+        return Stream.of(values)
+                .peek(value -> requireNonNull(value, "null values"));
+    }
+
+
+    @SafeVarargs
+    public static <T> Stream<T> concat(final Optional<? extends T>... optionals) {
+
+        if ( optionals == null ) {
+            throw new NullPointerException("null optionals");
+        }
+
+        return Stream.of(optionals)
+                .peek(value -> requireNonNull(value, "null optionals"))
+                .flatMap(Optional::stream);
+    }
+
+    @SafeVarargs
+    public static <T> Stream<T> concat(final Stream<? extends T>... streams) {
+
+        if ( streams == null ) {
+            throw new NullPointerException("null streams");
+        }
+
+        return Stream.of(streams)
+                .peek(value -> requireNonNull(value, "null streams"))
+                .flatMap(identity());
+    }
+
+    @SafeVarargs
+    public static <T> Stream<T> concat(final Collection<? extends T>... collections) {
+
+        if ( collections == null ) {
+            throw new NullPointerException("null collections");
+        }
+
+        return Stream.of(collections)
+                .peek(value -> requireNonNull(value, "null collections"))
+                .flatMap(c -> c.stream()
+                        .peek(value -> requireNonNull(value, "null collection values"))
+                );
+    }
+
+
+    //̸// Filters //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Creates a filter predicate that removes duplicate elements based on a key.
      *
-     * @param key a function mapping stream elements to values used for equality comparison; must return non-null values
+     * @param key a function mapping stream elements to values used for equality comparison; must return non-null
+     *            values
      *
-     * @return a stateful predicate that returns true only for elements whose key was not seen before,
-     *         suitable for use with {@link Stream#filter(Predicate)}
+     * @return a stateful predicate that returns true only for elements whose key was not seen before, suitable for use
+     *         with {@link Stream#filter(Predicate)}
      *
      * @throws NullPointerException if {@code key} is null or returns null values
-     *
      * @see Stream#filter(Predicate)
      */
     public static <T> Predicate<T> distinct(final Function<? super T, Object> key) {
@@ -60,6 +130,8 @@ public final class Streams {
         };
     }
 
+
+    //̸// Mappers //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static <V, R> Function<V, Stream<R>> nullable(final Function<V, R> mapper) {
 
@@ -84,12 +156,7 @@ public final class Streams {
     }
 
 
-    public static <V> Collector<CompletableFuture<V>, ?, Stream<V>> joining() {
-        return collectingAndThen(toList(), futures ->
-                futures.stream().map(CompletableFuture::join)
-        );
-    }
-
+    //̸// Collectors ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Collects stream elements performing recursive breadth-first traversal.

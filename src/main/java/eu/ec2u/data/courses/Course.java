@@ -46,7 +46,7 @@ import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Resource.localize;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
-import static eu.ec2u.work.Streams.nullable;
+import static eu.ec2u.work.shim.Streams.nullable;
 import static java.util.Comparator.comparing;
 
 

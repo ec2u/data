@@ -28,7 +28,7 @@ import com.metreeca.mesh.tools.Store;
 import eu.ec2u.data.programs.ProgramFrame;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.work.Rover;
-import eu.ec2u.work.Streams;
+import eu.ec2u.work.shim.Futures;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -66,7 +66,7 @@ import static eu.ec2u.data.things.SchemaThing.NAME_LENGTH;
 import static eu.ec2u.data.universities.University.JENA;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.Rover.rover;
-import static eu.ec2u.work.Streams.optional;
+import static eu.ec2u.work.shim.Streams.optional;
 import static java.lang.String.format;
 
 public final class OfferingsJena implements Runnable {
@@ -172,7 +172,7 @@ public final class OfferingsJena implements Runnable {
 
                 ))
 
-                .collect(Streams.joining())
+                .collect(Futures.joining())
                 .flatMap(Optional::stream);
 
     }
