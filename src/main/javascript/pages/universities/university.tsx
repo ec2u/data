@@ -17,8 +17,8 @@
 import { Universities } from "@ec2u/data/pages/universities/universities";
 import { ec2u } from "@ec2u/data/views";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, optional, required, virtual } from "@metreeca/core";
-import { id } from "@metreeca/core/id";
+import { immutable, multiple, optional, required, virtual } from "@metreeca/core";
+import { id, toIdString } from "@metreeca/core/id";
 import { integer, toIntegerString } from "@metreeca/core/integer";
 import { text, toTextString } from "@metreeca/core/text";
 import { year } from "@metreeca/core/year";
@@ -34,6 +34,8 @@ import * as React from "react";
 export const University=immutable({
 
 	id: required("/universities/{code}"),
+
+	homepage: multiple(id),
 
 	label: required(text),
 	depiction: required(id),
@@ -87,12 +89,24 @@ export function DataUniversity() {
 
 		tray={<TileFrame as={({
 
+			homepage,
+
 			inception,
 			students,
+
 			country,
 			city
 
 		}) => <>
+
+			<TileInfo>{{
+
+				"Home": homepage?.length === 1 && <a href={homepage[0]}>{toIdString(homepage[0], { compact: true })}</a>
+					|| homepage?.length && <ul>{homepage.map(url =>
+						<li key={url}><a href={url}>{toIdString(url, { compact: true })}</a></li>
+					)}</ul>
+
+			}}</TileInfo>
 
 			<TileInfo>{{
 
