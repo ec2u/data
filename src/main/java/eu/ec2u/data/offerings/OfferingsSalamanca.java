@@ -24,6 +24,7 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.URIs;
 
+import eu.ec2u.data.courses.Course;
 import eu.ec2u.data.courses.CourseFrame;
 import eu.ec2u.data.programs.ProgramFrame;
 
@@ -52,7 +53,6 @@ import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.DATA;
-import static eu.ec2u.data.courses.Course.review;
 import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.programs.Program.review;
 import static eu.ec2u.data.programs.Programs.PROGRAMS;
@@ -155,16 +155,14 @@ public final class OfferingsSalamanca implements Runnable {
 
                 .flatMap(Value::values)
 
-                .map(json -> async(() -> program(json)
-                        .flatMap(program -> review(program))
-                ))
+                .map(json -> async(() -> program(json)))
 
                 .collect(joining())
                 .flatMap(Optional::stream);
     }
 
     private Optional<ProgramFrame> program(final Value json) {
-        return json.get("programCode").string().map(code -> new ProgramFrame()
+        return json.get("programCode").string().flatMap(code -> review(new ProgramFrame()
 
                 .id(programID(code))
                 .university(SALAMANCA)
@@ -174,7 +172,7 @@ public final class OfferingsSalamanca implements Runnable {
 
                 .name(programName(json).orElse(null))
 
-        );
+        ));
     }
 
 
@@ -200,9 +198,7 @@ public final class OfferingsSalamanca implements Runnable {
 
                 .flatMap(Value::values)
 
-                .map(json -> async(() -> course(json)
-                        .flatMap(course -> review(course))
-                ))
+                .map(json -> async(() -> course(json).flatMap(Course::review)))
 
                 .collect(joining())
                 .flatMap(Optional::stream);

@@ -60,6 +60,7 @@ import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.work.shim.Streams.concat;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.function.Function.identity;
@@ -132,43 +133,39 @@ public interface Units extends Dataset {
 
         @Override
         protected Stream<Valuable> process(final CSVRecord record, final Collection<CSVRecord> records) {
-            return id(record).map(id -> new UnitFrame()
-
-                    .generated(true)
-
-                    .id(id)
-                    .university(university)
-
-                    .identifier(identifier(record).orElse(null))
-
-                    .prefLabel(map(prefLabel(record)))
-                    .altLabel(map(altLabel(record)))
-                    .definition(map(definition(record)))
-
-                    .homepage(set(homepage(record)))
-                    .mbox(set(mbox(record)))
-
-                    .classification(set(classification(record)))
-                    .subject(set(subject(record)))
-
-                    .unitOf(set(unitOf(record, records)))
-
-            ).flatMap(unit ->
-
-                    review(unit)
-
-            ).stream().flatMap(unit -> {
+            return id(record).stream().flatMap(id -> {
 
                 final Optional<PersonFrame> head=head(record);
 
-                return Xtream.from(
+                return concat(
 
-                        Stream.of(unit
+                        review(new UnitFrame()
+
+                                .generated(true)
+
+                                .id(id)
+                                .university(university)
+
+                                .identifier(identifier(record).orElse(null))
+
+                                .prefLabel(map(prefLabel(record)))
+                                .altLabel(map(altLabel(record)))
+                                .definition(map(definition(record)))
+
+                                .homepage(set(homepage(record)))
+                                .mbox(set(mbox(record)))
+
+                                .classification(set(classification(record)))
+                                .subject(set(subject(record)))
+
+                                .unitOf(set(unitOf(record, records)))
+
                                 .hasHead(head.map(Collections::set).orElse(null))
                                 .hasMember(head.map(Collections::set).orElse(null))
+
                         ),
 
-                        head.stream()
+                        head
 
                 );
 

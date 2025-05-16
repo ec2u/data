@@ -167,9 +167,9 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                             .map(Locales::locale)
                             .orElse(PAVIA.locale());
 
-                    return json.get("url").string()
+                    return json.get("url").string().flatMap(url -> review(doctorate(url, new ProgramFrame()
 
-                            .map(url -> doctorate(url, new ProgramFrame().generated(true)
+                            .generated(true)
 
                                     .id(PROGRAMS.id().resolve(uuid(PAVIA, url)))
                                     .university(PAVIA)
@@ -184,9 +184,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                                     .educationalLevel(ISCED2011.LEVEL_8)
                                     .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Dottorato di Ricerca"))))
 
-                            )
-
-                            .flatMap(program -> review(program));
+                    ));
 
                 }))
 

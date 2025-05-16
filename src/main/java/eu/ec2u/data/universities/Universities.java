@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.universities;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
@@ -54,6 +53,7 @@ import static eu.ec2u.data.resources.Localized.LOCALES;
 import static eu.ec2u.data.universities.University.PARTNERS;
 import static eu.ec2u.data.universities.University.review;
 import static eu.ec2u.work.Rover.rover;
+import static eu.ec2u.work.shim.Streams.concat;
 import static java.util.stream.Collectors.joining;
 
 @Frame
@@ -141,16 +141,17 @@ public interface Universities extends Dataset {
                                         .longitude(countyCoordinates.map(Wikidata.Point::longitude).orElse(0.0D))
                                         .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D));
 
-                                final UniversityFrame universityFrame=university
+                                final Optional<UniversityFrame> universityFrame=review(university
                                         .students(focus.forward(term("students")).integral().map(Long::intValue).orElse(0))
                                         .inception(focus.forward(term("inception")).year().orElse(null))
                                         .longitude(coordinates.map(Wikidata.Point::longitude).orElse(0.0D))
                                         .latitude(coordinates.map(Wikidata.Point::latitude).orElse(0.0D))
                                         .city(cityFrame)
-                                        .country(countryFrame);
+                                        .country(countryFrame)
+                                );
 
-                                return Xtream.from(
-                                        review(universityFrame).stream(),
+                                return concat(
+                                        universityFrame.stream(),
                                         Stream.of(cityFrame),
                                         Stream.of(countryFrame)
                                 );

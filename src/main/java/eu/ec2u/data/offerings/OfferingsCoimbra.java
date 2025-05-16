@@ -151,7 +151,6 @@ public final class OfferingsCoimbra implements Runnable {
                                         .map(offering -> async(() -> Optional.of(offering)
                                                 .filter(OfferingsCoimbra::isProgram)
                                                 .flatMap(this::program)
-                                                .flatMap(program -> review(program))
                                         ))
 
                                         .collect(joining())
@@ -171,7 +170,6 @@ public final class OfferingsCoimbra implements Runnable {
                                         .map(offering -> async(() -> Optional.of(offering)
                                                 .filter(not(OfferingsCoimbra::isProgram))
                                                 .flatMap(this::course)
-                                                .flatMap(course -> review(course))
                                         ))
 
                                         .collect(joining())
@@ -252,7 +250,7 @@ public final class OfferingsCoimbra implements Runnable {
     }
 
     private Optional<ProgramFrame> program(final Value json) {
-        return json.get("cursoId").integral().map(id -> new ProgramFrame()
+        return json.get("cursoId").integral().flatMap(id -> review(new ProgramFrame()
 
                 .id(PROGRAMS.id().resolve(uuid(COIMBRA, String.valueOf(id))))
                 .university(COIMBRA)
@@ -272,11 +270,11 @@ public final class OfferingsCoimbra implements Runnable {
                 .programPrerequisites(map(prerequisites(json)))
                 .competencyRequired(map(competencyRequired(json)))
 
-        );
+        ));
     }
 
     private Optional<CourseFrame> course(final Value json) {
-        return json.get("cursoId").integral().map(id -> new CourseFrame()
+        return json.get("cursoId").integral().flatMap(id -> review(new CourseFrame()
 
 
                 .id(COURSES.id().resolve(uuid(COIMBRA, String.valueOf(id))))
@@ -299,7 +297,7 @@ public final class OfferingsCoimbra implements Runnable {
                 .coursePrerequisites(map(prerequisites(json)))
                 .competencyRequired(map(competencyRequired(json)))
 
-        );
+        ));
     }
 
 

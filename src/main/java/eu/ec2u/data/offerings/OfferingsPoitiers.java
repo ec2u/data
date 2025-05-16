@@ -140,9 +140,7 @@ public final class OfferingsPoitiers implements Runnable {
                     .map(Value::get)
                     .flatMap(Value::values)
 
-                    .map(json -> async(() -> program(json)
-                            .flatMap(program -> review(program))
-                    ))
+                    .map(json -> async(() -> program(json)))
 
                     .collect(joining())
                     .flatMap(Optional::stream);
@@ -156,7 +154,7 @@ public final class OfferingsPoitiers implements Runnable {
     }
 
     private Optional<ProgramFrame> program(final Value json) {
-        return json.get("code").string().map(code -> new ProgramFrame()
+        return json.get("code").string().flatMap(code -> review(new ProgramFrame()
 
                         .id(PROGRAMS.id().resolve(uuid(POITIERS, code)))
                         .university(POITIERS)
@@ -173,7 +171,7 @@ public final class OfferingsPoitiers implements Runnable {
                         .about(set(about(json)))
                 // .hasCourse(set(hasCourse(json))) // !!! enable after courses are ingested
 
-        );
+        ));
     }
 
 

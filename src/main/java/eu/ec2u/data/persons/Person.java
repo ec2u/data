@@ -50,13 +50,13 @@ public interface Person extends Resource, FOAFPerson {
 
                 .map(PERSON_PATTERN::matcher)
                 .filter(Matcher::matches)
-                .map(matcher -> {
+                .flatMap(matcher -> {
 
                     final Optional<String> title=Optional.ofNullable(matcher.group(3)).map(Strings::normalize);
                     final String familyName=normalize(matcher.group(1));
                     final String givenName=normalize(matcher.group(2));
 
-                    return new PersonFrame()
+                    return review(new PersonFrame()
 
                             .id(Persons.PERSONS.id().resolve(uuid(university, format("%s, %s", familyName, givenName))))
 
@@ -64,11 +64,11 @@ public interface Person extends Resource, FOAFPerson {
 
                             .title(title.orElse(null))
                             .givenName(givenName)
-                            .familyName(familyName);
+                            .familyName(familyName)
 
-                })
+                    );
 
-                .flatMap(Person::review);
+                });
     }
 
 

@@ -16,13 +16,11 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
 
-import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Resources;
@@ -45,12 +43,15 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.persons.Person.review;
 import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.TYPE_THRESHOLD;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.POITIERS;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.work.shim.Streams.concat;
+import static eu.ec2u.work.shim.Streams.optional;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
 
@@ -66,8 +67,8 @@ public final class UnitsPoitiers implements Runnable {
     @Override public void run() {
 
         final String url="https://data.enseignementsup-recherche.gouv.fr"
-                         +"/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"
-                         +"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
+                +"/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"
+                +"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
 
         service(store()).modify(
 
@@ -83,51 +84,50 @@ public final class UnitsPoitiers implements Runnable {
 
 
     private Stream<Value> units(final String url) {
-        return Xtream.of(url)
-                .optMap(new GET<>(new JSON()))
+        return Stream.of(url)
+                .flatMap(optional(new GET<>(new JSON())))
                 .flatMap(Value::values);
     }
 
-    private Stream<? extends Valuable> unit(final Value json) {
-        return json.get("numero_national_de_structure").string().map(id -> new UnitFrame()
+    private Stream<Valuable> unit(final Value json) {
+        return json.get("numero_national_de_structure").string().stream().flatMap(id -> {
 
-                .generated(true)
+            final Set<PersonFrame> heads=set(heads(json));
 
-                .id(UNITS.id().resolve(uuid(POITIERS, id)))
-                .university(POITIERS)
-                .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
+            return concat(
 
-                .homepage(set(json.get("site_web").uri().stream()))
+                    review(new UnitFrame()
 
-                .identifier(id)
+                            .generated(true)
 
-                .prefLabel(json.get("libelle").string()
-                        .map(label -> map(entry(POITIERS.locale(), label)))
-                        .orElse(null)
-                )
+                            .id(UNITS.id().resolve(uuid(POITIERS, id)))
+                            .university(POITIERS)
+                            .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
 
-                .altLabel(json.get("sigle").string()
-                        .map(label -> map(entry(ROOT, label)))
-                        .orElse(null)
-                )
+                            .homepage(set(json.get("site_web").uri().stream()))
 
-                .unitOf(set(POITIERS))
+                            .identifier(id)
 
-                .classification(set(classification(json)))
-                .subject(set(subject(json)))
+                            .prefLabel(json.get("libelle").string()
+                                    .map(label -> map(entry(POITIERS.locale(), label)))
+                                    .orElse(null)
+                            )
 
-        ).flatMap(unit ->
+                            .altLabel(json.get("sigle").string()
+                                    .map(label -> map(entry(ROOT, label)))
+                                    .orElse(null)
+                            )
 
-                review(unit) // !!! review after setting linked objects
+                            .unitOf(set(POITIERS))
 
-        ).stream().flatMap(unit -> {
+                            .hasHead(heads)
+                            .hasMember(heads)
 
-            final Set<PersonFrame> heads=set(heads(json)
-                    .map(p -> p.headOf(set(unit)).memberOf(set(unit)))
-            );
+                            .classification(set(classification(json)))
+                            .subject(set(subject(json)))
 
-            return Xtream.from(
-                    Stream.of(unit),
+                    ).stream(),
+
                     heads.stream()
             );
 
@@ -149,18 +149,18 @@ public final class UnitsPoitiers implements Runnable {
                     final String forename=forenames.get(index);
                     final String surname=surnames.get(index);
 
-                    return new PersonFrame() // !!! factor
+                    return review(new PersonFrame() // !!! factor
 
                             .id(Persons.PERSONS.id().resolve(uuid(POITIERS, join(", ", surname, forename))))
                             .university(POITIERS)
                             .collection(Persons.PERSONS)
 
                             .givenName(forename)
-                            .familyName(surname);
+                            .familyName(surname)
+                    );
 
                 })
 
-                .map(Person::review)
                 .flatMap(Optional::stream);
     }
 

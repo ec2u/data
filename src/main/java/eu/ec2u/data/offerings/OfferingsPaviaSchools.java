@@ -184,7 +184,9 @@ public final class OfferingsPaviaSchools implements Runnable {
     private Optional<ProgramFrame> school(final Value json) {
         return json.get("name").string()
                 .map("Scuola di Specializzazione in %s"::formatted)
-                .map(name -> new ProgramFrame().generated(true)
+                .flatMap(name -> review(new ProgramFrame()
+
+                        .generated(true)
 
                         .id(PROGRAMS.id().resolve(uuid(PAVIA, name)))
                         .university(PAVIA)
@@ -202,8 +204,7 @@ public final class OfferingsPaviaSchools implements Runnable {
                         .programPrerequisites(map(programPrerequisites(json)))
 
 
-                )
-                .flatMap(program -> review(program));
+                ));
     }
 
 

@@ -235,28 +235,24 @@ public final class OfferingsPavia implements Runnable {
     }
 
     private Optional<ProgramFrame> program(final Value json) {
-        return json.get("cdsCod").string()
+        return json.get("cdsCod").string().flatMap(code -> review(new ProgramFrame()
 
-                .map(code -> new ProgramFrame()
+                // !!! "logisticaExistsFlg": 1,
+                // !!! "offertaExistsFlg": 1,
+                // !!! "statoAttCod": { "value": "A" },
 
-                        // !!! "logisticaExistsFlg": 1,
-                        // !!! "offertaExistsFlg": 1,
-                        // !!! "statoAttCod": { "value": "A" },
+                .id(PROGRAMS.id().resolve(uuid(PAVIA, code)))
+                .university(PAVIA)
 
-                        .id(PROGRAMS.id().resolve(uuid(PAVIA, code)))
-                        .university(PAVIA)
+                .identifier(code)
 
-                        .identifier(code)
+                .name(map(name(json)))
 
-                        .name(map(name(json)))
+                .educationalLevel(json.get("tipoCorsoCod").string().map(CODE_TO_LEVEL::get).orElse(null))
 
-                        .educationalLevel(json.get("tipoCorsoCod").string().map(CODE_TO_LEVEL::get).orElse(null))
+                .provider(provider(json).orElse(null)) // !!! linked entity
 
-                        .provider(provider(json).orElse(null)) // !!! linked entity
-
-                )
-
-                .flatMap(program -> review(program));
+        ));
     }
 
 
@@ -426,7 +422,7 @@ public final class OfferingsPavia implements Runnable {
                 .filter(distinct(CourseFrame::id)) // ;( deduplicate multiple courses w/ same afGenCod
                 .findFirst()
 
-                .flatMap(course -> Course.review(course));
+                .flatMap(Course::review);
     }
 
 

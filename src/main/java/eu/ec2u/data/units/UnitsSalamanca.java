@@ -56,8 +56,10 @@ import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.*;
 import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
+import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.SALAMANCA;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.work.shim.Streams.concat;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
@@ -119,83 +121,87 @@ public final class UnitsSalamanca implements Runnable {
     }
 
     private Stream<? extends Valuable> unit(final Value json) {
-        return json.get("id").string().map(id -> new UnitFrame()
+        return json.get("id").string().stream().flatMap(id -> {
 
-                .generated(true)
-
-                .id(Units.UNITS.id().resolve(uuid(SALAMANCA, id)))
-
-                .university(SALAMANCA)
-
-                .prefLabel(json.get("name").string()
-                        .filter(not(String::isEmpty))
-                        .map(v -> map(entry(SALAMANCA.locale(), v)))
-                        .orElse(null)
-                )
-
-                .altLabel(json.get("acronym").string()
-                        .filter(not(String::isEmpty))
-                        .map(v -> map(entry(ROOT, v)))
-                        .orElse(null)
-                )
-
-                .definition(json.get("topics").string()
-                        .filter(not(String::isEmpty))
-                        .map(v -> map(entry(SALAMANCA.locale(), v)))
-                        .orElse(null)
-                )
-
-                .classification(set(RECOGNIZED_GROUP))
-
-                .unitOf(set(SALAMANCA))
-
-                .homepage(set(json.get("group_scientific_portal_url").string()
-                        .filter(not(String::isEmpty))
-                        .map(URIs::uri)
-                        .stream()
-                ))
-
-                .subject(set(Stream.concat(
-
-                        json.get("knowledge_branch").string().stream()
-                                .flatMap(v -> split(v, "[,;]"))
-                                .flatMap(euroscivoc())
-                                .limit(1),
-
-                        json.get("RIS3").string().stream()
-                                .flatMap(v -> split(v, "[,;]"))
-                                .flatMap(euroscivoc())
-                                .limit(1)
-
-                )))
-
-        ).flatMap(unit ->
-
-                review(unit) // !!! review after setting linked objects
-
-        ).stream().flatMap(unit -> {
+            final URI uri=UNITS.id().resolve(uuid(SALAMANCA, id));
 
             final Optional<PersonFrame> head=json.get("head").string()
-                    .flatMap(p -> person(p, SALAMANCA))
-                    .map(p -> p.headOf(set(unit)).memberOf(set(unit)));
+                    .flatMap(p -> person(p, SALAMANCA));
 
+            final List<Entry<URI, Unit>> vis=vis().toList();
             final Optional<UnitFrame> department=department(json);
             final Optional<UnitFrame> institute=institute(json);
 
-            final List<Entry<URI, Unit>> vis=vis().toList();
+            final Optional<UnitFrame> unitFrame=review(new UnitFrame()
 
-            return Xtream.from(
-                    Stream.of(unit.unitOf(set(Xtream.from(
+                    .generated(true)
+
+                    .id(uri)
+
+                    .university(SALAMANCA)
+
+                    .prefLabel(json.get("name").string()
+                            .filter(not(String::isEmpty))
+                            .map(v -> map(entry(SALAMANCA.locale(), v)))
+                            .orElse(null)
+                    )
+
+                    .altLabel(json.get("acronym").string()
+                            .filter(not(String::isEmpty))
+                            .map(v -> map(entry(ROOT, v)))
+                            .orElse(null)
+                    )
+
+                    .definition(json.get("topics").string()
+                            .filter(not(String::isEmpty))
+                            .map(v -> map(entry(SALAMANCA.locale(), v)))
+                            .orElse(null)
+                    )
+
+                    .classification(set(RECOGNIZED_GROUP))
+
+                    .unitOf(set(concat(
                             department.isEmpty() && institute.isEmpty() ? Stream.of(SALAMANCA) : Stream.empty(),
                             department.stream(),
                             institute.stream(),
                             vis.stream()
-                                    .filter(e -> e.getKey().equals(unit.id()))
+                                    .filter(e -> e.getKey().equals(uri))
                                     .map(Entry::getValue)
-                    )))),
+                    )))
+
+                    .hasHead(set(head.stream()))
+                    .hasMember(set(head.stream()))
+
+                    .homepage(set(json.get("group_scientific_portal_url").string()
+                            .filter(not(String::isEmpty))
+                            .map(URIs::uri)
+                            .stream()
+                    ))
+
+                    .subject(set(Stream.concat(
+
+                            json.get("knowledge_branch").string().stream()
+                                    .flatMap(v -> split(v, "[,;]"))
+                                    .flatMap(euroscivoc())
+                                    .limit(1),
+
+                            json.get("RIS3").string().stream()
+                                    .flatMap(v -> split(v, "[,;]"))
+                                    .flatMap(euroscivoc())
+                                    .limit(1)
+
+                    )))
+
+            );
+
+            return concat(
+
+                    unitFrame.stream(),
+
                     head.stream(),
                     department.stream(),
                     institute.stream()
+
             );
 
         });
@@ -205,9 +211,9 @@ public final class UnitsSalamanca implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Optional<UnitFrame> department(final Value json) {
-        return json.get("department").string().filter(not(String::isBlank)).map(name -> new UnitFrame()
+        return json.get("department").string().filter(not(String::isBlank)).flatMap(name -> review(new UnitFrame()
 
-                .id(Units.UNITS.id().resolve(uuid(SALAMANCA, name)))
+                .id(UNITS.id().resolve(uuid(SALAMANCA, name)))
 
                 .university(SALAMANCA)
                 .unitOf(set(SALAMANCA))
@@ -222,13 +228,13 @@ public final class UnitsSalamanca implements Runnable {
 
                 )))
 
-        ).flatMap(unit -> review(unit));
+        ));
     }
 
     private Optional<UnitFrame> institute(final Value json) {
-        return json.get("institute").string().filter(not(String::isBlank)).map(name -> new UnitFrame()
+        return json.get("institute").string().filter(not(String::isBlank)).flatMap(name -> review(new UnitFrame()
 
-                .id(Units.UNITS.id().resolve(uuid(SALAMANCA, name)))
+                .id(UNITS.id().resolve(uuid(SALAMANCA, name)))
 
                 .university(SALAMANCA)
                 .unitOf(set(SALAMANCA))
@@ -242,7 +248,7 @@ public final class UnitsSalamanca implements Runnable {
                         json.get("institute_scientific_portal_url").string().flatMap(URIs::fuzzy).stream()
                 )))
 
-        ).flatMap(unit -> review(unit));
+        ));
     }
 
     private Stream<Entry<URI, Unit>> vis() {

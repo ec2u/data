@@ -26,6 +26,7 @@ import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
+import eu.ec2u.data.courses.Course;
 import eu.ec2u.data.courses.CourseFrame;
 import eu.ec2u.data.programs.ProgramFrame;
 import eu.ec2u.data.taxonomies.TopicFrame;
@@ -49,7 +50,6 @@ import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Loggers.time;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.courses.Course.review;
 import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.programs.Program.review;
 import static eu.ec2u.data.programs.Programs.PROGRAMS;
@@ -130,16 +130,14 @@ public final class OfferingsLinz implements Runnable {
 
                 .flatMap(Value::values)
 
-                .map(json -> async(() -> program(json)
-                        .flatMap(program -> review(program))
-                ))
+                .map(json -> async(() -> program(json)))
 
                 .collect(joining())
                 .flatMap(Optional::stream);
     }
 
     private Optional<ProgramFrame> program(final Value json) {
-        return json.get("identifier").strings().findFirst().map(code -> new ProgramFrame()
+        return json.get("identifier").strings().findFirst().flatMap(code -> review(new ProgramFrame()
 
                 .id(PROGRAMS.id().resolve(uuid(LINZ, code)))
                 .university(LINZ)
@@ -153,7 +151,7 @@ public final class OfferingsLinz implements Runnable {
                 .numberOfCredits(numberOfCredits(json).orElse(null))
                 .educationalLevel(educationalLevel(json).orElse(null))
 
-        );
+        ));
     }
 
 
@@ -167,7 +165,7 @@ public final class OfferingsLinz implements Runnable {
                 .flatMap(Value::values)
 
                 .map(json -> async(() -> course(json)
-                        .flatMap(course -> review(course))
+                        .flatMap(Course::review)
                 ))
 
                 .collect(joining())

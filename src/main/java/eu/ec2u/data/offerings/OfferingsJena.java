@@ -168,7 +168,6 @@ public final class OfferingsJena implements Runnable {
                         })
 
                         .flatMap(this::program)
-                        .flatMap(program -> review(program))
 
                 ))
 
@@ -178,7 +177,7 @@ public final class OfferingsJena implements Runnable {
     }
 
     private Optional<ProgramFrame> program(final Rover rover) {
-        return rover.forward(Schema.term("url")).uri().map(url -> new ProgramFrame()
+        return rover.forward(Schema.term("url")).uri().flatMap(url -> review(new ProgramFrame()
 
                 .id(PROGRAMS.id().resolve(uuid(JENA, url.toString())))
                 .university(JENA)
@@ -191,7 +190,7 @@ public final class OfferingsJena implements Runnable {
                 .educationalLevel(educationalLevel(rover).orElse(null))
                 .educationalCredentialAwarded(educationalCredentialAwarded(rover).orElse(null))
 
-        );
+        ));
     }
 
 

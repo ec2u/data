@@ -72,6 +72,7 @@ import static eu.ec2u.data.taxonomies.EC2UEvents.EC2U_EVENTS;
 import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static eu.ec2u.work.shim.Streams.concat;
 import static java.time.ZoneOffset.UTC;
 import static java.util.function.Predicate.not;
 
@@ -379,7 +380,7 @@ public interface Events extends Dataset {
                         //         ));
 
 
-                        return Xtream.from(
+                        return concat(
 
                                 review(event
                                                 .publisher(publisher)

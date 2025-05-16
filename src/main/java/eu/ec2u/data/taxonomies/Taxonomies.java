@@ -55,6 +55,7 @@ import static com.metreeca.shim.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.taxonomies.Topic.review;
 import static eu.ec2u.work.ai.Embedder.embedder;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -127,10 +128,11 @@ public interface Taxonomies extends Dataset {
         }
 
 
-        @Override protected Stream<TopicFrame> process(final CSVRecord record, final java.util.Collection<CSVRecord> records) {
+        @Override
+        protected Stream<TopicFrame> process(final CSVRecord record, final java.util.Collection<CSVRecord> records) {
             return value(record, "id").filter(not(String::isBlank))
 
-                    .map(id -> {
+                    .flatMap(id -> {
 
                         final String parent=id.substring(0, max(id.lastIndexOf('/'), 0));
 
@@ -145,7 +147,7 @@ public interface Taxonomies extends Dataset {
                                 .map(b -> new TopicFrame(true).id(uri(taxonomy.id()+"/"+b)))
                         );
 
-                        return new TopicFrame()
+                        return review(new TopicFrame()
 
                                 .id(uri(taxonomy.id()+"/"+id))
 
@@ -185,11 +187,12 @@ public interface Taxonomies extends Dataset {
                                 )
 
                                 .broader(broader)
-                                .broaderTransitive(broaderTransitive);
+                                .broaderTransitive(broaderTransitive)
+
+                        );
 
                     })
 
-                    .flatMap(Topic::review)
                     .stream();
         }
 

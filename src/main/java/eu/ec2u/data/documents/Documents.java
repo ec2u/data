@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.documents;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
@@ -56,6 +55,7 @@ import static eu.ec2u.data.organizations.Organizations.ORGANIZATIONS;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.work.shim.Streams.concat;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 
@@ -121,55 +121,51 @@ public interface Documents extends Dataset {
 
         @Override
         protected Stream<Valuable> process(final CSVRecord record, final Collection<CSVRecord> records) {
-
-            return id(record).map(id -> new DocumentFrame()
-
-                    .generated(true)
-
-                    .id(id)
-                    .university(university)
-
-                    .url(set(url(record)))
-                    .identifier(identifier(record).orElse(null))
-                    .language(set(language(record)))
-
-                    .title(map(title(record)))
-                    .description(map(description(record)))
-
-                    .created(created(record).orElse(null))
-                    .issued(issued(record).orElse(null))
-                    .modified(modified(record).orElse(null))
-                    .valid(valid(record).orElse(null))
-
-                    .rights(rights(record).orElse(null))
-                    .accessRights(accessRights(record).orElse(null))
-                    .license(license(record).orElse(null))
-
-                    .relation(set(relation(record, records)))
-
-            ).flatMap(document ->
-
-                    review(document) // !!! review after setting linked objects
-
-            ).stream().flatMap(document -> {
+            return id(record).stream().flatMap(id -> {
 
                 final Optional<OrgOrganizationFrame> publisher=publisher(record);
                 final Optional<PersonFrame> creator=creator(record);
                 final Optional<Set<PersonFrame>> contributor=contributor(record);
 
-                return Xtream.from(
+                return concat(
 
-                        Stream.of(document
+                        review(new DocumentFrame()
+
+                                .generated(true)
+
+                                .id(id)
+                                .university(university)
+
+                                .url(set(url(record)))
+                                .identifier(identifier(record).orElse(null))
+                                .language(set(language(record)))
+
+                                .title(map(title(record)))
+                                .description(map(description(record)))
+
                                 .publisher(publisher.orElse(null))
                                 .creator(creator.orElse(null))
                                 .contributor(contributor.orElse(null))
-                        ),
+
+                                .created(created(record).orElse(null))
+                                .issued(issued(record).orElse(null))
+                                .modified(modified(record).orElse(null))
+                                .valid(valid(record).orElse(null))
+
+                                .rights(rights(record).orElse(null))
+                                .accessRights(accessRights(record).orElse(null))
+                                .license(license(record).orElse(null))
+
+                                .relation(set(relation(record, records)))
+
+                        ).stream(),
 
                         publisher.stream(),
                         creator.stream(),
                         contributor.stream().flatMap(Collection::stream)
 
                 );
+
             });
         }
 
