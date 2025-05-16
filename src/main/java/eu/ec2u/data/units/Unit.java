@@ -46,6 +46,7 @@ import static com.metreeca.shim.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.resources.Resource.localize;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.VIRTUAL_INSTITUTE;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Units.UNITS;
@@ -177,18 +178,14 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     }
 
 
-    static Optional<UnitFrame> review(final UnitFrame unit, final Locale source) {
+    static Optional<UnitFrame> review(final UnitFrame unit) {
 
         if ( unit == null ) {
             throw new NullPointerException("null unit");
         }
 
-        if ( source == null ) {
-            throw new NullPointerException("null source");
-        }
-
-        return Optional.of(unit)
-                .map(u -> translate(u, source)) // before English-based classification
+        return Optional.of(unit) // translate before English-based classification
+                .map(u -> localize(u, locale -> translate(u, locale)))
                 .map(Unit::classify)
                 .flatMap(new Validate<>());
     }

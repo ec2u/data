@@ -187,7 +187,7 @@ public final class UnitsCoimbra implements Runnable {
 
         ).flatMap(unit ->
 
-                review(unit, COIMBRA.locale()) // !!! review after setting linked objects
+                review(unit) // !!! review after setting linked objects
 
         ).stream().flatMap(unit -> {
 

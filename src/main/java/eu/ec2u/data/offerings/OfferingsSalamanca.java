@@ -156,7 +156,7 @@ public final class OfferingsSalamanca implements Runnable {
                 .flatMap(Value::values)
 
                 .map(json -> async(() -> program(json)
-                        .flatMap(program -> review(program, SALAMANCA.locale()))
+                        .flatMap(program -> review(program))
                 ))
 
                 .collect(joining())
@@ -201,7 +201,7 @@ public final class OfferingsSalamanca implements Runnable {
                 .flatMap(Value::values)
 
                 .map(json -> async(() -> course(json)
-                        .flatMap(course -> review(course, SALAMANCA.locale()))
+                        .flatMap(course -> review(course))
                 ))
 
                 .collect(joining())

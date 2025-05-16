@@ -149,7 +149,7 @@ public interface Documents extends Dataset {
 
             ).flatMap(document ->
 
-                    review(document, university.locale()) // !!! review after setting linked objects
+                    review(document) // !!! review after setting linked objects
 
             ).stream().flatMap(document -> {
 

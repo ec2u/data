@@ -131,7 +131,7 @@ public final class OfferingsLinz implements Runnable {
                 .flatMap(Value::values)
 
                 .map(json -> async(() -> program(json)
-                        .flatMap(program -> review(program, LINZ.locale()))
+                        .flatMap(program -> review(program))
                 ))
 
                 .collect(joining())
@@ -167,7 +167,7 @@ public final class OfferingsLinz implements Runnable {
                 .flatMap(Value::values)
 
                 .map(json -> async(() -> course(json)
-                        .flatMap(course -> review(course, LINZ.locale()))
+                        .flatMap(course -> review(course))
                 ))
 
                 .collect(joining())

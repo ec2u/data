@@ -171,7 +171,7 @@ public final class UnitsSalamanca implements Runnable {
 
         ).flatMap(unit ->
 
-                review(unit, SALAMANCA.locale()) // !!! review after setting linked objects
+                review(unit) // !!! review after setting linked objects
 
         ).stream().flatMap(unit -> {
 
@@ -222,7 +222,7 @@ public final class UnitsSalamanca implements Runnable {
 
                 )))
 
-        ).flatMap(unit -> review(unit, SALAMANCA.locale()));
+        ).flatMap(unit -> review(unit));
     }
 
     private Optional<UnitFrame> institute(final Value json) {
@@ -242,7 +242,7 @@ public final class UnitsSalamanca implements Runnable {
                         json.get("institute_scientific_portal_url").string().flatMap(URIs::fuzzy).stream()
                 )))
 
-        ).flatMap(unit -> review(unit, SALAMANCA.locale()));
+        ).flatMap(unit -> review(unit));
     }
 
     private Stream<Entry<URI, Unit>> vis() {

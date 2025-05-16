@@ -141,7 +141,7 @@ public final class OfferingsPoitiers implements Runnable {
                     .flatMap(Value::values)
 
                     .map(json -> async(() -> program(json)
-                            .flatMap(program -> review(program, POITIERS.locale()))
+                            .flatMap(program -> review(program))
                     ))
 
                     .collect(joining())

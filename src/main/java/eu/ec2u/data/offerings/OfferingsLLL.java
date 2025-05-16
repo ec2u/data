@@ -23,6 +23,7 @@ import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
+import eu.ec2u.data.courses.Course;
 import eu.ec2u.data.courses.CourseFrame;
 import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.persons.PersonFrame;
@@ -55,7 +56,6 @@ import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.courses.Course.review;
 import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.persons.Persons.PERSONS;
@@ -175,7 +175,8 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                         .url(set(url(record).stream()))
 
                 )
-                .flatMap(c -> review(c, university.locale()))
+                .flatMap(Course::review)
+
         ).stream();
     }
 

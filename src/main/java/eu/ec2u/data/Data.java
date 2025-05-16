@@ -69,7 +69,7 @@ import static java.util.logging.Level.INFO;
 
 public final class Data extends Delegator {
 
-    private static final boolean Production=GCPServer.production();
+    private static final boolean PRODUCTION=GCPServer.production();
 
     private static final String GDB_SERVER="http://base.ec2u.net"; // !!! https
     private static final String GDB_REPOSITORY="data-work";
@@ -119,9 +119,9 @@ public final class Data extends Delegator {
 
                 .set(vault(), GCPVault::new)
 
-                .set(path(), () -> Paths.get(Production ? "/tmp" : "data"))
+                .set(path(), () -> Paths.get(PRODUCTION ? "/tmp" : "data"))
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
-                .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
+                .set(fetcher(), () -> PRODUCTION ? new URLFetcher() : new CacheFetcher())
 
                 .set(repository(), Data::gdb)
 

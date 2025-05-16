@@ -381,15 +381,10 @@ public interface Events extends Dataset {
 
                         return Xtream.from(
 
-                                review(
-
-                                        event
+                                review(event
                                                 .publisher(publisher)
-                                                .image(image.orElse(null)),
+                                                .image(image.orElse(null))
                                         // !!! .location(location.orElse(null)),
-
-                                        university.locale()
-
                                 ).stream(),
 
                                 // ;( keep track of all visited web pages to handle sources that expose stale events

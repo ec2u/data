@@ -203,7 +203,7 @@ public final class OfferingsPaviaSchools implements Runnable {
 
 
                 )
-                .flatMap(program -> review(program, PAVIA.locale()));
+                .flatMap(program -> review(program));
     }
 
 

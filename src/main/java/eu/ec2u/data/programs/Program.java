@@ -40,6 +40,7 @@ import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.resources.Resource.localize;
 
 
 @Frame
@@ -50,18 +51,14 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
     double ABOUT_THRESHOLD=0.6;
 
 
-    static Optional<ProgramFrame> review(final ProgramFrame program, final Locale source) {
+    static Optional<ProgramFrame> review(final ProgramFrame program) {
 
         if ( program == null ) {
             throw new NullPointerException("null program");
         }
 
-        if ( source == null ) {
-            throw new NullPointerException("null source");
-        }
-
-        return Optional.of(program)
-                .map(u -> translate(u, source)) // before English-based classification
+        return Optional.of(program) // translate before English-based classification
+                .map(p -> localize(p, locale -> translate(p, locale)))
                 .map(Program::classify)
                 .flatMap(new Validate<>());
     }

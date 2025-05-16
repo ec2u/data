@@ -151,7 +151,7 @@ public final class OfferingsCoimbra implements Runnable {
                                         .map(offering -> async(() -> Optional.of(offering)
                                                 .filter(OfferingsCoimbra::isProgram)
                                                 .flatMap(this::program)
-                                                .flatMap(program -> review(program, COIMBRA.locale()))
+                                                .flatMap(program -> review(program))
                                         ))
 
                                         .collect(joining())
@@ -171,7 +171,7 @@ public final class OfferingsCoimbra implements Runnable {
                                         .map(offering -> async(() -> Optional.of(offering)
                                                 .filter(not(OfferingsCoimbra::isProgram))
                                                 .flatMap(this::course)
-                                                .flatMap(course -> review(course, COIMBRA.locale()))
+                                                .flatMap(course -> review(course))
                                         ))
 
                                         .collect(joining())

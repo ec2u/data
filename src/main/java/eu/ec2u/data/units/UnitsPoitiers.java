@@ -118,7 +118,7 @@ public final class UnitsPoitiers implements Runnable {
 
         ).flatMap(unit ->
 
-                review(unit, POITIERS.locale()) // !!! review after setting linked objects
+                review(unit) // !!! review after setting linked objects
 
         ).stream().flatMap(unit -> {
 

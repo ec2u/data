@@ -44,6 +44,7 @@ import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.organizations.Organizations.ORGANIZATIONS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.resources.Resource.localize;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
 import static java.util.function.Predicate.not;
 
@@ -54,19 +55,15 @@ public interface Organization extends Resource, OrgOrganization, SchemaOrganizat
     double CLASSIFICATION_THRESHOLD=0.6;
 
 
-    static Optional<OrganizationFrame> review(final OrganizationFrame document, final Locale source) {
+    static Optional<OrganizationFrame> review(final OrganizationFrame organization) {
 
-        if ( document == null ) {
-            throw new NullPointerException("null document");
+        if ( organization == null ) {
+            throw new NullPointerException("null organization");
         }
 
-        if ( source == null ) {
-            throw new NullPointerException("null source");
-        }
-
-        return Optional.of(document)
-                .map(d -> translate(d, source)) // before English-based classification
-                .map(v -> classification(v))
+        return Optional.of(organization) // translate before English-based classification
+                .map(o -> localize(o, locale -> translate(o, locale)))
+                .map(o -> classification(o))
                 .flatMap(new Validate<>());
     }
 

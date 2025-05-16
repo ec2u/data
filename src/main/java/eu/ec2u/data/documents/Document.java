@@ -51,6 +51,7 @@ import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.documents.Documents.DOCUMENTS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.resources.Resource.localize;
 
 @Frame
 @Class("ec2u:")
@@ -66,21 +67,17 @@ public interface Document extends Resource {
     double AUDIENCE_THRESHOLD=0.6;
 
 
-    static Optional<DocumentFrame> review(final DocumentFrame document, final Locale source) {
+    static Optional<DocumentFrame> review(final DocumentFrame document) {
 
         if ( document == null ) {
             throw new NullPointerException("null document");
         }
 
-        if ( source == null ) {
-            throw new NullPointerException("null source");
-        }
-
-        return Optional.of(document)
-                .map(d -> translate(d, source)) // before English-based classification
-                .map(v -> type(v))
-                .map(v -> subject(v))
-                .map(v -> audience(v))
+        return Optional.of(document) // translate before English-based classification
+                .map(d -> localize(d, locale -> translate(d, locale)))
+                .map(d -> type(d))
+                .map(d -> subject(d))
+                .map(d -> audience(d))
                 .flatMap(new Validate<>());
     }
 

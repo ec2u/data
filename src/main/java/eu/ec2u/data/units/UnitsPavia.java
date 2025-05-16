@@ -302,9 +302,7 @@ public final class UnitsPavia implements Runnable {
 
                         ))
 
-                        .orElse(unit),
-
-                PAVIA.locale()
+                        .orElse(unit)
 
         ).stream();
     }

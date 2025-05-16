@@ -168,7 +168,7 @@ public final class OfferingsJena implements Runnable {
                         })
 
                         .flatMap(this::program)
-                        .flatMap(program -> review(program, JENA.locale()))
+                        .flatMap(program -> review(program))
 
                 ))
 

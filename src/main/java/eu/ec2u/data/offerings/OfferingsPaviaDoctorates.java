@@ -186,7 +186,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
                             )
 
-                            .flatMap(program -> review(program, PAVIA.locale()));
+                            .flatMap(program -> review(program));
 
                 }))
 

@@ -44,6 +44,7 @@ import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.resources.Resource.localize;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.work.Streams.nullable;
 import static java.util.Comparator.comparing;
@@ -57,18 +58,14 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
     double ABOUT_THRESHOLD=0.6;
 
 
-    static Optional<CourseFrame> review(final CourseFrame course, final Locale source) {
+    static Optional<CourseFrame> review(final CourseFrame course) {
 
         if ( course == null ) {
             throw new NullPointerException("null course");
         }
 
-        if ( source == null ) {
-            throw new NullPointerException("null source");
-        }
-
-        return Optional.of(course)
-                .map(u -> translate(u, source)) // before English-based classification
+        return Optional.of(course) // translate before English-based classification
+                .map(c -> localize(c, locale -> translate(c, locale)))
                 .map(Course::classify)
                 .flatMap(new Validate<>());
     }

@@ -43,6 +43,7 @@ import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.events.Events.EVENTS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.resources.Resource.localize;
 import static java.util.function.Predicate.not;
 
 @Frame
@@ -54,20 +55,16 @@ public interface Event extends Resource, SchemaEvent {
     double AUDIENCE_THRESHOLD=0.6;
 
 
-    static Optional<EventFrame> review(final EventFrame event, final Locale source) {
+    static Optional<EventFrame> review(final EventFrame event) {
 
         if ( event == null ) {
             throw new NullPointerException("null event");
         }
 
-        if ( source == null ) {
-            throw new NullPointerException("null source");
-        }
-
-        return Optional.of(event)
-                .map(d -> translate(d, source)) // before English-based classification
-                .map(v -> about(v))
-                .map(v -> audience(v))
+        return Optional.of(event) // translate before English-based classification
+                .map(e -> localize(e, locale -> translate(e, locale)))
+                .map(e -> about(e))
+                .map(e -> audience(e))
                 .flatMap(new Validate<>());
     }
 

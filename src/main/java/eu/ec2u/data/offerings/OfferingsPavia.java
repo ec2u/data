@@ -254,7 +254,7 @@ public final class OfferingsPavia implements Runnable {
 
                 )
 
-                .flatMap(program -> review(program, PAVIA.locale()));
+                .flatMap(program -> review(program));
     }
 
 
@@ -424,7 +424,7 @@ public final class OfferingsPavia implements Runnable {
                 .filter(distinct(CourseFrame::id)) // ;( deduplicate multiple courses w/ same afGenCod
                 .findFirst()
 
-                .flatMap(course -> Course.review(course, PAVIA.locale()));
+                .flatMap(course -> Course.review(course));
     }
 
 
