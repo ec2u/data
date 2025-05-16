@@ -77,7 +77,7 @@ public interface Universities extends Dataset {
     static void main(final String... args) {
         exec(() -> exec(() -> {
 
-            final Rover wikidata=rover(Stream.of(text(resource(University.class, ".qlt")))
+            final Rover wikidata=rover(Stream.of(text(resource(Universities.class, ".qlt")))
 
                     .map(query -> fill(query, map(
 

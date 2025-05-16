@@ -306,6 +306,40 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
             .locale(FI)
             .zone(ZoneId.of("Europe/Helsinki"));
 
+    UniversityFrame UMEA=new UniversityFrame()
+            .id(UNIVERSITIES.id().resolve("umea"))
+            .prefLabel(map(
+                    entry(EN, "Umeå University"),
+                    entry(SV, "Umeå universitet")
+            ))
+            .altLabel(map(
+                    entry(EN, "Umeå"),
+                    entry(SV, "Umeå")
+            ))
+            .definition(map(
+                    entry(EN, """
+                            Umeå University is a comprehensive university with around 38,000 students and 4,600 \
+                            staff. It offers over 40 undergraduate and Master’s degree programmes in a wide range of \
+                            academic fields, including science and technology, the social sciences, business, health \
+                            and medicine, and the arts and humanities. In total, the university provides 150 study \
+                            programmes and 1,800 courses. The international students at Umeå University have bestowed \
+                            the institution with outstanding ratings across various categories in the International \
+                            Student Barometer (ISB). Umeå University has been ranked first of all participating \
+                            universities in the world for student satisfaction, living and support.""")
+            ))
+            .homepage(set(
+                    uri("https://www.umu.se/en"),
+                    uri("https://www.umu.se")
+            ))
+            .depiction(set(
+                    uri("/blobs/umea.png")
+            ))
+            .seeAlso(set(
+                    uri("http://www.wikidata.org/entity/Q1144565")
+            ))
+            .locale(SV)
+            .zone(ZoneId.of("Europe/Stockholm"));
+
 
     Set<UniversityFrame> PARTNERS=set(
             COIMBRA,
@@ -315,7 +349,8 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
             PAVIA,
             POITIERS,
             SALAMANCA,
-            TURKU
+            TURKU,
+            UMEA
     );
 
 
