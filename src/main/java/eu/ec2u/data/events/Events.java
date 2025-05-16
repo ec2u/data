@@ -313,50 +313,7 @@ public interface Events extends Dataset {
                         final Optional<LocalDate> endDate=endDate(json);
                         final Optional<LocalTime> endTime=endTime(json);
 
-                        final EventFrame event=new EventFrame()
-
-                                .generated(true)
-
-                                .id(EVENTS.id().resolve(uuid(university, url)))
-                                .university(university)
-
-                                .url(set(uri))
-
-                                .name(name(json, language).orElse(null))
-                                .description(description(json, language).orElse(null))
-                                .disambiguatingDescription(disambiguatingDescription(json, language).orElse(null))
-
-                                .startDate(startDate
-                                        .map(date -> startTime
-                                                .map(time -> date.atTime(time).atZone(zone))
-                                                .orElseGet(() -> date.atStartOfDay().atZone(zone))
-                                        )
-                                        .orElse(null)
-                                )
-
-                                .endDate(endDate
-                                        .map(date -> endTime
-                                                .map(time -> date.atTime(time).atZone(zone))
-                                                .orElseGet(() -> date.atStartOfDay().atZone(zone))
-                                        )
-                                        .or(() -> startDate
-                                                .flatMap(date -> endTime
-                                                        .map(time -> date.atTime(time).atZone(zone)
-                                                        )
-                                                )
-                                        )
-                                        .orElse(null)
-                                )
-
-                                .eventAttendanceMode(attendanceMode(json).orElse(null))
-                                .isAccessibleForFree(entryFees(json).orElse(null))
-
-                                .about(set(about(json).stream()))
-                                .audience(set(audience(json).stream()));
-
-
                         final Optional<SchemaImageObjectFrame> image=image(json, uri);
-
 
                         final Optional<URI> attendanceURL=attendanceURL(json, uri);
                         final Optional<String> venueName=venueName(json);
@@ -380,24 +337,67 @@ public interface Events extends Dataset {
                         //         ));
 
 
+                        final Optional<EventFrame> event=review(new EventFrame()
+
+                                        .generated(true)
+
+                                        .id(EVENTS.id().resolve(uuid(university, url)))
+                                        .university(university)
+
+                                        .url(set(uri))
+
+                                        .name(name(json, language).orElse(null))
+                                        .description(description(json, language).orElse(null))
+                                        .disambiguatingDescription(disambiguatingDescription(json, language).orElse(null))
+
+                                        .startDate(startDate
+                                                .map(date -> startTime
+                                                        .map(time -> date.atTime(time).atZone(zone))
+                                                        .orElseGet(() -> date.atStartOfDay().atZone(zone))
+                                                )
+                                                .orElse(null)
+                                        )
+
+                                        .endDate(endDate
+                                                .map(date -> endTime
+                                                        .map(time -> date.atTime(time).atZone(zone))
+                                                        .orElseGet(() -> date.atStartOfDay().atZone(zone))
+                                                )
+                                                .or(() -> startDate
+                                                        .flatMap(date -> endTime
+                                                                .map(time -> date.atTime(time).atZone(zone)
+                                                                )
+                                                        )
+                                                )
+                                                .orElse(null)
+                                        )
+
+                                        .eventAttendanceMode(attendanceMode(json).orElse(null))
+                                        .isAccessibleForFree(entryFees(json).orElse(null))
+
+                                        .about(set(about(json).stream()))
+                                        .audience(set(audience(json).stream()))
+
+                                        .publisher(publisher)
+                                        .image(image.orElse(null)) // !!! embedded
+                                // !!! .location(location.orElse(null)), // !!! embedded
+                        );
+
+
                         return concat(
 
-                                review(event
-                                                .publisher(publisher)
-                                                .image(image.orElse(null))
-                                        // !!! .location(location.orElse(null)),
-                                ).stream(),
+                                event.stream(),
+
+                                Stream.of(publisher),
+                                image.stream(),
+                                // !!! location.stream()
 
                                 // ;( keep track of all visited web pages to handle sources that expose stale events
 
                                 Stream.of(new SchemaWebPageFrame()
                                         .id(uri)
                                         .dateRetrieved(Instant.now())
-                                ),
-
-                                Stream.of(publisher),
-                                image.stream()
-                                // !!! location.stream()
+                                )
 
                         );
 

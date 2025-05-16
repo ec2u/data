@@ -21,7 +21,6 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Id;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MaxLength;
-import com.metreeca.mesh.meta.shacl.Required;
 import com.metreeca.shim.Strings;
 
 import java.net.URI;
@@ -78,7 +77,6 @@ public interface Reference {
     URI id();
 
 
-    @Required
     @Localized
     @MaxLength(LABEL_LENGTH)
     @Forward("rdfs:")
