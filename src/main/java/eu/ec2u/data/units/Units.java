@@ -31,7 +31,6 @@ import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Reference;
-import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
@@ -53,7 +52,6 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.uuid;
@@ -243,25 +241,17 @@ public interface Units extends Dataset {
         }
 
         private Stream<Topic> subject(final CSVRecord record) {
-            return Stream.concat(
-
-                    value(record, "Sector").stream()
-                            .flatMap(new Taxonomies.Matcher(EUROSCIVOC).narrowing(2)) // prefer top-level concepts
-                            .limit(1),
-
-                    Stream.of(
-                                    value(record, "Name (English)").stream(),
-                                    value(record, "Name (Local)").stream(),
-                                    value(record, "Topics (English)").stream(),
-                                    value(record, "Topics (Local)").stream()
-                            )
-                            .flatMap(identity())
-                            .flatMap(topics -> Arrays.stream(topics.split(";")))
-                            .distinct()
-                            .flatMap(euroscivoc())
-                            .limit(3)
-
-            );
+            return Stream.of(
+                            value(record, "Name (English)").stream(),
+                            value(record, "Name (Local)").stream(),
+                            value(record, "Topics (English)").stream(),
+                            value(record, "Topics (Local)").stream()
+                    )
+                    .flatMap(identity())
+                    .flatMap(topics -> Arrays.stream(topics.split(";")))
+                    .distinct()
+                    .flatMap(euroscivoc())
+                    .limit(3);
         }
 
         private Stream<OrgOrganization> unitOf(final CSVRecord record, final Collection<CSVRecord> records) {

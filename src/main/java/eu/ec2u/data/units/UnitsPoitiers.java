@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
@@ -46,10 +47,12 @@ import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.POITIERS;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.work.shim.Futures.joining;
 import static eu.ec2u.work.shim.Streams.concat;
 import static eu.ec2u.work.shim.Streams.optional;
 import static java.lang.String.join;
 import static java.util.Locale.ROOT;
+import static java.util.function.UnaryOperator.identity;
 
 public final class UnitsPoitiers implements Runnable {
 
@@ -70,7 +73,9 @@ public final class UnitsPoitiers implements Runnable {
 
                 array(list(Stream.of(url)
                         .flatMap(this::units)
-                        .flatMap(this::unit)
+                        .map(json -> async(() -> unit(json)))
+                        .collect(joining())
+                        .flatMap(identity())
                 )),
 
                 value(query(new UnitFrame(true)).where("university", criterion().any(POITIERS)))
