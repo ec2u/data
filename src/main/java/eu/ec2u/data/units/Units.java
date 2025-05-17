@@ -31,11 +31,8 @@ import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Reference;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
@@ -240,20 +237,17 @@ public interface Units extends Dataset {
             return value(record, "Email", Reference::email).stream();
         }
 
-        private Stream<TopicFrame> classification(final CSVRecord record) {
-            return value(record, "Type")
-                    .flatMap(type2 -> Resources.match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), type2))
-                    .map(uri -> new TopicFrame(true).id(uri))
-                    .stream();
+        private Stream<Topic> classification(final CSVRecord record) {
+            return value(record, "Type").stream()
+                    .flatMap(Unit.organizations());
         }
 
         private Stream<Topic> subject(final CSVRecord record) {
             return Stream.concat(
 
                     value(record, "Sector").stream()
-                            .flatMap(new Taxonomies.Matcher(EUROSCIVOC).narrowing(2))
+                            .flatMap(new Taxonomies.Matcher(EUROSCIVOC).narrowing(2)) // prefer top-level concepts
                             .limit(1),
-
 
                     Stream.of(
                                     value(record, "Name (English)").stream(),

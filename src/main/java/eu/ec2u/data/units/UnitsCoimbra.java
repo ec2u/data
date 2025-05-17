@@ -30,10 +30,7 @@ import com.metreeca.shim.URIs;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Reference;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.TopicFrame;
 
 import java.net.URI;
 import java.time.Instant;
@@ -222,11 +219,9 @@ public final class UnitsCoimbra implements Runnable {
         );
     }
 
-    private Stream<TopicFrame> classification(final Value json) {
-        return json.get("type_en").string()
-                .flatMap(type -> Resources.match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), type))
-                .map(uri -> new TopicFrame(true).id(uri))
-                .stream();
+    private Stream<Topic> classification(final Value json) {
+        return json.get("type_en").string().stream()
+                .flatMap(Unit.organizations());
     }
 
     private Optional<PersonFrame> head(final Value json) {

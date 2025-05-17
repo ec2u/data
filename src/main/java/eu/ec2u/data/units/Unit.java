@@ -47,6 +47,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Resource.localize;
+import static eu.ec2u.data.taxonomies.EC2UOrganizations.EC2U_ORGANIZATIONS;
 import static eu.ec2u.data.taxonomies.EC2UOrganizations.VIRTUAL_INSTITUTE;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.data.units.Units.UNITS;
@@ -218,6 +219,13 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
         )));
     }
 
+
+    static Matcher organizations() {
+        return new Matcher(EC2U_ORGANIZATIONS)
+                .narrowing(1.1)
+                // !!! .threshold(0.75)
+                .tolerance(0.1);
+    }
 
     static Matcher euroscivoc() {
         return new Matcher(EUROSCIVOC)

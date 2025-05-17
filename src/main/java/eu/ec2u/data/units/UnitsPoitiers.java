@@ -23,10 +23,7 @@ import com.metreeca.mesh.Value;
 
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.TopicFrame;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +43,6 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.persons.Person.review;
 import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
-import static eu.ec2u.data.units.Units.TYPE_THRESHOLD;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.POITIERS;
 import static eu.ec2u.data.universities.University.uuid;
@@ -164,12 +160,9 @@ public final class UnitsPoitiers implements Runnable {
                 .flatMap(Optional::stream);
     }
 
-    private Stream<TopicFrame> classification(final Value json) {
+    private Stream<Topic> classification(final Value json) {
         return json.get("type_de_structure").string().stream()
-                .distinct()
-                .flatMap(topic -> Resources.match(EC2UOrganizations.EC2U_ORGANIZATIONS.id(), topic, TYPE_THRESHOLD))
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(1);
+                .flatMap(Unit.organizations());
     }
 
     private Stream<Topic> subject(final Value json) {
