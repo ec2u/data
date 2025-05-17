@@ -150,7 +150,7 @@ public interface Units extends Dataset {
                                 .homepage(set(homepage(record)))
                                 .mbox(set(mbox(record)))
 
-                                .classification(set(classification(record)))
+                                .classification(set(classification(record).stream()))
                                 .subject(set(subject(record)))
 
                                 .unitOf(set(unitOf(record, records)))
@@ -235,9 +235,10 @@ public interface Units extends Dataset {
             return value(record, "Email", Reference::email).stream();
         }
 
-        private Stream<Topic> classification(final CSVRecord record) {
+        private Optional<Topic> classification(final CSVRecord record) {
             return value(record, "Type").stream()
-                    .flatMap(Unit.organizations());
+                    .flatMap(Unit.organizations())
+                    .findFirst();
         }
 
         private Stream<Topic> subject(final CSVRecord record) {

@@ -65,8 +65,8 @@ import static java.util.function.Predicate.not;
 
 public final class UnitsCoimbra implements Runnable {
 
-    private static final String APIUrl="units-coimbra-url";
-    private static final String APIKey="units-coimbra-key";
+    private static final String API_URL="units-coimbra-url";
+    private static final String API_KEY="units-coimbra-key";
 
 
     public static void main(final String... args) {
@@ -99,8 +99,8 @@ public final class UnitsCoimbra implements Runnable {
 
     private Stream<Value> units(final Instant updated) {
 
-        final String url=vault.get(APIUrl);
-        final String key=service(vault()).get(APIKey);
+        final String url=vault.get(API_URL);
+        final String key=service(vault()).get(API_KEY);
 
         return Stream.of(updated)
 
@@ -156,7 +156,7 @@ public final class UnitsCoimbra implements Runnable {
                             .hasHead(head.map(Collections::set).orElse(null))
                             .hasMember(head.map(Collections::set).orElse(null))
 
-                            .classification(set(classification(json)))
+                            .classification(set(classification(json).stream()))
 
                             .subject(set(Stream.concat(
                                     sector(json).stream(), // !!! review property
@@ -219,9 +219,10 @@ public final class UnitsCoimbra implements Runnable {
         );
     }
 
-    private Stream<Topic> classification(final Value json) {
+    private Optional<Topic> classification(final Value json) {
         return json.get("type_en").string().stream()
-                .flatMap(Unit.organizations());
+                .flatMap(Unit.organizations())
+                .findFirst();
     }
 
     private Optional<PersonFrame> head(final Value json) {

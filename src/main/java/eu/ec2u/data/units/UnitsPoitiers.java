@@ -124,7 +124,7 @@ public final class UnitsPoitiers implements Runnable {
                             .hasHead(heads)
                             .hasMember(heads)
 
-                            .classification(set(classification(json)))
+                            .classification(set(classification(json).stream()))
                             .subject(set(subject(json)))
 
                     ).stream(),
@@ -165,9 +165,10 @@ public final class UnitsPoitiers implements Runnable {
                 .flatMap(Optional::stream);
     }
 
-    private Stream<Topic> classification(final Value json) {
+    private Optional<Topic> classification(final Value json) {
         return json.get("type_de_structure").string().stream()
-                .flatMap(Unit.organizations());
+                .flatMap(Unit.organizations())
+                .findFirst();
     }
 
     private Stream<Topic> subject(final Value json) {

@@ -222,15 +222,12 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
 
     static Matcher organizations() {
         return new Matcher(EC2U_ORGANIZATIONS)
-                .narrowing(1.1)
-                // !!! .threshold(0.75)
-                .tolerance(0.1);
+                .threshold(0.75);
     }
 
     static Matcher euroscivoc() {
         return new Matcher(EUROSCIVOC)
                 .narrowing(1.1)
-                // !!! .threshold(0.75)
                 .tolerance(0.1);
     }
 
