@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
@@ -50,6 +51,7 @@ import static eu.ec2u.data.resources.Localized.LOCALES;
 import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
 import static eu.ec2u.work.Rover.rover;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static eu.ec2u.work.shim.Futures.joining;
 import static java.lang.String.format;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 
@@ -137,7 +139,7 @@ public final class EuroSciVoc implements Runnable {
                                         .split()
                                 )
 
-                                .map(concept -> concept.uri()
+                                .map(concept -> async(() -> concept.uri()
 
                                         .map(id -> new TopicFrame()
                                                 .id(adopt(id))
@@ -166,8 +168,10 @@ public final class EuroSciVoc implements Runnable {
 
                                         .map(this::define)
                                         .flatMap(Topic::review)
-                                )
 
+                                ))
+
+                                .collect(joining())
                                 .flatMap(Optional::stream)
 
                 ))),
