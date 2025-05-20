@@ -17,7 +17,6 @@
 package eu.ec2u.data.units;
 
 import com.metreeca.flow.Xtream;
-import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.csv.formats.CSV;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.json.formats.JSON;
@@ -31,7 +30,6 @@ import eu.ec2u.data.persons.PersonFrame;
 import org.apache.commons.csv.CSVFormat;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +37,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
@@ -59,18 +58,20 @@ import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.SALAMANCA;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.work.shim.Futures.joining;
 import static eu.ec2u.work.shim.Streams.concat;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
+import static java.util.function.UnaryOperator.identity;
 
 public final class UnitsSalamanca implements Runnable {
 
     private static final String API_URL="units-salamanca-url"; // vault label
     private static final String API_KEY="units-salamanca-key"; // vault label
 
-    private static final String VIS_URL="units-salamanca-vis-url";
+    private static final String VIS_URL="units-salamanca-vis-url"; // vault label
 
 
     public static void main(final String... args) {
@@ -85,31 +86,32 @@ public final class UnitsSalamanca implements Runnable {
 
 
     @Override public void run() {
+
+        final List<Entry<URI, Unit>> vis=list(vis());
+
         service(store()).modify(
 
-                array(list(Stream.of(Instant.EPOCH)
-                        .flatMap(this::units)
-                        .flatMap(this::unit)
+                array(list(units()
+                        .map(json -> async(() -> unit(json, vis)))
+                        .collect(joining())
+                        .flatMap(identity())
                 )),
 
-                value(query(new UnitFrame(true)).where("university", criterion().any(SALAMANCA)))
-
+                value(query(new UnitFrame(true))
+                        .where("university", criterion().any(SALAMANCA))
+                )
         );
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<Value> units(final Instant updated) {
+    private Stream<Value> units() {
 
         final String url=vault.get(API_URL);
         final String key=vault.get(API_KEY);
 
-        return Xtream.of(updated)
-
-                .flatMap(new Fill<>()
-                        .model(url)
-                )
+        return Xtream.of(url)
 
                 .optMap(new GET<>(new JSON(), request -> request
                         .header("Authorization", format("Basic %s",
@@ -120,7 +122,7 @@ public final class UnitsSalamanca implements Runnable {
                 .flatMap(Value::values);
     }
 
-    private Stream<? extends Valuable> unit(final Value json) {
+    private Stream<? extends Valuable> unit(final Value json, final Collection<Entry<URI, Unit>> vis) {
         return json.get("id").string().stream().flatMap(id -> {
 
             final URI uri=UNITS.id().resolve(uuid(SALAMANCA, id));
@@ -128,7 +130,6 @@ public final class UnitsSalamanca implements Runnable {
             final Optional<PersonFrame> head=json.get("head").string()
                     .flatMap(p -> person(p, SALAMANCA));
 
-            final List<Entry<URI, Unit>> vis=vis().toList();
             final Optional<UnitFrame> department=department(json);
             final Optional<UnitFrame> institute=institute(json);
 
