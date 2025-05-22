@@ -16,9 +16,6 @@
 
 package eu.ec2u.data.taxonomies;
 
-import com.metreeca.flow.Xtream;
-
-import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
 
 import java.time.LocalDate;
@@ -51,12 +48,9 @@ import static eu.ec2u.data.taxonomies.Taxonomies.TAXONOMIES;
  */
 public final class ISCED2011 implements Runnable {
 
-    private static final OrgOrganizationFrame UNESCO_INSTITUTE_FOR_STATISTICS=new OrgOrganizationFrame()
-            .id(uri("http://www.uis.unesco.org/"))
-            .prefLabel(map(entry(EN, "UNESCO Institute for Statistics")));
-
     private static final TaxonomyFrame ISCED2011=new TaxonomyFrame()
             .id(TAXONOMIES.id().resolve("isced-2011"))
+
             .title(map(entry(EN, "International Standard Classification of Education 2011")))
             .alternative(map(entry(EN, "ISCED 2011")))
             .description(map(entry(EN, """
@@ -65,14 +59,15 @@ public final class ISCED2011 implements Runnable {
                     classification serves as an instrument to compile and present education statistics both nationally \
                     and internationally."""
             )))
-            .created(LocalDate.parse("2011-11-10"))
-            .issued(LocalDate.parse("2024-01-01"))
+
+            .issued(LocalDate.parse("2011-11-10"))
+
             .rights("Copyright © 2012 UNESCO Institute for Statistics")
-            .publisher(UNESCO_INSTITUTE_FOR_STATISTICS)
+            .publisher(ISCED.UNESCO_INSTITUTE_FOR_STATISTICS)
             .source(new ReferenceFrame()
-                    .id(uri("https://uis.unesco.org"+
-                            "/sites/default/files/documents"+
-                            "/international-standard-classification-of-education-isced-2011-en.pdf"
+                    .id(uri("https://uis.unesco.org"
+                            +"/sites/default/files/documents"
+                            +"/international-standard-classification-of-education-isced-2011-en.pdf"
                     )));
 
     public static final TopicFrame LEVEL_0=new TopicFrame(true).id(uri(ISCED2011.id()+"/0"));
@@ -110,12 +105,9 @@ public final class ISCED2011 implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
-                array(list(Xtream.from(
+                array(list(Stream.concat(
 
-                        Stream.of(
-                                ISCED2011,
-                                UNESCO_INSTITUTE_FOR_STATISTICS
-                        ),
+                        Stream.of(ISCED2011),
 
                         Stream.of(resource(ISCED2011.class, ".csv").toString())
                                 .flatMap(new Taxonomies.Loader(ISCED2011))

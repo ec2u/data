@@ -20,12 +20,11 @@ import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.tools.Store;
 
-import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
 import eu.ec2u.work.ai.Analyzer;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
-import org.eclipse.rdf4j.model.vocabulary.SKOSXL;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -53,63 +52,61 @@ import static eu.ec2u.work.Rover.rover;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static eu.ec2u.work.shim.Futures.joining;
 import static java.lang.String.format;
-import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
+import static org.eclipse.rdf4j.model.util.Values.iri;
+import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
 
 /**
- * European Science Vocabulary (EuroSciVoc).
- *
- * <p>European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati
- * Manual taxonomy. It was extended with fields of science categories extracted from CORDIS content through a
- * semi-automatic process developed with Natural Language Processing (NLP) techniques</p>
+ * International Standard Classification of Education (ISCED-F 2013)
  *
  * @see <a
- *         href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/euroscivoc">European
- *         Science Vocabulary (EuroSciVoc)</a>
+ *         href="https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/international-education-classification">...</a>
  */
-public final class EuroSciVoc implements Runnable {
+public final class ISCEDF2013 implements Runnable {
 
-    private static final String VERSION="1.5-20241002";
+    private static final String VERSION="20240110-0";
 
     private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
-            +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution%2Feuroscivoc%2F20241002-0%2Fttl%2Fskos_xl%2FEuroSciVoc.ttl"
-            +"&fileName=EuroSciVoc.ttl";
+            +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution"
+            +"%2Finternational-education-classification%2F20240110-0%2Frdf%2Fskos_ap_eu"
+            +"%2Finternational-education-classification-skos-ap-eu.rdf"
+            +"&fileName=international-education-classification-skos-ap-eu.rdf";
 
 
-    private static final OrgOrganizationFrame EU_PUBLICATION_OFFICE=new OrgOrganizationFrame()
-            .id(uri("https://op.europa.eu/"))
-            .prefLabel(map(entry(EN, "Publications Office of the European Union")));
-
-    public static final TaxonomyFrame EUROSCIVOC=new TaxonomyFrame()
-            .id(TAXONOMIES.id().resolve("euroscivoc"))
+    private static final TaxonomyFrame ISCEDF2013=new TaxonomyFrame()
+            .id(TAXONOMIES.id().resolve("isced-f-2013"))
             .version(VERSION)
 
-            .title(map(entry(EN, "European Science Vocabulary")))
-            .alternative(map(entry(EN, "EuroSciVoc")))
+            .title(map(entry(EN, "International Standard Classification of Education: Fields of Education and Training 2013")))
+            .alternative(map(entry(EN, "ISCED-F 2013")))
             .description(map(entry(EN, """
-                    European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's \
-                    2015 Frascati Manual taxonomy. It was extended with fields of science categories extracted from \
-                    CORDIS content through a semi-automatic process developed with Natural Language Processing \
-                    (NLP) techniques."""
-            )))
+                    International Standard Classification of Education: Fields of Education and Training 2013
+                    (ISCED-F 2013) - is a classification of fields of education, which accompanies ISCED 2011. \
+                    ISCED-F 2013 contains 11 broad fields (2 digits), 29 narrow fields (3 digits) and about 80 \
+                    detailed fields (4 digits).""")))
 
-            .issued(LocalDate.parse("2024-10-02"))
+            .issued(LocalDate.parse("2013-11-13"))
 
-            .rights("Copyright © 2023 Publications Office of the European Union")
-            .publisher(EU_PUBLICATION_OFFICE)
+            .rights("Copyright © 2015 UNESCO Institute for Statistics")
+            .publisher(ISCED.UNESCO_INSTITUTE_FOR_STATISTICS)
             .source(new ReferenceFrame()
-                    .id(uri("https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource"
-                            +"?uri=http://publications.europa.eu/resource/dataset/euroscivoc"
-                    ))
-            );
+                    .id(uri("https://uis.unesco.org"
+                            +"/sites/default/files/documents"
+                            +"/international-standard-classification-of-education-fields-of-education-and-training-2013-detailed-field-descriptions-2015-en.pdf"
+                    )));
 
 
-    private static final String EXTERNAL="http://data.europa.eu/8mn/euroscivoc/";
-    private static final String INTERNAL=EUROSCIVOC.id()+"/";
+    private static final String EXTERNAL="http://data.europa.eu/snb/isced-f/";
+    private static final String INTERNAL=ISCEDF2013.id()+"/";
+
+    private static final IRI XL_NOTATION=iri("http://publications.europa.eu/ontology/euvoc#", "xlNotation");
 
 
     public static void main(final String... args) {
-        exec(() -> new EuroSciVoc().run());
+        exec(() -> new ISCEDF2013().run());
     }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,14 +123,13 @@ public final class EuroSciVoc implements Runnable {
                 array(list(Stream.concat(
 
                         Stream.of(
-                                EUROSCIVOC,
-                                EU_PUBLICATION_OFFICE
+                                ISCEDF2013
                         ),
 
                         Stream.of(URL)
 
                                 .map(new Retrieve()
-                                        .format(TURTLE)
+                                        .format(RDFXML)
                                 )
 
                                 .flatMap(model -> rover(model)
@@ -148,24 +144,37 @@ public final class EuroSciVoc implements Runnable {
                                                 .id(adopt(id))
                                                 .generated(true)
                                                 .isDefinedBy(id)
-                                                .inScheme(EUROSCIVOC)
-                                                .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
-                                                        .uri().map(v -> EUROSCIVOC).orElse(null)
+                                                .inScheme(ISCEDF2013)
+                                                .topConceptOf(concept
+                                                        .forward(SKOS.TOP_CONCEPT_OF)
+                                                        .uri()
+                                                        .map(v -> ISCEDF2013)
+                                                        .orElse(null)
                                                 )
-                                                .notation(concept.forward(SKOS.NOTATION)
-                                                        .string().orElse(null)
+                                                .notation(concept
+                                                        .forward(XL_NOTATION)
+                                                        .forward(RDF.VALUE)
+                                                        .string()
+                                                        .orElse(null)
                                                 )
-                                                .prefLabel(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                        .texts(LOCALES).orElse(null)
+                                                .prefLabel(concept
+                                                        .forward(SKOS.PREF_LABEL)
+                                                        .texts(LOCALES)
+                                                        .orElse(null)
                                                 )
-                                                .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                        .textsets(LOCALES).orElse(null)
+                                                .altLabel(concept.forward(SKOS.ALT_LABEL)
+                                                        .textsets(LOCALES)
+                                                        .orElse(null)
                                                 )
-                                                .broader(set(concept.forward(SKOS.BROADER)
-                                                        .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                                .broader(set(concept
+                                                        .forward(SKOS.BROADER)
+                                                        .uris()
+                                                        .map(b -> new TopicFrame().id(adopt(b)))
                                                 ))
-                                                .broaderTransitive(set(concept.plus(SKOS.BROADER)
-                                                        .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                                .broaderTransitive(set(concept
+                                                        .plus(SKOS.BROADER)
+                                                        .uris()
+                                                        .map(b -> new TopicFrame().id(adopt(b)))
                                                 ))
                                         )
 
@@ -181,7 +190,7 @@ public final class EuroSciVoc implements Runnable {
 
                 value(query()
                         .model(new TopicFrame(true))
-                        .where("inScheme", criterion().any(EUROSCIVOC))
+                        .where("inScheme", criterion().any(ISCEDF2013))
                 )
 
         )).apply((elapsed, resources) -> logger.info(this, format(
@@ -210,9 +219,9 @@ public final class EuroSciVoc implements Runnable {
                         .or(() -> analyzer
 
                                 .prompt("""
-                                        Provide a definition between 250 and 500 chars for the research activity \
-                                        related to the given topic in the European Science Vocabulary (EuroSciVoc) \
-                                        taxonomy of fields of science based on OECD's 2015 Frascati Manual taxonomy.
+                                        Provide a definition between 250 and 500 chars for the field of education  \
+                                        related to the given topic in the International Standard Classification of \
+                                        Education: Fields of Education and Training 2013 taxonomy.
                                         
                                         Respond with a JSON object
                                         """, """
