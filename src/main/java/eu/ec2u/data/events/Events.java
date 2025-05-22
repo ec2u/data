@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.events;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
@@ -28,7 +27,6 @@ import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.tools.Store;
-import com.metreeca.shim.Futures;
 import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.datasets.Dataset;
@@ -70,7 +68,9 @@ import static eu.ec2u.data.taxonomies.EC2UEvents.EC2U_EVENTS;
 import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static eu.ec2u.work.shim.Futures.joining;
 import static eu.ec2u.work.shim.Streams.concat;
+import static eu.ec2u.work.shim.Streams.optional;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
@@ -271,8 +271,9 @@ public interface Events extends Dataset {
 
         @Override
         public Stream<Valuable> apply(final Stream<String> urls) {
-            return Futures
-                    .allOfItems(urls.map(url -> async(() -> Xtream.of(url)
+            return urls
+
+                    .map(url -> async(() -> Stream.of(url)
 
                             // ;( ignore all visited web pages: Last-Modified and ETag headers are not reliable
 
@@ -284,18 +285,19 @@ public interface Events extends Dataset {
 
                             .toList()
 
-                    )))
-                    .thenApply(s -> s.flatMap(Collection::stream))
-                    .join();
+                    ))
+
+                    .collect(joining())
+                    .flatMap(Collection::stream);
         }
 
 
-        private Xtream<Valuable> event(final String url) {
-            return Xtream.of(url)
+        private Stream<Valuable> event(final String url) {
+            return Stream.of(url)
 
-                    .optMap(new GET<>(new HTML()))
+                    .flatMap(optional(new GET<>(new HTML())))
                     .map(new Untag())
-                    .optMap(analyzer)
+                    .flatMap(optional(analyzer))
 
                     .flatMap(json -> {
 

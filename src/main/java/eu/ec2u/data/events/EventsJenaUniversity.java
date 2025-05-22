@@ -26,7 +26,9 @@ import eu.ec2u.data.organizations.OrganizationFrame;
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
 
 import java.util.List;
+import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
@@ -36,7 +38,10 @@ import static com.metreeca.shim.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.JENA;
+import static eu.ec2u.work.shim.Futures.joining;
+import static eu.ec2u.work.shim.Streams.optional;
 import static java.util.Map.entry;
+import static java.util.function.UnaryOperator.identity;
 
 public final class EventsJenaUniversity implements Runnable {
 
@@ -146,15 +151,15 @@ public final class EventsJenaUniversity implements Runnable {
 
     @Override
     public void run() {
-        store.insert(array(Xtream.from(PUBLISHERS) // !!! parallelize
+        store.insert(array(PUBLISHERS.stream()
 
-                .flatMap(publisher -> Xtream
+                .map(publisher -> async(() -> Xtream
 
                         .of(publisher.id().toString())
 
-                        .flatMap(home -> Xtream.of(home).crawl(url -> Xtream.of(url)
+                        .flatMap(home -> Xtream.of(home).crawl(url -> Stream.of(url)
 
-                                .optMap(new GET<>(new HTML()))
+                                .flatMap(optional(new GET<>(new HTML())))
                                 .map(XPath::new)
 
                                 .map(path -> entry(
@@ -167,7 +172,11 @@ public final class EventsJenaUniversity implements Runnable {
                         .pipe(new Events.Scanner(JENA, publisher))
 
                 ))
-        );
+
+                .collect(joining())
+                .flatMap(identity())
+
+        ));
     }
 
 }
