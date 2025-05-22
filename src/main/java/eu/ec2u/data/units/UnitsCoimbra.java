@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
@@ -52,10 +53,12 @@ import static eu.ec2u.data.resources.Localized.PT;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.COIMBRA;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.work.shim.Futures.joining;
 import static eu.ec2u.work.shim.Streams.concat;
 import static eu.ec2u.work.shim.Streams.optional;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
+import static java.util.function.UnaryOperator.identity;
 
 public final class UnitsCoimbra implements Runnable {
 
@@ -79,7 +82,9 @@ public final class UnitsCoimbra implements Runnable {
         service(store()).modify(
 
                 array(list(units()
-                        .flatMap(this::unit)
+                        .map(json -> async(() -> unit(json)))
+                        .collect(joining())
+                        .flatMap(identity())
                 )),
 
                 value(query(new UnitFrame(true)).where("university", criterion().any(COIMBRA)))
