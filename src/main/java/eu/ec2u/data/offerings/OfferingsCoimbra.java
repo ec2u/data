@@ -136,9 +136,8 @@ public final class OfferingsCoimbra implements Runnable {
     @Override
     public void run() {
 
-        final String url=vault.get(API_URL);
 
-        final Set<Value> offerings=set(Stream.of(url).flatMap(this::offerings));
+        final Set<Value> offerings=set(offerings());
 
         time(() -> Stream
 
@@ -200,8 +199,9 @@ public final class OfferingsCoimbra implements Runnable {
     }
 
 
-    private Stream<Value> offerings(final String url) {
+    private Stream<Value> offerings() {
 
+        final String url=vault.get(API_URL);
         final String id=vault.get(API_ID);
         final String token=service(vault()).get(API_TOKEN);
 

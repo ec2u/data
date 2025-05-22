@@ -210,7 +210,7 @@ public final class OfferingsPavia implements Runnable {
     private Xtream<Value> programs(final Year year) {
         return Xtream.of(0)
 
-                .crawl(start -> Xtream.of(start)
+                .crawl(start -> Stream.of(start)
 
                         .flatMap(new Fill<>()
                                 .model(ESSE3_URL+"?aaOffId={year}&start={start}&limit={limit}")
@@ -219,7 +219,7 @@ public final class OfferingsPavia implements Runnable {
                                 .value("limit", ESSE3_PAGE_SIZE)
                         )
 
-                        .optMap(new GET<>(new JSON()))
+                        .flatMap(optional(new GET<>(new JSON())))
 
                         .map(json -> {
 
@@ -250,8 +250,7 @@ public final class OfferingsPavia implements Runnable {
 
                 .educationalLevel(json.get("tipoCorsoCod").string().map(CODE_TO_LEVEL::get).orElse(null))
 
-                .provider(provider(json).orElse(null)) // !!! linked entity
-
+                .provider(provider(json).orElse(null))
         ));
     }
 
@@ -408,7 +407,7 @@ public final class OfferingsPavia implements Runnable {
                         .assesses(map(text(af, "OBIETT_FORM")))
                         .coursePrerequisites(map(text(af, "PREREQ")))
 
-                        // !!! <ns2:settCod>M-STO/04</ns2:settCod> to EuroSciVoc?
+                        // !!! <ns2:settCod>M-STO/04</ns2:settCod> to ISCED-F-2013?
 
                         .about(set(sdgs(af)))
 

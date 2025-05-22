@@ -104,9 +104,7 @@ public final class OfferingsJena implements Runnable {
     public void run() {
         time(() -> store.modify(
 
-                array(Stream.of(SITE_URL)
-                        .flatMap(this::programs)
-                ),
+                array(programs()),
 
                 value(query(new ProgramFrame(true))
                         .where("university", criterion().any(JENA))
@@ -120,10 +118,10 @@ public final class OfferingsJena implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<ProgramFrame> programs(final String url) {
+    private Stream<ProgramFrame> programs() {
         return Stream
 
-                .of(url)
+                .of(SITE_URL)
 
                 // extract detail links
 

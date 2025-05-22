@@ -89,9 +89,7 @@ public final class OfferingsPoitiers implements Runnable {
 
                         async(() -> store.modify(
 
-                                array(Stream.of("" /* !!! vault.get(PROGRAMS_URL)*/)
-                                        .flatMap(this::programs)
-                                ),
+                                array(programs()),
 
                                 value(query(new ProgramFrame(true))
                                         .where("university", criterion().any(POITIERS))
@@ -124,7 +122,9 @@ public final class OfferingsPoitiers implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<ProgramFrame> programs(final String url) {
+    private Stream<ProgramFrame> programs() {
+
+        // !!! vault.get(PROGRAMS_URL)
 
         try ( final Reader reader=reader(resource(this, ".json")) ) {
 
@@ -163,7 +163,7 @@ public final class OfferingsPoitiers implements Runnable {
                         .educationalLevel(educationalLevel(json).orElse(null))
                         .numberOfCredits(numberOfCredits(json).orElse(null))
 
-                        .provider(provider(json).orElse(null)) // !!! linked object
+                        .provider(provider(json).orElse(null))
 
                         .about(set(about(json)))
                 // .hasCourse(set(hasCourse(json))) // !!! enable after courses are ingested
@@ -199,7 +199,7 @@ public final class OfferingsPoitiers implements Runnable {
 
     private Stream<Topic> about(final Value json) {
         return json.get("discipline").string().stream()
-                .flatMap(Program.euroscivoc())
+                .flatMap(Program.iscedf())
                 .limit(1);
     }
 

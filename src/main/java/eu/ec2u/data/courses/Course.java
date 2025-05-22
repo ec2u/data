@@ -19,11 +19,10 @@ package eu.ec2u.data.courses;
 import com.metreeca.flow.Xtream;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.text.services.Translator;
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
-import com.metreeca.mesh.meta.jsonld.Reverse;
 
+import eu.ec2u.data.organizations.Organization;
 import eu.ec2u.data.programs.Program;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
@@ -91,7 +90,7 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
         return course.about(Optional.ofNullable(course.about())
                 .filter(not(Set::isEmpty))
                 .orElseGet(() -> set(Stream.of(embeddable(course))
-                        .flatMap(euroscivoc())
+                        .flatMap(iscedf())
                         .limit(1)
                 ))
         );
@@ -108,8 +107,8 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
     }
 
 
-    static Taxonomies.Matcher euroscivoc() {
-        return new Taxonomies.Matcher(EUROSCIVOC)
+    static Taxonomies.Matcher iscedf() {
+        return new Taxonomies.Matcher(EUROSCIVOC) // !!! ISCEDF-2013
                 .narrowing(1.1)
                 .tolerance(0.1);
     }
@@ -121,6 +120,10 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
     default Courses collection() {
         return COURSES;
     }
+
+    @Override
+    @Embedded
+    Organization provider();
 
     @Override
     default Topic educationalLevel() {

@@ -60,6 +60,6 @@ public interface SchemaLearningResource extends SchemaThing {
 
     Topic educationalLevel(); // !!! ISCED-2011
 
-    Set<Topic> about(); // !!! EuroSciVoc
+    Set<Topic> about(); // !!! ISCED-F-2013
 
 }

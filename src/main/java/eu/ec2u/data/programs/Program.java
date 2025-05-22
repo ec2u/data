@@ -20,9 +20,11 @@ import com.metreeca.flow.Xtream;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.text.services.Translator;
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.jsonld.Embedded;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
+import eu.ec2u.data.organizations.Organization;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.taxonomies.Taxonomies;
@@ -85,7 +87,7 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
         return program.about(Optional.ofNullable(program.about())
                 .filter(not(Set::isEmpty))
                 .orElseGet(() -> set(Stream.of(embeddable(program))
-                        .flatMap(euroscivoc())
+                        .flatMap(iscedf())
                         .limit(1)
                 ))
         );
@@ -100,8 +102,8 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
     }
 
 
-    static Taxonomies.Matcher euroscivoc() {
-        return new Taxonomies.Matcher(EUROSCIVOC)
+    static Taxonomies.Matcher iscedf() {
+        return new Taxonomies.Matcher(EUROSCIVOC) // !!! ISCED-F
                 .narrowing(1.1)
                 .tolerance(0.1);
     }
@@ -113,5 +115,9 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
     default Programs collection() {
         return PROGRAMS;
     }
+
+    @Override
+    @Embedded
+    Organization provider();
 
 }
