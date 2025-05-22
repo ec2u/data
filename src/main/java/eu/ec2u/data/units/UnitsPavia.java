@@ -20,21 +20,16 @@ import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.shim.Futures;
+import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.taxonomies.EC2UOrganizations;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.universities.University;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
@@ -51,10 +46,14 @@ import static com.metreeca.shim.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.PAVIA;
+import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static eu.ec2u.work.shim.Futures.joining;
+import static eu.ec2u.work.shim.Streams.optional;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
+import static java.util.function.UnaryOperator.identity;
 
 public final class UnitsPavia implements Runnable {
 
@@ -63,27 +62,6 @@ public final class UnitsPavia implements Runnable {
             Topic classification
     ) { }
 
-
-    //̸// !!! //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static final Pattern LanguagePattern=Pattern.compile("[a-zA-Z]{2}");
-
-    private static Optional<Locale> locale(final Optional<String> locale) {
-        return locale
-                .filter(LanguagePattern.asMatchPredicate())
-                .flatMap(lenient(Locale::forLanguageTag));
-    }
-
-
-    private static <V, R> Xtream<R> parallel(final Stream<V> values, final Function<V, Stream<R>> mapper) {
-        return Futures // collect stream within async to ensure parallel processing
-                .allOfItems(values.map(value -> async(() -> mapper.apply(value).toList())))
-                .thenApply(s -> Xtream.from(s.flatMap(Collection::stream)))
-                .join(); // !!! avoid inter-stage joins
-    }
-
-
-    /// ̸//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(final String... args) {
         exec(() -> new UnitsPavia().run());
@@ -98,7 +76,7 @@ public final class UnitsPavia implements Runnable {
     @Override public void run() {
         service(store()).modify(
 
-                array(list(Xtream
+                array(list(Stream
 
                         .of(
                                 new Catalog(
@@ -115,8 +93,14 @@ public final class UnitsPavia implements Runnable {
                                 )
                         )
 
-                        .pipe(catalogs -> parallel(catalogs, this::catalog))
-                        .<Xtream<UnitFrame>>pipe(units -> parallel(units, this::details))
+                        .map(catalog -> async(() -> catalog(catalog)
+                                .map(unit -> async(() -> details(unit)))
+                                .collect(joining())
+                                .flatMap(identity())
+                        ))
+
+                        .collect(joining())
+                        .flatMap(identity())
 
                 )),
 
@@ -187,21 +171,20 @@ public final class UnitsPavia implements Runnable {
 
                 .flatMap(json -> json.select("units.*").values())
 
-                .map(json -> {
+                .flatMap(optional(json -> {
 
-                            final Optional<URI> url=json.get("url").string()
-                                    .flatMap(URIs::fuzzy)
-                                    .map(catalog.url()::resolve);
+                    final Optional<URI> url=json.get("url").string()
+                            .flatMap(URIs::fuzzy)
+                            .map(catalog.url()::resolve);
 
-                            return new UnitFrame()
+                    return url.map(URI::toString)
+                            .or(() -> json.get("name").string())
+
+                            .map(id -> new UnitFrame()
 
                                     .generated(true)
 
-                                    .id(Units.UNITS.id().resolve(University.uuid(PAVIA, url
-                                            .map(URI::toString)
-                                            .or(() -> json.get("name").string())
-                                            .orElse(null) // !!! don't generate if missing
-                                    )))
+                                    .id(Units.UNITS.id().resolve(uuid(PAVIA, id)))
 
                                     .university(PAVIA)
                                     .unitOf(set(PAVIA))
@@ -212,20 +195,20 @@ public final class UnitsPavia implements Runnable {
                                     )
 
                                     .prefLabel(json.get("name").string()
-                                            .flatMap(name -> locale(json.get("language").string())
+                                            .flatMap(name -> json.get("language").string()
+                                                    .flatMap(lenient(Locales::locale))
                                                     .map(locale -> map(entry(locale, name)))
                                             )
                                             .orElse(null)
                                     )
 
-                                    .homepage(set(url
-                                            .stream()
-                                    ))
+                                    .homepage(set(url.stream()))
 
-                                    .classification(set(catalog.classification()));
-                        }
+                                    .classification(set(catalog.classification()))
 
-                );
+                            );
+
+                }));
     }
 
     private Stream<UnitFrame> details(final UnitFrame unit) {
@@ -274,32 +257,35 @@ public final class UnitsPavia implements Runnable {
                                 """
                         ))
 
-                        .flatMap(json -> locale(json.get("language").string()).map(locale -> unit
+                        .flatMap(json -> json.get("language").string()
+                                .flatMap(lenient(Locales::locale))
+                                .map(locale -> unit
 
-                                .altLabel(Optional.of(unit.altLabel())
-                                        .filter(not(Map::isEmpty))
-                                        .or(() -> json.get("acronym").string()
-                                                .map(acronym -> map(entry(ROOT, acronym)))
+                                        .altLabel(Optional.of(unit.altLabel())
+                                                .filter(not(Map::isEmpty))
+                                                .or(() -> json.get("acronym").string()
+                                                        .map(acronym -> map(entry(ROOT, acronym)))
+                                                )
+                                                .orElse(null)
                                         )
-                                        .orElse(null)
-                                )
 
-                                .altLabel(json.get("acronym").string()
-                                        .map(acronym -> map(entry(ROOT, acronym)))
-                                        .orElse(null)
-                                )
+                                        .altLabel(json.get("acronym").string()
+                                                .map(acronym -> map(entry(ROOT, acronym)))
+                                                .orElse(null)
+                                        )
 
-                                .comment(json.get("summary").string()
-                                        .map(summary -> map(entry(locale, summary)))
-                                        .orElse(null)
-                                )
+                                        .comment(json.get("summary").string()
+                                                .map(summary -> map(entry(locale, summary)))
+                                                .orElse(null)
+                                        )
 
-                                .definition(json.get("description").string()
-                                        .map(description -> map(entry(locale, description)))
-                                        .orElse(null)
-                                )
+                                        .definition(json.get("description").string()
+                                                .map(description -> map(entry(locale, description)))
+                                                .orElse(null)
+                                        )
 
-                        ))
+                                )
+                        )
 
                         .orElse(unit)
 
