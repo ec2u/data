@@ -36,9 +36,7 @@ import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.organizations.OrganizationFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.TopicFrame;
-import eu.ec2u.data.things.SchemaImageObjectFrame;
-import eu.ec2u.data.things.SchemaThing;
-import eu.ec2u.data.things.SchemaWebPageFrame;
+import eu.ec2u.data.things.*;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.ai.Analyzer;
 
@@ -74,6 +72,7 @@ import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static eu.ec2u.work.shim.Streams.concat;
 import static java.time.ZoneOffset.UTC;
+import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
 
 @Frame
@@ -164,7 +163,7 @@ public interface Events extends Dataset {
                 - end time in ISO format without seconds
                 - entry fees (free, paid); make sure not to mix up registration required with paid entry fees
                 - attendance mode (offline, online, mixed)
-                - attendance URL
+                - attendance URL (exclusively for online and mixed events)
                 - venue name
                 - venue street address
                 - venue city name
@@ -277,9 +276,7 @@ public interface Events extends Dataset {
 
                             // ;( ignore all visited web pages: Last-Modified and ETag headers are not reliable
 
-                            .filter(v -> store.retrieve(new SchemaWebPageFrame(true)
-                                    .id(uri(v))
-                            ).isEmpty())
+                            .filter(v -> store.retrieve(new SchemaWebPageFrame(true).id(uri(v))).isEmpty())
 
                             .flatMap(this::event)
 
@@ -319,78 +316,75 @@ public interface Events extends Dataset {
                         final Optional<String> venueName=venueName(json);
                         final Optional<String> venueAddress=venueAddress(json);
 
-                        // final Optional<SchemaLocationFrame> location=attendanceURL.map(au -> new SchemaLocationFrame()
-                        //                 .VirtualLocation(new SchemaVirtualLocationFrame()
-                        //                         .url(set(au))
-                        //                 )
-                        //         )
-                        //
-                        //         .or(() -> venueAddress.map(va -> new SchemaLocationFrame()
-                        //                 .PostalAddress(new SchemaPostalAddressFrame()
-                        //                         .name(venueName.map(vn -> map(entry(ROOT, vn))).orElse(null))
-                        //                         .streetAddress(va)
-                        //                 )
-                        //         ))
-                        //
-                        //         .or(() -> venueName.map(vn -> new SchemaLocationFrame()
-                        //                 .String(vn)
-                        //         ));
+                        final Optional<SchemaLocationFrame> location=attendanceURL.map(au -> new SchemaLocationFrame()
+                                        .VirtualLocation(new SchemaVirtualLocationFrame()
+                                                .url(set(au))
+                                        )
+                                )
+
+                                .or(() -> venueAddress.map(va -> new SchemaLocationFrame()
+                                        .PostalAddress(new SchemaPostalAddressFrame()
+                                                .name(venueName.map(vn -> map(entry(ROOT, vn))).orElse(null))
+                                                .streetAddress(va)
+                                        )
+                                ))
+
+                                .or(() -> venueName.map(vn -> new SchemaLocationFrame()
+                                        .String(vn)
+                                ));
 
 
                         final Optional<EventFrame> event=review(new EventFrame()
 
-                                        .generated(true)
+                                .generated(true)
 
-                                        .id(EVENTS.id().resolve(uuid(university, url)))
-                                        .university(university)
+                                .id(EVENTS.id().resolve(uuid(university, url)))
+                                .university(university)
 
-                                        .url(set(uri))
+                                .url(set(uri))
 
-                                        .name(name(json, language).orElse(null))
-                                        .description(description(json, language).orElse(null))
-                                        .disambiguatingDescription(disambiguatingDescription(json, language).orElse(null))
+                                .name(name(json, language).orElse(null))
+                                .description(description(json, language).orElse(null))
+                                .disambiguatingDescription(disambiguatingDescription(json, language).orElse(null))
 
-                                        .startDate(startDate
-                                                .map(date -> startTime
-                                                        .map(time -> date.atTime(time).atZone(zone))
-                                                        .orElseGet(() -> date.atStartOfDay().atZone(zone))
-                                                )
-                                                .orElse(null)
+                                .startDate(startDate
+                                        .map(date -> startTime
+                                                .map(time -> date.atTime(time).atZone(zone))
+                                                .orElseGet(() -> date.atStartOfDay().atZone(zone))
                                         )
+                                        .orElse(null)
+                                )
 
-                                        .endDate(endDate
-                                                .map(date -> endTime
-                                                        .map(time -> date.atTime(time).atZone(zone))
-                                                        .orElseGet(() -> date.atStartOfDay().atZone(zone))
-                                                )
-                                                .or(() -> startDate
-                                                        .flatMap(date -> endTime
-                                                                .map(time -> date.atTime(time).atZone(zone)
-                                                                )
+                                .endDate(endDate
+                                        .map(date -> endTime
+                                                .map(time -> date.atTime(time).atZone(zone))
+                                                .orElseGet(() -> date.atStartOfDay().atZone(zone))
+                                        )
+                                        .or(() -> startDate
+                                                .flatMap(date -> endTime
+                                                        .map(time -> date.atTime(time).atZone(zone)
                                                         )
                                                 )
-                                                .orElse(null)
                                         )
+                                        .orElse(null)
+                                )
 
-                                        .eventAttendanceMode(attendanceMode(json).orElse(null))
-                                        .isAccessibleForFree(entryFees(json).orElse(null))
+                                .eventAttendanceMode(attendanceMode(json).orElse(null))
+                                .isAccessibleForFree(entryFees(json).orElse(null))
 
-                                        .about(set(about(json).stream()))
-                                        .audience(set(audience(json).stream()))
+                                .about(set(about(json).stream()))
+                                .audience(set(audience(json).stream()))
 
-                                        .publisher(publisher)
-                                        .image(image.orElse(null)) // !!! embedded
-                                // !!! .location(location.orElse(null)), // !!! embedded
+                                .publisher(publisher)
+                                .image(image.orElse(null))
+                                .location(location.orElse(null))
                         );
 
 
                         return concat(
 
                                 event.stream(),
-
                                 Stream.of(publisher),
-                                image.stream(),
-                                // !!! location.stream()
 
                                 // ;( keep track of all visited web pages to handle sources that expose stale events
 

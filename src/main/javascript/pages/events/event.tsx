@@ -19,7 +19,7 @@ import { Events } from "@ec2u/data/pages/events/events";
 import { toEventAttendanceModeString, toEventStatusTypeString } from "@ec2u/data/pages/things/things";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
-import { immutable, multiple, optional, required } from "@metreeca/core";
+import { immutable, multiple, optional, repeatable, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { toDateString } from "@metreeca/core/date";
 import { dateTime } from "@metreeca/core/dateTime";
@@ -106,8 +106,7 @@ export const Event=immutable({
 		}),
 
 		VirtualLocation: optional({
-			label: required(text),
-			url: required(id)
+			url: repeatable(id)
 		})
 
 	}),
@@ -139,7 +138,8 @@ function asPostalAddress(address: PostalAddress) {
 }
 
 function asVirtualLocation(location: VirtualLocation) {
-	return <a href={location.url}>{toTextString(location.label)}</a>;
+	return location.url.length === 1 ? <a href={location.url[0]}>{toIdString(location.url[0], { compact: true })}</a>
+		: <ul>{location.url.map(url => <li key={url}><a href={url}>{toIdString(url, { compact: true })}</a></li>)}</ul>;
 }
 
 

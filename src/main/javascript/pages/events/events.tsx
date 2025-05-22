@@ -15,6 +15,7 @@
  */
 
 import { DataInfo } from "@ec2u/data/pages/datasets/dataset";
+import { toEventAttendanceModeString } from "@ec2u/data/pages/things/things";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
@@ -101,6 +102,10 @@ export function DataEvents() {
 
 			<TileOptions placeholder={"Free"} compact>{
 				useOptions(events, "isAccessibleForFree", { type: boolean })
+			}</TileOptions>
+
+			<TileOptions placeholder={"Attendance"} compact as={toEventAttendanceModeString}>{
+				useOptions(events, "eventAttendanceMode", { type: string })
 			}</TileOptions>
 
 			<TileOptions placeholder={"Topic"} compact>{
