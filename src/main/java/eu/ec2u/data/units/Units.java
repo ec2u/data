@@ -23,6 +23,7 @@ import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Collections;
 import com.metreeca.shim.URIs;
 
@@ -44,6 +45,7 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Strings.split;
@@ -52,8 +54,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.units.Unit.euroscivoc;
-import static eu.ec2u.data.units.Unit.review;
+import static eu.ec2u.data.units.Unit.*;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.shim.Streams.concat;
 import static java.lang.String.format;
@@ -82,7 +83,14 @@ public interface Units extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).insert(UNITS));
+        exec(() -> {
+
+            final Store store=service(store());
+
+            store.insert(UNITS);
+            store.insert(array(VIS));
+
+        });
     }
 
 

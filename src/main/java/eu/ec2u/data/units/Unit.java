@@ -37,14 +37,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.text.services.Translator.translator;
-import static com.metreeca.mesh.Value.array;
 import static com.metreeca.shim.Collections.map;
 import static com.metreeca.shim.Collections.set;
 import static com.metreeca.shim.URIs.uri;
 
-import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.EC2U;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Resource.localize;
@@ -165,7 +162,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
             .classification(set(VIRTUAL_INSTITUTE));
 
 
-    Set<Unit> VIS=set(
+    Set<UnitFrame> VIS=set(
             GLADE,
             VIQE,
             VISCC,
@@ -173,7 +170,7 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     );
 
 
-    static Optional<Unit> vi(final String code) {
+    static Optional<UnitFrame> vi(final String code) {
         return VIS.stream()
                 .filter(vi -> code.equalsIgnoreCase(vi.altLabel().get(ROOT)))
                 .findFirst();
@@ -230,18 +227,6 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
         return new Matcher(EUROSCIVOC)
                 .narrowing(1.1)
                 .tolerance(0.1);
-    }
-
-
-    static void main(final String... args) {
-        exec(() -> service(store()).insert(array(
-
-                GLADE,
-                VIQE,
-                VISCC,
-                VIPJSI
-
-        )));
     }
 
 

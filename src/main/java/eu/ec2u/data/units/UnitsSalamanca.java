@@ -286,7 +286,7 @@ public final class UnitsSalamanca implements Runnable {
 
                 .map(e -> {
 
-                    final Optional<Unit> vi=Unit.vi(e.getValue());
+                    final Optional<UnitFrame> vi=Unit.vi(e.getValue());
 
                     if ( vi.isEmpty() ) {
                         logger.warning(UnitsSalamanca.class, format(

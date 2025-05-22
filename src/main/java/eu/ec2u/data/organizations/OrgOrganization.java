@@ -46,7 +46,7 @@ import static java.util.function.Predicate.not;
 public interface OrgOrganization extends FOAFOrganization {
 
     int LABEL_LENGTH=100;
-    int DEFINITION_LENGTH=1_000;
+    int DEFINITION_LENGTH=10_000;
 
 
     static Map<Locale, String> label(final Map<Locale, String> name) {
