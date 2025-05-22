@@ -115,7 +115,7 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
     }
 
     @Override
-    default Topic educationalLevel() { // !!! won't work s long as references are clipped
+    default Topic educationalLevel() {
         return inProgram().stream()
                 .flatMap(nullable(SchemaLearningResource::educationalLevel))
                 .min(comparing(Reference::id))

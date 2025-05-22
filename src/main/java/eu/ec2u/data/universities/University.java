@@ -17,10 +17,8 @@
 package eu.ec2u.data.universities;
 
 import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Internal;
-import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
 import com.metreeca.shim.URIs;
@@ -412,9 +410,11 @@ public interface University extends Resource, GeoReference, OrgFormalOrganizatio
     int students();
 
     @Required
+    @Embedded
     GeoReference city();
 
     @Required
+    @Embedded
     GeoReference country();
 
 
