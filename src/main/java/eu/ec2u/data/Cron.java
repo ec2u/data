@@ -68,10 +68,12 @@ public final class Cron extends Delegator {
                 .path("/documents/coimbra", execute(new DocumentsCoimbra()))
                 .path("/documents/iasi", execute(new DocumentsIasi()))
                 .path("/documents/jena", execute(new DocumentsJena()))
+                .path("/documents/linz", execute(new DocumentsLinz()))
                 .path("/documents/pavia", execute(new DocumentsPavia()))
                 .path("/documents/poitiers", execute(new DocumentsPoitiers()))
                 .path("/documents/salamanca", execute(new DocumentsSalamanca()))
                 .path("/documents/turku", execute(new DocumentsTurku()))
+                .path("/documents/umea", execute(new DocumentsUmea()))
 
                 .path("/events", execute(new Events.Reaper()))
                 .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
@@ -82,6 +84,7 @@ public final class Cron extends Delegator {
                 .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))
                 .path("/events/salamanca/university", execute(new EventsSalamancaUniversity()))
                 .path("/events/turku/university", execute(new EventsTurkuUniversity()))
+                .path("/events/umea/university", execute(new EventsUmeaUniversity()))
 
         ));
     }

@@ -74,29 +74,37 @@ cron:
     url: /cron/documents/coimbra
     schedule: every day 00:30
 
-  - description: "documents › jena - nightly crawling"
-    url: /cron/documents/jena
-    schedule: every day 00:31
-
   - description: "documents › iasi - nightly crawling"
     url: /cron/documents/iasi
+    schedule: every day 00:31
+
+  - description: "documents › jena - nightly crawling"
+    url: /cron/documents/jena
     schedule: every day 00:32
+
+  - description: "documents › linz - nightly crawling"
+    url: /cron/documents/linz
+    schedule: every day 00:33
 
   - description: "documents › pavia - nightly crawling"
     url: /cron/documents/pavia
-    schedule: every day 00:33
+    schedule: every day 00:34
 
   - description: "documents › poitiers - nightly crawling"
     url: /cron/documents/poitiers
-    schedule: every day 00:34
+    schedule: every day 00:35
 
   - description: "documents › salamanca - nightly crawling"
     url: /cron/documents/salamanca
-    schedule: every day 00:35
+    schedule: every day 00:36
 
   - description: "documents › turku - nightly crawling"
     url: /cron/documents/turku
-    schedule: every day 00:36
+    schedule: every day 00:37
+
+  - description: "documents › umea - nightly crawling"
+    url: /cron/documents/umea
+    schedule: every day 00:38
 
 
   - description: "events › coimbra › university - nightly crawling"
@@ -131,6 +139,10 @@ cron:
     url: /cron/events/turku/university
     schedule: every day 00:47
 
+  - description: "events › umea › university - nightly crawling"
+    url: /cron/events/umea/university
+    schedule: every day 00:48
+
   - description: "events - nightly housekeeping"
     url: /cron/events
-    schedule: every day 00:48
+    schedule: every day 00:49
