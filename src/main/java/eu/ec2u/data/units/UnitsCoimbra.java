@@ -222,7 +222,7 @@ public final class UnitsCoimbra implements Runnable {
     private Optional<PersonFrame> head(final Value json) {
         return json.get("surname").string().flatMap(surname ->
                 json.get("forename").string().flatMap(forename ->
-                        person(COIMBRA, surname, forename)
+                        person(COIMBRA, forename, surname)
                 )
         );
     }

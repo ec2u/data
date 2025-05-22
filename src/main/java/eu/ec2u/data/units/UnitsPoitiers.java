@@ -25,9 +25,8 @@ import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.taxonomies.Topic;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.net.URI;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -41,7 +40,6 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.UNITS;
 import static eu.ec2u.data.universities.University.POITIERS;
@@ -63,14 +61,9 @@ public final class UnitsPoitiers implements Runnable {
 
     @Override public void run() {
 
-        final String url="https://data.enseignementsup-recherche.gouv.fr"
-                +"/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"
-                +"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
-
         service(store()).modify(
 
-                array(list(Stream.of(url)
-                        .flatMap(this::units)
+                array(list(units()
                         .map(json -> async(() -> unit(json)))
                         .collect(joining())
                         .flatMap(identity())
@@ -82,7 +75,14 @@ public final class UnitsPoitiers implements Runnable {
     }
 
 
-    private Stream<Value> units(final String url) {
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Stream<Value> units() {
+
+        final String url="https://data.enseignementsup-recherche.gouv.fr"
+                +"/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json"
+                +"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
+
         return Stream.of(url)
                 .flatMap(optional(new GET<>(new JSON())))
                 .flatMap(Value::values);
@@ -101,21 +101,14 @@ public final class UnitsPoitiers implements Runnable {
 
                             .id(UNITS.id().resolve(uuid(POITIERS, id)))
                             .university(POITIERS)
-                            .isDefinedBy(json.get("fiche_rnsr").uri().orElse(null))
-
-                            .homepage(set(json.get("site_web").uri().stream()))
+                            .isDefinedBy(source(json).orElse(null))
 
                             .identifier(id)
 
-                            .prefLabel(json.get("libelle").string()
-                                    .map(label -> map(entry(POITIERS.locale(), label)))
-                                    .orElse(null)
-                            )
+                            .homepage(set(homepage(json)))
 
-                            .altLabel(json.get("sigle").string()
-                                    .map(label -> map(entry(ROOT, label)))
-                                    .orElse(null)
-                            )
+                            .prefLabel(label(json).orElse(null))
+                            .altLabel(acronym(json).orElse(null))
 
                             .unitOf(set(POITIERS))
 
@@ -134,7 +127,24 @@ public final class UnitsPoitiers implements Runnable {
     }
 
 
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Optional<URI> source(final Value json) {
+        return json.get("fiche_rnsr").uri();
+    }
+
+    private Stream<URI> homepage(final Value json) {
+        return json.get("site_web").uri().stream();
+    }
+
+    private Optional<Map<Locale, String>> label(final Value json) {
+        return json.get("libelle").string()
+                .map(label -> map(entry(POITIERS.locale(), label)));
+    }
+
+    private Optional<Map<Locale, String>> acronym(final Value json) {
+        return json.get("sigle").string()
+                .map(label -> map(entry(ROOT, label)));
+    }
+
 
     private Stream<PersonFrame> heads(final Value json) {
 
@@ -148,7 +158,7 @@ public final class UnitsPoitiers implements Runnable {
                     final String forename=forenames.get(index);
                     final String surname=surnames.get(index);
 
-                    return Person.person(POITIERS, surname, forename);
+                    return Person.person(POITIERS, forename, surname);
 
                 })
 
@@ -164,7 +174,7 @@ public final class UnitsPoitiers implements Runnable {
     private Stream<Topic> subject(final Value json) {
         return json.select("domaine_scientifique.*").strings()
                 .distinct()
-                .flatMap(euroscivoc())
+                .flatMap(Unit.euroscivoc())
                 .limit(1);
     }
 

@@ -72,7 +72,7 @@ public interface Person extends Resource, FOAFPerson {
                 });
     }
 
-    static Optional<PersonFrame> person(final University university, final String surname, final String forename) {
+    static Optional<PersonFrame> person(final University university, final String forename, final String surname) {
         return review(new PersonFrame()
 
                 .id(Persons.PERSONS.id().resolve(uuid(university, join(", ", surname, forename))))
