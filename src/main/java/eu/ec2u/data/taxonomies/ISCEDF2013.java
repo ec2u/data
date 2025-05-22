@@ -72,7 +72,7 @@ public final class ISCEDF2013 implements Runnable {
             +"&fileName=international-education-classification-skos-ap-eu.rdf";
 
 
-    private static final TaxonomyFrame ISCEDF2013=new TaxonomyFrame()
+    public static final TaxonomyFrame ISCEDF2013=new TaxonomyFrame()
             .id(TAXONOMIES.id().resolve("isced-f-2013"))
             .version(VERSION)
 

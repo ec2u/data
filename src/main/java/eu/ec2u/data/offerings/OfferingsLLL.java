@@ -52,6 +52,7 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Loggers.time;
+import static com.metreeca.shim.Strings.split;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -62,6 +63,7 @@ import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.taxonomies.ISCED2011.*;
+import static eu.ec2u.data.taxonomies.ISCEDF2013.ISCEDF2013;
 import static eu.ec2u.data.taxonomies.SDGs.SDGS;
 import static eu.ec2u.data.universities.Universities.UNIVERSITIES;
 import static eu.ec2u.data.universities.University.PARTNERS;
@@ -81,7 +83,8 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
     );
 
 
-    private static final Pattern FuzzyDecimalPattern=Pattern.compile("^\\s*(\\d+(?:\\.\\d+)?)");
+    private static final Pattern SUBJECT_PATTERN=Pattern.compile("^\\s*(\\d{2,4})");
+    private static final Pattern FUZZY_DECIMAL_PATTERN=Pattern.compile("^\\s*(\\d+(?:\\.\\d+)?)");
 
 
     public static void main(final String... args) {
@@ -135,7 +138,7 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
 
                         // !!! Study degree course (in English)
 
-                        .courseCode(value(record, "University Course code").orElse(null))
+                        .courseCode(courseCode(record).orElse(null))
 
                         .name(map(name(record, university)))
 
@@ -155,16 +158,7 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                         // !!! Academic year in which the course is being offered
 
                         .inLanguage(set(inLanguage(record).stream()))
-
-                        .about(set(sdgs(record)))
-
-                        // .about(value(record, "Narrow field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf").stream()
-                        //         .flatMap(this::subjects) // !!! only if detailed field is not provided
-                        // )
-                        //
-                        // .about(value(record, "If available write the Detailed field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf    ").stream()
-                        //         .flatMap(this::subjects)
-                        // )
+                        .about(set(Stream.concat(sdgs(record), subjects(record))))
 
                         .courseMode(courseMode(record).orElse(null))
 
@@ -229,6 +223,10 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                 );
     }
 
+    private Optional<String> courseCode(final CSVRecord record) {
+        return value(record, "University Course code");
+    }
+
     private Stream<Map.Entry<Locale, String>> name(final CSVRecord record, final University university) {
         return Stream.concat(
                 value(record, "Course Title (in English)").map(v -> entry(EN, v)).stream(),
@@ -277,6 +275,19 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                 .map(n -> new TopicFrame(true).id(uri("%s/%s".formatted(SDGS.id(), n))));
     }
 
+    private Stream<TopicFrame> subjects(final CSVRecord record) {
+        return value(record, "If available write the Detailed field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf    ")
+                .or(() -> value(record, "Narrow field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf"))
+                .stream()
+
+                .flatMap(s -> split(s, ";"))
+                .map(SUBJECT_PATTERN::matcher) // remove trailing description
+                .filter(Matcher::find)
+                .map(matcher -> matcher.group(1))
+                .map(code -> uri(format("%s/%s", ISCEDF2013.id(), code))) // !!! validate
+                .map(id1 -> new TopicFrame(true).id(id1));
+    }
+
     private Optional<EventAttendanceModeEnumeration> courseMode(final CSVRecord record) {
         return value(record, "Teaching method (on-line/ in presence/ hybrid)")
                 .map(mode -> mode.toUpperCase(ROOT))
@@ -310,7 +321,7 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
     private static Optional<Double> decimal(final String text) {
         return Optional.of(text)
 
-                .map(FuzzyDecimalPattern::matcher)
+                .map(FUZZY_DECIMAL_PATTERN::matcher)
                 .filter(Matcher::find)
                 .map(matcher -> matcher.group(1))
 
@@ -324,16 +335,5 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
 
         return minutes == 0 ? Duration.ofHours(hours) : Duration.ofHours(hours).plus(Duration.ofMinutes(minutes));
     }
-
-
-    // private Stream<IRI> subjects(final String text) {
-    //     return Stream.of(text)
-    //             .flatMap(Strings::split)
-    //             .map(v -> Pattern.compile("^\\s*(\\d+)").matcher(v)) // remove trailing description
-    //             .filter(Matcher::find)
-    //             .map(matcher -> matcher.group(1))
-    //             .map(code -> format("%s/%s", ISCEDF2013.Scheme, code)) // !!! validate
-    //             .map(Frame::iri);
-    // }
 
 }

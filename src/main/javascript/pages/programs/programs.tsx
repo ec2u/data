@@ -89,7 +89,7 @@ export function DataPrograms() {
 				useOptions(programs, "timeToComplete", { type: period }) // !!! period >> range
 			}</TileOptions>
 
-			<TileOptions placeholder={"Subjects"} compact as={value => toEntryString(value)}>{
+			<TileOptions placeholder={"Subjects"} compact>{
 				useOptions(programs, "about", { type: entry({ id: "", label: required(text) }), size: 10 })
 			}</TileOptions>
 

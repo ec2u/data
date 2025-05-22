@@ -44,7 +44,7 @@ import static com.metreeca.shim.Collections.set;
 import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Resource.localize;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
+import static eu.ec2u.data.taxonomies.ISCEDF2013.ISCEDF2013;
 import static eu.ec2u.work.shim.Streams.nullable;
 import static java.util.Comparator.comparing;
 import static java.util.function.Predicate.not;
@@ -108,7 +108,7 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
 
 
     static Taxonomies.Matcher iscedf() {
-        return new Taxonomies.Matcher(EUROSCIVOC) // !!! ISCEDF-2013
+        return new Taxonomies.Matcher(ISCEDF2013)
                 .narrowing(1.1)
                 .tolerance(0.1);
     }

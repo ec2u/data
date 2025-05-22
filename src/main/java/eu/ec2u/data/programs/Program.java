@@ -43,7 +43,7 @@ import static com.metreeca.shim.Collections.set;
 import static eu.ec2u.data.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Resource.localize;
-import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
+import static eu.ec2u.data.taxonomies.ISCEDF2013.ISCEDF2013;
 import static java.util.function.Predicate.not;
 
 
@@ -103,7 +103,7 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
 
 
     static Taxonomies.Matcher iscedf() {
-        return new Taxonomies.Matcher(EUROSCIVOC) // !!! ISCED-F
+        return new Taxonomies.Matcher(ISCEDF2013)
                 .narrowing(1.1)
                 .tolerance(0.1);
     }
