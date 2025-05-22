@@ -302,7 +302,7 @@ public interface Units extends Dataset {
         }
 
         private Optional<PersonFrame> head(final CSVRecord record) {
-            return value(record, "Head", person -> person(person, university));
+            return value(record, "Head", person -> person(university, person));
         }
 
     }

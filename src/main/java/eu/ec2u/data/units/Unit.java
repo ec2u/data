@@ -19,11 +19,11 @@ package eu.ec2u.data.units;
 import com.metreeca.flow.Xtream;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.text.services.Translator;
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Forward;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
 
+import eu.ec2u.data.agents.FOAFPerson;
+import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
@@ -199,9 +199,9 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
         return unit // translate also customized labels/comments ;(translated text must be clipped again)
                 .label(Reference.label(translator.texts(unit.label(), source, EN)))
                 .comment(Reference.comment(translator.texts(unit.comment(), source, EN)))
-                .prefLabel(translator.texts(unit.prefLabel(), source, EN))
-                .altLabel(translator.texts(unit.altLabel(), source, EN))
-                .definition(translator.texts(unit.definition(), source, EN));
+                .prefLabel(OrgOrganization.label(translator.texts(unit.prefLabel(), source, EN)))
+                .altLabel(OrgOrganization.label(translator.texts(unit.altLabel(), source, EN)))
+                .definition(OrgOrganization.definition(translator.texts(unit.definition(), source, EN)));
     }
 
     private static UnitFrame classify(final UnitFrame unit) {
@@ -250,6 +250,15 @@ public interface Unit extends Resource, OrgOrganizationalUnit {
     default Units collection() {
         return UNITS;
     }
+
+
+    @Override
+    @Embedded
+    Set<FOAFPerson> hasHead();
+
+    @Override
+    @Embedded
+    Set<FOAFPerson> hasMember();
 
 
     @Forward("dct:")

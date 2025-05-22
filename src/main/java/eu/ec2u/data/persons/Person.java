@@ -34,6 +34,7 @@ import static com.metreeca.shim.Strings.normalize;
 
 import static eu.ec2u.data.universities.University.uuid;
 import static java.lang.String.format;
+import static java.lang.String.join;
 
 @Frame
 @Class
@@ -45,7 +46,7 @@ public interface Person extends Resource, FOAFPerson {
     );
 
 
-    static Optional<PersonFrame> person(final String string, final University university) {
+    static Optional<PersonFrame> person(final University university, final String string) {
         return Optional.of(string)
 
                 .map(PERSON_PATTERN::matcher)
@@ -70,6 +71,20 @@ public interface Person extends Resource, FOAFPerson {
 
                 });
     }
+
+    static Optional<PersonFrame> person(final University university, final String surname, final String forename) {
+        return review(new PersonFrame()
+
+                .id(Persons.PERSONS.id().resolve(uuid(university, join(", ", surname, forename))))
+                .university(university)
+                .collection(Persons.PERSONS)
+
+                .givenName(forename)
+                .familyName(surname)
+
+        );
+    }
+
 
 
     static Optional<PersonFrame> review(final PersonFrame person) {

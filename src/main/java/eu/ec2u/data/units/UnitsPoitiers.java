@@ -21,8 +21,8 @@ import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
 
+import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.persons.PersonFrame;
-import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.taxonomies.Topic;
 
 import java.util.List;
@@ -41,7 +41,6 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.persons.Person.review;
 import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.units.Units.UNITS;
@@ -50,7 +49,6 @@ import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.shim.Futures.joining;
 import static eu.ec2u.work.shim.Streams.concat;
 import static eu.ec2u.work.shim.Streams.optional;
-import static java.lang.String.join;
 import static java.util.Locale.ROOT;
 import static java.util.function.UnaryOperator.identity;
 
@@ -150,15 +148,7 @@ public final class UnitsPoitiers implements Runnable {
                     final String forename=forenames.get(index);
                     final String surname=surnames.get(index);
 
-                    return review(new PersonFrame() // !!! factor
-
-                            .id(Persons.PERSONS.id().resolve(uuid(POITIERS, join(", ", surname, forename))))
-                            .university(POITIERS)
-                            .collection(Persons.PERSONS)
-
-                            .givenName(forename)
-                            .familyName(surname)
-                    );
+                    return Person.person(POITIERS, surname, forename);
 
                 })
 

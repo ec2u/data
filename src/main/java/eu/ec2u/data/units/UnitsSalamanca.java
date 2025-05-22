@@ -128,7 +128,7 @@ public final class UnitsSalamanca implements Runnable {
             final URI uri=UNITS.id().resolve(uuid(SALAMANCA, id));
 
             final Optional<PersonFrame> head=json.get("head").string()
-                    .flatMap(p -> person(p, SALAMANCA));
+                    .flatMap(p -> person(SALAMANCA, p));
 
             final Optional<UnitFrame> department=department(json);
             final Optional<UnitFrame> institute=institute(json);

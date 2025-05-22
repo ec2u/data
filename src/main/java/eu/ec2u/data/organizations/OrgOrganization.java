@@ -18,6 +18,7 @@ package eu.ec2u.data.organizations;
 
 import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
+import com.metreeca.mesh.meta.shacl.MaxLength;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.agents.FOAFOrganization;
@@ -43,6 +44,21 @@ import static java.util.function.Predicate.not;
 @Namespace(prefix="skos", value="http://www.w3.org/2004/02/skos/core#")
 @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
 public interface OrgOrganization extends FOAFOrganization {
+
+    int LABEL_LENGTH=100;
+    int DEFINITION_LENGTH=1_000;
+
+
+    static Map<Locale, String> label(final Map<Locale, String> name) {
+        return Reference.clip(LABEL_LENGTH, name);
+    }
+
+    static Map<Locale, String> definition(final Map<Locale, String> description) {
+        return Reference.clip(DEFINITION_LENGTH, description);
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     default Map<Locale, String> label() {
@@ -73,14 +89,17 @@ public interface OrgOrganization extends FOAFOrganization {
     @Required
     @Localized
     @Forward("skos:")
+    @MaxLength(LABEL_LENGTH)
     Map<Locale, String> prefLabel();
 
     @Localized
     @Forward("skos:")
+    @MaxLength(LABEL_LENGTH)
     Map<Locale, String> altLabel();
 
     @Localized
     @Forward("skos:")
+    @MaxLength(DEFINITION_LENGTH)
     Map<Locale, String> definition();
 
 

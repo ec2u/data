@@ -16,8 +16,6 @@
 
 package eu.ec2u.data.units;
 
-import com.metreeca.flow.Xtream;
-import com.metreeca.flow.actions.Fill;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.services.Logger;
@@ -28,14 +26,12 @@ import com.metreeca.shim.Collections;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.persons.PersonFrame;
-import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.taxonomies.Topic;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -50,16 +46,14 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.persons.Person.review;
+import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Localized.PT;
-import static eu.ec2u.data.units.Unit.euroscivoc;
 import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.COIMBRA;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.shim.Streams.concat;
 import static eu.ec2u.work.shim.Streams.optional;
-import static java.lang.String.join;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
 
@@ -84,8 +78,7 @@ public final class UnitsCoimbra implements Runnable {
     public void run() {
         service(store()).modify(
 
-                array(list(Xtream.of(Instant.EPOCH)
-                        .flatMap(this::units)
+                array(list(units()
                         .flatMap(this::unit)
                 )),
 
@@ -97,16 +90,12 @@ public final class UnitsCoimbra implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<Value> units(final Instant updated) {
+    private Stream<Value> units() {
 
         final String url=vault.get(API_URL);
         final String key=service(vault()).get(API_KEY);
 
-        return Stream.of(updated)
-
-                .flatMap(new Fill<>()
-                        .model(url)
-                )
+        return Stream.of(url)
 
                 .flatMap(optional(new GET<>(new JSON(), request -> request
                         .header("Key", key)
@@ -159,7 +148,7 @@ public final class UnitsCoimbra implements Runnable {
                             .classification(set(classification(json).stream()))
 
                             .subject(set(Stream.concat(
-                                    sector(json).stream(), // !!! review property
+                                    sector(json).stream(),
                                     subjects(json)
                             )))
                     ),
@@ -180,14 +169,14 @@ public final class UnitsCoimbra implements Runnable {
         return json.get("email").string().flatMap(Reference::email).stream();
     }
 
-    private Stream<Map.Entry<Locale, String>> altLabel(final Value json) {
+    private Stream<Entry<Locale, String>> altLabel(final Value json) {
         return json.get("acronym_en").string()
                 .filter(not(String::isEmpty))
                 .map(v -> entry(ROOT, v))
                 .stream();
     }
 
-    private Stream<Map.Entry<Locale, String>> prefLabel(final Value json) {
+    private Stream<Entry<Locale, String>> prefLabel(final Value json) {
         return Stream.concat(
 
                 json.get("name_en").string()
@@ -203,7 +192,7 @@ public final class UnitsCoimbra implements Runnable {
         );
     }
 
-    private Stream<Map.Entry<Locale, String>> definition(final Value json) {
+    private Stream<Entry<Locale, String>> definition(final Value json) {
         return Stream.concat(
 
                 json.get("description_en").string()
@@ -228,15 +217,7 @@ public final class UnitsCoimbra implements Runnable {
     private Optional<PersonFrame> head(final Value json) {
         return json.get("surname").string().flatMap(surname ->
                 json.get("forename").string().flatMap(forename ->
-                        review(new PersonFrame() // !!! factor
-
-                                .id(Persons.PERSONS.id().resolve(uuid(COIMBRA, join(", ", surname, forename))))
-                                .university(COIMBRA)
-                                .collection(Persons.PERSONS)
-
-                                .givenName(forename)
-                                .familyName(surname)
-                        )
+                        person(COIMBRA, surname, forename)
                 )
         );
     }
@@ -245,13 +226,13 @@ public final class UnitsCoimbra implements Runnable {
         return json.get("knowledge_branch_en").string()
                 .or(() -> json.get("knowledge_branch_pt").string())
                 .stream()
-                .flatMap(euroscivoc())
+                .flatMap(Unit.euroscivoc())
                 .findFirst();
     }
 
     private Stream<Topic> subjects(final Value json) {
         return json.select("topics.*.name_en").strings()
-                .flatMap(euroscivoc());
+                .flatMap(Unit.euroscivoc());
     }
 
 }

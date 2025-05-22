@@ -334,11 +334,11 @@ public interface Documents extends Dataset {
         }
 
         private Optional<PersonFrame> creator(final CSVRecord record) {
-            return value(record, "Contact", person -> person(person, university));
+            return value(record, "Contact", person -> person(university, person));
         }
 
         private Optional<Set<PersonFrame>> contributor(final CSVRecord record) {
-            return Optional.of(values(record, "Contributor", person -> person(person, university)))
+            return Optional.of(values(record, "Contributor", person -> person(university, person)))
                     .map(Collections::set);
         }
 
