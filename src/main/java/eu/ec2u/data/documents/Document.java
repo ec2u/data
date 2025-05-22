@@ -19,10 +19,8 @@ package eu.ec2u.data.documents;
 import com.metreeca.flow.Xtream;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.text.services.Translator;
+import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Forward;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.MaxLength;
 import com.metreeca.mesh.meta.shacl.Required;
 
@@ -31,11 +29,8 @@ import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.resources.Localized;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EC2UDocuments;
-import eu.ec2u.data.taxonomies.EC2UStakeholders;
+import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.work.ai.Embedder;
 
 import java.net.URI;
@@ -44,6 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
@@ -52,6 +48,9 @@ import static com.metreeca.shim.Collections.set;
 import static eu.ec2u.data.documents.Documents.DOCUMENTS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Resource.localize;
+import static eu.ec2u.data.taxonomies.EC2UDocuments.EC2U_DOCUMENTS;
+import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
+import static java.util.function.Predicate.not;
 
 @Frame
 @Class("ec2u:")
@@ -61,10 +60,6 @@ public interface Document extends Resource {
 
     int TITLE_LENGTH=500;
     int DESCRIPTION_LENGTH=5000;
-
-    double TYPE_THRESHOLD=0.6;
-    double SUBJECT_THRESHOLD=0.6;
-    double AUDIENCE_THRESHOLD=0.6;
 
 
     static Optional<DocumentFrame> review(final DocumentFrame document) {
@@ -94,24 +89,29 @@ public interface Document extends Resource {
     }
 
     private static DocumentFrame type(final DocumentFrame document) {
-        return document.type().isEmpty() ? document.type(set(Resources
-                .match(EC2UDocuments.EC2U_DOCUMENTS.id(), embeddable(document), TYPE_THRESHOLD)
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(3)
-        )) : document;
+        return document.type(Optional.ofNullable(document.type())
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(Stream.of(embeddable(document))
+                        .flatMap(documents())
+                        .limit(3)
+                ))
+        );
     }
 
     private static DocumentFrame subject(final DocumentFrame document) {
-        return document;
+        return document; // !!!
     }
 
     private static DocumentFrame audience(final DocumentFrame document) {
-        return document.audience().isEmpty() ? document.audience(set(Resources
-                .match(EC2UStakeholders.EC2U_STAKEHOLDERS.id(), embeddable(document), AUDIENCE_THRESHOLD)
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(1)
-        )) : document;
+        return document.audience(Optional.ofNullable(document.audience())
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(Stream.of(embeddable(document))
+                        .flatMap(stakeholders())
+                        .limit(1)
+                ))
+        );
     }
+
 
     private static String embeddable(final Document document) {
         return Embedder.embeddable(set(Xtream.from(
@@ -119,6 +119,19 @@ public interface Document extends Resource {
                 Optional.ofNullable(document.description().get(EN)).stream()
         )));
     }
+
+
+    private static Taxonomies.Matcher documents() {
+        return new Taxonomies.Matcher(EC2U_DOCUMENTS)
+                .threshold(0.6);
+    }
+
+    private static Taxonomies.Matcher stakeholders() {
+        return new Taxonomies.Matcher(EC2U_STAKEHOLDERS)
+                .threshold(0.6);
+    }
+
+
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,10 +172,13 @@ public interface Document extends Resource {
     Map<Locale, String> description();
 
 
+    @Embedded
     Person creator();
 
+    @Embedded
     Set<Person> contributor();
 
+    @Embedded
     OrgOrganization publisher();
 
 
@@ -188,6 +204,7 @@ public interface Document extends Resource {
     Set<Topic> subject();
 
     Set<Topic> audience();
+
 
     Set<Document> relation();
 

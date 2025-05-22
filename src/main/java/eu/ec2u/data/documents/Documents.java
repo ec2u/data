@@ -121,52 +121,36 @@ public interface Documents extends Dataset {
 
         @Override
         protected Stream<Valuable> process(final CSVRecord record, final Collection<CSVRecord> records) {
-            return id(record).stream().flatMap(id -> {
+            return id(record).stream().flatMap(id -> concat(review(new DocumentFrame()
 
-                final Optional<OrgOrganizationFrame> publisher=publisher(record);
-                final Optional<PersonFrame> creator=creator(record);
-                final Optional<Set<PersonFrame>> contributor=contributor(record);
+                    .generated(true)
 
-                return concat(
+                    .id(id)
+                    .university(university)
 
-                        review(new DocumentFrame()
+                    .url(set(url(record)))
+                    .identifier(identifier(record).orElse(null))
+                    .language(set(language(record)))
 
-                                .generated(true)
+                    .title(map(title(record)))
+                    .description(map(description(record)))
 
-                                .id(id)
-                                .university(university)
+                    .publisher(publisher(record).orElse(null))
+                    .creator(creator(record).orElse(null))
+                    .contributor(contributor(record).orElse(null))
 
-                                .url(set(url(record)))
-                                .identifier(identifier(record).orElse(null))
-                                .language(set(language(record)))
+                    .created(created(record).orElse(null))
+                    .issued(issued(record).orElse(null))
+                    .modified(modified(record).orElse(null))
+                    .valid(valid(record).orElse(null))
 
-                                .title(map(title(record)))
-                                .description(map(description(record)))
+                    .rights(rights(record).orElse(null))
+                    .accessRights(accessRights(record).orElse(null))
+                    .license(license(record).orElse(null))
 
-                                .publisher(publisher.orElse(null))
-                                .creator(creator.orElse(null))
-                                .contributor(contributor.orElse(null))
+                    .relation(set(relation(record, records)))
 
-                                .created(created(record).orElse(null))
-                                .issued(issued(record).orElse(null))
-                                .modified(modified(record).orElse(null))
-                                .valid(valid(record).orElse(null))
-
-                                .rights(rights(record).orElse(null))
-                                .accessRights(accessRights(record).orElse(null))
-                                .license(license(record).orElse(null))
-
-                                .relation(set(relation(record, records)))
-
-                        ).stream(),
-
-                        publisher.stream(),
-                        creator.stream(),
-                        contributor.stream().flatMap(Collection::stream)
-
-                );
-
-            });
+            )));
         }
 
 
