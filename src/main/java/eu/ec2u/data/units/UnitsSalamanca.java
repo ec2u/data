@@ -27,14 +27,12 @@ import com.metreeca.mesh.Value;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.persons.PersonFrame;
+import eu.ec2u.data.taxonomies.Topic;
 import org.apache.commons.csv.CSVFormat;
 
 import java.net.URI;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
@@ -141,23 +139,9 @@ public final class UnitsSalamanca implements Runnable {
 
                     .university(SALAMANCA)
 
-                    .prefLabel(json.get("name").string()
-                            .filter(not(String::isEmpty))
-                            .map(v -> map(entry(SALAMANCA.locale(), v)))
-                            .orElse(null)
-                    )
-
-                    .altLabel(json.get("acronym").string()
-                            .filter(not(String::isEmpty))
-                            .map(v -> map(entry(ROOT, v)))
-                            .orElse(null)
-                    )
-
-                    .definition(json.get("topics").string()
-                            .filter(not(String::isEmpty))
-                            .map(v -> map(entry(SALAMANCA.locale(), v)))
-                            .orElse(null)
-                    )
+                    .prefLabel(label(json).orElse(null))
+                    .altLabel(acronym(json).orElse(null))
+                    .definition(definition(json).orElse(null))
 
                     .classification(set(RECOGNIZED_GROUP))
 
@@ -173,24 +157,11 @@ public final class UnitsSalamanca implements Runnable {
                     .hasHead(set(head.stream()))
                     .hasMember(set(head.stream()))
 
-                    .homepage(set(json.get("group_scientific_portal_url").string()
-                            .filter(not(String::isEmpty))
-                            .map(URIs::uri)
-                            .stream()
-                    ))
+                    .homepage(set(homepage(json)))
 
                     .subject(set(Stream.concat(
-
-                            json.get("knowledge_branch").string().stream()
-                                    .flatMap(v -> split(v, "[,;]"))
-                                    .flatMap(euroscivoc())
-                                    .limit(1),
-
-                            json.get("RIS3").string().stream()
-                                    .flatMap(v -> split(v, "[,;]"))
-                                    .flatMap(euroscivoc())
-                                    .limit(1)
-
+                            branch(json),
+                            RIS3(json)
                     )))
 
             );
@@ -206,6 +177,47 @@ public final class UnitsSalamanca implements Runnable {
             );
 
         });
+    }
+
+
+    private Optional<Map<Locale, String>> label(final Value json) {
+        return json.get("name").string()
+                .filter(not(String::isEmpty))
+                .map(v -> map(entry(SALAMANCA.locale(), v)));
+    }
+
+    private Optional<Map<Locale, String>> acronym(final Value json) {
+        return json.get("acronym").string()
+                .filter(not(String::isEmpty))
+                .map(v -> map(entry(ROOT, v)));
+    }
+
+    private Optional<Map<Locale, String>> definition(final Value json) {
+        return json.get("topics").string()
+                .filter(not(String::isEmpty))
+                .map(v -> map(entry(SALAMANCA.locale(), v)));
+    }
+
+    private Stream<URI> homepage(final Value json) {
+        return json.get("group_scientific_portal_url").string()
+                .filter(not(String::isEmpty))
+                .map(URIs::uri)
+                .stream();
+    }
+
+
+    private Stream<Topic> branch(final Value json) {
+        return json.get("knowledge_branch").string().stream()
+                .flatMap(v -> split(v, "[,;]"))
+                .flatMap(euroscivoc())
+                .limit(1);
+    }
+
+    private Stream<Topic> RIS3(final Value json) {
+        return json.get("RIS3").string().stream()
+                .flatMap(v -> split(v, "[,;]"))
+                .flatMap(euroscivoc())
+                .limit(1);
     }
 
 
