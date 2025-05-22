@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.things;
+package eu.ec2u.data.vocabularies.skos;
 
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.shacl.Required;
+import com.metreeca.mesh.meta.jsonld.Foreign;
+import com.metreeca.mesh.meta.jsonld.Hidden;
+import com.metreeca.mesh.meta.jsonld.Reverse;
 
-@Frame
-@Class("schema:Place")
-public interface SchemaPlace extends SchemaThing {
+import java.util.Set;
 
-    SchemaPostalAddress address();
+@Class("skos:ConceptScheme")
+@SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
+public interface SKOSConceptScheme<S extends SKOSConceptScheme<S, C>, C extends SKOSConcept<S, C>> extends SKOS {
 
+    @Foreign
+    @Reverse("skos:topConceptOf")
+    Set<C> hasTopConcept();
 
-    @Required
-    double latitude();
-
-    @Required
-    double longitude();
+    @Hidden
+    @Foreign
+    @Reverse("skos:inScheme")
+    Set<C> hasConcept();
 
 }

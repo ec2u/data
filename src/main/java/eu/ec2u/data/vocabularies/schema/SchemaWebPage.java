@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.things;
+package eu.ec2u.data.vocabularies.schema;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.shacl.Pattern;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.time.Instant;
 
 @Frame
-@Class("schema:Organization")
-public interface SchemaOrganization extends SchemaThing {
+@Class("schema:WebPage")
+public interface SchemaWebPage extends SchemaThing {
 
-    Map<Locale, String> legalName();
-
-    @Pattern(EMAIL_PATTERN)
-    Set<String> email();
-
-    @Pattern(PHONE_PATTERN)
-    Set<String> telephone();
+    Instant dateRetrieved();
 
 }

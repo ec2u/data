@@ -28,8 +28,10 @@ import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.things.SchemaLearningResource;
-import eu.ec2u.data.things.SchemaThing;
+import eu.ec2u.data.vocabularies.schema.SchemaCourse;
+import eu.ec2u.data.vocabularies.schema.SchemaCourseInstance;
+import eu.ec2u.data.vocabularies.schema.SchemaLearningResource;
+import eu.ec2u.data.vocabularies.schema.SchemaThing;
 import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;

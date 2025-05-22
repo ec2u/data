@@ -20,8 +20,8 @@ import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.taxonomies.Topic;
+import eu.ec2u.data.vocabularies.org.OrgOrganization;
 
 import java.time.LocalDate;
 import java.util.Locale;

@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations;
+package eu.ec2u.data.vocabularies.org;
 
 import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.shacl.MaxLength;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data.agents.FOAFOrganization;
-import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.resources.Localized;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.taxonomies.Topic;
+import eu.ec2u.data.vocabularies.foaf.FOAFOrganization;
+import eu.ec2u.data.vocabularies.foaf.FOAFPerson;
 
 import java.util.Locale;
 import java.util.Map;

@@ -24,6 +24,7 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
+import eu.ec2u.data.vocabularies.skos.SKOSConcept;
 import eu.ec2u.work.ai.Embedder;
 import eu.ec2u.work.ai.StoreEmbedder;
 import eu.ec2u.work.ai.Vector;

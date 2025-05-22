@@ -14,32 +14,23 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.things;
+package eu.ec2u.data.vocabularies.schema;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.shacl.MaxCount;
-import com.metreeca.mesh.meta.shacl.MinCount;
-
-import java.net.URI;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import com.metreeca.mesh.meta.shacl.Required;
 
 @Frame
-@Class("schema:ImageObject")
-public interface SchemaImageObject extends SchemaThing {
+@Class("schema:Place")
+public interface SchemaPlace extends SchemaThing {
 
-    @Override
-    @MinCount(1)
-    @MaxCount(1)
-    Set<URI> url();
+    SchemaPostalAddress address();
 
 
-    Map<Locale, String> caption();
+    @Required
+    double latitude();
 
-    String author();
-
-    String copyrightNotice();
+    @Required
+    double longitude();
 
 }

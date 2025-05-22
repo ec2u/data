@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.things;
+package eu.ec2u.data.vocabularies.foaf;
 
-import com.metreeca.mesh.meta.jsonld.Embedded;
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 @Frame
-public interface SchemaLocation {
-
-    String String();
-
-    @Embedded
-    SchemaPlace Place();
-
-    @Embedded
-    SchemaPostalAddress PostalAddress();
-
-    @Embedded
-    SchemaVirtualLocation VirtualLocation();
-
-}
+@Class("foaf:Organization")
+public interface FOAFOrganization extends FOAFAgent { }

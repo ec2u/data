@@ -23,11 +23,11 @@ import com.metreeca.mesh.meta.shacl.MinCount;
 import com.metreeca.mesh.meta.shacl.Required;
 import com.metreeca.shim.URIs;
 
-import eu.ec2u.data.organizations.OrgFormalOrganization;
-import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.resources.GeoReference;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
+import eu.ec2u.data.vocabularies.org.OrgFormalOrganization;
+import eu.ec2u.data.vocabularies.org.OrgOrganization;
 
 import java.net.URI;
 import java.time.Year;

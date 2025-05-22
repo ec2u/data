@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.programs;
+package eu.ec2u.data.vocabularies.schema;
 
-import com.metreeca.mesh.meta.jsonld.Foreign;
+import com.metreeca.mesh.meta.jsonld.Embedded;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
-import eu.ec2u.data.courses.Course;
-import eu.ec2u.data.resources.Localized;
-import eu.ec2u.data.things.SchemaLearningResource;
-
-import java.time.Period;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 @Frame
-public interface SchemaEducationalOccupationalProgram extends SchemaLearningResource {
+public interface SchemaLocation {
 
-    Period timeToComplete();
+    String String();
 
-    @Localized
-    Map<Locale, String> programPrerequisites();
+    @Embedded
+    SchemaPlace Place();
 
-    @Foreign
-    Set<Course> hasCourse();
+    @Embedded
+    SchemaPostalAddress PostalAddress();
+
+    @Embedded
+    SchemaVirtualLocation VirtualLocation();
 
 }

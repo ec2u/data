@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.courses;
+package eu.ec2u.data.vocabularies.schema;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.shacl.MaxCount;
+import com.metreeca.mesh.meta.shacl.MinCount;
 
-import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
-import eu.ec2u.data.persons.Person;
-import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.things.SchemaThing;
-
-import java.time.Duration;
+import java.net.URI;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 @Frame
-public interface SchemaCourseInstance extends SchemaThing {
+@Class("schema:ImageObject")
+public interface SchemaImageObject extends SchemaThing {
 
-    boolean isAccessibleForFree();
-
-    Duration courseWorkload();
-
-    EventAttendanceModeEnumeration courseMode();
-
-
-    Person instructor();
+    @Override
+    @MinCount(1)
+    @MaxCount(1)
+    Set<URI> url();
 
 
-    Set<Topic> audience(); // !!! EC2U Stakeholders
+    Map<Locale, String> caption();
+
+    String author();
+
+    String copyrightNotice();
 
 }

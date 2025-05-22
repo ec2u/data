@@ -14,23 +14,32 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations;
+package eu.ec2u.data.vocabularies.schema;
 
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.jsonld.Reverse;
-import com.metreeca.mesh.meta.shacl.Required;
-
-import java.util.Set;
+import com.metreeca.mesh.meta.shacl.Pattern;
 
 @Frame
-@Class("org:OrganizationalUnit")
-public interface OrgOrganizationalUnit extends OrgOrganization {
+@Class("schema:PostalAddress")
+public interface SchemaPostalAddress extends SchemaThing {
 
-    @Required
-    @Forward
-    @Reverse("org:hasUnit")
-    Set<OrgOrganization> unitOf();
+    String addressCountry();
+
+    String addressRegion();
+
+    String addressLocality();
+
+
+    String postalCode();
+
+    String streetAddress();
+
+
+    @Pattern(EMAIL_PATTERN)
+    String email();
+
+    @Pattern(PHONE_PATTERN)
+    String telephone();
 
 }

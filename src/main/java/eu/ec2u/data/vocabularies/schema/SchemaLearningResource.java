@@ -14,34 +14,52 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.courses;
+package eu.ec2u.data.vocabularies.schema;
 
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.shacl.Pattern;
+import com.metreeca.mesh.meta.shacl.MinInclusive;
 
+import eu.ec2u.data.organizations.Organization;
 import eu.ec2u.data.resources.Localized;
-import eu.ec2u.data.things.SchemaLearningResource;
+import eu.ec2u.data.taxonomies.Topic;
 
-import java.time.Duration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 @Frame
-public interface SchemaCourse extends SchemaLearningResource {
+public interface SchemaLearningResource extends SchemaThing {
 
     @Override
-    default String identifier() { return courseCode(); }
-
-    String courseCode();
+    default Map<Locale, String> description() { return teaches(); }
 
 
-    @Pattern("^[a-z]{2}$")
-    Set<String> inLanguage();
+    @MinInclusive("0.0")
+    double numberOfCredits();
 
-    Duration timeRequired();
 
     @Localized
-    Map<Locale, String> coursePrerequisites();
+    Map<Locale, String> teaches();
+
+    @Localized
+    Map<Locale, String> assesses();
+
+    @Localized
+    Map<Locale, String> competencyRequired();
+
+
+
+    @Localized
+    Map<Locale, String> educationalCredentialAwarded();
+
+    @Localized
+    Map<Locale, String> occupationalCredentialAwarded();
+
+
+    Organization provider();
+
+    Topic educationalLevel(); // !!! ISCED-2011
+
+    Set<Topic> about(); // !!! ISCED-F-2013
 
 }

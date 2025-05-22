@@ -16,7 +16,8 @@
 
 package eu.ec2u.data.taxonomies;
 
-import eu.ec2u.data.organizations.OrgOrganizationFrame;
+
+import eu.ec2u.data.vocabularies.org.OrgOrganizationFrame;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;

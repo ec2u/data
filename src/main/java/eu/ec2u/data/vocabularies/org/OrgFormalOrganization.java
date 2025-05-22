@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations;
+package eu.ec2u.data.vocabularies.org;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;

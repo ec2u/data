@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.agents;
+package eu.ec2u.data.vocabularies.org;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 @Frame
-@Class("foaf:Organization")
-public interface FOAFOrganization extends FOAFAgent { }
+@Class("org:OrganizationalCollaboration")
+public interface OrgOrganizationalCollaboration extends OrgOrganization { }

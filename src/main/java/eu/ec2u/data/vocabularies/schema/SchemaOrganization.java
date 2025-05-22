@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.things;
+package eu.ec2u.data.vocabularies.schema;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.shacl.MinCount;
+import com.metreeca.mesh.meta.shacl.Pattern;
 
-import java.net.URI;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 @Frame
-@Class("schema:VirtualLocation")
-public interface SchemaVirtualLocation extends SchemaThing {
+@Class("schema:Organization")
+public interface SchemaOrganization extends SchemaThing {
 
-    @Override
-    @MinCount(1)
-    Set<URI> url();
+    Map<Locale, String> legalName();
+
+    @Pattern(EMAIL_PATTERN)
+    Set<String> email();
+
+    @Pattern(PHONE_PATTERN)
+    Set<String> telephone();
 
 }

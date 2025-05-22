@@ -26,8 +26,9 @@ import com.metreeca.shim.Collections;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.taxonomies.Taxonomies;
-import eu.ec2u.data.things.SchemaImageObject;
-import eu.ec2u.data.things.SchemaOrganization;
+import eu.ec2u.data.vocabularies.org.OrgOrganization;
+import eu.ec2u.data.vocabularies.schema.SchemaImageObject;
+import eu.ec2u.data.vocabularies.schema.SchemaOrganization;
 import eu.ec2u.work.ai.Embedder;
 
 import java.net.URI;

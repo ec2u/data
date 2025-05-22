@@ -24,10 +24,10 @@ import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.courses.CourseFrame;
-import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.work.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 
@@ -58,7 +58,6 @@ import static com.metreeca.shim.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.courses.Course.review;
 import static eu.ec2u.data.courses.Courses.COURSES;
-import static eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.persons.Persons.PERSONS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
@@ -68,6 +67,7 @@ import static eu.ec2u.data.taxonomies.SDGs.SDGS;
 import static eu.ec2u.data.universities.Universities.UNIVERSITIES;
 import static eu.ec2u.data.universities.University.PARTNERS;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static java.lang.Math.floor;
 import static java.lang.Math.round;
 import static java.lang.String.format;

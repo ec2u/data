@@ -28,7 +28,8 @@ import eu.ec2u.data.organizations.Organization;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.taxonomies.Taxonomies;
-import eu.ec2u.data.things.SchemaThing;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalProgram;
+import eu.ec2u.data.vocabularies.schema.SchemaThing;
 import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;

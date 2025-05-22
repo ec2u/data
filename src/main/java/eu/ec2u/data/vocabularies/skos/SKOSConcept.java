@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.vocabularies.skos;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Foreign;

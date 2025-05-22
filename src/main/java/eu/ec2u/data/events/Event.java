@@ -27,6 +27,7 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.taxonomies.Taxonomies;
+import eu.ec2u.data.vocabularies.schema.SchemaEvent;
 import eu.ec2u.work.ai.Embedder;
 
 import java.time.ZonedDateTime;

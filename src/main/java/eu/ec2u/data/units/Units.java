@@ -28,12 +28,12 @@ import com.metreeca.shim.Collections;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.organizations.OrgOrganization;
-import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.data.vocabularies.org.OrgOrganization;
+import eu.ec2u.data.vocabularies.org.OrgOrganizationFrame;
 import eu.ec2u.work.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 
@@ -55,6 +55,7 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.persons.Person.person;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.units.Unit.*;
+import static eu.ec2u.data.units.Unit.review;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.shim.Streams.concat;
 import static java.lang.String.format;

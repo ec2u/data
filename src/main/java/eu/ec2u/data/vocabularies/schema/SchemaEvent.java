@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.events;
+package eu.ec2u.data.vocabularies.schema;
 
 import com.metreeca.mesh.meta.jsonld.Embedded;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.Required;
 
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.things.SchemaImageObject;
-import eu.ec2u.data.things.SchemaLocation;
-import eu.ec2u.data.things.SchemaOrganization;
-import eu.ec2u.data.things.SchemaThing;
 
 import java.net.URI;
 import java.time.Duration;

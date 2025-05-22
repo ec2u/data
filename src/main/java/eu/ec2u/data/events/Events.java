@@ -30,11 +30,11 @@ import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.organizations.OrganizationFrame;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.things.*;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
+import eu.ec2u.data.vocabularies.schema.*;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
@@ -61,9 +61,9 @@ import static com.metreeca.shim.URIs.uri;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Event.review;
-import static eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.universities.University.uuid;
+import static eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static eu.ec2u.work.shim.Futures.joining;
 import static eu.ec2u.work.shim.Streams.concat;

@@ -15,8 +15,6 @@
  */
 
 /**
- * Schema.org things.
- *
- * @see <a href="https://schema.org/">Schema.org</a>
+ * Well-known RDF vocabularies.
  */
-package eu.ec2u.data.things;
+package eu.ec2u.data.vocabularies;

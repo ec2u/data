@@ -27,10 +27,10 @@ import com.metreeca.shim.Collections;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.Dataset;
-import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.persons.PersonFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.data.vocabularies.org.OrgOrganizationFrame;
 import eu.ec2u.work.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 

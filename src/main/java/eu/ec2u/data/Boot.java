@@ -16,7 +16,6 @@
 
 package eu.ec2u.data;
 
-import eu.ec2u.data.agents.FOAFAgents;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
@@ -27,7 +26,6 @@ import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Taxonomies;
-import eu.ec2u.data.things.SchemaThings;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 
@@ -44,15 +42,13 @@ public final class Boot implements Runnable {
 
     @Override public void run() {
         EC2U.main();
-        Taxonomies.main();
-        Datasets.main();
         Resources.main();
+        Datasets.main();
+        Taxonomies.main();
+        Organizations.main();
         Universities.main();
         Units.main();
-        FOAFAgents.main();
-        Organizations.main();
         Persons.main();
-        SchemaThings.main();
         Offerings.main();
         Programs.main();
         Courses.main();

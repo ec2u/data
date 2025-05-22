@@ -24,13 +24,13 @@ import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.shacl.MaxLength;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data.organizations.OrgOrganization;
 import eu.ec2u.data.persons.Person;
 import eu.ec2u.data.resources.Localized;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.taxonomies.Topic;
+import eu.ec2u.data.vocabularies.org.OrgOrganization;
 import eu.ec2u.work.ai.Embedder;
 
 import java.net.URI;

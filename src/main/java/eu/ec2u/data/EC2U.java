@@ -16,25 +16,11 @@
 
 package eu.ec2u.data;
 
-import com.metreeca.flow.http.handlers.Delegator;
-import com.metreeca.flow.http.handlers.Router;
+import com.metreeca.mesh.meta.jsonld.Frame;
 
-import eu.ec2u.data.agents.FOAFAgents;
-import eu.ec2u.data.courses.Courses;
-import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.documents.Documents;
-import eu.ec2u.data.events.Events;
-import eu.ec2u.data.offerings.Offerings;
-import eu.ec2u.data.organizations.OrgOrganizationFrame;
-import eu.ec2u.data.organizations.Organizations;
-import eu.ec2u.data.persons.Persons;
-import eu.ec2u.data.programs.Programs;
+import eu.ec2u.data.organizations.Organization;
 import eu.ec2u.data.resources.ReferenceFrame;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.Taxonomies;
-import eu.ec2u.data.things.SchemaThings;
-import eu.ec2u.data.units.Units;
-import eu.ec2u.data.universities.Universities;
+import eu.ec2u.data.vocabularies.org.OrgOrganizationalCollaboration;
 
 import java.net.URI;
 import java.util.Map;
@@ -51,53 +37,30 @@ import static eu.ec2u.data.resources.Localized.EN;
 import static java.util.Locale.ROOT;
 
 
-public final class EC2U extends Delegator {
+@Frame
+public interface EC2U extends Organization, OrgOrganizationalCollaboration {
 
-    public static final String BASE="https://data.ec2u.eu/";
+    String BASE="https://data.ec2u.eu/";
 
-    public static final URI DATA=uri(BASE);
-    public static final URI LOADERS=DATA.resolve("loaders/");
+    URI DATA=uri(BASE);
 
 
-    public static final OrgOrganizationFrame EC2U=new OrgOrganizationFrame()
+    EC2UFrame EC2U=new EC2UFrame()
             .id(uri("https://ec2u.eu/"))
             .prefLabel(map(entry(EN, "European Campus of City-Universities")))
             .altLabel(map(entry(EN, "EC2U")));
 
-    public static final ReferenceFrame CCBYNCND40=new ReferenceFrame()
+
+    ReferenceFrame CCBYNCND40=new ReferenceFrame()
             .id(uri("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
             .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
             .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
 
-    public static final String COPYRIGHT="Copyright © 2022‑2025 EC2U Alliance";
+    String COPYRIGHT="Copyright © 2022‑2025 EC2U Alliance";
 
 
-    public static void main(final String... args) {
+    static void main(final String... args) {
         exec(() -> service(store()).insert(array(EC2U, CCBYNCND40)));
-    }
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public EC2U() {
-        delegate(new Router()
-
-                .path("/", new Datasets.Handler())
-                .path("/resources/*", new Resources.Handler())
-                .path("/taxonomies/*", new Taxonomies.Handler())
-                .path("/agents/*", new FOAFAgents.Handler())
-                .path("/organizations/*", new Organizations.Handler())
-                .path("/universities/*", new Universities.Handler())
-                .path("/units/*", new Units.Handler())
-                .path("/persons/*", new Persons.Handler())
-                .path("/documents/*", new Documents.Handler())
-                .path("/things/*", new SchemaThings.Handler())
-                .path("/offerings/*", new Offerings.Handler())
-                .path("/programs/*", new Programs.Handler())
-                .path("/courses/*", new Courses.Handler())
-                .path("/events/*", new Events.Handler())
-
-        );
     }
 
 }

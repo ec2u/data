@@ -14,32 +14,21 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.things;
+package eu.ec2u.data.vocabularies.schema;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.meta.shacl.Pattern;
+import com.metreeca.mesh.meta.shacl.MinCount;
+
+import java.net.URI;
+import java.util.Set;
 
 @Frame
-@Class("schema:PostalAddress")
-public interface SchemaPostalAddress extends SchemaThing {
+@Class("schema:VirtualLocation")
+public interface SchemaVirtualLocation extends SchemaThing {
 
-    String addressCountry();
-
-    String addressRegion();
-
-    String addressLocality();
-
-
-    String postalCode();
-
-    String streetAddress();
-
-
-    @Pattern(EMAIL_PATTERN)
-    String email();
-
-    @Pattern(PHONE_PATTERN)
-    String telephone();
+    @Override
+    @MinCount(1)
+    Set<URI> url();
 
 }

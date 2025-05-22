@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.organizations;
+package eu.ec2u.data.vocabularies.skos;
 
-import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 
-@Frame
-@Class("org:OrganizationalCollaboration")
-public interface OrgOrganizationalCollaboration extends OrgOrganization { }
+import eu.ec2u.data.resources.Reference;
+
+@Namespace(prefix="[skos]", value="http://www.w3.org/2004/02/skos/core#")
+public interface SKOS extends Reference { }

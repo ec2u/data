@@ -24,12 +24,12 @@ import com.metreeca.mesh.meta.jsonld.Forward;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import eu.ec2u.data.organizations.OrgOrganization;
-import eu.ec2u.data.organizations.OrgOrganizationalUnit;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.taxonomies.Taxonomies.Matcher;
 import eu.ec2u.data.taxonomies.Topic;
+import eu.ec2u.data.vocabularies.org.OrgOrganization;
+import eu.ec2u.data.vocabularies.org.OrgOrganizationalUnit;
 import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;

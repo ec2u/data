@@ -14,11 +14,33 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.vocabularies.schema;
 
-import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.shacl.Pattern;
 
-import eu.ec2u.data.resources.Reference;
+import eu.ec2u.data.resources.Localized;
 
-@Namespace(prefix="[skos]", value="http://www.w3.org/2004/02/skos/core#")
-public interface SKOS extends Reference { }
+import java.time.Duration;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+@Frame
+public interface SchemaCourse extends SchemaLearningResource {
+
+    @Override
+    default String identifier() { return courseCode(); }
+
+    String courseCode();
+
+
+    @Pattern("^[a-z]{2}$")
+    Set<String> inLanguage();
+
+    Duration timeRequired();
+
+    @Localized
+    Map<Locale, String> coursePrerequisites();
+
+}

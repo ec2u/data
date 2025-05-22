@@ -22,9 +22,9 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.shim.Strings;
 
-import eu.ec2u.data.agents.FOAFPerson;
 import eu.ec2u.data.resources.Resource;
 import eu.ec2u.data.universities.University;
+import eu.ec2u.data.vocabularies.foaf.FOAFPerson;
 
 import java.util.Optional;
 import java.util.regex.Matcher;

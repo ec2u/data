@@ -14,17 +14,30 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.things;
+package eu.ec2u.data.vocabularies.schema;
 
-import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
-import java.time.Instant;
+import eu.ec2u.data.persons.Person;
+import eu.ec2u.data.taxonomies.Topic;
+import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
+
+import java.time.Duration;
+import java.util.Set;
 
 @Frame
-@Class("schema:WebPage")
-public interface SchemaWebPage extends SchemaThing {
+public interface SchemaCourseInstance extends SchemaThing {
 
-    Instant dateRetrieved();
+    boolean isAccessibleForFree();
+
+    Duration courseWorkload();
+
+    EventAttendanceModeEnumeration courseMode();
+
+
+    Person instructor();
+
+
+    Set<Topic> audience(); // !!! EC2U Stakeholders
 
 }

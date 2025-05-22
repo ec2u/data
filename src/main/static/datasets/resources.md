@@ -10,7 +10,7 @@ housekeeping properties.
 | rdf:   | http://www.w3.org/1999/02/22-rdf-syntax-ns# | [Resource Description Framework 1.1 (RDF)](https://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/) vocabulary |
 | rdfs:  | http://www.w3.org/2000/01/rdf-schema#       | [RDF Schema 1.1 (RDFS)](https://www.w3.org/TR/rdf11-schema/) vocabulary                                        |
 
-![resource data model](index/resources.svg#75)
+![resource data model](index/resources.svg)
 
 ## Reference
 

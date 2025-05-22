@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.taxonomies;
+package eu.ec2u.data.vocabularies.foaf;
 
 import com.metreeca.mesh.meta.jsonld.Class;
-import com.metreeca.mesh.meta.jsonld.Foreign;
-import com.metreeca.mesh.meta.jsonld.Hidden;
-import com.metreeca.mesh.meta.jsonld.Reverse;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.Pattern;
 
+import eu.ec2u.data.resources.Reference;
+
+import java.net.URI;
 import java.util.Set;
 
-@Class("skos:ConceptScheme")
-@SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-public interface SKOSConceptScheme<S extends SKOSConceptScheme<S, C>, C extends SKOSConcept<S, C>> extends SKOS {
+@Frame
+@Class("foaf:Agent")
+@Namespace(prefix="[foaf]", value="http://xmlns.com/foaf/0.1/")
+public interface FOAFAgent extends Reference {
 
-    @Foreign
-    @Reverse("skos:topConceptOf")
-    Set<C> hasTopConcept();
+    Set<URI> depiction();
 
-    @Hidden
-    @Foreign
-    @Reverse("skos:inScheme")
-    Set<C> hasConcept();
+    Set<URI> homepage();
+
+
+    @Pattern(EMAIL_PATTERN)
+    Set<String> mbox();
+
+    @Pattern(PHONE_PATTERN)
+    Set<String> phone();
 
 }

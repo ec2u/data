@@ -15,6 +15,8 @@
  */
 
 /**
- * EC2U agents.
+ * Schema.org things.
+ *
+ * @see <a href="https://schema.org/">Schema.org</a>
  */
-package eu.ec2u.data.agents;
+package eu.ec2u.data.vocabularies.schema;

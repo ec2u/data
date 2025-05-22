@@ -18,8 +18,8 @@ package eu.ec2u.data.taxonomies;
 
 import com.metreeca.flow.Xtream;
 
-import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
+import eu.ec2u.data.vocabularies.org.OrgOrganizationFrame;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;

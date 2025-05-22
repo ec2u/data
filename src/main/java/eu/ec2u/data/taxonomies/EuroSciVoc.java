@@ -20,8 +20,8 @@ import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.tools.Store;
 
-import eu.ec2u.data.organizations.OrgOrganizationFrame;
 import eu.ec2u.data.resources.ReferenceFrame;
+import eu.ec2u.data.vocabularies.org.OrgOrganizationFrame;
 import eu.ec2u.work.ai.Analyzer;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;

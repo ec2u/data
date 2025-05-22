@@ -48,10 +48,10 @@ import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Loggers.time;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.LOADERS;
 import static eu.ec2u.data.programs.Program.review;
 import static eu.ec2u.data.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.resources.Localized.EN;
+import static eu.ec2u.data.resources.Resource.LOADERS;
 import static eu.ec2u.data.universities.University.PAVIA;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
