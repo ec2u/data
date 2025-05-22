@@ -21,11 +21,16 @@ the [Describing Linked Datasets with the VoID Vocabulary](https://www.w3.org/TR/
 
 ## Dataset
 
-| term                                                                 | type                                   | #    | description                                                       |
-|----------------------------------------------------------------------|----------------------------------------|------|-------------------------------------------------------------------|
-| **ec2u:Dataset**                                                     | [ec2u:Asset](assets.md)                |      | EC2U Knowledge Hub dataset                                        |
-| [rdfs:isDefinedBy](https://www.w3.org/TR/rdf-schema/#ch_isdefinedby) | [rdfs:Resource](resources.md)          | 0..1 | link to the data model specification                              |
-| [rdfs:member](https://www.w3.org/TR/rdf-schema/#ch_member)           | [rdfs:Resource](resources.md#resource) | *    | links to the EC2U Knowledge Hub resources included in the dataset |
+For the complete Dataset model specification, see [Dataset](datasets.md#dataset)
+and [Collection](datasets.md#collection).
+
+| term                                                                  | type                                 | #    | description                                                       |
+|-----------------------------------------------------------------------|--------------------------------------|------|-------------------------------------------------------------------|
+| **ec2u:Dataset**                                                      | [Collection](datasets.md#collection) |      | EC2U Knowledge Hub dataset                                        |
+| [dct:title](http://purl.org/dc/terms/title)                           | text                                 | 1    | Main title of the dataset                                         |
+| [dct:description](http://purl.org/dc/terms/description)               | text                                 | 0..1 | Description of the dataset                                        |
+| [dct:issued](http://purl.org/dc/terms/issued)                         | date                                 | 0..1 | Date of formal issuance                                           |
+| ‹members› = ^[ec2u:collection](https://data.ec2u.eu/terms/collection) | [Resource](resources.md#resource)    | *    | links to the EC2U Knowledge Hub resources included in the dataset |
 
 > [!WARNING]
 > Only datasets with a defined issuance date defined by the `dct:issued` property are exposed through user

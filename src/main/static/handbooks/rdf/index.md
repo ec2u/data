@@ -161,12 +161,12 @@ query engines and easily mapped to native datatypes in most programming language
 
 | datatype | description                                                                                 | RDF                                                               | JSON                             | Java                         |
 |----------|---------------------------------------------------------------------------------------------|:------------------------------------------------------------------|:---------------------------------|------------------------------|
-| id       | absolute resource [IRI](https://www.rfc-editor.org/rfc/rfc3987.html)                        | IRI                                                               | `“http://example.net/”`          | `URI`                        |
-|          | relative resource [IRI](https://www.rfc-editor.org/rfc/rfc3987.html)                        |                                                                   | `"/path"`                        | `URI`                        |
 | boolean  | `true` / `false` flag                                                                       | [xsd:boolean](https://www.w3.org/TR/xmlschema-2/#boolean)         | `boolean`                        | `Boolean`                    |
-| string   | textual content                                                                             | [xsd:string](https://www.w3.org/TR/xmlschema-2/#string)           | `string`                         | `String`                     |
 | integer  | arbitrary precision integer number (for instance,  `123` )                                  | [xsd:integer](https://www.w3.org/TR/xmlschema-2/#integer)         | `integral number`                | `BigInteger`                 |
 | decimal  | arbitrary precision decimal number (for instance, `123.456`)                                | [xsd:decimal](https://www.w3.org/TR/xmlschema-2/#decimal)         | `decimal number`                 | `BigDecimal`                 |
+| string   | textual content                                                                             | [xsd:string](https://www.w3.org/TR/xmlschema-2/#string)           | `string`                         | `String`                     |
+| uri      | absolute URI                                                                                | [xsd:anyURI](https://www.w3.org/TR/xmlschema-2/#anyURI)           | `“http://example.net/”`          | `URI`                        |
+|          | relative URI                                                                                | [xsd:anyURI](https://www.w3.org/TR/xmlschema-2/#anyURI)           | `"/path"`                        | `URI`                        |
 | year     | [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) year                                     | [xsd:gYear](https://www.w3.org/TR/xmlschema-2/#gYear)             | `“yyyy”`                         | `Year`                       |
 | date     | [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date                                     | [xsd:date](https://www.w3.org/TR/xmlschema-2/#date)               | `"yyyy-MM-dd"`                   | `LocalDate`                  |
 | time     | local  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date                              | [xsd:time](https://www.w3.org/TR/xmlschema-2/#time)               | `"hh:mm:ss"`                     | `LocalTime`                  |
@@ -174,9 +174,8 @@ query engines and easily mapped to native datatypes in most programming language
 | dateTime | local [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time                          | [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime)       | `"yyyy-MM-ddThh:mm:s.sss"`       | `LocalDateTime`              |
 |          | offset [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time                         | [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime)       | `"yyyy-MM-ddThh:mm:s.sss+hh:mm"` | `OffsetDateTime`             |
 | instant  | UTC [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time with millisecond precision | [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime)       | `"yyyy-MM-ddThh:mm:s.sssZ"`      | `Instant`                    |
-| duration | [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) duration                                 | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration)       | `"PyYMMdDThHmMs.sssS"`           |                              |
-|          | date-based  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) duration                     | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration)       | `"PyYMMdD"`                      | `Period`                     |
-|          | time-based  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) duration                     | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration)       | `"PThHmMs.sssS"`                 | `Duration`                   |
+| period   | date-based  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) duration                     | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration)       | `"PyYMMdD"`                      | `Period`                     |
+| duration | time-based  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) duration                     | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration)       | `"PdDThHmMs.sssS"`               | `Duration`                   |
 | text     | localised human-readable textual content                                                    | [rdf:langString](https://www.w3.org/TR/rdf-schema/#ch_langstring) | `{ "locale": "text" }`           | ``Map<Locale, String>``      |
 |          |                                                                                             |                                                                   | `{ "locale": ["text", …] }`      | ``Map<Locale, Set<String>>`` |
 
@@ -186,7 +185,7 @@ query engines and easily mapped to native datatypes in most programming language
 
 > [!WARNING]
 > To improve interoperability with third-party calendrical function libraries, date-based (`PyYMMdD`) and
-> time-based (`PThHmMs.sssS`) representations are preferred.
+> time-based (`PdDThHmMs.sssS`) representations are mandated for temporal amounts.
 
 # Taxonomies
 

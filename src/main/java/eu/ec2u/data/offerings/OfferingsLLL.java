@@ -279,7 +279,6 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
         return value(record, "If available write the Detailed field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf    ")
                 .or(() -> value(record, "Narrow field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf"))
                 .stream()
-
                 .flatMap(s -> split(s, ";"))
                 .map(SUBJECT_PATTERN::matcher) // remove trailing description
                 .filter(Matcher::find)

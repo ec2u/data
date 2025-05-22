@@ -16,15 +16,16 @@ and cardinality are tightly specified and constrained.
 > The `schema:Thing` data model is not intended to be used in isolation but only to provide base
 > definitions factoring generic properties shared by the specialised models defined by each [dataset](./index.md).
 
-| term                                                                             | type                                   | #    | description                                                    |
-|----------------------------------------------------------------------------------|----------------------------------------|------|----------------------------------------------------------------|
-| **[schema:Thing](https://schema.org/Thing)**                                     | [rdfs:Resource](resources.md#resource) |      | generic item                                                   |
-| [schema:url](https://schema.org/url)                                             | id                                     | *    | links to public web pages describing the item                  |
-| [schema:identifier](https://schema.org/identifier)                               | string                                 | *    | formal identifiers assigned by the item owner                  |
-| [schema:name](https://schema.org/name)                                           | text                                   | 0..1 | item name                                                      |
-| [schema:description](https://schema.org/description)                             | text                                   | 0..1 | extended  description of the item                              |
-| [schema:disambiguatingDescription](https://schema.org/disambiguatingDescription) | text                                   | 0..1 | short description intended to identify the item out of context |
-| [schema:image](https://schema.org/image)                                         | [schema:ImageObject](#image-object)    | 0..1 | link to an image of the item                                   |
+| term                                                                             | type                                   | #    | description                                                                                         |
+|----------------------------------------------------------------------------------|----------------------------------------|------|-----------------------------------------------------------------------------------------------------|
+| **[schema:Thing](https://schema.org/Thing)**                                     | [rdfs:Resource](resources.md#resource) |      | generic item                                                                                        |
+| [schema:url](https://schema.org/url)                                             | uri                                    | *    | links to public web pages describing the item                                                       |
+| [schema:identifier](https://schema.org/identifier)                               | string                                 | 0..1 | formal identifier assigned by the item owner (single value for compatibility with org:Organization) |
+| [schema:name](https://schema.org/name)                                           | text {maxLength(100)}                  | 0..1 | item name                                                                                           |
+| [schema:description](https://schema.org/description)                             | text {maxLength(10000)}                | 0..1 | extended description of the item                                                                    |
+| [schema:disambiguatingDescription](https://schema.org/disambiguatingDescription) | text {maxLength(500)}                  | 0..1 | short description intended to identify the item out of context                                      |
+| [schema:image](https://schema.org/image)                                         | [schema:ImageObject](#image-object)    | 0..1 | link to an image of the item                                                                        |
+| [schema:about](https://schema.org/about)                                         | [skos:Concept](taxonomies.md#concept)  | *    | topics related to the item                                                                          |
 
 ## Organization
 
@@ -72,14 +73,14 @@ and cardinality are tightly specified and constrained.
 | term                                                             | type                   | # | description                                                |
 |------------------------------------------------------------------|------------------------|---|------------------------------------------------------------|
 | **[schema:VirtualLocation](https://schema.org/VirtualLocation)** | [schema:Thing](#thing) |   | online virtual location, for instance for attending events |
-| [schema:url](https://schema.org/url)                             | id                     | 1 | link to the public web page hosting the virtual location   |
+| [schema:url](https://schema.org/url)                             | uri                    | 1 | link to the public web page hosting the virtual location   |
 
 ## Image Object
 
 | term                                                         | type                   | #    | description                                   |
 |--------------------------------------------------------------|------------------------|------|-----------------------------------------------|
 | **[schema:ImageObject](https://schema.org/ImageObject)**     | [schema:Thing](#thing) |      | image file                                    |
-| [schema:url](https://schema.org/url)                         | id                     | 1    | link to the image source                      |
+| [schema:url](https://schema.org/url)                         | uri                    | 1    | link to the image source                      |
 | [schema:caption](https://schema.org/caption)                 | text                   | 0..1 | descriptive caption                           |
 | [schema:author](https://schema.org/author)                   | string                 | 0..1 | author name                                   |
 | [schema:copyrightNotice](https://schema.org/copyrightNotice) | string                 | 0..1 | copyright notice,  for instance `2024 © EC2U` |

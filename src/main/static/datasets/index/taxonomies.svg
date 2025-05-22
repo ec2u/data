@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2025 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="495 407 518 273" width="518" height="273">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
+                color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
+                color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="taxonomies" stroke-dasharray="none" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1">
+        <title>taxonomies</title>
+        <rect fill="white" x="495" y="407" width="518" height="273"/>
+        <g id="taxonomies_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_227">
+                <g id="Graphic_229">
+                    <rect x="663.8537" y="558.11286" width="115.42529" height="61" fill="white"/>
+                    <rect x="663.8537" y="558.11286" width="115.42529" height="61" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(669.8537 561.11286)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">skos:notation : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">skos:prefLabel : text [1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31" xml:space="preserve">skos:altLabel : text [*]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42" xml:space="preserve">skos:hiddenLabel : text [*]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53" xml:space="preserve">skos:definition : text [0..1]</tspan>
+                    </text>
+                </g>
+                <g id="Graphic_228">
+                    <rect x="663.8537" y="540.8518" width="115.42529" height="17.261063" fill="white"/>
+                    <rect x="663.8537" y="540.8518" width="115.42529" height="17.261063" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(693.91815 543.9823)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                xml:space="preserve">skos:Concept</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_225">
+                <g id="Graphic_226">
+                    <a xl:href="resources.svg">
+                        <rect x="936.0347" y="435.97666" width="41.632324" height="17" fill="white"/>
+                        <rect x="936.0347" y="435.97666" width="41.632324" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(942.0347 438.97666)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
+                                    fill="#a5a5a5" x="0" y="9" xml:space="preserve">Dataset</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Group_221">
+                <g id="Graphic_222">
+                    <rect x="671.5375" y="435.97666" width="100.05762" height="17" fill="white"/>
+                    <rect x="671.5375" y="435.97666" width="100.05762" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(677.5375 438.97666)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                xml:space="preserve">skos:ConceptScheme</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_220">
+                <line x1="721.5663" y1="540.8518" x2="721.5663" y2="459.82666" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_219">
+                <rect x="672.4435" y="463.769" width="98.2456" height="24" fill="white"/>
+                <text transform="translate(675.4435 464.769)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="12.590332" y="9" xml:space="preserve">skos:inScheme 1</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">skos:topConceptOf 0..1</tspan>
+                </text>
+            </g>
+            <g id="Graphic_218">
+                <rect x="626.87005" y="504.31946" width="189.39258" height="24" fill="white"/>
+                <text transform="translate(629.87005 505.31946)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="26.62207" y="9" xml:space="preserve">/hasConcept = ^skos:inScheme *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">/skos:hasTopConcept = ^ skos:topConceptOf *</tspan>
+                </text>
+            </g>
+            <g id="Line_217">
+                <path d="M 721.5663 619.1129 L 721.5663 651.2165 L 626.87005 651.2165 L 626.87005 579.9823 L 657.0037 579.9823"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_216">
+                <rect x="653.71624" y="626.22945" width="135.7002" height="13" fill="white"/>
+                <text transform="translate(656.71624 627.22945)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">/skos:narrower = ^skos:broader *</tspan>
+                </text>
+            </g>
+            <g id="Graphic_215">
+                <rect x="523.7348" y="573.0864" width="129.80273" height="46" fill="white"/>
+                <text transform="translate(526.7348 574.0864)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="66.748535" y="9" xml:space="preserve">skos:broader *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="28.195312" y="20" xml:space="preserve">skos:broaderTransitive *</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="19.69629" y="31" xml:space="preserve">skos:related * {symmetric}</tspan>
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42" xml:space="preserve">skos:exactMatch * {symmetric}</tspan>
+                </text>
+            </g>
+            <g id="Line_214">
+                <path d="M 884.1145 456.89316 L 884.1145 444.47665 L 926.2847 444.47665"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_231">
+                <g id="Graphic_232">
+                    <rect x="827.21855" y="456.89316" width="75.86133" height="17" fill="white"/>
+                    <rect x="827.21855" y="456.89316" width="75.86133" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(833.21855 459.89316)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                xml:space="preserve">ec2u:Taxonomy</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_233">
+                <g id="Graphic_234">
+                    <rect x="835.7835" y="591.8876" width="58.731445" height="17.118805" fill="white"/>
+                    <rect x="835.7835" y="591.8876" width="58.731445" height="17.118805" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(843.0623 594.947)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                xml:space="preserve">ec2u:Topic</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_235">
+                <path d="M 846.1839 456.89316 L 846.1839 444.47666 L 781.34515 444.47666"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_236">
+                <g id="Graphic_237">
+                    <a xl:href="resources.svg">
+                        <rect x="936.0347" y="571.4823" width="47.898926" height="17" fill="white"/>
+                        <rect x="936.0347" y="571.4823" width="47.898926" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(942.0347 574.4823)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
+                                    fill="#a5a5a5" x="0" y="9" xml:space="preserve">Resource</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_238">
+                <path d="M 879.8321 591.8876 L 879.8321 579.9823 L 926.2847 579.9823"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_239">
+                <path d="M 850.4664 591.8876 L 850.4664 579.9823 L 789.029 579.9823"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_240">
+                <line x1="865.1492" y1="591.8876" x2="865.1492" y2="480.74316" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_243">
+                <path d="M 865.1492 609.0064 L 865.1492 617.1064 L 827.6835 617.1064 L 827.6835 600.447 L 828.9335 600.447"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_245">
+                <g id="Graphic_246">
+                    <a xl:href="resources.svg">
+                        <rect x="567.6051" y="435.97666" width="50.68506" height="17" fill="white"/>
+                        <rect x="567.6051" y="435.97666" width="50.68506" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(573.6051 438.97666)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
+                                    fill="#a5a5a5" x="0" y="9" xml:space="preserve">Reference</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_244">
+                <line x1="671.5375" y1="444.47665" x2="628.04014" y2="444.47665"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_247">
+                <path d="M 663.8537 560.41707 L 592.9476 560.41707 L 592.9476 462.72666"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+        </g>
+    </g>
+</svg>

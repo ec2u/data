@@ -40,7 +40,7 @@ public interface Datasets extends Dataset {
 
     DatasetsFrame DATASETS=new DatasetsFrame()
             .id(DATA.resolve("/"))
-            .isDefinedBy(DATA.resolve("datasets"))
+            .isDefinedBy(DATA.resolve("datasets/"))
             .title(map(entry(EN, "EC2U Dataset Catalog")))
             .alternative(map(entry(EN, "EC2U Datasets")))
             .description(map(entry(EN, "Datasets published on the EC2U Knowledge Hub.")))

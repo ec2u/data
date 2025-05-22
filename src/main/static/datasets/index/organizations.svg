@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2025 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="660 198 304 102" width="304" height="102">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
+                color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="organizations" stroke-dasharray="none" fill="none" fill-opacity="1" stroke="none" stroke-opacity="1">
+        <title>organizations</title>
+        <rect fill="white" x="660" y="198" width="304" height="102"/>
+        <g id="organizations_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_8">
+                <g id="Graphic_9">
+                    <rect x="674.747" y="267.97873" width="86.05664" height="17" fill="white"/>
+                    <rect x="674.747" y="267.97873" width="86.05664" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(680.747 270.97873)" fill="black">
+                        <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                xml:space="preserve">ec2u:Organization</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_6">
+                <g id="Graphic_7">
+                    <a xl:href="agents.svg">
+                        <rect x="762.9306" y="212.27038" width="79.70215" height="17" fill="white"/>
+                        <rect x="762.9306" y="212.27038" width="79.70215" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(768.9306 215.27038)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9"
+                                    xml:space="preserve">org:Organization</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_5">
+                <path d="M 717.7753 267.97873 L 717.7753 248.97873 L 802.7816 248.97873 L 802.7816 239.02038"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_3">
+                <g id="Graphic_4">
+                    <a xl:href="resources.svg">
+                        <rect x="681.62" y="212.27038" width="72.31055" height="17" fill="white"/>
+                        <rect x="681.62" y="212.27038" width="72.31055" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(687.62 215.27038)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9"
+                                    xml:space="preserve">ec2u:Resource</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_2">
+                <line x1="717.7753" y1="267.97873" x2="717.7753" y2="239.02038" marker-end="url(#UMLInheritance_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_10">
+                <g id="Graphic_11">
+                    <a xl:href="things.svg">
+                        <rect x="851.6327" y="212.27038" width="98.15479" height="17" fill="white"/>
+                        <rect x="851.6327" y="212.27038" width="98.15479" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(857.6327 215.27038)" fill="#a5a5a5">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9"
+                                    xml:space="preserve">schema:Organization</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_12">
+                <path d="M 717.7753 267.97873 L 717.7753 248.97873 L 900.7101 248.97873 L 900.7101 239.02038"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+        </g>
+    </g>
+</svg>
