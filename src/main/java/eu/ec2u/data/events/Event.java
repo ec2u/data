@@ -26,16 +26,14 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EC2UEvents;
-import eu.ec2u.data.taxonomies.EC2UStakeholders;
-import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.work.ai.Embedder;
 
 import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
@@ -44,6 +42,8 @@ import static com.metreeca.shim.Collections.set;
 import static eu.ec2u.data.events.Events.EVENTS;
 import static eu.ec2u.data.resources.Localized.EN;
 import static eu.ec2u.data.resources.Resource.localize;
+import static eu.ec2u.data.taxonomies.EC2UEvents.EC2U_EVENTS;
+import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static java.util.function.Predicate.not;
 
 @Frame
@@ -84,9 +84,8 @@ public interface Event extends Resource, SchemaEvent {
     private static EventFrame about(final EventFrame event) {
         return event.about(Optional.ofNullable(event.about())
                 .filter(not(Set::isEmpty))
-                .orElseGet(() -> set(Resources
-                        .match(EC2UEvents.EC2U_EVENTS.id(), embeddable(event), ABOUT_THRESHOLD)
-                        .map(uri -> new TopicFrame(true).id(uri))
+                .orElseGet(() -> set(Stream.of(embeddable(event))
+                        .flatMap(events())
                         .limit(1)
                 ))
         );
@@ -95,13 +94,13 @@ public interface Event extends Resource, SchemaEvent {
     private static EventFrame audience(final EventFrame event) {
         return event.about(Optional.ofNullable(event.about())
                 .filter(not(Set::isEmpty))
-                .orElseGet(() -> set(Resources
-                        .match(EC2UStakeholders.EC2U_STAKEHOLDERS.id(), embeddable(event), AUDIENCE_THRESHOLD)
-                        .map(uri -> new TopicFrame(true).id(uri))
+                .orElseGet(() -> set(Stream.of(embeddable(event))
+                        .flatMap(stakeholders())
                         .limit(1)
                 ))
         );
     }
+
 
     private static String embeddable(final Event event) {
         return Embedder.embeddable(set(Xtream.from(
@@ -109,6 +108,18 @@ public interface Event extends Resource, SchemaEvent {
                 Optional.ofNullable(event.description().get(EN)).stream()
         )));
     }
+
+
+    static Taxonomies.Matcher events() {
+        return new Taxonomies.Matcher(EC2U_EVENTS)
+                .threshold(0.6);
+    }
+
+    static Taxonomies.Matcher stakeholders() {
+        return new Taxonomies.Matcher(EC2U_STAKEHOLDERS)
+                .threshold(0.6);
+    }
+
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

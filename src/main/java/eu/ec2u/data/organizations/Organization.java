@@ -25,8 +25,7 @@ import com.metreeca.shim.Collections;
 
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.things.SchemaImageObject;
 import eu.ec2u.data.things.SchemaOrganization;
 import eu.ec2u.work.ai.Embedder;
@@ -36,6 +35,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
@@ -51,8 +51,6 @@ import static java.util.function.Predicate.not;
 @Frame
 @Namespace("[ec2u]")
 public interface Organization extends Resource, OrgOrganization, SchemaOrganization {
-
-    double CLASSIFICATION_THRESHOLD=0.6;
 
 
     static Optional<OrganizationFrame> review(final OrganizationFrame organization) {
@@ -79,19 +77,28 @@ public interface Organization extends Resource, OrgOrganization, SchemaOrganizat
                 .definition(translator.texts(document.definition(), source, EN));
     }
 
-    private static OrganizationFrame classification(final OrganizationFrame document) {
-        return document.classification().isEmpty() ? document.classification(set(Resources
-                .match(EC2U_ORGANIZATIONS.id(), embeddable(document), CLASSIFICATION_THRESHOLD)
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(3)
-        )) : document;
+    private static OrganizationFrame classification(final OrganizationFrame organization) {
+        return organization.classification(Optional.ofNullable(organization.classification())
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(Stream.of(embeddable(organization))
+                        .flatMap(organizations())
+                        .limit(3)
+                ))
+        );
     }
+
 
     private static String embeddable(final Organization document) {
         return Embedder.embeddable(set(Xtream.from(
                 Optional.ofNullable(document.prefLabel().get(EN)).stream(),
                 Optional.ofNullable(document.definition().get(EN)).stream()
         )));
+    }
+
+
+    private static Taxonomies.Matcher organizations() {
+        return new Taxonomies.Matcher(EC2U_ORGANIZATIONS)
+                .threshold(0.6);
     }
 
 

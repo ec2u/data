@@ -25,12 +25,10 @@ import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.courses.CourseFrame;
 import eu.ec2u.data.organizations.OrganizationFrame;
+import eu.ec2u.data.programs.Program;
 import eu.ec2u.data.programs.ProgramFrame;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.EuroSciVoc;
 import eu.ec2u.data.taxonomies.ISCED2011;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.TopicFrame;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -57,7 +55,6 @@ import static com.metreeca.shim.Resources.resource;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.courses.Courses.COURSES;
 import static eu.ec2u.data.organizations.Organizations.ORGANIZATIONS;
-import static eu.ec2u.data.programs.Program.ABOUT_THRESHOLD;
 import static eu.ec2u.data.programs.Program.review;
 import static eu.ec2u.data.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.universities.University.POITIERS;
@@ -200,13 +197,10 @@ public final class OfferingsPoitiers implements Runnable {
                 );
     }
 
-    private Stream<TopicFrame> about(final Value json) {
+    private Stream<Topic> about(final Value json) {
         return json.get("discipline").string().stream()
-                .flatMap(name -> Resources
-                        .match(EuroSciVoc.EUROSCIVOC.id(), name, ABOUT_THRESHOLD)
-                        .map(uri -> new TopicFrame(true).id(uri))
-                        .limit(1)
-                );
+                .flatMap(Program.euroscivoc())
+                .limit(1);
     }
 
     private Stream<CourseFrame> hasCourse(final Value json) {

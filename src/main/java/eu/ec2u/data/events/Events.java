@@ -32,8 +32,7 @@ import com.metreeca.shim.Locales;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.organizations.OrganizationFrame;
-import eu.ec2u.data.resources.Resources;
-import eu.ec2u.data.taxonomies.TopicFrame;
+import eu.ec2u.data.taxonomies.Topic;
 import eu.ec2u.data.things.*;
 import eu.ec2u.data.universities.University;
 import eu.ec2u.work.ai.Analyzer;
@@ -64,8 +63,6 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.events.Event.review;
 import static eu.ec2u.data.events.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.data.resources.Localized.EN;
-import static eu.ec2u.data.taxonomies.EC2UEvents.EC2U_EVENTS;
-import static eu.ec2u.data.taxonomies.EC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static eu.ec2u.work.shim.Futures.joining;
@@ -517,16 +514,16 @@ public interface Events extends Dataset {
         }
 
 
-        private Optional<TopicFrame> about(final Value json) {
-            return json.get("topic").string()
-                    .flatMap(t -> Resources.match(EC2U_EVENTS.id(), t))
-                    .map(t -> new TopicFrame(true).id(t));
+        private Optional<Topic> about(final Value json) {
+            return json.get("topic").string().stream()
+                    .flatMap(Event.events())
+                    .findFirst();
         }
 
-        private Optional<TopicFrame> audience(final Value json) {
-            return json.get("audience").string()
-                    .flatMap(t -> Resources.match(EC2U_STAKEHOLDERS.id(), t))
-                    .map(t -> new TopicFrame(true).id(t));
+        private Optional<Topic> audience(final Value json) {
+            return json.get("audience").string().stream()
+                    .flatMap(Event.stakeholders())
+                    .findFirst();
         }
 
     }

@@ -27,9 +27,8 @@ import com.metreeca.mesh.meta.jsonld.Reverse;
 import eu.ec2u.data.programs.Program;
 import eu.ec2u.data.resources.Reference;
 import eu.ec2u.data.resources.Resource;
-import eu.ec2u.data.resources.Resources;
+import eu.ec2u.data.taxonomies.Taxonomies;
 import eu.ec2u.data.taxonomies.Topic;
-import eu.ec2u.data.taxonomies.TopicFrame;
 import eu.ec2u.data.things.SchemaLearningResource;
 import eu.ec2u.data.things.SchemaThing;
 import eu.ec2u.work.ai.Embedder;
@@ -37,6 +36,7 @@ import eu.ec2u.work.ai.Embedder;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.text.services.Translator.translator;
@@ -48,15 +48,13 @@ import static eu.ec2u.data.resources.Resource.localize;
 import static eu.ec2u.data.taxonomies.EuroSciVoc.EUROSCIVOC;
 import static eu.ec2u.work.shim.Streams.nullable;
 import static java.util.Comparator.comparing;
+import static java.util.function.Predicate.not;
 
 
 @Frame
 @Class
 @Namespace("[ec2u]")
 public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
-
-    double ABOUT_THRESHOLD=0.6;
-
 
     static Optional<CourseFrame> review(final CourseFrame course) {
 
@@ -66,7 +64,7 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
 
         return Optional.of(course) // translate before English-based classification
                 .map(c -> localize(c, locale -> translate(c, locale)))
-                .map(Course::classify)
+                .map(c -> about(c))
                 .flatMap(new Validate<>());
     }
 
@@ -89,13 +87,16 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
                 .coursePrerequisites(Reference.clip(0, translator.texts(course.coursePrerequisites(), source, EN)));
     }
 
-    private static CourseFrame classify(final CourseFrame program) {
-        return program.about().isEmpty() ? program.about(set(Resources
-                .match(EUROSCIVOC.id(), embeddable(program), ABOUT_THRESHOLD)
-                .map(uri -> new TopicFrame(true).id(uri))
-                .limit(1)
-        )) : program;
+    private static CourseFrame about(final CourseFrame course) {
+        return course.about(Optional.ofNullable(course.about())
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(Stream.of(embeddable(course))
+                        .flatMap(euroscivoc())
+                        .limit(1)
+                ))
+        );
     }
+
 
     private static String embeddable(final Course course) {
         return Embedder.embeddable(set(Xtream.from(
@@ -104,6 +105,13 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
                 Optional.ofNullable(course.disambiguatingDescription().get(EN)).stream(),
                 Optional.ofNullable(course.teaches().get(EN)).stream()
         )));
+    }
+
+
+    static Taxonomies.Matcher euroscivoc() {
+        return new Taxonomies.Matcher(EUROSCIVOC)
+                .narrowing(1.1)
+                .tolerance(0.1);
     }
 
 
