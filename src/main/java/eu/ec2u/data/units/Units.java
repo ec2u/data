@@ -64,9 +64,6 @@ import static java.util.function.Function.identity;
 @Frame
 public interface Units extends Dataset {
 
-    double TYPE_THRESHOLD=0.6;
-
-
     UnitsFrame UNITS=new UnitsFrame()
             .id(DATA.resolve("units/"))
             .isDefinedBy(DATA.resolve("datasets/units"))

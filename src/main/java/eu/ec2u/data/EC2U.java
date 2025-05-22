@@ -19,15 +19,20 @@ package eu.ec2u.data;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 
+import eu.ec2u.data.agents.FOAFAgents;
 import eu.ec2u.data.courses.Courses;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.documents.Documents;
 import eu.ec2u.data.events.Events;
+import eu.ec2u.data.offerings.Offerings;
 import eu.ec2u.data.organizations.OrgOrganizationFrame;
+import eu.ec2u.data.organizations.Organizations;
+import eu.ec2u.data.persons.Persons;
 import eu.ec2u.data.programs.Programs;
 import eu.ec2u.data.resources.ReferenceFrame;
 import eu.ec2u.data.resources.Resources;
 import eu.ec2u.data.taxonomies.Taxonomies;
+import eu.ec2u.data.things.SchemaThings;
 import eu.ec2u.data.units.Units;
 import eu.ec2u.data.universities.Universities;
 
@@ -80,11 +85,16 @@ public final class EC2U extends Delegator {
                 .path("/", new Datasets.Handler())
                 .path("/resources/*", new Resources.Handler())
                 .path("/taxonomies/*", new Taxonomies.Handler())
+                .path("/agents/*", new FOAFAgents.Handler())
+                .path("/organizations/*", new Organizations.Handler())
                 .path("/universities/*", new Universities.Handler())
                 .path("/units/*", new Units.Handler())
+                .path("/persons/*", new Persons.Handler())
+                .path("/documents/*", new Documents.Handler())
+                .path("/things/*", new SchemaThings.Handler())
+                .path("/offerings/*", new Offerings.Handler())
                 .path("/programs/*", new Programs.Handler())
                 .path("/courses/*", new Courses.Handler())
-                .path("/documents/*", new Documents.Handler())
                 .path("/events/*", new Events.Handler())
 
         );

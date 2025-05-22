@@ -16,6 +16,10 @@
 
 package eu.ec2u.data.organizations;
 
+import com.metreeca.flow.http.handlers.Delegator;
+import com.metreeca.flow.http.handlers.Router;
+import com.metreeca.flow.http.handlers.Worker;
+import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
@@ -24,6 +28,7 @@ import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -38,7 +43,10 @@ public interface Organizations extends Dataset {
             .isDefinedBy(DATA.resolve("datasets/organizations"))
             .title(map(entry(EN, "EC2U Related Organizations")))
             .alternative(map(entry(EN, "EC2U Organizations")))
-            .description(map(entry(EN, "Organizations involved in activities related to EC2U allied universities.")))
+            .description(map(entry(EN, """
+                    Organisations related to EC2U partner universities.
+                    """
+            )))
             .publisher(EC2U)
             .rights(COPYRIGHT)
             .license(set(CCBYNCND40));
@@ -53,5 +61,23 @@ public interface Organizations extends Dataset {
 
     @Override
     Set<Organization> members();
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    final class Handler extends Delegator {
+
+        public Handler() {
+            delegate(new Router()
+
+                    .path("/", new Worker().get(new Driver(new OrganizationsFrame(true)
+
+                            .members(stash(query(new OrganizationFrame(true))))
+
+                    )))
+            );
+        }
+
+    }
 
 }

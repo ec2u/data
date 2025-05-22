@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.agents;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
@@ -23,6 +23,7 @@ import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.resources.Resource;
 
 import java.util.Set;
 
@@ -36,15 +37,15 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
-public interface Persons extends Dataset {
+public interface FOAFAgents extends Dataset {
 
-    PersonsFrame PERSONS=new PersonsFrame()
-            .id(DATA.resolve("persons/"))
-            .isDefinedBy(DATA.resolve("datasets/persons"))
-            .title(map(entry(EN, "EC2U Faculty, Researchers and Staff")))
-            .alternative(map(entry(EN, "EC2U People")))
+    FOAFAgentsFrame AGENTS=new FOAFAgentsFrame()
+            .id(DATA.resolve("agents/"))
+            .isDefinedBy(DATA.resolve("datasets/agents"))
+            .title(map(entry(EN, "EC2U Agents")))
+            .alternative(map(entry(EN, "EC2U Agents")))
             .description(map(entry(EN, """
-                    Staff involved in teaching and research activities at EC2U partner universities.
+                    Organisations and people related to EC2U partner universities.
                     """
             )))
             .publisher(EC2U)
@@ -53,14 +54,14 @@ public interface Persons extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).insert(PERSONS));
+        exec(() -> service(store()).insert(AGENTS));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    Set<Person> members();
+    Set<Resource> members();
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,9 +71,9 @@ public interface Persons extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new PersonsFrame(true)
+                    .path("/", new Worker().get(new Driver(new FOAFAgentsFrame(true)
 
-                            .members(stash(query(new PersonFrame(true))))
+                            .members(stash(query(new FOAFAgentFrame(true))))
 
                     )))
             );

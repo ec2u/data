@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.persons;
+package eu.ec2u.data.things;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
@@ -23,12 +23,12 @@ import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
 import eu.ec2u.data.datasets.Dataset;
+import eu.ec2u.data.resources.Resource;
 
 import java.util.Set;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 
 import static eu.ec2u.data.Data.exec;
@@ -36,15 +36,15 @@ import static eu.ec2u.data.EC2U.*;
 import static eu.ec2u.data.resources.Localized.EN;
 
 @Frame
-public interface Persons extends Dataset {
+public interface SchemaThings extends Dataset {
 
-    PersonsFrame PERSONS=new PersonsFrame()
-            .id(DATA.resolve("persons/"))
-            .isDefinedBy(DATA.resolve("datasets/persons"))
-            .title(map(entry(EN, "EC2U Faculty, Researchers and Staff")))
-            .alternative(map(entry(EN, "EC2U People")))
+    SchemaThingsFrame THINGS=new SchemaThingsFrame()
+            .id(DATA.resolve("things/"))
+            .isDefinedBy(DATA.resolve("datasets/things"))
+            .title(map(entry(EN, "Schema Things")))
+            .alternative(map(entry(EN, "Schema Things")))
             .description(map(entry(EN, """
-                    Staff involved in teaching and research activities at EC2U partner universities.
+                    Things described using schema.org data models.
                     """
             )))
             .publisher(EC2U)
@@ -53,14 +53,14 @@ public interface Persons extends Dataset {
 
 
     static void main(final String... args) {
-        exec(() -> service(store()).insert(PERSONS));
+        exec(() -> service(store()).insert(THINGS));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    Set<Person> members();
+    Set<Resource> members();
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,9 +70,9 @@ public interface Persons extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new PersonsFrame(true)
+                    .path("/", new Worker().get(new Driver(new SchemaThingsFrame(true)
 
-                            .members(stash(query(new PersonFrame(true))))
+                            // !!! .members(stash(query(new SchemaThingFrame(true))))
 
                     )))
             );

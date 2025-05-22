@@ -111,7 +111,7 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                 ),
 
                 Value.value(query(new CourseFrame(true))
-                        .where("seeAlso", criterion().any(uri(LLL.id()))) // ;( hack to clear the LLL set
+                        .where("seeAlso", criterion().any(uri(LLL.id()))) // ;( hack to clear the LLL set // !!! use loader()
                 )
 
         )).apply((elapsed, resources) -> logger.info(this, format(
@@ -130,7 +130,7 @@ public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Run
                         .university(university)
 
                         .audience(set(LLL))
-                        .seeAlso(set(LLL.id())) // ;( tag course as in the LLL set
+                        .seeAlso(set(LLL.id())) // ;( tag course as in the LLL set // !!! use loader()
 
                         // !!! Department (in English)
 

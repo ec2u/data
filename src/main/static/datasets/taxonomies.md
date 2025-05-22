@@ -10,7 +10,7 @@ the  [SKOS](https://www.w3.org/TR/skos-reference/) data model.
 |--------|--------------------------------------|-------------------------------------------------------------------------------------------------|
 | skos:  | http://www.w3.org/2004/02/skos/core# | [Simple Knowledge Organization System (SKOS)](https://www.w3.org/TR/skos-reference/) vocabulary |
 
-![concept data model](index/concepts.svg#75)
+![taxonomy data model](index/taxonomies.svg)
 
 ## Concept Scheme
 
