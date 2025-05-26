@@ -237,6 +237,9 @@ public interface Unit extends Organization, OrgOrganizationalUnit {
         return UNITS;
     }
 
+    @Override
+    Set<? extends Organization> unitOf();
+
 
     @Forward("dct:")
     Set<Topic> subject();

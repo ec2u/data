@@ -75,7 +75,7 @@ public interface Units extends Organizations {
                     Information about research units and supporting structures at EC2U partner universities.
                     """
             )))
-            .publisher(Organizations.EC2U)
+            .publisher(EC2U)
             .rights(Datasets.COPYRIGHT)
             .license(set(Datasets.CCBYNCND40))
             .issued(LocalDate.parse("2022-01-01"));
