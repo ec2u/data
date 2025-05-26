@@ -3,7 +3,7 @@
 
 {
   "compilerOptions": {
-    "baseUrl": "src/main/javascript",
+    "baseUrl": "src/main/typescript",
     "outDir": "target/static",
     "paths": {
       "@ec2u/data/*": [

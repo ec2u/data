@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2025 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns="http://www.w3.org/2000/svg" viewBox="1171 6 213 196" width="213" height="196">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
+                color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="foaf" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none">
+        <title>foaf</title>
+        <rect fill="white" x="1171" y="6" width="213" height="196"/>
+        <g id="foaf_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_55">
+                <g id="Graphic_57">
+                    <rect x="1253.3171" y="148.69291" width="116.0625" height="39" fill="white"/>
+                    <rect x="1253.3171" y="148.69291" width="116.0625" height="39" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(1259.3171 151.69291)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">foaf:title : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">foaf:givenName: string [1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31" xml:space="preserve">foaf:familyName: string [1]</tspan>
+                    </text>
+                </g>
+                <g id="Graphic_56">
+                    <a xl:href="http://xmlns.com/foaf/spec/#term_Person">
+                        <rect x="1253.3171" y="131.69291" width="116.0625" height="17" fill="white"/>
+                        <rect x="1253.3171" y="131.69291" width="116.0625" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(1287.6399 134.69291)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                    xml:space="preserve">foaf:Person</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Group_49">
+                <g id="Graphic_51">
+                    <a xl:href="http://xmlns.com/foaf/0.1/#term_Agent">
+                        <rect x="1185.7323" y="20.692914" width="98.52393" height="17" fill="white"/>
+                        <rect x="1185.7323" y="20.692914" width="98.52393" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(1213.628 23.692914)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                    xml:space="preserve">foaf:Agent</tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_50">
+                    <rect x="1185.7323" y="37.692914" width="98.52393" height="50" fill="white"/>
+                    <rect x="1185.7323" y="37.692914" width="98.52393" height="50" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(1191.7323 40.692914)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">foaf:depiction : uri [*]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">foaf:homepage : uri [*]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31" xml:space="preserve">foaf:mbox : string [*]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42" xml:space="preserve">foaf:phone : string [*]</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_39">
+                <path d="M 1253.3171 159.69289 L 1234.9943 159.69289 L 1234.9943 97.44291"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_91">
+                <g id="Graphic_92">
+                    <a xl:href="http://xmlns.com/foaf/spec/#term_Organization">
+                        <rect x="1253.3171" y="105.69291" width="82.73877" height="17" fill="white"/>
+                        <rect x="1253.3171" y="105.69291" width="82.73877" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(1259.3171 108.69291)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                    xml:space="preserve">foaf:Organization</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_94">
+                <path d="M 1253.3171 114.1929 L 1234.9943 114.1929 L 1234.9943 97.44291"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+        </g>
+    </g>
+</svg>

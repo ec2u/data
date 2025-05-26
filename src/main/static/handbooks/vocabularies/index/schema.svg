@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright © 2020-2025 EC2U Alliance
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns="http://www.w3.org/2000/svg" viewBox="-180 0 668 436" width="668" height="436">
+    <defs>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
+                color="black">
+            <g>
+                <path d="M 36 0 L 0 -21 L 0 21 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+        <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
+                stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
+                color="black">
+            <g>
+                <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+            </g>
+        </marker>
+    </defs>
+    <g id="schema" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none">
+        <title>schema</title>
+        <rect fill="white" x="-180" y="0" width="668" height="436"/>
+        <g id="schema_Layer_1">
+            <title>Layer 1</title>
+            <g id="Group_358">
+                <g id="Graphic_360">
+                    <a xl:href="https://schema.org/Thing">
+                        <rect x="55.47862" y="28.177166" width="194.3291" height="17.261063" fill="white"/>
+                        <rect x="55.47862" y="28.177166" width="194.3291" height="17.261063" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(125.75083 31.307697)" fill="black">
+                            <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9"
+                                    fill="black" x="0" y="9" xml:space="preserve">schema:Thing</tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_359">
+                    <rect x="55.47862" y="45.43823" width="194.3291" height="61" fill="white"/>
+                    <rect x="55.47862" y="45.43823" width="194.3291" height="61" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(61.47862 48.43823)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:url : uri [*]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">schema:identifier : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31" xml:space="preserve">schema:name : text [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42" xml:space="preserve">schema:description : text [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53" xml:space="preserve">schema:disambiguatingDescription : text [0..1]</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_352">
+                <g id="Graphic_354">
+                    <a xl:href="https://schema.org/Organization">
+                        <rect x="324.41563" y="39.307697" width="134.61621" height="17" fill="white"/>
+                        <rect x="324.41563" y="39.307697" width="134.61621" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(348.64634 42.307697)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                    xml:space="preserve">schema:Organization</tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_353">
+                    <rect x="324.41563" y="56.3077" width="134.61621" height="39" fill="white"/>
+                    <rect x="324.41563" y="56.3077" width="134.61621" height="39" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(330.41563 59.3077)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:legalName : text [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">schema:email : string [*]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31" xml:space="preserve">schema:telephone : string [*]</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_351">
+                <line x1="324.41563" y1="67.30767" x2="259.55772" y2="67.30769" marker-end="url(#UMLInheritance_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_345">
+                <g id="Graphic_347">
+                    <a xl:href="https://schema.org/Place">
+                        <rect x="198.05678" y="314.22363" width="131.36426" height="17" fill="white"/>
+                        <rect x="198.05678" y="314.22363" width="131.36426" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(235.31728 317.22363)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                    xml:space="preserve">schema:Place</tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_346">
+                    <rect x="198.05678" y="331.22363" width="131.36426" height="28" fill="white"/>
+                    <rect x="198.05678" y="331.22363" width="131.36426" height="28" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(204.05678 334.22363)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:latitude : decimal [1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">schema:longitude : decimal [1]</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Group_342">
+                <g id="Graphic_344">
+                    <rect x="184.43374" y="193.38583" width="158.61035" height="83" fill="white"/>
+                    <rect x="184.43374" y="193.38583" width="158.61035" height="83" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(190.43374 196.38583)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:addressCountry : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">schema:addressRegion : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31" xml:space="preserve">schema:addressLocality : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42" xml:space="preserve">schema:postalCode : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="53" xml:space="preserve">schema:streetAddress : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="64" xml:space="preserve">schema:email : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="75" xml:space="preserve">schema:telephone : string [0..1]</tspan>
+                    </text>
+                </g>
+                <g id="Graphic_343">
+                    <a xl:href="https://schema.org/PostalAddress">
+                        <rect x="184.43374" y="176.38583" width="158.61035" height="17" fill="white"/>
+                        <rect x="184.43374" y="176.38583" width="158.61035" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(217.0712 179.38583)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                    xml:space="preserve">schema:PostalAddress</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Group_339">
+                <g id="Graphic_341">
+                    <rect x="209.57485" y="390.6913" width="108.32812" height="17" fill="white"/>
+                    <rect x="209.57485" y="390.6913" width="108.32812" height="17" stroke="black" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(215.57485 393.6913)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:url : uri [1..*]</tspan>
+                    </text>
+                </g>
+                <g id="Graphic_340">
+                    <a xl:href="https://schema.org/VirtualLocation">
+                        <rect x="209.57485" y="373.6913" width="108.32812" height="17" fill="white"/>
+                        <rect x="209.57485" y="373.6913" width="108.32812" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(215.57485 376.6913)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                    xml:space="preserve">schema:VirtualLocation</tspan>
+                        </text>
+                    </a>
+                </g>
+            </g>
+            <g id="Line_338">
+                <line x1="263.7389" y1="314.22363" x2="263.7389" y2="283.23583" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_337">
+                <rect x="217.5934" y="288.45414" width="92.29102" height="13" fill="white"/>
+                <text transform="translate(220.5934 289.45414)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:address [0..1]</tspan>
+                </text>
+            </g>
+            <g id="Line_336">
+                <line x1="391.72373" y1="95.3077" x2="391.72373" y2="134.03976" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_335">
+                <rect x="347.7535" y="112.86178" width="87.94043" height="13" fill="white"/>
+                <text transform="translate(350.7535 113.86178)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:location 0..1</tspan>
+                </text>
+            </g>
+            <g id="Line_331">
+                <path d="M 184.43374 226.38578 L 152.64317 226.38578 L 152.64317 116.18823"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_330">
+                <path d="M 209.57485 390.6913 L 152.64317 390.6913 L 152.64317 116.18823"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_329">
+                <path d="M 198.05678 336.7236 L 152.64317 336.7236 L 152.64317 116.18823"
+                        marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_322">
+                <path d="M 104.06089 106.43823 L 104.06089 137.40206 L -71.96712 137.40206 L -71.96712 107.6577"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Graphic_321">
+                <rect x="-112.38875" y="111.56612" width="80.84326" height="13" fill="white"/>
+                <text transform="translate(-109.38875 112.56612)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:image 0..1</tspan>
+                </text>
+            </g>
+            <g id="Graphic_365">
+                <text transform="translate(252.38784 143.88976)" fill="black">
+                    <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9"
+                            xml:space="preserve">string</tspan>
+                </text>
+            </g>
+            <g id="Line_366">
+                <line x1="369.09922" y1="149.38976" x2="287.94" y2="149.38976" marker-end="url(#StickArrow_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_368">
+                <path d="M 391.72373 157.88976 L 391.72373 226.38583 L 349.8941 226.38583"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_369">
+                <path d="M 391.72373 157.88976 L 391.72373 336.72363 L 336.27104 336.72363"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Line_370">
+                <path d="M 391.72373 157.88976 L 391.72373 390.6913 L 324.75298 390.6913"
+                        marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_372">
+                <g id="Graphic_374">
+                    <a xl:href="https://schema.org/ImageObject">
+                        <rect x="-151.22835" y="33.807697" width="158.52246" height="17" fill="white"/>
+                        <rect x="-151.22835" y="33.807697" width="158.52246" height="17" stroke="black"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                        <text transform="translate(-114.76985 36.807697)" fill="black">
+                            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9"
+                                    xml:space="preserve">schema:ImageObject</tspan>
+                        </text>
+                    </a>
+                </g>
+                <g id="Graphic_373">
+                    <rect x="-151.22835" y="50.807697" width="158.52246" height="50" fill="white"/>
+                    <rect x="-151.22835" y="50.807697" width="158.52246" height="50" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(-145.22835 53.8077)" fill="black">
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:url : uri [1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">schema:caption : text [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="31" xml:space="preserve">schema:author : string [0..1]</tspan>
+                        <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="42" xml:space="preserve">schema:copyrightNotice : string [0..1]</tspan>
+                    </text>
+                </g>
+            </g>
+            <g id="Line_375">
+                <line x1="7.294113" y1="67.3077" x2="45.72862" y2="67.30767" marker-end="url(#UMLInheritance_Marker)"
+                        stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            </g>
+            <g id="Group_376">
+                <g id="Graphic_378">
+                    <rect x="369.09922" y="140.88976" width="45.249023" height="17" fill="white"/>
+                    <rect x="369.09922" y="140.88976" width="45.249023" height="17" stroke="black"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+                    <text transform="translate(375.09922 143.88976)" fill="black">
+                        <tspan font-family="Roboto" font-style="italic" font-weight="bold" font-size="9" fill="black"
+                                x="0" y="9" xml:space="preserve">Location</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

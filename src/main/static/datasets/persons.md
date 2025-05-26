@@ -1,37 +1,17 @@
-> **⚠️** **Work in progress…**
+EC2U persons are described using a controlled subset of
+the  [FOAF](../handbooks/vocabularies/foaf.md) data model.
 
-The [EC2U Persons Dataset](http://data.ec2u.eu/persons/) provides identifying and background information about academic
-and research staff at EC2U partner universities.
+| prefix | namespace                   | description                                                         |
+|--------|-----------------------------|---------------------------------------------------------------------|
+| ec2u:  | https://data.ec2u.eu/terms/ | EC2U Knowledge Hub vocabulary                                       |
+| foaf:  | http://xmlns.com/foaf/0.1/  | [Friend of a Friend (FOAF)](http://xmlns.com/foaf/spec/) vocabulary |
 
-# Data Model
+![person data model](index/persons.svg#50)
 
-![person data model](index/persons.svg)
+# Person
 
-EC2U staff are described using a controlled subset of the [FOAF](http://xmlns.com/foaf/spec/) data model, extended with:
-
-* the following [VIVO](https://wiki.lyrasis.org/display/VIVODOC113x/Ontology+Reference) `foaf:Person`
-  subclasses for classification purposes:
-  * `vivo:EmeritusFaculty`
-    * `vivo:EmeritusProfessor`
-  * `vivo:EmeritusLibrarian`
-  * `vivo:EmeritusProfessor`
-  * `vivo:FacultyMember`
-  * `vivo:Librarian`
-  * `vivo:NonAcademic`
-  * `vivo:NonFacultyAcademic`
-    * `vivo:Postdoc`
-  * `vivo:Student`
-    * `vivo:GraduateStudent`
-    * `vivo:UndergraduateStudent`
-
-## ec2u:Person
-
-> [!WARNING]
-> TBC
-
-| property                                     | description          |
-| -------------------------------------------- | -------------------- |
-| all [ec2u:Resource](/datasets/resources) properties | inherited properties |
-| foaf:title                                   |                      |
-| foaf:givenName                               |                      |
-| foaf:familyName                              |                      |
+| term                                                                          | type                                                                                          | # | description                                      |
+|-------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|---|--------------------------------------------------|
+| **ec2u:Person**                                                               | [ec2u:Resource](./index.md#resource), [foaf:Person](../handbooks/vocabularies/foaf.md#person) |   | EC2U Knowledge Hub person                        |
+| ‹headOf› = ^[org:hasHead](https://www.w3.org/TR/vocab-org/#org:hasHead)       | [ec2u:Organization](organizations.md#organization)                                            | * | links to organizations headed by the person      |
+| ‹memberOf› = ^[org:hasMember](https://www.w3.org/TR/vocab-org/#org:hasMember) | [ec2u:Organization](organizations.md#organization)                                            | * | links to organizations the person is a member of |

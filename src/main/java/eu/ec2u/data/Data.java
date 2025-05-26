@@ -17,62 +17,112 @@
 package eu.ec2u.data;
 
 import com.metreeca.flow.Locator;
-import com.metreeca.flow.Request;
 import com.metreeca.flow.gcp.GCPServer;
-import com.metreeca.flow.gcp.services.GCPTranslator;
 import com.metreeca.flow.gcp.services.GCPVault;
-import com.metreeca.flow.handlers.*;
-import com.metreeca.flow.openai.services.OpenAnalyzer;
+import com.metreeca.flow.http.Request;
+import com.metreeca.flow.http.handlers.*;
+import com.metreeca.flow.http.services.Fetcher.CacheFetcher;
+import com.metreeca.flow.http.services.Fetcher.URLFetcher;
 import com.metreeca.flow.rdf4j.handlers.Graphs;
 import com.metreeca.flow.rdf4j.handlers.SPARQL;
-import com.metreeca.flow.rdf4j.services.Graph;
 import com.metreeca.flow.services.Cache.FileCache;
-import com.metreeca.flow.services.Fetcher.CacheFetcher;
-import com.metreeca.flow.services.Fetcher.URLFetcher;
-import com.metreeca.flow.services.Translator.CacheTranslator;
-import com.metreeca.flow.services.Translator.ComboTranslator;
+import com.metreeca.flow.services.Vault;
+import com.metreeca.flow.text.services.Translator.CacheTranslator;
 
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.datasets.courses.Courses;
+import eu.ec2u.data.datasets.documents.Documents;
+import eu.ec2u.data.datasets.events.Events;
+import eu.ec2u.data.datasets.organizations.Organizations;
+import eu.ec2u.data.datasets.persons.Persons;
+import eu.ec2u.data.datasets.programs.Programs;
+import eu.ec2u.data.datasets.taxonomies.Taxonomies;
+import eu.ec2u.data.datasets.units.Units;
+import eu.ec2u.data.datasets.universities.Universities;
+import eu.ec2u.data.services.Pipelines;
+import eu.ec2u.data.services.Resources;
+import eu.ec2u.work.ai.Embedder.CacheEmbedder;
+import eu.ec2u.work.ai.OpenAnalyzer;
+import eu.ec2u.work.ai.OpenEmbedder;
+import eu.ec2u.work.ai.OpenTranslator;
+import eu.ec2u.work.ai.StoreTranslator;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
+import java.time.Duration;
 
-import static com.metreeca.flow.Handler.handler;
 import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.Response.SeeOther;
-import static com.metreeca.flow.json.services.Analyzer.analyzer;
-import static com.metreeca.flow.jsonld.formats.JSONLD.codec;
-import static com.metreeca.flow.jsonld.formats.JSONLD.store;
-import static com.metreeca.flow.rdf4j.services.Graph.graph;
+import static com.metreeca.flow.http.Handler.handler;
+import static com.metreeca.flow.http.Response.SeeOther;
+import static com.metreeca.flow.http.services.Fetcher.fetcher;
+import static com.metreeca.flow.json.formats.JSON.codec;
+import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.rdf4j.RDF4J.repository;
 import static com.metreeca.flow.services.Cache.cache;
-import static com.metreeca.flow.services.Fetcher.fetcher;
-import static com.metreeca.flow.services.Logger.Level.debug;
-import static com.metreeca.flow.services.Translator.translator;
 import static com.metreeca.flow.services.Vault.vault;
-import static com.metreeca.link.json.JSON.json;
-import static com.metreeca.link.rdf4j.RDF4J.rdf4j;
+import static com.metreeca.flow.text.services.Translator.translator;
+import static com.metreeca.mesh.json.JSONCodec.json;
+import static com.metreeca.mesh.rdf4j.RDF4JStore.rdf4j;
+import static com.metreeca.shim.Loggers.logging;
+import static com.metreeca.shim.URIs.uri;
 
+import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static eu.ec2u.work.ai.Embedder.embedder;
+import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
+import static java.util.logging.Level.INFO;
 
 public final class Data extends Delegator {
 
-    private static final boolean Production=GCPServer.production();
+    public static final String BASE="https://data.ec2u.eu/";
 
-    private static final String GraphDBServer="http://base.ec2u.net"; // !!! https
-    private static final String GraphDBRepository="data-next";
-    private static final String GraphDBUsr="server";
-    private static final String GraphDBPwd="gdb-server-pwd";
+    public static final URI DATA=uri(BASE);
+
+
+    private static final boolean PRODUCTION=GCPServer.production();
+
+    private static final String GDB_SERVER="http://base.ec2u.net"; // !!! https
+    private static final String GDB_REPOSITORY="data-next";
+    private static final String GDB_USR="gdb-server-usr";
+    private static final String GDB_PWD="gdb-server-pwd";
 
 
     static {
-        debug.log("com.metreeca");
+        logging(INFO);
     }
 
     static {
         System.setProperty("com.sun.security.enableAIAcaIssuers", "true"); // ;( retrieve missing certificates
+    }
+
+
+    private static Repository gdb() {
+
+        final Vault vault=service(vault());
+
+        final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GDB_SERVER, GDB_REPOSITORY));
+
+        repository.setUsernameAndPassword(vault.get(GDB_USR), vault.get(GDB_PWD));
+
+        return repository;
+    }
+
+    private static void chat(final ChatCompletionCreateParams.Builder builder) {
+        builder
+                .model("gpt-4o-mini")
+                .seed(0)
+                .temperature(0)
+                .maxCompletionTokens(4096);
+    }
+
+    private static void embedding(final EmbeddingCreateParams.Builder builder) {
+        builder.model("text-embedding-3-small");
     }
 
 
@@ -83,35 +133,27 @@ public final class Data extends Delegator {
 
                 .set(vault(), GCPVault::new)
 
-                .set(path(), () -> Paths.get(Production ? "/tmp" : "data"))
+                .set(path(), () -> Paths.get(PRODUCTION ? "/tmp" : "data"))
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
-                .set(fetcher(), () -> Production ? new URLFetcher() : new CacheFetcher())
+                .set(fetcher(), () -> PRODUCTION ? new URLFetcher() : new CacheFetcher())
 
-                .set(graph(), () -> new Graph(service(Data::repository)))
-                .set(store(), () -> rdf4j(service(Data::repository)))
-                .set(codec(), () -> json().pretty(true))
+                .set(repository(), Data::gdb)
 
-                .set(analyzer(), () -> new OpenAnalyzer("gpt-4o-mini", service(vault()).get("openai-key")))
+                .set(store(), () -> rdf4j(service(repository())))
+                .set(codec(), () -> json()
+                        .prune(true)
+                        .indent(true)
+                        .base(DATA)
+                )
 
-                .set(translator(), () -> new CacheTranslator(new ComboTranslator(
-                        // !!! new GraphTranslator(),
-                        new GCPTranslator()
-                )));
+                .set(openai(), () -> openai(service(vault()).get("openai-key"), builder -> builder
+                        .timeout(Duration.ofSeconds(20))
+                ))
 
-    }
+                .set(translator(), () -> new CacheTranslator(new StoreTranslator(new OpenTranslator(Data::chat))))
+                .set(analyzer(), () -> new OpenAnalyzer(Data::chat))
+                .set(embedder(), () -> new CacheEmbedder(new OpenEmbedder(Data::embedding)));
 
-
-    private static Repository repository() {
-        return repository(GraphDBRepository);
-    }
-
-    public static Repository repository(final String name) {
-
-        final HTTPRepository repository=new HTTPRepository(format("%s/repositories/%s", GraphDBServer, name));
-
-        repository.setUsernameAndPassword(GraphDBUsr, service(vault()).get(GraphDBPwd));
-
-        return repository;
     }
 
 
@@ -119,8 +161,8 @@ public final class Data extends Delegator {
         new GCPServer().delegate(locator -> services(locator).get(Data::new)).start();
     }
 
-    public static void exec(final Runnable... tasks) {
-        services(new Locator()).exec(tasks).clear();
+    public static void exec(final Runnable task) {
+        try ( final Locator locator=services(new Locator()) ) { locator.exec(task); }
     }
 
 
@@ -151,11 +193,23 @@ public final class Data extends Delegator {
 
                 new Wrapper() // after publisher
 
-                        .before(request -> request.base(EC2U.BASE)), // define canonical base
+                        .before(request -> request.base(BASE)), // define canonical base
 
                 new Router()
-                        .path("/cron/*", new Cron())
-                        .path("/*", new EC2U())
+
+                        .path("/", new Datasets.Handler())
+                        .path("/taxonomies/*", new Taxonomies.Handler())
+                        .path("/organizations/*", new Organizations.Handler())
+                        .path("/universities/*", new Universities.Handler())
+                        .path("/units/*", new Units.Handler())
+                        .path("/persons/*", new Persons.Handler())
+                        .path("/programs/*", new Programs.Handler())
+                        .path("/courses/*", new Courses.Handler())
+                        .path("/documents/*", new Documents.Handler())
+                        .path("/events/*", new Events.Handler())
+
+                        .path("/resources/*", new Resources.Handler())
+                        .path("/pipelines/*", new Pipelines.Handler())
 
         ));
     }
