@@ -55,32 +55,32 @@ public final class TopicsEC2UOrganizations implements Runnable {
             .license(set(Datasets.CCBYNCND40));
 
 
-    public static final TopicFrame UNIVERSITY=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS.id()+"/university"
+    public static final TopicFrame UNIVERSITY=new TopicFrame().id((
+            EC2U_ORGANIZATIONS.id().resolve("university")
     ));
 
-    public static final TopicFrame INSTITUTE=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS.id()+"/university-unit/institute"
+    public static final TopicFrame INSTITUTE=new TopicFrame().id((
+            EC2U_ORGANIZATIONS.id().resolve("university-unit/institute")
     ));
 
-    public static final TopicFrame VIRTUAL_INSTITUTE=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS.id()+"/university-unit/institute/virtual"
+    public static final TopicFrame VIRTUAL_INSTITUTE=new TopicFrame().id((
+            EC2U_ORGANIZATIONS.id().resolve("university-unit/institute/virtual")
     ));
 
-    public static final TopicFrame DEPARTMENT=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS.id()+"/university-unit/department"
+    public static final TopicFrame DEPARTMENT=new TopicFrame().id((
+            EC2U_ORGANIZATIONS.id().resolve("university-unit/department")
     ));
 
-    public static final TopicFrame SERVICE_CENTRE=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS.id()+"/university-unit/centre/service"
+    public static final TopicFrame SERVICE_CENTRE=new TopicFrame().id((
+            EC2U_ORGANIZATIONS.id().resolve("university-unit/centre/service")
     ));
 
-    public static final TopicFrame INTERDEPARTMENTAL_RESEARCH_CENTRE=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS.id()+"/university-unit/centre/research/interdepartmental"
+    public static final TopicFrame INTERDEPARTMENTAL_RESEARCH_CENTRE=new TopicFrame().id((
+            EC2U_ORGANIZATIONS.id().resolve("university-unit/centre/research/interdepartmental")
     ));
 
-    public static final TopicFrame RECOGNIZED_GROUP=new TopicFrame().id(uri(
-            EC2U_ORGANIZATIONS.id()+"/university-unit/group/recognized"
+    public static final TopicFrame RECOGNIZED_GROUP=new TopicFrame().id((
+            EC2U_ORGANIZATIONS.id().resolve("university-unit/group/recognized")
     ));
 
 

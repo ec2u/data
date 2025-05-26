@@ -69,16 +69,16 @@ public final class TopicsISCED2011 implements Runnable {
                     ))
             );
 
-    public static final TopicFrame LEVEL_0=new TopicFrame(true).id(uri(ISCED2011.id()+"/0"));
-    public static final TopicFrame LEVEL_1=new TopicFrame(true).id(uri(ISCED2011.id()+"/1"));
-    public static final TopicFrame LEVEL_2=new TopicFrame(true).id(uri(ISCED2011.id()+"/2"));
-    public static final TopicFrame LEVEL_3=new TopicFrame(true).id(uri(ISCED2011.id()+"/3"));
-    public static final TopicFrame LEVEL_4=new TopicFrame(true).id(uri(ISCED2011.id()+"/4"));
-    public static final TopicFrame LEVEL_5=new TopicFrame(true).id(uri(ISCED2011.id()+"/5"));
-    public static final TopicFrame LEVEL_6=new TopicFrame(true).id(uri(ISCED2011.id()+"/6"));
-    public static final TopicFrame LEVEL_7=new TopicFrame(true).id(uri(ISCED2011.id()+"/7"));
-    public static final TopicFrame LEVEL_8=new TopicFrame(true).id(uri(ISCED2011.id()+"/8"));
-    public static final TopicFrame LEVEL_9=new TopicFrame(true).id(uri(ISCED2011.id()+"/9"));
+    public static final TopicFrame LEVEL_0=new TopicFrame(true).id(ISCED2011.id().resolve("0"));
+    public static final TopicFrame LEVEL_1=new TopicFrame(true).id(ISCED2011.id().resolve("1"));
+    public static final TopicFrame LEVEL_2=new TopicFrame(true).id(ISCED2011.id().resolve("2"));
+    public static final TopicFrame LEVEL_3=new TopicFrame(true).id(ISCED2011.id().resolve("3"));
+    public static final TopicFrame LEVEL_4=new TopicFrame(true).id(ISCED2011.id().resolve("4"));
+    public static final TopicFrame LEVEL_5=new TopicFrame(true).id(ISCED2011.id().resolve("5"));
+    public static final TopicFrame LEVEL_6=new TopicFrame(true).id(ISCED2011.id().resolve("6"));
+    public static final TopicFrame LEVEL_7=new TopicFrame(true).id(ISCED2011.id().resolve("7"));
+    public static final TopicFrame LEVEL_8=new TopicFrame(true).id(ISCED2011.id().resolve("8"));
+    public static final TopicFrame LEVEL_9=new TopicFrame(true).id(ISCED2011.id().resolve("9"));
 
 
     public static final Map<Integer, Topic> LEVELS=map(
