@@ -33,6 +33,7 @@ import eu.ec2u.data.vocabularies.schema.SchemaCourseInstance;
 import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -117,6 +118,17 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
+    default Map<Locale, String> label() {
+        return Reference.label(name());
+    }
+
+    @Override
+    default Map<Locale, String> comment() {
+        return Reference.comment(disambiguatingDescription(), description());
+    }
+
+
+    @Override
     default Courses dataset() {
         return COURSES;
     }
@@ -144,6 +156,6 @@ public interface Course extends Resource, SchemaCourse, SchemaCourseInstance {
 
 
     @Pattern("^"+TopicsEC2UStakeholders.PATH+".*$") // !!! @Prefix
-    Set<Topic> audience(); // !!! EC2U Stakeholders
+    Set<Topic> audience();
 
 }

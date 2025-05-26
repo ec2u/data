@@ -36,6 +36,7 @@ import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalProgram;
 import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -114,6 +115,17 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    default Map<Locale, String> label() {
+        return Reference.label(name());
+    }
+
+    @Override
+    default Map<Locale, String> comment() {
+        return Reference.comment(disambiguatingDescription(), description());
+    }
+
 
     @Override
     default Programs dataset() {
