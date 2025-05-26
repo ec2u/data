@@ -30,10 +30,10 @@ import org.eclipse.rdf4j.model.vocabulary.SKOSXL;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
-import static com.metreeca.flow.Locator.async;
-import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.Locator.*;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
@@ -116,6 +116,8 @@ public final class TopicsEuroSciVoc implements Runnable {
     private final Analyzer analyzer=service(analyzer());
     private final Logger logger=service(logger());
 
+    private final Executor executor=executor(10); // ;( limit concurrent threads updating GDB
+
 
     @Override
     public void run() {
@@ -140,7 +142,7 @@ public final class TopicsEuroSciVoc implements Runnable {
                                         .split()
                                 )
 
-                                .map(concept -> async(() -> concept.uri()
+                                .map(concept -> async(executor, () -> concept.uri()
 
                                         .map(id -> new TopicFrame()
                                                 .id(adopt(id))
