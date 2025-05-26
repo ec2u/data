@@ -70,6 +70,16 @@ export const Datasets=immutable({
 });
 
 
+const DatasetOrder: string[]=[
+	"/universities/",
+	"/units/",
+	"/programs/",
+	"/courses/",
+	"/documents/",
+	"/events/"
+];
+
+
 export function DataDatasets() {
 
 	const datasets=useCollection(Datasets, "members");
@@ -97,7 +107,14 @@ export function DataDatasets() {
 
 	>
 
-		<TileSheet placeholder={Datasets[icon]} sorted={(x, y) => x.members[0].count - y.members[0].count} as={({
+		<TileSheet placeholder={Datasets[icon]} sorted={(x, y) => {
+
+			const xi=DatasetOrder.indexOf(x.id);
+			const yi=DatasetOrder.indexOf(y.id);
+
+			return (xi >= 0 ? xi : DatasetOrder.length) - (yi >= 0 ? yi : DatasetOrder.length);
+
+		}} as={({
 
 			id,
 
