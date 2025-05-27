@@ -147,7 +147,7 @@ public final class Data extends Delegator {
                 )
 
                 .set(openai(), () -> openai(service(vault()).get("openai-key"), builder -> builder
-                        .timeout(Duration.ofSeconds(20))
+                        .timeout(Duration.ofSeconds(60))
                 ))
 
                 .set(translator(), () -> new CacheTranslator(new StoreTranslator(new OpenTranslator(Data::chat))))

@@ -90,7 +90,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
                         value(query(new ProgramFrame(true))
                                 .where("university", criterion().any(PAVIA))
-                                .where("loader", criterion().any(PIPELINE))
+                                .where("pipeline", criterion().any(PIPELINE))
                         )
 
                 )
