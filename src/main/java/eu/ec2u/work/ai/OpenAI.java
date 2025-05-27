@@ -21,7 +21,10 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.errors.OpenAIException;
 import com.openai.errors.RateLimitException;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -39,7 +42,9 @@ import static java.lang.String.format;
 public final class OpenAI {
 
     private static final long MIN_DELAY=100;
-    private static final long MAX_DELAY=5*60_000;
+    private static final long MAX_DELAY=2*60_000;
+
+    private static final AtomicReference<Queue<Long>> TIMESTAMPS=new AtomicReference<>(new ConcurrentLinkedQueue<>());
 
 
     /**
@@ -95,11 +100,15 @@ public final class OpenAI {
         for (int attempt=0; attempts == 0 || attempt < attempts; attempt++) {
             try {
 
+                timestamps().add(System.currentTimeMillis());
+
                 return task.get();
 
             } catch ( final RateLimitException e ) {
 
                 try {
+
+                    // compute the minimum delay before the next attempt
 
                     final long minimum=e.headers()
                             .values("retry-after-ms")
@@ -108,8 +117,23 @@ public final class OpenAI {
                             .flatMap(lenient(Long::parseLong))
                             .orElse(MIN_DELAY);
 
-                    final long maximum=minimum+min(minimum*(1L << min(attempt, 30)), MAX_DELAY);// prevent overflow
-                    final long delay=ThreadLocalRandom.current().nextLong(minimum, maximum);
+
+                    // compute the maximum delay before the next attempt (exponential backoff with overflow prevention)
+
+                    final long maximum=minimum+min(minimum*(1L << min(attempt, 30)), MAX_DELAY);
+
+
+                    // compute the number of requests within the maximum delay
+
+                    final long horizon=System.currentTimeMillis()-maximum;
+                    final long requests=timestamps().stream()
+                            .filter(timestamp -> timestamp > horizon)
+                            .count();
+
+
+                    // reschedule the next attempt, taking into account the number of concurrent requests
+
+                    final long delay=requests*ThreadLocalRandom.current().nextLong(minimum, maximum);
 
                     service(logger()).warning(OpenAI.class, format(
                             "task delayed by <%,d> ms after <%,d> attempts", delay, attempt+1
@@ -131,8 +155,28 @@ public final class OpenAI {
     }
 
 
+    private static Queue<Long> timestamps() {
+        return TIMESTAMPS.updateAndGet(timestamps -> {
+
+            final long cutoff=System.currentTimeMillis()-MAX_DELAY;
+
+            while ( !timestamps.isEmpty() && timestamps.peek() < cutoff ) {
+                timestamps.poll();
+            }
+
+            return timestamps;
+
+        });
+    }
+
+
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private OpenAI() { }
+
+
+    private static int events() {
+        return timestamps().size();
+    }
 
 }
