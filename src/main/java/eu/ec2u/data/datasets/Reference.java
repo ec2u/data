@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import static com.metreeca.shim.Collections.entry;
 import static com.metreeca.shim.Collections.map;
 
+import static eu.ec2u.data.datasets.Localized.LOCALES;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.reducing;
 
@@ -43,6 +44,11 @@ public interface Reference {
     String EMAIL_PATTERN="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
     String PHONE_PATTERN="^\\+?[1-9]\\d{1,14}$";
     String LANGUAGE_PATTERN="^[a-z]{2}$";
+
+
+    static boolean local(final Entry<Locale, String> text) {
+        return LOCALES.contains(text.getKey());
+    }
 
 
     @SafeVarargs
@@ -67,8 +73,7 @@ public interface Reference {
 
 
     static Optional<String> email(final String text) {
-        return Optional.of(text)
-                .filter(t -> t.matches(EMAIL_PATTERN));
+        return Optional.of(text).filter(t -> t.matches(EMAIL_PATTERN));
     }
 
 

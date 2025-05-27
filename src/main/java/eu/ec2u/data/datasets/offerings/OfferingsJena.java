@@ -20,6 +20,7 @@ package eu.ec2u.data.datasets.offerings;
 import com.metreeca.flow.http.FormatException;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.lod.Schema;
+import com.metreeca.flow.rdf.Rover;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
@@ -27,7 +28,6 @@ import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
-import eu.ec2u.work.Rover;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -45,6 +45,7 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.rdf.Rover.reverse;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
@@ -63,7 +64,6 @@ import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
 import static eu.ec2u.data.datasets.universities.University.JENA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
-import static eu.ec2u.work.Rover.rover;
 import static java.lang.String.format;
 
 public final class OfferingsJena implements Runnable {
@@ -150,7 +150,7 @@ public final class OfferingsJena implements Runnable {
 
                                 final Collection<Statement> model=Schema.normalize(rdf(reader, SITE_URL, parser));
 
-                                return Optional.of(rover(model).focus(ABOUT_PAGE).reverse(RDF.TYPE));
+                                return Optional.of(Rover.rover(model).focus(ABOUT_PAGE).traverse(reverse(RDF.TYPE)));
 
                             } catch ( final FormatException e ) {
 
@@ -172,7 +172,7 @@ public final class OfferingsJena implements Runnable {
     }
 
     private Optional<ProgramFrame> program(final Rover rover) {
-        return rover.forward(Schema.term("url")).uri().flatMap(url -> review(new ProgramFrame()
+        return rover.traverse(Schema.term("url")).uri().flatMap(url -> review(new ProgramFrame()
 
                 .id(PROGRAMS.id().resolve(uuid(JENA, url.toString())))
                 .university(JENA)
@@ -190,19 +190,19 @@ public final class OfferingsJena implements Runnable {
 
 
     private static Optional<Map<Locale, String>> name(final Rover rover) {
-        return rover.forward(HEADLINE).string().map(v -> map(entry(EN, v)));
+        return rover.traverse(HEADLINE).string().map(v -> map(entry(EN, v)));
     }
 
     private static Optional<Map<Locale, String>> description(final Rover rover) {
-        return rover.forward(ABSTRACT).string().map(v -> map(entry(EN, v)));
+        return rover.traverse(ABSTRACT).string().map(v -> map(entry(EN, v)));
     }
 
     private static Optional<Topic> educationalLevel(final Rover rover) {
-        return rover.forward(EDUCATIONAL_LEVEL).string().map(LEVELS::get);
+        return rover.traverse(EDUCATIONAL_LEVEL).string().map(LEVELS::get);
     }
 
     private static Optional<Map<Locale, String>> educationalCredentialAwarded(final Rover rover) {
-        return rover.forward(EDUCATIONAL_LEVEL).string().map(v -> map(entry(EN, v)));
+        return rover.traverse(EDUCATIONAL_LEVEL).string().map(v -> map(entry(EN, v)));
     }
 
 }

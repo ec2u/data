@@ -20,6 +20,7 @@ import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.tools.Store;
 
+import eu.ec2u.data.datasets.Reference;
 import eu.ec2u.data.datasets.ReferenceFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 import eu.ec2u.work.ai.Analyzer;
@@ -35,6 +36,7 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.*;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.rdf.Rover.*;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
@@ -48,8 +50,6 @@ import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
-import static eu.ec2u.data.datasets.Localized.LOCALES;
-import static eu.ec2u.work.Rover.rover;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.lang.String.format;
 import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
@@ -138,7 +138,7 @@ public final class TopicsEuroSciVoc implements Runnable {
 
                                 .flatMap(model -> rover(model)
                                         .focus(SKOS.CONCEPT)
-                                        .reverse(RDF.TYPE)
+                                        .traverse(reverse(RDF.TYPE))
                                         .split()
                                 )
 
@@ -149,23 +149,36 @@ public final class TopicsEuroSciVoc implements Runnable {
                                                 .generated(true)
                                                 .isDefinedBy(id)
                                                 .inScheme(EUROSCIVOC)
-                                                .topConceptOf(concept.forward(SKOS.TOP_CONCEPT_OF)
-                                                        .uri().map(v -> EUROSCIVOC).orElse(null)
+                                                .topConceptOf(concept
+                                                        .traverse(SKOS.TOP_CONCEPT_OF)
+                                                        .uri()
+                                                        .map(v -> EUROSCIVOC)
+                                                        .orElse(null)
                                                 )
-                                                .notation(concept.forward(SKOS.NOTATION)
-                                                        .string().orElse(null)
+                                                .notation(concept
+                                                        .traverse(SKOS.NOTATION)
+                                                        .string()
+                                                        .orElse(null)
                                                 )
-                                                .prefLabel(concept.forward(SKOSXL.PREF_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                        .texts(LOCALES).orElse(null)
-                                                )
-                                                .altLabel(concept.forward(SKOSXL.ALT_LABEL).forward(SKOSXL.LITERAL_FORM)
-                                                        .textsets(LOCALES).orElse(null)
-                                                )
-                                                .broader(set(concept.forward(SKOS.BROADER)
-                                                        .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                                .prefLabel(map(concept
+                                                        .traverse(SKOSXL.PREF_LABEL, SKOSXL.LITERAL_FORM)
+                                                        .texts()
+                                                        .filter(Reference::local)
                                                 ))
-                                                .broaderTransitive(set(concept.plus(SKOS.BROADER)
-                                                        .uris().map(b -> new TopicFrame().id(adopt(b)))
+                                                .altLabel(mapset(concept
+                                                        .traverse(SKOSXL.ALT_LABEL, SKOSXL.LITERAL_FORM)
+                                                        .texts()
+                                                        .filter(Reference::local)
+                                                ))
+                                                .broader(set(concept
+                                                        .traverse(SKOS.BROADER)
+                                                        .uris()
+                                                        .map(b -> new TopicFrame().id(adopt(b)))
+                                                ))
+                                                .broaderTransitive(set(concept
+                                                        .traverse(plus(forward(SKOS.BROADER)))
+                                                        .uris()
+                                                        .map(b -> new TopicFrame().id(adopt(b)))
                                                 ))
                                         )
 

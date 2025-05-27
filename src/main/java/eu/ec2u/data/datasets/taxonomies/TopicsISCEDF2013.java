@@ -20,6 +20,7 @@ import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.tools.Store;
 
+import eu.ec2u.data.datasets.Reference;
 import eu.ec2u.data.datasets.ReferenceFrame;
 import eu.ec2u.work.ai.Analyzer;
 import org.eclipse.rdf4j.model.IRI;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.rdf.Rover.*;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
@@ -47,8 +49,6 @@ import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
-import static eu.ec2u.data.datasets.Localized.LOCALES;
-import static eu.ec2u.work.Rover.rover;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.lang.String.format;
 import static org.eclipse.rdf4j.model.util.Values.iri;
@@ -133,7 +133,7 @@ public final class TopicsISCEDF2013 implements Runnable {
 
                                 .flatMap(model -> rover(model)
                                         .focus(SKOS.CONCEPT)
-                                        .reverse(RDF.TYPE)
+                                        .traverse(reverse(RDF.TYPE))
                                         .split()
                                 )
 
@@ -145,33 +145,33 @@ public final class TopicsISCEDF2013 implements Runnable {
                                                 .isDefinedBy(id)
                                                 .inScheme(ISCEDF2013)
                                                 .topConceptOf(concept
-                                                        .forward(SKOS.TOP_CONCEPT_OF)
+                                                        .traverse(SKOS.TOP_CONCEPT_OF)
                                                         .uri()
                                                         .map(v -> ISCEDF2013)
                                                         .orElse(null)
                                                 )
                                                 .notation(concept
-                                                        .forward(XL_NOTATION)
-                                                        .forward(RDF.VALUE)
+                                                        .traverse(XL_NOTATION, RDF.VALUE)
                                                         .string()
                                                         .orElse(null)
                                                 )
-                                                .prefLabel(concept
-                                                        .forward(SKOS.PREF_LABEL)
-                                                        .texts(LOCALES)
-                                                        .orElse(null)
-                                                )
-                                                .altLabel(concept.forward(SKOS.ALT_LABEL)
-                                                        .textsets(LOCALES)
-                                                        .orElse(null)
-                                                )
+                                                .prefLabel(map(concept
+                                                        .traverse(SKOS.PREF_LABEL)
+                                                        .texts()
+                                                        .filter(Reference::local)
+                                                ))
+                                                .altLabel(mapset(concept
+                                                        .traverse(SKOS.ALT_LABEL)
+                                                        .texts()
+                                                        .filter(Reference::local)
+                                                ))
                                                 .broader(set(concept
-                                                        .forward(SKOS.BROADER)
+                                                        .traverse(SKOS.BROADER)
                                                         .uris()
                                                         .map(b -> new TopicFrame().id(adopt(b)))
                                                 ))
                                                 .broaderTransitive(set(concept
-                                                        .plus(SKOS.BROADER)
+                                                        .traverse(plus(forward(SKOS.BROADER)))
                                                         .uris()
                                                         .map(b -> new TopicFrame().id(adopt(b)))
                                                 ))
