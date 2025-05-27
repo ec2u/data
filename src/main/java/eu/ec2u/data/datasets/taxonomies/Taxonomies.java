@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.datasets.taxonomies;
 
+import com.metreeca.flow.csv.actions.Transform;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
@@ -26,7 +27,6 @@ import com.metreeca.mesh.tools.Store;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.datasets.organizations.Organizations;
-import eu.ec2u.work.CSVProcessor;
 import eu.ec2u.work.ai.Embedder;
 import eu.ec2u.work.ai.StoreEmbedder;
 import eu.ec2u.work.ai.Vector;
@@ -121,7 +121,7 @@ public interface Taxonomies extends Dataset {
 
     }
 
-    final class Loader extends CSVProcessor<TopicFrame> {
+    final class Loader extends Transform<TopicFrame> {
 
         private static final Pattern NUMBER_PATTERN=Pattern.compile("\\d+");
 

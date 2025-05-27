@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.datasets.offerings;
 
+import com.metreeca.flow.csv.actions.Transform;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.mesh.Value;
@@ -28,7 +29,6 @@ import eu.ec2u.data.datasets.persons.PersonFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicFrame;
 import eu.ec2u.data.datasets.universities.University;
 import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
-import eu.ec2u.work.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
@@ -74,7 +74,7 @@ import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
 
-public final class OfferingsLLL extends CSVProcessor<CourseFrame> implements Runnable {
+public final class OfferingsLLL extends Transform<CourseFrame> implements Runnable {
 
     private static final String DATA_URL="offerings-lll-url"; // vault label
 

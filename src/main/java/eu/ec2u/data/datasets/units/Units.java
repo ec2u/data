@@ -17,6 +17,7 @@
 package eu.ec2u.data.datasets.units;
 
 import com.metreeca.flow.Xtream;
+import com.metreeca.flow.csv.actions.Transform;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
@@ -36,7 +37,6 @@ import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.data.datasets.persons.PersonFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.universities.University;
-import eu.ec2u.work.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
@@ -123,7 +123,7 @@ public interface Units extends Organizations {
 
     }
 
-    final class Loader extends CSVProcessor<Valuable> {
+    final class Loader extends Transform<Valuable> {
 
         private final University university;
 

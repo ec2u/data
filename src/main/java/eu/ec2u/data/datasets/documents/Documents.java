@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.datasets.documents;
 
+import com.metreeca.flow.csv.actions.Transform;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
@@ -34,7 +35,6 @@ import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.data.datasets.persons.PersonFrame;
 import eu.ec2u.data.datasets.universities.University;
-import eu.ec2u.work.CSVProcessor;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
@@ -114,7 +114,7 @@ public interface Documents extends Dataset {
 
     }
 
-    final class Loader extends CSVProcessor<Valuable> {
+    final class Loader extends Transform<Valuable> {
 
         private static final Pattern VALID_PATTERN=Pattern.compile("\\d{4}(?:/\\d{4})?");
 
