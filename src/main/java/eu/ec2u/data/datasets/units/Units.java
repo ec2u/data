@@ -249,7 +249,7 @@ public interface Units extends Organizations {
 
         private Optional<Topic> classification(final CSVRecord record) {
             return value(record, "Type").stream()
-                    .flatMap(Unit.organizations())
+                    .flatMap(organizations())
                     .findFirst();
         }
 

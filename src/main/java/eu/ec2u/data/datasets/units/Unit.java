@@ -185,7 +185,8 @@ public interface Unit extends Organization, OrgOrganizationalUnit {
 
         return Optional.of(unit) // translate before English-based classification
                 .map(u -> localize(u, locale -> translate(u, locale)))
-                .map(Unit::classify)
+                .map(u -> classification(u))
+                .map(u -> subject(u))
                 .flatMap(new Validate<>());
     }
 
@@ -202,11 +203,24 @@ public interface Unit extends Organization, OrgOrganizationalUnit {
                 .definition(translator.texts(unit.definition(), source, EN));
     }
 
-    private static UnitFrame classify(final UnitFrame unit) {
-        return unit.subject(Optional.of(unit.subject()).filter(not(Set::isEmpty)).orElseGet(() -> set(euroscivoc()
-                .apply(embeddable(unit))
-                .limit(3)
-        )));
+    private static UnitFrame classification(final UnitFrame unit) {
+        return unit.classification(Optional.of(unit.classification())
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(organizations()
+                        .apply(embeddable(unit))
+                        .limit(1)
+                ))
+        );
+    }
+
+    private static UnitFrame subject(final UnitFrame unit) {
+        return unit.subject(Optional.of(unit.subject())
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(euroscivoc()
+                        .apply(embeddable(unit))
+                        .limit(3)
+                ))
+        );
     }
 
     private static String embeddable(final Unit unit) {
@@ -220,7 +234,7 @@ public interface Unit extends Organization, OrgOrganizationalUnit {
 
     static Matcher organizations() {
         return new Matcher(EC2U_ORGANIZATIONS)
-                .threshold(0.75);
+                .threshold(0.6);
     }
 
     static Matcher euroscivoc() {
