@@ -166,16 +166,16 @@ public interface Events extends Dataset {
                   sure not to include the document title in the description and to ignore other ancillary matters
                   such as page headers, footers, and navigation sections
                 - start date in ISO format, taking into account that the current date is %s
-                - start time in ISO format without seconds
+                - start time in ISO format without seconds (hh:mm)
                 - end date in ISO format, taking into account that the current date is %s
-                - end time in ISO format without seconds
+                - end time in ISO format without seconds (hh:mm)
                 - entry fees (free, paid); make sure not to mix up registration required with paid entry fees
                 - attendance mode (offline, online, mixed)
                 - attendance URL (make absolutely sure to include it only for events with online and mixed attendance mode)
                 - venue name
                 - venue street address
                 - venue city name
-                - image URL, only if confident about it
+                - image URL (may include a query component), only if reasonably sure
                 - image credits or copyright
                 - major topic
                 - intended audience
