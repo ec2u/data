@@ -17,6 +17,7 @@
 package eu.ec2u.data.datasets.taxonomies;
 
 import com.metreeca.flow.Xtream;
+import com.metreeca.flow.services.Vault;
 
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.datasets.organizations.Organizations;
@@ -26,12 +27,12 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
-import static com.metreeca.shim.Resources.resource;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -39,8 +40,10 @@ import static eu.ec2u.data.datasets.Localized.EN;
 
 public final class TopicsEC2UOrganizations implements Runnable {
 
-    public static final String PATH=Taxonomies.PATH+"organizations/";
+    private static final String DATA_URL="taxonomies-ec2u-organizations"; // vault label
 
+
+    public static final String PATH=Taxonomies.PATH+"organizations/";
 
     public static final TaxonomyFrame EC2U_ORGANIZATIONS=new TaxonomyFrame()
             .id(uri(PATH))
@@ -91,18 +94,15 @@ public final class TopicsEC2UOrganizations implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Vault vault=service(vault());
+
+
     @Override public void run() {
         service(store()).modify(
 
                 array(list(Xtream.from(
-
-                        Stream.of(
-                                EC2U_ORGANIZATIONS
-                        ),
-
-                        Stream.of(resource(TopicsEC2UOrganizations.class, ".csv").toString())
-                                .flatMap(new Taxonomies.Loader(EC2U_ORGANIZATIONS))
-
+                        Stream.of(EC2U_ORGANIZATIONS),
+                        Stream.of(vault.get(DATA_URL)).flatMap(new Taxonomies.Loader(EC2U_ORGANIZATIONS))
                 ))),
 
                 value(query(new TopicFrame(true)).where("inScheme", criterion().any(EC2U_ORGANIZATIONS)))

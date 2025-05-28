@@ -17,6 +17,7 @@
 package eu.ec2u.data.datasets.taxonomies;
 
 import com.metreeca.flow.Xtream;
+import com.metreeca.flow.services.Vault;
 
 import eu.ec2u.data.datasets.ReferenceFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
@@ -26,12 +27,12 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
-import static com.metreeca.shim.Resources.resource;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -49,6 +50,9 @@ import static eu.ec2u.data.datasets.Localized.EN;
  * development across institutions within the EC2U alliance.
  */
 public final class TopicsSDGs implements Runnable {
+
+    private static final String DATA_URL="taxonomies-ec2u-sdgs"; // vault label
+
 
     public static final String PATH=Taxonomies.PATH+"sdgs/";
 
@@ -91,19 +95,15 @@ public final class TopicsSDGs implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Vault vault=service(vault());
+
+
     @Override public void run() {
         service(store()).modify(
 
                 array(list(Xtream.from(
-
-                Stream.of(
-                        SDGS,
-                        UNITED_NATIONS
-                ),
-
-                        Stream.of(resource(TopicsSDGs.class, ".csv").toString())
-                        .flatMap(new Taxonomies.Loader(SDGS))
-
+                        Stream.of(SDGS, UNITED_NATIONS),
+                        Stream.of(vault.get(DATA_URL)).flatMap(new Taxonomies.Loader(SDGS))
                 ))),
 
                 value(query(new TopicFrame(true)).where("inScheme", criterion().any(SDGS)))

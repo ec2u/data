@@ -16,6 +16,8 @@
 
 package eu.ec2u.data.datasets.taxonomies;
 
+import com.metreeca.flow.services.Vault;
+
 import eu.ec2u.data.datasets.ReferenceFrame;
 
 import java.time.LocalDate;
@@ -24,12 +26,12 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
-import static com.metreeca.shim.Resources.resource;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -46,6 +48,9 @@ import static eu.ec2u.data.datasets.Localized.EN;
  * standardized framework for organizing educational programs and related qualifications.
  */
 public final class TopicsISCED2011 implements Runnable {
+
+    private static final String DATA_URL="taxonomies-ec2u-isced-2011"; // vault label
+
 
     public static final String PATH=Taxonomies.PATH+"isced-2011/";
 
@@ -101,16 +106,15 @@ public final class TopicsISCED2011 implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Vault vault=service(vault());
+
+
     @Override public void run() {
         service(store()).modify(
 
                 array(list(Stream.concat(
-
                         Stream.of(ISCED2011),
-
-                        Stream.of(resource(TopicsISCED2011.class, ".csv").toString())
-                                .flatMap(new Taxonomies.Loader(ISCED2011))
-
+                        Stream.of(vault.get(DATA_URL)).flatMap(new Taxonomies.Loader(ISCED2011))
                 ))),
 
                 value(query(new TopicFrame(true)).where("inScheme", criterion().any(ISCED2011)))
