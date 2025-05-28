@@ -32,6 +32,10 @@ cron:
     url: /pipelines/units/turku
     schedule: every 1 of month 00:35
 
+  - description: "units › umea - monthly crawling"
+    url: /pipelines/units/umea
+    schedule: every 1 of month 00:40
+
 
   - description: "offerings › coimbra - monthly crawling"
     url: /pipelines/offerings/coimbra

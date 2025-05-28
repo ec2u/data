@@ -42,6 +42,9 @@ public interface Page {
 
     String hash();
 
+    String body();
+
+
 
     URI pipeline();
 
