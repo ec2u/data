@@ -58,6 +58,7 @@ public interface Pipelines {
                     .path("/units/poitiers", execute(new UnitsPoitiers()))
                     .path("/units/salamanca", execute(new UnitsSalamanca()))
                     .path("/units/turku", execute(new UnitsTurku()))
+                    .path("/units/umea", execute(new UnitsUmea()))
 
                     .path("/offerings/coimbra", execute(new OfferingsCoimbra()))
                     .path("/offerings/jena", execute(new OfferingsJena()))
