@@ -32,6 +32,7 @@ import com.metreeca.shim.Locales;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.datasets.Datasets;
+import eu.ec2u.data.datasets.PageFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.data.datasets.taxonomies.Topic;
@@ -284,7 +285,7 @@ public interface Events extends Dataset {
 
                             // ;( ignore all visited web pages: Last-Modified and ETag headers are not reliable
 
-                            .filter(v -> store.retrieve(new EventPageFrame(true).id(uri(v))).isEmpty())
+                            .filter(v -> store.retrieve(new PageFrame(true).id(uri(v))).isEmpty())
 
                             .flatMap(this::event)
 
@@ -397,7 +398,7 @@ public interface Events extends Dataset {
 
                                 // ;( keep track of all visited web pages to handle sources that expose stale events
 
-                                Stream.of(new EventPageFrame()
+                                Stream.of(new PageFrame()
                                         .id(uri)
                                         .retrieved(Instant.now())
                                 )

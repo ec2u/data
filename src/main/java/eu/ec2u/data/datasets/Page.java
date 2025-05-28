@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.datasets.events;
+package eu.ec2u.data.datasets;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-
-import eu.ec2u.data.datasets.Reference;
 
 import java.time.Instant;
 
 @Frame
-public interface EventPage extends Reference {
+@Class
+public interface Page extends Reference {
 
     Instant retrieved();
 
