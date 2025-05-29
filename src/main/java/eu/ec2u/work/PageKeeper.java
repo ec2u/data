@@ -25,10 +25,7 @@ import com.metreeca.mesh.tools.Store;
 
 import java.net.URI;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -37,6 +34,7 @@ import java.util.stream.Stream;
 import static com.metreeca.flow.Locator.*;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -48,7 +46,6 @@ import static com.metreeca.shim.URIs.uuid;
 
 import static java.util.Map.entry;
 import static java.util.Objects.requireNonNull;
-import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
 
 public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, Integer> {
@@ -108,7 +105,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
                                 .resource(uri())
                         )
                         .where("pipeline",
-                                criterion().any(Value.uri(pipeline))
+                                criterion().any(uri(pipeline))
                         )
                 ))
 
@@ -161,10 +158,12 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
                         })
 
+                        .toList()
+
                 ))
 
                 .collect(joining())
-                .flatMap(identity())
+                .flatMap(Collection::stream)
 
         );
 
