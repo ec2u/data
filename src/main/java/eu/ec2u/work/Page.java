@@ -14,17 +14,37 @@
  * limitations under the License.
  */
 
-package eu.ec2u.data.datasets;
+package eu.ec2u.work;
 
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Id;
 
+import java.net.URI;
 import java.time.Instant;
 
 @Frame
 @Class
-public interface Page extends Reference {
+public interface Page {
 
-    Instant retrieved();
+    @Id
+    URI id();
+
+
+    Instant created();
+
+    Instant updated();
+
+    Instant fetched();
+
+
+    String etag();
+
+    String hash();
+
+
+    URI pipeline();
+
+    URI resource();
 
 }

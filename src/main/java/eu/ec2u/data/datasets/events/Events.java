@@ -32,7 +32,6 @@ import com.metreeca.shim.Locales;
 import eu.ec2u.data.Data;
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.datasets.Datasets;
-import eu.ec2u.data.datasets.PageFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.data.datasets.taxonomies.Topic;
@@ -42,6 +41,7 @@ import eu.ec2u.data.vocabularies.schema.SchemaImageObjectFrame;
 import eu.ec2u.data.vocabularies.schema.SchemaLocationFrame;
 import eu.ec2u.data.vocabularies.schema.SchemaPostalAddressFrame;
 import eu.ec2u.data.vocabularies.schema.SchemaVirtualLocationFrame;
+import eu.ec2u.work.PageFrame;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
@@ -400,7 +400,7 @@ public interface Events extends Dataset {
 
                                 Stream.of(new PageFrame()
                                         .id(uri)
-                                        .retrieved(Instant.now())
+                                        .fetched(Instant.now())
                                 )
 
                         );
