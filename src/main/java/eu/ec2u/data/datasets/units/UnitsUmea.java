@@ -20,19 +20,26 @@ import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
+import com.metreeca.mesh.Value;
 import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Locales;
 
+import eu.ec2u.work.PageFrame;
 import eu.ec2u.work.ai.Analyzer;
 
+import java.net.URI;
+import java.time.Instant;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.*;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -42,6 +49,7 @@ import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
+import static com.metreeca.shim.URIs.uuid;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.units.Unit.review;
@@ -52,6 +60,7 @@ import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
+import static java.util.function.Predicate.not;
 
 public final class UnitsUmea implements Runnable {
 
@@ -62,8 +71,8 @@ public final class UnitsUmea implements Runnable {
 
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Executor executor=executor(10);
     private final Store store=service(store());
+    private final Executor executor=executor(10);
 
 
     private final Analyzer analyzer=service(analyzer()).prompt("""
@@ -117,16 +126,85 @@ public final class UnitsUmea implements Runnable {
 
     @Override
     public void run() {
+
+        final URI pipeline=uri("java:%s".formatted(getClass().getName()));
+
+        final Set<String> urls=set(units());
+
+        final Map<String, PageFrame> pages=map(store
+
+                .retrieve(value(query()
+                        .model(new PageFrame(true)
+                                .id(uri())
+                                .hash("")
+                                .resource(uri())
+                        )
+                        .where("pipeline",
+                                criterion().any(uri(pipeline))
+                        )
+                ))
+
+                .values()
+                .map(PageFrame::new)
+                .map(page -> entry(page.id().toString(), page))
+        );
+
+
+        final Value insert=array(urls.stream()
+
+                .map(url -> async(executor, () -> Optional.of(url)
+
+                        .flatMap(new GET<>(new HTML()))
+                        .map(new Untag())
+                        .stream()
+
+                        .flatMap(body -> {
+
+                            final Instant now=Instant.now();
+                            final String hash=uuid(body);
+
+                            final boolean clean=Optional.ofNullable(pages.get(url))
+                                    .map(page -> page.hash().equals(hash))
+                                    .orElse(false);
+
+                            return clean ? Stream.empty() : unit(url, body).stream().flatMap(unit -> Stream.of(
+                                    unit,
+                                    new PageFrame()
+                                            .id(uri(url))
+                                            .fetched(now)
+                                            // !!! created
+                                            // !!! updated
+                                            // !!! etag
+                                            .hash(hash)
+                                            .body(body)
+                                            .pipeline(pipeline)
+                                            .resource(unit.id())
+                            ));
+
+                        })
+
+                ))
+
+                .collect(joining())
+                .flatMap(identity())
+
+        );
+
+
+        final Value remove=array(pages.values().stream()
+
+                .filter(not(page -> urls.contains(page.id().toString())))
+
+                .flatMap(page -> Stream.of(
+                        new UnitFrame(true).id(page.resource()),
+                        page
+                ))
+
+        );
+
         store.modify(
-
-                array((units()
-                        .map(url -> async(executor, () -> unit(url)))
-                        .collect(joining())
-                        .flatMap(Optional::stream)
-                )),
-
-                value(query(new UnitFrame(true)).where("university", criterion().any(UMEA)))
-
+                insert,
+                remove
         );
     }
 
@@ -174,59 +252,50 @@ public final class UnitsUmea implements Runnable {
                 )
 
                 .collect(joining())
-                .flatMap(identity())
-
-                .distinct();
+                .flatMap(identity());
     }
 
-    private Optional<UnitFrame> unit(final String url) {
-        return Optional.of(url)
+    private Optional<UnitFrame> unit(final String url, final String body) {
+        return Optional.of(body).flatMap(analyzer).flatMap(json -> {
 
-                .flatMap(new GET<>(new HTML()))
-                .map(new Untag())
+            final Locale locale=json.get("language").string()
+                    .flatMap(lenient(Locales::locale))
+                    .orElseGet(UMEA::locale);
 
-                .flatMap(analyzer)
+            return review(new UnitFrame()
 
-                .flatMap(json -> {
+                    .generated(true)
 
-                    final Locale locale=json.get("language").string()
-                            .flatMap(lenient(Locales::locale))
-                            .orElseGet(UMEA::locale);
+                    .id(UNITS.id().resolve(uuid(UMEA, url)))
 
-                    return review(new UnitFrame()
+                    .comment(json.get("summary").string()
+                            .map(summary -> map(entry(locale, summary)))
+                            .orElse(null)
+                    )
 
-                            .generated(true)
+                    .university(UMEA)
+                    .unitOf(set(UMEA))
 
-                            .id(UNITS.id().resolve(uuid(UMEA, url)))
+                    .homepage(set(uri(url)))
 
-                            .comment(json.get("summary").string()
-                                    .map(summary -> map(entry(locale, summary)))
-                                    .orElse(null)
-                            )
+                    .altLabel(json.get("acronym").string()
+                            .map(acronym -> map(entry(ROOT, acronym)))
+                            .orElse(null)
+                    )
 
-                            .university(UMEA)
-                            .unitOf(set(UMEA))
+                    .prefLabel(json.get("name").string()
+                            .map(name -> map(entry(locale, name)))
+                            .orElse(null)
+                    )
 
-                            .homepage(set(uri(url)))
+                    .definition(json.get("description").string()
+                            .map(description -> map(entry(locale, description)))
+                            .orElse(null)
+                    )
 
-                            .altLabel(json.get("acronym").string()
-                                    .map(acronym -> map(entry(ROOT, acronym)))
-                                    .orElse(null)
-                            )
+            );
 
-                            .prefLabel(json.get("name").string()
-                                    .map(name -> map(entry(locale, name)))
-                                    .orElse(null)
-                            )
-
-                            .definition(json.get("description").string()
-                                    .map(description -> map(entry(locale, description)))
-                                    .orElse(null)
-                            )
-
-                    );
-
-                });
+        });
     }
 
 }
