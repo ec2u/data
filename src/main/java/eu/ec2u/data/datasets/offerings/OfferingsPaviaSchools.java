@@ -25,11 +25,11 @@ import com.metreeca.mesh.Value;
 import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.URIs;
 
-import eu.ec2u.data.datasets.ReferenceFrame;
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
 import eu.ec2u.work.ai.Analyzer;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -41,6 +41,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -48,10 +49,9 @@ import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.Localized.EN;
-import static eu.ec2u.data.datasets.Resource.LOADERS;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.universities.University.PAVIA;
@@ -63,9 +63,7 @@ import static java.util.function.Predicate.not;
 
 public final class OfferingsPaviaSchools implements Runnable {
 
-    private static final ReferenceFrame PIPELINE=new ReferenceFrame()
-            .id(LOADERS.resolve("offerings/pavia/schools"))
-            .label(map(entry(EN, "Offerings › Pavia › Schools")));
+    private static final URI PIPELINE=uri("java:%s".formatted(OfferingsPaviaSchools.class.getName()));
 
 
     private static final Collection<String> ROOT_URLS=list(
@@ -94,7 +92,7 @@ public final class OfferingsPaviaSchools implements Runnable {
 
                         value(query(new ProgramFrame(true))
                                 .where("university", criterion().any(PAVIA))
-                                .where("pipeline", criterion().any(PIPELINE))
+                                .where("pipeline", criterion().any(uri(PIPELINE)))
                         )
 
                 )

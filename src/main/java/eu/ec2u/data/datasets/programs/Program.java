@@ -16,7 +16,6 @@
 
 package eu.ec2u.data.datasets.programs;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.text.services.Translator;
 import com.metreeca.mesh.meta.jsonld.Class;
@@ -26,17 +25,14 @@ import com.metreeca.mesh.meta.jsonld.Namespace;
 import com.metreeca.mesh.meta.shacl.Pattern;
 
 import eu.ec2u.data.datasets.Reference;
-import eu.ec2u.data.datasets.Resource;
+import eu.ec2u.data.datasets.offerings.Offering;
 import eu.ec2u.data.datasets.organizations.Organization;
-import eu.ec2u.data.datasets.taxonomies.Taxonomies;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCEDF2013;
 import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalProgram;
-import eu.ec2u.work.ai.Embedder;
 
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -47,15 +43,15 @@ import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.Resource.localize;
+import static eu.ec2u.data.datasets.offerings.Offering.*;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
-import static eu.ec2u.data.datasets.taxonomies.TopicsISCEDF2013.ISCEDF2013;
 import static java.util.function.Predicate.not;
 
 
 @Frame
 @Class
 @Namespace("[ec2u]")
-public interface Program extends Resource, SchemaEducationalOccupationalProgram {
+public interface Program extends Offering, SchemaEducationalOccupationalProgram {
 
     static Optional<ProgramFrame> review(final ProgramFrame program) {
 
@@ -65,6 +61,7 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
 
         return Optional.of(program) // translate before English-based classification
                 .map(p -> localize(p, locale -> translate(p, locale)))
+                .map(p -> educationalLevel(p))
                 .map(p -> about(p))
                 .flatMap(new Validate<>());
     }
@@ -88,7 +85,18 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
                 .programPrerequisites(translator.texts(program.programPrerequisites(), source, EN));
     }
 
-    private static ProgramFrame about(final ProgramFrame program) {
+
+    static ProgramFrame educationalLevel(final ProgramFrame offering) {
+        return offering.educationalLevel(Optional.ofNullable(offering.educationalLevel())
+                .or(() -> Optional.of(embeddable(offering)).stream()
+                        .flatMap(isced2011())
+                        .findFirst()
+                )
+                .orElse(null)
+        );
+    }
+
+    static ProgramFrame about(final ProgramFrame program) {
         return program.about(Optional.ofNullable(program.about())
                 .filter(not(Set::isEmpty))
                 .orElseGet(() -> set(Stream.of(embeddable(program))
@@ -99,39 +107,16 @@ public interface Program extends Resource, SchemaEducationalOccupationalProgram 
     }
 
 
-    private static String embeddable(final Program program) {
-        return Embedder.embeddable(set(Xtream.from(
-                Optional.ofNullable(program.name().get(EN)).stream(),
-                Optional.ofNullable(program.description().get(EN)).stream()
-        )));
-    }
-
-
-    static Taxonomies.Matcher iscedf() {
-        return new Taxonomies.Matcher(ISCEDF2013)
-                .narrowing(1.1)
-                .tolerance(0.1);
-    }
-
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default Map<Locale, String> label() {
-        return Reference.label(name());
-    }
-
-    @Override
-    default Map<Locale, String> comment() {
-        return Reference.comment(disambiguatingDescription(), description());
-    }
-
 
     @Override
     default Programs dataset() {
         return PROGRAMS;
     }
 
+
+    //̸// !!! Factor to Offering ///////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     @Embedded

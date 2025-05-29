@@ -25,7 +25,6 @@ import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
-import eu.ec2u.data.datasets.programs.Program;
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
@@ -199,7 +198,7 @@ public final class OfferingsPoitiers implements Runnable {
 
     private Stream<Topic> about(final Value json) {
         return json.get("discipline").string().stream()
-                .flatMap(Program.iscedf())
+                .flatMap(Offering.iscedf())
                 .limit(1);
     }
 

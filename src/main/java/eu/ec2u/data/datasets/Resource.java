@@ -20,7 +20,6 @@ import com.metreeca.mesh.meta.jsonld.*;
 import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.shacl.Required;
 
-import eu.ec2u.data.Data;
 import eu.ec2u.data.datasets.universities.University;
 
 import java.net.URI;
@@ -39,8 +38,6 @@ import static java.lang.String.format;
 @Base(BASE)
 @Namespace(prefix="[ec2u]", value="/terms/")
 public interface Resource extends Reference {
-
-    URI LOADERS=Data.DATA.resolve("loaders/");
 
     /**
      * Maps a function to the locale of a resource's university.
@@ -102,7 +99,7 @@ public interface Resource extends Reference {
 
 
     @Hidden
-    Reference pipeline();
+    URI pipeline();
 
     @Hidden
     String embedding();

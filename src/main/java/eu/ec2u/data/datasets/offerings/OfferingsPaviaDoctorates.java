@@ -25,11 +25,11 @@ import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Locales;
 
-import eu.ec2u.data.datasets.ReferenceFrame;
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
 import eu.ec2u.work.ai.Analyzer;
 
+import java.net.URI;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -39,6 +39,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -49,8 +50,6 @@ import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.Localized.EN;
-import static eu.ec2u.data.datasets.Resource.LOADERS;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.universities.University.PAVIA;
@@ -61,9 +60,7 @@ import static java.util.function.Predicate.not;
 
 public final class OfferingsPaviaDoctorates implements Runnable {
 
-    private static final ReferenceFrame PIPELINE=new ReferenceFrame()
-            .id(LOADERS.resolve("offerings/pavia/doctorates"))
-            .label(map(entry(EN, "Offerings › Pavia › Doctorates")));
+    private static final URI PIPELINE=uri("java:%s".formatted(OfferingsPaviaDoctorates.class.getName()));
 
     private static final String PAGE_URL="https://phd.unipv.it/la-scuola-di-alta-formazione-dottorale-di-pavia-safd/";
 
@@ -90,7 +87,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
                         value(query(new ProgramFrame(true))
                                 .where("university", criterion().any(PAVIA))
-                                .where("pipeline", criterion().any(PIPELINE))
+                                .where("pipeline", criterion().any(uri(PIPELINE)))
                         )
 
                 )
@@ -171,18 +168,18 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
                             .generated(true)
 
-                                    .id(PROGRAMS.id().resolve(uuid(PAVIA, url)))
-                                    .university(PAVIA)
+                            .id(PROGRAMS.id().resolve(uuid(PAVIA, url)))
+                            .university(PAVIA)
                             .pipeline(PIPELINE)
 
-                                    .name(map(json.get("name").string().stream().map(name ->
-                                            entry(locale, (locale.equals(PAVIA.locale()) ? "Dottorato in" : "Doctorate in ")+name)
-                                    )))
+                            .name(map(json.get("name").string().stream().map(name ->
+                                    entry(locale, (locale.equals(PAVIA.locale()) ? "Dottorato in" : "Doctorate in ")+name)
+                            )))
 
-                                    .url(set(uri(url)))
+                            .url(set(uri(url)))
 
                             .educationalLevel(TopicsISCED2011.LEVEL_8)
-                                    .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Dottorato di Ricerca"))))
+                            .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Dottorato di Ricerca"))))
 
                     ));
 
@@ -208,7 +205,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         - admission requirements
                         
                         Make absolutely sure to leave empty properties that are not explicitly specified in the document.
-                        Describe properties extensively.
+                        Describe properties extensively, using markdown as required.
                         Respond with a JSON object.
                         """, """
                         {

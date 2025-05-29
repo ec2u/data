@@ -54,7 +54,7 @@ public final class TopicsISCED2011 implements Runnable {
 
     public static final String PATH=Taxonomies.PATH+"isced-2011/";
 
-    private static final TaxonomyFrame ISCED2011=new TaxonomyFrame()
+    public static final TaxonomyFrame ISCED2011=new TaxonomyFrame()
             .id(uri(PATH))
             .title(map(entry(EN, "International Standard Classification of Education 2011")))
             .alternative(map(entry(EN, "ISCED 2011")))
@@ -97,6 +97,11 @@ public final class TopicsISCED2011 implements Runnable {
             entry(8, LEVEL_8),
             entry(9, LEVEL_9)
     );
+
+
+    public static TopicFrame level(final int level) {
+        return new TopicFrame(true).id(uri(PATH+level));
+    }
 
 
     public static void main(final String... args) {
