@@ -17,39 +17,32 @@
 package eu.ec2u.data.datasets.units;
 
 import com.metreeca.flow.http.actions.GET;
+import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.XPath;
-import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Locales;
+import com.metreeca.shim.URIs;
 
-import eu.ec2u.work.PageFrame;
+import eu.ec2u.work.PageKeeper;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.*;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.Value.uri;
-import static com.metreeca.mesh.Value.value;
-import static com.metreeca.mesh.queries.Criterion.criterion;
-import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Collections.map;
 import static com.metreeca.shim.Collections.set;
 import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.Lambdas.lenient;
+import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
-import static com.metreeca.shim.URIs.uuid;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.units.Unit.review;
@@ -57,10 +50,12 @@ import static eu.ec2u.data.datasets.units.Units.UNITS;
 import static eu.ec2u.data.datasets.universities.University.UMEA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
+import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 import static java.util.function.Function.identity;
-import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toSet;
 
 public final class UnitsUmea implements Runnable {
 
@@ -72,6 +67,7 @@ public final class UnitsUmea implements Runnable {
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Store store=service(store());
+    private final Logger logger=service(logger());
     private final Executor executor=executor(10);
 
 
@@ -126,92 +122,24 @@ public final class UnitsUmea implements Runnable {
 
     @Override
     public void run() {
+        time(() ->
 
-        final URI pipeline=uri("java:%s".formatted(getClass().getName()));
+                units().collect(collectingAndThen(toSet(), new PageKeeper<>(
+                        uri("java:%s".formatted(getClass().getName())),
+                        this::unit,
+                        id -> new UnitFrame(true).id(id),
+                        executor(10)
+                )))
 
-        final Set<String> urls=set(units());
-
-        final Map<String, PageFrame> pages=map(store
-
-                .retrieve(value(query()
-                        .model(new PageFrame(true)
-                                .id(uri())
-                                .hash("")
-                                .resource(uri())
-                        )
-                        .where("pipeline",
-                                criterion().any(uri(pipeline))
-                        )
-                ))
-
-                .values()
-                .map(PageFrame::new)
-                .map(page -> entry(page.id().toString(), page))
-        );
-
-
-        final Value insert=array(urls.stream()
-
-                .map(url -> async(executor, () -> Optional.of(url)
-
-                        .flatMap(new GET<>(new HTML()))
-                        .map(new Untag())
-                        .stream()
-
-                        .flatMap(body -> {
-
-                            final Instant now=Instant.now();
-                            final String hash=uuid(body);
-
-                            final boolean clean=Optional.ofNullable(pages.get(url))
-                                    .map(page -> page.hash().equals(hash))
-                                    .orElse(false);
-
-                            return clean ? Stream.empty() : unit(url, body).stream().flatMap(unit -> Stream.of(
-                                    unit,
-                                    new PageFrame()
-                                            .id(uri(url))
-                                            .fetched(now)
-                                            // !!! created
-                                            // !!! updated
-                                            // !!! etag
-                                            .hash(hash)
-                                            .body(body)
-                                            .pipeline(pipeline)
-                                            .resource(unit.id())
-                            ));
-
-                        })
-
-                ))
-
-                .collect(joining())
-                .flatMap(identity())
-
-        );
-
-
-        final Value remove=array(pages.values().stream()
-
-                .filter(not(page -> urls.contains(page.id().toString())))
-
-                .flatMap(page -> Stream.of(
-                        new UnitFrame(true).id(page.resource()),
-                        page
-                ))
-
-        );
-
-        store.modify(
-                insert,
-                remove
-        );
+        ).apply((elapsed, resources) -> logger.info(this, format(
+                "synced <%,d> resources in <%,d> ms", resources, elapsed
+        )));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<String> units() {
+    private Stream<URI> units() {
         return Stream
 
                 .of(
@@ -252,10 +180,12 @@ public final class UnitsUmea implements Runnable {
                 )
 
                 .collect(joining())
-                .flatMap(identity());
+                .flatMap(identity())
+
+                .flatMap(optional(lenient(URIs::uri)));
     }
 
-    private Optional<UnitFrame> unit(final String url, final String body) {
+    private Optional<UnitFrame> unit(final URI url, final String body) {
         return Optional.of(body).flatMap(analyzer).flatMap(json -> {
 
             final Locale locale=json.get("language").string()
@@ -266,7 +196,7 @@ public final class UnitsUmea implements Runnable {
 
                     .generated(true)
 
-                    .id(UNITS.id().resolve(uuid(UMEA, url)))
+                    .id(UNITS.id().resolve(uuid(UMEA, url.toString())))
 
                     .comment(json.get("summary").string()
                             .map(summary -> map(entry(locale, summary)))
@@ -276,7 +206,7 @@ public final class UnitsUmea implements Runnable {
                     .university(UMEA)
                     .unitOf(set(UMEA))
 
-                    .homepage(set(uri(url)))
+                    .homepage(set(url))
 
                     .altLabel(json.get("acronym").string()
                             .map(acronym -> map(entry(ROOT, acronym)))
