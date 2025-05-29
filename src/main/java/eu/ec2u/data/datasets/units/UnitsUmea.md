@@ -6,6 +6,7 @@
   * [Faculties, schools and institutes](https://www.umu.se/om-umea-universitet/sa-ar-vi-organiserade/fakulteter-och-hogskolor/)
   * [Research centres](https://www.umu.se/om-umea-universitet/sa-ar-vi-organiserade/centrum/)
   * [Research groups](https://www.umu.se/forskning/forskningsgrupper/)
+  * [Research infrastructure](https://www.umu.se/forskning/forskningsinfrastruktur/)
 
 # Integration
 
