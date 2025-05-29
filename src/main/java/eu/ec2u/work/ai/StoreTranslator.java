@@ -19,7 +19,6 @@ package eu.ec2u.work.ai;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.text.services.Translator;
-import com.metreeca.mesh.Value;
 import com.metreeca.mesh.shapes.Shape;
 import com.metreeca.mesh.tools.Store;
 
@@ -121,8 +120,7 @@ public final class StoreTranslator implements Translator {
                                 .where(TEXT, criterion().any(text(source, text)))
                         ))
 
-                        .stream()
-                        .flatMap(Value::values)
+                        .values()
 
                         .filter(match -> match.get(TEXT).texts()
                                 .map(Entry::getKey)

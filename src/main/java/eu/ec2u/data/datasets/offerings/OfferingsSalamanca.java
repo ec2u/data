@@ -268,8 +268,7 @@ public final class OfferingsSalamanca implements Runnable {
                         .where("university", criterion().any(SALAMANCA))
                 ))
 
-                .stream()
-                .flatMap(Value::values)
+                .values()
                 .map(CourseFrame::new)
                 .map(CourseFrame::id)
                 .map(DATA::resolve)
@@ -282,8 +281,7 @@ public final class OfferingsSalamanca implements Runnable {
                         .where("university", criterion().any(SALAMANCA))
                 ))
 
-                .stream()
-                .flatMap(Value::values)
+                .values()
                 .map(ProgramFrame::new)
                 .map(ProgramFrame::id)
                 .map(DATA::resolve)

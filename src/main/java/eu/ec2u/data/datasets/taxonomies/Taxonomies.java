@@ -334,6 +334,7 @@ public interface Taxonomies extends Dataset {
 
                     )))
 
+                    .value()
                     .map(TaxonomyFrame::new)
                     .map(TaxonomyFrame::members)
                     .stream()

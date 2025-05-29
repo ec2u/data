@@ -217,6 +217,7 @@ public final class TopicsEuroSciVoc implements Runnable {
                                 .definition(map(entry(ANY, "")))
                         )
 
+                        .value()
                         .flatMap(value -> value.get("definition").value())
                         .map(v -> map(v.texts()))
 

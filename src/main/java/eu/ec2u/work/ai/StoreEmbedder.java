@@ -114,6 +114,7 @@ public final class StoreEmbedder implements Embedder {
                                 .where(STRING, criterion().any(string(t)))
                         ))
 
+                        .value()
                         .flatMap(value -> value.select("*.vector").strings().findFirst())
                         .map(Vector::decode)
 
