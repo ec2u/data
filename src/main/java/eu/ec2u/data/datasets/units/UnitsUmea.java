@@ -20,7 +20,6 @@ import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
@@ -34,7 +33,6 @@ import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.*;
-import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Collections.map;
 import static com.metreeca.shim.Collections.set;
@@ -66,10 +64,11 @@ public final class UnitsUmea implements Runnable {
 
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Store store=service(store());
     private final Logger logger=service(logger());
     private final Executor executor=executor(10);
 
+
+    // !!! factor w/ UnitsPavia
 
     private final Analyzer analyzer=service(analyzer()).prompt("""
             Extract the following properties from the provided markdown document describing an academic unit:
@@ -128,7 +127,7 @@ public final class UnitsUmea implements Runnable {
                         uri("java:%s".formatted(getClass().getName())),
                         this::unit,
                         id -> new UnitFrame(true).id(id),
-                        executor(10)
+                        executor
                 )))
 
         ).apply((elapsed, resources) -> logger.info(this, format(
@@ -175,6 +174,12 @@ public final class UnitsUmea implements Runnable {
                                 .flatMap(optional(new GET<>(new HTML())))
                                 .map(XPath::new)
                                 .flatMap(path -> path.links("//div[@class='item']/a/@href"))
+                        ),
+
+                        async(() -> Stream.of("https://www.umu.se/forskning/forskningsinfrastruktur/")
+                                .flatMap(optional(new GET<>(new HTML())))
+                                .map(XPath::new)
+                                .flatMap(path -> path.links("//a[contains(@href,'/forskning/infrastruktur/')]/@href"))
                         )
 
                 )
