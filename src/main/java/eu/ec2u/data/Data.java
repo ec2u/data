@@ -78,6 +78,7 @@ import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.logging.Level.INFO;
 
+@SuppressWarnings("OverlyCoupledClass")
 public final class Data extends Delegator {
 
     public static final String BASE="https://data.ec2u.eu/";

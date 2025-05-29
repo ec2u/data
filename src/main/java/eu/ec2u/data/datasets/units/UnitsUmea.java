@@ -65,7 +65,7 @@ public final class UnitsUmea implements Runnable {
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Logger logger=service(logger());
-    private final Executor executor=executor(10);
+    private final Executor executor=executor(10); // !!!
 
 
     // !!! factor w/ UnitsPavia
@@ -75,7 +75,7 @@ public final class UnitsUmea implements Runnable {
             
             - official name
             - acronym, verbatim as defined in the document and only if absolutely confident about it
-            - plain text summary of about 500 characters in the document language
+            - plain text summary of about 500 characters
             - full description as included in the document in markdown format; remove H1 (#) headings containing
               the name of the unit; make absolutely sure not to include any description of ongoing and upcoming events
             - document language as a 2-letter ISO tag
