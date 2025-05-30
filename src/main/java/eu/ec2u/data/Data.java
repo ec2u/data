@@ -44,10 +44,7 @@ import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.services.Pipelines;
 import eu.ec2u.data.services.Resources;
 import eu.ec2u.work.ai.Embedder.CacheEmbedder;
-import eu.ec2u.work.ai.OpenAnalyzer;
-import eu.ec2u.work.ai.OpenEmbedder;
-import eu.ec2u.work.ai.OpenTranslator;
-import eu.ec2u.work.ai.StoreTranslator;
+import eu.ec2u.work.ai.*;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -149,7 +146,7 @@ public final class Data extends Delegator {
                         .base(DATA)
                 )
 
-                .set(openai(), () -> openai(service(vault()).get("openai-key"), builder -> builder
+                .set(openai(), () -> new OpenAI(service(vault()).get("openai-key"), builder -> builder
                         .timeout(Duration.ofSeconds(60))
                 ))
 

@@ -20,7 +20,6 @@ import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.text.services.Translator;
 import com.metreeca.shim.Locales;
 
-import com.openai.client.OpenAIClient;
 import com.openai.models.ResponseFormatText;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import com.openai.models.chat.completions.ChatCompletionCreateParams.ResponseFormat;
@@ -34,7 +33,6 @@ import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.text.services.Translator.preprocess;
 import static com.metreeca.shim.Loggers.time;
 
-import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
@@ -60,7 +58,7 @@ public final class OpenTranslator implements Translator {
 
     private Consumer<ChatCompletionCreateParams.Builder> setup;
 
-    private final OpenAIClient client=service(openai());
+    private final OpenAI openai=service(openai());
     private final Logger logger=service(logger());
 
 
@@ -101,8 +99,8 @@ public final class OpenTranslator implements Translator {
 
                 setup.accept(builder);
 
-                return backoff(0, () -> Optional.of(text).flatMap(t -> client.chat().completions()
-                        .create(builder
+                return Optional.of(text)
+                        .map(t -> builder
                                 .responseFormat(FORMAT)
                                 .addSystemMessage(format(PROMPT,
                                         source.equals(Locales.ANY) ? "" : target.getDisplayLanguage(ENGLISH),
@@ -111,11 +109,16 @@ public final class OpenTranslator implements Translator {
                                 .addUserMessage(t)
                                 .build()
                         )
-                        .choices()
-                        .getFirst()
-                        .message()
-                        .content()
-                ));
+                        .flatMap(params -> openai.retry(params.model().asString(), 0, () -> openai
+                                .client()
+                                .chat()
+                                .completions()
+                                .create(params)
+                                .choices()
+                                .getFirst()
+                                .message()
+                                .content()
+                        ));
 
             } catch ( final RuntimeException e ) {
 

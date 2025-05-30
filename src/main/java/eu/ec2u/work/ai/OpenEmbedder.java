@@ -18,7 +18,6 @@ package eu.ec2u.work.ai;
 
 import com.metreeca.flow.services.Logger;
 
-import com.openai.client.OpenAIClient;
 import com.openai.models.embeddings.EmbeddingCreateParams;
 
 import java.util.Optional;
@@ -29,7 +28,6 @@ import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Loggers.elide;
 import static com.metreeca.shim.Loggers.time;
 
-import static eu.ec2u.work.ai.OpenAI.backoff;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
@@ -45,7 +43,7 @@ public class OpenEmbedder implements Embedder {
 
     private final Consumer<EmbeddingCreateParams.Builder> setup;
 
-    private final OpenAIClient client=service(openai());
+    private final OpenAI openai=service(openai());
     private final Logger logger=service(logger());
 
 
@@ -78,19 +76,21 @@ public class OpenEmbedder implements Embedder {
 
                 setup.accept(builder);
 
-                return backoff(0, () -> Optional.of(text)
+                return Optional.of(text)
                         .filter(not(String::isBlank))
-                        .map(t -> client.embeddings()
-                                .create(builder
-                                        .input(t)
-                                        .build()
-                                )
+                        .map(t -> builder
+                                .input(t)
+                                .build()
+                        )
+                        .map(params -> openai.retry(params.model().asString(), 0, () -> openai
+                                .client()
+                                .embeddings()
+                                .create(params)
                                 .data()
                                 .getFirst()
                                 .embedding()
-                        )
-                        .map(Vector::new)
-                );
+                        ))
+                        .map(Vector::new);
 
             } catch ( final RuntimeException e ) {
 

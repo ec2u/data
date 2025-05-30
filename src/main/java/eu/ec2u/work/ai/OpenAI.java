@@ -48,25 +48,25 @@ public final class OpenAI {
 
 
     /**
-     * Retrieves the default OpenAI client factory.
+     * Retrieves the default OpenAI factory.
      *
-     * @return the default OpenAI client factory, which throws an exception reporting the service as undefined
+     * @return the default OpenAI factory, which throws an exception reporting the service as undefined
      */
-    public static Supplier<OpenAIClient> openai() {
-        return () -> { throw new IllegalStateException("undefined OpenAI client service"); };
+    public static Supplier<OpenAI> openai() {
+        return () -> { throw new IllegalStateException("undefined OpenAI service"); };
     }
 
 
-    public static OpenAIClient openai(final String key) {
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        if ( key == null ) {
-            throw new NullPointerException("null key");
-        }
+    private final OpenAIClient client;
 
-        return openai(key, client -> { });
+
+    public OpenAI(final String key) {
+        this(key, builder -> { });
     }
 
-    public static OpenAIClient openai(final String key, final Consumer<OpenAIOkHttpClient.Builder> setup) {
+    public OpenAI(final String key, final Consumer<OpenAIOkHttpClient.Builder> setup) {
 
         if ( key == null ) {
             throw new NullPointerException("null key");
@@ -80,14 +80,39 @@ public final class OpenAI {
 
         setup.accept(builder);
 
-        return builder.build();
+        this.client=builder.build();
     }
 
+
+    public OpenAIClient client() {
+        return client;
+    }
+
+
+    //̸// !!! //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static Queue<Long> timestamps() {
+        return TIMESTAMPS.updateAndGet(timestamps -> {
+
+            final long cutoff=System.currentTimeMillis()-MAX_DELAY;
+
+            while ( !timestamps.isEmpty() && timestamps.peek() < cutoff ) {
+                timestamps.poll();
+            }
+
+            return timestamps;
+
+        });
+    }
+
+    private static int events() {
+        return timestamps().size();
+    }
 
     /*
      * @see <a href="https://platform.openai.com/docs/guides/rate-limits#error-mitigation">Rate limits - Error mitigation</a>
      */
-    static <V> V backoff(final int attempts, final Supplier<V> task) {
+    public <V> V retry(final String model, final int attempts, final Supplier<V> task) {
 
         if ( attempts < 0 ) {
             throw new IllegalArgumentException(format("negative attempt limit <%d>", attempts));
@@ -152,31 +177,6 @@ public final class OpenAI {
 
         throw new OpenAIException(format("request aborted after <%,d> attempts", attempts));
 
-    }
-
-
-    private static Queue<Long> timestamps() {
-        return TIMESTAMPS.updateAndGet(timestamps -> {
-
-            final long cutoff=System.currentTimeMillis()-MAX_DELAY;
-
-            while ( !timestamps.isEmpty() && timestamps.peek() < cutoff ) {
-                timestamps.poll();
-            }
-
-            return timestamps;
-
-        });
-    }
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private OpenAI() { }
-
-
-    private static int events() {
-        return timestamps().size();
     }
 
 }
