@@ -51,6 +51,7 @@ import static eu.ec2u.data.datasets.Resource.localize;
 import static eu.ec2u.data.datasets.events.Events.EVENTS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UEvents.EC2U_EVENTS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.EC2U_STAKEHOLDERS;
+import static eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static java.util.function.Predicate.not;
 
 @Frame
@@ -121,6 +122,24 @@ public interface Event extends Resource, SchemaEvent {
     static Taxonomies.Matcher stakeholders() {
         return new Taxonomies.Matcher(EC2U_STAKEHOLDERS)
                 .threshold(0.6);
+    }
+
+
+    static EventAttendanceModeEnumeration attendanceMode(final String value) {
+        return switch ( value ) {
+            case "offline" -> OfflineEventAttendanceMode;
+            case "online" -> OnlineEventAttendanceMode;
+            case "mixed" -> MixedEventAttendanceMode;
+            default -> null;
+        };
+    }
+
+    static Boolean entryFees(final String value) {
+        return switch ( value ) {
+            case "free" -> true;
+            case "paid" -> false;
+            default -> null;
+        };
     }
 
 

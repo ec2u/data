@@ -69,13 +69,17 @@ cron:
     url: /pipelines/offerings/salamanca
     schedule: every 1 of month 01:35
 
-  - description: "offerings › umea - monthly crawling"
+  - description: "offerings › umea › programs - monthly crawling"
     url: /pipelines/offerings/umea
     schedule: every 1 of month 01:40
 
+  - description: "offerings › umea › courses - monthly crawling"
+    url: /pipelines/offerings/umea
+    schedule: every 1 of month 01:45
+
   - description: "offerings › LLL - monthly crawling"
     url: /pipelines/offerings/lll
-    schedule: every 1 of month 01:45
+    schedule: every 1 of month 01:50
 
 
   - description: "documents › coimbra - nightly crawling"

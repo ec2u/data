@@ -72,7 +72,6 @@ import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.events.Event.review;
 import static eu.ec2u.data.datasets.universities.University.uuid;
-import static eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Locale.ROOT;
@@ -468,23 +467,14 @@ public interface Events extends Dataset {
             return json
                     .get("entryFees")
                     .string()
-                    .map(value -> switch ( value ) {
-                        case "free" -> true;
-                        case "paid" -> false;
-                        default -> null;
-                    });
+                    .map(Event::entryFees);
         }
 
         private Optional<EventAttendanceModeEnumeration> attendanceMode(final Value json) {
             return json
                     .get("attendanceMode")
                     .string()
-                    .map(value -> switch ( value ) {
-                        case "offline" -> OfflineEventAttendanceMode;
-                        case "online" -> OnlineEventAttendanceMode;
-                        case "mixed" -> MixedEventAttendanceMode;
-                        default -> null;
-                    });
+                    .map(Event::attendanceMode);
         }
 
 

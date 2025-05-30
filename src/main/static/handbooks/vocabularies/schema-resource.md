@@ -17,15 +17,15 @@ representation of educational content for search engines and educational applica
 | term                                                                                     | type                                          | #    | description                                               |
 |------------------------------------------------------------------------------------------|-----------------------------------------------|------|-----------------------------------------------------------|
 | **[schema:LearningResource](https://schema.org/LearningResource)**                       | [schema:Thing](schema.md#thing)               |      | A creative work that provides educational value           |
-| [schema:provider](https://schema.org/provider)                                           | [schema:Organization](schema.md#organization) | 0..1 | links to the organization providing the learning resource |
-| [schema:teaches](https://schema.org/teaches)                                             | text                                          | 0..1 | description of what the learning resource teaches         |
-| [schema:assesses](https://schema.org/assesses)                                           | text                                          | 0..1 | description of what the learning resource assesses        |
 | [schema:numberOfCredits](https://schema.org/numberOfCredits)                             | decimal                                       | 0..1 | number of credits awarded for the learning resource       |
 | [schema:educationalCredentialAwarded](https://schema.org/educationalCredentialAwarded)   | text                                          | 0..1 | educational credential awarded by the learning resource   |
 | [schema:occupationalCredentialAwarded](https://schema.org/occupationalCredentialAwarded) | text                                          | 0..1 | occupational credential awarded by the learning resource  |
-| [schema:educationalLevel](https://schema.org/educationalLevel)                           | [skos:Concept](skos.md#concept)               | 0..1 | links to the educational level of the learning resource   |
+| [schema:teaches](https://schema.org/teaches)                                             | text                                          | 0..1 | description of what the learning resource teaches         |
+| [schema:assesses](https://schema.org/assesses)                                           | text                                          | 0..1 | description of what the learning resource assesses        |
 | [schema:competencyRequired](https://schema.org/competencyRequired)                       | text                                          | 0..1 | competency required for the learning resource             |
+| [schema:educationalLevel](https://schema.org/educationalLevel)                           | [skos:Concept](skos.md#concept)               | 0..1 | links to the educational level of the learning resource   |
 | [schema:about](https://schema.org/about)                                                 | [skos:Concept](skos.md#concept)               | *    | links to topics covered by the learning resource          |
+| [schema:provider](https://schema.org/provider)                                           | [schema:Organization](schema.md#organization) | 0..1 | links to the organization providing the learning resource |
 
 # Educational Occupational Program
 
@@ -52,8 +52,8 @@ representation of educational content for search engines and educational applica
 |----------------------------------------------------------------------|---------------------------------|------|----------------------------------------------------------------------------------------------------------------------|
 | **[schema:CourseInstance](https://schema.org/CourseInstance)**       | [schema:Thing](schema.md#thing) |      | An instance of a Course which is distinct from other instances because it is offered at a different time or location |
 | [schema:isAccessibleForFree](https://schema.org/isAccessibleForFree) | boolean                         | 0..1 | whether the course instance is accessible for free                                                                   |
-| [schema:courseWorkload](https://schema.org/courseWorkload)           | duration                        | 0..1 | workload of the course instance                                                                                      |
 | [schema:courseMode](https://schema.org/courseMode)                   | EventAttendanceModeEnumeration  | 0..1 | attendance mode of the course instance                                                                               |
+| [schema:courseWorkload](https://schema.org/courseWorkload)           | duration                        | 0..1 | workload of the course instance                                                                                      |
 | [schema:about](https://schema.org/about)                             | [skos:Concept](skos.md#concept) | *    | links to topics covered by the course instance                                                                       |
 | [schema:audience](https://schema.org/audience)                       | [skos:Concept](skos.md#concept) | *    | links to the intended audience of the course instance                                                                |
 

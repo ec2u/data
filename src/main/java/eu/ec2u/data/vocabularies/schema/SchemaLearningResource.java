@@ -29,10 +29,6 @@ import java.util.Set;
 @Frame
 public interface SchemaLearningResource extends SchemaThing {
 
-    @Override
-    default Map<Locale, String> description() { return teaches(); }
-
-
     @MinInclusive("0.0")
     double numberOfCredits();
 
