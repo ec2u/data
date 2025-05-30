@@ -28,10 +28,8 @@ import eu.ec2u.work.PageKeeper;
 
 import java.net.URI;
 import java.util.Optional;
-import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
-import static com.metreeca.flow.Locator.executor;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Lambdas.lenient;
@@ -59,15 +57,13 @@ public final class OfferingsUmeaPrograms implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Logger logger=service(logger());
-    private final Executor executor=executor(10); // !!! remove
 
 
     @Override
     public void run() {
         time(() -> Stream
 
-                .of("""
-                        https://www.umu.se/utbildning/sok/?edu=p""")
+                .of("https://www.umu.se/utbildning/sok/?edu=p")
 
                 .flatMap(traverse(
 
@@ -82,17 +78,10 @@ public final class OfferingsUmeaPrograms implements Runnable {
 
                 .flatMap(optional(lenient(URIs::uri)))
 
-                // !!!
-                .sorted()
-                .limit(1)
-
                 .collect(collectingAndThen(toSet(), new PageKeeper<>(
-
                         PIPELINE,
                         page -> new Programs.Scanner().apply(page, new ProgramFrame().university(UMEA)),
-                        page -> Optional.of(new ProgramFrame(true).id(page.id())),
-                        executor
-
+                        page -> Optional.of(new ProgramFrame(true).id(page.id()))
                 )))
 
         ).apply((elapsed, resources) -> logger.info(this, format(

@@ -57,7 +57,7 @@ public final class UnitsUmea implements Runnable {
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Logger logger=service(logger());
-    private final Executor executor=executor(25); // !!!
+    private final Executor executor=executor(10);
 
 
     @Override

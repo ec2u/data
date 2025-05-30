@@ -28,10 +28,8 @@ import eu.ec2u.work.PageKeeper;
 
 import java.net.URI;
 import java.util.Optional;
-import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
-import static com.metreeca.flow.Locator.executor;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Lambdas.lenient;
@@ -59,7 +57,7 @@ public final class OfferingsUmeaCourses implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Logger logger=service(logger());
-    private final Executor executor=executor(25); // !!! remove
+
 
     @Override
     public void run() {
@@ -80,20 +78,10 @@ public final class OfferingsUmeaCourses implements Runnable {
 
                 .flatMap(optional(lenient(URIs::uri)))
 
-
-                // !!!
-
-                .sorted()
-                .skip(0)
-                .limit(250)
-
                 .collect(collectingAndThen(toSet(), new PageKeeper<>(
-
                         PIPELINE,
                         page -> new Courses.Scanner().apply(page, new CourseFrame().university(UMEA)),
-                        page -> Optional.of(new CourseFrame(true).id(page.id())),
-                        executor
-
+                        page -> Optional.of(new CourseFrame(true).id(page.id()))
                 )))
 
         ).apply((elapsed, resources) -> logger.info(this, format(
