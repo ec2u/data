@@ -149,6 +149,7 @@ export function DataProgram() {
 			assesses,
 			programPrerequisites,
 			competencyRequired,
+
 			educationalCredentialAwarded,
 			occupationalCredentialAwarded
 

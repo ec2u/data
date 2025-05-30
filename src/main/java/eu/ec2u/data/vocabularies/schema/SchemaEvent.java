@@ -45,9 +45,9 @@ public interface SchemaEvent extends SchemaThing {
 
     enum EventAttendanceModeEnumeration {
 
-        MixedEventAttendanceMode,
         OfflineEventAttendanceMode,
-        OnlineEventAttendanceMode
+        OnlineEventAttendanceMode,
+        MixedEventAttendanceMode
 
     }
 

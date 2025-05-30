@@ -27,7 +27,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.Executor;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -52,8 +51,9 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
     private final URI pipeline;
 
-    private final BiFunction<? super URI, ? super String, Optional<T>> insert;
-    private final Function<? super URI, T> remove;
+    private final Function<Page, Optional<T>> insert;
+    private final Function<Page, Optional<T>> remove;
+
     private final Executor executor;
 
     private final Store store=service(store());
@@ -61,16 +61,16 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
     public PageKeeper(
             final URI pipeline,
-            final BiFunction<? super URI, ? super String, Optional<T>> insert,
-            final Function<? super URI, T> remove
+            final Function<Page, Optional<T>> insert,
+            final Function<Page, Optional<T>> remove
     ) {
         this(pipeline, insert, remove, executor());
     }
 
     public PageKeeper(
             final URI pipeline,
-            final BiFunction<? super URI, ? super String, Optional<T>> insert,
-            final Function<? super URI, T> remove,
+            final Function<Page, Optional<T>> insert,
+            final Function<Page, Optional<T>> remove,
             final Executor executor
     ) {
 
@@ -135,23 +135,23 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
                             if ( clean ) { return Stream.empty(); } else {
 
-                                return requireNonNull(insert.apply(url, body), "null insert factory value")
+                                final PageFrame page=new PageFrame()
+                                        .id(url)
+                                        .fetched(now)
+                                        // !!! created
+                                        // !!! updated
+                                        // !!! etag
+                                        .hash(hash)
+                                        .pipeline(pipeline);
+
+                                return requireNonNull(insert.apply(page.body(body)), "null insert factory value")
 
                                         .map(Valuable::toValue)
                                         .stream()
 
                                         .flatMap(value -> value.id().stream().flatMap(id -> Stream.of(
                                                 value,
-                                                new PageFrame()
-                                                        .id(url)
-                                                        .fetched(now)
-                                                        // !!! created
-                                                        // !!! updated
-                                                        // !!! etag
-                                                        .hash(hash)
-                                                        .pipeline(pipeline)
-                                                        .resource(id)
-                                                        .toValue()
+                                                page.resource(id).toValue()
                                         )));
 
                             }
@@ -172,10 +172,9 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
                 .filter(not(page -> urls.contains(page.id())))
 
-                .flatMap(page -> Stream.of(
-                        requireNonNull(remove.apply(page.resource()), "null remove factory value"),
-                        page
-                ))
+                .flatMap(page -> requireNonNull(remove.apply(page), "null remove factory value").stream()
+                        .flatMap(t -> Stream.of(t, page))
+                )
 
                 .map(Valuable::toValue)
 

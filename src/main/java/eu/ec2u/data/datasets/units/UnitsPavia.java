@@ -110,7 +110,7 @@ public final class UnitsPavia implements Runnable {
     }
 
 
-    private Stream<UnitFrame> catalog(final Catalog catalog) {
+    private Stream<UnitFrame> catalog(final Catalog catalog) { // !!! migrate to Units.Scanner
         return Xtream.of(catalog.url().toASCIIString())
 
                 .optMap(new GET<>(new HTML()))

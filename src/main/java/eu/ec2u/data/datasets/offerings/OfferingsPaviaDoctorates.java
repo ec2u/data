@@ -189,7 +189,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                 .flatMap(Optional::stream);
     }
 
-    private ProgramFrame doctorate(final String url, final ProgramFrame doctorate) {
+    private ProgramFrame doctorate(final String url, final ProgramFrame doctorate) { // !!! migrate to Programs.Scanner
         return Optional.of(url)
 
                 .flatMap(new GET<>(new HTML()))

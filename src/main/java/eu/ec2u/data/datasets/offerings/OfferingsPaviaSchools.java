@@ -105,7 +105,7 @@ public final class OfferingsPaviaSchools implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<ProgramFrame> schools() {
+    private Stream<ProgramFrame> schools() { // !!! migrate to Programs.Scanner
         return ROOT_URLS.stream()
 
                 .map(url -> async(() -> Stream.of(url)

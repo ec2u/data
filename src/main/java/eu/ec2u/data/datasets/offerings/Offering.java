@@ -40,6 +40,7 @@ import java.util.Set;
 import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.datasets.Localized.EN;
+import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.ISCED2011;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCEDF2013.ISCEDF2013;
 
@@ -55,6 +56,12 @@ public interface Offering extends Resource, SchemaLearningResource {
 
     static Taxonomies.Matcher iscedf() {
         return new Taxonomies.Matcher(ISCEDF2013)
+                .narrowing(1.1)
+                .tolerance(0.1);
+    }
+
+    static Taxonomies.Matcher stakeholders() {
+        return new Taxonomies.Matcher(EC2U_STAKEHOLDERS)
                 .narrowing(1.1)
                 .tolerance(0.1);
     }

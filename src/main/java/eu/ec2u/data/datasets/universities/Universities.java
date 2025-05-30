@@ -53,7 +53,6 @@ import static com.metreeca.shim.Strings.fill;
 import static com.metreeca.shim.URIs.term;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.Localized.LOCALES;
 import static eu.ec2u.data.datasets.universities.University.PARTNERS;
@@ -172,11 +171,6 @@ public interface Universities extends Organizations {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default Datasets dataset() {
-        return DATASETS;
-    }
 
     @Override
     Set<University> members();

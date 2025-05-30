@@ -26,6 +26,7 @@ import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.tools.Store;
 import com.metreeca.shim.Collections;
+import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.Data;
@@ -37,12 +38,14 @@ import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.data.datasets.persons.PersonFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.universities.University;
+import eu.ec2u.work.Page;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
@@ -50,17 +53,19 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Streams.concat;
 import static com.metreeca.shim.Strings.split;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.Datasets.DATASETS;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.persons.Person.person;
 import static eu.ec2u.data.datasets.units.Unit.*;
 import static eu.ec2u.data.datasets.universities.University.uuid;
+import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
+import static java.util.Map.entry;
 import static java.util.function.Function.identity;
 
 @Frame
@@ -94,11 +99,6 @@ public interface Units extends Organizations {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default Datasets dataset() {
-        return DATASETS;
-    }
 
     @Override
     Set<Unit> members();
@@ -319,4 +319,97 @@ public interface Units extends Organizations {
 
     }
 
+    final class Scanner implements BiFunction<Page, UnitFrame, Optional<UnitFrame>> {
+
+        @Override
+        public Optional<UnitFrame> apply(final Page page, final UnitFrame unit) {
+            return Optional.of(page.body()).flatMap(service(analyzer()).prompt("""
+                    Extract the following properties from the provided markdown document describing an academic unit:
+                    
+                    - official name
+                    - acronym, verbatim as defined in the document and only if absolutely confident about it
+                    - plain text summary of about 500 characters
+                    - full description as included in the document in markdown format; remove H1 (#) headings containing
+                      the name of the unit; make absolutely sure not to include any description of ongoing and upcoming events
+                    - document language as a 2-letter ISO tag
+                    
+                    Remove personal email addresses.
+                    
+                    Respond in the document original language.
+                    Respond with a JSON object.
+                    """, """
+                    {
+                      "name": "unit",
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "acronym": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "language": {
+                            "type": "string",
+                            "pattern": "^[a-zA-Z]{2}$"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "summary",
+                          "description",
+                          "language"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }"""
+            )).flatMap(json -> {
+
+                final Locale locale=json.get("language").string()
+                        .flatMap(lenient(Locales::locale))
+                        .orElseGet(unit.university()::locale);
+
+                return review(new UnitFrame()
+
+                        .generated(true)
+
+                        .id(UNITS.id().resolve(uuid(unit.university(), page.id().toString())))
+
+                        .comment(json.get("summary").string()
+                                .map(summary -> map(entry(locale, summary)))
+                                .orElse(null)
+                        )
+
+                        .university(unit.university())
+                        .unitOf(set(unit.university()))
+
+                        .homepage(set(page.id()))
+
+                        .altLabel(json.get("acronym").string()
+                                .map(acronym -> map(entry(ROOT, acronym)))
+                                .orElse(null)
+                        )
+
+                        .prefLabel(json.get("name").string()
+                                .map(name -> map(entry(locale, name)))
+                                .orElse(null)
+                        )
+
+                        .definition(json.get("description").string()
+                                .map(description -> map(entry(locale, description)))
+                                .orElse(null)
+                        )
+
+                );
+
+            });
+        }
+
+    }
 }
