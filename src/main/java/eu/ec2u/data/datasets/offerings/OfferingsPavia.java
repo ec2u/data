@@ -83,7 +83,6 @@ import static eu.ec2u.data.datasets.universities.University.uuid;
 import static eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
-import static java.util.function.UnaryOperator.identity;
 
 public final class OfferingsPavia implements Runnable {
 
@@ -183,9 +182,9 @@ public final class OfferingsPavia implements Runnable {
                             async(() -> store.modify(
 
                                     array(programs.stream()
-                                            .map(program -> async(() -> courses(program)))
+                                            .map(program -> async(() -> courses(program).toList()))
                                             .collect(joining())
-                                            .flatMap(identity())
+                                            .flatMap(Collection::stream)
                                     ),
 
                                     value(query(new CourseFrame(true))

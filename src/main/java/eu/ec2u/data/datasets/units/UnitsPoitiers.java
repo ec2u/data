@@ -47,7 +47,6 @@ import static eu.ec2u.data.datasets.units.Units.UNITS;
 import static eu.ec2u.data.datasets.universities.University.POITIERS;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static java.util.Locale.ROOT;
-import static java.util.function.UnaryOperator.identity;
 import static java.util.stream.Stream.concat;
 
 public final class UnitsPoitiers implements Runnable {
@@ -64,9 +63,9 @@ public final class UnitsPoitiers implements Runnable {
         service(store()).modify(
 
                 array(list(units()
-                        .map(json -> async(() -> unit(json)))
+                        .map(json -> async(() -> unit(json).toList()))
                         .collect(joining())
-                        .flatMap(identity())
+                        .flatMap(Collection::stream)
                 )),
 
                 value(query(new UnitFrame(true)).where("university", criterion().any(POITIERS)))

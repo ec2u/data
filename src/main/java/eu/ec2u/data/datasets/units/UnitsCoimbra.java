@@ -30,6 +30,7 @@ import eu.ec2u.data.datasets.persons.PersonFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -58,7 +59,6 @@ import static eu.ec2u.data.datasets.universities.University.COIMBRA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
-import static java.util.function.UnaryOperator.identity;
 
 public final class UnitsCoimbra implements Runnable {
 
@@ -82,9 +82,9 @@ public final class UnitsCoimbra implements Runnable {
         service(store()).modify(
 
                 array(list(units()
-                        .map(json -> async(() -> unit(json)))
+                        .map(json -> async(() -> unit(json).toList()))
                         .collect(joining())
-                        .flatMap(identity())
+                        .flatMap(Collection::stream)
                 )),
 
                 value(query(new UnitFrame(true)).where("university", criterion().any(COIMBRA)))

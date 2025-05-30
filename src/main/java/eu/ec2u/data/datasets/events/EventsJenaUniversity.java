@@ -24,6 +24,7 @@ import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -41,7 +42,6 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.universities.University.JENA;
 import static java.util.Map.entry;
-import static java.util.function.UnaryOperator.identity;
 
 public final class EventsJenaUniversity implements Runnable {
 
@@ -161,10 +161,12 @@ public final class EventsJenaUniversity implements Runnable {
 
                         .pipe(new Events.Scanner(JENA, publisher))
 
+                        .toList()
+
                 ))
 
                 .collect(joining())
-                .flatMap(identity())
+                .flatMap(Collection::stream)
 
         ));
     }

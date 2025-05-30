@@ -28,6 +28,7 @@ import eu.ec2u.data.datasets.taxonomies.TopicsEC2UOrganizations;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -53,7 +54,6 @@ import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
-import static java.util.function.UnaryOperator.identity;
 
 public final class UnitsPavia implements Runnable {
 
@@ -94,13 +94,14 @@ public final class UnitsPavia implements Runnable {
                         )
 
                         .map(catalog -> async(() -> catalog(catalog)
-                                .map(unit -> async(() -> details(unit)))
+                                .map(unit -> async(() -> details(unit).toList()))
                                 .collect(joining())
-                                .flatMap(identity())
+                                .flatMap(Collection::stream)
+                                .toList()
                         ))
 
                         .collect(joining())
-                        .flatMap(identity())
+                        .flatMap(Collection::stream)
 
                 )),
 

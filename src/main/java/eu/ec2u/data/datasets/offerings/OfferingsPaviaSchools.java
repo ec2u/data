@@ -58,7 +58,6 @@ import static eu.ec2u.data.datasets.universities.University.PAVIA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.lang.String.format;
-import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
 
 public final class OfferingsPaviaSchools implements Runnable {
@@ -171,11 +170,12 @@ public final class OfferingsPaviaSchools implements Runnable {
 
                         .collect(joining())
                         .flatMap(Optional::stream)
+                        .toList()
 
                 ))
 
                 .collect(joining())
-                .flatMap(identity());
+                .flatMap(Collection::stream);
     }
 
 

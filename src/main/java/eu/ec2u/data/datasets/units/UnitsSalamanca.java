@@ -62,7 +62,6 @@ import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
-import static java.util.function.UnaryOperator.identity;
 
 public final class UnitsSalamanca implements Runnable {
 
@@ -90,9 +89,9 @@ public final class UnitsSalamanca implements Runnable {
         service(store()).modify(
 
                 array(list(units()
-                        .map(json -> async(() -> unit(json, vis)))
+                        .map(json -> async(() -> unit(json, vis).toList()))
                         .collect(joining())
-                        .flatMap(identity())
+                        .flatMap(Collection::stream)
                 )),
 
                 value(query(new UnitFrame(true))
