@@ -104,6 +104,10 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
     }
 
 
+    @Override
+    Set<Topic> audience();
+
+
     @Reverse("schema:hasCourse")
     Set<Program> inProgram();
 
