@@ -73,7 +73,6 @@ import static eu.ec2u.work.ai.Embedder.embedder;
 import static eu.ec2u.work.ai.OpenAI.openai;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 
 @SuppressWarnings("OverlyCoupledClass")
@@ -94,7 +93,6 @@ public final class Data extends Delegator {
 
     static {
         logging(INFO);
-        logging(FINE, OpenAI.class.getName());
     }
 
     static {

@@ -32,9 +32,9 @@ cron:
     url: /pipelines/units/turku
     schedule: every 1 of month 00:35
 
-  - description: "units › umea - monthly crawling"
-    url: /pipelines/units/umea
-    schedule: every 1 of month 00:40
+  #  - description: "units › umea - monthly crawling"
+  #    url: /pipelines/units/umea
+  #    schedule: every 1 of month 00:40
 
 
   - description: "offerings › coimbra - monthly crawling"
@@ -65,13 +65,13 @@ cron:
     url: /pipelines/offerings/poitiers
     schedule: every 1 of month 01:30
 
-  - description: "offerings › salamanca - monthly crawling"
-    url: /pipelines/offerings/salamanca
-    schedule: every 1 of month 01:35
+  #  - description: "offerings › salamanca - monthly crawling"
+  #    url: /pipelines/offerings/salamanca
+  #    schedule: every 1 of month 01:35
 
-  - description: "offerings › umea › programs - monthly crawling"
-    url: /pipelines/offerings/umea
-    schedule: every 1 of month 01:40
+  #  - description: "offerings › umea › programs - monthly crawling"
+  #    url: /pipelines/offerings/umea
+  #    schedule: every 1 of month 01:40
 
   - description: "offerings › umea › courses - monthly crawling"
     url: /pipelines/offerings/umea
@@ -151,9 +151,9 @@ cron:
     url: /pipelines/events/turku/university
     schedule: every day 03:35
 
-  - description: "events › umea › university - nightly crawling"
-    url: /pipelines/events/umea/university
-    schedule: every day 03:40
+  #  - description: "events › umea › university - nightly crawling"
+  #    url: /pipelines/events/umea/university
+  #    schedule: every day 03:40
 
   - description: "events - nightly housekeeping"
     url: /pipelines/events
