@@ -17,6 +17,7 @@
 package eu.ec2u.work;
 
 import com.metreeca.flow.http.actions.GET;
+import com.metreeca.flow.xml.actions.Focus;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.Valuable;
@@ -121,6 +122,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
                         .map(URI::toString) // !!!
                         .flatMap(new GET<>(new HTML()))
+                        .flatMap(new Focus())
                         .map(new Untag())
                         .stream()
 

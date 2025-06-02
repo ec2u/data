@@ -18,7 +18,7 @@ package eu.ec2u.data.datasets.offerings;
 
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.flow.xml.actions.Extract;
+import com.metreeca.flow.xml.actions.Focus;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.Value;
@@ -110,7 +110,7 @@ public final class OfferingsPaviaSchools implements Runnable {
                 .map(url -> async(() -> Stream.of(url)
 
                         .flatMap(optional(new GET<>(new HTML())))
-                        .flatMap(optional(new Extract()))
+                        .flatMap(optional(new Focus()))
                         .map(new Untag())
 
                         .flatMap(optional(analyzer.prompt("""
