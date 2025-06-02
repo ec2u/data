@@ -22,6 +22,7 @@ import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.errors.OpenAIException;
 import com.openai.errors.RateLimitException;
+import eu.ec2u.work.Throttle;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -112,7 +113,7 @@ public final class OpenAI {
 
     //̸// !!! //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Map<String, Throttle> throttles=new ConcurrentHashMap<>();
+    private final Map<String, Throttle<?>> throttles=new ConcurrentHashMap<>();
 
 
     /**
@@ -149,14 +150,14 @@ public final class OpenAI {
             throw new NullPointerException("null task");
         }
 
-        final Throttle throttle=throttles.computeIfAbsent(model, key -> new Throttle());
+        final Throttle<?> throttle=throttles.computeIfAbsent(model, key -> new Throttle<>());
 
         for (int attempt=0; attempts == 0 || attempt < attempts; attempt++) {
             try {
 
                 final long delay=throttle.await();
 
-                logger.debug(this, format(
+                logger.info(this, format(
                         "request attempt <%d> submitted with delay <%,d> ms", attempt+1, delay
                 ));
 

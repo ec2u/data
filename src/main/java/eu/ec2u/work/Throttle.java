@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.ai;
+package eu.ec2u.work;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.UnaryOperator;
 
 import static java.lang.Math.*;
 import static java.lang.StrictMath.pow;
@@ -30,7 +31,7 @@ import static java.lang.System.currentTimeMillis;
  * success rates. The throttle maintains a queue counter tracking active tasks and adapts delays accordingly.
  */
 @SuppressWarnings("SynchronizedMethod")
-public final class Throttle {
+public final class Throttle<T> implements UnaryOperator<T> {
 
     private static final int DEFAULT_MINIMUM=100;
     private static final int DEFAULT_MAXIMUM=60*1000;
@@ -119,10 +120,10 @@ public final class Throttle {
      *
      * @return a new throttle instance with the updated minimum delay
      *
-     * @throws IllegalArgumentException if minimum is negative
+     * @throws IllegalArgumentException if minimum is negative or greater than maximum
      */
-    public Throttle minimum(final long minimum) {
-        return new Throttle(
+    public Throttle<T> minimum(final long minimum) {
+        return new Throttle<>(
                 minimum,
                 maximum,
                 backoff,
@@ -137,10 +138,10 @@ public final class Throttle {
      *
      * @return a new throttle instance with the updated maximum delay
      *
-     * @throws IllegalArgumentException if maximum is negative
+     * @throws IllegalArgumentException if maximum is negative or less than minimum
      */
-    public Throttle maximum(final long maximum) {
-        return new Throttle(
+    public Throttle<T> maximum(final long maximum) {
+        return new Throttle<>(
                 minimum,
                 maximum,
                 backoff,
@@ -158,8 +159,8 @@ public final class Throttle {
      *
      * @throws IllegalArgumentException if backoff is less than 1.0
      */
-    public Throttle backoff(final double backoff) {
-        return new Throttle(
+    public Throttle<T> backoff(final double backoff) {
+        return new Throttle<>(
                 minimum,
                 maximum,
                 backoff,
@@ -176,8 +177,8 @@ public final class Throttle {
      *
      * @throws IllegalArgumentException if recover is not between 0.0 and 1.0
      */
-    public Throttle recover(final double recover) {
-        return new Throttle(
+    public Throttle<T> recover(final double recover) {
+        return new Throttle<>(
                 minimum,
                 maximum,
                 backoff,
@@ -196,7 +197,20 @@ public final class Throttle {
      *
      * @return the time elapsed since the last task execution in milliseconds, or 0 if interrupted
      */
-    public long await() {
+    public long await() { return await(true); }
+
+    /**
+     * Waits for permission to execute a task, respecting throttling constraints.
+     * <p>
+     * Blocks the current thread until the throttle determines it's safe to proceed based on current load and timing.
+     * Uses randomized sleep intervals to avoid thundering herd effects.
+     *
+     * @param adapt {@code true}, if a completion feedback through the {@link #adapt(boolean)} or {@link #adapt(long)}
+     *              methods is expected, {@code false}, otherwise
+     *
+     * @return the time elapsed since the last task execution in milliseconds, or 0 if interrupted
+     */
+    public long await(final boolean adapt) {
 
         while ( delay() ) {
             try {
@@ -212,7 +226,7 @@ public final class Throttle {
             }
         }
 
-        return execute();
+        return execute(adapt);
     }
 
 
@@ -245,6 +259,24 @@ public final class Throttle {
         return adapt(retry == 0, retry);
     }
 
+    /**
+     * Applies throttling to a value by waiting without affecting the queue counter.
+     * <p>
+     * This method implements the {@link UnaryOperator} interface, allowing the throttle to be used in functional
+     * programming contexts where rate limiting is needed.
+     *
+     * @param value the input value to pass through
+     *
+     * @return the same value after applying throttling delay
+     */
+    @Override
+    public T apply(final T value) {
+
+        await(false);
+
+        return value;
+    }
+
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -262,18 +294,21 @@ public final class Throttle {
     /**
      * Records the execution of a new task.
      * <p>
-     * Updates the fence timestamp to the current time and increments the queue counter to track the number of active
-     * concurrent tasks.
+     * Updates the fence timestamp to the current time and optionally increments the queue counter to track the number
+     * of active concurrent tasks.
+     *
+     * @param adapt {@code true} to increment the queue counter, {@code false} to leave it unchanged
      *
      * @return the time elapsed since the last task execution in milliseconds
      */
-    private synchronized long execute() {
+    private synchronized long execute(final boolean adapt) {
 
         final long last=fence;
         final long next=currentTimeMillis();
 
         fence=next;
-        queue++;
+
+        if ( adapt ) { queue++; }
 
         return next-last;
     }
@@ -281,8 +316,11 @@ public final class Throttle {
     /**
      * Adapts the throttling parameters based on task completion status.
      * <p>
-     * Decrements the queue counter and adjusts the baseline delay: - On successful completion: reduces delay by the
-     * recover factor (speeds up) - On failure/retry: increases delay by the backoff factor (slows down)
+     * Decrements the queue counter and adjusts the baseline delay:
+     * <ul>
+     * <li>On successful completion: reduces delay by the recover factor (speeds up)</li>
+     * <li>On failure/retry: increases delay by the backoff factor (slows down)</li>
+     * </ul>
      * <p>
      * The delay is always clamped between minimum and maximum bounds, with retry delays taking precedence when
      * specified.
