@@ -257,14 +257,16 @@ public final class Throttle<T> implements UnaryOperator<T> {
      * Blocks the current thread until the throttle determines it's safe to proceed based on current load and timing.
      * Uses randomized sleep intervals to avoid thundering herd effects.
      *
-     * @param adapt {@code true}, if a completion feedback through the {@link #adapt(boolean)} or {@link #adapt(long)}
-     *              methods is expected, {@code false}, otherwise
+     * @param adapt {@code true} to increment the queue counter and expect completion feedback through the
+     *              {@link #adapt(boolean)} or {@link #adapt(long)} methods, {@code false} otherwise
      *
-     * @return the time elapsed since the last task execution in milliseconds, or 0 for the first task or if interrupted
+     * @return the time elapsed since the last task execution in milliseconds, or 0 if interrupted
      */
     public long await(final boolean adapt) {
 
-        while ( delay() ) {
+        long elapsed;
+
+        while ( (elapsed=delay(adapt)) < 0 ) {
             try {
 
                 Thread.sleep(minimum+ThreadLocalRandom.current().nextLong(minimum));
@@ -278,7 +280,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
             }
         }
 
-        return execute(adapt);
+        return elapsed;
     }
 
 
@@ -334,38 +336,34 @@ public final class Throttle<T> implements UnaryOperator<T> {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Checks if the current thread should wait before executing a task.
+     * Attempts to reserve an execution slot, respecting throttling constraints.
      * <p>
      * Uses exponential backoff based on queue size: more concurrent tasks result in longer delays. After a failure,
-     * only allows one task at a time until a success occurs.
-     *
-     * @return {@code true} if the caller should wait before proceeding
-     */
-    private synchronized boolean delay() {
-        return dirty && queue > 0
-               || fence+clamp(max(delay, minimum)*pow(buildup, queue), minimum, maximum) >= currentTimeMillis();
-    }
-
-    /**
-     * Records the execution of a new task.
-     * <p>
-     * Updates the fence timestamp to the current time and optionally increments the queue counter to track the number
-     * of active concurrent tasks.
+     * only allows one request at a time until a success occurs. If successful, atomically updates the fence timestamp
+     * and optionally increments the queue counter.
      *
      * @param adapt {@code true} to increment the queue counter, {@code false} to leave it unchanged
      *
-     * @return the time elapsed since the last task execution in milliseconds or 0 for thefirst task
+     * @return the time elapsed since the last task execution in milliseconds, or a negative value if the caller should
+     *         wait
      */
-    private synchronized long execute(final boolean adapt) {
+    private synchronized long delay(final boolean adapt) {
 
-        final long last=fence;
         final long next=currentTimeMillis();
+        final long wait=clamp(round(delay*pow(buildup, queue)), minimum, maximum);
 
-        fence=next;
+        if ( dirty && queue > 0 || fence+wait > next ) { return -1; } else {
 
-        if ( adapt ) { queue++; }
+            final long last=fence;
 
-        return last > 0 ? next-last : 0;
+            fence=next;
+
+            if ( adapt ) { queue++; }
+
+            return next-last;
+
+        }
+
     }
 
     /**
