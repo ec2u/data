@@ -36,6 +36,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
     private static final int DEFAULT_MINIMUM=100;
     private static final int DEFAULT_MAXIMUM=60*1000;
 
+    private static final double DEFAULT_BUILDUP=2.75; // about 15 seconds after 5 pending tasks
     private static final double DEFAULT_BACKOFF=1.10;
     private static final double DEFAULT_RECOVER=0.95;
 
@@ -45,10 +46,11 @@ public final class Throttle<T> implements UnaryOperator<T> {
     private final long minimum;
     private final long maximum;
 
+    private final double buildup;
     private final double backoff;
     private final double recover;
 
-    private boolean dirty; // true if the last response was a rejection, restricting queue to 1
+    private boolean dirty; // true if the last response was a rejection, restricting pending tasks to 1
 
     private long delay; // the current baseline delay between two task executions ([ms])
     private long fence; // the timestamp of the last task execution ([ms] since epoch)
@@ -58,15 +60,18 @@ public final class Throttle<T> implements UnaryOperator<T> {
     /**
      * Creates a throttle with default parameters.
      * <p>
-     * Uses minimum delay of {@value DEFAULT_MINIMUM} ms, maximum delay of {@value DEFAULT_MAXIMUM} ms, backoff factor
-     * of {@value DEFAULT_BACKOFF}, and recovery factor of {@value DEFAULT_RECOVER}.
+     * Uses minimum delay of {@value DEFAULT_MINIMUM} ms, maximum delay of {@value DEFAULT_MAXIMUM} ms, buildup factor
+     * of {@value DEFAULT_BUILDUP}, backoff factor of {@value DEFAULT_BACKOFF}, and recovery factor of
+     * {@value DEFAULT_RECOVER}.
      */
     public Throttle() {
         this(
                 DEFAULT_MINIMUM,
                 DEFAULT_MAXIMUM,
+                DEFAULT_BUILDUP,
                 DEFAULT_BACKOFF,
-                DEFAULT_RECOVER);
+                DEFAULT_RECOVER
+        );
     }
 
     /**
@@ -74,43 +79,66 @@ public final class Throttle<T> implements UnaryOperator<T> {
      *
      * @param minimum the minimum delay between task executions in milliseconds
      * @param maximum the maximum delay between task executions in milliseconds
+     * @param buildup the exponential factor for queue-based delay increases (must be >= 1.0)
      * @param backoff the multiplicative factor for increasing delays on failure (must be >= 1.0)
      * @param recover the multiplicative factor for decreasing delays on success (must be between 0.0 and 1.0)
      *
-     * @throws IllegalArgumentException if minimum or maximum is negative, backoff is less than 1.0, or recover is not
-     *                                  between 0.0 and 1.0
+     * @throws IllegalArgumentException if minimum or maximum is negative, buildup or backoff is less than 1.0, or
+     *                                  recover is not between 0.0 and 1.0
      */
     public Throttle(
             final long minimum,
             final long maximum,
+            final double buildup,
             final double backoff,
             final double recover
     ) {
 
         if ( minimum < 0 ) {
-            throw new IllegalArgumentException(format("negative minimum <%d>", minimum));
+            throw new IllegalArgumentException(format(
+                    "negative minimum delay <%d>", minimum
+            ));
         }
 
         if ( maximum < 0 ) {
-            throw new IllegalArgumentException(format("negative maximum <%d>", maximum));
+            throw new IllegalArgumentException(format(
+                    "negative maximum delay <%d>", maximum
+            ));
         }
 
         if ( minimum > maximum ) {
-            throw new IllegalArgumentException(format("conflicting minimum <%d> and maximum <%d>", minimum, maximum));
+            throw new IllegalArgumentException(format(
+                    "conflicting minimum <%d> and maximum <%d> delays", minimum, maximum
+            ));
+        }
+
+        if ( buildup < 1.0 ) {
+            throw new IllegalArgumentException(format(
+                    "illegal buildup factor <%.3f>", buildup
+            ));
         }
 
         if ( backoff < 1.0 ) {
-            throw new IllegalArgumentException(format("illegal backoff <%.3f>", backoff));
+            throw new IllegalArgumentException(format(
+                    "illegal backoff factor <%.3f>", backoff
+            ));
         }
 
         if ( recover < 0 || recover > 1.0 ) {
-            throw new IllegalArgumentException(format("illegal recover <%.3f>", recover));
+            throw new IllegalArgumentException(format(
+                    "illegal recover factor <%.3f>", recover
+            ));
         }
 
         this.minimum=minimum;
         this.maximum=maximum;
+
+        this.buildup=buildup;
         this.backoff=backoff;
         this.recover=recover;
+
+        this.delay=minimum;
+        this.fence=currentTimeMillis();
     }
 
 
@@ -127,6 +155,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
         return new Throttle<>(
                 minimum,
                 maximum,
+                buildup,
                 backoff,
                 recover
         );
@@ -145,11 +174,31 @@ public final class Throttle<T> implements UnaryOperator<T> {
         return new Throttle<>(
                 minimum,
                 maximum,
+                buildup,
                 backoff,
                 recover
         );
     }
 
+
+    /**
+     * Configures the buildup factor for exponential queue-based delays.
+     *
+     * @param buildup the exponential factor for delay increases based on queue size (must be >= 1.0)
+     *
+     * @return a new throttle instance with the updated buildup factor
+     *
+     * @throws IllegalArgumentException if buildup is less than 1.0
+     */
+    public Throttle<T> buildup(final double buildup) {
+        return new Throttle<>(
+                minimum,
+                maximum,
+                buildup,
+                backoff,
+                recover
+        );
+    }
 
     /**
      * Configures the backoff factor for increasing delays on task failure.
@@ -164,6 +213,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
         return new Throttle<>(
                 minimum,
                 maximum,
+                buildup,
                 backoff,
                 recover
         );
@@ -182,6 +232,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
         return new Throttle<>(
                 minimum,
                 maximum,
+                buildup,
                 backoff,
                 recover
         );
@@ -209,7 +260,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
      * @param adapt {@code true}, if a completion feedback through the {@link #adapt(boolean)} or {@link #adapt(long)}
      *              methods is expected, {@code false}, otherwise
      *
-     * @return the time elapsed since the last task execution in milliseconds, or 0 if interrupted
+     * @return the time elapsed since the last task execution in milliseconds, or 0 for the first task or if interrupted
      */
     public long await(final boolean adapt) {
 
@@ -260,6 +311,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
         return adapt(retry == 0, retry);
     }
 
+
     /**
      * Applies throttling to a value by waiting without affecting the queue counter.
      * <p>
@@ -285,13 +337,13 @@ public final class Throttle<T> implements UnaryOperator<T> {
      * Checks if the current thread should wait before executing a task.
      * <p>
      * Uses exponential backoff based on queue size: more concurrent tasks result in longer delays. After a failure,
-     * only allows one request at a time until a success occurs.
+     * only allows one task at a time until a success occurs.
      *
      * @return {@code true} if the caller should wait before proceeding
      */
     private synchronized boolean delay() {
         return dirty && queue > 0
-               || fence+clamp(max(delay, minimum)*pow(backoff, queue), minimum, maximum) >= currentTimeMillis();
+               || fence+clamp(max(delay, minimum)*pow(buildup, queue), minimum, maximum) >= currentTimeMillis();
     }
 
     /**
@@ -302,7 +354,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
      *
      * @param adapt {@code true} to increment the queue counter, {@code false} to leave it unchanged
      *
-     * @return the time elapsed since the last task execution in milliseconds
+     * @return the time elapsed since the last task execution in milliseconds or 0 for thefirst task
      */
     private synchronized long execute(final boolean adapt) {
 
@@ -313,7 +365,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
 
         if ( adapt ) { queue++; }
 
-        return next-last;
+        return last > 0 ? next-last : 0;
     }
 
     /**
@@ -326,7 +378,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
      * </ul>
      * <p>
      * The delay is always clamped between minimum and maximum bounds, with retry delays taking precedence when
-     * specified. After a failure, the throttle restricts new requests until the current one succeeds.
+     * specified. After a failure, the throttle restricts new tasks until the current one succeeds.
      *
      * @param completed {@code true} if the task completed successfully, {@code false} if it failed
      * @param retry     the explicit retry delay in milliseconds, or 0 for adaptive behavior
