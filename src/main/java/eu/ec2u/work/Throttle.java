@@ -48,6 +48,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
     private final double backoff;
     private final double recover;
 
+    private boolean dirty; // true if the last response was a rejection, restricting queue to 1
 
     private long delay; // the current baseline delay between two task executions ([ms])
     private long fence; // the timestamp of the last task execution ([ms] since epoch)
@@ -283,12 +284,14 @@ public final class Throttle<T> implements UnaryOperator<T> {
     /**
      * Checks if the current thread should wait before executing a task.
      * <p>
-     * Uses exponential backoff based on queue size: more concurrent tasks result in longer delays.
+     * Uses exponential backoff based on queue size: more concurrent tasks result in longer delays. After a failure,
+     * only allows one request at a time until a success occurs.
      *
      * @return {@code true} if the caller should wait before proceeding
      */
     private synchronized boolean delay() {
-        return fence+clamp(delay*pow(backoff, queue), minimum, maximum) > currentTimeMillis();
+        return dirty && queue > 0
+               || fence+clamp(max(delay, minimum)*pow(backoff, queue), minimum, maximum) >= currentTimeMillis();
     }
 
     /**
@@ -318,12 +321,12 @@ public final class Throttle<T> implements UnaryOperator<T> {
      * <p>
      * Decrements the queue counter and adjusts the baseline delay:
      * <ul>
-     * <li>On successful completion: reduces delay by the recover factor (speeds up)</li>
-     * <li>On failure/retry: increases delay by the backoff factor (slows down)</li>
+     * <li>On successful completion: reduces delay by the recover factor (speeds up) and clears failure state</li>
+     * <li>On failure/retry: increases delay by the backoff factor (slows down) and sets failure state</li>
      * </ul>
      * <p>
      * The delay is always clamped between minimum and maximum bounds, with retry delays taking precedence when
-     * specified.
+     * specified. After a failure, the throttle restricts new requests until the current one succeeds.
      *
      * @param completed {@code true} if the task completed successfully, {@code false} if it failed
      * @param retry     the explicit retry delay in milliseconds, or 0 for adaptive behavior
@@ -332,6 +335,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
      */
     private synchronized long adapt(final boolean completed, final long retry) {
 
+        dirty=!completed;
         queue--;
 
         return delay=max(retry, completed
