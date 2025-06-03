@@ -16,18 +16,24 @@
 
 package eu.ec2u.data.datasets.events;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
+import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
+import eu.ec2u.work.PageKeeper;
+
+import java.net.URI;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
-import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.array;
+import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Collections.map;
+import static com.metreeca.shim.Lambdas.lenient;
+import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
 
@@ -35,9 +41,14 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.universities.University.TURKU;
 import static eu.ec2u.data.datasets.universities.University.UMEA;
+import static java.lang.String.format;
 import static java.util.Map.entry;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toSet;
 
 public final class EventsUmeaUniversity implements Runnable {
+
+    private static final URI PIPELINE=uri("java:%s".formatted(EventsUmeaUniversity.class.getName()));
 
     private static final OrganizationFrame PUBLISHER=new OrganizationFrame()
 
@@ -57,12 +68,12 @@ public final class EventsUmeaUniversity implements Runnable {
 
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Store store=service(store());
+    private final Logger logger=service(logger());
 
 
     @Override
     public void run() {
-        store.insert(array(Xtream
+        time(() -> Stream
 
                 .of(PUBLISHER.id().toString())
 
@@ -71,9 +82,17 @@ public final class EventsUmeaUniversity implements Runnable {
 
                 .flatMap(path -> path.links("//a[@class='eventlink']/@href"))
 
-                .pipe(new Events.Scanner(UMEA, PUBLISHER))
+                .flatMap(optional(lenient(URIs::uri)))
 
-        ));
+                .collect(collectingAndThen(toSet(), new PageKeeper<>(
+                        PIPELINE,
+                        page -> new Events.Scanner().apply(page, new EventFrame().university(UMEA).publisher(PUBLISHER)),
+                        page -> Optional.of(new EventFrame(true).id(page.resource()))
+                )))
+
+        ).apply((elapsed, resources) -> logger.info(this, format(
+                "synced <%,d> resources in <%,d> ms", resources, elapsed
+        )));
     }
 
 }

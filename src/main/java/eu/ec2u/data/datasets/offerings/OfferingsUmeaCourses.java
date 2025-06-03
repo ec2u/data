@@ -81,7 +81,7 @@ public final class OfferingsUmeaCourses implements Runnable {
                 .collect(collectingAndThen(toSet(), new PageKeeper<>(
                         PIPELINE,
                         page -> new Courses.Scanner().apply(page, new CourseFrame().university(UMEA)),
-                        page -> Optional.of(new CourseFrame(true).id(page.id()))
+                        page -> Optional.of(new CourseFrame(true).id(page.resource()))
                 )))
 
         ).apply((elapsed, resources) -> logger.info(this, format(

@@ -33,16 +33,6 @@ import static java.lang.System.currentTimeMillis;
 @SuppressWarnings("SynchronizedMethod")
 public final class Throttle<T> implements UnaryOperator<T> {
 
-    private static final int DEFAULT_MINIMUM=100;
-    private static final int DEFAULT_MAXIMUM=60*1000;
-
-    private static final double DEFAULT_BUILDUP=2.75; // about 15 seconds after 5 pending tasks
-    private static final double DEFAULT_BACKOFF=1.10;
-    private static final double DEFAULT_RECOVER=0.95;
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private final long minimum;
     private final long maximum;
 
@@ -58,19 +48,17 @@ public final class Throttle<T> implements UnaryOperator<T> {
 
 
     /**
-     * Creates a throttle with default parameters.
+     * Creates a throttle with default parameters for unrestricted execution.
      * <p>
-     * Uses minimum delay of {@value DEFAULT_MINIMUM} ms, maximum delay of {@value DEFAULT_MAXIMUM} ms, buildup factor
-     * of {@value DEFAULT_BUILDUP}, backoff factor of {@value DEFAULT_BACKOFF}, and recovery factor of
-     * {@value DEFAULT_RECOVER}.
+     * Configures minimum and maximum delays to 0, and all factors to 1.0, effectively disabling throttling.
      */
     public Throttle() {
         this(
-                DEFAULT_MINIMUM,
-                DEFAULT_MAXIMUM,
-                DEFAULT_BUILDUP,
-                DEFAULT_BACKOFF,
-                DEFAULT_RECOVER
+                0,
+                0,
+                1,
+                1,
+                1
         );
     }
 
@@ -298,7 +286,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
     /**
      * Adapts throttling parameters with an explicit retry delay.
      *
-     * @param retry the explicit retry delay in milliseconds, or 0 for successful completion
+     * @param retry the explicit retry delay in milliseconds; 0 indicates successful task completion
      *
      * @return the new baseline delay in milliseconds
      *

@@ -16,29 +16,41 @@
 
 package eu.ec2u.data.datasets.events;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.ical.formats.iCal;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.flow.services.Logger;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
+import eu.ec2u.work.PageKeeper;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Description;
 
+import java.net.URI;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.http.Message.ABSOLUTE_PATTERN;
-import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.array;
+import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Collections.map;
+import static com.metreeca.shim.Lambdas.lenient;
+import static com.metreeca.shim.Loggers.time;
+import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.universities.University.SALAMANCA;
+import static java.lang.String.format;
 import static java.util.Map.entry;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toSet;
 import static net.fortuna.ical4j.model.Component.VEVENT;
 
 public final class EventsSalamancaUniversity implements Runnable {
+
+    private static final URI PIPELINE=uri("java:%s".formatted(EventsSalamancaUniversity.class.getName()));
 
     private static final OrganizationFrame PUBLISHER=new OrganizationFrame()
 
@@ -58,24 +70,34 @@ public final class EventsSalamancaUniversity implements Runnable {
 
     //̸////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Store store=service(store());
+    private final Logger logger=service(logger());
 
 
-    @Override public void run() {
-        store.insert(array(Xtream
+    @Override
+    public void run() {
+        time(() -> Stream
 
                 .of("https://eventum.usal.es/ics/location/spain/lo-1.ics") // https://eventum.usal.es/kml.html
 
-                .optMap(new GET<>(new iCal()))
+                .flatMap(optional(new GET<>(new iCal())))
 
                 .flatMap(calendar -> calendar.getComponents(VEVENT).stream().map(VEvent.class::cast))
 
-                .optMap(v -> v.getDescription()
+                .flatMap(optional(v -> v.getDescription()
                         .map(Description::getValue)
                         .filter(ABSOLUTE_PATTERN.asMatchPredicate())
-                )
+                ))
 
-                .pipe(new Events.Scanner(SALAMANCA, PUBLISHER))));
+                .flatMap(optional(lenient(URIs::uri)))
+
+                .collect(collectingAndThen(toSet(), new PageKeeper<>(
+                        PIPELINE,
+                        page -> new Events.Scanner().apply(page, new EventFrame().university(SALAMANCA).publisher(PUBLISHER)),
+                        page -> Optional.of(new EventFrame(true).id(page.resource()))
+                )))
+
+        ).apply((elapsed, resources) -> logger.info(this, format(
+                "synced <%,d> resources in <%,d> ms", resources, elapsed
+        )));
     }
-
 }

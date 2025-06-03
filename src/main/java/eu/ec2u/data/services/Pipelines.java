@@ -85,7 +85,7 @@ public interface Pipelines {
                     .path("/events", execute(new Events.Reaper()))
                     .path("/events/coimbra/university", execute(new EventsCoimbraUniversity()))
                     .path("/events/iasi/university/360", execute(new EventsIasiUniversity360()))
-                    .path("/events/jena/university", execute(new EventsJenaUniversity()))
+                    .path("/events/jena/university", execute(new _EventsJenaUniversity()))
                     .path("/events/linz/university", execute(new EventsLinzUniversity()))
                     .path("/events/pavia/university", execute(new EventsPaviaUniversity()))
                     .path("/events/poitiers/university", execute(new EventsPoitiersUniversity()))

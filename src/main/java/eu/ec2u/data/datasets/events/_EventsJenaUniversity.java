@@ -24,6 +24,7 @@ import com.metreeca.mesh.tools.Store;
 
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -43,7 +44,9 @@ import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.universities.University.JENA;
 import static java.util.Map.entry;
 
-public final class EventsJenaUniversity implements Runnable {
+public final class _EventsJenaUniversity implements Runnable {
+
+    private static final URI PIPELINE=uri("java:%s".formatted(_EventsJenaUniversity.class.getName()));
 
     private static final List<OrganizationFrame> PUBLISHERS=list(
 
@@ -130,7 +133,7 @@ public final class EventsJenaUniversity implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new EventsJenaUniversity().run());
+        exec(() -> new _EventsJenaUniversity().run());
     }
 
 
@@ -159,7 +162,7 @@ public final class EventsJenaUniversity implements Runnable {
 
                         ))
 
-                        .pipe(new Events.Scanner(JENA, publisher))
+                        .pipe(new Events._Scanner(JENA, publisher))
 
                         .toList()
 

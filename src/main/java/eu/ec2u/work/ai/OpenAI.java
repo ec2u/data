@@ -64,6 +64,9 @@ public final class OpenAI {
 
     private final Logger logger=service(logger());
 
+    private final Map<String, Throttle<?>> throttles=new ConcurrentHashMap<>();
+
+
 
     /**
      * Creates an OpenAI client with the specified API key.
@@ -111,10 +114,6 @@ public final class OpenAI {
     }
 
 
-    //̸// !!! //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private final Map<String, Throttle<?>> throttles=new ConcurrentHashMap<>();
-
 
     /**
      * Executes a task with adaptive rate limiting and retry logic.
@@ -150,7 +149,13 @@ public final class OpenAI {
             throw new NullPointerException("null task");
         }
 
-        final Throttle<?> throttle=throttles.computeIfAbsent(model, key -> new Throttle<>());
+        final Throttle<?> throttle=throttles.computeIfAbsent(model, key -> new Throttle<>()
+                .minimum(100)
+                .maximum(60*1000)
+                .buildup(1.10)
+                .backoff(1.10)
+                .recover(0.95)
+        );
 
         for (int attempt=0; attempts == 0 || attempt < attempts; attempt++) {
             try {
