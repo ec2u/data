@@ -171,7 +171,8 @@ public interface Events extends Dataset {
                     - start time in ISO format without seconds (hh:mm)
                     - end date in ISO format, taking into account that the current date is %s
                     - end time in ISO format without seconds (hh:mm)
-                    - entry fees (free, paid); make sure not to mix up registration required with paid entry fees
+                    - entry fees (free, paid); include only if absolutely confident; make sure not to mix up 
+                      registration required with paid entry fees
                     - attendance mode (offline, online, mixed)
                     - attendance URL (make absolutely sure to include it only if attendance is online or mixed)
                     - venue name

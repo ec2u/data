@@ -150,8 +150,8 @@ public final class OpenAI {
         }
 
         final Throttle<?> throttle=throttles.computeIfAbsent(model, key -> new Throttle<>()
-                .minimum(100)
                 .maximum(60*1000)
+                .minimum(100) // !!! ;( after maximum
                 .buildup(1.10)
                 .backoff(1.10)
                 .recover(0.95)
