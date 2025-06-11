@@ -37,10 +37,7 @@ import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.universities.University;
 import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
-import eu.ec2u.data.vocabularies.schema.SchemaImageObjectFrame;
-import eu.ec2u.data.vocabularies.schema.SchemaLocationFrame;
-import eu.ec2u.data.vocabularies.schema.SchemaPostalAddressFrame;
-import eu.ec2u.data.vocabularies.schema.SchemaVirtualLocationFrame;
+import eu.ec2u.data.vocabularies.schema.*;
 import eu.ec2u.work.Page;
 import eu.ec2u.work.PageFrame;
 import eu.ec2u.work.ai.Analyzer;
@@ -119,15 +116,25 @@ public interface Events extends Dataset {
     final class Handler extends Delegator {
 
         public Handler() {
+
+            final EventFrame event=new EventFrame(true)
+                    .image(new SchemaImageObjectFrame(true))
+                    .location(new SchemaLocationFrame(true)
+                            .String("")
+                            .Place(new SchemaPlaceFrame(true)
+                                    .address(new SchemaPostalAddressFrame(true))
+                            )
+                            .PostalAddress(new SchemaPostalAddressFrame(true))
+                            .VirtualLocation(new SchemaVirtualLocationFrame(true))
+                    );
+
             delegate(new Router()
 
                     .path("/", new Worker().get(new Driver(new EventsFrame(true)
-
-                            .members(stash(query(new EventFrame(true))))
-
+                            .members(stash(query(event)))
                     )))
 
-                    .path("/{code}", new Worker().get(new Driver(new EventFrame(true))))
+                    .path("/{code}", new Worker().get(new Driver(event)))
             );
         }
 
