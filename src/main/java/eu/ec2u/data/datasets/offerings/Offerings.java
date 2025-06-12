@@ -57,7 +57,8 @@ public interface Offerings {
                             - full description of acquired competencies or intended learning outcomes
                             - full description of graduation or completion requirements
                             
-                            - educational level as an ISCED 2011 code (1-9)
+                            - educational level as an ISCED 2011 code; make sure to use only codes in the 6-8 range;
+                              leave blank if not confident
                             
                             Make absolutely sure to omit properties that are not explicitly specified in the document.
                             Full descriptions must be included verbatim from the document in Markdown format
