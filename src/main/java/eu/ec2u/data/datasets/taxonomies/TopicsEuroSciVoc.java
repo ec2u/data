@@ -18,7 +18,7 @@ package eu.ec2u.data.datasets.taxonomies;
 
 import com.metreeca.flow.rdf.actions.Retrieve;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.pipe.Store;
 
 import eu.ec2u.data.datasets.Reference;
 import eu.ec2u.data.datasets.ReferenceFrame;

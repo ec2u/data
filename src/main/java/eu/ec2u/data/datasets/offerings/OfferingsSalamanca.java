@@ -21,7 +21,7 @@ import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.mesh.Value;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.pipe.Store;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.courses.Course;

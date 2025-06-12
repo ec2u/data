@@ -18,8 +18,8 @@ package eu.ec2u.work.ai;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Logger;
+import com.metreeca.mesh.pipe.Store;
 import com.metreeca.mesh.shapes.Shape;
-import com.metreeca.mesh.tools.Store;
 
 import java.net.URI;
 import java.util.Optional;

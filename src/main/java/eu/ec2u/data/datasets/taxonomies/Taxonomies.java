@@ -22,7 +22,7 @@ import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.pipe.Store;
 
 import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.datasets.Datasets;

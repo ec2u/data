@@ -17,7 +17,7 @@
 package eu.ec2u.data.datasets.units;
 
 import com.metreeca.flow.services.Vault;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.pipe.Store;
 
 import java.util.stream.Stream;
 

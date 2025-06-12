@@ -22,7 +22,7 @@ import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.actions.Focus;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.pipe.Store;
 import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;

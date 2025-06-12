@@ -24,7 +24,7 @@ import com.metreeca.flow.rdf.Rover;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.pipe.Store;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;

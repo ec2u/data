@@ -20,7 +20,7 @@ import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.pipe.Store;
 
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 

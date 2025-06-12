@@ -22,7 +22,7 @@ import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.Value;
-import com.metreeca.mesh.tools.Store;
+import com.metreeca.mesh.pipe.Store;
 
 import java.net.URI;
 import java.time.Instant;
