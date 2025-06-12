@@ -154,10 +154,6 @@ export function DataCourse() {
 
 			<TileInfo>{{
 
-				"Audience": audience?.length && <ul>{audience.slice().sort(entryCompare).map(audience =>
-					<li key={audience.id}><TileLink>{audience}</TileLink></li>
-				)}</ul>,
-
 				"Fees": isAccessibleForFree === true ? "Free for Externals"
 					: isAccessibleForFree === false ? "Paid for Externals"
 						: undefined
