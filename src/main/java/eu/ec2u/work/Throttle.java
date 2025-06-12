@@ -28,7 +28,7 @@ import static java.lang.System.currentTimeMillis;
  * Adaptive throttle for rate-limiting concurrent task execution.
  * <p>
  * Implements exponential backoff and recovery mechanisms to dynamically adjust execution rates based on load and
- * success rates. The throttle maintains a queue counter tracking active tasks and adapts delays accordingly.
+ * success rates.
  */
 @SuppressWarnings("SynchronizedMethod")
 public final class Throttle<T> implements UnaryOperator<T> {
@@ -49,8 +49,6 @@ public final class Throttle<T> implements UnaryOperator<T> {
 
     /**
      * Creates a throttle with default parameters for unrestricted execution.
-     * <p>
-     * Configures minimum and maximum delays to 0, and all factors to 1.0, effectively disabling throttling.
      */
     public Throttle() {
         this(
@@ -66,7 +64,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
      * Creates a throttle with custom parameters.
      *
      * @param minimum the minimum delay between task executions in milliseconds
-     * @param maximum the maximum delay between task executions in milliseconds
+     * @param maximum the maximum delay between task executions in milliseconds; 0 means no limit
      * @param buildup the exponential factor for queue-based delay increases (must be >= 1.0)
      * @param backoff the multiplicative factor for increasing delays on failure (must be >= 1.0)
      * @param recover the multiplicative factor for decreasing delays on success (must be between 0.0 and 1.0)
@@ -94,7 +92,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
             ));
         }
 
-        if ( minimum > maximum ) {
+        if ( maximum > 0 && minimum > maximum ) {
             throw new IllegalArgumentException(format(
                     "conflicting minimum <%d> and maximum <%d> delays", minimum, maximum
             ));
@@ -119,7 +117,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
         }
 
         this.minimum=minimum;
-        this.maximum=maximum;
+        this.maximum=maximum == 0 ? Long.MAX_VALUE : maximum;
 
         this.buildup=buildup;
         this.backoff=backoff;
@@ -152,7 +150,7 @@ public final class Throttle<T> implements UnaryOperator<T> {
     /**
      * Configures the maximum delay between task executions.
      *
-     * @param maximum the maximum delay in milliseconds
+     * @param maximum the maximum delay in milliseconds; 0 means no limit
      *
      * @return a new throttle instance with the updated maximum delay
      *
