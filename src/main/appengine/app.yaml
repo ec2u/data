@@ -12,3 +12,6 @@ handlers:
     secure: always
 
 instance_class: F4_1G # https://cloud.google.com/appengine/docs/standard#instance_classes
+
+automatic_scaling:
+  max_instances: 5
