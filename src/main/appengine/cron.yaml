@@ -1,149 +1,160 @@
 cron:
 
-  - description: "universities - nightly housekeeping"
-    url: /cron/universities/
-    schedule: every day 00:00
-
-
-  - description: "units › coimbra - nightly crawling"
-    url: /cron/units/coimbra
-    schedule: every day 00:00
-
-  - description: "units › jena - nightly crawling"
-    url: /cron/units/jena
-    schedule: every day 00:00
-
-  - description: "units › iasi - nightly crawling"
-    url: /cron/units/iasi
-    schedule: every day 00:00
-
-  - description: "units › pavia - monthly crawling"
-    url: /cron/units/pavia
+  - description: "units › coimbra - monthly crawling"
+    url: /pipelines/units/coimbra
     schedule: every 1 of month 00:00
 
-  - description: "units › poitiers - nightly crawling"
-    url: /cron/units/poitiers
-    schedule: every day 00:00
+  - description: "units › iasi - monthly crawling"
+    url: /pipelines/units/iasi
+    schedule: every 1 of month 00:05
 
-  - description: "units › salamanca - nightly crawling"
-    url: /cron/units/salamanca
-    schedule: every day 00:00
+  - description: "units › jena - monthly crawling"
+    url: /pipelines/units/jena
+    schedule: every 1 of month 00:10
 
-  - description: "units › turku - nightly crawling"
-    url: /cron/units/turku
-    schedule: every day 00:00
+  - description: "units › linz - monthly crawling"
+    url: /pipelines/units/linz
+    schedule: every 1 of month 00:15
+
+  - description: "units › pavia - monthly crawling"
+    url: /pipelines/units/pavia
+    schedule: every 1 of month 00:20
+
+  - description: "units › poitiers - monthly crawling"
+    url: /pipelines/units/poitiers
+    schedule: every 1 of month 00:25
+
+  - description: "units › salamanca - monthly crawling"
+    url: /pipelines/units/salamanca
+    schedule: every 1 of month 00:30
+
+  - description: "units › turku - monthly crawling"
+    url: /pipelines/units/turku
+    schedule: every 1 of month 00:35
+
+  #  - description: "units › umea - monthly crawling"
+  #    url: /pipelines/units/umea
+  #    schedule: every 1 of month 00:40
 
 
   - description: "offerings › coimbra - monthly crawling"
-    url: /cron/offerings/coimbra
-    schedule: every 1 of month 00:00
+    url: /pipelines/offerings/coimbra
+    schedule: every 1 of month 01:00
 
   - description: "offerings › jena - monthly crawling"
-    url: /cron/offerings/jena
-    schedule: every 1 of month 00:00
+    url: /pipelines/offerings/jena
+    schedule: every 1 of month 01:05
 
-  - description: "offerings › linz › programs - monthly crawling"
-    url: /cron/offerings/linz/programs
-    schedule: every 1 of month 00:00
-
-  - description: "offerings › linz › courses - monthly crawling"
-    url: /cron/offerings/linz/courses
-    schedule: every 1 of month 00:00
+  - description: "offerings › linz - monthly crawling"
+    url: /pipelines/offerings/linz/programs
+    schedule: every 1 of month 01:10
 
   - description: "offerings › pavia - monthly crawling"
-    url: /cron/offerings/pavia
-    schedule: every 1 of month 00:00
-
-  - description: "offerings › pavia - monthly crawling"
-    url: /cron/offerings/pavia
-    schedule: every 1 of month 00:00
+    url: /pipelines/offerings/pavia
+    schedule: every 1 of month 01:15
 
   - description: "offerings › pavia › doctorates - monthly crawling"
-    url: /cron/offerings/pavia/doctorates
-    schedule: every 1 of month 00:00
+    url: /pipelines/offerings/pavia/doctorates
+    schedule: every 1 of month 01:20
 
   - description: "offerings › pavia › schools - monthly crawling"
-    url: /cron/offerings/pavia/schools
-    schedule: every 1 of month 00:00
+    url: /pipelines/offerings/pavia/schools
+    schedule: every 1 of month 01:25
 
   - description: "offerings › poitiers - monthly crawling"
-    url: /cron/offerings/poitiers
-    schedule: every 1 of month 00:00
+    url: /pipelines/offerings/poitiers
+    schedule: every 1 of month 01:30
 
   - description: "offerings › salamanca - monthly crawling"
-    url: /cron/offerings/salamanca
-    schedule: every 1 of month 00:00
+    url: /pipelines/offerings/salamanca
+    schedule: every 1 of month 01:35
 
-  - description: "offerings › turku - monthly crawling"
-    url: /cron/offerings/turku
-    schedule: every 1 of month 00:00
+  #    - description: "offerings › umea › programs - monthly crawling"
+  #      url: /pipelines/offerings/umea
+  #      schedule: every 1 of month 01:40
+
+  #  - description: "offerings › umea › courses - monthly crawling"
+  #    url: /pipelines/offerings/umea
+  #    schedule: every 1 of month 01:45
 
   - description: "offerings › LLL - monthly crawling"
-    url: /cron/offerings/lll
-    schedule: every 1 of month 00:00
+    url: /pipelines/offerings/lll
+    schedule: every 1 of month 01:50
 
 
   - description: "documents › coimbra - nightly crawling"
-    url: /cron/documents/coimbra
-    schedule: every day 00:00
-
-  - description: "documents › jena - nightly crawling"
-    url: /cron/documents/jena
-    schedule: every day 00:00
+    url: /pipelines/documents/coimbra
+    schedule: every day 02:00
 
   - description: "documents › iasi - nightly crawling"
-    url: /cron/documents/iasi
-    schedule: every day 00:00
+    url: /pipelines/documents/iasi
+    schedule: every day 02:05
+
+  - description: "documents › jena - nightly crawling"
+    url: /pipelines/documents/jena
+    schedule: every day 02:10
+
+  - description: "documents › linz - nightly crawling"
+    url: /pipelines/documents/linz
+    schedule: every day 02:15
 
   - description: "documents › pavia - nightly crawling"
-    url: /cron/documents/pavia
-    schedule: every day 00:00
+    url: /pipelines/documents/pavia
+    schedule: every day 02:20
 
   - description: "documents › poitiers - nightly crawling"
-    url: /cron/documents/poitiers
-    schedule: every day 00:00
+    url: /pipelines/documents/poitiers
+    schedule: every day 02:25
 
   - description: "documents › salamanca - nightly crawling"
-    url: /cron/documents/salamanca
-    schedule: every day 00:00
+    url: /pipelines/documents/salamanca
+    schedule: every day 02:30
 
   - description: "documents › turku - nightly crawling"
-    url: /cron/documents/turku
-    schedule: every day 00:00
+    url: /pipelines/documents/turku
+    schedule: every day 02:35
+
+  - description: "documents › umea - nightly crawling"
+    url: /pipelines/documents/umea
+    schedule: every day 02:40
 
 
-  - description: "events › iasi › university - nightly crawling"
-    url: /cron/events/iasi/university
-    schedule: every day 00:00
+  - description: "events › coimbra › university - nightly crawling"
+    url: /pipelines/events/coimbra/university
+    schedule: every day 03:00
 
   - description: "events › iasi › university › 360 - nightly crawling"
-    url: /cron/events/iasi/university/360
-    schedule: every day 00:00
+    url: /pipelines/events/iasi/university/360
+    schedule: every day 03:05
 
   - description: "events › jena › university - nightly crawling"
-    url: /cron/events/jena/university
-    schedule: every day 00:00
+    url: /pipelines/events/jena/university
+    schedule: every day 03:10
 
   - description: "events › linz › university - nightly crawling"
-    url: /cron/events/linz/university
-    schedule: every day 00:00
-
-  - description: "events › pavia › borromeo - nightly crawling"
-    url: /cron/events/pavia/borromeo
-    schedule: every day 00:00
+    url: /pipelines/events/linz/university
+    schedule: every day 03:15
 
   - description: "events › pavia › university - nightly crawling"
-    url: /cron/events/pavia/university
-    schedule: every day 00:00
+    url: /pipelines/events/pavia/university
+    schedule: every day 03:20
 
   - description: "events › poitiers › university - nightly crawling"
-    url: /cron/events/poitiers/university
-    schedule: every day 00:00
+    url: /pipelines/events/poitiers/university
+    schedule: every day 03:25
 
   - description: "events › salamanca › university - nightly crawling"
-    url: /cron/events/salamanca/university
-    schedule: every day 00:00
+    url: /pipelines/events/salamanca/university
+    schedule: every day 03:30
 
   - description: "events › turku › university - nightly crawling"
-    url: /cron/events/turku/university
-    schedule: every day 00:00
+    url: /pipelines/events/turku/university
+    schedule: every day 03:35
+
+  #    - description: "events › umea › university - nightly crawling"
+  #      url: /pipelines/events/umea/university
+  #      schedule: every day 03:40
+
+  - description: "events - nightly housekeeping"
+    url: /pipelines/events
+    schedule: every day 03:45

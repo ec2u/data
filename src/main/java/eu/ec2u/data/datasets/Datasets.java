@@ -16,94 +16,83 @@
 
 package eu.ec2u.data.datasets;
 
-import com.metreeca.flow.handlers.Delegator;
-import com.metreeca.flow.handlers.Worker;
-import com.metreeca.flow.jsonld.handlers.Driver;
-import com.metreeca.flow.jsonld.handlers.Relator;
-import com.metreeca.link.Shape;
+import com.metreeca.flow.http.handlers.Delegator;
+import com.metreeca.flow.http.handlers.Worker;
+import com.metreeca.flow.json.handlers.Driver;
+import com.metreeca.mesh.meta.jsonld.Frame;
+import com.metreeca.mesh.meta.jsonld.Namespace;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.model.vocabulary.VOID;
+import eu.ec2u.data.Data;
 
-import static com.metreeca.flow.Handler.handler;
-import static com.metreeca.link.Constraint.any;
-import static com.metreeca.link.Frame.*;
-import static com.metreeca.link.Query.filter;
-import static com.metreeca.link.Query.query;
-import static com.metreeca.link.Shape.integer;
-import static com.metreeca.link.Shape.*;
+import java.util.Map;
+import java.util.Set;
+
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
+import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.EC2U.create;
-import static eu.ec2u.data.EC2U.item;
-import static eu.ec2u.data.assets.Assets.Asset;
-import static eu.ec2u.data.resources.Resources.Resource;
+import static eu.ec2u.data.datasets.Localized.EN;
+import static eu.ec2u.data.datasets.organizations.Organizations.EC2U;
+import static java.util.Locale.ROOT;
 
-public final class Datasets extends Delegator {
+@Frame
+@Namespace("[ec2u]")
+public interface Datasets extends Dataset {
 
-    public static final IRI Context=item("/datasets/");
+    String COPYRIGHT="Copyright © 2022‑2025 EC2U Alliance";
 
+    ReferenceFrame CCBYNCND40=new ReferenceFrame()
+            .id(uri("https://creativecommons.org/licenses/by-nc-nd/4.0/"))
+            .label(Map.of(ROOT, "CC BY-NC-ND 4.0"))
+            .comment(Map.of(ROOT, "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International"));
 
-    public static Shape Datasets() {
-        return Dataset(Dataset());
-    }
-
-    public static Shape Dataset() {
-        return shape(VOID.DATASET, Asset(),
-
-                property(VOID.ENTITIES, optional(integer())),
-                property(VOID.ROOT_RESOURCE, multiple(Resource())),
-
-                property(RDFS.ISDEFINEDBY, optional(Resource()))
-
-        );
-    }
-
-    public static Shape Dataset(final Shape shape) {
-
-        if ( shape == null ) {
-            throw new NullPointerException("null shape");
-        }
-
-        return shape(Dataset(),
-
-                property("members", RDFS.MEMBER, shape)
-
-        );
-    }
+    DatasetsFrame DATASETS=new DatasetsFrame()
+            .id(Data.DATA.resolve("/"))
+            .isDefinedBy(Data.DATA.resolve("datasets/"))
+            .title(map(entry(EN, "EC2U Dataset Catalog")))
+            .alternative(map(entry(EN, "EC2U Datasets")))
+            .description(map(entry(EN, "Datasets published on the EC2U Knowledge Hub.")))
+            .publisher(EC2U)
+            .rights(COPYRIGHT)
+            .license(set(CCBYNCND40));
 
 
-    public static void main(final String... args) {
-        exec(() -> create(Context, Datasets.class, Dataset()));
+    static void main(final String... args) {
+        exec(() -> service(store()).insert(array(CCBYNCND40, DATASETS)));
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Datasets() {
-        delegate(handler(new Driver(Datasets()), new Worker()
+    @Override
+    default Datasets dataset() {
+        return DATASETS;
+    }
 
-                .get(new Relator(frame(
+    @Override
+    Set<Dataset> members();
 
-                        field(ID, iri()),
-                        field(RDFS.LABEL, literal("Datasets", "en")),
 
-                        field(RDFS.MEMBER, query(
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                                frame(
-                                        field(ID, iri()),
-                                        field(RDFS.LABEL, literal("", ANY_LOCALE))
-                                ),
+    final class Handler extends Delegator {
 
-                                filter(DCTERMS.ISSUED, any())
+        public Handler() {
 
-                        ))
+            delegate(new Worker().get(new Driver(new DatasetsFrame(true)
 
-                )))
+                    .members(stash(query(new DatasetFrame(true).members(null))
+                            .where("issued", criterion().any(set()))
+                    ))
 
-        ));
+            )));
+        }
+
     }
 
 }

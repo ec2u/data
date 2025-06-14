@@ -17,7 +17,7 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -64,8 +64,8 @@
         <maven.version>3.6</maven.version>
         <maven.compiler.release>21</maven.compiler.release>
 
-        <node.version>18.0.0</node.version>
-        <npm.version>8.6.0</npm.version>
+        <node.version>22.14.0</node.version>
+        <npm.version>11.2.0</npm.version>
 
         <gae.project>ec2u-${project.artifactId}</gae.project>
         <gae.version>${revision}</gae.version>
@@ -96,7 +96,22 @@
 
         <dependency>
             <groupId>com.metreeca</groupId>
-            <artifactId>flow-jsonld</artifactId>
+            <artifactId>mesh-meta</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>mesh-json</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>mesh-rdf4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.metreeca</groupId>
+            <artifactId>flow-json</artifactId>
         </dependency>
 
         <dependency>
@@ -142,12 +157,6 @@
 
 
         <dependency>
-            <groupId>com.metreeca</groupId>
-            <artifactId>link-rdf4j</artifactId>
-        </dependency>
-
-
-        <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-repository-http</artifactId>
         </dependency>
@@ -177,19 +186,13 @@
 
         <repository>
 
-            <id>central-releases</id>
-            <url>https://oss.sonatype.org/content/repositories/releases</url>
+            <name>Central Portal Snapshots</name>
+            <id>central-portal-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
 
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
-
-        </repository>
-
-        <repository>
-
-            <id>central-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
 
             <snapshots>
                 <enabled>true</enabled>
@@ -274,6 +277,15 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
 
+                    <annotationProcessorPaths>
+
+                        <path>
+                            <groupId>com.metreeca</groupId>
+                            <artifactId>mesh-mint</artifactId>
+                        </path>
+
+                    </annotationProcessorPaths>
+
                 </configuration>
 
             </plugin>
@@ -282,7 +294,7 @@
 
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.15.0</version>
+                <version>1.15.1</version>
 
                 <configuration>
 
@@ -424,7 +436,7 @@
 
             </plugin>
 
-            <plugin> <!-- https://central.sonatype.com/artifact/com.google.cloud.tools/appengine-maven-plugin/versions -->
+            <plugin> <!-- https://central.sonatype.com/artifact/com.google.cloud.tools/appengine-maven-plugin/ -->
 
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
@@ -446,7 +458,7 @@
 
                         <goals>
                             <goal>deploy</goal>
-                            <!--<goal>deployCron</goal>-->
+                            <goal>deployCron</goal>
                         </goals>
 
                     </execution>
