@@ -276,8 +276,8 @@ public final class UnitsSalamanca implements Runnable {
                 .flatMap(Collection::stream)
 
                 .map(record -> entry(
-                        record.get("Work"),
-                        record.get("VI") // !!! Unit
+                        record.get("Unit"),
+                        record.get("VI")
                 ))
 
                 .filter(e -> !e.getKey().isEmpty())
