@@ -200,6 +200,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         Extract the following properties from the provided markdown document describing a doctoral program:
                         
                         - document language as guessed from its content as a 2-letter ISO tag
+                        - plain text summary of about 500 characters
                         - general objectives
                         - acquired competency or intended learning outcomes
                         - admission requirements
@@ -210,11 +211,13 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         """, """
                         {
                           "name": "program",
-                          "strict": true,
                           "schema": {
                             "type": "object",
                             "properties": {
                               "language": {
+                                "type": "string"
+                              },
+                              "summary": {
                                 "type": "string"
                               },
                               "objectives": {
@@ -229,6 +232,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                             },
                             "required": [
                               "language",
+                              "summary",
                               "objectives",
                               "competencies",
                               "requirements"
@@ -247,6 +251,11 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                             .orElse(PAVIA.locale());
 
                     return doctorate
+
+                            .disambiguatingDescription(json.get("summary").string()
+                                    .map(summary -> map(entry(locale, summary)))
+                                    .orElse(null)
+                            )
 
                             .teaches(map(json.get("objectives").string().stream()
                                     .filter(not(String::isEmpty))

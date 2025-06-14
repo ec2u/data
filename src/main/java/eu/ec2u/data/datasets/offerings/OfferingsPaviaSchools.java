@@ -118,6 +118,7 @@ public final class OfferingsPaviaSchools implements Runnable {
                                 for each listed school extract the following properties:
                                 
                                 - name
+                                - plain text summary of about 500 characters
                                 - general objectives
                                 - acquired competency or intended learning outcomes
                                 - admission requirements
@@ -128,7 +129,6 @@ public final class OfferingsPaviaSchools implements Runnable {
                                 """, """
                                 {
                                   "name": "schools",
-                                  "strict": false,
                                   "schema": {
                                     "type": "object",
                                     "properties": {
@@ -140,6 +140,9 @@ public final class OfferingsPaviaSchools implements Runnable {
                                             "name": {
                                               "type": "string"
                                             },
+                                            "summary": {
+                                               "type": "string"
+                                             },
                                             "objectives": {
                                                "type": "string"
                                              },
@@ -151,7 +154,8 @@ public final class OfferingsPaviaSchools implements Runnable {
                                              }
                                           },
                                           "required": [
-                                            "name"
+                                            "name",
+                                            "summary"
                                           ]
                                         }
                                       }
@@ -193,6 +197,11 @@ public final class OfferingsPaviaSchools implements Runnable {
                         .url(set(json.get("url").string().flatMap(URIs::fuzzy).stream()))
 
                         .name(map(entry(PAVIA.locale(), name)))
+
+                        .disambiguatingDescription(json.get("summary").string()
+                                .map(summary -> map(entry(PAVIA.locale(), summary)))
+                                .orElse(null)
+                        )
 
                         .educationalLevel(TopicsISCED2011.LEVEL_8)
                         .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Diploma di Specializzazione")))
