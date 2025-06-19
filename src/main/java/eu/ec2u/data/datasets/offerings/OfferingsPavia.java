@@ -39,6 +39,7 @@ import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.taxonomies.TopicFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
+import eu.ec2u.data.datasets.taxonomies.TopicsSDGs;
 import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -69,7 +70,6 @@ import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.distinct;
 import static com.metreeca.shim.Streams.optional;
-import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
@@ -77,7 +77,6 @@ import static eu.ec2u.data.datasets.courses.Courses.COURSES;
 import static eu.ec2u.data.datasets.organizations.Organizations.ORGANIZATIONS;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
-import static eu.ec2u.data.datasets.taxonomies.TopicsSDGs.SDGS;
 import static eu.ec2u.data.datasets.universities.University.PAVIA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration.*;
@@ -458,7 +457,7 @@ public final class OfferingsPavia implements Runnable {
                             .filter(v -> v >= 1 && v <= 17);
 
                 })
-                .map(n -> new TopicFrame(true).id(uri("%s/%s".formatted(SDGS.id(), n))));
+                .map(n -> new TopicFrame(true).id(TopicsSDGs.code(n)));
     }
 
 

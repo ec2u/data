@@ -22,6 +22,7 @@ import com.metreeca.flow.services.Vault;
 import eu.ec2u.data.datasets.ReferenceFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -53,8 +54,8 @@ public final class TopicsSDGs implements Runnable {
 
     private static final String DATA_URL="taxonomies-ec2u-sdgs"; // vault label
 
+    private static final String PATH=Taxonomies.PATH+"sdgs/";
 
-    public static final String PATH=Taxonomies.PATH+"sdgs/";
 
     private static final OrganizationFrame UNITED_NATIONS=new OrganizationFrame()
             .id(uri("http://un.org/"))
@@ -86,6 +87,16 @@ public final class TopicsSDGs implements Runnable {
             )))
             .publisher(UNITED_NATIONS)
             .source(new ReferenceFrame().id(uri("https://sdgs.un.org/goals")));
+
+
+    public static URI code(final int code) {
+
+        if ( code < 1 || code > 17 ) {
+            throw new IllegalArgumentException(String.format("illegal SDG number <%d>", code));
+        }
+
+        return SDGS.id().resolve(String.valueOf(code));
+    }
 
 
     public static void main(final String... args) {
