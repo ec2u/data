@@ -27,6 +27,7 @@ import com.metreeca.shim.URIs;
 import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.persons.PersonFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicFrame;
+import eu.ec2u.data.datasets.taxonomies.TopicsISCEDF2013;
 import eu.ec2u.data.datasets.taxonomies.TopicsSDGs;
 import eu.ec2u.data.datasets.universities.University;
 import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
@@ -54,7 +55,6 @@ import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Strings.split;
-import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
@@ -63,7 +63,6 @@ import static eu.ec2u.data.datasets.courses.Courses.COURSES;
 import static eu.ec2u.data.datasets.persons.Persons.PERSONS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
-import static eu.ec2u.data.datasets.taxonomies.TopicsISCEDF2013.ISCEDF2013;
 import static eu.ec2u.data.datasets.universities.Universities.UNIVERSITIES;
 import static eu.ec2u.data.datasets.universities.University.PARTNERS;
 import static eu.ec2u.data.datasets.universities.University.uuid;
@@ -79,7 +78,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
     private static final String DATA_URL="offerings-lll-url"; // vault label
 
     private static final TopicFrame LLL=new TopicFrame(true).id(
-            uri("%s/%s".formatted(EC2U_STAKEHOLDERS.id(), "teaching/students/continuing-education"))
+            EC2U_STAKEHOLDERS.id().resolve("teaching/students/continuing-education")
     );
 
 
@@ -272,7 +271,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
 
     private Stream<TopicFrame> sdgs(final CSVRecord record) {
         return values(record, "SDG Number (if SDGs related)", lenient(Integer::valueOf))
-                .map(n -> new TopicFrame(true).id(TopicsSDGs.sdgs(n)));
+                .map(n -> new TopicFrame(true).id(TopicsSDGs.code(n)));
     }
 
     private Stream<TopicFrame> subjects(final CSVRecord record) {
@@ -283,8 +282,8 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
                 .map(SUBJECT_PATTERN::matcher) // remove trailing description
                 .filter(Matcher::find)
                 .map(matcher -> matcher.group(1))
-                .map(code -> uri(format("%s/%s", ISCEDF2013.id(), code))) // !!! validate
-                .map(id1 -> new TopicFrame(true).id(id1));
+                .map(TopicsISCEDF2013::code)
+                .map(id -> new TopicFrame(true).id(id));
     }
 
     private Optional<EventAttendanceModeEnumeration> courseMode(final CSVRecord record) {

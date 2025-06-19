@@ -100,6 +100,11 @@ public final class TopicsISCEDF2013 implements Runnable {
     private static final IRI XL_NOTATION=iri("http://publications.europa.eu/ontology/euvoc#", "xlNotation");
 
 
+    public static URI code(final String code) { // !!! validate
+        return ISCEDF2013.id().resolve(code);
+    }
+
+
     public static void main(final String... args) {
         exec(() -> new TopicsISCEDF2013().run());
     }

@@ -44,7 +44,8 @@ import static com.metreeca.shim.Collections.set;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.Resource.localize;
 import static eu.ec2u.data.datasets.courses.Courses.COURSES;
-import static eu.ec2u.data.datasets.offerings.Offering.*;
+import static eu.ec2u.data.datasets.offerings.Offering.embeddable;
+import static eu.ec2u.data.datasets.offerings.Offering.iscedf;
 import static java.util.function.Predicate.not;
 
 
@@ -62,7 +63,6 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
         return Optional.of(course) // translate before English-based classification
                 .map(c -> localize(c, locale -> translate(c, locale)))
                 .map(c -> about(c))
-                .map(c -> audience(c))
                 .flatMap(new Validate<>());
     }
 
@@ -91,16 +91,6 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
                 .filter(not(Set::isEmpty))
                 .orElseGet(() -> set(Stream.of(embeddable(course))
                         .flatMap(iscedf())
-                        .limit(1)
-                ))
-        );
-    }
-
-    static CourseFrame audience(final CourseFrame course) {
-        return course.audience(Optional.ofNullable(course.about())
-                .filter(not(Set::isEmpty))
-                .orElseGet(() -> set(Stream.of(embeddable(course))
-                        .flatMap(stakeholders())
                         .limit(1)
                 ))
         );

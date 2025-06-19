@@ -89,13 +89,13 @@ public final class TopicsSDGs implements Runnable {
             .source(new ReferenceFrame().id(uri("https://sdgs.un.org/goals")));
 
 
-    public static URI sdgs(final int number) {
+    public static URI code(final int code) {
 
-        if ( number < 1 || number > 17 ) {
-            throw new IllegalArgumentException(String.format("illegal SDG number <%d>", number));
+        if ( code < 1 || code > 17 ) {
+            throw new IllegalArgumentException(String.format("illegal SDG number <%d>", code));
         }
 
-        return SDGS.id().resolve(String.valueOf(number));
+        return SDGS.id().resolve(String.valueOf(code));
     }
 
 

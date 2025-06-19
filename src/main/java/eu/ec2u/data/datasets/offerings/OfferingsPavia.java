@@ -457,7 +457,7 @@ public final class OfferingsPavia implements Runnable {
                             .filter(v -> v >= 1 && v <= 17);
 
                 })
-                .map(n -> new TopicFrame(true).id(TopicsSDGs.sdgs(n)));
+                .map(n -> new TopicFrame(true).id(TopicsSDGs.code(n)));
     }
 
 
