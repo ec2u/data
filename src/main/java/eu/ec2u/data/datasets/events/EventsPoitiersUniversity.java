@@ -90,11 +90,11 @@ public final class EventsPoitiersUniversity implements Runnable {
 
                 .flatMap(optional(lenient(URIs::uri)))
 
-                .collect(collectingAndThen(toSet(), new PageKeeper<>(
-                        PIPELINE,
-                        page -> new Events.Scanner().apply(page, new EventFrame().university(POITIERS).publisher(PUBLISHER)),
-                        page -> Optional.of(new EventFrame(true).id(page.resource()))
-                )))
+                .collect(collectingAndThen(toSet(), new PageKeeper<EventFrame>(PIPELINE)
+                        .insert(page -> new Events.Scanner().apply(page, new EventFrame().university(POITIERS).publisher(PUBLISHER)))
+                        .remove(page -> Optional.of(new EventFrame(true).id(page.resource())))
+                        .annexes(PUBLISHER)
+                ))
 
         ).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
