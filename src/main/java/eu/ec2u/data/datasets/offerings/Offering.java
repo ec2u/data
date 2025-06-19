@@ -86,7 +86,9 @@ public interface Offering extends Resource, SchemaLearningResource {
 
     @Override
     default Map<Locale, String> comment() {
-        return Reference.comment(disambiguatingDescription(), description());
+        return Reference.comment(
+                disambiguatingDescription(), description(), teaches()
+        );
     }
 
 
