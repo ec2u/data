@@ -27,6 +27,7 @@ import com.metreeca.shim.URIs;
 import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.persons.PersonFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicFrame;
+import eu.ec2u.data.datasets.taxonomies.TopicsSDGs;
 import eu.ec2u.data.datasets.universities.University;
 import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
 import org.apache.commons.csv.CSVRecord;
@@ -63,7 +64,6 @@ import static eu.ec2u.data.datasets.persons.Persons.PERSONS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCEDF2013.ISCEDF2013;
-import static eu.ec2u.data.datasets.taxonomies.TopicsSDGs.SDGS;
 import static eu.ec2u.data.datasets.universities.Universities.UNIVERSITIES;
 import static eu.ec2u.data.datasets.universities.University.PARTNERS;
 import static eu.ec2u.data.datasets.universities.University.uuid;
@@ -272,7 +272,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
 
     private Stream<TopicFrame> sdgs(final CSVRecord record) {
         return values(record, "SDG Number (if SDGs related)", lenient(Integer::valueOf))
-                .map(n -> new TopicFrame(true).id(uri("%s/%s".formatted(SDGS.id(), n))));
+                .map(n -> new TopicFrame(true).id(TopicsSDGs.sdgs(n)));
     }
 
     private Stream<TopicFrame> subjects(final CSVRecord record) {
