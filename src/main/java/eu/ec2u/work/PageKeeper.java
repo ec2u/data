@@ -16,6 +16,7 @@
 
 package eu.ec2u.work;
 
+import com.metreeca.flow.Locator;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.xml.actions.Focus;
 import com.metreeca.flow.xml.actions.Untag;
@@ -31,19 +32,20 @@ import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.metreeca.flow.Locator.*;
+import static com.metreeca.flow.Locator.async;
+import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.shim.Collections.list;
-import static com.metreeca.shim.Collections.map;
+import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.URIs.uri;
 import static com.metreeca.shim.URIs.uuid;
 
+import static java.util.Arrays.asList;
 import static java.util.Map.entry;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -55,23 +57,30 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
     private final Function<Page, Optional<T>> insert;
     private final Function<Page, Optional<T>> remove;
 
+    private final Collection<? extends Valuable> annexes;
+
     private final Executor executor;
+
 
     private final Store store=service(store());
 
 
-    public PageKeeper(
-            final URI pipeline,
-            final Function<Page, Optional<T>> insert,
-            final Function<Page, Optional<T>> remove
-    ) {
-        this(pipeline, insert, remove, executor());
+    public PageKeeper(final URI pipeline) {
+        this(
+                pipeline,
+                page -> Optional.empty(),
+                page -> Optional.empty(),
+                set(),
+                Locator.executor()
+        );
     }
 
-    public PageKeeper(
+
+    private PageKeeper(
             final URI pipeline,
             final Function<Page, Optional<T>> insert,
             final Function<Page, Optional<T>> remove,
+            final Collection<? extends Valuable> annexes,
             final Executor executor
     ) {
 
@@ -87,10 +96,75 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
             throw new NullPointerException("null remove factory");
         }
 
+        if ( annexes == null || annexes.stream().anyMatch(Objects::isNull) ) {
+            throw new NullPointerException("null annexes");
+        }
+
+        if ( executor == null ) {
+            throw new NullPointerException("null executor");
+        }
+
         this.pipeline=pipeline;
         this.insert=insert;
         this.remove=remove;
+        this.annexes=annexes;
         this.executor=executor;
+    }
+
+
+    public PageKeeper<T> insert(final Function<Page, Optional<T>> insert) {
+        return new PageKeeper<>(
+                pipeline,
+                insert,
+                remove,
+                annexes,
+                executor
+        );
+    }
+
+    public PageKeeper<T> remove(final Function<Page, Optional<T>> remove) {
+        return new PageKeeper<>(
+                pipeline,
+                insert,
+                remove,
+                annexes,
+                executor
+        );
+    }
+
+    public PageKeeper<T> annexes(final Valuable... annexes) {
+
+        if ( annexes == null ) {
+            throw new NullPointerException("null annexes");
+        }
+
+        return new PageKeeper<>(
+                pipeline,
+                insert,
+                remove,
+                asList(annexes),
+                executor
+        );
+    }
+
+    public PageKeeper<T> annexes(final Collection<? extends Valuable> annexes) {
+        return new PageKeeper<>(
+                pipeline,
+                insert,
+                remove,
+                annexes,
+                executor
+        );
+    }
+
+    public PageKeeper<T> executor(final Executor executor) {
+        return new PageKeeper<>(
+                pipeline,
+                insert,
+                remove,
+                annexes,
+                executor
+        );
     }
 
 
@@ -116,58 +190,63 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
         );
 
 
-        final List<Value> insertions=list(urls.stream()
+        final List<Value> insertions=list(Stream.concat(
 
-                .map(url -> async(executor, () -> Optional.of(url)
+                urls.stream()
 
-                        .map(URI::toString) // !!!
-                        .flatMap(new GET<>(new HTML()))
-                        .flatMap(new Focus())
-                        .map(new Untag())
-                        .stream()
+                        .map(url -> async(executor, () -> Optional.of(url)
 
-                        .flatMap(body -> {
+                                .map(URI::toString) // !!!
+                                .flatMap(new GET<>(new HTML()))
+                                .flatMap(new Focus())
+                                .map(new Untag())
+                                .stream()
 
-                            final Instant now=Instant.now();
-                            final String hash=uuid(body);
+                                .flatMap(body -> {
 
-                            final boolean clean=Optional.ofNullable(pages.get(url))
-                                    .map(page -> page.hash().equals(hash))
-                                    .orElse(false);
+                                    final Instant now=Instant.now();
+                                    final String hash=uuid(body);
 
-                            if ( clean ) { return Stream.empty(); } else {
+                                    final boolean clean=Optional.ofNullable(pages.get(url))
+                                            .map(page -> page.hash().equals(hash))
+                                            .orElse(false);
 
-                                final PageFrame page=new PageFrame()
-                                        .id(url)
-                                        .fetched(now)
-                                        // !!! created
-                                        // !!! updated
-                                        // !!! etag
-                                        .hash(hash)
-                                        .pipeline(pipeline);
+                                    if ( clean ) { return Stream.empty(); } else {
 
-                                return requireNonNull(insert.apply(page.body(body)), "null insert factory value")
+                                        final PageFrame page=new PageFrame()
+                                                .id(url)
+                                                .fetched(now)
+                                                // !!! created
+                                                // !!! updated
+                                                // !!! etag
+                                                .hash(hash)
+                                                .pipeline(pipeline);
 
-                                        .map(Valuable::toValue)
-                                        .stream()
+                                        return requireNonNull(insert.apply(page.body(body)), "null insert factory value")
 
-                                        .flatMap(value -> value.id().stream().flatMap(id -> Stream.of(
-                                                value,
-                                                page.resource(id).toValue()
-                                        )));
+                                                .map(Valuable::toValue)
+                                                .stream()
 
-                            }
+                                                .flatMap(value -> value.id().stream().flatMap(id -> Stream.of(
+                                                        value,
+                                                        page.resource(id).toValue()
+                                                )));
 
-                        })
+                                    }
 
-                        .toList()
+                                })
 
-                ))
+                                .toList()
 
-                .collect(joining())
-                .flatMap(Collection::stream)
+                        ))
 
-        );
+                        .collect(joining())
+                        .flatMap(Collection::stream),
+
+                annexes.stream()
+                        .map(Valuable::toValue)
+
+        ));
 
 
         final List<Value> removals=list(pages.values().stream()

@@ -116,11 +116,10 @@ public final class UnitsUmea implements Runnable {
                 .flatMap(Collection::stream)
                 .flatMap(optional(lenient(URIs::uri)))
 
-                .collect(collectingAndThen(toSet(), new PageKeeper<>(
-                        PIPELINE,
-                        page -> new Units.Scanner().apply(page, new UnitFrame().university(UMEA)),
-                        page -> Optional.of(new UnitFrame(true).id(page.resource()))
-                )))
+                .collect(collectingAndThen(toSet(), new PageKeeper<UnitFrame>(PIPELINE)
+                        .insert(page -> new Units.Scanner().apply(page, new UnitFrame().university(UMEA)))
+                        .remove(page -> Optional.of(new UnitFrame(true).id(page.resource())))
+                ))
 
         ).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed

@@ -78,10 +78,9 @@ public final class OfferingsUmeaPrograms implements Runnable {
 
                 .flatMap(optional(lenient(URIs::uri)))
 
-                .collect(collectingAndThen(toSet(), new PageKeeper<>(
-                        PIPELINE,
-                        page -> new Programs.Scanner().apply(page, new ProgramFrame().university(UMEA)),
-                        page -> Optional.of(new ProgramFrame(true).id(page.resource()))
+                .collect(collectingAndThen(toSet(), new PageKeeper<ProgramFrame>(PIPELINE)
+                        .insert(page -> new Programs.Scanner().apply(page, new ProgramFrame().university(UMEA)))
+                        .remove(page -> Optional.of(new ProgramFrame(true).id(page.resource()))
                 )))
 
         ).apply((elapsed, resources) -> logger.info(this, format(

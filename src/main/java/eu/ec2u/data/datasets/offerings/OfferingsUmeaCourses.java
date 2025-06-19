@@ -78,11 +78,10 @@ public final class OfferingsUmeaCourses implements Runnable {
 
                 .flatMap(optional(lenient(URIs::uri)))
 
-                .collect(collectingAndThen(toSet(), new PageKeeper<>(
-                        PIPELINE,
-                        page -> new Courses.Scanner().apply(page, new CourseFrame().university(UMEA)),
-                        page -> Optional.of(new CourseFrame(true).id(page.resource()))
-                )))
+                .collect(collectingAndThen(toSet(), new PageKeeper<CourseFrame>(PIPELINE)
+                        .insert(page -> new Courses.Scanner().apply(page, new CourseFrame().university(UMEA)))
+                        .remove(page -> Optional.of(new CourseFrame(true).id(page.resource())))
+                ))
 
         ).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
