@@ -96,7 +96,7 @@ public interface Event extends Resource, SchemaEvent {
     }
 
     private static EventFrame audience(final EventFrame event) {
-        return event.about(Optional.ofNullable(event.about())
+        return event.audience(Optional.ofNullable(event.audience())
                 .filter(not(Set::isEmpty))
                 .orElseGet(() -> set(Stream.of(embeddable(event))
                         .flatMap(stakeholders())
