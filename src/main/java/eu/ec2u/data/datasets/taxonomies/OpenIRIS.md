@@ -1,0 +1,512 @@
+# Research Resource Types
+
+## Numerical Coded Equipment
+
+- 0120_cryomagnets
+- 0920_atomic and molecular beam apparatus
+- 1710_quadrupole mass spectrometer
+- 1850_chemiluminescence spectrometer
+- 1860_spectrometer (special optical)
+- 19_other operating and laboratory equipment
+- 3160_surface plasmon resonance systems (opr, spr)
+- 5000_fluorescence microscopes
+- 5700_giant pulse laser (solid state laser)
+- 5700_solid state laser
+
+## Microscopy & Imaging Equipment
+
+- 2-Photon
+- 3D Metrology
+- 3D Scanner
+- Atomic Force Microscope
+- Confocal Microscope
+- Confocal Microscope and STED Nanoscope
+- cryo-FIB/SEM
+- cryo-Transmission Electron Microscope
+- cryoCLEM
+- Darkfield microscope
+- Electron Microscope
+- Electron Microscope (Scanning Electron Microscope)
+- Electron Microscope (Transmission Electron Microscope)
+- Electron Microscopy
+- FIB
+- FLIM microscope
+- Fluorescence microscope
+- High Content Imager
+- High Throughput Microscope/High Content Screening Device
+- IF - Quantitative Phase Imaging
+- IF - Scanning electron microscope + Focused ion beam
+- IF - Single Molecule Localization Microscopy
+- IF - Spinning disk confocal
+- IF - Stimulated Raman scattering
+- Image Cytometer
+- Imager
+- Imaging
+- Imaging Flow Cytometer
+- Imaging Mass Cytometer
+- Imaging Mass Cytometry
+- Imaging System
+- Imaging system (cameras etc.)
+- Light microscopy
+- Light microscopy (Fluorescence Microscopy)
+- Light microscopy (Fluorescence Nanoscopy)
+- Light microscopy (Functional Imaging)
+- Light microscopy (Mesoscopic Imaging)
+- Light Sheet
+- Light Sheet Microscope
+- Lightsheet, SPIM
+- LSM
+- Macroscope
+- Micro-CT
+- Microscope
+- Microscope (Lightsheet Microscope)
+- Microscope (Spinning Disk)
+- Microscope and micromanipulation
+- Multiphoton Microscope
+- Photomicroscope
+- Raman microscope
+- Scanning confocal
+- Scanning confocal (Widefield)
+- Scanning Electron Microscope
+- SEM
+- SEM (FIB/SEM)
+- Slide Scanner
+- SMLM Single-molecule localization microscopy
+- Spinning Disk Microscope
+- Spinning-disk confocal
+- Spinning-disk confocal (TIRF)
+- STED
+- Stereo Microscope
+- Super-resolution
+- Super-resolution microscope
+- Superresolution microscope
+- TEM
+- TEM Microscope
+- Tomograph
+- Tomography
+- Two Photon
+- Video-microscope
+- Widefield
+- Widefield Microscope
+- Zoom-microscope with structured illumination
+
+## Spectroscopy & Analysis Equipment
+
+- Bioanalyzer
+- Chromatography
+- Chromatography System
+- Chromograph
+- Diffractometer
+- DLS
+- Dynamic and Static Light Scattering
+- Dynamic Light Scattering
+- Dynamic Light Scattering (DLS)
+- Ellipsometer
+- Fluorometer
+- FTIR
+- HPLC
+- IF - Raman
+- Mass Photometer
+- Mass Spectrometer
+- Mass Spectrometry
+- Microspectroscope
+- nanoDSF
+- NanoSIMS
+- NMR
+- NMR (Spectrometer)
+- NMR equipment
+- SAXS
+- Spectrometer
+- Spectrophotometer
+- Spectroradiometer
+- Spectroscopy
+- Spectral imaging
+- X-ray Diffractometer
+- X-ray Photoelectron Spectrometer
+- X-ray Scattering
+- Xray Fluorescence
+- XRD
+
+## Flow Cytometry & Cell Analysis
+
+- Cell Analyzer
+- Cell sorting
+- Cytometer
+- FACS
+- Flow Cytometry
+- Flow Cytometry Analyzer
+- Flow Cytometry Imager
+- Flow Cytometry Sorter
+- Image Cytometer
+- Imaging Flow Cytometer
+- Imaging Mass Cytometer
+- Imaging Mass Cytometry
+- Mass Cytometer
+- Mass Cytometry
+- Real-time cell analyzer
+
+## Molecular Biology Equipment
+
+- Automated ELISA
+- Automated Immunostainer
+- Automate d'ELISA
+- Bioanalyzer
+- Blot Analysis
+- Blotting Equipment
+- Capillary Electrophoresis System
+- Capillary western blot
+- Cell Culture
+- Crystallization Robot
+- Digital Droplet PCR
+- Digital PCR
+- DNA Sequencer
+- Droplet Digital PCR (ddPCR)
+- Electroporator
+- Gel Imager
+- Immuno-analyseur
+- Library Prep
+- Luminex reader
+- MSD reader
+- Multiplex immunoassay
+- Nanodrop
+- Next Generation Sequencing
+- Oligonucleotide Synthesizer
+- PCR
+- Pipetting Robot
+- Plate Reader
+- Protein Analysis
+- Protein Production
+- Pyrosequencer
+- qPCR
+- qPCR/Digital PCR
+- Sequencer
+- Sequencing Capillary Electrophoresis
+- Tapestation
+- Thermal Cycler
+- Transfection
+- Western blot imager
+
+## Physical & Material Analysis
+
+- 3D Metrology
+- Accelerator
+- Calorimeter
+- Contact Angle
+- Differential Scanning Calorimeter
+- Differential Scanning Calorimetry
+- Digital Image Correlation
+- Elemental Analysis (Analyzer)
+- Elemental analyzer
+- Glossimetry
+- ICP Analyzer
+- Isothermal Titration Calorimetry
+- Material Characterization
+- Materials Testing Machine
+- Mechanical tester
+- Nanoindenter
+- Nitrogen Sorptiometer
+- Particle size analyzer
+- Potentiostat
+- Profilometer
+- Rehometer
+- Rheometer
+- Scintallation counter
+- Surface characterization
+- Tensiometer
+- Texture analyzer
+- Thermal Analysis
+- Thermobalance
+
+## Manufacturing & Fabrication
+
+- 3D Printer
+- Annealing
+- Board cutter
+- Bonder
+- CNC-Universal-Fräsmaschine
+- Coater
+- Cutting Machine
+- CVD
+- Deposition
+- E-beam lithography
+- Etcher
+- Evaporator
+- Focused Ion Beam
+- Fusion Instrument
+- IF - Plasma assisted electron beam deposition
+- IF - Plasma Assisted Reactive Magnetrons Spittering (PARMS)
+- Ion Beam
+- Ion Beam Mill
+- Laser Cutter
+- Lithography
+- Milling Machine
+- PECVD
+- Plasma Cleaner
+- Plasma etcher
+- Saw
+- Spin coating
+- Sputter
+- Thin Film Deposition
+
+## Laboratory Equipment & Supplies
+
+- Autoclave
+- Bacteria Shaker
+- Biological Safety Cabinet
+- Biosafety Cabinet
+- Biosafety Cabinet (BSL2)
+- Centrifuge
+- Chemical Fume Hood
+- Chemical Library
+- Cleaner
+- Climate chamber
+- Cooled transport
+- Cooled work bench
+- Critical Point Dryer
+- Cryo Holder
+- Cryofixateur LP
+- Cryo-Plunger
+- Cryostat
+- Dewar
+- Distiller
+- Dryer
+- Freeze Dryer
+- Freeze Plunger
+- Fume hood
+- Furnace
+- Glovebox
+- Grinder
+- Heating
+- High-pressure freezer
+- Hood
+- Incubator
+- Laminar Flow Hood
+- Liquid nitrogen vessel
+- Microbiological Safety Cabinet
+- Microwave
+- Oven
+- Plate Sealer
+- Plate Washer
+- Plunge Freezer
+- Shaker
+- Sonicator
+- storage robot
+- Substitueur
+- Ultra Low Temperature Freezer
+- Ultracentrifuge
+- Ultramicrotome
+- Vacuum line
+- Vapor
+
+## Computing & Analysis Software
+
+- Analysis Program
+- Analysis Workstation
+- Cluster (HPC)
+- Computer
+- Computer cluster
+- Data
+- Floating License
+- High Performance Computing
+- NFS
+- Software
+- USB Software License Dongle
+- Workstation
+
+## Life Sciences Research
+
+- Affinity measurement
+- Anaesthesia
+- Animal facility equipment
+- Awake mouse training/habituation
+- Behavioral testing
+- Biomarkers Quantification
+- Biomarkers research
+- Bioreactor
+- Biosafety equipment
+- Cell Analysis
+- Fermenter
+- Genetic Screen
+- High pressure freezing
+- Histology
+- Histology services
+- Live cell analysis
+- Live Cell Flow Chamber (FCS2)
+- Metabolic assay platform
+- Microscale thermophoresis
+- Phenotyping Platform
+- Plant Phenotyping System
+- Single Cell
+- Tissue dissociator
+- Tissue Processor
+- virus production
+
+## Medical & Clinical Equipment
+
+- CT
+- In Vivo Imaging
+- in vivo microCT
+- In-vivo NIR and BLI imager
+- Irradiator
+- Magnetic Resonance Imaging
+- Magnetic Resonance Imaging System
+- MRI
+- MRI equipment
+- Nuclear imaging
+- Optical Imaging Whole body
+- PET-CT
+- Preclinical Imaging System
+- radiation facility
+- Surgery
+- ultrasound
+- Ultrasound
+- Ultrasound equipment
+- Whole Animal Imaging
+- X-ray 3D tomograph
+- X-ray irradiation system
+
+## Experimental & Specialized Equipment
+
+- Acoustic nano-dispenser
+- Aerosol Generators
+- Bike
+- Bulk Liquid Dispenser
+- Camera
+- Deep UV
+- Dispenser
+- distributeur de cellule
+- Electrochemistry
+- Electromyography
+- Electron Microprobe
+- Electrophoresis
+- Electrophysiology
+- Equipped working environment
+- Experimental Room
+- Extraction
+- Extractor
+- Force plate
+- Fraction collectors
+- Galvanic
+- Gas Phase
+- GPS
+- Grid Negative Staining
+- Grinding
+- IF - ILM
+- IMU
+- Interferometer
+- Jump testing
+- Laser
+- Laser (Femtosecond laser system)
+- Laser micro-dissection
+- Laser Scanner
+- Laser source
+- Library (siRNA)
+- Light Source
+- Microelectrode array
+- Microplate Reader
+- Motion Capture
+- Objective
+- Optical tweezer
+- Optical Tweezers
+- Opto Electronics
+- Patch Clamp Components
+- Photocells
+- Power source
+- Pressure sensor
+- Printer
+- Purification
+- Quality Control
+- Scanner
+- Separator
+- Sensor
+- THz source
+- Treadmill
+- VO2 - Gas Analyzer
+
+## Sample Preparation & Processing
+
+- Embedding Station
+- Extraction
+- Extractor
+- Freeze Plunger
+- Grinding
+- High pressure freezing
+- Immunolabeling
+- Microtome
+- Sample Preparation
+- Sample preparation equipment
+- Technique Tokuyasu
+- Tissue dissociator
+- Tissue Processor
+- Ultramicrotome
+- Vibratom
+- vibratome
+
+## Administrative & Service Categories
+
+- Absence personnel PF
+- Account Creation
+- Activity
+- Administration
+- Administration (BSM/SFAB - FU)
+- Analysis
+- Analysis method
+- Automation
+- Biological image data service
+- CIML-User Request Histology
+- CIM-Plate 16
+- Demande D'accès
+- E-Plate 16
+- Equipment
+- Form
+- Infrastructure
+- Laboratory
+- Lab Space
+- Meeting Room
+- Meeting Room Accessories
+- Other Instruments
+- Other laboratory equipment
+- Project
+- Project Discussion
+- Request
+- Request (Training Request)
+- Research Instrument
+- Room
+- Sample submission
+- Sample submission form
+- Service
+- Staff
+- Storage
+- Support
+- Surgery Room
+- Système d'analyse multiplex
+- Test
+- Test chamber
+- Tester
+- Training
+- Training Request
+
+## Fluid Handling & Automation
+
+- Acoustic nano-dispenser
+- Automated Immunostainer
+- Automation
+- Bulk Liquid Dispenser
+- Dispenser
+- distributeur de cellule
+- Fluid Handling
+- Pipetting Robot
+- Robot
+
+## Specialized Analysis Techniques
+
+- Affinity measurement
+- Analytical Ultracentrifugation
+- Analyzer
+- Analzyer
+- Discrete Analyzer
+- Fluid Handling
+- Lapping & Polishing
+- Microelectrode array
+- Microscale thermophoresis
+- Test chamber
