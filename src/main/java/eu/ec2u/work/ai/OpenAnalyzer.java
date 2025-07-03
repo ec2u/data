@@ -23,9 +23,9 @@ import com.metreeca.mesh.Value;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openai.models.ResponseFormatJsonObject;
 import com.openai.models.ResponseFormatJsonSchema;
 import com.openai.models.ResponseFormatJsonSchema.JsonSchema;
+import com.openai.models.ResponseFormatText;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import com.openai.models.chat.completions.ChatCompletionCreateParams.ResponseFormat;
 
@@ -139,7 +139,7 @@ public final class OpenAnalyzer implements Analyzer {
                     }
                 })
                 .orElseGet(() ->
-                        ResponseFormat.ofJsonObject(ResponseFormatJsonObject.builder().build())
+                        ResponseFormat.ofText(ResponseFormatText.builder().build())
                 )
         );
     }
