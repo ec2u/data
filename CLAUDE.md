@@ -8,7 +8,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Test**: `mvn test` - Runs JUnit tests
 - **Run locally**: `java -cp target/classes:target/libs/* eu.ec2u.data.Data` - Starts the server on localhost:8080
 - **Data processing**: `java -cp target/classes:target/libs/* eu.ec2u.data.Boot` - Runs all dataset processing pipelines
+- **Run any Java class**: `java -cp "target/classes:target/libs/*" <fully.qualified.ClassName>` - Runs any Java class
+  with main method
 - **Clean**: `mvn clean` - Removes target directory and node_modules
+
+## Running Java Programs
+
+To run any Java program in this project:
+
+1. First compile: `mvn compile -q`
+2. Then run: `java -cp "target/classes:target/libs/*" <fully.qualified.ClassName>`
+
+Examples:
+
+- `java -cp "target/classes:target/libs/*" eu.ec2u.work.units.WorkText`
+- `java -cp "target/classes:target/libs/*" eu.ec2u.work.units.Work`
 
 ## Frontend Development
 

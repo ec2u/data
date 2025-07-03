@@ -1,0 +1,17 @@
+- Centre
+    - Research Centre
+        - Interdepartmental Research Centre
+    - Service Centre
+    - Technology Transfer Centre
+- Department
+- Institute
+- Laboratory
+- Research Area
+- Research Facility
+    - Museum
+    - Research Collection
+    - Research Instrument
+    - Research Library
+    - Research Station
+- Research Group
+- Research Network
