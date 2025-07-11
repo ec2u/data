@@ -19,7 +19,6 @@ package eu.ec2u.data.datasets.events;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
@@ -37,7 +36,6 @@ import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.universities.University;
 import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
-import eu.ec2u.data.vocabularies.schema.*;
 import eu.ec2u.work.Page;
 import eu.ec2u.work.PageFrame;
 import eu.ec2u.work.ai.Analyzer;
@@ -62,7 +60,6 @@ import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.Lambdas.lenient;
-import static com.metreeca.shim.Streams.concat;
 import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
 
@@ -130,11 +127,11 @@ public interface Events extends Dataset {
 
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new EventsFrame(true)
+                    .path("/", new Driver().retrieve(new EventsFrame(true)
                             .members(stash(query(event)))
                     )))
 
-                    .path("/{code}", new Worker().get(new Driver(event)))
+                    .path("/{code}", new Driver().retrieve(event)))
             );
         }
 

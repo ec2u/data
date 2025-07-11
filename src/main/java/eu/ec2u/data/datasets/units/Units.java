@@ -20,7 +20,6 @@ import com.metreeca.flow.Xtream;
 import com.metreeca.flow.csv.actions.Transform;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.Valuable;
 import com.metreeca.mesh.meta.jsonld.Frame;
@@ -50,8 +49,6 @@ import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.Value.array;
-import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Streams.concat;
@@ -111,13 +108,13 @@ public interface Units extends Organizations {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new UnitsFrame(true)
+                    .path("/", new Driver().retrieve(new UnitsFrame(true)
 
                             .members(stash(query(new UnitFrame(true))))
 
                     )))
 
-                    .path("/{code}", new Worker().get(new Driver(new UnitFrame(true))))
+                    .path("/{code}", new Driver().retrieve(new UnitFrame(true))))
             );
         }
 
