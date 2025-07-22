@@ -18,7 +18,6 @@ package eu.ec2u.data.datasets.persons;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 
@@ -78,11 +77,11 @@ public interface Persons extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new PersonsFrame(true)
+                    .path("/", new Driver().retrieve(new PersonsFrame(true)
 
                             .members(stash(query(new PersonFrame(true))))
 
-                    )))
+                    ))
             );
         }
 

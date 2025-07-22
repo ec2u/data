@@ -19,7 +19,6 @@ package eu.ec2u.data.datasets.events;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
@@ -130,11 +129,11 @@ public interface Events extends Dataset {
 
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new EventsFrame(true)
+                    .path("/", new Driver().retrieve(new EventsFrame(true)
                             .members(stash(query(event)))
-                    )))
+                    ))
 
-                    .path("/{code}", new Worker().get(new Driver(event)))
+                    .path("/{code}", new Driver().retrieve(event))
             );
         }
 
