@@ -18,7 +18,6 @@ package eu.ec2u.data.datasets.courses;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.shim.Collections;
@@ -41,7 +40,6 @@ import java.util.function.BiFunction;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
-import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Lambdas.lenient;
 
@@ -92,13 +90,13 @@ public interface Courses extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new CoursesFrame(true)
+                    .path("/", new Driver().retrieve(new CoursesFrame(true)
 
                             .members(stash(query(new CourseFrame(true))))
 
                     )))
 
-                    .path("/{code}", new Worker().get(new Driver(new CourseFrame(true))))
+                    .path("/{code}", new Driver().retrieve(new CourseFrame(true))))
             );
         }
 

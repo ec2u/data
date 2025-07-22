@@ -18,7 +18,6 @@ package eu.ec2u.data.datasets.universities;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.flow.lod.Wikidata;
 import com.metreeca.flow.rdf.Rover;
@@ -44,7 +43,6 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.rdf.Rover.rover;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
-import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Resources.resource;
 import static com.metreeca.shim.Resources.text;
@@ -183,11 +181,11 @@ public interface Universities extends Organizations {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new UniversitiesFrame(true)
+                    .path("/", new Driver().retrieve(new UniversitiesFrame(true)
                             .members(stash(query(new UniversityFrame(true))))
                     )))
 
-                    .path("/{code}", new Worker().get(new Driver(new UniversityFrame(true))))
+                    .path("/{code}", new Driver().retrieve(new UniversityFrame(true))))
 
             );
         }
