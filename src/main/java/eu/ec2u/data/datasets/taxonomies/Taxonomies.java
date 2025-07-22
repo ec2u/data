@@ -19,7 +19,6 @@ package eu.ec2u.data.datasets.taxonomies;
 import com.metreeca.flow.csv.actions.Transform;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.pipe.Store;
@@ -109,12 +108,12 @@ public interface Taxonomies extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new TaxonomiesFrame(true)
+                    .path("/", new Driver().retrieve(new TaxonomiesFrame(true)
                             .members(stash(query(new TaxonomyFrame(true))))
-                    )))
+                    ))
 
-                    .path("/{taxonomy}/", new Worker().get(new Driver(new TaxonomyFrame(true))))
-                    .path("/{taxonomy}/*", new Worker().get(new Driver(new TopicFrame(true))))
+                    .path("/{taxonomy}/", new Driver().retrieve(new TaxonomyFrame(true)))
+                    .path("/{taxonomy}/*", new Driver().retrieve(new TopicFrame(true)))
 
             );
         }
