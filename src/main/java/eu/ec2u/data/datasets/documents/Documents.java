@@ -19,7 +19,6 @@ package eu.ec2u.data.datasets.documents;
 import com.metreeca.flow.csv.actions.Transform;
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.Valuable;
@@ -102,13 +101,13 @@ public interface Documents extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new DocumentsFrame(true)
+                    .path("/", new Driver().retrieve(new DocumentsFrame(true)
 
                             .members(stash(query(new DocumentFrame(true))))
 
-                    )))
+                    ))
 
-                    .path("/{code}", new Worker().get(new Driver(new DocumentFrame(true))))
+                    .path("/{code}", new Driver().retrieve(new DocumentFrame(true)))
             );
         }
 

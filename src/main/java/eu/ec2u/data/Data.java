@@ -55,7 +55,7 @@ import java.time.Duration;
 import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.http.Handler.handler;
-import static com.metreeca.flow.http.Response.SeeOther;
+import static com.metreeca.flow.http.Response.SEE_OTHER;
 import static com.metreeca.flow.http.services.Fetcher.fetcher;
 import static com.metreeca.flow.json.formats.JSON.codec;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -85,7 +85,7 @@ public final class Data extends Delegator {
 
     private static final boolean PRODUCTION=GCPServer.production();
 
-    private static final String GDB_SERVER="http://base.ec2u.net"; // !!! https
+    private static final String GDB_SERVER="https://graphdb.ec2u.net";
     private static final String GDB_REPOSITORY="data-main";
     private static final String GDB_USR="gdb-server-usr";
     private static final String GDB_PWD="gdb-server-pwd";
@@ -179,7 +179,7 @@ public final class Data extends Delegator {
 
                         .path("/sparql", handler(Request::route,
 
-                                (request, forward) -> request.reply(SeeOther, URI.create(format(
+                                (request, forward) -> request.reply(SEE_OTHER, URI.create(format(
                                         "https://apps.metreeca.com/self/#endpoint=%s", request.item()
                                 ))),
 

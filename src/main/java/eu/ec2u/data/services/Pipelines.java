@@ -30,7 +30,7 @@ import eu.ec2u.data.datasets.units.*;
 
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.gcp.GCPServer.cron;
-import static com.metreeca.flow.http.Response.BadGateway;
+import static com.metreeca.flow.http.Response.BAD_GATEWAY;
 import static com.metreeca.flow.http.Response.OK;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Loggers.time;
@@ -114,7 +114,7 @@ public interface Pipelines {
 
                             service(logger()).warning(task.getClass(), "failed", e);
 
-                            return request.reply(BadGateway, format(
+                            return request.reply(BAD_GATEWAY, format(
                                     "task failed / %s", e.getMessage()
                             ));
 

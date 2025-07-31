@@ -18,7 +18,6 @@ package eu.ec2u.data.datasets.programs;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.shim.Locales;
@@ -91,13 +90,13 @@ public interface Programs extends Dataset {
         public Handler() {
             delegate(new Router()
 
-                    .path("/", new Worker().get(new Driver(new ProgramsFrame(true)
+                    .path("/", new Driver().retrieve(new ProgramsFrame(true)
 
                             .members(stash(query(new ProgramFrame(true))))
 
-                    )))
+                    ))
 
-                    .path("/{code}", new Worker().get(new Driver(new ProgramFrame(true))))
+                    .path("/{code}", new Driver().retrieve(new ProgramFrame(true)))
             );
         }
 
