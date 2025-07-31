@@ -18,7 +18,6 @@ package eu.ec2u.data.services;
 
 import com.metreeca.flow.http.handlers.Delegator;
 import com.metreeca.flow.http.handlers.Router;
-import com.metreeca.flow.http.handlers.Worker;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
@@ -46,13 +45,13 @@ public interface Resources {
     final class Handler extends Delegator {
 
         public Handler() {
-            delegate(new Router().path("/", new Worker().get(new Driver(new ResourcesFrame(true)
+            delegate(new Router().path("/", new Driver().retrieve(new ResourcesFrame(true)
 
                     .members(stash(Query.query(new ResourceFrame(true))
                             .where("dataset.issued", criterion().any(set()))
                     ))
 
-            ))));
+            )));
         }
 
     }
