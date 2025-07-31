@@ -85,7 +85,7 @@ public final class Data extends Delegator {
 
     private static final boolean PRODUCTION=GCPServer.production();
 
-    private static final String GDB_SERVER="http://base.ec2u.net"; // !!! https
+    private static final String GDB_SERVER="https://graphdb.ec2u.net";
     private static final String GDB_REPOSITORY="data-next";
     private static final String GDB_USR="gdb-server-usr";
     private static final String GDB_PWD="gdb-server-pwd";
