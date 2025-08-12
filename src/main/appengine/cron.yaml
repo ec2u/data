@@ -77,9 +77,9 @@ cron:
   #    url: /pipelines/offerings/umea
   #    schedule: 1 of month 01:45
 
-  - description: "offerings › LLL - monthly crawling"
+  - description: "offerings › LLL - nightly crawling"
     url: /pipelines/offerings/lll
-    schedule: 1 of month 01:50
+    schedule: every day 01:50
 
 
   - description: "documents › coimbra - nightly crawling"
