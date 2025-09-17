@@ -79,6 +79,8 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
     private final URI pipeline;
 
+    private final boolean incremental;
+
     private final Function<Page, Optional<T>> insert;
     private final Function<Page, Optional<T>> remove;
 
@@ -103,6 +105,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
     public PageKeeper(final URI pipeline) {
         this(
                 pipeline,
+                false,
                 page -> Optional.empty(),
                 page -> Optional.empty(),
                 set(),
@@ -113,6 +116,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
     private PageKeeper(
             final URI pipeline,
+            final boolean incremental,
             final Function<Page, Optional<T>> insert,
             final Function<Page, Optional<T>> remove,
             final Collection<? extends Valuable> annexes,
@@ -140,10 +144,33 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
         }
 
         this.pipeline=pipeline;
+        this.incremental=incremental;
         this.insert=insert;
         this.remove=remove;
         this.annexes=annexes;
         this.executor=executor;
+    }
+
+
+    /**
+     * Configures the incremental processing mode.
+     *
+     * <p>Incremental mode disables removal of stale resources: only new or modified pages from the
+     * {@linkplain  #apply(Set) supplied URLs}  are processed; other existing pages are retained without updates./p>
+     *
+     * @param incremental {@code true} to enable incremental processing, {@code false} otherwise
+     *
+     * @return a new PageKeeper instance with the specified incremental mode
+     */
+    public PageKeeper<T> incremental(final boolean incremental) {
+        return new PageKeeper<>(
+                pipeline,
+                incremental,
+                insert,
+                remove,
+                annexes,
+                executor
+        );
     }
 
 
@@ -163,6 +190,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
     public PageKeeper<T> insert(final Function<Page, Optional<T>> insert) {
         return new PageKeeper<>(
                 pipeline,
+                incremental,
                 insert,
                 remove,
                 annexes,
@@ -186,6 +214,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
     public PageKeeper<T> remove(final Function<Page, Optional<T>> remove) {
         return new PageKeeper<>(
                 pipeline,
+                incremental,
                 insert,
                 remove,
                 annexes,
@@ -215,6 +244,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
         return new PageKeeper<>(
                 pipeline,
+                incremental,
                 insert,
                 remove,
                 asList(annexes),
@@ -238,6 +268,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
     public PageKeeper<T> annexes(final Collection<? extends Valuable> annexes) {
         return new PageKeeper<>(
                 pipeline,
+                incremental,
                 insert,
                 remove,
                 annexes,
@@ -261,6 +292,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
     public PageKeeper<T> executor(final Executor executor) {
         return new PageKeeper<>(
                 pipeline,
+                incremental,
                 insert,
                 remove,
                 annexes,
@@ -376,7 +408,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
         ));
 
 
-        final List<Value> removals=list(pages.values().stream()
+        final List<Value> removals=incremental ? list() : list(pages.values().stream()
 
                 .filter(not(page -> urls.contains(page.id())))
 
