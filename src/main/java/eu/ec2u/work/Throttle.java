@@ -26,9 +26,9 @@ import static java.lang.System.currentTimeMillis;
 
 /**
  * Adaptive throttle for rate-limiting concurrent task execution.
- * <p>
- * Implements exponential backoff and recovery mechanisms to dynamically adjust execution rates based on load and
- * success rates.
+ *
+ * <p>Implements exponential backoff and recovery mechanisms to dynamically adjust execution rates based on load and
+ * success rates.</p>
  */
 @SuppressWarnings("SynchronizedMethod")
 public final class Throttle<T> implements UnaryOperator<T> {
