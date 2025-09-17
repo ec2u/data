@@ -39,3 +39,14 @@ Documentation standards for Java APIs using Javadoc comments.
 - Keep HTML tags inline with text content, not on separate lines
 - Add empty lines before and after block elements like `<p>`, `<ul>`, `<ol>`
 - Use `{@code ...}` for inline code references instead of `<code>` tags
+
+### Formatting Checklist
+
+Before finalizing Javadoc, verify:
+
+- [ ] Empty lines before each `<p>`, `<ul>`, `<ol>` tag
+- [ ] Empty lines after each `</p>`, `</ul>`, `</ol>` tag
+- [ ] Consistent lowercase bullet points in lists
+- [ ] Proper `{@link}` references to related classes/methods
+- [ ] All `@param` and `@return` tags documented
+- [ ] Functional responsibilities described, not implementation details
