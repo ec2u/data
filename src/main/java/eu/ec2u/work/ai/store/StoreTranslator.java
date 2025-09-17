@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.ai;
+package eu.ec2u.work.ai.store;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Logger;

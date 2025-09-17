@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.ai;
+package eu.ec2u.work.ai.open;
 
 import com.metreeca.flow.services.Logger;
 

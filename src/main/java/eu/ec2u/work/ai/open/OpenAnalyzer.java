@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.ai;
+package eu.ec2u.work.ai.open;
 
 import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.services.Logger;
@@ -28,6 +28,7 @@ import com.openai.models.ResponseFormatJsonSchema;
 import com.openai.models.ResponseFormatJsonSchema.JsonSchema;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import com.openai.models.chat.completions.ChatCompletionCreateParams.ResponseFormat;
+import eu.ec2u.work.ai.Analyzer;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -37,7 +38,7 @@ import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Loggers.elide;
 import static com.metreeca.shim.Loggers.time;
 
-import static eu.ec2u.work.ai.OpenAI.openai;
+import static eu.ec2u.work.ai.open.OpenAI.openai;
 import static java.util.function.Predicate.not;
 
 /**

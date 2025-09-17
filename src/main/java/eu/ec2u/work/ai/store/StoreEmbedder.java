@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.ai;
+package eu.ec2u.work.ai.store;
 
 import com.metreeca.flow.json.actions.Validate;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.mesh.pipe.Store;
 import com.metreeca.mesh.shapes.Shape;
+
+import eu.ec2u.work.ai.Embedder;
+import eu.ec2u.work.ai.Vector;
 
 import java.net.URI;
 import java.util.Optional;
