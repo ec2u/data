@@ -1,25 +1,16 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-# Development Commands
+| Reference                             | Purpose                                                                |
+|---------------------------------------|------------------------------------------------------------------------|
+| @docs/guidelines/coding/java.md       | Standards for Java coding and Javadocs documentation                   |
+| @docs/guidelines/coding/typescript.md | Standards for TypeScript coding and TypeDoc documentation              |
+| @docs/guidelines/coding/markdown.md   | Standards for technical writing and structuring markdown documentation |
+| @docs/guidelines/modelling.md         | Standards for documenting and structuring data models                  |
+| @docs/guidelines/deploying.md         | Procedures for Google App Engine deployment                            |
 
-## Java Backend
+## Guidelines Reference
 
-- **Build**: `mvn compile` - Compiles Java sources and builds frontend assets
-- **Test**: `mvn test` - Runs JUnit tests
-- **Run locally**: `java -cp target/classes:target/libs/* eu.ec2u.data.Data` - Starts the server on localhost:8080
-- **Data processing**: `java -cp target/classes:target/libs/* eu.ec2u.data.Boot` - Runs all dataset processing pipelines
-- **Clean**: `mvn clean` - Removes target directory and node_modules
-
-## Frontend Development
-
-- **Start dev server**: `npm start` - Starts Vite dev server with hot reload (proxies API calls to localhost:8080)
-- **Build**: `npm run build` - Builds optimized frontend assets
-- **Install dependencies**: `npm install`
-
-## Google App Engine Deployment
-
-- **Deploy**: `mvn appengine:deploy` - Deploys to Google App Engine
-- **Deploy with staging**: `mvn compile appengine:deploy -Dgae.version=staging -Dgae.promote=false`
+- Use @ mentions for internal file references in Claude Code instructions (e.g., `@docs/guidelines/java.md`)
 
 # Architecture Overview
 
@@ -43,14 +34,6 @@ uses Maven to orchestrate both Java compilation and frontend bundling via the fr
 - **Styling**: CSS with PostCSS nesting plugin
 - **API**: Consumes REST/JSON-LD APIs from the Java backend
 
-## Data Model
-
-- **Vocabularies**: Uses standard vocabularies (Schema.org, FOAF, SKOS, W3C Organization Ontology) defined in
-  `src/main/java/eu/ec2u/data/vocabularies`
-- **Datasets**: Structured data about EC2U universities including courses, events, documents, organizations, persons,
-  programs, taxonomies, and units
-- **Cross-linking**: All datasets are semantically linked and support faceted search
-
 ## Key Dependencies
 
 - **Backend**: Metreeca Flow framework, RDF4J, OpenAI Java client
@@ -58,65 +41,37 @@ uses Maven to orchestrate both Java compilation and frontend bundling via the fr
 - **Database**: GraphDB (configured via environment variables)
 - **Deployment**: Google App Engine
 
-## Development Workflow
+## Configuration
+
+- **Maven properties**: Java 21, Node 22.14.0, npm 11.2.0
+- **Environment**: Production detection via Google App Engine environment
+- **Secrets**: GraphDB credentials, OpenAI API key, and sensitive parameters for accessing data sources stored in
+  Google Cloud Secret Manager
+
+# Development
+
+## Workflow
 
 1. Java backend runs on port 8080 serving both API and static assets
 2. During development, run `npm start` to start Vite dev server with API proxy
 3. Frontend changes are hot-reloaded, backend changes require restart
 4. Maven handles the full build including frontend bundling for production
 
-## Configuration
+## Backend Commands
 
-- **Maven properties**: Java 21, Node 22.14.0, npm 11.2.0
-- **Environment**: Production detection via Google App Engine environment
-- **Secrets**: GraphDB credentials and OpenAI API key stored in Google Cloud Secret Manager
+- **Build**: `mvn compile` - Compiles Java sources and builds frontend assets
+- **Test**: `mvn test` - Runs JUnit tests
+- **Run locally**: `java -cp target/classes:target/libs/* eu.ec2u.data.Data` - Starts the server on localhost:8080
+- **Data processing**: `java -cp target/classes:target/libs/* eu.ec2u.data.Boot` - Runs all dataset processing pipelines
+- **Clean**: `mvn clean` - Removes target directory and node_modules
 
-# Code Style Guidelines
+## Frontend Commands
 
-- Java code follows standard Java conventions
-- Follow existing patterns for nested test classes with `@Nested` annotation
-- Follow existing patterns for property naming in bean interfaces
-- Imports: static imports for factory methods and constants
-- Error handling: use checked exceptions with functional interfaces
-- Naming: PascalCase for classes, camelCase for methods and variables
-- Documentation: use Javadoc for public APIs
-- Use final liberally for immutability
+- **Start dev server**: `npm start` - Starts Vite dev server with hot reload (proxies API calls to localhost:8080)
+- **Build**: `npm run build` - Builds optimized frontend assets
+- **Install dependencies**: `npm install`
 
-# Javadocs Guidelines
+## Deployment Commands
 
-- Place Javadoc immediately before the documented element
-- Use Javadoc only for public APIs unless required to do otherwise
-- Introduce the class with a concise definition and a brief description of its purpose; keep the definition as short as
-  possible
-- Introduce boolean methods with "Checks if"
-- Introduce read accessors with "Retrieves"
-- Introduce write accessors with "Configures"
-- Report unexpected null values as "@throws NullPointerException if <param> is {@code null}"; if two parameters are
-  to be reported use "if either <param1> or <param2> is {@code null}"; if multiple parameters are to be reported use
-  "if any of <param1>, <param2>, ..., <paramN> is {@code null}"
-- Document record parameters with @param tags in the class description
-- Definitely don't generate example usage sections
-- Don't generate javadocs for overridden methods
-
-# Data Model Guidelines
-
-Data models are described by markdown files in the @src/main/static/datasets/ and
-@src/main/static/handbooks/vocabularies folders; each document:
-
-- has a brief summary of the vocabulary after the yaml front matter section, cross-linked to overview reference
-  documents for the vocabularies in use
-- entities and their properties are described in a tabular format
-    - entities and properties have a description, cross-linked as required
-    - properties are described wrt to the object being defined (eg the name of the person)
-    - property names are properly cross-linked to their definitions either in the data model documents or in the
-      vocabulary standard document
-    - references to other entities are introduced as  "link to …" or “links to …” according to the cardinality of the
-      property
-  - descriptions are concise, neutral and technical in tone
-    - existing descriptions are revises for completeness, correctness and consistency, but not otherwise replaced
-- property definitions are consistent wrt to the authoritative definitions in the @src/main/java/eu/ec2u/data/datasets/
-  and @src/main/java/eu/ec2u/data/vocabularies packages and subpackages
-- cross-links are checked for completeness and correctness
-    - links to locally defined well-known vocabularies, wherever available, are preferred; links to online standard
-      reference documents are used otherwise
-    - references to property definitions are linked using the proper anchor in the target document
+- **Deploy**: `mvn appengine:deploy` - Deploys to Google App Engine
+- **Deploy with staging**: `mvn compile appengine:deploy -Dgae.version=staging -Dgae.promote=false`
