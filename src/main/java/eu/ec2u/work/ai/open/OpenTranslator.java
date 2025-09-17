@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.ec2u.work.ai;
+package eu.ec2u.work.ai.open;
 
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.text.services.Translator;
@@ -33,7 +33,7 @@ import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.text.services.Translator.preprocess;
 import static com.metreeca.shim.Loggers.time;
 
-import static eu.ec2u.work.ai.OpenAI.openai;
+import static eu.ec2u.work.ai.open.OpenAI.openai;
 import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
 

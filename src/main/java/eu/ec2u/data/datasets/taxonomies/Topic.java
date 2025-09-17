@@ -26,8 +26,8 @@ import eu.ec2u.data.datasets.Reference;
 import eu.ec2u.data.datasets.Resource;
 import eu.ec2u.data.vocabularies.skos.SKOSConcept;
 import eu.ec2u.work.ai.Embedder;
-import eu.ec2u.work.ai.StoreEmbedder;
 import eu.ec2u.work.ai.Vector;
+import eu.ec2u.work.ai.store.StoreEmbedder;
 
 import java.util.*;
 import java.util.stream.Stream;

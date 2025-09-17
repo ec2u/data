@@ -44,7 +44,11 @@ import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.services.Pipelines;
 import eu.ec2u.data.services.Resources;
 import eu.ec2u.work.ai.Embedder.CacheEmbedder;
-import eu.ec2u.work.ai.*;
+import eu.ec2u.work.ai.open.OpenAI;
+import eu.ec2u.work.ai.open.OpenAnalyzer;
+import eu.ec2u.work.ai.open.OpenEmbedder;
+import eu.ec2u.work.ai.open.OpenTranslator;
+import eu.ec2u.work.ai.store.StoreTranslator;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -70,7 +74,7 @@ import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static eu.ec2u.work.ai.Embedder.embedder;
-import static eu.ec2u.work.ai.OpenAI.openai;
+import static eu.ec2u.work.ai.open.OpenAI.openai;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.logging.Level.INFO;
