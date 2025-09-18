@@ -21,7 +21,6 @@ import com.metreeca.flow.http.handlers.Router;
 import com.metreeca.flow.json.handlers.Driver;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Virtual;
-import com.metreeca.mesh.queries.Query;
 
 import eu.ec2u.data.datasets.Resource;
 import eu.ec2u.data.datasets.ResourceFrame;
@@ -29,6 +28,7 @@ import eu.ec2u.data.datasets.ResourceFrame;
 import java.util.Set;
 
 import static com.metreeca.mesh.queries.Criterion.criterion;
+import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.set;
 import static com.metreeca.shim.Collections.stash;
 
@@ -47,7 +47,7 @@ public interface Resources {
         public Handler() {
             delegate(new Router().path("/", new Driver().retrieve(new ResourcesFrame(true)
 
-                    .members(stash(Query.query(new ResourceFrame(true))
+                    .members(stash(query(new ResourceFrame(true))
                             .where("dataset.issued", criterion().any(set()))
                     ))
 

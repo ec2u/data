@@ -16,51 +16,46 @@
 
 package eu.ec2u.data.datasets.units;
 
-import com.metreeca.flow.Xtream;
 import com.metreeca.flow.http.actions.GET;
-import com.metreeca.flow.xml.actions.Untag;
-import com.metreeca.flow.xml.formats.HTML;
-import com.metreeca.shim.Locales;
-import com.metreeca.shim.URIs;
+import com.metreeca.flow.json.formats.JSON;
+import com.metreeca.flow.services.Logger;
+import com.metreeca.flow.services.Vault;
+import com.metreeca.mesh.Valuable;
+import com.metreeca.mesh.Value;
+import com.metreeca.shim.Futures;
 
-import eu.ec2u.data.datasets.taxonomies.Topic;
-import eu.ec2u.data.datasets.taxonomies.TopicsEC2UOrganizations;
-import eu.ec2u.work.ai.Analyzer;
+import eu.ec2u.data.datasets.Reference;
+import eu.ec2u.data.datasets.organizations.OrganizationFrame;
+import eu.ec2u.data.datasets.taxonomies.TopicFrame;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
+import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
-import static com.metreeca.shim.Futures.joining;
-import static com.metreeca.shim.Lambdas.lenient;
+import static com.metreeca.shim.Streams.concat;
 import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.units.Unit.review;
+import static eu.ec2u.data.datasets.Localized.EN;
+import static eu.ec2u.data.datasets.units.Unit._review;
 import static eu.ec2u.data.datasets.universities.University.PAVIA;
-import static eu.ec2u.data.datasets.universities.University.uuid;
-import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.util.Locale.ROOT;
 import static java.util.Map.entry;
-import static java.util.function.Predicate.not;
 
 public final class UnitsPavia implements Runnable {
 
-    private record Catalog(
-            URI url,
-            Topic classification
-    ) { }
+    private static final String API_URL="units-coimbra-url";
+    private static final String API_KEY="units-coimbra-key";
 
 
     public static void main(final String... args) {
@@ -68,41 +63,20 @@ public final class UnitsPavia implements Runnable {
     }
 
 
-    /// ̸//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Analyzer analyzer=service(analyzer());
+    private final Vault vault=service(vault());
+    private final Logger logger=service(logger());
 
 
-    @Override public void run() {
+    @Override
+    public void run() {
         service(store()).modify(
 
-                array(list(Stream
-
-                        .of(
-                                new Catalog(
-                                        uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti"),
-                                        TopicsEC2UOrganizations.DEPARTMENT
-                                ),
-                                new Catalog(
-                                        uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo"),
-                                        TopicsEC2UOrganizations.SERVICE_CENTRE
-                                ),
-                                new Catalog(
-                                        uri("https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali"),
-                                        TopicsEC2UOrganizations.INTERDEPARTMENTAL_RESEARCH_CENTRE
-                                )
-                        )
-
-                        .map(catalog -> async(() -> catalog(catalog)
-                                .map(unit -> async(() -> details(unit).toList()))
-                                .collect(joining())
-                                .flatMap(Collection::stream)
-                                .toList()
-                        ))
-
-                        .collect(joining())
+                array(list(units()
+                        .map(json -> async(() -> list(unit(json))))
+                        .collect(Futures.joining())
                         .flatMap(Collection::stream)
-
                 )),
 
                 value(query(new UnitFrame(true)).where("university", criterion().any(PAVIA)))
@@ -111,186 +85,83 @@ public final class UnitsPavia implements Runnable {
     }
 
 
-    private Stream<UnitFrame> catalog(final Catalog catalog) { // !!! migrate to Units.Scanner
-        return Xtream.of(catalog.url().toASCIIString())
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                .optMap(new GET<>(new HTML()))
-                .map(new Untag())
+    private Stream<Value> units() {
 
-                .optMap(analyzer.prompt("""
-                        The input is a markdown document containing a list of university research units;
-                        for each unit in the list, extract the following properties :
-                        
-                        - complete name (don't include the acronym)
-                        - name language as a 2-letter ISO tag
-                        - uppercase acronym (only if explicitly defined in the complete name, ignoring the URL)
-                        - URL (optional)
-                        
-                        Make absolutely sure to report all units included in the list.
-                        Don't include empty properties.
-                        Respond with a JSON object.
-                        """, """
-                        {
-                          "name": "units",
-                          "schema": {
-                            "type": "object",
-                            "properties": {
-                              "units": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object",
-                                  "properties": {
-                                    "acronym": {
-                                      "type": "string"
-                                    },
-                                    "name": {
-                                      "type": "string"
-                                    },
-                                    "language": {
-                                      "type": "string",
-                                      "pattern": "^\\\\d{2}$"
-                                    },
-                                    "url": {
-                                      "type": "string",
-                                      "format": "uri"
-                                    }
-                                  },
-                                  "required": [
-                                    "name",
-                                    "language"
-                                  ]
-                                }
-                              }
-                            },
-                            "required": [
-                              "units"
-                            ]
-                          }
-                        }
-                        """
-                ))
+        final String url="http://localhost:2025/units/"; // !!! final String url=vault.get(API_URL);
 
-                .flatMap(json -> json.select("units.*").values())
-
-                .flatMap(optional(json -> {
-
-                    final Optional<URI> url=json.get("url").string()
-                            .flatMap(URIs::fuzzy)
-                            .map(catalog.url()::resolve);
-
-                    return url.map(URI::toString)
-                            .or(() -> json.get("name").string())
-
-                            .map(id -> new UnitFrame()
-
-                                    .generated(true)
-
-                                    .id(Units.UNITS.id().resolve(uuid(PAVIA, id)))
-
-                                    .university(PAVIA)
-                                    .unitOf(set(PAVIA))
-
-                                    .altLabel(json.get("acronym").string()
-                                            .map(acronym -> map(entry(ROOT, acronym)))
-                                            .orElse(null)
-                                    )
-
-                                    .prefLabel(json.get("name").string()
-                                            .flatMap(name -> json.get("language").string()
-                                                    .flatMap(lenient(Locales::locale))
-                                                    .map(locale -> map(entry(locale, name)))
-                                            )
-                                            .orElse(null)
-                                    )
-
-                                    .homepage(set(url.stream()))
-
-                                    .classification(set(catalog.classification()))
-
-                            );
-
-                }));
+        return Stream.of("%s?%s".formatted(url, PAVIA.id()))
+                .flatMap(optional(new GET<>(new JSON())))
+                .flatMap(Value::values);
     }
 
-    private Stream<UnitFrame> details(final UnitFrame unit) {
-        return review(
+    private Stream<? extends Valuable> unit(final Value json) {
+        return json.get("id").string().stream().flatMap(optional(id -> _review(new UnitFrame()
 
-                unit.homepage().stream().findFirst()
+                .generated(true)
 
-                        .map(URI::toASCIIString)
-                        .flatMap(new GET<>(new HTML()))
-                        .map(new Untag())
+                .id(uri(id))
 
-                        .flatMap(analyzer.prompt("""
-                                Extract the following properties from the provided markdown document
-                                describing a university research unit:
-                                
-                                - acronym (don't include if not explicitly defined in the document)
-                                - plain text summary of about 500 characters in the document language
-                                - full description as included in the document in markdown format
-                                - document language as a 2-letter ISO tag
-                                
-                                Remove personal email addresses.
-                                Respond with a JSON object.
-                                """, """
-                                {
-                                  "name": "unit",
-                                  "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                      "acronym": {
-                                        "type": "string"
-                                      },
-                                      "summary": {
-                                        "type": "string"
-                                      },
-                                      "description": {
-                                        "type": "string"
-                                      },
-                                      "language": {
-                                        "type": "string",
-                                        "pattern": "^[a-zA-Z]{2}$"
-                                      }
-                                    },
-                                    "required": []
-                                  }
-                                }
-                                """
-                        ))
+                .label(json.get("formal").string()
+                        .map(v -> map(entry(EN, v)))
+                        .orElse(null)
+                )
 
-                        .flatMap(json -> json.get("language").string()
-                                .flatMap(lenient(Locales::locale))
-                                .map(locale -> unit
+                .comment(json.get("summary").string()
+                        .map(v -> map(entry(EN, v)))
+                        .orElse(null)
+                )
 
-                                        .altLabel(Optional.of(unit.altLabel())
-                                                .filter(not(Map::isEmpty))
-                                                .or(() -> json.get("acronym").string()
-                                                        .map(acronym -> map(entry(ROOT, acronym)))
-                                                )
-                                                .orElse(null)
-                                        )
+                .university(PAVIA) // !!! factor
 
-                                        .altLabel(json.get("acronym").string()
-                                                .map(acronym -> map(entry(ROOT, acronym)))
-                                                .orElse(null)
-                                        )
+                .identifier(json.get("identifier").string()
+                        .orElse(null)
+                )
 
-                                        .comment(json.get("summary").string()
-                                                .map(summary -> map(entry(locale, summary)))
-                                                .orElse(null)
-                                        )
+                .mbox(set(json.get("email").string()
+                        .flatMap(Reference::email)
+                ))
 
-                                        .definition(json.get("description").string()
-                                                .map(description -> map(entry(locale, description)))
-                                                .orElse(null)
-                                        )
+                .homepage(set(concat(
+                        json.get("profile").uri(),
+                        json.get("website").uri()
+                )))
 
-                                )
-                        )
+                .prefLabel(json.get("formal").string()
+                        .map(v -> map(entry(EN, v)))
+                        .orElse(null)
+                )
 
-                        .orElse(unit)
+                .altLabel(map(concat(
+                        json.get("acronym").string()
+                                .map(v -> entry(ROOT, v))
+                                .stream(),
+                        json.get("formal").string()
+                                .map(v -> entry(EN, v))
+                                .stream()
+                )))
 
-        ).stream();
+                .definition(json.get("description").string()
+                        .map(v -> map(entry(EN, v)))
+                        .orElse(null)
+                )
+
+                .unitOf(set(json.get("parent").uri()
+                        .map(v -> new OrganizationFrame().id(v))
+                ))
+
+                .classification(set(json.get("type").uri()
+                        .map(v -> new TopicFrame().id(v))
+                ))
+
+                .subject(set(json.get("topics").uris()
+                        .map(v -> new TopicFrame().id(v))
+                ))
+
+                .keyword(set(json.get("keywords").strings()))
+
+        )));
     }
 
 }

@@ -137,9 +137,10 @@ public final class Data extends Delegator {
 
                 .set(path(), () -> Paths.get(PRODUCTION ? "/tmp" : "data"))
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
-                .set(fetcher(), () -> PRODUCTION ? new URLFetcher() : new CacheFetcher()
-                        .ignore("https://docs.google.com/spreadsheets/")
-                )
+                .set(fetcher(), () -> PRODUCTION ? new URLFetcher() : new CacheFetcher().ignore(
+                        "http://localhost:2025/", // local ai crawler microservice
+                        "https://docs.google.com/spreadsheets/"
+                ))
 
                 .set(repository(), Data::gdb)
 
