@@ -152,7 +152,6 @@ export function DataUnit() {
 		<TileFrame placeholder={Events[icon]} as={({
 
 			prefLabel,
-			altLabel,
 			definition,
 
 			university,

@@ -79,7 +79,7 @@ export function DataUnits() {
 				useOptions(units, "university", { type: entry({ id: "", label: required(text) }) })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Type"} compact>{
+			<TileOptions placeholder={"Type"}>{
 				useOptions(units, "classification", { type: entry({ id: "", label: required(text) }), size: 10 })
 			}</TileOptions>
 
