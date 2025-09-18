@@ -23,7 +23,7 @@ import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.shim.Strings;
 
 import eu.ec2u.work.ai.Analyzer;
-import eu.ec2u.work.ai.OpenAnalyzer;
+import eu.ec2u.work.ai.open.OpenAnalyzer;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
