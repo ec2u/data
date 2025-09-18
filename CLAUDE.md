@@ -2,15 +2,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | Reference                             | Purpose                                                                |
 |---------------------------------------|------------------------------------------------------------------------|
-| @docs/guidelines/coding/java.md       | Standards for Java coding and Javadocs documentation                   |
-| @docs/guidelines/coding/typescript.md | Standards for TypeScript coding and TypeDoc documentation              |
-| @docs/guidelines/coding/markdown.md   | Standards for technical writing and structuring markdown documentation |
 | @docs/guidelines/modelling.md         | Standards for documenting and structuring data models                  |
 | @docs/guidelines/deploying.md         | Procedures for Google App Engine deployment                            |
 
-## Guidelines Reference
-
-- Use @ mentions for internal file references in Claude Code instructions (e.g., `@docs/guidelines/java.md`)
+---
 
 # Architecture Overview
 
