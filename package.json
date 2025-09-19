@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf lib node_modules",
+    "setup": "npm install",
+    "check": "jest",
+    "build": "rm -rf lib && tsc"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.1.3",
+    "ts-jest": "^29.4.3",
+    "typescript": "^5.9.2"
+  }
+}
