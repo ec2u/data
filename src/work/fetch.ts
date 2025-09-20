@@ -48,6 +48,19 @@ import { JSDOM } from "jsdom";
 
 
 /**
+ * Link data extracted from HTML anchor elements.
+ */
+export interface Link {
+
+	readonly href: string;
+	readonly text?: string;
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
  * Fetches content from the specified URL with error handling.
  *
  * @param url - The URL to fetch
@@ -101,12 +114,7 @@ export async function content(dom: JSDOM): Promise<DefuddleResponse & { url: str
  * @param dom - JSDOM instance containing the HTML document
  * @returns Promise resolving to immutable array of link objects with href and text properties
  */
-export async function links(dom: JSDOM): Promise<ReadonlyArray<{
-
-	readonly href: string;
-	readonly text?: string
-
-}>> {
+export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
 
 	const base=dom.window.location.href;
 	const self=base + "#";
