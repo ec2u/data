@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { get, html, links } from "@/work/fetch";
+import { get, html, links } from "@/core/fetch";
 
 Promise.resolve("https://fisica.dip.unipv.it/")
 
