@@ -18,15 +18,10 @@ import { ai, json } from "@/gcp/gemini";
 import { Type } from "@google/genai";
 import dedent from "dedent";
 
-interface TranslationResult {
-	originalText: string;
-	translatedText: string;
-	language: string;
-}
 
+Promise.resolve("ciao babbo!")
 
-async function translateText(text: string): Promise<TranslationResult> {
-	return ai().then(async ai => json(await ai.models.generateContent({
+	.then(async text => ai().then(async ai => json(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
 		contents: text,
 		config: {
@@ -56,9 +51,7 @@ async function translateText(text: string): Promise<TranslationResult> {
 				required: ["originalText", "translatedText", "language"]
 			}
 		}
-	})));
-}
+	}))))
 
-translateText("ciao babbo!")
 	.then(console.info)
 	.catch(console.error);

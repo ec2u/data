@@ -12,7 +12,8 @@
     },
     "strict": true,
     "target": "ES2022",
-    "module": "commonjs",
+    "module": "ES2022",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "sourceMap": true,
     "skipLibCheck": true

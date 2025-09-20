@@ -26,12 +26,10 @@
  * The pipeline uses:
  *
  * - Built-in `fetch` for HTTP requests with automatic redirect handling
- * - Defuddle for intelligent content extraction, removing non-essential elements
- *   {@link https://github.com/kepano/defuddle}
- * - Turndown for HTML to Markdown conversion with consistent formatting
- *   {@link https://github.com/mixmark-io/turndown}
  * - JSDOM for DOM manipulation in Node.js environment
  *   {@link https://github.com/jsdom/jsdom}
+ * - Defuddle for intelligent content extraction, removing non-essential elements
+ *   {@link https://github.com/kepano/defuddle}
  *
  * This approach provides cleaner output than direct HTML-to-Markdown conversion
  * by filtering out template and boilerplate content before conversion.
@@ -40,59 +38,68 @@
  *
  * - **JSDOM**: Must use v24.x (currently v24.1.3) due to Defuddle peer dependency.
  *   Defuddle requires `jsdom@^24.0.0`, incompatible with newer v27.x versions.
- * - **Defuddle**: Uses browser-style import (`defuddle`) rather than Node.js-specific
- *   import (`defuddle/node`) due to package export limitations in v0.6.6.
- * - **Turndown**: Stable at v7.x with consistent API.
+ * - **Defuddle**: Uses Node.js-optimized import (`defuddle/node`) with ES modules.
+ *   Content extraction and markdown conversion handled by Defuddle's built-in
+ *   `separateMarkdown` option for integrated processing.
  */
 
-import Defuddle from "defuddle";
+import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
-import TurndownService from "turndown";
 
-export interface ExtractedContent {
-	title: string;
-	content: string;
-	markdown: string;
-	author?: string;
-	description?: string;
-	publishedDate?: string;
-	url: string;
-}
 
-export async function fetchAndExtractContent(url: string): Promise<ExtractedContent> {
+/**
+ * Fetches content from the specified URL with error handling.
+ *
+ * @param url - The URL to fetch
+ * @returns Promise resolving to the HTTP response
+ * @throws Error if the request fails or returns non-ok status
+ */
+export async function get(url: string): Promise<Response> {
 
 	const response=await fetch(url);
 
 	if ( !response.ok ) {
-		throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+		throw new Error(`failed to fetch <${url}> <${response.status} ${response.statusText}>`);
 	}
 
-	const html=await response.text();
-	const dom=new JSDOM(html, { url });
+	return response;
+}
 
-	const defuddle=new Defuddle(dom.window.document);
-	const result=defuddle.parse();
+/**
+ * Converts HTTP response to JSDOM instance for DOM manipulation.
+ *
+ * @param response - The HTTP response containing HTML content
+ * @returns Promise resolving to JSDOM instance with parsed HTML
+ */
+async function html(response: Response): Promise<JSDOM> {
+	return new JSDOM(await response.text(), { url: response.url });
+}
 
-	const turndownService=new TurndownService({
-		headingStyle: "atx",
-		bulletListMarker: "-",
-		codeBlockStyle: "fenced"
+/**
+ * Extracts clean content and converts to markdown using Defuddle.
+ *
+ * @param dom - JSDOM instance containing the HTML document
+ * @returns Promise resolving to extracted content with metadata and URL
+ */
+async function content(dom: JSDOM): Promise<DefuddleResponse & { url: string }> {
+
+	const url=dom.window.location.href;
+
+	const result=await Defuddle(dom, url, {
+		separateMarkdown: true
 	});
 
-	const markdown=turndownService.turndown(result.content);
-
-	return {
-		title: result.title || "",
-		content: result.content,
-		markdown,
-		author: result.author,
-		description: result.description,
-		publishedDate: result.published,
-		url
-	};
+	return { ...result, url: url };
 }
 
-export async function extractToMarkdown(url: string): Promise<string> {
-	const extracted=await fetchAndExtractContent(url);
-	return extracted.markdown;
-}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Promise.resolve("https://fisica.dip.unipv.it/")
+
+	.then(get)
+	.then(html)
+	.then(content)
+
+	.then(console.info)
+	.catch(console.error);
