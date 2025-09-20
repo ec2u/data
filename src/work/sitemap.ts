@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { error } from "@/core";
-import { secret } from "@/gcp/secrets";
-import { GoogleGenAI, Type } from "@google/genai";
+import { ai, json } from "@/gcp/gemini";
+import { Type } from "@google/genai";
 import dedent from "dedent";
 
 interface TranslationResult {
@@ -26,39 +25,16 @@ interface TranslationResult {
 }
 
 
-function parse<T>(response: undefined | string): T {
-
-	if ( !response ) {
-		throw error("empty model response");
-	}
-
-	try {
-
-		return JSON.parse(response);
-
-	} catch ( e ) {
-		return error(`malformed model response (${e}) <${response}>`);
-	}
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 async function translateText(text: string): Promise<TranslationResult> {
-
-	const ai=new GoogleGenAI({
-		apiKey: await secret("googleai-key")
-	});
-
-	const response=await ai.models.generateContent({
+	return ai().then(async ai => json(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
 		contents: text,
 		config: {
 			systemInstruction: dedent`
-				- You are a professional translator.
-				- You are expected to translate the text provided by the user.
-				- Provide accurate translations and detect the source language.
-				- Always respond with JSON containing the original text, translation, and detected language code.
+                - You are a professional translator.
+                - You are expected to translate the text provided by the user.
+                - Provide accurate translations and detect the source language.
+                - Always respond with JSON containing the original text, translation, and detected language code.
 			`,
 			responseMimeType: "application/json",
 			responseSchema: {
@@ -80,13 +56,8 @@ async function translateText(text: string): Promise<TranslationResult> {
 				required: ["originalText", "translatedText", "language"]
 			}
 		}
-	});
-
-	return parse(response.text?.trim());
+	})));
 }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 translateText("ciao babbo!")
 	.then(console.info)
