@@ -49,42 +49,41 @@ Take ALWAYS into account the following CRITICAL issues:
 - **mixed navigation links** / linked pages could include relevant subpages mixed with external resources and parent
   institution links included in page templates
 
-You MUST select URLs if they meet ANY of these criteria:
+You MUST be SELECTIVE: only include URLs that are essential for understanding the unit's research, faculty,
+and academic programs. Better to include 3 perfect URLs than 20 marginal ones.
 
-## ALWAYS Include:
+# ALWAYS Include
 
-- URLs that share the same domain/subdomain as the unit's home page AND contain content specifically
-  related to the unit (research, teaching, members, facilities) - NOT generic administrative pages
-- Pages about research topics, groups, or areas (e.g., "research lines", "research groups")
-- Member directories or staff pages (e.g., "faculty", "people", "members")
-- Facility or equipment descriptions (e.g., "facilities", "laboratories", "instruments")
-- Publication lists or research output pages
-- Course or teaching pages when part of an academic unit
-- Parent unit pages (department pages for labs, university pages for departments)
-- Child unit pages (lab pages within departments)
+- Main unit pages: research lines, faculty/members, facilities, degree programs
+- Specific research group or lab pages within the unit
+- Course listings and academic programs offered by the unit
+- Research facility and equipment pages specific to the unit
+- Language variants of core pages (e.g., `/en/` vs `/it/` for main unit pages)
+- Direct child unit pages (specific labs or research groups)
 
-## Language Variants:
+## Examples of URLs to Include
 
-- Include URLs that are language variants of the same content (e.g., `/en/` vs `/it/` versions)
-- These are often highly relevant even if they duplicate content
+- `https://physics.university.edu/research/research-lines-and-groups` (research lines)
+- `https://physics.university.edu/academics/degree-programs` (degree programs)
+- `https://physics.university.edu/department/about-us/faculty` (faculty directory)
+- `https://physics.university.edu/research/labs-and-facilities` (labs/facilities)
 
-## Examples of URLs to Include:
+# NEVER Include
 
-- `https://fisica.dip.unipv.it/it/didattica/corsi-di-laurea` (degree courses)
-- `https://fisica.dip.unipv.it/it/ricerca/linee-e-gruppi-di-ricerca` (research lines)
-- `https://fisica.dip.unipv.it/en/` (English version)
-- `https://physics.university.edu/faculty/` (faculty directory)
-- `https://lab.physics.edu/equipment/` (equipment pages)
+- **External/unrelated domains** (not the unit's main domain)
+- **News domains** (any subdomain with `news`, `notizie`)
+- **Administrative portals** (any subdomain with `portal`, `admin`)
+- **Social media links** (any URL containing "social", Facebook, Twitter, LinkedIn, etc.)
+- **External domains** (unipv.it general pages, iusspavia.it, cineca.it, infn.it, etc.)
+- **Administrative pages** (quality assurance, documents, general university procedures)
+- **General university services** (enrollment, general news, library, IT services)
+- **Navigation/utility pages** (sitemaps, contact forms, calendars, monitoring pages)
+- **Partnership/collaboration pages** unless they describe specific research collaborations
+- **Outreach/divulgation pages** unless core to the unit's mission
+- **Generic course catalogs** or university-wide academic information
+- **News pages** from other departments or general university news
 
-## Do NOT Include:
-
-- External social media links
-- General university administrative pages unrelated to the unit (even if same domain)
-- External journal or database links
-- Generic contact or location pages without unit-specific content
-- CMS-generated or unstructured URLs that don't clearly relate to the unit's activities
-
-## Special Note on Unstructured URLs:
+# Special Note on Unstructured URLs
 
 For CMS-generated URLs like `https://example.edu/page=123`, evaluate the CONTENT and linking text,
 not just the domain. Include only if the content clearly relates to the specific unit being analyzed.

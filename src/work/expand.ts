@@ -42,7 +42,7 @@ interface Output {
 const home="https://fisica.dip.unipv.it/";
 const description=`This is the Italian homepage of the Physics Department "Alessandro Volta" at the University of Pavia. It provides a general description of the unit, detailing its mission to promote and coordinate extensive research across various physics fields and to manage Bachelor's, Master's, and PhD degree programs. The page highlights recent news and achievements, showcasing awards received by its members and the department's involvement in significant scientific projects, such as the Breakthrough Prize and muon beam detector development. Additionally, it offers academic information for prospective students, outlining available degree options, and features testimonials from alumni about their career successes.`;
 
-Promise.resolve(home)
+Promise.resolve("https://fisica.dip.unipv.it/it/ricerca/linee-e-gruppi-di-ricerca/fisica-sperimentale-della-materia")
 
 	.then(get)
 	.then(html)
@@ -65,8 +65,7 @@ Promise.resolve(home)
 		model: "gemini-2.5-flash",
 		contents: JSON.stringify(input, null, 2),
 		config: {
-			systemInstruction: dedent`
-Your task is to analyse a page from a website describing an academic research unit, with the eventual goal of generation
+			systemInstruction: dedent`Your task is to analyse a page from a website describing an academic research unit, with the eventual goal of generation
 an annotated sitemap for further processing.
 
 You will be provided with an input JSON object structured according to the following typescript interface:
@@ -117,42 +116,42 @@ Take ALWAYS into account the following CRITICAL issues:
 - **mixed navigation links** / linked pages could include relevant subpages mixed with external resources and parent
   institution links included in page templates
 
-You MUST select URLs if they meet ANY of these criteria:
+You MUST be SELECTIVE: only include URLs that are essential for understanding the unit's research, faculty,
+and academic programs. Better to include 3 perfect URLs than 20 marginal ones.
 
-## ALWAYS Include:
 
-- URLs that share the same domain/subdomain as the unit's home page AND contain content specifically
-  related to the unit (research, teaching, members, facilities) - NOT generic administrative pages
-- Pages about research topics, groups, or areas (e.g., "research lines", "research groups")
-- Member directories or staff pages (e.g., "faculty", "people", "members")
-- Facility or equipment descriptions (e.g., "facilities", "laboratories", "instruments")
-- Publication lists or research output pages
-- Course or teaching pages when part of an academic unit
-- Parent unit pages (department pages for labs, university pages for departments)
-- Child unit pages (lab pages within departments)
+# ALWAYS Include
 
-## Language Variants:
+- Main unit pages: research lines, faculty/members, facilities, degree programs
+- Specific research group or lab pages within the unit
+- Course listings and academic programs offered by the unit
+- Research facility and equipment pages specific to the unit
+- Language variants of core pages (e.g., \`/en/\` vs \`/it/\` for main unit pages)
+- Direct child unit pages (specific labs or research groups)
 
-- Include URLs that are language variants of the same content (e.g., \`/en/\` vs \`/it/\` versions)
-- These are often highly relevant even if they duplicate content
+## Examples of URLs to Include
 
-## Examples of URLs to Include:
+- \`https://physics.university.edu/research/research-lines-and-groups\` (research lines)
+- \`https://physics.university.edu/academics/degree-programs\` (degree programs)
+- \`https://physics.university.edu/department/about-us/faculty\` (faculty directory)
+- \`https://physics.university.edu/research/labs-and-facilities\` (labs/facilities)
 
-- \`https://fisica.dip.unipv.it/it/didattica/corsi-di-laurea\` (degree courses)
-- \`https://fisica.dip.unipv.it/it/ricerca/linee-e-gruppi-di-ricerca\` (research lines)
-- \`https://fisica.dip.unipv.it/en/\` (English version)
-- \`https://physics.university.edu/faculty/\` (faculty directory)
-- \`https://lab.physics.edu/equipment/\` (equipment pages)
+# NEVER Include
 
-## Do NOT Include:
+- **External/unrelated domains** (not the unit's main domain)
+- **News domains** (any subdomain with \`news\`, \`notizie\`)
+- **Administrative portals** (any subdomain with \`portal\`, \`admin\`)
+- **Social media links** (any URL containing "social", Facebook, Twitter, LinkedIn, etc.)
+- **External domains** (unipv.it general pages, iusspavia.it, cineca.it, infn.it, etc.)
+- **Administrative pages** (quality assurance, documents, general university procedures)
+- **General university services** (enrollment, general news, library, IT services)
+- **Navigation/utility pages** (sitemaps, contact forms, calendars, monitoring pages)
+- **Partnership/collaboration pages** unless they describe specific research collaborations
+- **Outreach/divulgation pages** unless core to the unit's mission
+- **Generic course catalogs** or university-wide academic information
+- **News pages** from other departments or general university news
 
-- External social media links
-- General university administrative pages unrelated to the unit (even if same domain)
-- External journal or database links
-- Generic contact or location pages without unit-specific content
-- CMS-generated or unstructured URLs that don't clearly relate to the unit's activities
-
-## Special Note on Unstructured URLs:
+# Special Note on Unstructured URLs
 
 For CMS-generated URLs like \`https://example.edu/page=123\`, evaluate the CONTENT and linking text,
 not just the domain. Include only if the content clearly relates to the specific unit being analyzed.

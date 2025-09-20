@@ -23,7 +23,7 @@ interface Output {
 
 	role: // page role in the context of the website of the unit 
 
-		"foreign"           // content doesn't belong to the unit website
+		null                // content doesn't belong to the unit website
 
 		| "description"     // general description of the unit
 		| "topics"          // description of the research topics of the unit

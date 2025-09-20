@@ -33,7 +33,8 @@ interface Input {
 
 interface Output {
 
-	role: "foreign"
+	role: null
+
 		| "description"
 		| "topics"
 		| "members"
@@ -50,7 +51,7 @@ interface Output {
 const home="https://fisica.dip.unipv.it/";
 const description=`This is the Italian homepage of the Physics Department "Alessandro Volta" at the University of Pavia. It provides a general description of the unit, detailing its mission to promote and coordinate extensive research across various physics fields and to manage Bachelor's, Master's, and PhD degree programs. The page highlights recent news and achievements, showcasing awards received by its members and the department's involvement in significant scientific projects, such as the Breakthrough Prize and muon beam detector development. Additionally, it offers academic information for prospective students, outlining available degree options, and features testimonials from alumni about their career successes.`;
 
-Promise.resolve(home)
+Promise.resolve("https://fisica.dip.unipv.it/it/ricerca/linee-e-gruppi-di-ricerca/fisica-sperimentale-della-materia")
 
 	.then(get)
 	.then(html)
@@ -97,7 +98,7 @@ interface Output {
 
 	role: // page role in the context of the website of the unit 
 
-		"foreign"           // content doesn't belong to the unit website
+		null           		// content doesn't belong to the unit website
 
 		| "description"     // general description of the unit
 		| "topics"          // description of the research topics of the unit
@@ -116,9 +117,17 @@ interface Output {
 				type: Type.OBJECT,
 				properties: {
 					role: {
-						type: Type.STRING,
 						description: "The role/type of this page",
-						enum: ["foreign", "description", "topics", "members", "facilities", "publications", "parent", "child"]
+						oneOf: [
+							{ type: Type.NULL },
+							{
+								type: Type.STRING,
+								enum: [
+									"description", "topics", "members", "facilities",
+									"publications", "parent", "child"
+								]
+							}
+						]
 					},
 					summary: {
 						type: Type.STRING,
