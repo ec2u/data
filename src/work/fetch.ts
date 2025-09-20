@@ -71,7 +71,7 @@ export async function get(url: string): Promise<Response> {
  * @param response - The HTTP response containing HTML content
  * @returns Promise resolving to JSDOM instance with parsed HTML
  */
-async function html(response: Response): Promise<JSDOM> {
+export async function html(response: Response): Promise<JSDOM> {
 	return new JSDOM(await response.text(), { url: response.url });
 }
 
@@ -81,7 +81,7 @@ async function html(response: Response): Promise<JSDOM> {
  * @param dom - JSDOM instance containing the HTML document
  * @returns Promise resolving to extracted content with metadata and URL
  */
-async function content(dom: JSDOM): Promise<DefuddleResponse & { url: string }> {
+export async function content(dom: JSDOM): Promise<DefuddleResponse & { url: string }> {
 
 	const url=dom.window.location.href;
 
@@ -92,14 +92,33 @@ async function content(dom: JSDOM): Promise<DefuddleResponse & { url: string }> 
 	return { ...result, url: url };
 }
 
+/**
+ * Extracts links from the DOM with their absolute URLs and text content.
+ *
+ * Filters out internal fragment links (those starting with #) and handles image-only links
+ * by using the img alt attribute as fallback text when no text content is available.
+ *
+ * @param dom - JSDOM instance containing the HTML document
+ * @returns Promise resolving to immutable array of link objects with href and text properties
+ */
+export async function links(dom: JSDOM): Promise<ReadonlyArray<{
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	readonly href: string;
+	readonly text?: string
 
-Promise.resolve("https://fisica.dip.unipv.it/")
+}>> {
 
-	.then(get)
-	.then(html)
-	.then(content)
+	const base=dom.window.location.href;
+	const self=base + "#";
 
-	.then(console.info)
-	.catch(console.error);
+	return Array.from(dom.window.document.querySelectorAll("a[href]"))
+
+		.map(link => link as HTMLAnchorElement)
+
+		.filter(link => !link.href.startsWith(self))
+
+		.map(link => Object.freeze({
+			href: new URL(link.href, base).href,
+			text: link.textContent.trim() || link.querySelector("img")?.alt?.trim()
+		}));
+}

@@ -15,8 +15,21 @@
  */
 
 import { ai, json } from "@/gcp/gemini";
+import { content, get, html } from "@/work/fetch";
 import { Type } from "@google/genai";
 import dedent from "dedent";
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Promise.resolve("https://fisica.dip.unipv.it/")
+
+	.then(get)
+	.then(html)
+	.then(content)
+
+	.then(console.info)
+	.catch(console.error);
 
 
 Promise.resolve("ciao babbo!")
