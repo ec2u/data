@@ -24,10 +24,9 @@
  */
 
 import { error } from "@/core";
+import { project } from "@/gcp/index";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
-import { GoogleAuth } from "google-auth-library";
 
-const auth=new GoogleAuth();
 const client=new SecretManagerServiceClient();
 
 
@@ -35,8 +34,6 @@ const client=new SecretManagerServiceClient();
 
 export async function secret(key: string): Promise<string> {
 	try {
-
-		const project=await auth.getProjectId();
 
 		const name=`projects/${project}/secrets/${key}/versions/latest`;
 		const [version]=await client.accessSecretVersion({ name });

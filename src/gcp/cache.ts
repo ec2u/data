@@ -24,10 +24,13 @@
 import { hash, isObject, isString } from "@/core";
 import { Cache } from "@/core/cache";
 import { log, message } from "@/core/log";
+import { project } from "@/gcp/index";
 import { Datastore } from "@google-cloud/datastore";
-import { GoogleAuth } from "google-auth-library";
 
-const auth=new GoogleAuth();
+
+const datastore=new Datastore({
+	projectId: project
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,25 +61,6 @@ export function DatastoreCache<T>({
 
 	const pending=new Map<string, Promise<T>>();
 
-	let db: null | Datastore=null;
-
-	async function getDatastore() {
-
-		if ( !db ) {
-			try {
-
-				db=new Datastore({
-					projectId: await auth.getProjectId()
-				});
-
-			} catch ( e ) {
-				throw new Error(`failed to initialize Datastore: ${message(e)}`);
-			}
-		}
-
-		return db;
-	}
-
 	return {
 
 		async lookup(key: string, generator: (key: string) => Promise<T>): Promise<T> {
@@ -92,8 +76,6 @@ export function DatastoreCache<T>({
 				const promise=new Promise<T>(async (resolve, reject) => {
 
 					try {
-
-						const datastore=await getDatastore();
 
 						log.info(DatastoreCache.name, `looking up <${key}>`);
 

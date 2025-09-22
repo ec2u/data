@@ -15,9 +15,9 @@
  */
 
 /**
- * Shared TypeScript utilities.
+ * @module core
  *
- * @module
+ * Provides core utilities and common TypeScript helper functions.
  */
 
 
