@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { DiskCache } from "@/core/cache";
 import { crawl } from "@/core/fetch";
+import { DatastoreCache } from "@/gcp/cache";
 
 
 crawl("https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale", {
 
 	depth: 2,
 	tasks: 10,
-	cache: DiskCache({ path: "data/cache" })
+	cache: DatastoreCache({ collection: "pages" })
 
 })
 

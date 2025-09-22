@@ -15,63 +15,62 @@
  */
 
 /**
- * @module FirebaseCache
+ * @module DatastoreCache
  *
- * Provides Firebase Firestore-backed cache implementation for persistent,
+ * Provides Google Cloud Datastore-backed cache implementation for persistent,
  * distributed caching across multiple instances.
  */
 
-import { hash } from "@/core";
+import { hash, isObject, isString } from "@/core";
 import { Cache } from "@/core/cache";
-import { Firestore } from "@google-cloud/firestore";
+import { Datastore } from "@google-cloud/datastore";
 import { GoogleAuth } from "google-auth-library";
 
 const auth=new GoogleAuth();
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
- * Creates a Firebase Firestore-backed cache implementation.
+ * Creates a Google Cloud Datastore-backed cache implementation.
  *
- * Values are stored in Firestore and can be shared across multiple instances.
+ * Values are stored in Datastore and can be shared across multiple instances.
  * This implementation provides persistence, distribution, and automatic
  * deduplication of concurrent requests for the same key.
  *
  * @template T The type of values to cache
  *
- * @param config Configuration options for the Firebase cache
- * @param config.database Firestore database ID (default: "(default)")
- * @param config.collection Firestore collection name for cache entries (default: "cache")
+ * @param config Configuration options for the Datastore cache
+ * @param config.collection Datastore kind name for cache entries (default: "cache")
  *
- * @returns A cache instance that persists values to Firestore
+ * @returns A cache instance that persists values to Datastore
  */
-export function FirebaseCache<T>({
+export function DatastoreCache<T>({
 
-	collection="cache",
-	database="(default)"
+	collection="cache"
 
 }: {
 
 	collection?: string;
-	database?: string;
 
 }={}): Cache<T> {
 
 	const pending=new Map<string, Promise<T>>();
 
-	let db: null | Firestore=null;
+	let db: null | Datastore=null;
 
-	async function getFirestore() {
+	async function getDatastore() {
 
 		if ( !db ) {
 			try {
 
-				db=new Firestore({
-					projectId: await auth.getProjectId(),
-					databaseId: database
+				db=new Datastore({
+					projectId: await auth.getProjectId()
 				});
 
 			} catch ( e ) {
 				const message=e instanceof Error ? e.message : String(e);
-				throw new Error(`failed to initialize Firestore database <${database}>: ${message}`);
+				throw new Error(`failed to initialize Datastore: ${message}`);
 			}
 		}
 
@@ -82,57 +81,74 @@ export function FirebaseCache<T>({
 
 		async lookup(key: string, generator: (key: string) => Promise<T>): Promise<T> {
 
-			const docId=hash(key);
 			const work=pending.get(key);
 
 			if ( work ) {
+
 				return work;
-			}
 
-			const promise=new Promise<T>(async (resolve, reject) => {
+			} else {
 
-				try {
+				const promise=new Promise<T>(async (resolve, reject) => {
 
-					const firestore=await getFirestore();
-					const docRef=firestore.collection(collection).doc(docId);
-					const doc=await docRef.get();
+					try {
 
-					if ( doc.exists ) {
-						const data=doc.data();
-						if ( data && data.value !== undefined ) {
-							resolve(data.value);
-							return;
+						const datastore=await getDatastore();
+
+						console.log(`Cache lookup: ${key}`);
+
+						const docId=hash(key);
+						const entityKey=datastore.key([collection, docId]);
+						const [entity]=await datastore.get(entityKey);
+
+						if ( entity ) {
+
+							if ( entity.value !== undefined ) {
+								resolve(entity.value);
+							}
+
+						} else {
+
+							const value=await generator(key);
+
+							function excluded(entry: any, prefix=""): string[] {
+								return !isObject(entry) ? [] : Object.keys(entry).flatMap(key => {
+
+									const path=prefix ? `${prefix}.${key}` : key;
+									const value=entry[key];
+
+									return isString(value) ? [path] : [...excluded(value, path)];
+								});
+							}
+
+							await datastore.save({
+								key: entityKey,
+								data: {
+									key,
+									value
+								},
+								excludeFromIndexes: excluded(value, "value")
+							});
+
+							resolve(value);
 						}
+
+					} catch ( e ) {
+
+						const message=e instanceof Error ? e.message : String(e);
+						console.error(`Datastore cache error for <${key}>: ${message}`);
+
+						reject(e);
+
 					}
+				});
 
-					// Generate new value
-					const value=await generator(key);
+				pending.set(key, promise);
 
-					// Store in Firestore
-					await docRef.set({
-						key,
-						value,
-						timestamp: new Date(),
-						hash: docId
-					});
-
-					resolve(value);
-
-				} catch ( e ) {
-
-					const message=e instanceof Error ? e.message : String(e);
-					console.error(`Firebase cache error for <${key}>: ${message}`);
-
-					reject(e);
-
-				}
-			});
-
-			pending.set(key, promise);
-
-			return promise.finally(() => {
-				pending.delete(key);
-			});
+				return promise.finally(() => {
+					pending.delete(key);
+				});
+			}
 		}
 
 	};
