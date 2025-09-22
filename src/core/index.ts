@@ -21,6 +21,17 @@
  */
 
 
+import { createHash } from "crypto";
+
+/**
+ * Represents any valid JSON value type.
+ *
+ * Includes primitive types (null, boolean, number, string) and composite types
+ * (objects with string keys and arrays) that can contain other JSON values.
+ */
+export type JSON=null | boolean | number | string | { readonly [key: string]: JSON } | readonly JSON[];
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -177,6 +188,17 @@ export function asArray<T=unknown>(value: unknown, is?: (value: unknown) => valu
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Computes the MD5 hash of a string.
+ *
+ * @param data the string to hash
+ * @return the MD5 hash as a lowercase hexadecimal string
+ */
+export function hash(data: string) {
+	return createHash("md5").update(data).digest("hex");
+}
+
 
 /**
  * Checks deep object equality.

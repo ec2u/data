@@ -43,9 +43,39 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
+import { Cache, HeapCache } from "@/core/cache";
+import { hash, immutable } from "@/core/index";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
 
+
+/**
+ * Web page data extracted and processed by the crawler.
+ *
+ * Contains cleaned content in markdown format, extracted links, and metadata
+ * for tracking crawl state and content changes.
+ */
+export interface Page {
+
+	/** Absolute URL of the crawled page */
+	readonly url: string;
+
+	/** Page title extracted from HTML or derived from URL */
+	readonly title: string;
+
+	/** Main content converted to markdown format with boilerplate removed */
+	readonly content: string;
+
+	/** Links extracted from the page with absolute URLs */
+	readonly links: readonly Link[];
+
+	/** Timestamp when the page was fetched (milliseconds since epoch) */
+	readonly fetched: number;
+
+	/** Content hash for detecting changes between crawls */
+	readonly digest: string;
+
+}
 
 /**
  * Link data extracted from HTML anchor elements.
@@ -129,4 +159,104 @@ export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
 			href: new URL(link.href, base).href,
 			text: link.textContent.trim() || link.querySelector("img")?.alt?.trim()
 		}));
+}
+
+/**
+ * Crawls a website starting from the home URL with configurable depth and concurrency.
+ *
+ * Performs breadth-first traversal of web pages, extracting content and following links within the same origin. Uses
+ * parallel fetching for improved performance while respecting the configured concurrency limits.
+ *
+ * @param home - The starting URL to begin crawling from
+ * @param options - Configuration options for the crawl
+ * @param options.depth - Maximum crawl depth (0 for unlimited, default: 0)
+ * @param options.tasks - Number of concurrent fetch operations (default: 4)
+ * @param options.cache - Cache implementation for storing processed pages (default: HeapCache)
+ *
+ * @returns Promise resolving to immutable array of crawled pages with extracted content
+ */
+export async function crawl(home: string, {
+
+	depth=0,
+	tasks=4,
+	cache=HeapCache<Page>()
+
+}: Partial<{
+
+	depth: number
+	tasks: number
+	cache: Cache<Page>
+
+}>={}): Promise<ReadonlyArray<Page>> {
+
+	const pages: Page[]=[];
+	const origin=new URL(home).origin;
+
+	const pending: Array<{ url: string; level: number }>=[{ url: home, level: 0 }];
+	const visited=new Set<string>();
+
+	while ( pending.length > 0 ) {
+		await Promise.all(pending.splice(0, tasks).map(({ url, level }) => {
+
+			visited.add(url);
+
+			return cache.lookup(url, async function (url: string) {
+
+					console.info(`crawling ${url}>`);
+
+					const response=await get(url);
+					const dom=await html(response);
+					const pageContent=await content(dom);
+					const pageLinks=await links(dom);
+
+					return {
+						url: url,
+						title: pageContent.title || url,
+						content: pageContent.contentMarkdown || "",
+						links: pageLinks,
+						digest: hash(pageContent.contentMarkdown || ""),
+						fetched: Date.now()
+					};
+
+				})
+
+				.then((page) => {
+
+					pages.push(page);
+
+					page.links
+						.filter(link => !visited.has(link.href)
+							&& isWithinDepthLimit(level + 1, depth)
+							&& hasSameOrigin(link.href, origin)
+							&& !isFile(link.href)
+						)
+						.forEach(link => pending.push({ url: link.href, level: level + 1 }));
+
+
+					function isWithinDepthLimit(depth: number, limit: number) {
+						return limit === 0 || depth <= limit;
+					}
+
+					function hasSameOrigin(url: string, origin: string): boolean {
+						return new URL(url).origin === origin;
+					}
+
+					function isFile(url: string): boolean {
+
+						const pathname=new URL(url).pathname;
+						const filename=pathname.split("/").pop() || "";
+
+						return /\.[a-zA-Z0-9]+$/.test(filename);
+					}
+
+
+				})
+
+				.catch((e) => {
+					console.warn(`failed to crawl <${url}>: ${e instanceof Error ? e.message : String(e)}`);
+				});
+		}));
+	}
+
+	return immutable(pages);
 }
