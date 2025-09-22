@@ -70,6 +70,7 @@ export interface Page {
 	/** Links extracted from the page with absolute URLs */
 	readonly links: readonly Link[];
 
+
 	/** Timestamp when the page was fetched (milliseconds since epoch) */
 	readonly fetched: number;
 
@@ -268,11 +269,10 @@ export async function crawl(home: string, {
 						return /\.[a-zA-Z0-9]+$/.test(filename);
 					}
 
-
 				})
 
 				.catch((e) => {
-					log.warn(crawl.name, `failed to crawl <${url}>: ${message(e)}`);
+					log.warn(crawl.name, `failed to process <${url}>: ${message(e)}`);
 				});
 		}));
 	}

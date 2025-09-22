@@ -5,6 +5,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [Immutable.js Documentation](https://immutable-js.com/docs/v5/) - Immutable data structures for JavaScript
 - [Google GenAI Documentation](https://googleapis.github.io/js-genai/release_docs/index.html) - Google Generative AI SDK
   for JavaScript/TypeScript
+- [Google Cloud Datastore Documentation](https://cloud.google.com/nodejs/docs/reference/datastore/latest) - Google Cloud
+  Datastore client library
+- [Google Cloud Secret Manager Documentation](https://cloud.google.com/nodejs/docs/reference/secret-manager/latest) -
+  Google Cloud Secret Manager client library
+- [Dedent Documentation](https://github.com/dmnd/dedent) - ES6 string tag that strips indentation from multi-line
+  strings
+- [JSDOM Documentation](https://github.com/jsdom/jsdom) - A JavaScript implementation of the DOM and HTML standards
 
 ---
 
@@ -355,10 +362,11 @@ async function run() {
 }
 
 run();
-``` It is also possible to use streaming with Chat:
-
 ```
-javascript
+
+It is also possible to use streaming with Chat:
+
+```javascript
 const chat = ai.chats.create({model: "gemini-2.5-flash"});
 const stream = await chat.sendMessageStream({message: "I have 2 dogs in my house."});
 for await (const chunk of stream) {
@@ -469,8 +477,8 @@ The `jsonStr` might look like this:
             "1 teaspoon salt",
             "2 cups chocolate chips"
         ]
-    },
-    ...
+    }
+    // ... more recipes
 ]
 ```
 
