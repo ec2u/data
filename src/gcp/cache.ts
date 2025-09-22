@@ -45,17 +45,17 @@ const datastore=new Datastore({
  * @template T The type of values to cache
  *
  * @param config Configuration options for the Datastore cache
- * @param config.collection Datastore kind name for cache entries (default: "cache")
+ * @param config.kind Datastore kind name for cache entries (default: "Cache")
  *
  * @returns A cache instance that persists values to Datastore
  */
 export function DatastoreCache<T>({
 
-	collection="cache"
+	kind="Cache"
 
 }: {
 
-	collection?: string;
+	kind?: string;
 
 }={}): Cache<T> {
 
@@ -80,7 +80,7 @@ export function DatastoreCache<T>({
 						log.info(DatastoreCache.name, `looking up <${key}>`);
 
 						const docId=hash(key);
-						const entityKey=datastore.key([collection, docId]);
+						const entityKey=datastore.key([kind, docId]);
 						const [entity]=await datastore.get(entityKey);
 
 						if ( entity ) {

@@ -20,9 +20,9 @@ import { DatastoreCache } from "@/gcp/cache";
 
 crawl("https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale", {
 
-	depth: 2,
+	depth: 1,
 	tasks: 10,
-	cache: DatastoreCache({ collection: "pages" })
+	cache: DatastoreCache()
 
 })
 
