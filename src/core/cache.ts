@@ -14,27 +14,58 @@
  * limitations under the License.
  */
 
+/**
+ * @module Cache
+ *
+ * Provides caching implementations for storing and retrieving computed values
+ * with string-based keys.
+ */
+
 import { hash } from "@/core/index";
 import { existsSync, promises as fs } from "fs";
 import { join } from "path";
 
+/**
+ * A generic cache interface for storing and retrieving values by string key.
+ *
+ * @template T The type of values stored in the cache
+ */
 export interface Cache<T> {
 
-	lookup(url: string, generator: (url: string) => Promise<T>): Promise<T>;
+	/**
+	 * Retrieves a value from the cache or generates it if not present.
+	 *
+	 * @param key The string key to look up in the cache
+	 * @param generator Function to generate the value if not cached
+	 * @returns Promise resolving to the cached or generated value
+	 */
+	lookup(key: string, generator: (key: string) => Promise<T>): Promise<T>;
 
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Creates an in-memory cache implementation.
+ *
+ * Values are stored in memory and will be lost when the process terminates.
+ * This implementation is suitable for short-lived applications or when
+ * persistence is not required.
+ *
+ * @template T The type of values to cache
+ *
+ * @returns A cache instance that stores values in memory
+ */
 export function HeapCache<T>(): Cache<T> {
 
 	const cache=new Map<string, T>();
 
 	return {
 
-		async lookup(url: string, generator: (url: string) => Promise<T>): Promise<T> {
+		async lookup(key: string, generator: (key: string) => Promise<T>): Promise<T> {
 
-			const cached=cache.get(url);
+			const cached=cache.get(key);
 
 			if ( cached !== undefined ) {
 
@@ -42,9 +73,9 @@ export function HeapCache<T>(): Cache<T> {
 
 			} else {
 
-				const value=await generator(url);
+				const value=await generator(key);
 
-				cache.set(url, value);
+				cache.set(key, value);
 
 				return value;
 
@@ -55,6 +86,20 @@ export function HeapCache<T>(): Cache<T> {
 }
 
 
+/**
+ * Creates a persistent disk-based cache implementation.
+ *
+ * Values are stored as JSON files on disk using key hashes as filenames.
+ * This implementation provides persistence across process restarts and
+ * includes deduplication of concurrent requests for the same key.
+ *
+ * @template T The type of values to cache
+ *
+ * @param config Configuration options for the cache
+ * @param config.path Directory path where cache files will be stored (default: ".cache")
+ *
+ * @returns A cache instance that persists values to disk
+ */
 export function DiskCache<T>({
 
 	path=".cache"
@@ -69,10 +114,10 @@ export function DiskCache<T>({
 
 	return {
 
-		async lookup(url: string, generator: (url: string) => Promise<T>): Promise<T> {
+		async lookup(key: string, generator: (key: string) => Promise<T>): Promise<T> {
 
-			const file=join(path, `${(hash(url))}.json`);
-			const work=pending.get(url);
+			const file=join(path, `${(hash(key))}.json`);
+			const work=pending.get(key);
 
 
 			async function cleanup(): Promise<void> {
@@ -83,7 +128,8 @@ export function DiskCache<T>({
 					}
 
 				} catch ( e ) {
-					console.error(`unable to remove partial cache file for <${url}> at <${file}>: ${e instanceof Error ? e.message : String(e)}`);
+					const message=e instanceof Error ? e.message : String(e);
+					console.error(`unable to remove partial cache file for <${key}> at <${file}>: ${message}`);
 				}
 			}
 
@@ -100,7 +146,8 @@ export function DiskCache<T>({
 
 				} catch ( e ) {
 
-					console.error(`corrupted cache entry for <${url}> at <${file}>: ${e instanceof Error ? e.message : String(e)}`);
+					const message=e instanceof Error ? e.message : String(e);
+					console.error(`corrupted cache entry for <${key}> at <${file}>: ${message}`);
 
 					throw e;
 				}
@@ -111,7 +158,7 @@ export function DiskCache<T>({
 
 					try {
 
-						const value=await generator(url);
+						const value=await generator(key);
 
 						try {
 
@@ -122,7 +169,8 @@ export function DiskCache<T>({
 
 						} catch ( e ) {
 
-							console.error(`unable to write cache entry for <${url}> at <${file}>: ${e instanceof Error ? e.message : String(e)}`);
+							const message=e instanceof Error ? e.message : String(e);
+							console.error(`unable to write cache entry for <${key}> at <${file}>: ${message}`);
 
 							await cleanup();
 
@@ -132,7 +180,8 @@ export function DiskCache<T>({
 
 					} catch ( e ) {
 
-						console.error(`unable to generate cache value for <${url}> at <${file}>: ${e instanceof Error ? e.message : String(e)}`);
+						const message=e instanceof Error ? e.message : String(e);
+						console.error(`unable to generate cache value for <${key}> at <${file}>: ${message}`);
 
 						await cleanup();
 
@@ -141,10 +190,10 @@ export function DiskCache<T>({
 					}
 				});
 
-				pending.set(url, promise);
+				pending.set(key, promise);
 
 				return promise.finally(() => {
-					pending.delete(url);
+					pending.delete(key);
 				});
 			}
 		}
