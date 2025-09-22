@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { message } from "@/core/log";
 import { secret } from "@/gcp/secrets";
 import { GenerateContentResponse, GoogleGenAI } from "@google/genai";
 
@@ -28,7 +29,8 @@ export function ai(): Promise<GoogleGenAI> {
 	}));
 }
 
-export function json<T>(response: GenerateContentResponse): T {
+
+export function text(response: GenerateContentResponse): string {
 
 	const text=response.text?.trim();
 
@@ -36,11 +38,15 @@ export function json<T>(response: GenerateContentResponse): T {
 		throw new Error("empty model response");
 	}
 
+	return text;
+}
+
+export function json<T>(response: GenerateContentResponse): T {
 	try {
 
-		return JSON.parse(text);
+		return JSON.parse(text(response));
 
 	} catch ( e ) {
-		throw new Error(`malformed model response (${e}) <${text}>`);
+		throw new Error(`malformed model response: ${message(e)}`);
 	}
 }

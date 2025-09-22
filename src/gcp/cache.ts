@@ -103,7 +103,7 @@ export function DatastoreCache<T>({
 								});
 							}
 
-							log.info(DatastoreCache.name, `saving <${key}>`);
+							log.info(DatastoreCache.name, `caching <${key}>`);
 
 							await datastore.save({
 								key: entityKey,

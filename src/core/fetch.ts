@@ -77,6 +77,8 @@ export interface Page {
 	/** Content hash for detecting changes between crawls */
 	readonly digest: string;
 
+	readonly summary: string;
+
 }
 
 /**
@@ -162,6 +164,7 @@ export async function content(dom: JSDOM): Promise<DefuddleResponse & { url: str
  * by using the img alt attribute as fallback text when no text content is available.
  *
  * @param dom - JSDOM instance containing the HTML document
+ *
  * @returns Promise resolving to immutable array of link objects with href and text properties
  */
 export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
@@ -199,13 +202,17 @@ export async function crawl(home: string, {
 
 	depth=0,
 	tasks=4,
-	cache=HeapCache<Page>()
+	cache=HeapCache<Page>(),
+
+	summarist
 
 }: Partial<{
 
 	depth: number
 	tasks: number
 	cache: Cache<Page>
+
+	summarist: (page: Pick<Page, "url" | "title" | "content">) => Promise<string>
 
 }>={}): Promise<ReadonlyArray<Page>> {
 
@@ -218,6 +225,8 @@ export async function crawl(home: string, {
 	while ( pending.length > 0 ) {
 		await Promise.all(pending.splice(0, tasks).map(({ url, level }) => {
 
+			log.info(crawl.name, `visiting <${url}>`);
+
 			visited.add(url);
 
 			return cache.lookup(url, async function (url: string) {
@@ -229,13 +238,23 @@ export async function crawl(home: string, {
 					const pageContent=await content(dom);
 					const pageLinks=await links(dom);
 
+					const text=pageContent.contentMarkdown || "";
+					const title=pageContent.title || url;
+
+					log.info(crawl.name, `summarizing <${url}>`);
+
+					const summary=await summarist?.({ url, title, content: text })
+						|| pageContent.description
+						|| text.substring(0, 500 - 1) + "…";
+
 					return {
-						url: url,
-						title: pageContent.title || url,
-						content: pageContent.contentMarkdown || "",
+						url,
+						title: title,
+						content: text,
 						links: pageLinks,
-						digest: hash(pageContent.contentMarkdown || ""),
-						fetched: Date.now()
+						digest: hash(text),
+						fetched: Date.now(),
+						summary
 					};
 
 				})
