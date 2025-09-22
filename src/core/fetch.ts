@@ -129,11 +129,29 @@ export async function content(dom: JSDOM): Promise<DefuddleResponse & { url: str
 
 	const url=dom.window.location.href;
 
-	const result=await Defuddle(dom, url, {
-		separateMarkdown: true
-	});
+	// ;( suppress defuddle's hardcoded console.log messages (https://github.com/kepano/defuddle/issues/92)
 
-	return { ...result, url: url };
+	const originalLog=console.log;
+
+	console.log=(msg, ...args) => {
+		if ( typeof msg !== "string" || !msg.includes("Initial parse returned very little content") ) {
+			originalLog(msg, ...args);
+		}
+	};
+
+	try {
+
+		const result=await Defuddle(dom, url, {
+			separateMarkdown: true,
+			debug: false
+		});
+
+		return { ...result, url: url };
+
+	} finally {
+		console.log=originalLog;
+	}
+
 }
 
 /**
