@@ -26,5 +26,5 @@ crawl("https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/bio
 
 })
 
-	.then(console.log)
+	.then(console.info)
 	.catch(console.error);

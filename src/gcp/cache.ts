@@ -23,6 +23,7 @@
 
 import { hash, isObject, isString } from "@/core";
 import { Cache } from "@/core/cache";
+import { log, message } from "@/core/log";
 import { Datastore } from "@google-cloud/datastore";
 import { GoogleAuth } from "google-auth-library";
 
@@ -69,8 +70,7 @@ export function DatastoreCache<T>({
 				});
 
 			} catch ( e ) {
-				const message=e instanceof Error ? e.message : String(e);
-				throw new Error(`failed to initialize Datastore: ${message}`);
+				throw new Error(`failed to initialize Datastore: ${message(e)}`);
 			}
 		}
 
@@ -95,7 +95,7 @@ export function DatastoreCache<T>({
 
 						const datastore=await getDatastore();
 
-						console.log(`Cache lookup: ${key}`);
+						log.info(DatastoreCache.name, `looking up <${key}>`);
 
 						const docId=hash(key);
 						const entityKey=datastore.key([collection, docId]);
@@ -121,6 +121,8 @@ export function DatastoreCache<T>({
 								});
 							}
 
+							log.info(DatastoreCache.name, `saving <${key}>`);
+
 							await datastore.save({
 								key: entityKey,
 								data: {
@@ -135,8 +137,7 @@ export function DatastoreCache<T>({
 
 					} catch ( e ) {
 
-						const message=e instanceof Error ? e.message : String(e);
-						console.error(`Datastore cache error for <${key}>: ${message}`);
+						log.error(DatastoreCache.name, `processing error for <${key}>: ${(message(e))}`);
 
 						reject(e);
 

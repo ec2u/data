@@ -22,6 +22,7 @@
  */
 
 import { hash } from "@/core/index";
+import { log, message } from "@/core/log";
 import { existsSync, promises as fs } from "fs";
 import { join } from "path";
 
@@ -128,8 +129,7 @@ export function DiskCache<T>({
 					}
 
 				} catch ( e ) {
-					const message=e instanceof Error ? e.message : String(e);
-					console.error(`unable to remove partial cache file for <${key}> at <${file}>: ${message}`);
+					log.error(DiskCache.name, `unable to remove partial cache file for <${key}> at <${file}>: ${message(e)}`);
 				}
 			}
 
@@ -146,8 +146,7 @@ export function DiskCache<T>({
 
 				} catch ( e ) {
 
-					const message=e instanceof Error ? e.message : String(e);
-					console.error(`corrupted cache entry for <${key}> at <${file}>: ${message}`);
+					log.error(DiskCache.name, `corrupted cache entry for <${key}> at <${file}>: ${message(e)}`);
 
 					throw e;
 				}
@@ -169,8 +168,7 @@ export function DiskCache<T>({
 
 						} catch ( e ) {
 
-							const message=e instanceof Error ? e.message : String(e);
-							console.error(`unable to write cache entry for <${key}> at <${file}>: ${message}`);
+							log.error(DiskCache.name, `unable to write cache entry for <${key}> at <${file}>: ${message(e)}`);
 
 							await cleanup();
 
@@ -180,8 +178,7 @@ export function DiskCache<T>({
 
 					} catch ( e ) {
 
-						const message=e instanceof Error ? e.message : String(e);
-						console.error(`unable to generate cache value for <${key}> at <${file}>: ${message}`);
+						log.error(DiskCache.name, `unable to generate cache value for <${key}> at <${file}>: ${message(e)}`);
 
 						await cleanup();
 

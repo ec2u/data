@@ -45,6 +45,7 @@
 
 import { Cache, HeapCache } from "@/core/cache";
 import { hash, immutable } from "@/core/index";
+import { log, message } from "@/core/log";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
 
@@ -202,7 +203,7 @@ export async function crawl(home: string, {
 
 			return cache.lookup(url, async function (url: string) {
 
-					console.info(`crawling ${url}>`);
+					log.info(crawl.name, `fetching <${url}>`);
 
 					const response=await get(url);
 					const dom=await html(response);
@@ -253,7 +254,7 @@ export async function crawl(home: string, {
 				})
 
 				.catch((e) => {
-					console.warn(`failed to crawl <${url}>: ${e instanceof Error ? e.message : String(e)}`);
+					log.warn(crawl.name, `failed to crawl <${url}>: ${message(e)}`);
 				});
 		}));
 	}
