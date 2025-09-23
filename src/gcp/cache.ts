@@ -44,8 +44,7 @@ const datastore=new Datastore({
  *
  * @template T The type of values to cache
  *
- * @param config Configuration options for the Datastore cache
- * @param config.kind Datastore kind name for cache entries (default: "Cache")
+ * @param kind Datastore kind name for cache entries (default: "Cache")
  *
  * @returns A cache instance that persists values to Datastore
  */
@@ -63,7 +62,7 @@ export function DatastoreCache<T>({
 
 	return {
 
-		async lookup(key: string, generator: (key: string) => Promise<T>): Promise<T> {
+		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
 
 			const work=pending.get(key);
 
@@ -88,7 +87,7 @@ export function DatastoreCache<T>({
 								resolve(entity.value);
 							}
 
-						} else {
+						} else if ( generator ) {
 
 							const value=await generator(key);
 
@@ -110,6 +109,11 @@ export function DatastoreCache<T>({
 							});
 
 							resolve(value);
+
+						} else {
+
+							reject(new Error(`undefined cache value for <${kind} @ ${key}>`));
+
 						}
 
 					} catch ( e ) {

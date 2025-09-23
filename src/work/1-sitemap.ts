@@ -22,7 +22,8 @@ import dedent from "dedent";
 
 crawl(
 	// "https://microwave.unipv.it",
-	"https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale",
+	// "https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale",
+	"https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/",
 
 	{
 

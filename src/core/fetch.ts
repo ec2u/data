@@ -146,6 +146,7 @@ export async function content(dom: JSDOM): Promise<DefuddleResponse & { url: str
 
 		const result=await Defuddle(dom, url, {
 			separateMarkdown: true,
+			removeImages: true,
 			debug: false
 		});
 

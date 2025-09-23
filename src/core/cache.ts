@@ -37,10 +37,13 @@ export interface Cache<T> {
 	 * Retrieves a value from the cache or generates it if not present.
 	 *
 	 * @param key The string key to look up in the cache
-	 * @param generator Function to generate the value if not cached
+	 * @param generator Optional function to generate the value if not cached
+	 *
 	 * @returns Promise resolving to the cached or generated value
+	 *
+	 * @throws Error if key not found and no generator provided
 	 */
-	lookup(key: string, generator: (key: string) => Promise<T>): Promise<T>;
+	lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T>;
 
 	/**
 	 * Removes cached entries
@@ -73,7 +76,7 @@ export function HeapCache<T>(): Cache<T> {
 
 	return {
 
-		async lookup(key: string, generator: (key: string) => Promise<T>): Promise<T> {
+		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
 
 			const cached=cache.get(key);
 
@@ -81,13 +84,17 @@ export function HeapCache<T>(): Cache<T> {
 
 				return cached;
 
-			} else {
+			} else if ( generator ) {
 
 				const value=await generator(key);
 
 				cache.set(key, value);
 
 				return value;
+
+			} else {
+
+				throw new Error(`undefined cache value for <${key}>`);
 
 			}
 		},
@@ -132,7 +139,7 @@ export function DiskCache<T>({
 
 	return {
 
-		async lookup(key: string, generator: (key: string) => Promise<T>): Promise<T> {
+		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
 
 			const file=join(path, `${(hash(key))}.json`);
 			const work=pending.get(key);
@@ -168,7 +175,7 @@ export function DiskCache<T>({
 					throw e;
 				}
 
-			} else {
+			} else if ( generator ) {
 
 				const promise=new Promise<T>(async (resolve, reject) => {
 
@@ -209,6 +216,11 @@ export function DiskCache<T>({
 				return promise.finally(() => {
 					pending.delete(key);
 				});
+
+			} else {
+
+				throw new Error(`undefined cache value for <${key}>`);
+
 			}
 		},
 

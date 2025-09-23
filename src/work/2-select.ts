@@ -159,10 +159,193 @@ summary: This page details the research activities of the "Seed Molecular Physio
 
 `;
 
+const power=`
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/
+title: Institut für Elektrische Antriebe und Leistungselektronik
+summary: This page introduces the Institute of Electric Drives and Power Electronics at Johannes Kepler University Linz. It outlines the institute's history, established in 1994 and evolving into its current form in 2004. The page details the institute's core competencies in electric drives, small motors, magnetic bearing technology, and drive electronics. It also provides essential contact information, including the institute's address, location within the Science Park, head of the institute, secretarial office hours, phone number, and email address, along with a link to its English version.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/ueber-uns/
+title: Über uns
+summary: This page provides an overview of the Institute for Electrical Drives and Power Electronics at JKU. It traces the institute's origins from the establishment of Mechatronics studies at JKU in 1990, highlighting its role in founding numerous research institutes and competence centers like LCM. The summary details the institute's core competencies in electrical drives, magnetic bearings, and power electronics, emphasizing its significant contributions to research projects and the development of numerous patents. It also touches upon its involvement in regional development initiatives and the establishment of a sister institute focused on smart actuators.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/anfahrt/
+title: Anfahrt
+summary: This page provides comprehensive directions to the Institute for Electrical Drives and Power Electronics at Johannes Kepler University Linz. It details how to reach the institute by car from various directions, by train from Linz main station, and by plane via Linz/Hörsching airport. Additionally, it lists the institute's postal and physical addresses, secretariat opening hours, contact telephone and fax numbers, and email address, along with visitor parking information for the Science Park 1 underground garage.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/forschung/publikationen/
+title: Publikationen
+summary: This page serves as a gateway to the research output of the Institute of Electrical Drives and Power Electronics. It directs users to "Pure," an external platform that functions as a comprehensive repository for the institute's publications. This catalogue allows for the discovery and retrieval of scholarly works, providing access to the research contributions of the institute's members.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/lehre/masterarbeiten/
+title: Masterarbeiten
+summary: This page from the Institute for Electrical Drives and Power Electronics at JKU provides essential information for students undertaking their Master's thesis. It outlines the admission requirements, detailing the necessary ECTS credits from completed coursework. The page also explains the structure of the Master's thesis and seminar, emphasizing the written component of the seminar and the presentation-based progress tracking for the thesis itself. Crucially, it directs students to a continuously updated PDF document listing currently available thesis topics, encouraging them to consult with supervisors for specific assignments.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/stellenangebote/
+title: Stellenangebote
+summary: This page serves as a recruitment portal for the Institute of Electrical Drives and Power Electronics at JKU. It outlines the types of positions available, specifically seeking scientific project staff and university assistants. The institute is looking for individuals with expertise or interest in electrical drive technology, smart actuators, power electronics, and control engineering, emphasizing the need for professionals to develop, research, and test new technologies before market introduction. Interested candidates are invited to submit their applications via email.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/lehre/repositorium/
+title: Repositorium
+summary: This page serves as a repository for the Institute of Electrical Drives and Power Electronics at JKU. It provides students with access to past examination papers and practice tests to aid in their preparation for course assessments. The materials are intended as a guide and do not represent the complete scope of examination content for each subject.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/
+title: Team
+summary: This page serves as a directory for the Institute of Electrical Drives and Power Electronics at JKU. It lists the institute's personnel, categorized by their roles, including the Director, Deputy Directors, Assistants, Secretariat, Accounting, Technicians, and Scientific Staff. Each entry provides contact information such as name, office location, phone extension, and email address, facilitating communication with the institute's members.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/lehre/aktuelle-kurse/
+title: Aktuelle Kurse
+summary: This page serves as a directory for current courses offered by the Institute of Electrical Drives and Power Electronics. It provides a structured listing of courses, detailing their identification codes, titles, subtitles, registration links, types, weekly hours, instructors, and scheduling rhythms. The information is presented in a tabular format, with options to expand or collapse details for each course, facilitating easy access to essential information for students and faculty.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/lehre/bachelorarbeiten/
+title: Bachelorarbeiten
+summary: This page from the Institute for Electrical Drives and Power Electronics at JKU provides essential information for students undertaking their Bachelor's thesis. It outlines the prerequisites for registration, including a minimum of 80 ECTS credits from core subjects, and details the process for completing and submitting the written thesis within the enrolled semester. The page also directs students to a continuously updated PDF document listing currently available thesis topics, emphasizing that specific topic assignment is arranged through consultation with a supervisor. Submission deadlines for both summer and winter semesters are clearly stated, along with the assessment structure involving interim and final presentations.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/lehre/studienangebot/
+title: Studienangebot
+summary: This page outlines the study offerings in electrical drive technology and power electronics at the JKU's Institute for Electrical Drives and Power Electronics. It details the Bachelor's and Master's programs, emphasizing the integration of electrical drives as a core component. The content covers foundational knowledge, design principles, and advanced control techniques for various motor types, complemented by power electronics courses. The page also provides access to introductory lecture materials and presents comprehensive tables listing available courses for both Bachelor's and Master's degrees, including their ECTS credits and semester offerings.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/forschung/erc-forschung/
+title: ERC Forschung
+summary: This page provides information about the ERC research activities of the Institute of Electrical Drives and Power Electronics. It specifically highlights the ERC Starting Grant project CHARMAELEON and directs users to the English version of the institute's website for further details.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/dobler/
+title: Dobler
+summary: This page provides information about DI Christoph Dobler, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a personal profile page within the institute's website, detailing his professional contributions. The page links to his publications, lectures, research projects, short scientific contributions, and innovations, offering a comprehensive overview of his academic and research activities.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/marth/
+title: Marth
+summary: This page provides information about DI Dr. Edmund Marth, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a directory of his academic contributions, linking to his publications, lectures, research projects, short scientific contributions, and innovations.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/gruber/
+title: Gruber
+summary: This page provides information about Univ.-Prof. DI Dr. Wolfgang Gruber, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic profile, including his publications, lectures, research projects, short scientific contributions, and innovations. The page acts as a directory to his scholarly output and professional activities within the institute.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/gruber-ch/
+title: Gruber Ch.
+summary: This page provides administrative contact information for Christine Gruber at the Institute for Electrical Drives and Power Electronics. It includes her office location, phone numbers, and email address. Links are also provided to access her publications, lectures, research projects, short scientific contributions, innovations, and other academic activities.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/varvolik/
+title: Varvolik
+summary: This page provides information about Vasyl Varvolik, Ph.D., a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including his publications, lectures, research projects, short scientific contributions, and innovations. The page acts as a directory to his scholarly output and professional activities within the institute.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/
+title: News & Events
+summary: This page serves as a news and events hub for the Institute for Electrical Drives and Power Electronics. It features recent announcements, including awards for scientific outreach, research project launches, participation in conferences and public events, and staff achievements in both academic and sporting activities. The content highlights the institute's engagement with the wider community and its contributions to research and education.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/klambauer/
+title: Klambauer
+summary: This page provides administrative contact information for Claudia Klambauer at the Institute for Electrical Drives and Power Electronics. It includes her office location, phone numbers, and email address. Links are also provided to sections detailing her publications, lectures, research projects, short scientific contributions, innovations, and other relevant academic activities.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/bramerdorfer/
+title: Bramerdorfer
+summary: This page provides detailed information about Univ.-Prof. DI Dr. Gerd Bramerdorfer, a member of the academic team at the Institute for Electrical Drives and Power Electronics. It serves as a central point for accessing his professional profile, including a downloadable curriculum vitae. The page also acts as a gateway to his scholarly output, offering links to his publications, lectures, research projects, and innovations, thereby showcasing his contributions to the institute's research activities.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/mallinger/
+title: Mallinger
+summary: This page provides detailed contact information and professional background for DI Stefan Mallinger, a University Assistant at the Institute for Electrical Drives and Power Electronics. It serves as a personal profile page within the institute's website, offering direct contact details, office location, and links to his research profile, ORCID, and lists of his publications, lectures, research projects, and innovations.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/mueller/
+title: Müller
+summary: This page provides contact and location details for Gertraud Müller, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a directory entry for an individual within the institute's team, offering her contact information, office location, and links to her professional contributions including publications, lectures, research projects, and innovations.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/goldbeck/
+title: Goldbeck
+summary: This page provides information about DI Gereon Goldbeck, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including a list of his publications, lectures he has delivered, research projects he is involved in, his short biography, and any innovations he has contributed.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/somer/
+title: Somer
+summary: This page provides contact information and professional details for Idil Somer, a technician at the Institute for Electrical Drives and Power Electronics. It serves as a directory entry within the institute's website, offering direct contact methods and links to her contributions in publications, lectures, research projects, and innovations.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/proell/
+title: Pröll
+summary: This page provides information about DI Andreas Pröll, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a profile page within the institute's website, detailing his contributions and activities. The content is organized into sections that highlight his publications, lectures, research projects, short scientific contributions, and innovations, offering a comprehensive overview of his academic and research work.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/woeckinger/
+title: Wöckinger
+summary: This page provides information about DI Daniel Wöckinger, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including his publications, lectures, and involvement in research projects. The page also highlights his contributions to innovation and provides a link to his short profile.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/dirnberger/
+title: Dirnberger
+summary: This page provides information about DI Peter Dirnberger, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including his publications, lectures, research projects, and innovations. The page also links to his short biography and potentially other relevant academic information.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/weissitsch/
+title: Weissitsch
+summary: This page provides information about DI Gabriel Weissitsch, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including his publications, lectures, research projects, and innovations. The page also links to his involvement in SCS (likely a specific research area or group) and any relevant patents or intellectual property.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/zorn/
+title: Zorn
+summary: This page provides information about DI Patrick Zorn, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including his publications, lectures, and involvement in research projects. The page also highlights his contributions to innovation and provides a brief overview of his academic profile.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/strasser/
+title: Strasser
+summary: This page provides contact information and professional details for Gerhard Strasser, a technician at the Institute for Electrical Drives and Power Electronics at JKU. It serves as a directory entry for a specific team member, offering his office location, phone numbers, and email address. The page also links to his contributions and activities within the institute, including his publications, lectures, research projects, and innovations.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/torabi-shahbaz/
+title: Torabi_Shahbaz
+summary: This page provides information about Mohammad Torabi Shahbaz, MSc., a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including his publications, lectures, and involvement in research projects. The page also details his contributions to scientific computing and innovations, offering a comprehensive overview of his work and expertise within the institute.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/koll/
+title: Koll
+summary: This page provides information about DI Martin Koll, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic profile, detailing his publications, lectures, research projects, short scientific contributions, and innovations. The page acts as a directory to his scholarly output and professional activities within the institute.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/afrandideh/
+title: Afrandideh
+summary: This page provides information about Saeed Afrandideh, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including his publications, lectures, research projects, short scientific contributions, and innovations. The page acts as a directory to his scholarly output and professional activities within the institute.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/eal-mitarbeiter-ueberzeugen-bei-der-epnc-2024-in-portoroz-18-21062024/
+title: EAL Mitarbeiter überzeugen bei der EPNC 2024 in Portorož (18.-21.06.2024)
+summary: This page from the Institute for Electrical Drives and Power Electronics website highlights the successful participation of its staff at the EPNC 2024 conference in Portorož. It specifically mentions DI Martin Koll receiving the Best Paper Award and Mohammad Torabi Shabhaz presenting his work, which generated significant interest and discussion among attendees. The news item celebrates these achievements and contributions to the conference.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/krainer/
+title: Krainer
+summary: This page provides information about DI Thomas Krainer, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a central point for accessing his academic contributions, including his publications, lectures, research projects, and innovations. The page also links to his short biography and any relevant innovations he has been involved in, offering a comprehensive overview of his work within the institute.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/neues-forschungsprojekt-am-institut-fuer-elektrische-antriebe-und-leistungselektronik-advanced-technologies-for-fuel-cell-subsystem-compressors/
+title: Neues Forschungsprojekt am Institut für Elektrische Antriebe und Leistungselektronik: "Advanced technologies for fuel cell subsystem compressors"
+summary: The Institute for Electrical Drives and Power Electronics is announcing a new research project focused on "Advanced technologies for fuel cell subsystem compressors," funded by the Technology Agency of the Czech Republic. This initiative aims to develop next-generation, rare-earth-free compressors for fuel cell systems, enhancing their efficiency and performance. The project also explores the implementation of bearingless technologies to further improve compressor capabilities. This four-year project involves collaboration with Garrett Motion and the Brno University of Technology, with Professor Wolfgang Gruber leading the research team.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/ueber-uns/team/peer/
+title: Peer
+summary: This page provides information about DI Markus Peer, a member of the Institute for Electrical Drives and Power Electronics at JKU. It serves as a directory entry for him, linking to his publications, lectures, research projects, short scientific contributions, and innovations. The content aims to offer a comprehensive overview of his academic and research activities within the institute.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/institutswanderung-auf-den-traunstein/
+title: Institutswanderung auf den Traunstein
+summary: This page details a recent institute hike undertaken by the Institute for Electrical Drives and Power Electronics. It serves as a news item, documenting a specific event for the institute's community. The content focuses on the successful completion of a challenging hike to the Traunstein summit, emphasizing the participants' perseverance, the rewarding views, and the positive group dynamics despite adverse weather conditions.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/doppelte-auszeichnung-fuer-di-dr-florian-poltschak-kepler-award-fuer-wissenschaftsvermittlung-in-der-kategorie-vermittlungsarbeit-fuer-kinder-und-jugendliche-und-sonderpreis-wissenschaftsvermittler-des-jahres/
+title: Doppelte Auszeichnung für DI Dr. Florian Poltschak bei den Kepler Awards für Wissenschaftsvermittlung
+summary: This page from the Institute for Electrical Drives and Power Electronics highlights the dual recognition of DI Dr. Florian Poltschak at the Kepler Awards for Science Communication. It details his achievement of winning both the award for "Educational Work for Children and Youth" and the special prize for "Science Communicator of the Year." The content emphasizes his volunteer work in engaging approximately 1,000 children in intelligent drive systems through creative, age-appropriate methods during events like JKU Science Holidays and the Long Night of Research, aiming to foster early interest in technology and science. The page also includes links to related news articles featuring other award recipients.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/?tx_news_pi1%5B%40widget_0%5D%5BcurrentPage%5D=2&cHash=06063c3c8d5eefd5f0aad87636c93f03#news-anchor
+title: News & Events
+summary: This page serves as a news and events archive for the Institute of Electrical Drives and Power Electronics at JKU. It features a chronological listing of past activities, including workshops, industry excursions, academic lectures, conference participations, and student events. The entries provide brief descriptions and links to more detailed information about each occurrence, showcasing the institute's engagement in research, education, and industry collaboration.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/das-institut-fuer-elektrische-antriebe-und-leistungselektronik-bei-der-langen-nacht-der-forschung-2024/
+title: Das Institut für Elektrische Antriebe und Leistungselektronik bei der Langen Nacht der Forschung 2024
+summary: This page details the participation of the Institute for Electrical Drives and Power Electronics at the "Long Night of Research 2024." It highlights their exhibit, which aimed to explain the functionality and applications of magnetically levitated motors to the public. The institute expresses gratitude to visitors and anticipation for future events, emphasizing their role in showcasing future technologies.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/jku-campus-run-2024-und-mechatronik-fussballturnier-eal-laeuft-und-schiesst-daneben/
+title: JKU Campus Run 2024 und Mechatronik Fußballturnier: EAL läuft und schießt daneben.
+summary: This page details the participation of the Institute for Electrical Drives and Power Electronics (EAL) in the JKU Campus Run and a subsequent Mechatronics Football Tournament. It highlights the institute's multiple teams in the relay race, celebrating a third-place finish in the mixed-team category. The page then humorously recounts the football team's performance, drawing parallels between on-field challenges and the optimization required in electrical drive technology, concluding with a lighthearted assessment of the team's need for improved coordination.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/auf-die-daube-fertig-los-team-eal-beim-mechatronik-eisstockturnier/
+title: Auf die Daube fertig los: Team EAL beim Mechatronik Eisstockturnier
+summary: This page reports on the participation of the "EAL-Haubentaucher" team from the Institute for Electrical Drives and Power Electronics at the Mechatronics Ice Stock Tournament. It details the team members and their performance, noting their elimination in the group stage despite a strong effort. The article highlights the event as a fun experience and expresses the team's commitment to a more successful participation in the following year.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/interview-mit-prof-gerd-bramerdorfer-im-mc-report/
+title: Interview mit Prof. Gerd Bramerdorfer im MC Report
+summary: This page from the Institute for Electrical Drives and Power Electronics website features an interview with Prof. Gerd Bramerdorfer. It highlights his insights on the challenges and opportunities in optimizing electrical drive systems, the integration of social and ecological considerations in new developments, his research goals supported by an ERC Starting Grant, and the societal impact of his work. The interview also touches upon industry collaborations and the "Charmaeleon" project, offering a glimpse into the future of mechatronics at JKU.
+
+url: https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/news-events/detail/news/vote-your-prof-wettbewerb-praemiert-herausragende-lehre-2-platz-fuer-prof-gruber-vom-institut-fuer-elektrische-antriebe-und-leistungselektronik/
+title: "Vote Your Prof" Wettbewerb prämiert herausragende Lehre
+summary: This news item from the Institute for Electrical Drives and Power Electronics highlights the recognition of outstanding teaching through the "Vote Your Prof" competition. Approximately 500 students participated in this initiative, organized by the Austrian National Union of Students, to honor their favorite professors. Professor Wolfgang Gruber from the institute secured second place within the Faculty of Engineering and Natural Sciences for the Winter Semester 2023/24, a significant achievement given the faculty's diverse student distribution. The institute expresses gratitude to the students and congratulates Professor Gruber on this award.
+`;
+
 
 Promise.resolve(
-		microwave
+		// microwave
 		// biology
+		power
 	)
 
 	.then(async input => ai().then(async ai => text(await ai.models.generateContent({
