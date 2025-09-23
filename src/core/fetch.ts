@@ -219,15 +219,13 @@ export async function crawl(home: string, {
 	const pages: Page[]=[];
 	const origin=new URL(home).origin;
 
+	const visited=new Set<string>([home]);
 	const pending: Array<{ url: string; level: number }>=[{ url: home, level: 0 }];
-	const visited=new Set<string>();
 
 	while ( pending.length > 0 ) {
 		await Promise.all(pending.splice(0, tasks).map(({ url, level }) => {
 
 			log.info(crawl.name, `visiting <${url}>`);
-
-			visited.add(url);
 
 			return cache.lookup(url, async function (url: string) {
 
@@ -263,18 +261,20 @@ export async function crawl(home: string, {
 
 					pages.push(page);
 
-					page.links
-						.filter(link => !visited.has(link.href)
-							&& isWithinDepthLimit(level + 1, depth)
-							&& hasSameOrigin(link.href, origin)
-							&& !isFile(link.href)
-						)
-						.forEach(link => pending.push({ url: link.href, level: level + 1 }));
+					if ( depth === 0 || level + 1 <= depth ) {
+						page.links.map(link => link.href)
 
+							.filter(href => hasSameOrigin(href, origin))
+							.filter(href => !isFile(href))
 
-					function isWithinDepthLimit(depth: number, limit: number) {
-						return limit === 0 || depth <= limit;
+							.forEach(href => {
+								if ( !visited.has(href) ) {
+									visited.add(href);
+									pending.push({ url: href, level: level + 1 });
+								}
+							});
 					}
+
 
 					function hasSameOrigin(url: string, origin: string): boolean {
 						return new URL(url).origin === origin;
