@@ -228,11 +228,9 @@ export async function crawl(home: string, {
 	}
 
 
-	const entry=normalize(home);
-	const origin=new URL(home).origin;
-
 	const pages: Page[]=[];
 
+	const entry=normalize(home);
 	const visited=new Set<string>([entry]);
 	const pending: Array<{ url: string; level: number }>=[{ url: entry, level: 0 }];
 
@@ -278,7 +276,8 @@ export async function crawl(home: string, {
 					if ( depth === 0 || level + 1 <= depth ) {
 						page.links.map(link => normalize(link.href))
 
-							.filter(href => hasSameOrigin(href, origin))
+							.filter(href => hasSameOrigin(href, entry))
+							.filter(href => isKinOf(href, entry))
 							.filter(href => !isFile(href))
 
 							.forEach(href => {
@@ -290,8 +289,39 @@ export async function crawl(home: string, {
 					}
 
 
-					function hasSameOrigin(url: string, origin: string): boolean {
-						return new URL(url).origin === origin;
+					function hasSameOrigin(url: string, entry: string): boolean {
+						return new URL(url).origin === new URL(entry).origin;
+					}
+
+					/**
+					 * Checks if url is a sibling or descendant of entry.
+					 *
+					 * Siblings are considered as kin to handle flat CMS-style URLs such as `/page/123`.
+					 *
+					 * @param url - The URL to check
+					 * @param entry - The entry URL to compare against
+					 *
+					 * @returns `true` if url is a sibling or descendant of entry; `false` otherwise
+					 */
+					function isKinOf(url: string, entry: string): boolean {
+
+						const entrySegments=new URL(entry).pathname
+							.split("/")
+							.filter(segment => segment !== "");
+
+						const urlSegments=new URL(url).pathname
+							.split("/")
+							.filter(segment => segment !== "");
+
+						if ( urlSegments.length < entrySegments.length ) {
+							return false;
+						}
+
+						for (let i=0; i < entrySegments.length; i++) {
+							if ( urlSegments[i] !== entrySegments[i] ) { return false; }
+						}
+
+						return true;
 					}
 
 					function isFile(url: string): boolean {
@@ -299,7 +329,7 @@ export async function crawl(home: string, {
 						const pathname=new URL(url).pathname;
 						const filename=pathname.split("/").pop() || "";
 
-						return /\.[a-zA-Z0-9]+$/.test(filename);
+						return !filename.endsWith(".php") && /\.[a-zA-Z0-9]+$/.test(filename);
 					}
 
 				})
