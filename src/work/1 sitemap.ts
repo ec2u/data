@@ -41,6 +41,8 @@ crawl(microwave, {
 				${content}
 			`,
 			config: {
+				seed: 0,
+				temperature: 0,
 				systemInstruction: dedent`You are an academic content manager specializing in research activities.
 
 Your task is to create an English summary of about 500 chars for a page from a website describing an academic research
