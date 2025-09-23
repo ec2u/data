@@ -42,6 +42,15 @@ export interface Cache<T> {
 	 */
 	lookup(key: string, generator: (key: string) => Promise<T>): Promise<T>;
 
+	/**
+	 * Removes cached entries
+	 *
+	 * @param key Specific key to delete, or omit to clear entire cache
+	 *
+	 * @returns Promise that resolves when the operation completes
+	 */
+	delete(key?: string): Promise<void>;
+
 }
 
 
@@ -80,6 +89,14 @@ export function HeapCache<T>(): Cache<T> {
 
 				return value;
 
+			}
+		},
+
+		async delete(key?: string): Promise<void> {
+			if ( key === undefined ) {
+				cache.clear();
+			} else {
+				cache.delete(key);
 			}
 		}
 
@@ -192,6 +209,47 @@ export function DiskCache<T>({
 				return promise.finally(() => {
 					pending.delete(key);
 				});
+			}
+		},
+
+		async delete(key?: string): Promise<void> {
+			if ( key === undefined ) {
+
+				try {
+
+					if ( existsSync(path) ) {
+						const files=await fs.readdir(path);
+						await Promise.all(
+							files
+								.filter(file => file.endsWith(".json"))
+								.map(file => fs.unlink(join(path, file)))
+						);
+					}
+
+				} catch ( e ) {
+
+					log.error(DiskCache.name, `unable to clear cache directory at <${path}>: ${message(e)}`);
+
+					throw e;
+				}
+
+			} else {
+
+				const file=join(path, `${hash(key)}.json`);
+
+				try {
+
+					if ( existsSync(file) ) {
+						await fs.unlink(file);
+					}
+
+				} catch ( e ) {
+
+					log.error(DiskCache.name, `unable to delete cache file for <${key}> at <${file}>: ${message(e)}`);
+
+					throw e;
+				}
+
 			}
 		}
 

@@ -77,10 +77,9 @@ export function DatastoreCache<T>({
 
 					try {
 
-						log.info(DatastoreCache.name, `looking up <${key}>`);
+						log.info(DatastoreCache.name, `looking up <${kind}@${key}>`);
 
-						const docId=hash(key);
-						const entityKey=datastore.key([kind, docId]);
+						const entityKey=datastore.key([kind, hash(key)]);
 						const [entity]=await datastore.get(entityKey);
 
 						if ( entity ) {
@@ -103,7 +102,7 @@ export function DatastoreCache<T>({
 								});
 							}
 
-							log.info(DatastoreCache.name, `caching <${key}>`);
+							log.info(DatastoreCache.name, `caching <${kind}@${key}>`);
 
 							await datastore.save({
 								key: entityKey,
@@ -119,7 +118,7 @@ export function DatastoreCache<T>({
 
 					} catch ( e ) {
 
-						log.error(DatastoreCache.name, `processing error for <${key}>: ${(message(e))}`);
+						log.error(DatastoreCache.name, `unable to look up <${kind}@${key}>: ${(message(e))}`);
 
 						reject(e);
 
@@ -131,6 +130,63 @@ export function DatastoreCache<T>({
 				return promise.finally(() => {
 					pending.delete(key);
 				});
+			}
+		},
+
+		async delete(key?: string): Promise<void> {
+			if ( key === undefined ) {
+
+				try {
+
+					log.info(DatastoreCache.name, `deleting <${kind}@*>`);
+
+					const [entities]=await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
+
+					if ( entities.length === 0 ) {
+
+						log.info(DatastoreCache.name, `no cache entries found for kind <${kind}>`);
+
+					} else {
+
+						const keys=entities.map(entity => entity[datastore.KEY]);
+
+						const batchSize=500; // delete in batches of 500 (Datastore limit)
+
+						for (let i=0; i < keys.length; i+=batchSize) {
+							await datastore.delete(keys.slice(i, i + batchSize));
+						}
+
+					}
+				} catch ( e ) {
+
+					log.error(DatastoreCache.name, `unable to delete <${kind}@*>: ${message(e)}`);
+
+					throw e;
+				}
+
+			} else {
+
+				log.info(DatastoreCache.name, `deleting <${kind}@${key}>`);
+
+				const docId=hash(key);
+				const entityKey=datastore.key([kind, docId]);
+
+				try {
+
+					await datastore.delete(entityKey);
+
+				} catch ( e ) {
+
+					log.error(DatastoreCache.name, `unable to delete <${kind}@${key}>: ${message(e)}`);
+
+					throw e;
+
+				} finally {
+
+					pending.delete(key);
+
+				}
+
 			}
 		}
 
