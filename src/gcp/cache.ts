@@ -21,7 +21,7 @@
  * distributed caching across multiple instances.
  */
 
-import { hash, isObject, isString } from "@/core";
+import { hash, isObject } from "@/core";
 import { Cache } from "@/core/cache";
 import { log, message } from "@/core/log";
 import { project } from "@/gcp/index";
@@ -77,7 +77,7 @@ export function DatastoreCache<T>({
 
 					try {
 
-						log.info(DatastoreCache.name, `looking up <${kind}@${key}>`);
+						log.info(DatastoreCache.name, `looking up <${kind} @ ${key}>`);
 
 						const entityKey=datastore.key([kind, hash(key)]);
 						const [entity]=await datastore.get(entityKey);
@@ -92,17 +92,13 @@ export function DatastoreCache<T>({
 
 							const value=await generator(key);
 
-							function excluded(entry: any, prefix=""): string[] {
-								return !isObject(entry) ? [] : Object.keys(entry).flatMap(key => {
-
-									const path=prefix ? `${prefix}.${key}` : key;
-									const value=entry[key];
-
-									return isString(value) ? [path] : [...excluded(value, path)];
-								});
+							function excluded(entry: unknown, path: string): string[] {
+								return !isObject(entry) ? [path] : Object.keys(entry).flatMap(field =>
+									[path, ...excluded(entry[field], path ? `${path}.${field}` : field)]
+								);
 							}
 
-							log.info(DatastoreCache.name, `caching <${kind}@${key}>`);
+							log.info(DatastoreCache.name, `caching <${kind} @ ${key}>`);
 
 							await datastore.save({
 								key: entityKey,
@@ -118,7 +114,7 @@ export function DatastoreCache<T>({
 
 					} catch ( e ) {
 
-						log.error(DatastoreCache.name, `unable to look up <${kind}@${key}>: ${(message(e))}`);
+						log.error(DatastoreCache.name, `unable to look up <${kind} @ ${key}>: ${(message(e))}`);
 
 						reject(e);
 
@@ -138,7 +134,7 @@ export function DatastoreCache<T>({
 
 				try {
 
-					log.info(DatastoreCache.name, `deleting <${kind}@*>`);
+					log.info(DatastoreCache.name, `deleting <${kind} @ *>`);
 
 					const [entities]=await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
 
@@ -159,14 +155,14 @@ export function DatastoreCache<T>({
 					}
 				} catch ( e ) {
 
-					log.error(DatastoreCache.name, `unable to delete <${kind}@*>: ${message(e)}`);
+					log.error(DatastoreCache.name, `unable to delete <${kind} @ *>: ${message(e)}`);
 
 					throw e;
 				}
 
 			} else {
 
-				log.info(DatastoreCache.name, `deleting <${kind}@${key}>`);
+				log.info(DatastoreCache.name, `deleting <${kind} @ ${key}>`);
 
 				const docId=hash(key);
 				const entityKey=datastore.key([kind, docId]);
@@ -177,7 +173,7 @@ export function DatastoreCache<T>({
 
 				} catch ( e ) {
 
-					log.error(DatastoreCache.name, `unable to delete <${kind}@${key}>: ${message(e)}`);
+					log.error(DatastoreCache.name, `unable to delete <${kind} @ ${key}>: ${message(e)}`);
 
 					throw e;
 

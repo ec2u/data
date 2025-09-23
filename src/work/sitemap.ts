@@ -20,9 +20,12 @@ import { ai, text } from "@/gcp/gemini";
 import dedent from "dedent";
 
 
-crawl("https://microwave.unipv.it", {
+const microwave="https://microwave.unipv.it";
+const biology="https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale";
 
-	depth: 1,
+crawl(microwave, {
+
+	depth: 2,
 	tasks: 10,
 	cache: DatastoreCache({ kind: "Page" }),
 
@@ -53,8 +56,7 @@ Make sure to:
 - Highlight the page role within the website
 - Summarize directories, catalogues and other listings focusing on the definition of their contents,
   rather than enumerating items and their details
-- ALWAYS translate title and other excerpts from the page content, rather than including them verbatim
-
+- NEVER include the page title in the summary
  `
 			}
 		}))
