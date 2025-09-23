@@ -20,19 +20,20 @@ import { ai, text } from "@/gcp/gemini";
 import dedent from "dedent";
 
 
-const microwave="https://microwave.unipv.it";
-const biology="https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale";
+crawl(
+	// "https://microwave.unipv.it",
+	"https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale",
 
-crawl(microwave, {
+	{
 
-	depth: 2,
-	tasks: 10,
-	cache: DatastoreCache({ kind: "Page" }),
+		depth: 2,
+		tasks: 10,
+		cache: DatastoreCache({ kind: "Page" }),
 
-	summarist: ({ url, title, content }) => ai().then(async ai =>
-		text(await ai.models.generateContent({
-			model: "gemini-2.5-flash-lite",
-			contents: dedent`
+		summarist: ({ url, title, content }) => ai().then(async ai =>
+			text(await ai.models.generateContent({
+				model: "gemini-2.5-flash-lite",
+				contents: dedent`
 				---
 				url: ${url}
 				title: ${title}
@@ -40,10 +41,10 @@ crawl(microwave, {
 				
 				${content}
 			`,
-			config: {
-				seed: 0,
-				temperature: 0,
-				systemInstruction: dedent`You are an academic content manager specializing in research activities.
+				config: {
+					seed: 0,
+					temperature: 0,
+					systemInstruction: dedent`You are an academic content manager specializing in research activities.
 
 Your task is to create an English summary of about 500 chars for a page from a website describing an academic research
 unit.
@@ -60,11 +61,11 @@ Make sure to:
   rather than enumerating items and their details
 - NEVER include the page title in the summary
  `
-			}
-		}))
-	)
+				}
+			}))
+		)
 
-})
+	})
 
 	.then(pages => pages
 
