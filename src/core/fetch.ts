@@ -216,11 +216,25 @@ export async function crawl(home: string, {
 
 }>={}): Promise<ReadonlyArray<Page>> {
 
-	const pages: Page[]=[];
+	function normalize(url: string): string {
+
+		const parsed=new URL(url);
+
+		if ( parsed.pathname === "" ) {
+			parsed.pathname="/";
+		}
+
+		return parsed.href;
+	}
+
+
+	const entry=normalize(home);
 	const origin=new URL(home).origin;
 
-	const visited=new Set<string>([home]);
-	const pending: Array<{ url: string; level: number }>=[{ url: home, level: 0 }];
+	const pages: Page[]=[];
+
+	const visited=new Set<string>([entry]);
+	const pending: Array<{ url: string; level: number }>=[{ url: entry, level: 0 }];
 
 	while ( pending.length > 0 ) {
 		await Promise.all(pending.splice(0, tasks).map(({ url, level }) => {
@@ -262,7 +276,7 @@ export async function crawl(home: string, {
 					pages.push(page);
 
 					if ( depth === 0 || level + 1 <= depth ) {
-						page.links.map(link => link.href)
+						page.links.map(link => normalize(link.href))
 
 							.filter(href => hasSameOrigin(href, origin))
 							.filter(href => !isFile(href))
