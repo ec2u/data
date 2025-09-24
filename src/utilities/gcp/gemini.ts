@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { message } from "@/core/log";
-import { secret } from "@/gcp/secrets";
+import { message } from "@/utilities/core/log";
+import { secret } from "@/utilities/gcp/secrets";
 import { GenerateContentResponse, GoogleGenAI } from "@google/genai";
 
 let sdk: null | Promise<GoogleGenAI>=null;

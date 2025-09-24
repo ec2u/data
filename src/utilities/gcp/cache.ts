@@ -21,10 +21,10 @@
  * distributed caching across multiple instances.
  */
 
-import { hash, isObject } from "@/core";
-import { Cache } from "@/core/cache";
-import { log, message } from "@/core/log";
-import { project } from "@/gcp/index";
+import { hash, isObject } from "@/utilities/core";
+import { Cache } from "@/utilities/core/cache";
+import { log, message } from "@/utilities/core/log";
+import { project } from "@/utilities/gcp/index";
 import { Datastore } from "@google-cloud/datastore";
 
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ai, text } from "@/gcp/gemini";
+import { ai, text } from "@/utilities/gcp/gemini";
 import dedent from "dedent";
 
 

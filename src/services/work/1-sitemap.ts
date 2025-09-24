@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { crawl } from "@/core/fetch";
-import { DatastoreCache } from "@/gcp/cache";
-import { ai, text } from "@/gcp/gemini";
+import { crawl } from "@/utilities/core/fetch";
+import { DatastoreCache } from "@/utilities/gcp/cache";
+import { ai, text } from "@/utilities/gcp/gemini";
 import dedent from "dedent";
 
 

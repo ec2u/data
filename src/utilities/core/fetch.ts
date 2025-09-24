@@ -43,9 +43,9 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
-import { Cache, HeapCache } from "@/core/cache";
-import { hash, immutable } from "@/core/index";
-import { log, message } from "@/core/log";
+import { Cache, HeapCache } from "@/utilities/core/cache";
+import { hash, immutable } from "@/utilities/core/index";
+import { log, message } from "@/utilities/core/log";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
 

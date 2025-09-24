@@ -23,8 +23,8 @@
  * @see {@link https://cloud.google.com/nodejs/docs/reference/secret-manager/latest/secret-manager/v1.secretmanagerserviceclient} SecretManagerServiceClient
  */
 
-import { error } from "@/core";
-import { project } from "@/gcp/index";
+import { error } from "@/utilities/core";
+import { project } from "@/utilities/gcp/index";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 
 const client=new SecretManagerServiceClient();

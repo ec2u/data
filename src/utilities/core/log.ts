@@ -23,7 +23,7 @@
  * context padding for improved readability in console output.
  */
 
-import { immutable } from "@/core/index";
+import { immutable } from "@/utilities/core/index";
 
 
 /**

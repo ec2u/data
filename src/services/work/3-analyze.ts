@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Page } from "@/core/fetch";
-import { log, message } from "@/core/log";
-import { DatastoreCache } from "@/gcp/cache";
-import { ai, json } from "@/gcp/gemini";
+import { Page } from "@/utilities/core/fetch";
+import { log, message } from "@/utilities/core/log";
+import { DatastoreCache } from "@/utilities/gcp/cache";
+import { ai, json } from "@/utilities/gcp/gemini";
 import { Type } from "@google/genai";
 import dedent from "dedent";
 

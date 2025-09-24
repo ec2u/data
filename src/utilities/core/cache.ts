@@ -21,8 +21,8 @@
  * with string-based keys.
  */
 
-import { hash } from "@/core/index";
-import { log, message } from "@/core/log";
+import { hash } from "@/utilities/core/index";
+import { log, message } from "@/utilities/core/log";
 import { existsSync, promises as fs } from "fs";
 import { join } from "path";
 
