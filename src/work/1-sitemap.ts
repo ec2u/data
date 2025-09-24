@@ -45,16 +45,16 @@ crawl(
 				config: {
 					seed: 0,
 					temperature: 0,
-					systemInstruction: dedent`You are an academic content manager specializing in research activities.
+					systemInstruction: dedent`ROLE / You are an academic content manager specializing in research activities.
 
-Your task is to create an English summary of about 500 chars for a page from a website describing an academic research
-unit.
+INPUT / You will be provided with a page from a website describing an academic research
+unit; page content is in markdown format and includes its URL and title in the frontmatter.
 
-Page content is provided in markdown format and includes its URL and title in the frontmatter.
+GOAL / Your task is to create an English summary of about 500 chars for the provided page.
 
-Reply with a plaintext paragraph.
+OUTPUT / Reply with a plaintext paragraph.
 
-Make sure to:
+INSTRUCTIONS / Make sure to:
 
 - Identify the described unit
 - Highlight the page role within the website

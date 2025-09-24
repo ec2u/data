@@ -344,8 +344,8 @@ summary: This news item from the Institute for Electrical Drives and Power Elect
 
 Promise.resolve(
 		// microwave
-		// biology
-		power
+		biology
+		// power
 	)
 
 	.then(async input => ai().then(async ai => text(await ai.models.generateContent({
@@ -369,6 +369,7 @@ GOAL / Your task is to identify pages where the following information about the 
 - research publications from the unit
 - instrumentation and other facilities, including specialised software
 - entry points to sub-laboratories, research lines, or specialized facilities within the unit
+- contact information
 
 You want information about the RESEARCH UNIT, NOT about individual researchers or their personal work: pages describing
 staff profiles and individual research topics and activities ARE STRICTLY FORBIDDEN.
@@ -387,7 +388,6 @@ ABSOLUTE EXCLUSIONS / NEVER SELECT pages that:
 - Focus on student activities, courses, teaching, or educational content
 - Are directories of external links or resources
 - Contain news, events, announcements, or historical information
-- Contain contact information
 
 POSITIVE INDICATORS / PRIORITIZE pages that:
 

@@ -25,6 +25,7 @@ import dedent from "dedent";
 interface Output {
 
 	readonly name: string;
+	readonly email: string;
 	readonly summary: string;
 	readonly description: string;
 
@@ -120,6 +121,7 @@ INPUT / You will be provided with a collated collection of pages from a website 
 GOAL / Your task is to identify the following information about the unit AS A WHOLE:
 
 - name of the research unit
+- INSTITUTIONAL email address of the research unit
 - summary of the research unit (a concise paragraph of about 500 chars)
 - general description of the research unit in markdown format (no more than a page of text, using STRICTLY ONLY H1 (#) headings)
 - a list of research topics and fields of the unit
@@ -151,6 +153,8 @@ DESCRIPTION STRUCTURE:
 
 LINKING REQUIREMENTS:
 
+- Make ABSOLUTELY sure to ignore personal email addresses
+- Make ABSOLUTELY sure to report the institutional email address only if ACTUALLY found in one of the pages
 - Make ABSOLUTELy sure that the linked pages ACTUALLY contain the expected content
 `,
 				responseMimeType: "application/json",
@@ -158,6 +162,7 @@ LINKING REQUIREMENTS:
 					type: Type.OBJECT,
 					properties: {
 						name: { type: Type.STRING, description: "Name of the research unit" },
+						email: { type: Type.STRING, description: "Institutional email address of the research unit" },
 						summary: { type: Type.STRING, description: "Summary of the research unit (~500 chars)" },
 						description: { type: Type.STRING, description: "General description in markdown format" },
 						topics: {
@@ -187,7 +192,7 @@ LINKING REQUIREMENTS:
 							required: ["publications", "facilities", "children"]
 						}
 					},
-					required: ["name", "summary", "description", "topics", "links"]
+					required: ["name", "email", "summary", "description", "topics", "links"]
 				}
 			}
 		})));
