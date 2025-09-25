@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-module.exports = {
-    preset: 'ts-jest',
-    testEnvironment: 'node',
+// https://kulshekhar.github.io/ts-jest/docs/getting-started/presets
+
+import {createDefaultEsmPreset, pathsToModuleNameMapper} from 'ts-jest';
+import tsconfig from './tsconfig.json' with {type: 'json'};
+
+export default {
+    ...createDefaultEsmPreset(),
+    roots: ['<rootDir>'],
+    modulePaths: [tsconfig.compilerOptions.baseUrl],
+    moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
+        prefix: '<rootDir>/src/'
+    })
 };

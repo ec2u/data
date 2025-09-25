@@ -105,8 +105,13 @@ export function select(pages: readonly Page[]) {
 
 		})))
 
-		.then(links => links
-			.split("\n")
-			.filter(link => link !== "")
-		);
+		.then(links => {
+
+			const urls=new Set(pages.map(page => page.url));
+
+			return links
+				.split("\n")
+				.filter(link => link !== "")
+				.filter(link => urls.has(link));
+		});
 }

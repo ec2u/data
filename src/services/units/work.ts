@@ -24,9 +24,9 @@ import { explore } from "./1-explore";
 
 Promise.resolve(
 		// "https://microwave.unipv.it"
-		// "https://giurisprudenza.dip.unipv.it/"
 		// "https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale",
-		"https://dbbs.dip.unipv.it/"
+		// "https://dbbs.dip.unipv.it/"
+		"https://giurisprudenza.dip.unipv.it/"
 		// "https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/"
 	)
 
@@ -34,8 +34,6 @@ Promise.resolve(
 	.then(select)
 
 	.then(urls => {
-
-
 		console.log(urls);
 		return urls;
 	})

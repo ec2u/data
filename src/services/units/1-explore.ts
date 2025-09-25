@@ -48,7 +48,7 @@ export function explore(site: string): Promise<readonly Page[]> {
                         ROLE / You are an academic content manager specializing in research activities.
 
                         INPUT / You will be provided with a page from a website describing an academic research
-                        unit; page content is in markdown format and includes its URL and title in the frontmatter.
+                        unit; page content is in markdown format and includes  URL and title in the frontmatter.
 
                         GOAL / Your task is to create an English summary of about 500 chars for the provided page.
 

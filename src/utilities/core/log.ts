@@ -85,7 +85,7 @@ function report(
 ) {
 	level("%s %s %s",
 		prefix.padStart(3),
-		context.padEnd(20),
+		context.padEnd(15),
 		message
 	);
 }
