@@ -18,7 +18,7 @@ import { select } from "@/services/units/2-select";
 import { analyze } from "@/services/units/3-analyze";
 import { Page } from "@/utilities/core/fetch";
 import { log, message } from "@/utilities/core/log";
-import { Artifact, pipe } from "@/utilities/core/pipe";
+import { Memo, pipe } from "@/utilities/core/pipe";
 import { DatastoreCache } from "@/utilities/gcp/cache";
 import { explore } from "./1-explore";
 
@@ -33,17 +33,17 @@ pipe(
 	, {
 
 		label: "units",
-		cache: DatastoreCache<Artifact>({ kind: "Artifact" })
+		cache: DatastoreCache<Memo>({ kind: "Memo" })
 
 	}
 )
 
-	.then(explore)
-	.then(select)
+	.task(explore)
+	.task(select)
 
 	.then(async urls => {
 
-		const cache=DatastoreCache<Page>({ kind: "Page" });
+		const cache=DatastoreCache<Page>({ kind: "Page" }); // !!!
 
 		return await Promise.all(
 			urls.map(url => cache.lookup(url).catch(error => {
@@ -57,7 +57,7 @@ pipe(
 
 	})
 
-	.then(v => analyze(v))
+	.task(analyze)
 
-	.then(v => console.log(v))
-	.catch(v => console.error(v));
+	.then(console.log)
+	.catch(console.error);

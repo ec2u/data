@@ -15,42 +15,37 @@
  */
 
 import { HeapCache } from "./cache";
-import { Artifact, pipe } from "./pipe";
+import { as, Memo, pipe } from "./pipe";
 
 const label="test";
-const cache=HeapCache<Artifact>();
-
-pipe("ciao!", { label: label, cache })
-	.then(function x(d) {
-		console.log("x(%s)", d);
-		return d;
-	})
-	.then(function y(d) {
-		console.log("y(%s)", d);
-		return d;
-	})
-	.then(function z(d) {
-		console.log("z(%s)", d);
-		return d;
-	})
-	.then(d => console.log(d))
-
-	.then(() => {
+const cache=HeapCache<Memo>();
 
 
-		pipe("ciao!", { label, cache })
-			.then(function x(d) {
-				console.log("x(%s)", d);
-				return d;
-			})
-			.then(function y(d) {
-				console.log("y(%s)", d);
-				return d;
-			})
-			.then(function z(d) {
-				console.log("z(%s)", d);
-				return d;
-			})
-			.then(d => console.log(d));
+function x(d: string): string {
+	console.log("x(%s)", d);
+	return d;
+}
 
-	});
+function y(d: string): string {
+	console.log("y(%s)", d);
+	return d;
+}
+
+function z(d: string): string {
+	console.log("z(%s)", d);
+	return d;
+}
+
+
+pipe("ciao!", { label, cache })
+	.task(as("w", x))
+	.task(y)
+	.task(z)
+	.then(console.log)
+
+	.then(() => pipe("ciao!", { label, cache })
+		.task(x)
+		.task(y)
+		.task(z)
+		.then(console.log)
+	);
