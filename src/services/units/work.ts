@@ -18,25 +18,28 @@ import { select } from "@/services/units/2-select";
 import { analyze } from "@/services/units/3-analyze";
 import { Page } from "@/utilities/core/fetch";
 import { log, message } from "@/utilities/core/log";
+import { Artifact, pipe } from "@/utilities/core/pipe";
 import { DatastoreCache } from "@/utilities/gcp/cache";
 import { explore } from "./1-explore";
 
 
-Promise.resolve(
-		// "https://microwave.unipv.it"
-		// "https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale",
-		// "https://dbbs.dip.unipv.it/"
-		"https://giurisprudenza.dip.unipv.it/"
-		// "https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/"
-	)
+pipe(
+	// "https://microwave.unipv.it"
+	// "https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale",
+	"https://dbbs.dip.unipv.it/"
+	// "https://giurisprudenza.dip.unipv.it/"
+	// "https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/"
+
+	, {
+
+		label: "units",
+		cache: DatastoreCache<Artifact>({ kind: "Artifact" })
+
+	}
+)
 
 	.then(explore)
 	.then(select)
-
-	.then(urls => {
-		console.log(urls);
-		return urls;
-	})
 
 	.then(async urls => {
 
@@ -54,7 +57,7 @@ Promise.resolve(
 
 	})
 
-	.then(analyze)
+	.then(v => analyze(v))
 
-	.then(console.log)
-	.catch(console.error);
+	.then(v => console.log(v))
+	.catch(v => console.error(v));

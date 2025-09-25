@@ -21,7 +21,7 @@
  * distributed caching across multiple instances.
  */
 
-import { hash, isObject } from "@/utilities/core";
+import { hash } from "@/utilities/core";
 import { Cache } from "@/utilities/core/cache";
 import { log, message } from "@/utilities/core/log";
 import { project } from "@/utilities/gcp/index";
@@ -84,18 +84,12 @@ export function DatastoreCache<T>({
 						if ( entity ) {
 
 							if ( entity.value !== undefined ) {
-								resolve(entity.value);
+								resolve(JSON.parse(entity.value));
 							}
 
 						} else if ( generator ) {
 
 							const value=await generator(key);
-
-							function excluded(entry: unknown, path: string): string[] {
-								return !isObject(entry) ? [path] : Object.keys(entry).flatMap(field =>
-									[path, ...excluded(entry[field], path ? `${path}.${field}` : field)]
-								);
-							}
 
 							log.info(DatastoreCache.name, `caching <${kind} @ ${key}>`);
 
@@ -103,9 +97,9 @@ export function DatastoreCache<T>({
 								key: entityKey,
 								data: {
 									key,
-									value
+									value: JSON.stringify(value)
 								},
-								excludeFromIndexes: excluded(value, "value")
+								excludeFromIndexes: ["value"]
 							});
 
 							resolve(value);
@@ -192,4 +186,35 @@ export function DatastoreCache<T>({
 
 	};
 
+}
+
+/**
+ * Deletes all entities of a specific kind from Datastore.
+ *
+ * @param kind The Datastore kind to delete all entities from
+ */
+export async function deleteAllEntities(kind: string): Promise<void> {
+	try {
+		log.info("deleteAllEntities", `deleting all entities of kind <${kind}>`);
+
+		const [entities]=await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
+
+		if ( entities.length === 0 ) {
+			log.info("deleteAllEntities", `no entities found for kind <${kind}>`);
+			return;
+		}
+
+		const keys=entities.map(entity => entity[datastore.KEY]);
+		const batchSize=500; // Datastore limit
+
+		for (let i=0; i < keys.length; i+=batchSize) {
+			await datastore.delete(keys.slice(i, i + batchSize));
+		}
+
+		log.info("deleteAllEntities", `deleted ${entities.length} entities of kind <${kind}>`);
+
+	} catch ( e ) {
+		log.error("deleteAllEntities", `unable to delete entities of kind <${kind}>: ${message(e)}`);
+		throw e;
+	}
 }
