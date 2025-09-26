@@ -24,16 +24,8 @@
 import { hash } from "@/utilities/core";
 import { Cache } from "@/utilities/core/cache";
 import { log, message } from "@/utilities/core/log";
-import { project } from "@/utilities/gcp/index";
-import { Datastore } from "@google-cloud/datastore";
+import { datastore } from "@/utilities/gcp/datatsore";
 
-
-const datastore=new Datastore({
-	projectId: project
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Creates a Google Cloud Datastore-backed cache implementation.
@@ -76,7 +68,7 @@ export function DatastoreCache<T>({
 
 					try {
 
-						log.info(DatastoreCache.name, `looking up <${kind} @ ${key}>`);
+						log.info(DatastoreCache.name, `looking up <${kind}>/<${key}>`);
 
 						const entityKey=datastore.key([kind, hash(key)]);
 						const [entity]=await datastore.get(entityKey);
@@ -91,7 +83,7 @@ export function DatastoreCache<T>({
 
 							const value=await generator(key);
 
-							log.info(DatastoreCache.name, `caching <${kind} @ ${key}>`);
+							log.info(DatastoreCache.name, `caching <${kind}>/<${key}>`);
 
 							await datastore.save({
 								key: entityKey,
@@ -106,13 +98,13 @@ export function DatastoreCache<T>({
 
 						} else {
 
-							reject(new Error(`undefined cache value for <${kind} @ ${key}>`));
+							reject(new Error(`undefined cache value for <${kind}>/<${key}>`));
 
 						}
 
 					} catch ( e ) {
 
-						log.error(DatastoreCache.name, `unable to look up <${kind} @ ${key}>: ${(message(e))}`);
+						log.error(DatastoreCache.name, `unable to look up <${kind}>/<${key}>: ${(message(e))}`);
 
 						reject(e);
 
@@ -160,7 +152,7 @@ export function DatastoreCache<T>({
 
 			} else {
 
-				log.info(DatastoreCache.name, `deleting <${kind} @ ${key}>`);
+				log.info(DatastoreCache.name, `deleting <${kind}>/<${key}>`);
 
 				const docId=hash(key);
 				const entityKey=datastore.key([kind, docId]);
@@ -171,7 +163,7 @@ export function DatastoreCache<T>({
 
 				} catch ( e ) {
 
-					log.error(DatastoreCache.name, `unable to delete <${kind} @ ${key}>: ${message(e)}`);
+					log.error(DatastoreCache.name, `unable to delete <${kind}>/<${key}>: ${message(e)}`);
 
 					throw e;
 

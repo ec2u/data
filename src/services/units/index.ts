@@ -15,7 +15,44 @@
  */
 
 
-export const defaults={
-	seed: 0,
-	temperature: 0
-};
+import { explore } from "@/services/units/1-explore";
+import { analyze } from "@/services/units/2-analyze";
+import { structure } from "@/services/units/3-structure";
+import { dump } from "@/utilities/core/log";
+import { pipe } from "@/utilities/core/pipe";
+import { DatastoreCache } from "@/utilities/gcp/cache";
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+pipe(
+	"https://iii.dip.unipv.it/"
+	// "https://dbbs.dip.unipv.it/"
+	// "https://dbbs.dip.unipv.it/it/ricerca/linee-e-gruppi-di-ricerca/linee-e-temi-di-ricerca/unita-di-psicologia-dello-sviluppo-e"
+	// "http://lag.unipv.it/en/" "http://psicologia.unipv.it/laboratori/lasc/163-lasc.html"
+
+	// "https://giurisprudenza.dip.unipv.it/"
+	// "https://dirittoesanita.unipv.it/"
+
+	// "https://microwave.unipv.it"
+	// "https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale"
+	// "https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale/laboratorio-di-biotecnologie-vegetali"
+
+	// "https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/"
+
+	, {
+
+		label: "units-url",
+		cache: DatastoreCache({ kind: "Memo" })
+
+	}
+)
+
+	.then(explore)
+	.then(analyze)
+	.then(dump("index.md"))
+
+	.then(structure)
+	.then(dump("index.json"))
+
+	.catch(console.error);

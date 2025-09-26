@@ -238,8 +238,6 @@ export async function crawl(home: string, {
 	while ( pending.length > 0 ) {
 		await Promise.all(pending.splice(0, tasks).map(({ url, level }) => {
 
-			log.info(crawl.name, `visiting <${url}>`);
-
 			return cache.lookup(url, async function (url: string) {
 
 					log.info(crawl.name, `fetching <${url}>`);
@@ -265,7 +263,7 @@ export async function crawl(home: string, {
 						links: pageLinks,
 						digest: hash(text),
 						fetched: Date.now(),
-						summary
+						summary: summary.replaceAll(/\s+/g, " ")
 					};
 
 				})
@@ -338,6 +336,7 @@ export async function crawl(home: string, {
 				.catch((e) => {
 					log.warn(crawl.name, `failed to process <${url}>: ${message(e)}`);
 				});
+
 		}));
 	}
 
