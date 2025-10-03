@@ -60,6 +60,41 @@ export interface Cache<T> {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Creates a pass-through cache implementation that never stores values.
+ *
+ * All lookup calls invoke the generator function without caching results.
+ * This implementation is useful for testing or when caching should be disabled
+ * while maintaining the same interface.
+ *
+ * @template T The type of values to cache
+ *
+ * @returns A cache instance that always passes through to the generator
+ */
+export function DummyCache<T>(): Cache<T> {
+
+	return {
+
+		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
+
+			if ( generator ) {
+
+				return await generator(key);
+
+			} else {
+
+				throw new Error(`undefined cache value for <${key}>`);
+
+			}
+		},
+
+		async delete(_key?: string): Promise<void> {
+			// no-op: nothing to delete
+		}
+
+	};
+}
+
+/**
  * Creates an in-memory cache implementation.
  *
  * Values are stored in memory and will be lost when the process terminates.
@@ -109,7 +144,6 @@ export function HeapCache<T>(): Cache<T> {
 
 	};
 }
-
 
 /**
  * Creates a persistent disk-based cache implementation.

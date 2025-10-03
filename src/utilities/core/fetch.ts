@@ -43,7 +43,7 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
-import { Cache, HeapCache } from "@/utilities/core/cache";
+import { Cache, DummyCache } from "@/utilities/core/cache";
 import { hash, immutable } from "@/utilities/core/index";
 import { log, message } from "@/utilities/core/log";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
@@ -93,6 +93,27 @@ export interface Link {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Normalizes a URL by ensuring it has a pathname.
+ *
+ * Converts URLs with empty pathnames to include a root path ("/"), ensuring consistent URL format for comparison
+ * and caching operations.
+ *
+ * @param url - The URL to normalize
+ *
+ * @returns The normalized URL with guaranteed pathname
+ */
+export function normalize(url: string): string {
+
+	const parsed=new URL(url);
+
+	if ( parsed.pathname === "" ) {
+		parsed.pathname="/";
+	}
+
+	return parsed.href;
+}
 
 /**
  * Fetches content from the specified URL with error handling.
@@ -185,6 +206,8 @@ export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
 		}));
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Crawls a website starting from the home URL with configurable depth and concurrency.
  *
@@ -195,7 +218,7 @@ export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
  * @param options - Configuration options for the crawl
  * @param options.depth - Maximum crawl depth (0 for unlimited, default: 0)
  * @param options.tasks - Number of concurrent fetch operations (default: 4)
- * @param options.cache - Cache implementation for storing processed pages (default: HeapCache)
+ * @param options.cache - Cache implementation for storing processed pages (default: DummyCache)
  *
  * @returns Promise resolving to immutable array of crawled pages with extracted content
  */
@@ -203,7 +226,7 @@ export async function crawl(home: string, {
 
 	depth=0,
 	tasks=4,
-	cache=HeapCache<Page>(),
+	cache=DummyCache<Page>(),
 
 	summarist
 
@@ -217,18 +240,6 @@ export async function crawl(home: string, {
 
 }>={}): Promise<ReadonlyArray<Page>> {
 
-	function normalize(url: string): string {
-
-		const parsed=new URL(url);
-
-		if ( parsed.pathname === "" ) {
-			parsed.pathname="/";
-		}
-
-		return parsed.href;
-	}
-
-
 	const pages: Page[]=[];
 
 	const entry=normalize(home);
@@ -238,35 +249,7 @@ export async function crawl(home: string, {
 	while ( pending.length > 0 ) {
 		await Promise.all(pending.splice(0, tasks).map(({ url, level }) => {
 
-			return cache.lookup(url, async function (url: string) {
-
-					log.info(crawl.name, `fetching <${url}>`);
-
-					const response=await get(url);
-					const dom=await html(response);
-					const pageContent=await content(dom);
-					const pageLinks=await links(dom);
-
-					const text=pageContent.contentMarkdown || "";
-					const title=pageContent.title || url;
-
-					log.info(crawl.name, `summarizing <${url}>`);
-
-					const summary=await summarist?.({ url, title, content: text })
-						|| pageContent.description
-						|| text.substring(0, 500 - 1) + "…";
-
-					return {
-						url,
-						title: title,
-						content: text,
-						links: pageLinks,
-						digest: hash(text),
-						fetched: Date.now(),
-						summary: summary.replaceAll(/\s+/g, " ")
-					};
-
-				})
+			return visit(url, { cache, summarist })
 
 				.then((page) => {
 
@@ -341,4 +324,64 @@ export async function crawl(home: string, {
 	}
 
 	return immutable(pages);
+}
+
+/**
+ * Fetches and processes a single web page, extracting content and metadata.
+ *
+ * Retrieves the page from the specified URL, extracts clean markdown content, links, and metadata. Uses caching to
+ * avoid redundant fetches of the same URL. Optionally generates a summary using a provided summarist function,
+ * falling back to the page's meta description or content excerpt.
+ *
+ * @param url - The URL of the page to visit
+ * @param options - Configuration options for page processing
+ * @param options.cache - Cache implementation for storing processed pages (default: DummyCache)
+ * @param options.summarist - Optional function to generate custom summaries from page content
+ *
+ * @returns Promise resolving to processed page with extracted content and metadata
+ */
+export async function visit(url: string, {
+
+	cache=DummyCache<Page>(),
+
+	summarist
+
+}: Partial<{
+
+	cache: Cache<Page>
+
+	summarist: (page: Pick<Page, "url" | "title" | "content">) => Promise<string>
+
+}>={}): Promise<Page> {
+
+	return cache.lookup(normalize(url), async function (url: string) {
+
+		log.info(visit.name, `fetching <${url}>`);
+
+		const response=await get(url);
+		const dom=await html(response);
+		const pageContent=await content(dom);
+		const pageLinks=await links(dom);
+
+		const text=pageContent.contentMarkdown || "";
+		const title=pageContent.title || url;
+
+		log.info(crawl.name, `summarizing <${url}>`);
+
+		const summary=await summarist?.({ url, title, content: text })
+			|| pageContent.description
+			|| text.substring(0, 500 - 1) + "…";
+
+		return {
+			url,
+			title: title,
+			content: text,
+			links: pageLinks,
+			digest: hash(text),
+			fetched: Date.now(),
+			summary: summary.replaceAll(/\s+/g, " ")
+		};
+
+	});
+
 }
