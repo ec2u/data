@@ -91,6 +91,15 @@ export interface Link {
 
 }
 
+/**
+ * Function that generates a summary from page content.
+ */
+export interface Summarist {
+
+	(page: Pick<Page, "url" | "title" | "content">): Promise<string>;
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -226,17 +235,13 @@ export async function crawl(home: string, {
 
 	depth=0,
 	tasks=4,
-	cache=DummyCache<Page>(),
-
-	summarist
+	cache=DummyCache<Page>()
 
 }: Partial<{
 
 	depth: number
 	tasks: number
 	cache: Cache<Page>
-
-	summarist: (page: Pick<Page, "url" | "title" | "content">) => Promise<string>
 
 }>={}): Promise<ReadonlyArray<Page>> {
 
@@ -249,7 +254,7 @@ export async function crawl(home: string, {
 	while ( pending.length > 0 ) {
 		await Promise.all(pending.splice(0, tasks).map(({ url, level }) => {
 
-			return visit(url, { cache, summarist })
+			return visit(url, { cache })
 
 				.then((page) => {
 
@@ -350,7 +355,7 @@ export async function visit(url: string, {
 
 	cache: Cache<Page>
 
-	summarist: (page: Pick<Page, "url" | "title" | "content">) => Promise<string>
+	summarist: Summarist
 
 }>={}): Promise<Page> {
 

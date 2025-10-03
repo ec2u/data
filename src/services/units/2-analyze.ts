@@ -58,7 +58,7 @@ export function analyze(pages: readonly Page[]): Promise<string> {
 					- a list of URLs for pages describing INDIVIDUAL child research units
 					
 					OUTPUT / Reply with a detailed textual analysis in markdown format, reporting the requested
-					information in the given order and under clear and CONCISE H! headings.
+					information in the given order and under clear and CONCISE H1 headings.
 					
 					CRITICAL PRIVACY REQUIREMENTS
 					
@@ -70,7 +70,7 @@ export function analyze(pages: readonly Page[]): Promise<string> {
 					- ALWAYS retrieve relevant content from URLs where it is likely to be found, prioritizing
 					them against the goals of the analysis, taking into also their title and summary
 					- Make ABSOLUTELY sure to access pages likely containing directories of child units
-					- Make ABSOLUTELY sure to prioritize access to local language pages over thei English translation
+					- Make ABSOLUTELY sure to prioritize access to local language pages over their English translation
 
 					NAME GUIDELINES
 					
