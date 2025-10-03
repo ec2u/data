@@ -20,18 +20,24 @@ import { FunctionDeclaration, Type } from "@google/genai";
 import dedent from "dedent";
 
 
-interface Tool<V=any, R=any> extends FunctionDeclaration {
+interface Tool<V, R> {
 
 	(args: V): R;
+
+	declaration: FunctionDeclaration;
+
+}
+
+interface ToolError {
+
+	error: string
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function fetchPage(opts: Parameters<typeof visit>[1]={}): Tool<{ url: string }, Promise<Page | {
-	error: string
-}>> {
+export function fetchPage(opts: Parameters<typeof visit>[1]={}): Tool<{ url: string }, Promise<Page | ToolError>> {
 
 	const visited=new Set<string>();
 
@@ -52,18 +58,20 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): Tool<{ url: str
 
 		},
 		{
-			name: "fetchPage",
-			description: dedent`Fetches and extracts the main content from a web page. 
-					Returns the page title, a summary, the full text content in markdown format, and a list of outbound links with their URLs and anchor text. Use this function to explore pages that are likely to contain information about the research unit's identity, activities, topics, or child units.`,
-			parameters: {
-				type: Type.OBJECT,
-				properties: {
-					url: {
-						type: Type.STRING,
-						description: dedent`The absolute URL of the web page to fetch and extract content from (must start with http:// or https://)`
-					}
-				},
-				required: ["url"]
+			declaration: {
+				name: "fetchPage",
+				description: dedent`Fetches and extracts the main content from a web page.
+						Returns the page title, a summary, the full text content in markdown format, and a list of outbound links with their URLs and anchor text. Use this function to explore pages that are likely to contain information about the research unit's identity, activities, topics, or child units.`,
+				parameters: {
+					type: Type.OBJECT,
+					properties: {
+						url: {
+							type: Type.STRING,
+							description: dedent`The absolute URL of the web page to fetch and extract content from (must start with http:// or https://)`
+						}
+					},
+					required: ["url"]
+				}
 			}
 		}
 	);

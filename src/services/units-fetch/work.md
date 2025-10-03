@@ -1,96 +1,115 @@
 # Official Unit Name
-Dipartimento di Ingegneria Industriale e dell’Informazione
+
+Department of Biology and Biotechnology "Lazzaro Spallanzani"
 
 # Common or Short Name
 
 Not defined
 
 # Acronym
-DIII
+
+DBB
 
 # Identifier
 
 Not defined
 
 # Institutional Email Address
-info.iii@unipv.it
+
+amministrazione_dbb@unipv.it
+
+# Typology
+
+Department
 
 # Summary
 
-The Department of Industrial and Information Engineering (DIII) at the University of Pavia is a large academic unit
-dedicated to education, innovation, and technology transfer in the field of Engineering. It comprises 70 faculty members
-and 200 researchers, including PhD students and research fellows. The department hosts over 30 research laboratories and
-is involved in numerous national and international competitive research projects, fostering significant technology
-transfer collaborations with various companies.
+The Department of Biology and Biotechnology "Lazzaro Spallanzani" (DBB) is a dynamic research unit at the University of
+Pavia. It focuses on a broad spectrum of biological and biotechnological research, encompassing areas from molecular and
+cellular biology to genomics, neurobiology, and environmental applications. The department is committed to advancing
+scientific knowledge and fostering interdisciplinary collaborations.
 
 # General Description
 
-The Dipartimento di Ingegneria Industriale e dell’Informazione (DIII) is one of the largest departments within the
-University of Pavia, playing a central role in scientific-technological and socio-economic progress. Its core mission is
-to drive education, innovation, and technological transfer in Engineering, addressing contemporary challenges and
-opportunities.
+The Department of Biology and Biotechnology "Lazzaro Spallanzani" (DBB) is a prominent research and educational
+institution dedicated to exploring fundamental biological processes and developing innovative biotechnological
+applications. Located at the University of Pavia, the department engages in cutting-edge research across various
+disciplines, contributing significantly to national and international scientific progress.
 
-The department boasts a substantial research infrastructure, including more than 30 specialized laboratories. These
-laboratories cover a broad spectrum of topics, such as informatics, microelectronics, photonics, energy and power
-systems, automation, robotics, bioengineering, and bioinformatics. DIII actively participates in competitive research
-projects at both national and international levels, establishing itself as a vital hub for technology transfer through
-collaborations with local, national, and multinational companies.
-
-Beyond research, DIII is also a significant educational institution within the Faculty of Engineering, offering eight
-degree programs. These include three bachelor's degrees in Bioengineering, Electronic and Information Engineering, and
-Industrial Engineering, alongside five master's degrees, three of which are taught in English: Bioengineering, Computer
-Engineering, Electronics Engineering, Industrial Automation, and Electrical Engineering. Furthermore, the department is
-home to three doctoral programs: Bioengineering, Bioinformatics and Health Technologies; Electronic, Computer and
-Electrical Engineering; and Microelectronics.
-
-The department also serves as the administrative base for two interdepartmental centers: the Centre for Health
-Technologies (CHT) and the Centro Interdipartimentale di Ricerca per la Storia della Tecnica Elettrica (CIRSTE), further
-highlighting its interdisciplinary engagement and broad impact.
-
-# Typology
-Department
+The DBB's research activities span a wide array of topics, including the molecular basis of human diseases, advanced
+bioinformatics, and the study of biological systems at cellular and organismal levels. The department is equipped with
+numerous specialized laboratories that facilitate in-depth investigations into genetics, microbiology, pharmacology, and
+environmental biology. Its commitment to excellence is underscored by its recognition as a "Department of Excellence" in
+the biological area for the quinquennium 2018-2022.
 
 # Major Research Fields and Topics
 
-1. 5G and Telecommunications
-2. Automotive
-3. Artificial Intelligence and Data Science
-4. Energy and Power Systems
-5. High Performance Computing
-6. Imaging and Multimedia
-7. IoT, Embedded System and Remote Sensing
-8. Life Science and Bioengineering
-9. Mechatronics
-10. Microelectronics and Photonics
-11. Numerical Modeling for Engineering Science
-12. Robotics and Industrial Automation
-13. Bioinformatics
+* Bioinformatics and Big Data
+* Cellular Biology
+* Molecular Biology
+* Genetics
+* Neurobiology
+* Microbiology
+* Pharmacology and Toxicology
+* Physiology and Nutrition
+* Plant Biology
+* Structural Biology
+* Ancient DNA
+* Molecular Basis of Human Pathologies
+* Cellular Biology and Biochemistry of the Vascular System
+* Biology and Biotechnologies of Reproduction
+* Genomics and Biotechnologies of Insects of Agrarian and Sanitary Importance
+* Population Genomics
+* Human Genetics - Tumor Genetics
+* Microbial Genetics and Biotechnologies
+* Molecular Mechanisms of Innate Immunity and Nucleic Acid Recognition
+* Parasitology, Symbiosis and Bioinformatics
+* Neuropharmacology
+* Cellular Biology of Development
 
-# URLs for pages describing INDIVIDUAL child research units
+# Child Research Units
 
-* http://lab-bioinfo.unipv.it/
-* http://bioing.unipv.it/
-* http://cad.unipv.it/
-* http://aiclab.unipv.it/
-* http://vision.unipv.it/
-* http://www.unipv.it/dmae/lab_costruzioniEle.html
-* http://tlcrs.unipv.it/
-* http://dcalab.unipv.it/
-* http://www-9.unipv.it/electric/elpot/elpot.html
-* https://labeo.unipv.it/wordpress/
-* https://labenunipv.wordpress.com/
-* http://photonics.unipv.it/
-* http://sisdin.unipv.it/lab/
-* http://www.labmedinfo.org/
-* https://sites.google.com/site/dbajoni/research
-* http://mclab.unipv.it/
-* https://sites.google.com/view/microelectronics-lab
-* http://microwave.unipv.it/
-* http://ims2.unipv.it/
-* https://dangelo.unipv.it/
-* http://peg.unipv.it/
-* http://robot.unipv.it/
-* http://eil.unipv.it/
-* http://tlclab.unipv.it/
-* http://cht.unipv.it/it/front-page/
-* http://cirste.unipv.it/
+* [Comparative Anatomy and Cytology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-cellulare/laboratorio-di-anatomia-comparata-e)
+* [Platelet Biochemistry Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-cellulare-e-biochimica-del-sistema-vascolare-1)
+* [Biophysics of Ion Channels and Neurophysiology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurobiologia/laboratorio-di-biofisica-dei-canali-ionici)
+* [Cellular Biology and Neurobiology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-cellulare/laboratorio-di-biologia-cellulare-e)
+* [Developmental Biology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-cellulare-dello-sviluppo/biologia-dello-sviluppo)
+* [Molecular Biology, Cytogenetics, Epigenomics Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-molecolare-citogenetica-epigenomica/molecular)
+* [Structural Biology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-strutturale/laboratorio-di-biologia-strutturale)
+* [BioPhotoLab](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale/biophotolab)
+* [Plant Biotechnologies Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale/laboratorio-di-biotecnologie-vegetali)
+* [Ancient DNA Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/dna-antico/laboratorio-di-dna-antico)
+* [Microbial Enzymology and Pharmacological Targets Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/microbiologia-molecolare/laboratorio-di-enzimologia)
+* [Pharmacobiochemistry and Toxicology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/farmacologia-e-tossicologia/laboratorio-di)
+* [Pharmacogenetics and Experimental Toxicology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/farmacologia-e-tossicologia/laboratorio-di-0)
+* [Cellular and Molecular Physiology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/fisiologia-e-nutrizione/laboratorio-di-fisiologia)
+* [FMagnani Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-strutturale/laboratorio-fmagnani)
+* [Microorganism Genetics Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genetica-e-biotecnologie-microbiche/laboratorio-di)
+* [Opportunistic Pathogen Genetics Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/microbiologia-molecolare/laboratorio-di-genetica-dei)
+* [Human Genetics - Tumor Genetics Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genetica-umana-genetica-dei-tumori/laboratorio-di)
+* [Computational Genomics Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/bioinformatics-and-big-data/genomica-computazionale)
+* [Animal Population Genomics Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-delle-popolazioni-umane-ed-animali/laboratorio-0)
+* [Human Population Genomics Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-delle-popolazioni-umane-ed-animali/laboratorio)
+* [Red Blood Cell Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-cellulare-e-biochimica-del-sistema-vascolare-e-1)
+* [Insect Evolutionary Biology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-e-biotecnologie-degli-insetti-di-importanza-1)
+* [Molecular Mechanisms of Innate Immunity and Nucleic Acid Recognition Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-molecolare/laboratorio-di-meccanismi-molecolari)
+* [Mycobacteriology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/microbiologia-molecolare/laboratorio-di-micobatteriologia)
+* [Molecular Microbiology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/microbiologia-molecolare/laboratorio-di-microbiologia)
+* [Neurobiology and Integrated Physiology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurobiologia/laboratorio-di-neurobiologia-e-fisiologia)
+* [Cellular and Molecular Neuropharmacology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurofarmacologia/laboratorio-di-neurofarmacologia)
+* [Translational Neurosciences and Neuropsychopharmacology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurofarmacologia/laboratorio-di-neuroscienze)
+* [Functional Oncogenomics Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/basi-molecolari-delle-patologie-umane/laboratorio-di)
+* [Molecular Parasitology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/parassitologia-simbiosi-e-bioinformatica/laboratorio-di)
+* [Seed Molecular Physiology Lab](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale/seed-molecular-physiology-lab)
+* [The Armenise-Harvard Laboratory of Structural Biology](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-strutturale/armenise-harvard-laboratory)
+* [Vector Biology Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-e-biotecnologie-degli-insetti-di-importanza-2)
+* [ZooE-Zoology and Evolution Laboratory](https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-e-biotecnologie-degli-insetti-di-importanza-0)
+
+# Related Research Units
+
+* [European Centre for Law, Science and New Technologies (ECLT)](https://dbb.dip.unipv.it/it/network/eclt)
+* [Centre for Health Technologies (CHT)](https://web.unipv.it/centri-di-ricerca/)
+* [Istituto di Genetica Molecolare del CNR di Pavia (IGM)](http://www.igm.cnr.it/)
+* [European Pediatric Translational Research Infrastructure (EPTRI)](https://eptri.eu/)
+* [EuroScitizen](http://www.euroscitizen.eu/)
+* [DARTER - Delivery of AntisenseRNA Therapeutics](https://antisenserna.eu/)
