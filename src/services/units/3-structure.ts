@@ -15,7 +15,7 @@
  */
 
 import { defaults, Unit } from "@/services/units/shared";
-import { md } from "@/utilities/core/tag";
+import { md } from "@/utilities/core/tags";
 import { ai, json } from "@/utilities/gcp/gemini";
 import { Type } from "@google/genai";
 

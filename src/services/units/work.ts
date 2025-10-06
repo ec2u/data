@@ -20,7 +20,7 @@ import { defaults } from "@/services/units/shared";
 import { Page } from "@/utilities/core/fetch";
 import { dump } from "@/utilities/core/log";
 import { pipe } from "@/utilities/core/pipe";
-import { md } from "@/utilities/core/tag";
+import { md } from "@/utilities/core/tags";
 import { DatastoreCache } from "@/utilities/gcp/cache";
 import { ai, text } from "@/utilities/gcp/gemini";
 import { estimateResponseCost, formatCostBreakdown } from "@/utilities/gcp/gemini-cost";

@@ -20,9 +20,12 @@ import { FunctionDeclaration, Type } from "@google/genai";
 import dedent from "dedent";
 
 
+// see https://ai.google.dev/gemini-api/docs/function-calling
+
+
 interface Tool<V, R> {
 
-	(args: V): R;
+	(args: V): Promise<R | ToolError>;
 
 	declaration: FunctionDeclaration;
 
@@ -37,7 +40,7 @@ interface ToolError {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function fetchPage(opts: Parameters<typeof visit>[1]={}): Tool<{ url: string }, Promise<Page | ToolError>> {
+export function fetchPage(opts: Parameters<typeof visit>[1]={}): Tool<{ url: string }, Page> {
 
 	const visited=new Set<string>();
 
@@ -60,14 +63,22 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): Tool<{ url: str
 		{
 			declaration: {
 				name: "fetchPage",
-				description: dedent`Fetches and extracts the main content from a web page.
-						Returns the page title, a summary, the full text content in markdown format, and a list of outbound links with their URLs and anchor text. Use this function to explore pages that are likely to contain information about the research unit's identity, activities, topics, or child units.`,
+				description: dedent`
+					Fetches and extracts the main content from a web page.
+					Returns the page title, a summary, the full text content in markdown format, and a list of
+					outbound links with their URLs and anchor text. Use this function to explore pages that are
+					likely to contain information about the research unit's identity, activities, topics,
+					or child units.
+				`,
 				parameters: {
 					type: Type.OBJECT,
 					properties: {
 						url: {
 							type: Type.STRING,
-							description: dedent`The absolute URL of the web page to fetch and extract content from (must start with http:// or https://)`
+							description: dedent`
+								The absolute URL of the web page to fetch and extract content from
+								(must start with http:// or https://)
+							`
 						}
 					},
 					required: ["url"]
