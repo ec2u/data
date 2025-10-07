@@ -14,16 +14,27 @@
  * limitations under the License.
  */
 
-import { crawl, Page } from "@/utilities/core/fetch";
+import { defaults } from "@/services/units/shared";
+import { file } from "@/utilities/core/files";
 import { DatastoreCache } from "@/utilities/gcp/cache";
+import { ai, text } from "@/utilities/gcp/gemini";
+import { fetchPage } from "@/utilities/gcp/gemini-tools";
 
+export async function explore(site: string): Promise<string> {
 
-export function explore(site: string): Promise<readonly Page[]> {
-	return crawl(site, {
+	return ai().then(async ai => text(await ai.models.generateContent({
+		model: "gemini-2.5-flash",
+		contents: site,
+		config: {
+			...defaults,
+			systemInstruction: await file("./1-analyze.md", import.meta.url),
+			tools: [
+				fetchPage({ cache: DatastoreCache({ kind: "Page" }) })
+			],
+			automaticFunctionCalling: {
+				maximumRemoteCalls: 20
+			}
+		}
+	})));
 
-		depth: 2,
-		tasks: 10,
-		cache: DatastoreCache({ kind: "Page" })
-
-	});
 }

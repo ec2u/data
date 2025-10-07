@@ -21,23 +21,21 @@ import { Type } from "@google/genai";
 
 
 export function structure(overview: string): Promise<Unit> {
-	return ai().then(async ai => json<Unit>(await ai.models.generateContent({
-
+	return ai().then(async ai => json(await ai.models.generateContent({
 		model: "gemini-2.5-flash-lite",
-
+		contents: overview,
 		config: {
 			...defaults,
 			systemInstruction: md`
+			
 				ROLE / You are an academic content manager specializing in research activities.
 				
 				INPUT / You will be provided with a document describing an academic research unit.
 				
-				GOAL / Your task is to convert it into a structured machine-redable representation.
+				GOAL / Your task is to convert it into a structured machine-readable representation.
 				
 				OUTPUT / Reply with a structured JSON object.
-				
-				INSTRUCTIONS
-				
+								
 				- ALWAYS omit undefined scalar values
 				- ALWAYS omit empty object values
 				- ALWAYS omit empty array values
@@ -52,31 +50,17 @@ export function structure(overview: string): Promise<Unit> {
 					acronym: { type: Type.STRING, description: "Acronym of the research unit" },
 					identifier: { type: Type.STRING, description: "Unique identifier of the research unit" },
 					email: { type: Type.STRING, description: "Institutional email address of the research unit" },
+					type: { type: Type.STRING, description: "Type or category of the research unit" },
 					summary: { type: Type.STRING, description: "Summary of the research unit (~500 chars)" },
 					description: { type: Type.STRING, description: "General description in markdown format" },
-					type: { type: Type.STRING, description: "Type or category of the research unit" },
 					topics: {
 						type: Type.ARRAY,
 						items: { type: Type.STRING },
 						description: "List of research topics and fields"
-					},
-					links: {
-						type: Type.OBJECT,
-						properties: {
-							children: {
-								type: Type.ARRAY,
-								items: { type: Type.STRING },
-								description: "URLs for sub-laboratories/research lines pages"
-							}
-						},
-						required: ["children"]
 					}
 				},
-				required: ["formal", "summary", "description", "type", "topics"]
+				required: ["formal", "type", "summary", "description", "topics"]
 			}
-		},
-
-		contents: overview
-
+		}
 	})));
 }
