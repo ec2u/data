@@ -20,20 +20,18 @@ import { FunctionDeclaration, Type } from "@google/genai";
 import dedent from "dedent";
 
 
-// see https://ai.google.dev/gemini-api/docs/function-calling
+// see https://ai.google.dev/gemini-apiresearch the issue/docs/function-calling
 
 
-interface Tool<V, R> {
+interface Tool<V, R> extends FunctionDeclaration {
 
 	(args: V): Promise<R | ToolError>;
-
-	declaration: FunctionDeclaration;
 
 }
 
 interface ToolError {
 
-	error: string
+	error: string;
 
 }
 
@@ -44,47 +42,54 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): Tool<{ url: str
 
 	const visited=new Set<string>();
 
-	return Object.assign(
-		async ({ url }: { url: string }) => {
+	return Object.assign(async ({
 
-			if ( visited.has(url) ) {
-				return { error: "Already visited this URL" };
-			}
+		url
 
-			visited.add(url);
+	}: {
 
-			try {
-				return await visit(url, opts);
-			} catch ( error ) {
-				return { error: message(error) };
-			}
+		url: string
 
-		},
-		{
-			declaration: {
-				name: "fetchPage",
-				description: dedent`
-					Fetches and extracts the main content from a web page.
-					Returns the page title, a summary, the full text content in markdown format, and a list of
-					outbound links with their URLs and anchor text. Use this function to explore pages that are
-					likely to contain information about the research unit's identity, activities, topics,
-					or child units.
-				`,
-				parameters: {
-					type: Type.OBJECT,
-					properties: {
-						url: {
-							type: Type.STRING,
-							description: dedent`
-								The absolute URL of the web page to fetch and extract content from
-								(must start with http:// or https://)
-							`
-						}
-					},
-					required: ["url"]
-				}
-			}
+	}) => {
+
+		if ( visited.has(url) ) {
+			return { error: `previously visited URL <${url}>` };
 		}
-	);
+
+		visited.add(url);
+
+		try {
+			return await visit(url, opts);
+		} catch ( error ) {
+			return { error: message(error) };
+		}
+
+	}, {
+
+		name: "fetchPage",
+
+		description: dedent`
+			Fetches and extracts the main content from a web page.
+			Returns the page title, a summary, the full text content in markdown format, and a list of
+			outbound links with their URLs and anchor text. Use this function to explore pages that are
+			likely to contain information about the research unit's identity, activities, topics,
+			or child units.
+		`,
+
+		parameters: {
+			type: Type.OBJECT,
+			properties: {
+				url: {
+					type: Type.STRING,
+					description: dedent`
+						The absolute URL of the web page to fetch and extract content from
+						(must start with http:// or https://)
+					`
+				}
+			},
+			required: ["url"]
+		}
+
+	});
 
 }

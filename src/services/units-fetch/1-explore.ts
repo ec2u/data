@@ -22,13 +22,8 @@ import { fetchPage } from "@/utilities/gcp/gemini-tools";
 
 export async function explore(site: string): Promise<string> {
 
-	const maxRounds=20;
-
 	const client=await ai();
 
-	const history: Array<{ role: string; parts: any }>=[
-		{ role: "user", parts: [{ text: site }] }
-	];
 
 	const tools={
 
@@ -36,12 +31,17 @@ export async function explore(site: string): Promise<string> {
 
 	};
 
+	const contents: Array<{ role: string; parts: any }>=[
+		{ role: "user", parts: [{ text: site }] }
+	];
+
+	const maxRounds=20;
 
 	for (let round=0; round < maxRounds; round++) {
 
 		const response=await client.models.generateContent({
 			model: "gemini-2.5-flash",
-			contents: history,
+			contents,
 			config: {
 				seed: 0,
 				temperature: 0,
@@ -58,7 +58,7 @@ export async function explore(site: string): Promise<string> {
 		if ( parts ) {
 			if ( response.functionCalls && response.functionCalls.length > 0 ) {
 
-				history.push(
+				contents.push(
 					{ role: "model", parts },
 					{
 						role: "function", parts: await Promise.all(
@@ -96,6 +96,15 @@ export async function explore(site: string): Promise<string> {
 				);
 
 			} else {
+
+				// NOTE: The Gemini API does not support combining function calling (tools) with structured
+				// output (responseMimeType/responseSchema) in the same request. This returns unstructured
+				// text that must be parsed manually or processed in a follow-up call with responseSchema.
+				// See:
+				// - https://discuss.ai.google.dev/t/function-calling-with-a-response-mime-type-application
+				//   -json-is-unsupported/105093
+				// - https://github.com/google-gemini/deprecated-generative-ai-python/issues/515
+				// - https://github.com/agno-agi/agno/issues/3292
 
 				const text=parts
 					.filter(part => "text" in part && part.text)

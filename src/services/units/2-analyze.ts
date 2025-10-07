@@ -23,6 +23,7 @@ import { estimateResponseCost, formatCostBreakdown } from "@/utilities/gcp/gemin
 
 export function analyze(pages: readonly Page[]): Promise<string> {
 	return ai().then(async ai => {
+
 		const response=await ai.models.generateContent({
 
 			model: "gemini-2.5-flash",
