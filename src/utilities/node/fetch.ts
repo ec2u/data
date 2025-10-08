@@ -43,9 +43,10 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
+import { immutable } from "@/utilities/core";
 import { Cache, DummyCache } from "@/utilities/core/cache";
-import { hash, immutable } from "@/utilities/core/index";
 import { log, message } from "@/utilities/core/log";
+import { hash } from "@/utilities/node/hash";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
 

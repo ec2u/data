@@ -20,6 +20,8 @@
  * Utilities for file operations
  */
 
+import { isString } from "@/utilities/core";
+import { writeFileSync } from "fs";
 import { readFile } from "fs/promises";
 
 const cache=new Map<string, Promise<string>>();
@@ -44,4 +46,26 @@ export function file(url: string | URL, base?: string | URL): Promise<string> {
 	}
 
 	return cache.get(key)!;
+}
+
+/**
+ * Creates a function that writes data to a file and returns it unmodified.
+ *
+ * @template T - The type of data to be written and returned
+ *
+ * @param path - The file path to write to
+ *
+ * @returns A function that accepts data, writes it to the specified file, and returns the data unchanged
+ */
+export function dump<T>(path: string): (data: T) => T {
+	return (data: T) => {
+
+		writeFileSync(
+			path,
+			isString(data) ? data : JSON.stringify(data, null, 4),
+			"utf8"
+		);
+
+		return data;
+	};
 }

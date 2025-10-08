@@ -21,10 +21,10 @@
  * distributed caching across multiple instances.
  */
 
-import { hash } from "@/utilities/core";
 import { Cache } from "@/utilities/core/cache";
 import { log, message } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
+import { hash } from "@/utilities/node/hash";
 
 
 /**
@@ -185,7 +185,7 @@ export function DatastoreCache<T>({
  *
  * @param kind The Datastore kind to delete all entities from
  */
-export async function deleteAllEntities(kind: string): Promise<void> {
+export async function clear(kind: string): Promise<void> {
 	try {
 		log.info("deleteAllEntities", `deleting all entities of kind <${kind}>`);
 

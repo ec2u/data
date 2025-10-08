@@ -14,10 +14,62 @@
  * limitations under the License.
  */
 
-import { defaults, Unit } from "@/services/units/shared";
+import { Unit } from "@/pipelines/units";
 import { md } from "@/utilities/core/tags";
-import { ai, json } from "@/utilities/gcp/gemini";
+import { DatastoreCache } from "@/utilities/gcp/cache";
+import { ai, json, text } from "@/utilities/gcp/gemini";
+import { dump, file } from "@/utilities/node/files";
+import { fetchPage } from "@/utilities/work/gemini-tools";
 import { Type } from "@google/genai";
+
+
+Promise.resolve(
+		// "https://iii.dip.unipv.it/"
+		// "https://microwave.unipv.it"
+
+		// "https://dbbs.dip.unipv.it/"
+		// "https://dbbs.dip.unipv.it/it/ricerca/linee-e-gruppi-di-ricerca/linee-e-temi-di-ricerca/unita-di-statistica-medica-e-genomica"
+		// "http://lag.unipv.it/en/" "http://psicologia.unipv.it/laboratori/lasc/163-lasc.html"
+
+		// "https://giurisprudenza.dip.unipv.it/"
+		// "https://dirittoesanita.unipv.it/"
+
+		"https://dbb.dip.unipv.it/it"
+		// "https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale"
+		// "https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale/laboratorio-di-biotecnologie-vegetali"
+
+		// "https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/"
+
+	)
+
+	.then(explore).then(dump("work.md"))
+	.then(structure).then(dump("work.json"))
+
+	.then(console.info)
+	.catch(console.error);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export async function explore(site: string): Promise<string> {
+
+	return ai().then(async ai => text(await ai.models.generateContent({
+		model: "gemini-2.5-flash",
+		contents: site,
+		config: {
+			seed: 0,
+			temperature: 0,
+			systemInstruction: await file("./1-analyze.md", import.meta.url),
+			tools: [
+				fetchPage({ cache: DatastoreCache({ kind: "Page" }) })
+			],
+			automaticFunctionCalling: {
+				maximumRemoteCalls: 20
+			}
+		}
+	})));
+
+}
 
 
 export function structure(overview: string): Promise<Unit> {
@@ -25,7 +77,8 @@ export function structure(overview: string): Promise<Unit> {
 		model: "gemini-2.5-flash-lite",
 		contents: overview,
 		config: {
-			...defaults,
+			seed: 0,
+			temperature: 0,
 			systemInstruction: md`
 			
 				ROLE / You are an academic content manager specializing in research activities.

@@ -14,38 +14,14 @@
  * limitations under the License.
  */
 
-import { HeapCache } from "./cache";
-import { as, Memo, pipe } from "./pipe";
+import { createHash } from "crypto";
 
-const label="test";
-const cache=HeapCache<Memo>();
-
-
-function x(d: string): string {
-	console.log("x(%s)", d);
-	return d;
+/**
+ * Computes the MD5 hash of a string.
+ *
+ * @param data the string to hash
+ * @return the MD5 hash as a lowercase hexadecimal string
+ */
+export function hash(data: string) {
+	return createHash("md5").update(data).digest("hex");
 }
-
-function y(d: string): string {
-	console.log("y(%s)", d);
-	return d;
-}
-
-function z(d: string): string {
-	console.log("z(%s)", d);
-	return d;
-}
-
-
-pipe("ciao!", { label, cache })
-	.task(as("w", x))
-	.task(y)
-	.task(z)
-	.then(console.log)
-
-	.then(() => pipe("ciao!", { label, cache })
-		.task(x)
-		.task(y)
-		.task(z)
-		.then(console.log)
-	);

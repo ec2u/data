@@ -15,8 +15,9 @@
  */
 
 import { message } from "@/utilities/core/log";
+import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
-import { GenerateContentResponse, GoogleGenAI, GoogleGenAIOptions } from "@google/genai";
+import { GenerateContentResponse, GoogleGenAI, GoogleGenAIOptions, SchemaUnion } from "@google/genai";
 
 let sdk: null | Promise<GoogleGenAI>=null;
 
@@ -38,7 +39,9 @@ export function ai(opts: GoogleGenAIOptions={}): Promise<GoogleGenAI> {
  * are present in the response.
  *
  * @param response Response from a generateContent call
+ *
  * @returns Trimmed text content
+ *
  * @throws Error if the response contains no text content
  */
 export function text(response: GenerateContentResponse): string {
@@ -53,7 +56,9 @@ export function text(response: GenerateContentResponse): string {
  * Extracts and parses JSON content from a Gemini API response.
  *
  * @param response Response from a generateContent call with JSON output
+ *
  * @returns Parsed JSON object
+ *
  * @throws Error if the response contains no text or invalid JSON
  */
 export function json<T>(response: GenerateContentResponse): T {
@@ -66,4 +71,43 @@ export function json<T>(response: GenerateContentResponse): T {
 		throw new Error(`malformed model response: ${message(e)}`);
 	}
 
+}
+
+/**
+ * Converts unstructured text into structured data using the Gemini API.
+ *
+ * Instructs the model to extract and structure information from text according to the provided schema,
+ * with deterministic output (seed=0, temperature=0) and automatic omission of undefined/empty values.
+ *
+ * @typeParam T Type of the structured data to return
+ *
+ * @param text Textual report to convert
+ * @param schema JSON schema defining the expected output structure
+ *
+ * @returns Structured data conforming to the schema
+ *
+ * @throws Error if the model response is malformed or invalid JSON
+ */
+export function data<T>(text: string, schema: SchemaUnion): Promise<T> {
+	return ai().then(async ai => json(await ai.models.generateContent({
+		model: "gemini-2.5-flash-lite",
+		contents: text,
+		config: {
+			seed: 0,
+			temperature: 0,
+			systemInstruction: md`
+				ROLE / You are a data engineer.
+				INPUT / You will be provided with a textual report.
+				GOAL / Your task is to convert it into a structured machine-readable representation.
+				OUTPUT / Reply with a structured JSON object; unless required otherwise by the provided schema:
+
+				- ALWAYS omit undefined scalar values
+				- ALWAYS omit empty object values
+				- ALWAYS omit empty array values
+
+			`,
+			responseMimeType: "application/json",
+			responseSchema: schema
+		}
+	})));
 }

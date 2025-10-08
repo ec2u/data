@@ -21,8 +21,6 @@
  */
 
 
-import { createHash } from "crypto";
-
 /**
  * Represents any valid JSON value type.
  *
@@ -188,17 +186,6 @@ export function asArray<T=unknown>(value: unknown, is?: (value: unknown) => valu
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Computes the MD5 hash of a string.
- *
- * @param data the string to hash
- * @return the MD5 hash as a lowercase hexadecimal string
- */
-export function hash(data: string) {
-	return createHash("md5").update(data).digest("hex");
-}
-
 
 /**
  * Checks deep object equality.
