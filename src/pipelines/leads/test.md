@@ -35,18 +35,21 @@ This document describes significant test cases used during development, with sam
 - Navigate to research themes/laboratories page (https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori)
 - Recognize pages like "Bioinformatics and Big Data", "Neurofarmacologia" as themes, not actual units
 - Explore each theme page to find actual laboratories underneath
-- Extract actual labs: "Laboratorio di Genomica Computazionale" (under Bioinformatics theme), "Laboratorio di
-  Neurofarmacologia Cellulare e Molecolare", etc.
-- Fetch individual lab profile pages to find homepage links
-- Example: Genomica Computazionale profile should reveal https://lescailab.unipv.it/
+- Extract actual labs: "Genomica Computazionale" (under Bioinformatics theme), "Laboratorio di Neurofarmacologia
+  Cellulare e Molecolare", etc.
+- **Fetch each lab's profile page** to find homepage links
+- Example: Genomica Computazionale profile (
+  https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/bioinformatics-and-big-data/genomica-computazionale)
+  should reveal https://lescailab.unipv.it/
 
 **Key Issues Tested:**
 
 - Distinguishing research themes from actual structural units
 - Exploring theme pages to find labs underneath
 - Not reporting themes as units
-- Homepage links embedded in lab profile pages
+- **Homepage links embedded in lab profile pages (currently inconsistent)**
 - Multi-level structure: department → themes → labs
+- Fetching individual profile pages for each identified lab
 
 # Test Case 3: Nested Subunits
 
@@ -139,7 +142,50 @@ This document describes significant test cases used during development, with sam
 - Flexible profile URL definition
 - Handling units without dedicated pages
 
-# Test Case 7: Empty Results
+# Test Case 7: Individual People vs Research Units
+
+**Sample URL:** https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/
+
+**Description:** Institute with staff/team pages that should NOT be reported as research units.
+
+**Expected Behavior:**
+
+- Navigate to team/staff pages
+- Recognize URLs like `/team/gruber/` as individual person's profile pages
+- **Do NOT report** personal pages, staff profiles, or professorships as research units
+- Only report actual organizational units (labs, groups, divisions)
+- Distinguish between "Prof. X's research group" (a unit) and "Prof. X" (a person)
+
+**Key Issues Tested:**
+
+- Excluding individual people's pages from results
+- Distinguishing administrative roles/positions from organizational units
+- Not confusing "Professur für..." (professorship held by a person) with an actual research unit
+
+# Test Case 8: University-Wide Centers vs Departmental Units
+
+**Sample URL:** https://iii.dip.unipv.it/
+
+**Description:** Engineering department that lists both its own labs and university-wide interdepartmental centers.
+
+**Expected Behavior:**
+
+- Report departmental labs (e.g., Bioinformatica e Biologia Sintetica, Microonde e Antenne)
+- **Do NOT report** university-wide centers like:
+    - Centro Linguistico di Ateneo (CLA) - University Language Center
+    - MERGED - Interdepartmental migration/gender center
+    - CICOPS - International cooperation commission
+    - Other "Centro Interdipartimentale" units
+- Recognize that interdepartmental/university-wide centers exist at a higher organizational level
+- Only report units that structurally belong to the Engineering department
+
+**Key Issues Tested:**
+
+- Distinguishing departmental units from university-wide centers
+- Not reporting interdepartmental centers as direct subunits
+- Understanding organizational hierarchy (department < university)
+
+# Test Case 9: Empty Results
 
 **Description:** Units with no structural subunits.
 
@@ -184,3 +230,5 @@ For all test cases, each subunit should include:
 4. **Multi-Level Navigation:** Explore intermediate pages to find listings
 5. **Single-Level Extraction:** Report only direct subunits, not nested ones
 6. **Research Themes vs Units:** Don't report themes/topics as units; explore them to find actual labs underneath
+7. **Individual People vs Units:** NEVER report personal pages, staff profiles, or individual professorships as units
+8. **University-Wide Centers:** NEVER report interdepartmental or university-wide centers as departmental subunits

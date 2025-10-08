@@ -26,11 +26,14 @@ When you have gathered sufficient information, stop exploring and generate a str
 Generate a plaintext report listing each subunit with:
 
 - **profile:** the URL of the institutional profile (if available)
-- **homepage:** the URL of the subunit's self-managed website (if available)
+- **homepage:** the URL of the subunit's self-managed website (**include when found on profile page**)
 - **name:** the name of the subunit
 - **summary:** a brief description (~100 chars)
 
 Format as a markdown list with all available information for each subunit.
+
+**IMPORTANT:** After fetching each subunit's profile page, check for homepage links (subdomains or external URLs) and
+include them in the report.
 
 If no structural subunits are found after thorough exploration, return an empty list.
 
@@ -46,7 +49,7 @@ If no structural subunits are found after thorough exploration, return an empty 
 
 **Homepage:** The subunit's own self-managed website
 
-- Subdomain (different subdomain from the parent unit, e.g., lab-bioinfo.unipv.it)
+- Subdomain (different subdomain from the parent unit, e.g., labname.example.edu)
 - Independent domain (completely different domain, e.g., labname.org)
 - Any site where the subunit manages its own content independently
 - **Important:** Subdomains are homepages, NOT profiles
@@ -69,20 +72,39 @@ If no structural subunits are found after thorough exploration, return an empty 
 - Units with only horizontal/peer relationships (sister units, partners)
 - **Research themes, topics, or areas** (thematic groupings that may contain labs but are not themselves organizational
   units)
+- **Individual people** (professors, researchers, staff members - their personal/staff pages are NOT research units)
+- **Administrative roles** (chairs, professorships, positions held by individuals)
+- **University-wide or interdepartmental centers** that are managed at a higher organizational level (e.g., university
+  language center, university-wide cooperation commissions). However, departmental research centers that happen to be
+  interdisciplinary ARE subunits if they belong to the department
 
 **Key distinctions:**
 
 - "Belonging to" or "part of" → subunit; "collaborate with" or "participate in" → not a subunit
 - Has dedicated members/space/PI → likely a unit; purely thematic/topical grouping → not a unit
 - If a page links to actual labs/groups underneath it, those linked labs are subunits, not the theme page itself
+- **Individual person's page → NOT a unit**; organizational entity with multiple members → likely a unit
+- **University-wide/interdepartmental centers → check organizational belonging**: If the center is described as "part
+  of"
+  or "belonging to" the department → it's a subunit; if it's university-wide and just "listed" on the department page →
+  NOT a subunit
+- **CRITICAL:** Staff/team member pages, personal profiles, and individual professorships are NEVER research units
+- **CRITICAL:** Check if interdepartmental centers are structurally part of the unit or exist at university level
+  (e.g., "Centro Interdipartimentale" at university level vs departmental research center)
 
 # Requirements
 
-- Identify ONLY structural subunits (not collaborations or parent units)
+- Identify ONLY structural subunits (not collaborations, parent units, individual people, or true university-wide
+  centers)
+- **NEVER report individual people's pages** (staff profiles, personal pages, team member pages)
+- **Check organizational level of interdepartmental centers**: Report them if they are part of the target unit, exclude
+  them if they are university-wide services
 - Report EVERY subunit found, including all entries from directories/tables/lists
+- **MUST fetch each subunit's profile page** to extract complete information
 - Each subunit **MUST** have:
     - At least one URL (profile or homepage) as evidence of online presence
     - A summary (~100 chars) describing focus, research areas, and purpose
+  - Homepage URL when available on the profile page (subdomains or external links)
 - Report URLs verbatim (exactly as found)
 
 # Guidelines
@@ -97,13 +119,14 @@ If no structural subunits are found after thorough exploration, return an empty 
 4. From section pages, fetch listing pages with actual subunit directories
 5. **If pages appear to be research themes/topics rather than actual units**, explore links within those pages to find
    actual labs/groups
-6. Fetch profile pages in parallel to find homepage links
+6. **Fetch each identified subunit's profile page** to extract homepage links and additional details
 
 **Key principles:**
 
 - Do NOT assume homepage directly links to listing pages
 - Do NOT rely solely on homepage content
 - Do NOT report thematic pages as units; explore them to find actual labs underneath
+- **Do NOT report individual people's pages as units** (staff profiles, team member pages, personal pages)
 - Prioritize pages likely containing comprehensive subunit lists
 - Prioritize local language pages over English translations
 - Ignore PDFs and linked documents
@@ -118,15 +141,19 @@ If no structural subunits are found after thorough exploration, return an empty 
 
 **Homepage URLs:**
 
-- Subdomains differing from parent unit's subdomain
-- Independent domains
-- Links labeled "website", "homepage", "site" in main content area
+- Subdomains differing from parent unit's subdomain (e.g., `labname.example.edu`)
+- Independent domains (e.g., `labname.org`)
+- Links in profile page content (often within text or as standalone links)
+- Links labeled "website", "homepage", "site", or appearing as clickable lab names in main content area
+- **Look carefully in profile page text** for subdomain or external URLs
 - Ignore footer links (university services, privacy policies, webmail)
 
-**Two-step discovery:**
+**Discovery process:**
 
-1. Check directory/listing pages for direct homepage links
-2. Fetch profile pages to find additional homepage links
+1. Check directory/listing pages for direct homepage links (subdomains or external URLs)
+2. **For each identified subunit, fetch its profile page** to find homepage links
+3. Extract homepage URLs from profile page content (look for subdomains and external links)
+4. Homepage links are often embedded in the profile text or listed as "website", "homepage", or similar labels
 
 ## Stopping Conditions
 
@@ -135,7 +162,9 @@ If no structural subunits are found after thorough exploration, return an empty 
 1. All relevant section pages (research/groups/organization) are fetched and explored
 2. Listing pages within those sections are identified and fetched
 3. All structural subunits from listing pages are identified
-4. Profile and/or homepage URLs are collected for each
-5. Information for summaries is gathered
+4. **Each subunit's profile page is fetched** (if not already on a listing page)
+5. Homepage URLs are extracted from profile pages where available
+6. Profile and/or homepage URLs are collected for each subunit
+7. Information for summaries is gathered
 
 **Then** generate the structured report. Return empty list if no subunits found after thorough exploration.

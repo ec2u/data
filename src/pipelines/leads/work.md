@@ -1,150 +1,131 @@
-- **name**: Laboratorio di Genomica Computazionale
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/bioinformatics-and-big-data/genomica-computazionale
-  **summary**: Focuses on analyzing biological data and phenomena using computational tools and algorithms, integrating
-  informatics, infrastructure, and programming knowledge.
-- **name**: Laboratorio di Parassitologia molecolare
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/parassitologia-simbiosi-e-bioinformatica/laboratorio-di
-  **summary**: Conducts research in molecular parasitology, symbiosis, and bioinformatics.
-- **name**: Laboratorio di Neurofarmacologia Cellulare e Molecolare
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurofarmacologia/laboratorio-di-neurofarmacologia
-  **summary**: Specializes in cellular and molecular neuropharmacology research.
-- **name**: Laboratorio di Neuroscienze Traslazionali e Neuropsicofarmacologia
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurofarmacologia/laboratorio-di-neuroscienze
-  **summary**: Focuses on translational neuroscience and neuropsychopharmacology research.
-- **name**: Laboratorio di Biofisica dei Canali Ionici e Neurofisiologia
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurobiologia/laboratorio-di-biofisica-dei-canali-ionici
-  **summary**: Investigates the biophysics of ion channels and neurophysiology.
-- **name**: Laboratorio di Biologia Cellulare e Neurobiologia
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurobiologia/laboratorio-di-neurobiologia
-  **summary**: Investigates molecular and cellular mechanisms of biological processes like differentiation,
-  proliferation, and cell death.
-- **name**: Laboratorio di Neurobiologia e Fisiologia Integrata
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurobiologia/laboratorio-di-neurobiologia-e-fisiologia
-  **summary**: Conducts research in neurobiology and integrated physiology.
-- **name**: Laboratorio di Oncogenomica funzionale
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/neurobiologia/laboratorio-di-oncogenomica-funzionale
-  **summary**: Develops new therapeutic strategies for astrocytic brain tumors, especially glioblastoma multiforme,
-  using cellular and animal models.
-- **name**: Laboratorio di Microbiologia Molecolare
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/microbiologia-molecolare/laboratorio-di-microbiologia
-  **summary**: Conducts research in molecular microbiology.
-- **name**: Laboratorio di Enzimologia microbica e bersagli farmacologici
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/microbiologia-molecolare/laboratorio-di-enzimologia
-  **summary**: Focuses on microbial enzymology and pharmacological targets.
-- **name**: Laboratorio di Genetica dei patogeni opportunisti
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/microbiologia-molecolare/laboratorio-di-genetica-dei
-  **summary**: Researches the genetics of opportunistic pathogens.
-- **name**: Laboratorio di Micobatteriologia
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/microbiologia-molecolare/laboratorio-di-micobatteriologia
-  **summary**: Specializes in mycobacteriology research.
-- **name**: Laboratorio ZooE - Zoologia ed Evoluzione
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-e-biotecnologie-degli-insetti-di-importanza-0
-  **summary**: Conducts research in zoology and evolution.
-- **name**: Laboratory of Insect Evolutionary Biology
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-e-biotecnologie-degli-insetti-di-importanza-1
-  **summary**: Focuses on the evolutionary biology of insects.
-- **name**: Laboratorio di Inherited Symbionts for Vector Control
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-e-biotecnologie-degli-insetti-di-importanza-3
-  **summary**: Researches inherited symbionts for vector control.
-- **name**: Vector Biology Laboratory
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-e-biotecnologie-degli-insetti-di-importanza-2
-  **summary**: Conducts research in vector biology.
-- **name**: Laboratorio di Genomica delle Popolazioni umane
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-delle-popolazioni-umane-ed-animali/laboratorio
-  **summary**: Studies the origin and diffusion of human populations in Europe, Mediterranean, North Africa, Italy, and
-  Americas.
-- **name**: Laboratorio di Genomica delle Popolazioni animali
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genomica-delle-popolazioni-umane-ed-animali/laboratorio-0
-  **summary**: Investigates the diffusion of domestic, commensal, and invasive animal species.
-- **name**: Laboratorio di Genetica Umana-Genetica dei Tumori
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genetica-umana-genetica-dei-tumori/laboratorio-di
-  **summary**: Conducts research in human genetics and cancer genetics.
-- **name**: Laboratorio di Genetica dei microorganismi
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/genetica-e-biotecnologie-microbiche/laboratorio-di
-  **summary**: Focuses on the genetics of microorganisms.
-- **name**: Laboratorio di Fisiologia cellulare e molecolare
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/fisiologia-e-nutrizione/laboratorio-di-fisiologia
-  **summary**: Engages in cellular and molecular physiology research.
-- **name**: Laboratorio di Farmacobiochimica e Tossicologia
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/farmacologia-e-tossicologia/laboratorio-di
-  **summary**: Conducts research in pharmacobiochemistry and toxicology.
-- **name**: Laboratorio di Farmacogenetica e Tossicologia Sperimentale
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/farmacologia-e-tossicologia/laboratorio-di-0
-  **summary**: Specializes in pharmacogenetics and experimental toxicology.
-- **name**: Laboratorio di DNA antico
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/dna-antico/laboratorio-di-dna-antico
-  **summary**: Researches ancient DNA, including archaeogenomics in Eurasia, Africa, and Americas, and cultural heritage
-  valorization.
-- **name**: Laboratorio di Biotecnologie vegetali
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale/laboratorio-di-biotecnologie-vegetali
-  **summary**: Conducts research in plant biotechnologies, focusing on model plants and agronomically important species.
-- **name**: “Seed Molecular Physiology” Lab
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale/seed-molecular-physiology-lab
-  **summary**: Focuses on the molecular physiology of seeds.
-- **name**: BioPhotoLab
-  **profile**: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-vegetale/biophotolab
-  **summary**: Engages in research related to biophotography and plant biology.
-- **name**: Laboratorio di Biologia strutturale
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-strutturale/laboratorio-di-biologia-strutturale
-  **summary**: Focuses on structure-function relationships of proteins, molecular recognition, and enzymatic catalysis.
-- **name**: The Armenise-Harvard Laboratory of Structural Biology
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-strutturale/armenise-harvard-laboratory
-  **summary**: Conducts research in structural biology.
-- **name**: Laboratorio FMagnani
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-strutturale/laboratorio-fmagnani
-  **summary**: Research group led by Dr. Francesca Magnani, focusing on structural biology.
-- **name**: Laboratorio di Biologia Molecolare, Citogenetica, Epigenomica
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-molecolare-citogenetica-epigenomica/molecular
-  **summary**: Researches molecular mechanisms of genome integrity, centromeres, telomeres, cancerogenesis, and
-  evolution.
-- **name**: Laboratorio di Biologia e Biotecnologie della Riproduzione
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-e-biotecnologie-della-riproduzione/laboratorio
-  **summary**: Conducts research in biology and biotechnologies of reproduction.
-- **name**: Laboratorio Globulo rosso
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-cellulare-e-biochimica-del-sistema-vascolare-0
-  **summary**: Specializes in research on red blood cells.
-- **name**: Laboratorio di Biochimica delle piastrine
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-cellulare-e-biochimica-del-sistema-vascolare-1
-  **summary**: Focuses on the biochemistry of platelets.
-- **name**: Laboratorio di Anatomia Comparata e Citologia
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-cellulare/laboratorio-di-anatomia-comparata-e
-  **summary**: Conducts research in comparative anatomy and cytology.
-- **name**: Laboratorio di Meccanismi Molecolari dell’Immunità Innata e Riconoscimento Acidi Nucleici
-  **profile
-  **: https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/biologia-molecolare/laboratorio-di-meccanismi-molecolari
-  **summary**: Studies molecular mechanisms of innate immunity, host-vector interactions, and nucleic acid sensing in
-  gene therapies and autoimmune diseases.
+- **name:** Bioinformatica e Biologia Sintetica
+  **homepage:** http://lab-bioinfo.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on bioinformatics and synthetic biology research.
+- **name:** Bioingegneria
+  **homepage:** http://bioing.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Conducts research in bioengineering.
+- **name:** CAD di dispositivi elettrici e magnetici
+  **homepage:** http://cad.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in CAD for electrical and magnetic devices.
+- **name:** Circuiti Integrati Analogici
+  **homepage:** http://aiclab.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Research on analog integrated circuits.
+- **name:** CEMA (Comp. Elettromagnetica Amb.)
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Research in electromagnetic compatibility for environmental applications.
+- **name:** Computer Vision & Multimedia
+  **homepage:** http://vision.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on computer vision and multimedia research.
+- **name:** Costruzioni Elettromeccaniche
+  **homepage:** http://www.unipv.it/dmae/lab_costruzioniEle.html
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in electromechanical constructions.
+- **name:** Didattica e Ricerca Aerospaziale (FabSpace)
+  **homepage:** http://tlcrs.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Engages in aerospace education and research, including FabSpace activities.
+- **name:** Digital Content Analysis Lab
+  **homepage:** http://dcalab.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Conducts research on digital content analysis.
+- **name:** Elettronica di Potenza
+  **homepage:** http://www-9.unipv.it/electric/elpot/elpot.html
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in power electronics research.
+- **name:** Elettroottica
+  **homepage:** https://labeo.unipv.it/wordpress/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on electro-optics research.
+- **name:** Energetica Elettrica e Labac
+  **homepage:** https://labenunipv.wordpress.com/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Research in electrical energy and related laboratory activities.
+- **name:** Femtolab
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Conducts research in femtosecond laser technology and applications.
+- **name:** Fotonica Integrata
+  **homepage:** http://photonics.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in integrated photonics research.
+- **name:** Identificazione e Controllo dei Sistemi Dinamici
+  **homepage:** http://sisdin.unipv.it/lab/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on identification and control of dynamic systems.
+- **name:** Informatica Biomedica "Mario Stefanelli"
+  **homepage:** http://www.labmedinfo.org/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Conducts research in biomedical informatics.
+- **name:** Informatica Biomedica "Mario Stefanelli" UPIT
+  **homepage:** http://www.labmedinfo.org/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Conducts research in biomedical informatics, likely a specific branch or project.
+- **name:** Informatica Forense
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in forensic informatics research.
+- **name:** Ingegneria Elettrica
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on general electrical engineering research.
+- **name:** Interazione Luce Materia
+  **homepage:** https://sites.google.com/site/dbajoni/research
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Research on light-matter interaction.
+- **name:** Laboratorio Sorgenti Laser
+  **homepage:** https://photonics.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in laser sources research.
+- **name:** Research on Advanced Mechanical Systems
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Conducts research on advanced mechanical systems.
+- **name:** Microcalcolatori
+  **homepage:** http://mclab.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on microcomputer research.
+- **name:** Microelettronica
+  **homepage:** https://sites.google.com/view/microelectronics-lab
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in microelectronics research.
+- **name:** Microonde e Antenne
+  **homepage:** http://microwave.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Conducts research on microwaves and antennas.
+- **name:** Microsistemi Integrati e Sensori
+  **homepage:** http://ims2.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on integrated microsystems and sensors.
+- **name:** Neuroimmagini e Neuroingegneria
+  **homepage:** https://dangelo.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Research in neuroimaging and neuroengineering.
+- **name:** Ottica Nonlineare
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in nonlinear optics research.
+- **name:** Performance Evaluation
+  **homepage:** http://peg.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on performance evaluation research.
+- **name:** Robotica
+  **homepage:** http://robot.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Conducts research in robotics.
+- **name:** Robotica Intelligente
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in intelligent robotics research.
+- **name:** Robotica Industriale
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on industrial robotics research.
+- **name:** Strumentazione Elettronica
+  **homepage:** http://eil.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Research in electronic instrumentation.
+- **name:** Technologies and Intelligence for Health
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Focuses on technologies and intelligence for health applications.
+- **name:** Telecomunicazioni e Telerilevamento
+  **homepage:** http://tlclab.unipv.it/
+  **profile:** https://iii.dip.unipv.it/it/ricerca/laboratori-di-ricerca
+  **summary:** Specializes in telecommunications and remote sensing.
