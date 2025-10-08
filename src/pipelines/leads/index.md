@@ -13,101 +13,129 @@ You will be provided with a lead to an online description of a research unit, po
 
 # Task
 
-Explore the content starting from the provided URL to identify structurally subunits of the target research
-unit. When you have gathered sufficient information, stop exploring and generate a structured report of subunits.
+Explore the content starting from the provided URL to identify **direct structural subunits** of the target research
+unit.
 
-# Understanding Profile vs Homepage
+**IMPORTANT:** Report ONLY the immediate/direct subunits (one level down). Do NOT include nested subunits of subunits -
+the pipeline will handle those recursively in subsequent calls.
 
-- profile: institutional page managed by the university or a formal research subunit (e.g., department); typically
-  part of a larger institutional website
-    - dedicated: entire dedicated page/section for the target unit within the institutional site
-    - embedded: section within a parent page (url is entry point; may span multiple pages; the parent site likely
-      includes unrelated material; analysis must focus only on relevant pages for the target unit, possibly identified
-      by name/summary)
-    - mentioned: brief reference within a page that includes other descriptions and possibly other types of
-      information; analysis must focus only on the target unit, possibly identified by name/summary
-- homepage: self-managed website published and controlled by the unit itself; typically an independent site
+When you have gathered sufficient information, stop exploring and generate a structured report of direct subunits.
 
-# Exploration Strategy
+# Output
 
-- Start with the provided URL (profile or homepage)
-- If starting from a profile (institutional page), look for links to the unit's self-managed homepage
-- If starting from a homepage (self-managed site), look for references to the institutional profile
-- Prioritize pages mentioning subunits, laboratories, research groups and other subunits
-- Look for pages about organization structure
-- Continue exploring until you have identified all structurally subunits
-- IGNORE parent units, collaborating units, coordinating research centers, and other horizontal relationships
-- IGNORE pdfs and other linked documents
+Generate a plaintext report listing each subunit with:
 
-# URL Access
+- **profile:** the URL of the institutional profile (if available)
+- **homepage:** the URL of the subunit's self-managed website (if available)
+- **name:** the name of the subunit
+- **summary:** a brief description (~100 chars)
 
-- ALWAYS retrieve relevant content from URLs where it is likely to be found, prioritizing them against the goals of the
-  analysis, taking into also their title and summary
-- Make ABSOLUTELY sure to access pages likely containing directories of subunits
-- Make ABSOLUTELY sure to prioritize access to local language pages over their English translation
+Format as a markdown list with all available information for each subunit.
 
-# Parallel Fetching
+If no structural subunits are found after thorough exploration, return an empty list.
 
-- You can fetch MULTIPLE pages in parallel by calling fetchPage multiple times in a single turn
-- ALWAYS batch independent page requests together for efficiency
-- For example, if you see links to 5 subunits, call fetchPage for all 5 at once
-- Do NOT fetch pages one at a time across multiple turns unless they depend on each other's results
+# Definitions
 
-# Stopping Conditions
+## Profile vs Homepage
 
-- Stop exploring when you have identified all structurally subunits with homepage links
-- After stopping exploration, generate a structured report
+**Profile:** Informational page within the parent unit's website structure (same domain and path hierarchy)
 
-# Output Format
+- **Dedicated page:** entire page/section for the subunit
+- **Shared page:** section where the subunit is mentioned alongside others; may span multiple pages; focus only on
+  relevant content
 
-When you decide to stop exploring, generate a plaintext report listing each subunit with:
+**Homepage:** The subunit's own self-managed website
 
-- profile: the URL of the institutional profile of the subunit
-- homepage: the URL of the subunit's self-managed website
-- name: the name of the subunit
-- summary: a brief paragraph describing the subunit's
-  focus, research areas, and purpose in about 100 characters
+- Subdomain (different subdomain from the parent unit, e.g., lab-bioinfo.unipv.it)
+- Independent domain (completely different domain, e.g., labname.org)
+- Any site where the subunit manages its own content independently
+- **Important:** Subdomains are homepages, NOT profiles
 
-Format the report as a markdown list where each entry includes all available information about the subunit.
+## Subunits
 
-IMPORTANT: Always include a summary for each subunit, even if brief. Extract this from the available information about
-the subunit's research focus, activities, or purpose.
+**Structural subunits** are units that are organizationally part of the target unit:
 
-# Identifying Subunits
+- Laboratories
+- Research groups
+- Research centers **that are part of the unit**
+- Divisions, sections, or other organizational subdivisions
+- Units with direct hierarchical or membership relationship to the parent
 
-- Make ABSOLUTELY sure to identify ONLY structurally subunits, thoroughly inspecting available information to
-  distinguish them from parent units, collaborating units, coordinating research centers, and other horizontal
-  relationships
-- Include ONLY units that are structurally part of the target unit (e.g., laboratories, research groups, divisions)
-- IGNORE parent units, collaborating units, research centers, and other horizontal relationships
+**NOT subunits** (ignore these):
 
-# Reporting Subunits
+- Parent units (units that contain the target unit)
+- External collaborating units (partnerships, joint projects with other institutions)
+- Coordinating bodies that the unit participates in but doesn't contain
+- Units with only horizontal/peer relationships (sister units, partners)
+- **Research themes, topics, or areas** (thematic groupings that may contain labs but are not themselves organizational
+  units)
 
-- Make ABSOLUTELY sure to report EVERY subunit found
-- Make ABSOLUTELY sure to report all entries found in unit directories formatted as tables or lists without textual
-  descriptions
+**Key distinctions:**
 
-# Determining Profile and Homepage
+- "Belonging to" or "part of" → subunit; "collaborate with" or "participate in" → not a subunit
+- Has dedicated members/space/PI → likely a unit; purely thematic/topical grouping → not a unit
+- If a page links to actual labs/groups underneath it, those linked labs are subunits, not the theme page itself
 
-- For each subunit, distinguish between profile and homepage:
-    - profile: URL on institutional website (university, department, or parent unit site)
-    - homepage: URL of the subunit's own independent website
-- A subunit may have both, one, or neither URL
-- When you find a link to a subunit:
-    - If it's on an institutional domain, it's likely a profile
-    - If it's on an independent domain controlled by the subunit, it's likely a homepage
-    - When uncertain, retrieve the URL to inspect and determine its nature
+# Requirements
 
-## Finding Homepage Links
+- Identify ONLY structural subunits (not collaborations or parent units)
+- Report EVERY subunit found, including all entries from directories/tables/lists
+- Each subunit **MUST** have:
+    - At least one URL (profile or homepage) as evidence of online presence
+    - A summary (~100 chars) describing focus, research areas, and purpose
+- Report URLs verbatim (exactly as found)
 
-- Make ABSOLUTELY sure to fetch each subunit's profile page to look for homepage links
-- Look for external website links in the profile page content (not just footer/navigation)
-- Common patterns for homepage links:
-    - External links to subunit-specific domains or subdomains
-    - Links with labels like "website", "homepage", "site", or their local language equivalents
-    - URLs that are NOT part of the main institutional domain structure
-    - Links appearing in the main content area describing the subunit (not in navigation or footer)
-- IGNORE footer links to university services, privacy policies, webmail, etc.
-- Make ABSOLUTELY sure to report URLs verbatim
-- Do NOT confuse profile and homepage - they serve different purposes
-- ALWAYS include homepage when you find it on the profile page
+# Guidelines
+
+## Exploration Process
+
+**Multi-level navigation:**
+
+1. Start with the provided URL
+2. Examine navigation for links to research/organization/groups sections
+3. Fetch section pages (may be overview/index pages)
+4. From section pages, fetch listing pages with actual subunit directories
+5. **If pages appear to be research themes/topics rather than actual units**, explore links within those pages to find
+   actual labs/groups
+6. Fetch profile pages in parallel to find homepage links
+
+**Key principles:**
+
+- Do NOT assume homepage directly links to listing pages
+- Do NOT rely solely on homepage content
+- Do NOT report thematic pages as units; explore them to find actual labs underneath
+- Prioritize pages likely containing comprehensive subunit lists
+- Prioritize local language pages over English translations
+- Ignore PDFs and linked documents
+- Batch parallel requests when fetching independent pages
+
+## Finding URLs
+
+**Profile URLs:**
+
+- Pages within parent unit's website structure (same domain and path hierarchy)
+- May be dedicated pages or sections where subunit is mentioned
+
+**Homepage URLs:**
+
+- Subdomains differing from parent unit's subdomain
+- Independent domains
+- Links labeled "website", "homepage", "site" in main content area
+- Ignore footer links (university services, privacy policies, webmail)
+
+**Two-step discovery:**
+
+1. Check directory/listing pages for direct homepage links
+2. Fetch profile pages to find additional homepage links
+
+## Stopping Conditions
+
+**Do NOT stop until:**
+
+1. All relevant section pages (research/groups/organization) are fetched and explored
+2. Listing pages within those sections are identified and fetched
+3. All structural subunits from listing pages are identified
+4. Profile and/or homepage URLs are collected for each
+5. Information for summaries is gathered
+
+**Then** generate the structured report. Return empty list if no subunits found after thorough exploration.

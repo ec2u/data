@@ -66,11 +66,24 @@ export async function structure(report: string): Promise<readonly Lead[]> {
 		items: {
 			type: Type.OBJECT,
 			properties: {
-				profile: { type: Type.STRING, description: "The URL of the institutional profile of the unit" },
-				homepage: { type: Type.STRING, description: "The URL of the unit's self-managed website" },
-				name: { type: Type.STRING, description: "The name of the research unit" },
-				summary: { type: Type.STRING, description: "A brief summary of the research unit" }
-			}
+				profile: {
+					type: Type.STRING,
+					description: "The URL of the institutional profile of the unit (omit if not available)"
+				},
+				homepage: {
+					type: Type.STRING,
+					description: "The URL of the unit's self-managed website (omit if not available)"
+				},
+				name: {
+					type: Type.STRING,
+					description: "The name of the research unit"
+				},
+				summary: {
+					type: Type.STRING,
+					description: "A brief summary of the research unit"
+				}
+			},
+			required: ["name", "summary"]
 		}
 	});
 }
