@@ -20,7 +20,8 @@ import { file } from "@/utilities/node/files";
 import { fetchPage } from "@/utilities/work/gemini-tools";
 import { Type } from "@google/genai";
 
-export interface Unit {
+
+interface Unit {
 
 	readonly formal: string;
 	readonly short?: string;

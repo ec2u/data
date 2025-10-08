@@ -99,7 +99,7 @@ export function data<T>(text: string, schema: SchemaUnion): Promise<T> {
 				ROLE / You are a data engineer.
 				INPUT / You will be provided with a textual report.
 				GOAL / Your task is to convert it into a structured machine-readable representation.
-				OUTPUT / Reply with a structured JSON object; unless required otherwise by the provided schema:
+				OUTPUT / Reply with a structured JSON object; unless otherwise required by the provided schema:
 
 				- ALWAYS omit undefined scalar values
 				- ALWAYS omit empty object values
