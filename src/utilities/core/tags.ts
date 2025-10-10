@@ -35,3 +35,19 @@ import dedent from "dedent";
 export function md(template: TemplateStringsArray, ...values: unknown[]): string {
 	return dedent(template, ...values);
 }
+
+/**
+ * Template literal tag that marks a string as SPARQL query content.
+ *
+ * <p>Identifies template literals containing SPARQL query syntax, enabling proper handling
+ * by SPARQL processors and development tools. The tag also normalizes indentation
+ * to ensure clean formatting regardless of the surrounding code structure.</p>
+ *
+ * @param template the template strings array containing SPARQL query content
+ * @param values interpolated values to be embedded in the query
+ *
+ * @returns the SPARQL query string with normalized indentation
+ */
+export function sparql(template: TemplateStringsArray, ...values: unknown[]): string {
+	return dedent(template, ...values);
+}

@@ -20,6 +20,14 @@ import { file } from "@/utilities/node/files";
 import { fetchPage } from "@/utilities/work/gemini-tools";
 import { Type } from "@google/genai";
 
+
+const tools=[
+	fetchPage({ cache: DatastoreCache({ kind: "Page" }) })
+];
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Lead to the online description of a research unit.
  */
@@ -50,9 +58,7 @@ export async function analyze(lead: Lead): Promise<string> {
 			seed: 0,
 			temperature: 0,
 			systemInstruction: await file("index.md", import.meta.url),
-			tools: [
-				fetchPage({ cache: DatastoreCache({ kind: "Page" }) })
-			],
+			tools,
 			automaticFunctionCalling: {
 				maximumRemoteCalls: 20
 			}

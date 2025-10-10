@@ -1,8 +1,0 @@
-
-
-	 - dedicated: entire dedicated website for the target unit
-	 - embedded: section within a parent site (url is entry point; may span multiple pages; the parent site
-	   likely includes unrelated material; analysis must focus only on relevant pages for the target unit,
-	   possibly identified by name/summary)
-	 - mentioned: brief reference within a page that includes other descriptions and possibly other types of
-	   information; analysis must focus only on the target unit, possibly identified by name/summary

@@ -17,16 +17,15 @@
 import { message } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
-import { GenerateContentResponse, GoogleGenAI, GoogleGenAIOptions, SchemaUnion } from "@google/genai";
+import { GenerateContentResponse, GoogleGenAI, SchemaUnion } from "@google/genai";
 
 let sdk: null | Promise<GoogleGenAI>=null;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ai(opts: GoogleGenAIOptions={}): Promise<GoogleGenAI> {
-	return sdk??=secret("googleai-key")
-		.then(key => new GoogleGenAI({ apiKey: key, ...opts }));
+export function ai(): Promise<GoogleGenAI> {
+	return sdk??=secret("googleai-key").then(apiKey => new GoogleGenAI({ apiKey }));
 }
 
 

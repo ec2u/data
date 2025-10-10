@@ -25,10 +25,11 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - **Acronym**: Acronym if defined, otherwise "Not defined"
 - **Identifier**: Internal identifier if defined, otherwise "Not defined"
 - **Institutional Email Address**: Email if found, otherwise "Not defined"
-- **Typology**: Classification type, for instance, Department, Laboratory, Research Group
-- **Major Research Fields and Topics**: Bulleted list
+- **Typology**: Formal topic ID from the organizations taxonomy (not a free-form classification type)
+- **Topics**: Bulleted list of formal topic IDs from research taxonomies
 - **Summary**: Concise paragraph of about 500 chars
 - **General Description**: Standalone description of about 250 words, 2-4 paragraphs
+- **Keywords**: Bulleted list of free-form keywords describing research areas and fields
 
 # Requirements
 
@@ -58,13 +59,41 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 
 ## Typology
 
-- ALWAYS include a unit type for classification purpose
+- ALWAYS determine the unit type by calling `matchTopics` to find the best-matching topic ID
+- Use the unit's classification type (for instance, Department, Laboratory, Research Group) as the query text
+- Use scheme: `https://data.ec2u.eu/taxonomies/organizations/`
+- Use focus: `https://data.ec2u.eu/taxonomies/organizations/university-unit`
+- Set limit: 1
+- Set threshold: 0.5 (reject matches with distance > 0.5 as too dissimilar)
+- Report the ID of the returned topic as the typology value
+- If no match is found within threshold, report "Not defined"
 
-## Research Topics
+## Topics
 
-- Keep the research topics list as SHORT as possible, but make sure that all relevant topics are included
-- Focus on MAJOR topics, but highlight NOTEWORTHY specialty topics
-- Sort topics by INCREASING specificity
+- Topics should be formal topic IDs obtained by calling `matchTopics` for each keyword **separately**
+- IMPORTANT: Call `matchTopics` ONCE per keyword, NOT with all keywords combined in a single text
+- Use each individual keyword as the query text for its own `matchTopics` call
+- Use scheme: `https://data.ec2u.eu/taxonomies/euroscivoc/`
+- Set limit: 1 for each keyword match
+- Set threshold: 0.6 (reject matches with distance > 0.6 as too dissimilar)
+- You can call `matchTopics` MULTIPLE times in parallel by calling it for all keywords at once
+- ALWAYS batch independent keyword matching requests together for efficiency (parallel calls, not combined text)
+- Deduplicate results to avoid repeating the same topic ID
+- Omit keywords that don't match any topic within the threshold
+
+**Example**: For keywords ["Machine Learning", "Robotics", "Data Science"], make THREE parallel calls:
+
+- `matchTopics(text: "Machine Learning", scheme: "...", limit: 1, threshold: 0.6)`
+- `matchTopics(text: "Robotics", scheme: "...", limit: 1, threshold: 0.6)`
+- `matchTopics(text: "Data Science", scheme: "...", limit: 1, threshold: 0.6)`
+
+## Keywords
+
+- Keywords should be free-form descriptive terms for research areas and fields
+- Keep the list as SHORT as possible, but make sure that all relevant areas are included
+- Focus on MAJOR areas, but highlight NOTEWORTHY specialty areas
+- Sort items by INCREASING specificity
+- Keywords complement the formal topics by providing additional context
 
 ## Summary and Description
 

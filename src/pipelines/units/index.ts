@@ -15,6 +15,8 @@
  */
 
 import { Lead } from "@/pipelines/leads";
+import { matchTopics } from "@/pipelines/topics/callable";
+import { topics } from "@/pipelines/topics/store";
 import { DatastoreCache } from "@/utilities/gcp/cache";
 import { ai, data, text } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
@@ -22,7 +24,15 @@ import { fetchPage } from "@/utilities/work/gemini-tools";
 import { Type } from "@google/genai";
 
 
-interface Unit {
+const tools=[
+	fetchPage({ cache: DatastoreCache({ kind: "Page" }) }),
+	matchTopics({ topics: topics })
+];
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface Unit {
 
 	readonly formal: string;
 	readonly short?: string;
@@ -36,9 +46,9 @@ interface Unit {
 
 	readonly summary: string;
 	readonly description: string;
+	readonly keywords: readonly string[];
 
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,9 +60,7 @@ export async function analyze(lead: Lead): Promise<string> {
 			seed: 0,
 			temperature: 0,
 			systemInstruction: await file("index.md", import.meta.url),
-			tools: [
-				fetchPage({ cache: DatastoreCache({ kind: "Page" }) })
-			],
+			tools,
 			automaticFunctionCalling: {
 				maximumRemoteCalls: 20
 			}
@@ -64,20 +72,49 @@ export async function structure(report: string): Promise<Unit> {
 	return data(report, {
 		type: Type.OBJECT,
 		properties: {
-			formal: { type: Type.STRING, description: "Formal name of the research unit" },
-			short: { type: Type.STRING, description: "Short name of the research unit" },
-			acronym: { type: Type.STRING, description: "Acronym of the research unit" },
-			identifier: { type: Type.STRING, description: "Unique identifier of the research unit" },
-			email: { type: Type.STRING, description: "Institutional email address of the research unit" },
-			summary: { type: Type.STRING, description: "Summary of the research unit (~500 chars)" },
-			description: { type: Type.STRING, description: "General description in markdown format" },
-			type: { type: Type.STRING, description: "Type or category of the research unit" },
+			formal: {
+				type: Type.STRING,
+				description: "Formal name of the research unit"
+			},
+			short: {
+				type: Type.STRING,
+				description: "Short name of the research unit"
+			},
+			acronym: {
+				type: Type.STRING,
+				description: "Acronym of the research unit"
+			},
+			identifier: {
+				type: Type.STRING,
+				description: "Unique identifier of the research unit"
+			},
+			email: {
+				type: Type.STRING,
+				description: "Institutional email address of the research unit"
+			},
+			type: {
+				type: Type.STRING,
+				description: "Formal topic ID from the organizations taxonomy"
+			},
 			topics: {
 				type: Type.ARRAY,
 				items: { type: Type.STRING },
-				description: "List of research topics and fields"
+				description: "List of formal research topic IDs"
+			},
+			summary: {
+				type: Type.STRING,
+				description: "Summary of the research unit (~500 chars)"
+			},
+			description: {
+				type: Type.STRING,
+				description: "General description in markdown format"
+			},
+			keywords: {
+				type: Type.ARRAY,
+				items: { type: Type.STRING },
+				description: "List of keywords research topics and fields"
 			}
 		},
-		required: ["formal", "type", "summary", "description", "topics"]
+		required: ["formal", "type", "topics", "summary", "description", "keywords"]
 	});
 }
