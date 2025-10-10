@@ -15,9 +15,11 @@
  */
 
 import { match, Topic } from "@/pipelines/topics/index";
+import { Promisable } from "@/utilities/core";
 import { log, message } from "@/utilities/core/log";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import dedent from "dedent";
+
 
 /**
  * Topic matching tool for Gemini API.
@@ -32,7 +34,7 @@ import dedent from "dedent";
  */
 export function matchTopics(opts: {
 
-	topics: (scheme: string) => Promise<readonly Topic[]>
+	topics: (scheme: string) => Promisable<readonly Topic[]>
 
 }): CallableTool {
 
@@ -136,7 +138,7 @@ export function matchTopics(opts: {
 					let topics=cache.get(scheme);
 
 					if ( !topics ) {
-						cache.set(scheme, (topics=opts.topics(scheme)));
+						cache.set(scheme, (topics=Promise.resolve(opts.topics(scheme))));
 					}
 
 					const matches=await match(text, {

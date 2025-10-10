@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-import { match } from "@/pipelines/topics";
-import { topics } from "@/pipelines/topics/store";
+import { secret } from "@/utilities/gcp/secrets";
+import SparqlClient from "sparql-http-client";
+
+let client: null | SparqlClient=null;
 
 
-console.log(await match("Research Lab", {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	topics: await topics("https://data.ec2u.eu/taxonomies/organizations/"),
-	focus: "https://data.ec2u.eu/taxonomies/organizations/university-unit",
-	limit: 1
-
-}));
+export async function hub() {
+	return client??=new SparqlClient({
+		endpointUrl: "https://graphdb.ec2u.net/repositories/data-main",
+		user: await secret("gdb-server-usr"),
+		password: await secret("gdb-server-pwd")
+	});
+}

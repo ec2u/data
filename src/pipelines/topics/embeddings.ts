@@ -14,21 +14,6 @@
  * limitations under the License.
  */
 
-import { ai } from "@/utilities/gcp/gemini";
-
-export async function embedding(text: string): Promise<readonly number[]> {
-	return ai().then(async ai => {
-
-		const response=await ai.models.embedContent({
-			model: "text-embedding-004", //  see https://ai.google.dev/models
-			contents: text
-		});
-
-		return response.embeddings?.[0]?.values || [];
-
-	});
-}
-
 /**
  * Computes the cosine distance between two vectors.
  *
@@ -73,4 +58,54 @@ export function distance(x: readonly number[], y: readonly number[]) {
 	}
 
 	return 1-dot/(Math.sqrt(xnorm)*Math.sqrt(ynorm));
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Compresses an embedding vector to base64-encoded 16-bit quantized representation.
+ *
+ * <p>Reduces storage size by ~75% compared to JSON array representation,
+ * converting 64-bit floats to 16-bit integers with negligible precision loss
+ * for cosine similarity calculations.</p>
+ *
+ * <p>Values are scaled to the int16 range [-32768, 32767] and rescaled on decompression.
+ * This quantization preserves relative distances well for semantic similarity tasks.</p>
+ *
+ * @param embedding the embedding vector to compress
+ *
+ * @return base64-encoded binary representation of the quantized embedding
+ */
+export function compress(embedding: readonly number[]): string {
+
+	const int16Array=new Int16Array(embedding.length);
+
+	for (let i=0; i < embedding.length; i++) {
+		int16Array[i]=Math.round(embedding[i]*32767);
+	}
+
+	const buffer=Buffer.from(int16Array.buffer);
+
+	return buffer.toString("base64");
+}
+
+/**
+ * Decompresses a base64-encoded 16-bit quantized embedding to a float vector.
+ *
+ * @param compressed the base64-encoded compressed embedding
+ *
+ * @return the decompressed embedding vector
+ */
+export function decompress(compressed: string): readonly number[] {
+
+	const buffer=Buffer.from(compressed, "base64");
+
+	const int16Array=new Int16Array(
+		buffer.buffer,
+		buffer.byteOffset,
+		buffer.byteLength/Int16Array.BYTES_PER_ELEMENT
+	);
+
+	return Array.from(int16Array, v => v/32767);
 }

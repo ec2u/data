@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { distance, embedding } from "@/pipelines/topics/embeddings";
+import { distance } from "@/pipelines/topics/embeddings";
+import { ai, embedding } from "@/utilities/gcp/gemini";
 
 export interface Topic {
 
@@ -32,6 +33,16 @@ export interface Topic {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export async function index(text: string): Promise<readonly number[]> {
+	return ai().then(async ai => embedding(await ai.models.embedContent({
+		model: "text-embedding-004", //  see https://ai.google.dev/models
+		contents: text,
+		config: {
+			taskType: "SEMANTIC_SIMILARITY" // see https://ai.google.dev/gemini-api/docs/embeddings#supported-task-types
+		}
+	})));
+}
 
 /**
  * Matches topics against a text query using semantic similarity.
@@ -95,11 +106,11 @@ export async function match(text: string, {
 		throw new RangeError(`negative narrowing <${narrowing}>`);
 	}
 
-	const _embedding=await embedding(text); // !!!
+	const embedding=await index(text); // !!!
 
 	const sorted=topics
 		.filter(topic => focus === undefined || topic.lineage.includes(focus))
-		.map(topic => [topic, distance(_embedding, topic.embedding)*(narrowing ? Math.pow(narrowing, topic.lineage.length-1) : 1)] as [Topic, number])
+		.map(topic => [topic, distance(embedding, topic.embedding)*(narrowing ? Math.pow(narrowing, topic.lineage.length-1) : 1)] as [Topic, number])
 		.filter(([, d]) => threshold === undefined || d <= threshold)
 		.sort((x, y) => x[1]-y[1]);
 

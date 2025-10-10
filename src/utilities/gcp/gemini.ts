@@ -17,7 +17,7 @@
 import { message } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
-import { GenerateContentResponse, GoogleGenAI, SchemaUnion } from "@google/genai";
+import { EmbedContentResponse, GenerateContentResponse, GoogleGenAI, SchemaUnion } from "@google/genai";
 
 let sdk: null | Promise<GoogleGenAI>=null;
 
@@ -61,7 +61,6 @@ export function text(response: GenerateContentResponse): string {
  * @throws Error if the response contains no text or invalid JSON
  */
 export function json<T>(response: GenerateContentResponse): T {
-
 	try {
 
 		return JSON.parse(text(response));
@@ -69,8 +68,21 @@ export function json<T>(response: GenerateContentResponse): T {
 	} catch ( e ) {
 		throw new Error(`malformed model response: ${message(e)}`);
 	}
-
 }
+
+/**
+ * Extracts embedding vector from a Gemini API response.
+ *
+ * @param response Response from an embedContent call
+ *
+ * @returns Embedding vector as an array of numbers, or empty array if not present
+ */
+export function embedding(response: EmbedContentResponse) {
+	return response.embeddings?.[0]?.values ?? [];
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Converts unstructured text into structured data using the Gemini API.
