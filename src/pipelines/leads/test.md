@@ -14,14 +14,14 @@ This document describes significant test cases used during development, with sam
 **Expected Behavior:**
 
 - Extract all 35 laboratories listed
-- Identify homepage URLs for labs with subdomain sites (e.g., lab-bioinfo.unipv.it, vision.unipv.it)
-- Recognize subdomains as homepages, not profiles
+- Identify website URLs for labs with subdomain sites (e.g., lab-bioinfo.unipv.it, vision.unipv.it)
+- Recognize subdomains as websites, not profiles
 - Generate summaries for each laboratory (~100 chars)
 
 **Key Issues Tested:**
 
-- Missing homepage URLs when directly visible in listing
-- Subdomain confusion (treating subdomains as profiles vs homepages)
+- Missing website URLs when directly visible in listing
+- Subdomain confusion (treating subdomains as profiles vs websites)
 - Summary generation requirement
 
 # Test Case 2: Research Themes vs Actual Labs
@@ -37,7 +37,7 @@ This document describes significant test cases used during development, with sam
 - Explore each theme page to find actual laboratories underneath
 - Extract actual labs: "Genomica Computazionale" (under Bioinformatics theme), "Laboratorio di Neurofarmacologia
   Cellulare e Molecolare", etc.
-- **Fetch each lab's profile page** to find homepage links
+- **Fetch each lab's profile page** to find website links
 - Example: Genomica Computazionale profile (
   https://dbb.dip.unipv.it/it/ricerca/tematiche-di-ricerca-e-laboratori/bioinformatics-and-big-data/genomica-computazionale)
   should reveal https://lescailab.unipv.it/
@@ -47,7 +47,7 @@ This document describes significant test cases used during development, with sam
 - Distinguishing research themes from actual structural units
 - Exploring theme pages to find labs underneath
 - Not reporting themes as units
-- **Homepage links embedded in lab profile pages (currently inconsistent)**
+- **Website links embedded in lab profile pages (currently inconsistent)**
 - Multi-level structure: department → themes → labs
 - Fetching individual profile pages for each identified lab
 
@@ -88,23 +88,23 @@ This document describes significant test cases used during development, with sam
 - Expected centers: CEDANT, Centro di Studio sulla Simbolica Giuridica, Centro Studi sull'Unione Europea, Centro Studi
   Guido Rossi
 - For Centro Studi Diritto e Sanità: extract both profile (institutional page) and
-  homepage (https://dirittoesanita.unipv.it/)
+  website (https://dirittoesanita.unipv.it/)
 
 **Key Issues Tested:**
 
 - Research centers not being excluded as "coordinating bodies"
 - Distinguishing "our centers" from "centers we participate in"
-- Both profile and homepage extraction for centers
+- Both profile and website extraction for centers
 
 # Test Case 5: Multi-Level Navigation
 
 **Sample URL:** https://giurisprudenza.dip.unipv.it/
 
-**Description:** Department where research groups page is not directly linked from homepage.
+**Description:** Department where research groups page is not directly linked from website.
 
 **Navigation Path:**
 
-1. Homepage: https://giurisprudenza.dip.unipv.it/
+1. Website: https://giurisprudenza.dip.unipv.it/
 2. Intermediate: https://giurisprudenza.dip.unipv.it/it/ricerca/persone-e-network
 3. Listing: https://giurisprudenza.dip.unipv.it/it/ricerca/persone-e-network/gruppi-e-centri-di-ricerca
 
@@ -112,14 +112,14 @@ This document describes significant test cases used during development, with sam
 
 - Explore intermediate navigation pages (ricerca/persone-e-network)
 - From intermediate page, identify and fetch listing pages
-- Do NOT assume homepage directly links to all content
+- Do NOT assume website directly links to all content
 - Navigate through: section pages � subsection pages � listing pages
 
 **Key Issues Tested:**
 
 - Multi-level exploration requirement
 - Intermediate navigation page handling
-- Not relying solely on homepage content
+- Not relying solely on website content
 
 # Test Case 6: Profile Types (Dedicated, Embedded, Mentioned)
 
@@ -210,22 +210,22 @@ For all test cases, each subunit should include:
   "summary": "Brief description (~100 chars)",
   "profile": "https://institutional.site/path/to/unit",
   // optional
-  "homepage": "https://unit.subdomain.site/"
+  "website": "https://unit.subdomain.site/"
   // optional
 }
 ```
 
 **Requirements:**
 
-- At least one URL (profile or homepage) required
+- At least one URL (profile or website) required
 - Summary field always required
 - Profile: institutional page within parent site structure
-- Homepage: subdomain or independent site
+- Website: subdomain or independent site
 
 # Common Patterns to Verify
 
-1. **Subdomain Recognition:** `lab-name.unipv.it` → homepage, not profile
-2. **Homepage Discovery:** Check listing page, then fetch profile pages
+1. **Subdomain Recognition:** `lab-name.unipv.it` → website, not profile
+2. **Website Discovery:** Check listing page, then fetch profile pages
 3. **Research Centers:** Include if "part of" unit, exclude if external collaboration
 4. **Multi-Level Navigation:** Explore intermediate pages to find listings
 5. **Single-Level Extraction:** Report only direct subunits, not nested ones

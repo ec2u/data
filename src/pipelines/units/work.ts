@@ -35,8 +35,13 @@ Promise.resolve(
 		// "https://www.jku.at/institut-fuer-elektrische-antriebe-und-leistungselektronik/"
 	)
 
-	.then(analyze).then(dump("work.md"))
-	.then(structure).then(dump("work.json"))
+	.then(url => ({ profile: url }))
+
+	.then(analyze)
+	.then(dump("work.md"))
+
+	.then(structure)
+	.then(dump("work.json"))
 
 	.then(console.info)
 	.catch(console.error);

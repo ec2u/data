@@ -29,7 +29,7 @@ export interface Lead {
 	readonly profile?: string;
 
 	/** The URL of the unit's self-managed website */
-	readonly homepage?: string;
+	readonly website?: string;
 
 	/** The name of the research unit */
 	readonly name?: string;
@@ -70,7 +70,7 @@ export async function structure(report: string): Promise<readonly Lead[]> {
 					type: Type.STRING,
 					description: "The URL of the institutional profile of the unit (omit if not available)"
 				},
-				homepage: {
+				website: {
 					type: Type.STRING,
 					description: "The URL of the unit's self-managed website (omit if not available)"
 				},

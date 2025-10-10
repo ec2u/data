@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Lead } from "@/pipelines/leads";
 import { DatastoreCache } from "@/utilities/gcp/cache";
 import { ai, data, text } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
@@ -26,25 +27,25 @@ interface Unit {
 	readonly formal: string;
 	readonly short?: string;
 	readonly acronym?: string;
-	readonly identifier?: string;
-	readonly type: string;
 
+	readonly identifier?: string;
 	readonly email?: string;
+
+	readonly type: string;
+	readonly topics: readonly string[];
 
 	readonly summary: string;
 	readonly description: string;
-
-	readonly topics: readonly string[];
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function analyze(site: string): Promise<string> {
+export async function analyze(lead: Lead): Promise<string> {
 	return ai().then(async ai => text(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
-		contents: site,
+		contents: JSON.stringify(lead, null, 2),
 		config: {
 			seed: 0,
 			temperature: 0,
@@ -67,10 +68,10 @@ export async function structure(report: string): Promise<Unit> {
 			short: { type: Type.STRING, description: "Short name of the research unit" },
 			acronym: { type: Type.STRING, description: "Acronym of the research unit" },
 			identifier: { type: Type.STRING, description: "Unique identifier of the research unit" },
-			type: { type: Type.STRING, description: "Type or category of the research unit" },
 			email: { type: Type.STRING, description: "Institutional email address of the research unit" },
 			summary: { type: Type.STRING, description: "Summary of the research unit (~500 chars)" },
 			description: { type: Type.STRING, description: "General description in markdown format" },
+			type: { type: Type.STRING, description: "Type or category of the research unit" },
 			topics: {
 				type: Type.ARRAY,
 				items: { type: Type.STRING },
