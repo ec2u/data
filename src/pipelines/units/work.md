@@ -17,60 +17,47 @@ info.iii@unipv.it
 https://data.ec2u.eu/taxonomies/organizations/university-unit/department
 
 # Topics
-
-* https://data.ec2u.eu/taxonomies/euroscivoc/17b7bbad-4972-4fe7-aa3c-cbd21809f0bb
 * https://data.ec2u.eu/taxonomies/euroscivoc/1198b23a-f82f-4189-8778-d9a742430a0f
 * https://data.ec2u.eu/taxonomies/euroscivoc/f4cb5fb7-3942-47b0-855c-3d9fca817513
-* https://data.ec2u.eu/taxonomies/euroscivoc/6e37f121-a5d4-4054-b685-fec1c2d5e6c8
-* https://data.ec2u.eu/taxonomies/euroscivoc/f688c719-b99d-4140-874b-574380f66398
 * https://data.ec2u.eu/taxonomies/euroscivoc/b078d965-cd9f-438b-888e-a86a2137ca10
+* https://data.ec2u.eu/taxonomies/euroscivoc/17b7bbad-4972-4fe7-aa3c-cbd21809f0bb
 * https://data.ec2u.eu/taxonomies/euroscivoc/c2a8caf5-4ee8-43ff-a3cd-bae7430e4e18
 * https://data.ec2u.eu/taxonomies/euroscivoc/8d3657d8-563a-47fb-a5c2-5592b08365b5
 * https://data.ec2u.eu/taxonomies/euroscivoc/b160ef85-1d08-4f45-9d3a-dbc21cd196d0
 * https://data.ec2u.eu/taxonomies/euroscivoc/0e362272-f233-4787-bfb1-1917f4c7c43a
+* https://data.ec2u.eu/taxonomies/euroscivoc/6e37f121-a5d4-4054-b685-fec1c2d5e6c8
 * https://data.ec2u.eu/taxonomies/euroscivoc/29584f77-4bbc-4540-afae-cbc9764a2660
 * https://data.ec2u.eu/taxonomies/euroscivoc/a010f01c-4bd9-4bca-b568-0c1357034db9
+* https://data.ec2u.eu/taxonomies/euroscivoc/f688c719-b99d-4140-874b-574380f66398
 
 # Summary
 
-The Department of Electrical, Computer and Biomedical Engineering (DIII) is a leading academic unit dedicated to
-advancing scientific and technological progress in engineering. Its mission encompasses fostering education, driving
-innovation, and facilitating technology transfer across various engineering disciplines. The Department focuses on
-addressing contemporary challenges and opportunities in fields such as telecommunications, automotive, artificial
-intelligence, data science, energy, high-performance computing, imaging, multimedia, IoT, embedded systems, remote
-sensing, life science, bioengineering, mechatronics, microelectronics, photonics, numerical modeling, and industrial
-automation.
+The Department of Electrical, Computer and Biomedical Engineering is a key academic unit dedicated to advancing
+scientific and technological progress in engineering. Its mission encompasses education, innovation, and technology
+transfer, addressing contemporary challenges and opportunities. The Department focuses on a broad spectrum of research
+areas, including telecommunications, artificial intelligence, robotics, and biomedical applications, aiming to drive
+advancements in these critical fields.
 
 # General Description
 
-The Department of Electrical, Computer and Biomedical Engineering (DIII) is a dynamic research and educational
-institution committed to excellence in the broad field of engineering. The Department plays a crucial role in the
-scientific, technological, and socio-economic development of modern society by serving as a hub for advanced training,
-groundbreaking innovation, and effective technology transfer. Its comprehensive approach to engineering education and
-research prepares future generations of engineers and scientists to tackle complex global challenges.
+The Department of Electrical, Computer and Biomedical Engineering is an interdisciplinary academic and research unit
+committed to fostering innovation and knowledge dissemination in various engineering disciplines. The Department's core
+mission is to serve as a catalyst for scientific and technological development, providing high-quality education and
+facilitating technology transfer to industry and society.
 
-The Department's research activities span a wide array of cutting-edge areas, reflecting the interdisciplinary nature of
-contemporary engineering. Key research lines include the development of advanced 5G and telecommunications systems,
-innovative solutions in automotive engineering, and the application of artificial intelligence and data science for
-complex problem-solving. Furthermore, the Department is actively involved in research concerning sustainable energy
-solutions, high-performance computing architectures, and advanced imaging and multimedia processing techniques.
-
-Specialized research also extends to the Internet of Things (IoT), embedded systems, and remote sensing for diverse
-applications. The Department contributes significantly to life science and bioengineering through technological
-advancements, and explores the integration of mechanical, electrical, and computer engineering in mechatronics. Research
-in microelectronics and photonics focuses on developing next-generation devices, while numerical modeling for
-engineering science provides critical tools for analysis and design. Finally, the Department is at the forefront of
-robotics and industrial automation, developing intelligent systems for various industrial and service sectors.
+Research activities within the Department span a wide array of cutting-edge fields. These include the development of
+advanced telecommunication systems, intelligent solutions in artificial intelligence and data science, and innovative
+applications in robotics and industrial automation. Furthermore, the Department explores areas such as biomedical
+engineering, microelectronics, photonics, and high-performance computing, contributing to both fundamental understanding
+and practical applications. The Department is dedicated to addressing complex engineering challenges and contributing to
+societal progress through its diverse research portfolio.
 
 # Keywords
-
-* Energy
 * Telecommunications
-* Automotive
-* Mechatronics
-* Robotics
+* Automotive Engineering
 * Artificial Intelligence
 * Data Science
+* Energy
 * High Performance Computing
 * Imaging
 * Multimedia
@@ -79,7 +66,9 @@ robotics and industrial automation, developing intelligent systems for various i
 * Remote Sensing
 * Life Science
 * Bioengineering
+* Mechatronics
 * Microelectronics
 * Photonics
 * Numerical Modeling
-* Engineering Science
+* Robotics
+* Industrial Automation

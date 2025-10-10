@@ -23,7 +23,7 @@
  * context padding for improved readability in console output.
  */
 
-import { immutable } from "@/utilities/core";
+import { immutable, isError, isNumber } from "@/utilities/core";
 
 
 /**
@@ -104,5 +104,47 @@ function report(
  * @returns Error message or string representation of the value
  */
 export function message(value: unknown) {
-	return value instanceof Error ? value.message : String(value);
+	return isNumber(value) ? value.toLocaleString("en-US")
+		: isError(value) ? value.message
+			: String(value);
+}
+
+/**
+ * Executes a task and monitors its execution time.
+ *
+ * <p>Supports both synchronous and asynchronous tasks. For promises, the elapsed time
+ * is measured from task invocation until promise resolution. The monitor callback receives
+ * the unwrapped result value and elapsed time in milliseconds.</p>
+ *
+ * @param task Function returning a value or promise to be timed
+ * @param monitor Callback invoked with the result value and elapsed time in milliseconds
+ *
+ * @returns The task's return value (promise or direct value)
+ */
+export function time<T>(task: () => Promise<T>, monitor: (value: T, elapsed: number) => void): Promise<T>;
+export function time<T>(task: () => T, monitor: (value: T, elapsed: number) => void): T;
+export function time<T>(task: () => T | Promise<T>, monitor: (value: T, elapsed: number) => void): T | Promise<T> {
+
+	const start=Date.now();
+
+	const value=task();
+
+	if ( value instanceof Promise ) {
+
+		return value.then(resolved => {
+
+			monitor(resolved, Date.now()-start);
+
+			return resolved;
+
+		});
+
+	} else {
+
+		monitor(value, Date.now()-start);
+
+		return value;
+
+	}
+
 }

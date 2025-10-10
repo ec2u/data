@@ -74,6 +74,15 @@ export function isFunction(value: unknown): value is Function {
 	return typeof value === "function";
 }
 
+/**
+ * Checks if a value is an Error instance.
+ *
+ * @param value the value to check
+ * @return `true` if the value is an Error instance
+ */
+export function isError(value: unknown): value is Error {
+	return value instanceof Error;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

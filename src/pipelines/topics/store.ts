@@ -16,7 +16,7 @@
 
 import { embedding } from "@/pipelines/topics/embeddings";
 import { Topic } from "@/pipelines/topics/index";
-import { log } from "@/utilities/core/log";
+import { log, message, time } from "@/utilities/core/log";
 import { sparql } from "@/utilities/core/tags";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { secret } from "@/utilities/gcp/secrets";
@@ -132,24 +132,22 @@ export async function store(scheme: string) {
 }
 
 export async function topics(scheme: string): Promise<readonly Topic[]> {
+	return time(async () => {
 
-	const start=Date.now();
+			const query=datastore
+				.createQuery(Topic)
+				.filter(new PropertyFilter("scheme", "=", scheme));
 
-	const query=datastore
-		.createQuery(Topic)
-		.filter(new PropertyFilter("scheme", "=", scheme));
+			const [entities]=await datastore.runQuery(query);
 
-	const [entities]=await datastore.runQuery(query);
+			return entities.map(({ [datastore.KEY]: _, embedding, ...topic }) => ({
+				...topic,
+				embedding: decompress(embedding as string)
+			} as Topic));
 
-	const result=entities.map(({ [datastore.KEY]: _, embedding, ...topic }) => ({
-		...topic,
-		embedding: decompress(embedding as string)
-	} as Topic));
-
-	log.info(topics.name, `loaded <${result.length.toLocaleString("en-US")}> topics from <${scheme}> in <${(Date.now()-start).toLocaleString("en-US")}> ms`);
-
-	return result;
-
+		}, (value, elapsed) => log.info(topics.name,
+			`loaded <${message(value.length)}> topics from <${scheme}> in <${message(elapsed)}> ms`)
+	);
 }
 
 
