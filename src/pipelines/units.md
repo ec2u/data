@@ -1,6 +1,0 @@
-- diverse structuring (eg dept > section > unit > lab)
-- embedded vs linked descriptions
-- multiple embedded descriptions per page
-- duplicate descriptions (eg embedded + linked)
-- no child units (eg law depts)
-- incongruent naming (eg laboratory at informatics vs physics)

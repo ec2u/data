@@ -17,11 +17,28 @@
 import { createHash } from "crypto";
 
 /**
- * Computes the MD5 hash of a string.
+ * Generates a deterministic UUID v3 (MD5-based) from a string.
  *
- * @param data the string to hash
- * @return the MD5 hash as a lowercase hexadecimal string
+ * @param text the string to generate a UUID from
+ *
+ * @return the UUID v3 as a lowercase string in standard format
  */
-export function hash(data: string) {
-	return createHash("md5").update(data).digest("hex");
+export function uuid(text: string): string {
+
+	const hash=createHash("md5").update(text, "utf8").digest();
+
+	// set version 3 and variant bits per RFC 4122
+
+	hash[6]=(hash[6]&0x0f)|0x30;
+	hash[8]=(hash[8]&0x3f)|0x80;
+
+	// format as 8-4-4-4-12
+
+	return [
+		hash.subarray(0, 4).toString("hex"),
+		hash.subarray(4, 6).toString("hex"),
+		hash.subarray(6, 8).toString("hex"),
+		hash.subarray(8, 10).toString("hex"),
+		hash.subarray(10, 16).toString("hex")
+	].join("-");
 }

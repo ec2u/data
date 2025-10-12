@@ -46,7 +46,7 @@
 import { immutable } from "@/utilities/core";
 import { Cache, DummyCache } from "@/utilities/core/cache";
 import { log, message } from "@/utilities/core/log";
-import { hash } from "@/utilities/node/hash";
+import { uuid } from "@/utilities/node/uuid";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
 
@@ -75,7 +75,7 @@ export interface Page {
 	/** Timestamp when the page was fetched (milliseconds since epoch) */
 	readonly fetched: number;
 
-	/** Content hash for detecting changes between crawls */
+	/** Content uuid for detecting changes between crawls */
 	readonly digest: string;
 
 	readonly summary: string;
@@ -383,7 +383,7 @@ export async function visit(url: string, {
 			title: title,
 			content: text,
 			links: pageLinks,
-			digest: hash(text),
+			digest: uuid(text),
 			fetched: Date.now(),
 			summary: summary.replaceAll(/\s+/g, " ")
 		};

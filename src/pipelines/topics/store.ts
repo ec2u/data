@@ -16,49 +16,73 @@
 
 import { compress, decompress } from "@/pipelines/topics/embeddings";
 import { Topic } from "@/pipelines/topics/index";
+import { immutable } from "@/utilities/core";
 import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
-import { hash } from "@/utilities/node/hash";
+import { uuid } from "@/utilities/node/uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
 
 
-const Topic="Topic";
+const kind="Topic";
+const batch=100;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function store(topics: readonly Topic[]): Promise<readonly Topic[]> {
+export const topics=immutable({
 
-	const BATCH_SIZE=100;
+	async lookup({
 
-	for (let i=0; i < topics.length; i+=BATCH_SIZE) {
+		scheme
 
-		await datastore.upsert(topics.slice(i, i+BATCH_SIZE).map(({ embedding, ...topic }) => ({
-			key: datastore.key([Topic, hash(topic.id)]),
-			data: { ...topic, embedding: compress(embedding) },
-			excludeFromIndexes: ["definition", "embedding"]
-		})));
+	}: {
+
+		scheme?: string
+
+	}={}): Promise<readonly Topic[]> {
+
+		return time(async () => {
+
+				let query=datastore.createQuery(kind);
+
+				if ( scheme ) {
+					query=query.filter(new PropertyFilter("scheme", "=", scheme));
+				}
+
+				const [entities]=await datastore.runQuery(query);
+
+				return entities.map(({ [datastore.KEY]: _, embedding, ...topic }) => ({
+					...topic,
+					embedding: decompress(embedding as string)
+				} as Topic));
+
+			}, (value, elapsed) => log.info(topics.lookup.name,
+				`retrieved <${message(value.length)}> topics${(scheme ? ` from <${scheme}>` : "")} in <${message(elapsed)}> ms`
+			)
+		);
+
+	},
+
+	async insert(items: readonly Topic[]): Promise<readonly Topic[]> {
+
+		return time(async () => {
+
+				for (let i=0; i < items.length; i+=batch) {
+
+					await datastore.upsert(items.slice(i, i+batch).map(({ embedding, ...topic }) => ({
+						key: datastore.key([kind, uuid(topic.id)]),
+						data: { ...topic, embedding: compress(embedding) },
+						excludeFromIndexes: ["definition", "embedding"]
+					})));
+				}
+
+				return items;
+
+			}, (value, elapsed) => log.info(topics.insert.name,
+				`inserted <${message(value.length)}> topics in <${message(elapsed)}> ms`
+			)
+		);
+
 	}
 
-	return topics;
-
-}
-
-export async function topics(scheme: string): Promise<readonly Topic[]> {
-	return time(async () => {
-
-			const query=datastore
-				.createQuery(Topic)
-				.filter(new PropertyFilter("scheme", "=", scheme));
-
-			const [entities]=await datastore.runQuery(query);
-
-			return entities.map(({ [datastore.KEY]: _, embedding, ...topic }) => ({
-				...topic,
-				embedding: decompress(embedding as string)
-			} as Topic));
-
-		}, (value, elapsed) => log.info(topics.name,
-			`loaded <${message(value.length)}> topics from <${scheme}> in <${message(elapsed)}> ms`)
-	);
-}
+});

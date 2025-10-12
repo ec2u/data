@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Lead } from "@/pipelines/units";
 import { DatastoreCache } from "@/utilities/gcp/cache";
 import { ai, data, text } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
@@ -28,25 +29,6 @@ const tools=[
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Lead to the online description of a research unit.
- */
-export interface Lead {
-
-	/** The URL of the institutional profile of the unit */
-	readonly profile?: string;
-
-	/** The URL of the unit's self-managed website */
-	readonly website?: string;
-
-	/** The name of the research unit */
-	readonly name?: string;
-
-	/** A brief summary of the research unit */
-	readonly summary?: string;
-
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +39,7 @@ export async function analyze(lead: Lead): Promise<string> {
 		config: {
 			seed: 0,
 			temperature: 0,
-			systemInstruction: await file("index.md", import.meta.url),
+			systemInstruction: await file("explore.md", import.meta.url),
 			tools,
 			automaticFunctionCalling: {
 				maximumRemoteCalls: 20

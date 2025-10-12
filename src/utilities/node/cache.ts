@@ -16,7 +16,7 @@
 
 import { Cache } from "@/utilities/core/cache";
 import { log, message } from "@/utilities/core/log";
-import { hash } from "@/utilities/node/hash";
+import { uuid } from "@/utilities/node/uuid";
 import { existsSync, promises as fs } from "fs";
 import { join } from "path";
 
@@ -50,7 +50,7 @@ export function DiskCache<T>({
 
 		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
 
-			const file=join(path, `${(hash(key))}.json`);
+			const file=join(path, `${(uuid(key))}.json`);
 			const work=pending.get(key);
 
 
@@ -156,7 +156,7 @@ export function DiskCache<T>({
 
 			} else {
 
-				const file=join(path, `${hash(key)}.json`);
+				const file=join(path, `${uuid(key)}.json`);
 
 				try {
 

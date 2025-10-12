@@ -15,13 +15,13 @@
  */
 
 import { index, Topic } from "@/pipelines/topics";
-import { store } from "@/pipelines/topics/store";
+import { topics } from "@/pipelines/topics/store";
 import { sparql } from "@/utilities/core/tags";
 import { hub } from "@/utilities/hub";
 import type { Term } from "@rdfjs/types";
 
-extract("https://data.ec2u.eu/taxonomies/organizations/").then(store);
-extract("https://data.ec2u.eu/taxonomies/euroscivoc/").then(store);
+extract("https://data.ec2u.eu/taxonomies/organizations/").then(topics.insert);
+extract("https://data.ec2u.eu/taxonomies/euroscivoc/").then(topics.insert);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

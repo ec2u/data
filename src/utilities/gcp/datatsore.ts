@@ -38,12 +38,13 @@ export const datastore=new Datastore({
  */
 export async function clear(kind: string): Promise<void> {
 	try {
-		log.info("deleteAllEntities", `deleting all entities of kind <${kind}>`);
+
+		log.info(clear.name, `deleting all entities of kind <${kind}>`);
 
 		const [entities]=await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
 
 		if ( entities.length === 0 ) {
-			log.info("deleteAllEntities", `no entities found for kind <${kind}>`);
+			log.info(clear.name, `no entities found for kind <${kind}>`);
 			return;
 		}
 
@@ -54,10 +55,13 @@ export async function clear(kind: string): Promise<void> {
 			await datastore.delete(keys.slice(i, i+batchSize));
 		}
 
-		log.info("deleteAllEntities", `deleted ${entities.length} entities of kind <${kind}>`);
+		log.info(clear.name, `deleted ${entities.length} entities of kind <${kind}>`);
 
 	} catch ( e ) {
-		log.error("deleteAllEntities", `unable to delete entities of kind <${kind}>: ${message(e)}`);
+
+		log.error(clear.name, `unable to delete entities of kind <${kind}>: ${message(e)}`);
+
 		throw e;
+
 	}
 }

@@ -24,7 +24,7 @@
 import { Cache } from "@/utilities/core/cache";
 import { log, message } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
-import { hash } from "@/utilities/node/hash";
+import { uuid } from "@/utilities/node/uuid";
 
 
 /**
@@ -70,7 +70,7 @@ export function DatastoreCache<T>({
 
 						log.info(DatastoreCache.name, `looking up <${kind}>/<${key}>`);
 
-						const entityKey=datastore.key([kind, hash(key)]);
+						const entityKey=datastore.key([kind, uuid(key)]);
 						const [entity]=await datastore.get(entityKey);
 
 						if ( entity ) {
@@ -154,7 +154,7 @@ export function DatastoreCache<T>({
 
 				log.info(DatastoreCache.name, `deleting <${kind}>/<${key}>`);
 
-				const docId=hash(key);
+				const docId=uuid(key);
 				const entityKey=datastore.key([kind, docId]);
 
 				try {
