@@ -31,7 +31,7 @@ const batch=100;
 
 export const topics=immutable({
 
-	async lookup({
+	async select({
 
 		scheme
 
@@ -43,7 +43,7 @@ export const topics=immutable({
 
 		return time(async () => {
 
-				let query=datastore.createQuery(kind);
+			let query=datastore.createQuery(kind).order("__key__");
 
 				if ( scheme ) {
 					query=query.filter(new PropertyFilter("scheme", "=", scheme));
@@ -56,7 +56,7 @@ export const topics=immutable({
 					embedding: decompress(embedding as string)
 				}));
 
-			}, (value, elapsed) => log.info(topics.lookup.name,
+			}, (value, elapsed) => log.info(topics.select.name,
 				`retrieved <${message(value.length)}> topics${(scheme ? ` from <${scheme}>` : "")} in <${message(elapsed)}> ms`
 			)
 		);

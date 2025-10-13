@@ -26,7 +26,7 @@ import { Type } from "@google/genai";
 
 const tools=[
 	fetchPage({ cache: DatastoreCache({ kind: "Page" }) }),
-	matchTopics({ topics: scheme => topics.lookup({ scheme }) })
+	matchTopics({ topics: scheme => topics.select({ scheme }) })
 ];
 
 

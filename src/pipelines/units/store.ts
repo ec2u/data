@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { Lead } from "@/pipelines/units/index";
+import { Lead, Unit } from "@/pipelines/units/index";
 import { immutable } from "@/utilities/core";
 import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 
 
-const kind="Lead";
+const Lead="Lead";
+const Unit="Unit";
+
 const batch=100;
 
 
@@ -29,7 +31,7 @@ const batch=100;
 
 export const leads=immutable({
 
-	async lookup({ offset, limit }: {
+	async select({ offset, limit }: {
 
 		readonly offset?: number;
 		readonly limit?: number;
@@ -38,24 +40,23 @@ export const leads=immutable({
 
 		return time(async () => {
 
-				let query=datastore.createQuery(kind);
+			let query=datastore.createQuery(Lead).order("__key__");
 
-				if ( offset ) {
-					query=query.offset(offset);
-				}
+			if ( offset ) {
+				query=query.offset(offset);
+			}
 
-				if ( limit ) {
-					query=query.limit(limit);
-				}
+			if ( limit ) {
+				query=query.limit(limit);
+			}
 
-				const [entities]=await datastore.runQuery(query);
+			const [entities]=await datastore.runQuery(query);
 
-				return entities.map(({ [datastore.KEY]: _, ...lead }) => lead);
+			return entities.map(({ [datastore.KEY]: _, ...item }) => item);
 
-			}, (value, elapsed) => log.info(leads.lookup.name,
-				`retrieved <${message(value.length)}> leads in <${message(elapsed)}> ms`
-			)
-		);
+		}, (items, elapsed) => log.info(leads.select.name,
+			`retrieved <${message(items.length)}> leads in <${message(elapsed)}> ms`
+		));
 
 	},
 
@@ -63,23 +64,128 @@ export const leads=immutable({
 
 		return time(async () => {
 
+			for (let i=0; i < items.length; i+=batch) {
+				await datastore.upsert(items.slice(i, i+batch).map(item => ({
+					key: datastore.key([Lead, uuid(item.id)]),
+					data: item,
+					excludeFromIndexes: ["summary"]
+				})));
+			}
+
+			return items;
+
+		}, (items, elapsed) => log.info(leads.insert.name,
+			`inserted <${message(items.length)}> leads in <${message(elapsed)}> ms`
+		));
+
+	},
+
+	async remove(): Promise<void> {
+
+		time(async () => {
+
+			const [items]=await datastore.runQuery(datastore.createQuery(Lead).select("__key__"));
+
+			if ( items.length !== 0 ) {
 				for (let i=0; i < items.length; i+=batch) {
-
-					await datastore.upsert(items.slice(i, i+batch)
-						.filter(lead => lead.id || lead.profile || lead.website)
-						.map(lead => ({
-							key: datastore.key([kind, uuid(lead.id ?? lead.profile ?? lead.website!)]),
-							data: lead,
-							excludeFromIndexes: ["summary"]
-						})));
+					await datastore.delete(items.slice(i, i+batch).map(entity => entity[datastore.KEY]));
 				}
+			}
 
-				return items;
+			return items;
 
-			}, (value, elapsed) => log.info(leads.insert.name,
-				`inserted <${message(value.length)}> leads in <${message(elapsed)}> ms`
-			)
-		);
+		}, (items, elapsed) => log.info(leads.remove.name,
+			`removed <${message(items.length)}> leads in <${message(elapsed)}> ms`
+		));
+
+	}
+
+});
+
+export const units=immutable({
+
+	async lookup(id: string): Promise<undefined | Unit> {
+
+		return time(async () => {
+
+			const key=datastore.key([Unit, uuid(id)]);
+			const [entity]=await datastore.get(key);
+
+			return entity ? { ...entity, [datastore.KEY]: undefined } : undefined;
+
+		}, (_, elapsed) => log.info(units.lookup.name,
+			`fetched unit <${id}> in <${message(elapsed)}> ms`
+		));
+
+	},
+
+	async select({ offset, limit }: {
+
+		readonly offset?: number;
+		readonly limit?: number;
+
+	}={}): Promise<readonly Unit[]> {
+
+		return time(async () => {
+
+			let query=datastore.createQuery(Unit).order("__key__");
+
+			if ( offset ) {
+				query=query.offset(offset);
+			}
+
+			if ( limit ) {
+				query=query.limit(limit);
+			}
+
+			const [entities]=await datastore.runQuery(query);
+
+			return entities.map(({ [datastore.KEY]: _, ...item }) => item);
+
+		}, (value, elapsed) => log.info(units.select.name,
+			`retrieved <${message(value.length)}> units in <${message(elapsed)}> ms`
+		));
+
+	},
+
+	async insert(items: readonly Unit[]): Promise<readonly Unit[]> {
+
+		return time(async () => {
+
+			for (let i=0; i < items.length; i+=batch) {
+
+				await datastore.upsert(items.slice(i, i+batch).map(item => ({
+					key: datastore.key([Unit, uuid(item.id)]),
+					data: item,
+					excludeFromIndexes: ["authoritative", "summary", "description", "keywords"]
+				})));
+			}
+
+			return items;
+
+		}, (value, elapsed) => log.info(units.insert.name,
+			`inserted <${message(value.length)}> units in <${message(elapsed)}> ms`
+		));
+
+	},
+
+	async remove(): Promise<void> {
+
+		time(async () => {
+
+			const [items]=await datastore.runQuery(datastore.createQuery(Unit).select("__key__"));
+
+			if ( items.length !== 0 ) {
+				for (let i=0; i < items.length; i+=batch) {
+					await datastore.delete(items.slice(i, i+batch).map(entity => entity[datastore.KEY]));
+				}
+			}
+
+			return items;
+
+		}, (items, elapsed) => log.info(units.remove.name,
+			`removed <${message(items.length)}> units in <${message(elapsed)}> ms`
+		));
 
 	}
 

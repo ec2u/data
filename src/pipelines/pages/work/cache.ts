@@ -69,7 +69,7 @@ export function DummyCache<T>(): Cache<T> {
 
 	return {
 
-		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
+		async select(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
 
 			if ( generator ) {
 
@@ -106,7 +106,7 @@ export function HeapCache<T>(): Cache<T> {
 
 	return {
 
-		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
+		async select(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
 
 			const cached=cache.get(key);
 

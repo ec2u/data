@@ -54,7 +54,7 @@ export function DatastoreCache<T>({
 
 	return {
 
-		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
+		async select(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
 
 			const work=pending.get(key);
 

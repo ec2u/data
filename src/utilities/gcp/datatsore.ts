@@ -20,48 +20,9 @@
  * Provides utility methods for Google Cloud Datastore operations.
  */
 
-import { log, message } from "@/utilities/core/log";
 import { project } from "@/utilities/gcp/index";
 import { Datastore } from "@google-cloud/datastore";
 
 export const datastore=new Datastore({
 	projectId: project
 });
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Deletes all entities of a specific kind from Datastore.
- *
- * @param kind The Datastore kind to delete all entities from
- */
-export async function clear(kind: string): Promise<void> {
-	try {
-
-		log.info(clear.name, `deleting all entities of kind <${kind}>`);
-
-		const [entities]=await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
-
-		if ( entities.length === 0 ) {
-			log.info(clear.name, `no entities found for kind <${kind}>`);
-			return;
-		}
-
-		const keys=entities.map(entity => entity[datastore.KEY]);
-		const batchSize=500; // Datastore limit
-
-		for (let i=0; i < keys.length; i+=batchSize) {
-			await datastore.delete(keys.slice(i, i+batchSize));
-		}
-
-		log.info(clear.name, `deleted ${entities.length} entities of kind <${kind}>`);
-
-	} catch ( e ) {
-
-		log.error(clear.name, `unable to delete entities of kind <${kind}>: ${message(e)}`);
-
-		throw e;
-
-	}
-}

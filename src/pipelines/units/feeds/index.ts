@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Lead } from "@/pipelines/units";
+import { Unit } from "@/pipelines/units";
 import { sparql } from "@/utilities/core/tags";
 import { hub } from "@/utilities/hub";
 import type { Term } from "@rdfjs/types";
 
-export async function bootstrap(university: string): Promise<readonly Lead[]> {
+export async function bootstrap(university: string): Promise<readonly Unit[]> {
 	return Array.fromAsync(
 		hub.query.select(sparql`
 
@@ -51,11 +51,41 @@ export async function bootstrap(university: string): Promise<readonly Lead[]> {
 
             }
 
-		`), (record: Record<string, Term>) => ({
-			id: record.unit?.value,
-			website: record.homepage?.value,
-			name: record.label?.value,
-			summary: record.comment?.value
-		})
+		`), (record: Record<string, Term>) => {
+
+			const id=record.unit?.value;
+
+			return ({
+
+				id,
+
+				created: Date.now(),
+				updated: undefined,
+				fetched: undefined,
+				deleted: undefined,
+
+				authoritative: [],
+
+				parent: university,
+				university,
+
+				formal: record.label?.value ?? "",
+				short: undefined,
+				acronym: undefined,
+
+				identifier: undefined,
+				email: undefined,
+				profile: undefined,
+				website: record.homepage?.value,
+
+				type: "",
+				topics: [],
+
+				summary: record.comment?.value ?? "",
+				description: "",
+				keywords: []
+
+			});
+		}
 	);
 }

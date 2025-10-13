@@ -16,30 +16,62 @@
 
 /**
  * Lead to the online description of a research unit.
+ *
+ * Either `profile` or `website` is expected.
  */
 export interface Lead {
 
-	/** The internal URL id of the unit the lead refers to */
-	readonly id?: string;
+	/** The IRI identifying the research unit */
+	readonly id: string;
 
-	/** The URL of the institutional profile of the unit */
+	/** The URL of the institutional profile */
 	readonly profile?: string;
 
-	/** The URL of the unit's self-managed website */
+	/** The URL of the self-managed website */
 	readonly website?: string;
 
-	/** The name of the research unit */
+	/** The name */
 	readonly name?: string;
 
-	/** A brief summary of the research unit */
+	/** A brief summary */
 	readonly summary?: string;
 
 }
 
 /**
  * Structured information about a research unit.
+ *
+ * Timestamps are in milliseconds from epoch.
  */
 export interface Unit {
+
+	/** The IRI identifying the research unit */
+	readonly id: string;
+
+
+	/** Timestamp when the record was created  */
+	readonly created: number;
+
+	/** Timestamp when the record was last updated */
+	readonly updated?: number;
+
+	/** Timestamp when the record was last updated from web sources */
+	readonly fetched?: number;
+
+	/** Timestamp when the record was deleted  */
+	readonly deleted?: number;
+
+
+	/** List of field names that were populated from an authoritative source */
+	readonly authoritative: readonly string[];
+
+
+	/** The IRI identifying the parent unit, or the university for top-level units */
+	readonly parent: string;
+
+	/** The IRI identifying the university */
+	readonly university: string;
+
 
 	/** The formal name */
 	readonly formal: string;
@@ -57,11 +89,17 @@ export interface Unit {
 	/** The contact email address */
 	readonly email?: string;
 
+	/** The URL of the institutional profile */
+	readonly profile?: string;
 
-	/** The concept URI for the type or category in external taxonomies */
+	/** The URL of the self-managed website */
+	readonly website?: string;
+
+
+	/** The concept IRI of the type or category */
 	readonly type: string;
 
-	/** The concept URIs for the research topics in external taxonomies */
+	/** The concept IRI of the research topics */
 	readonly topics: readonly string[];
 
 

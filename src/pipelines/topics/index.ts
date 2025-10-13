@@ -27,6 +27,7 @@ export interface Topic {
 	readonly scheme: string;
 	readonly broader: undefined | string;
 	readonly lineage: readonly string[];
+
 	readonly embedding: readonly number[];
 
 }
