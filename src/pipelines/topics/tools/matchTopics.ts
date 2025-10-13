@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { match, Topic } from "@/pipelines/topics/index";
+import { match, Topic } from "@/pipelines/topics";
 import { Promisable } from "@/utilities/core";
 import { log, message } from "@/utilities/core/log";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";

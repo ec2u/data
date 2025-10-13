@@ -35,13 +35,13 @@ export interface Topic {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export async function index(text: string): Promise<readonly number[]> {
-	return ai().then(async ai => embedding(await ai.models.embedContent({
+	return embedding(await ai.models.embedContent({
 		model: "text-embedding-004", //  see https://ai.google.dev/models
 		contents: text,
 		config: {
 			taskType: "SEMANTIC_SIMILARITY" // see https://ai.google.dev/gemini-api/docs/embeddings#supported-task-types
 		}
-	})));
+	}));
 }
 
 /**

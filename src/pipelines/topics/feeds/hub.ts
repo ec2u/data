@@ -28,53 +28,46 @@ extract("https://data.ec2u.eu/taxonomies/euroscivoc/").then(topics.insert);
 
 async function extract(scheme: string): Promise<readonly Topic[]> {
 
-	const client=await hub();
+	return Array.fromAsync(
+			hub.query.select(sparql`
 
-	return new Promise<Partial<Topic>[]>((resolve, reject) => {
+                prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
-		const results: Partial<Topic>[]=[];
+                select * where {
 
-		client.query.select(sparql`
-                    prefix skos: <http://www.w3.org/2004/02/skos/core#>
-
-                    select * where {
-
-                        values ?scheme {
-                            <${scheme}>
-                        }
-
-                        ?topic a skos:Concept ;
-                            skos:inScheme ?scheme ;
-                            skos:prefLabel ?label .
-
-                        filter (lang(?label) = 'en')
-
-                        optional {
-
-                            ?topic skos:definition ?definition
-
-                            filter (lang(?definition) = 'en')
-
-                        }
-
-                        optional {
-
-                            ?topic skos:broader ?broader
-
-                        }
+                    values ?scheme {
+                        <${scheme}>
                     }
-			`)
 
-			.on("data", (row: Record<string, Term>) => results.push({
+                    ?topic a skos:Concept ;
+                        skos:inScheme ?scheme ;
+                        skos:prefLabel ?label .
+
+                    filter (lang(?label) = 'en')
+
+                    optional {
+
+                        ?topic skos:definition ?definition
+
+                        filter (lang(?definition) = 'en')
+
+                    }
+
+                    optional {
+
+                        ?topic skos:broader ?broader
+
+                    }
+                }
+
+			`), (row: Record<string, Term>) => ({
 				id: row.topic?.value,
 				label: row.label?.value,
 				definition: row.definition?.value,
 				scheme,
 				broader: row.broader?.value
-			}))
-			.on("end", () => resolve(results))
-			.on("error", reject);
-	})
+			})
+		)
 
 		.then(topics => {
 

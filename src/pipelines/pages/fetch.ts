@@ -43,8 +43,8 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
+import { Cache, DummyCache } from "@/pipelines/pages/work/cache";
 import { immutable } from "@/utilities/core";
-import { Cache, DummyCache } from "@/utilities/core/cache";
 import { log, message } from "@/utilities/core/log";
 import { uuid } from "@/utilities/node/uuid";
 import { Defuddle, DefuddleResponse } from "defuddle/node";

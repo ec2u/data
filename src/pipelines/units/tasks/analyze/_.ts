@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { analyze, structure } from "@/pipelines/units/prompts/analyze/analyze";
+import { analyze, structure } from "@/pipelines/units/tasks/analyze/analyze";
 import { dump } from "@/utilities/node/files";
 
 Promise.resolve(

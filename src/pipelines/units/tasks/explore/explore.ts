@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
+import { DatastoreCache } from "@/pipelines/pages/work/store";
 import { Lead } from "@/pipelines/units";
-import { DatastoreCache } from "@/utilities/gcp/cache";
 import { ai, data, text } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
-import { fetchPage } from "@/utilities/work/gemini-tools";
 import { Type } from "@google/genai";
 
 
@@ -33,7 +33,7 @@ const tools=[
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export async function analyze(lead: Lead): Promise<string> {
-	return ai().then(async ai => text(await ai.models.generateContent({
+	return text(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
 		contents: JSON.stringify(lead, null, 2),
 		config: {
@@ -45,7 +45,7 @@ export async function analyze(lead: Lead): Promise<string> {
 				maximumRemoteCalls: 20
 			}
 		}
-	})));
+	}));
 }
 
 export async function structure(report: string): Promise<readonly Lead[]> {

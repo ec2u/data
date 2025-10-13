@@ -21,7 +21,7 @@
  * distributed caching across multiple instances.
  */
 
-import { Cache } from "@/utilities/core/cache";
+import { Cache } from "@/pipelines/pages/work/cache";
 import { log, message } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";

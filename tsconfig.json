@@ -9,6 +9,10 @@
     },
     "strict": true,
     "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "ESNext"
+    ],
     "module": "ES2022",
     "moduleResolution": "node",
     "esModuleInterop": true,

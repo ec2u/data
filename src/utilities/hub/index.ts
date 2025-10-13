@@ -17,15 +17,8 @@
 import { secret } from "@/utilities/gcp/secrets";
 import SparqlClient from "sparql-http-client";
 
-let client: null | SparqlClient=null;
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export async function hub() {
-	return client??=new SparqlClient({
-		endpointUrl: "https://graphdb.ec2u.net/repositories/data-main",
-		user: await secret("gdb-server-usr"),
-		password: await secret("gdb-server-pwd")
-	});
-}
+export const hub=new SparqlClient({
+	endpointUrl: "https://graphdb.ec2u.net/repositories/data-main",
+	user: await secret("gdb-server-usr"),
+	password: await secret("gdb-server-pwd")
+});

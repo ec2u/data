@@ -19,14 +19,9 @@ import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
 import { EmbedContentResponse, GenerateContentResponse, GoogleGenAI, SchemaUnion } from "@google/genai";
 
-let sdk: null | Promise<GoogleGenAI>=null;
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function ai(): Promise<GoogleGenAI> {
-	return sdk??=secret("googleai-key").then(apiKey => new GoogleGenAI({ apiKey }));
-}
+export const ai=new GoogleGenAI({
+	apiKey: await secret("googleai-key")
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,8 +94,8 @@ export function embedding(response: EmbedContentResponse) {
  *
  * @throws Error if the model response is malformed or invalid JSON
  */
-export function data<T>(text: string, schema: SchemaUnion): Promise<T> {
-	return ai().then(async ai => json(await ai.models.generateContent({
+export async function data<T>(text: string, schema: SchemaUnion): Promise<T> {
+	return json(await ai.models.generateContent({
 		model: "gemini-2.5-flash-lite",
 		contents: text,
 		config: {
@@ -120,5 +115,5 @@ export function data<T>(text: string, schema: SchemaUnion): Promise<T> {
 			responseMimeType: "application/json",
 			responseSchema: schema
 		}
-	})));
+	}));
 }

@@ -54,7 +54,7 @@ export const topics=immutable({
 				return entities.map(({ [datastore.KEY]: _, embedding, ...topic }) => ({
 					...topic,
 					embedding: decompress(embedding as string)
-				} as Topic));
+				}));
 
 			}, (value, elapsed) => log.info(topics.lookup.name,
 				`retrieved <${message(value.length)}> topics${(scheme ? ` from <${scheme}>` : "")} in <${message(elapsed)}> ms`

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { visit } from "@/pipelines/pages/fetch";
 import { log, message } from "@/utilities/core/log";
-import { visit } from "@/utilities/node/fetch";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import dedent from "dedent";
 

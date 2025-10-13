@@ -36,20 +36,42 @@ export interface Lead {
 
 }
 
+/**
+ * Structured information about a research unit.
+ */
 export interface Unit {
 
+	/** The formal name */
 	readonly formal: string;
+
+	/** The short name */
 	readonly short?: string;
+
+	/** The acronym */
 	readonly acronym?: string;
 
+
+	/** The unique identifier */
 	readonly identifier?: string;
+
+	/** The contact email address */
 	readonly email?: string;
 
+
+	/** The concept URI for the type or category in external taxonomies */
 	readonly type: string;
+
+	/** The concept URIs for the research topics in external taxonomies */
 	readonly topics: readonly string[];
 
+
+	/** A brief summary */
 	readonly summary: string;
+
+	/** A detailed description */
 	readonly description: string;
+
+	/** Keywords describing the research focus */
 	readonly keywords: readonly string[];
 
 }
