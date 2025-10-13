@@ -15,7 +15,8 @@
  */
 
 import { match, Topic } from "@/pipelines/topics";
-import { Promisable } from "@/utilities/core";
+
+import { Promisable } from "@/utilities/core/async";
 import { log, message } from "@/utilities/core/log";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import dedent from "dedent";

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { compress, decompress } from "@/pipelines/topics/embeddings";
 import { Topic } from "@/pipelines/topics/index";
+import { compress, decompress } from "@/utilities/ai/embeddings";
 import { immutable } from "@/utilities/core";
 import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";

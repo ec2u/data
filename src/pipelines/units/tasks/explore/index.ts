@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { DatastoreCache } from "@/pipelines/pages/work/store";
 import { Lead } from "@/pipelines/units";
 import { ai, data, text } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
@@ -23,7 +23,7 @@ import { Type } from "@google/genai";
 
 
 const tools=[
-	fetchPage({ cache: DatastoreCache({ kind: "Page" }) })
+	fetchPage({ cache: pages.lookup })
 ];
 
 

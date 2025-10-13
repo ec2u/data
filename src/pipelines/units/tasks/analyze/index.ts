@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { DatastoreCache } from "@/pipelines/pages/work/store";
 import { topics } from "@/pipelines/topics/store";
 import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
 import { Lead, Unit } from "@/pipelines/units";
@@ -25,7 +25,7 @@ import { Type } from "@google/genai";
 
 
 const tools=[
-	fetchPage({ cache: DatastoreCache({ kind: "Page" }) }),
+	fetchPage({ cache: pages.lookup }),
 	matchTopics({ topics: scheme => topics.select({ scheme }) })
 ];
 

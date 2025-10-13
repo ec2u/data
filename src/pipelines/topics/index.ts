@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { distance } from "@/pipelines/topics/embeddings";
+import { distance } from "@/utilities/ai/embeddings";
 import { ai, embedding } from "@/utilities/gcp/gemini";
 
 export interface Topic {

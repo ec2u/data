@@ -29,8 +29,6 @@
  */
 export type JSON=null | boolean | number | string | { readonly [key: string]: JSON } | readonly JSON[];
 
-export type Promisable<T>=T | Promise<T>;
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

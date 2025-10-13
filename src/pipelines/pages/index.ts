@@ -43,9 +43,8 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
-import { Cache, DummyCache } from "@/pipelines/pages/work/cache";
-import { immutable } from "@/utilities/core";
-import { log, message } from "@/utilities/core/log";
+import { Promisable } from "@/utilities/core/async";
+import { log } from "@/utilities/core/log";
 import { uuid } from "@/utilities/node/uuid";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
@@ -89,6 +88,24 @@ export interface Link {
 
 	readonly href: string;
 	readonly text?: string;
+
+}
+
+
+/**
+ * Cache function for storing and retrieving processed web pages.
+ *
+ * Retrieves a cached page by URL or generates it using the provided fetcher function if not present in the cache.
+ * Supports both synchronous and asynchronous cache implementations through the {@link Promisable} return type.
+ *
+ * @param url - The URL to look up in the cache
+ * @param fetcher - Function to generate the page if not cached
+ *
+ * @returns The cached or newly generated page
+ */
+export interface Cache {
+
+	(url: string, fetcher: (url: string) => Promisable<Page>): Promisable<Page>;
 
 }
 
@@ -202,7 +219,7 @@ export async function content(dom: JSDOM): Promise<DefuddleResponse & { url: str
 export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
 
 	const base=dom.window.location.href;
-	const self=base + "#";
+	const self=base+"#";
 
 	return Array.from(dom.window.document.querySelectorAll("a[href]"))
 
@@ -216,121 +233,8 @@ export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
 		}));
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Crawls a website starting from the home URL with configurable depth and concurrency.
- *
- * Performs breadth-first traversal of web pages, extracting content and following links within the same origin. Uses
- * parallel fetching for improved performance while respecting the configured concurrency limits.
- *
- * @param home - The starting URL to begin crawling from
- * @param options - Configuration options for the crawl
- * @param options.depth - Maximum crawl depth (0 for unlimited, default: 0)
- * @param options.tasks - Number of concurrent fetch operations (default: 4)
- * @param options.cache - Cache implementation for storing processed pages (default: DummyCache)
- *
- * @returns Promise resolving to immutable array of crawled pages with extracted content
- */
-export async function crawl(home: string, {
-
-	depth=0,
-	tasks=4,
-	cache=DummyCache<Page>()
-
-}: Partial<{
-
-	depth: number
-	tasks: number
-	cache: Cache<Page>
-
-}>={}): Promise<ReadonlyArray<Page>> {
-
-	const pages: Page[]=[];
-
-	const entry=normalize(home);
-	const visited=new Set<string>([entry]);
-	const pending: Array<{ url: string; level: number }>=[{ url: entry, level: 0 }];
-
-	while ( pending.length > 0 ) {
-		await Promise.all(pending.splice(0, tasks).map(({ url, level }) => {
-
-			return visit(url, { cache })
-
-				.then((page) => {
-
-					pages.push(page);
-
-					if ( depth === 0 || level + 1 <= depth ) {
-						page.links.map(link => normalize(link.href))
-
-							.filter(href => hasSameOrigin(href, entry))
-							.filter(href => isKinOf(href, entry))
-							.filter(href => !isFile(href))
-
-							.forEach(href => {
-								if ( !visited.has(href) ) {
-									visited.add(href);
-									pending.push({ url: href, level: level + 1 });
-								}
-							});
-					}
-
-
-					function hasSameOrigin(url: string, entry: string): boolean {
-						return new URL(url).origin === new URL(entry).origin;
-					}
-
-					/**
-					 * Checks if url is a sibling or descendant of entry.
-					 *
-					 * Siblings are considered as kin to handle flat CMS-style URLs such as `/page/123`.
-					 *
-					 * @param url - The URL to check
-					 * @param entry - The entry URL to compare against
-					 *
-					 * @returns `true` if url is a sibling or descendant of entry; `false` otherwise
-					 */
-					function isKinOf(url: string, entry: string): boolean {
-
-						const entrySegments=new URL(entry).pathname
-							.split("/")
-							.filter(segment => segment !== "");
-
-						const urlSegments=new URL(url).pathname
-							.split("/")
-							.filter(segment => segment !== "");
-
-						if ( urlSegments.length < entrySegments.length ) {
-							return false;
-						}
-
-						for (let i=0; i < entrySegments.length; i++) {
-							if ( urlSegments[i] !== entrySegments[i] ) { return false; }
-						}
-
-						return true;
-					}
-
-					function isFile(url: string): boolean {
-
-						const pathname=new URL(url).pathname;
-						const filename=pathname.split("/").pop() || "";
-
-						return !filename.endsWith(".php") && /\.[a-zA-Z0-9]+$/.test(filename);
-					}
-
-				})
-
-				.catch((e) => {
-					log.warn(crawl.name, `failed to process <${url}>: ${message(e)}`);
-				});
-
-		}));
-	}
-
-	return immutable(pages);
-}
 
 /**
  * Fetches and processes a single web page, extracting content and metadata.
@@ -341,26 +245,26 @@ export async function crawl(home: string, {
  *
  * @param url - The URL of the page to visit
  * @param options - Configuration options for page processing
- * @param options.cache - Cache implementation for storing processed pages (default: DummyCache)
+ * @param options.cache - Cache implementation for storing processed pages (default: pass-through)
  * @param options.summarist - Optional function to generate custom summaries from page content
  *
  * @returns Promise resolving to processed page with extracted content and metadata
  */
 export async function visit(url: string, {
 
-	cache=DummyCache<Page>(),
+	cache=(url, fetcher) => fetcher(url),
 
 	summarist
 
 }: Partial<{
 
-	cache: Cache<Page>
+	cache: Cache
 
 	summarist: Summarist
 
 }>={}): Promise<Page> {
 
-	return cache.lookup(normalize(url), async function (url: string) {
+	return cache(normalize(url), async function (url: string) {
 
 		log.info(visit.name, `fetching <${url}>`);
 
@@ -372,11 +276,11 @@ export async function visit(url: string, {
 		const text=pageContent.contentMarkdown || "";
 		const title=pageContent.title || url;
 
-		log.info(crawl.name, `summarizing <${url}>`);
+		log.info(visit.name, `summarizing <${url}>`);
 
 		const summary=await summarist?.({ url, title, content: text })
 			|| pageContent.description
-			|| text.substring(0, 500 - 1) + "…";
+			|| text.substring(0, 500-1)+"…";
 
 		return {
 			url,
