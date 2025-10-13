@@ -19,22 +19,13 @@
  *
  * Either `profile` or `website` is expected.
  */
-export interface Lead {
+export interface Lead extends Partial<Unit> {
 
 	/** The IRI identifying the research unit */
 	readonly id: string;
 
-	/** The URL of the institutional profile */
-	readonly profile?: string;
-
-	/** The URL of the self-managed website */
-	readonly website?: string;
-
-	/** The name */
-	readonly name?: string;
-
-	/** A brief summary */
-	readonly summary?: string;
+	/** Discriminator indicating this is a lead record */
+	readonly lead: true;
 
 }
 
@@ -49,6 +40,13 @@ export interface Unit {
 	readonly id: string;
 
 
+	/** Indicates whether this record represents a lead (true) or a fully populated unit (false) */
+	readonly lead: boolean;
+
+	/** List of field names that were populated from an authoritative source */
+	readonly authoritative: readonly string[];
+
+
 	/** Timestamp when the record was created  */
 	readonly created: number;
 
@@ -60,10 +58,6 @@ export interface Unit {
 
 	/** Timestamp when the record was deleted  */
 	readonly deleted?: number;
-
-
-	/** List of field names that were populated from an authoritative source */
-	readonly authoritative: readonly string[];
 
 
 	/** The IRI identifying the parent unit, or the university for top-level units */

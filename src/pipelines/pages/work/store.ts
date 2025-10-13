@@ -54,7 +54,7 @@ export function DatastoreCache<T>({
 
 	return {
 
-		async select(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
+		async lookup(key: string, generator?: (key: string) => Promise<T>): Promise<T> {
 
 			const work=pending.get(key);
 
@@ -178,35 +178,4 @@ export function DatastoreCache<T>({
 
 	};
 
-}
-
-/**
- * Deletes all entities of a specific kind from Datastore.
- *
- * @param kind The Datastore kind to delete all entities from
- */
-export async function clear(kind: string): Promise<void> {
-	try {
-		log.info("deleteAllEntities", `deleting all entities of kind <${kind}>`);
-
-		const [entities]=await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
-
-		if ( entities.length === 0 ) {
-			log.info("deleteAllEntities", `no entities found for kind <${kind}>`);
-			return;
-		}
-
-		const keys=entities.map(entity => entity[datastore.KEY]);
-		const batchSize=500; // Datastore limit
-
-		for (let i=0; i < keys.length; i+=batchSize) {
-			await datastore.delete(keys.slice(i, i + batchSize));
-		}
-
-		log.info("deleteAllEntities", `deleted ${entities.length} entities of kind <${kind}>`);
-
-	} catch ( e ) {
-		log.error("deleteAllEntities", `unable to delete entities of kind <${kind}>: ${message(e)}`);
-		throw e;
-	}
 }

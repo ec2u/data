@@ -29,17 +29,14 @@ const tools=[
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export async function analyze(lead: Lead): Promise<string> {
+export async function explore(lead: Lead): Promise<string> {
 	return text(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
 		contents: JSON.stringify(lead, null, 2),
 		config: {
 			seed: 0,
 			temperature: 0,
-			systemInstruction: await file("explore.md", import.meta.url),
+			systemInstruction: await file("index.llm", import.meta.url),
 			tools,
 			automaticFunctionCalling: {
 				maximumRemoteCalls: 20

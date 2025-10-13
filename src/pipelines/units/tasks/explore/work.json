@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Artificial Intelligence and Machine Learning",
+    "summary": "This unit focuses on the theoretical and practical aspects of artificial intelligence and machine learning, including algorithm development, data analysis, and applications in various domains.",
+    "profile": "https://example.com/profiles/aiml",
+    "website": "https://example.com/aiml"
+  },
+  {
+    "name": "Computational Biology",
+    "summary": "This unit applies computational methods to biological problems, such as genomics, proteomics, and systems biology, to advance our understanding of living organisms.",
+    "profile": "https://example.com/profiles/compbio",
+    "website": "https://example.com/compbio"
+  },
+  {
+    "name": "Quantum Computing Research Group",
+    "summary": "Dedicated to exploring the principles and applications of quantum computing, this group investigates quantum algorithms, hardware development, and error correction techniques.",
+    "profile": "https://example.com/profiles/qcrg",
+    "website": "https://example.com/qcrg"
+  }
+]
