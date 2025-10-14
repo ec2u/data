@@ -36,7 +36,7 @@ export async function scan(url: string): Promise<string> {
 		config: {
 			seed: 0,
 			temperature: 0,
-			systemInstruction: await file("pavia.ai", import.meta.url),
+			systemInstruction: await file(".ai", import.meta.url),
 			tools
 		}
 	}));

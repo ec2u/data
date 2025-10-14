@@ -17,9 +17,11 @@
 import { Unit } from "@/pipelines/units";
 import { scan, structure } from "@/pipelines/units/feeds/pavia";
 import { units } from "@/pipelines/units/store";
-import { pavia } from "@/utilities/hub";
-import { base } from "../../../utilities/hub";
-import { uuid } from "../../../utilities/node/uuid";
+import { base, pavia } from "@/utilities/hub";
+import { uuid } from "@/utilities/node/uuid";
+
+
+const Units=`${base}units/`; // !!!
 
 
 const root=
@@ -42,8 +44,6 @@ Promise.resolve(root)
 		parent: university,
 		university: university,
 
-		updated: Date.now(),
-
 		formal: item.formal,
 		acronym: item.acronym,
 
@@ -52,16 +52,32 @@ Promise.resolve(root)
 
 	})))
 
-	.then(async (items): Promise<readonly Unit[]> => Promise.all(items.map(async item => {
+	.then(async items => Promise.all(items.map(async item => {
 
-		const match=await units.lookup(item);
+		const updated=Date.now();
+		const current=await units.lookup(item);
 
-		return match ? merge(match, item) : { ...item, id: `${base}units/${uuid()}` };
+		return !current ? { ...item, updated, id: `${Units}${uuid()}` }
+			: !matches(current, item) ? merge(current, { ...item, updated })
+				: current;
 
 	})))
 
 	.then(units.insert)
 	.then(console.info);
+
+
+/**
+ * Checks if a unit matches all properties specified in a partial unit.
+ *
+ * @param match the unit to test against
+ * @param item the partial unit containing properties to match
+ *
+ * @returns true if all properties in item have equal values in match, false otherwise
+ */
+function matches(match: Unit, item: Partial<Unit>) {
+	return Object.entries(item).every(([key, value]) => match[key as keyof Unit] === value);
+}
 
 
 /**

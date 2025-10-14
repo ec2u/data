@@ -23,7 +23,6 @@ import { uuid } from "@/utilities/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";
 import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
 
-
 const kind="Unit";
 const batch=100;
 
@@ -46,60 +45,73 @@ export const units=immutable({
 					return undefined;
 				}
 
-			} else if ( key.parent && key.university ) {
+			} else {
 
-				if ( key.website ) {
+				if ( key.id ) {
 
-					const query=datastore.createQuery(kind)
-						.filter(new PropertyFilter("website", "=", normalizeUrl(key.website)))
-						.filter(new PropertyFilter("parent", "=", key.parent))
-						.filter(new PropertyFilter("university", "=", key.university));
+					const [entity]=await datastore.get(datastore.key([kind, uuid(key.id)]));
 
-					const [entities]=await datastore.runQuery(query);
-
-					if ( entities.length === 1 ) {
-
-						return clean(entities[0]);
-
-					} else if ( entities.length > 1 ) {
-
-						log.warn(units.lookup.name, `multiple matches for <${JSON.stringify({
-							parent: key.parent,
-							university: key.university,
-							website: key.website
-						})}>`);
-
-						return undefined;
+					if ( entity ) {
+						return clean(entity);
 					}
 
 				}
 
-				if ( key.formal ) {
+				if ( key.parent && key.university ) {
 
-					const query=datastore.createQuery(kind)
-						.filter(new PropertyFilter("formal_", "=", normalizeName(key.formal)))
-						.filter(new PropertyFilter("parent", "=", key.parent))
-						.filter(new PropertyFilter("university", "=", key.university));
+					if ( key.website ) {
 
-					const [entities]=await datastore.runQuery(query);
+						const query=datastore.createQuery(kind)
+							.filter(new PropertyFilter("website", "=", normalizeUrl(key.website)))
+							.filter(new PropertyFilter("parent", "=", key.parent))
+							.filter(new PropertyFilter("university", "=", key.university));
 
-					if ( entities.length === 1 ) {
+						const [entities]=await datastore.runQuery(query);
 
-						return clean(entities[0]);
+						if ( entities.length === 1 ) {
 
-					} else if ( entities.length > 1 ) {
+							return clean(entities[0]);
 
-						log.warn(units.lookup.name, `multiple matches for <${JSON.stringify({
-							parent: key.parent,
-							university: key.university,
-							formal: key.formal
-						})}>`);
+						} else if ( entities.length > 1 ) {
 
-						return undefined;
+							log.warn(units.lookup.name, `multiple matches for <${JSON.stringify({
+								parent: key.parent,
+								university: key.university,
+								website: key.website
+							})}>`);
+
+							return undefined;
+						}
+
+					}
+
+					if ( key.formal ) {
+
+						const query=datastore.createQuery(kind)
+							.filter(new PropertyFilter("formal_", "=", normalizeName(key.formal)))
+							.filter(new PropertyFilter("parent", "=", key.parent))
+							.filter(new PropertyFilter("university", "=", key.university));
+
+						const [entities]=await datastore.runQuery(query);
+
+						if ( entities.length === 1 ) {
+
+							return clean(entities[0]);
+
+						} else if ( entities.length > 1 ) {
+
+							log.warn(units.lookup.name, `multiple matches for <${JSON.stringify({
+								parent: key.parent,
+								university: key.university,
+								formal: key.formal
+							})}>`);
+
+							return undefined;
+						}
+
 					}
 
 				}
-
 			}
 
 			return undefined;
@@ -152,7 +164,6 @@ export const units=immutable({
 		return time(async () => {
 
 			for (let i=0; i < items.length; i+=batch) {
-
 				await datastore.upsert(items.slice(i, i+batch).map(item => ({
 					key: datastore.key([kind, uuid(item.id)]),
 					data: {
