@@ -2,7 +2,7 @@
 /.vscode/
 /.claude/
 
-/work.*
+/pipe.*
 
 /node_modules/
 

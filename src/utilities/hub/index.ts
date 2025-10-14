@@ -15,15 +15,24 @@
  */
 
 import { secret } from "@/utilities/gcp/secrets";
-import { uuid } from "@/utilities/node/uuid";
 import SparqlClient from "sparql-http-client";
 
 export const base="https://data.ec2u.eu/";
 
-export const universities=`${base}universities/`;
 export const units=`${base}units/`;
 
+export const universities=`${base}universities/`;
+
+
+export const coimbra=`${universities}coimbra`;
+export const iasi=`${universities}iasi`;
+export const jena=`${universities}jena`;
+export const linz=`${universities}linz`;
 export const pavia=`${universities}pavia`;
+export const poitiers=`${universities}poitiers`;
+export const salamanca=`${universities}salamanca`;
+export const turku=`${universities}turku`;
+export const umea=`${universities}umea`;
 
 
 export const hub=new SparqlClient({
@@ -31,10 +40,3 @@ export const hub=new SparqlClient({
 	user: await secret("gdb-server-usr"),
 	password: await secret("gdb-server-pwd")
 });
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function id(university: string, name: string) {
-	return uuid(`${university}@${name}`);
-}

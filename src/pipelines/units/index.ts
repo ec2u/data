@@ -15,95 +15,83 @@
  */
 
 /**
- * Lead to the online description of a research unit.
- *
- * Either `profile` or `website` is expected.
- */
-export interface Lead extends Partial<Unit> {
-
-	/** The IRI identifying the research unit */
-	readonly id: string;
-
-	/** Discriminator indicating this is a lead record */
-	readonly lead: true;
-
-}
-
-/**
  * Structured information about a research unit.
  *
  * Timestamps are in milliseconds from epoch.
  */
 export interface Unit {
 
-	/** The IRI identifying the research unit */
+	/** The IRI identifying the research unit. */
 	readonly id: string;
 
-
-	/** Indicates whether this record represents a lead (true) or a fully populated unit (false) */
-	readonly lead: boolean;
-
-	/** List of field names that were populated from an authoritative source */
-	readonly authoritative: readonly string[];
-
-
-	/** Timestamp when the record was created  */
-	readonly created: number;
-
-	/** Timestamp when the record was last updated */
-	readonly updated?: number;
-
-	/** Timestamp when the record was last updated from web sources */
-	readonly fetched?: number;
-
-	/** Timestamp when the record was deleted  */
-	readonly deleted?: number;
-
-
-	/** The IRI identifying the parent unit, or the university for top-level units */
+	/** The IRI identifying the parent unit.
+	 *
+	 * For top-level units ths is expected to be the university id. */
 	readonly parent: string;
 
-	/** The IRI identifying the university */
+	/** The IRI identifying the university. */
 	readonly university: string;
 
 
-	/** The formal name */
-	readonly formal: string;
+	/** Timestamp when the record was last updated. */
+	readonly updated: number;
 
-	/** The short name */
+	/** Timestamp when the record was last updated from web sources. */
+	readonly visited?: number;
+
+	/** Timestamp when the record was deleted. */
+	readonly deleted?: number;
+
+
+	/** List of field names that were populated from an authoritative source. */
+	readonly authoritative?: readonly string[];
+
+
+	/** The formal name. */
+	readonly formal?: string;
+
+	/** The short name. */
 	readonly short?: string;
 
-	/** The acronym */
+	/** The acronym. */
 	readonly acronym?: string;
 
 
-	/** The unique identifier */
+	/** The unique identifier. */
 	readonly identifier?: string;
 
-	/** The contact email address */
+	/** The contact email address. */
 	readonly email?: string;
 
-	/** The URL of the institutional profile */
+	/**
+	 * The URL of the institutional profile.
+	 *
+	 * May be shared with other units, for instance, in the case of directories or collective descriptions of multiple
+	 * organizational units.
+	 */
 	readonly profile?: string;
 
-	/** The URL of the self-managed website */
+	/** The URL of the self-managed website.
+	 *
+	 * The website is expected to be specific to the unit.
+	 */
 	readonly website?: string;
 
 
-	/** The concept IRI of the type or category */
-	readonly type: string;
+	/** The concept IRI of the type or category. */
+	readonly type?: string;
 
-	/** The concept IRI of the research topics */
-	readonly topics: readonly string[];
+	/** The concept IRI of the research topics. */
+	readonly topics?: readonly string[];
 
 
-	/** A brief summary */
-	readonly summary: string;
+	/** A brief summary. */
+	readonly summary?: string;
 
-	/** A detailed description */
-	readonly description: string;
+	/** A detailed description. */
+	readonly description?: string;
 
-	/** Keywords describing the research focus */
-	readonly keywords: readonly string[];
+	/** Keywords describing the research focus. */
+	readonly keywords?: readonly string[];
 
 }

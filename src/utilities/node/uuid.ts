@@ -14,31 +14,44 @@
  * limitations under the License.
  */
 
-import { createHash } from "crypto";
+import { createHash, randomUUID } from "crypto";
 
 /**
- * Generates a deterministic UUID v3 (MD5-based) from a string.
+ * Generates a UUID from a string.
  *
- * @param text the string to generate a UUID from
+ * Behavior depends on whether text is provided:
  *
- * @return the UUID v3 as a lowercase string in standard format
+ * - when text is provided, generates a deterministic UUID v3 (MD5-based)
+ * - when text is not provided, generates a random UUID v4
+ *
+ * @param text the string to generate a UUID from (optional)
+ *
+ * @return the UUID as a lowercase string in standard format
  */
-export function uuid(text: string): string {
+export function uuid(text?: string): string {
 
-	const hash=createHash("md5").update(text, "utf8").digest();
+	if ( text ) {
 
-	// set version 3 and variant bits per RFC 4122
+		const hash=createHash("md5").update(text, "utf8").digest();
 
-	hash[6]=(hash[6]&0x0f)|0x30;
-	hash[8]=(hash[8]&0x3f)|0x80;
+		// set version 3 and variant bits per RFC 4122
 
-	// format as 8-4-4-4-12
+		hash[6]=(hash[6]&0x0f)|0x30;
+		hash[8]=(hash[8]&0x3f)|0x80;
 
-	return [
-		hash.subarray(0, 4).toString("hex"),
-		hash.subarray(4, 6).toString("hex"),
-		hash.subarray(6, 8).toString("hex"),
-		hash.subarray(8, 10).toString("hex"),
-		hash.subarray(10, 16).toString("hex")
-	].join("-");
+		// format as 8-4-4-4-12
+
+		return [
+			hash.subarray(0, 4).toString("hex"),
+			hash.subarray(4, 6).toString("hex"),
+			hash.subarray(6, 8).toString("hex"),
+			hash.subarray(8, 10).toString("hex"),
+			hash.subarray(10, 16).toString("hex")
+		].join("-");
+
+	} else {
+
+		return randomUUID();
+
+	}
 }

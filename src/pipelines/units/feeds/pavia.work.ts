@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-import { Lead } from "@/pipelines/units";
+import { Unit } from "@/pipelines/units";
 import { scan, structure } from "@/pipelines/units/feeds/pavia";
-import { id, pavia, units } from "@/utilities/hub";
+import { units } from "@/pipelines/units/store";
+import { pavia } from "@/utilities/hub";
+import { base } from "../../../utilities/hub";
+import { uuid } from "../../../utilities/node/uuid";
 
 
 const root=
@@ -27,25 +30,56 @@ const root=
 ;
 
 
+const university=pavia;
+
 Promise.resolve(root)
 
 	.then(scan)
 	.then(structure)
 
-	.then((items): readonly Lead[] => items.map(item => ({
+	.then(items => items.map(item => ({
 
-		id: `${units}${id(pavia, item.website ?? root)}`,
+		parent: university,
+		university: university,
 
-		lead: true,
-
-		parent: pavia,
-		university: pavia,
+		updated: Date.now(),
 
 		formal: item.formal,
 		acronym: item.acronym,
 
-		website: item.website ?? root
+		profile: root,
+		website: item.website
 
 	})))
 
+	.then(async (items): Promise<readonly Unit[]> => Promise.all(items.map(async item => {
+
+		const match=await units.lookup(item);
+
+		return match ? merge(match, item) : { ...item, id: `${base}units/${uuid()}` };
+
+	})))
+
+	.then(units.insert)
 	.then(console.info);
+
+
+/**
+ * Merges a delta unit into an existing unit value, respecting authoritative field declarations.
+ *
+ * Fields marked as authoritative in the existing value are preserved unless the delta also declares them as
+ * authoritative. This allows controlled updates where certain fields can be protected from modification.
+ *
+ * @param value the existing unit to merge into
+ * @param delta the partial unit containing updates to apply
+ * @returns a new unit with delta fields merged into value, respecting authoritative declarations
+ */
+function merge<U extends Partial<Unit>>(value: U, delta: Partial<Unit>): U {
+
+	const valueAuthoritative=new Set(value.authoritative ?? []);
+	const deltaAuthoritative=new Set(delta.authoritative ?? []);
+
+	return Object.assign({}, value, Object.fromEntries(Object.entries(delta).filter(([key]) =>
+		!valueAuthoritative.has(key) || deltaAuthoritative.has(key)
+	)));
+}

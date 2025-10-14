@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+import { normalize as normalizeUrl } from "@/pipelines/pages/index";
 import { Unit } from "@/pipelines/units/index";
-import { immutable } from "@/utilities/core";
+import { immutable, isString } from "@/utilities/core";
 import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
+import { Entity } from "@google-cloud/datastore/build/src/entity";
+import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
 
 
 const kind="Unit";
@@ -29,24 +32,80 @@ const batch=100;
 
 export const units=immutable({
 
-	async lookup(id: string): Promise<undefined | Unit> {
+	async lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
 
 		return time(async () => {
 
-			const [entity]=await datastore.get(datastore.key([kind, uuid(id)]));
+			if ( isString(key) ) {
 
-			if ( entity ) {
+				const [entity]=await datastore.get(datastore.key([kind, uuid(key)]));
 
-				const { [datastore.KEY]: _, ...item }=entity;
+				if ( entity ) {
+					return clean(entity);
+				} else {
+					return undefined;
+				}
 
-				return item;
+			} else if ( key.parent && key.university ) {
 
-			} else {
-				return undefined;
+				if ( key.website ) {
+
+					const query=datastore.createQuery(kind)
+						.filter(new PropertyFilter("website", "=", normalizeUrl(key.website)))
+						.filter(new PropertyFilter("parent", "=", key.parent))
+						.filter(new PropertyFilter("university", "=", key.university));
+
+					const [entities]=await datastore.runQuery(query);
+
+					if ( entities.length === 1 ) {
+
+						return clean(entities[0]);
+
+					} else if ( entities.length > 1 ) {
+
+						log.warn(units.lookup.name, `multiple matches for <${JSON.stringify({
+							parent: key.parent,
+							university: key.university,
+							website: key.website
+						})}>`);
+
+						return undefined;
+					}
+
+				}
+
+				if ( key.formal ) {
+
+					const query=datastore.createQuery(kind)
+						.filter(new PropertyFilter("formal_", "=", normalizeName(key.formal)))
+						.filter(new PropertyFilter("parent", "=", key.parent))
+						.filter(new PropertyFilter("university", "=", key.university));
+
+					const [entities]=await datastore.runQuery(query);
+
+					if ( entities.length === 1 ) {
+
+						return clean(entities[0]);
+
+					} else if ( entities.length > 1 ) {
+
+						log.warn(units.lookup.name, `multiple matches for <${JSON.stringify({
+							parent: key.parent,
+							university: key.university,
+							formal: key.formal
+						})}>`);
+
+						return undefined;
+					}
+
+				}
+
 			}
 
-		}, (_, elapsed) => log.info(units.lookup.name,
-			`fetched unit <${id}> in <${message(elapsed)}> ms`
+			return undefined;
+
+		}, (value, elapsed) => value && log.info(units.lookup.name,
+			`fetched unit <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`
 		));
 
 	},
@@ -72,7 +131,7 @@ export const units=immutable({
 
 			const [entities]=await datastore.runQuery(query);
 
-			return entities.map(({ [datastore.KEY]: _, ...item }) => item);
+			return entities.map(clean);
 
 		}, (value, elapsed) => log.info(units.select.name,
 			`retrieved <${message(value.length)}> units in <${message(elapsed)}> ms`
@@ -88,7 +147,12 @@ export const units=immutable({
 
 				await datastore.upsert(items.slice(i, i+batch).map(item => ({
 					key: datastore.key([kind, uuid(item.id)]),
-					data: item,
+					data: {
+						...item,
+						...(item.formal ? { formal_: normalizeName(item.formal) } : {}),
+						...(item.profile ? { profile: normalizeUrl(item.profile) } : {}),
+						...(item.website ? { website: normalizeUrl(item.website) } : {})
+					},
 					excludeFromIndexes: ["authoritative", "summary", "description", "keywords"]
 				})));
 			}
@@ -122,3 +186,47 @@ export const units=immutable({
 	}
 
 });
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Cleans a Datastore entity by removing internal fields.
+ *
+ * Strips the Datastore key and normalized label fields from an entity,
+ * returning a clean Unit object suitable for public API responses.
+ *
+ * @param entity - The Datastore entity to clean
+ *
+ * @returns A Unit object with internal fields removed
+ */
+function clean(entity: Entity): Unit {
+
+	const { [datastore.KEY]: _, formal_, ...item }=entity;
+
+	return item;
+}
+
+/**
+ * Normalizes a unit name label for duplicate detection and matching.
+ *
+ * Creates a canonical form by removing diacritical marks, normalizing whitespace,
+ * and converting to uppercase to enable case-insensitive and accent-insensitive comparisons.
+ *
+ * @param name - The unit name to normalize
+ *
+ * @returns The normalized name with diacritics removed, whitespace normalized, and uppercase letters
+ *
+ * @example
+ * label("École Polytechnique")  // "ECOLE POLYTECHNIQUE"
+ * label("Bio-Chemistry & Physics")  // "BIO CHEMISTRY PHYSICS"
+ * label("Computer   Science")  // "COMPUTER SCIENCE"
+ */
+function normalizeName(name: string): string {
+	return name
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.replace(/[^\p{L}\p{N}]+/gu, " ")
+		.toUpperCase()
+		.trim();
+}

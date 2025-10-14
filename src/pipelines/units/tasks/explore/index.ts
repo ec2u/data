@@ -36,7 +36,7 @@ export async function explore(lead: Lead): Promise<string> {
 		config: {
 			seed: 0,
 			temperature: 0,
-			systemInstruction: await file("index.llm", import.meta.url),
+			systemInstruction: await file("index.ai", import.meta.url),
 			tools,
 			automaticFunctionCalling: {
 				maximumRemoteCalls: 20

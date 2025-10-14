@@ -21,7 +21,9 @@
  */
 
 import { project } from "@/utilities/gcp/index";
-import { Datastore } from "@google-cloud/datastore";
+import { Datastore, or, PropertyFilter } from "@google-cloud/datastore";
+
+export { PropertyFilter, or };
 
 export const datastore=new Datastore({
 	projectId: project

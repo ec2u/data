@@ -16,7 +16,7 @@
 
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { Lead } from "@/pipelines/units";
+import { Unit } from "@/pipelines/units";
 import { ai, data, text } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
@@ -36,13 +36,13 @@ export async function scan(url: string): Promise<string> {
 		config: {
 			seed: 0,
 			temperature: 0,
-			systemInstruction: await file("pavia.llm", import.meta.url),
+			systemInstruction: await file("pavia.ai", import.meta.url),
 			tools
 		}
 	}));
 }
 
-export async function structure(report: string): Promise<readonly Lead[]> {
+export async function structure(report: string): Promise<readonly Partial<Unit>[]> {
 	return data(report, {
 		type: Type.ARRAY,
 		items: {
