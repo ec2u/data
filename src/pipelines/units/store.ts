@@ -110,7 +110,9 @@ export const units=immutable({
 
 	},
 
-	async select({ offset, limit }: {
+	async select({ updated, offset, limit }: {
+
+		readonly updated?: number;
 
 		readonly offset?: number;
 		readonly limit?: number;
@@ -119,7 +121,13 @@ export const units=immutable({
 
 		return time(async () => {
 
-			let query=datastore.createQuery(kind).order("__key__");
+			let query=datastore.createQuery(kind);
+
+			if ( updated ) {
+				query=query.filter(new PropertyFilter("updated", ">=", updated)).order("updated");
+			} else {
+				query=query.order("__key__");
+			}
 
 			if ( offset ) {
 				query=query.offset(offset);
