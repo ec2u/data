@@ -67,21 +67,28 @@ export const topics=immutable({
 
 		return time(async () => {
 
-				for (let i=0; i < items.length; i+=batch) {
+			const indexed=new Set(["scheme"]);
 
-					await datastore.upsert(items.slice(i, i+batch).map(({ embedding, ...topic }) => ({
+			for (let i=0; i < items.length; i+=batch) {
+
+				await datastore.upsert(items.slice(i, i+batch).map(({ embedding, ...topic }) => {
+
+					const data={ ...topic, embedding: compress(embedding) };
+
+					return {
 						key: datastore.key([kind, uuid(topic.id)]),
-						data: { ...topic, embedding: compress(embedding) },
-						excludeFromIndexes: ["definition", "embedding"]
-					})));
-				}
+						data,
+						excludeFromIndexes: Object.keys(data).filter(field => !indexed.has(field))
+					};
 
-				return items;
+				}));
+			}
 
-			}, (value, elapsed) => log.info(topics.insert.name,
-				`inserted <${message(value.length)}> topics in <${message(elapsed)}> ms`
-			)
-		);
+			return items;
+
+		}, (value, elapsed) => log.info(topics.insert.name,
+			`inserted <${message(value.length)}> topics in <${message(elapsed)}> ms`
+		));
 
 	}
 

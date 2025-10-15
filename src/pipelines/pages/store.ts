@@ -51,8 +51,8 @@ export const pages=immutable({
 
 					log.info(pages.lookup.name, `looking up <${url}>`);
 
-					const entityKey=datastore.key([kind, uuid(url)]);
-					const [entity]=await datastore.get(entityKey);
+					const key=datastore.key([kind, uuid(url)]);
+					const [entity]=await datastore.get(key);
 
 					if ( entity ) {
 
@@ -66,13 +66,14 @@ export const pages=immutable({
 
 						log.info(pages.lookup.name, `caching <${url}>`);
 
+						const data={
+							value: JSON.stringify(value)
+						};
+
 						await datastore.save({
-							key: entityKey,
-							data: {
-								key: url,
-								value: JSON.stringify(value)
-							},
-							excludeFromIndexes: ["value"]
+							key,
+							data,
+							excludeFromIndexes: Object.keys(data)
 						});
 
 						resolve(value);

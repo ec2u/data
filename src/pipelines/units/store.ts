@@ -163,17 +163,25 @@ export const units=immutable({
 
 		return time(async () => {
 
+			const indexed=new Set(["parent", "university", "updated", "formal_", "website"]);
+
 			for (let i=0; i < items.length; i+=batch) {
-				await datastore.upsert(items.slice(i, i+batch).map(item => ({
-					key: datastore.key([kind, uuid(item.id)]),
-					data: {
+				await datastore.upsert(items.slice(i, i+batch).map(item => {
+
+					const data={
 						...item,
 						...(item.formal ? { formal_: normalizeName(item.formal) } : {}),
 						...(item.profile ? { profile: normalizeUrl(item.profile) } : {}),
 						...(item.website ? { website: normalizeUrl(item.website) } : {})
-					},
-					excludeFromIndexes: ["authoritative", "summary", "description", "keywords"]
-				})));
+					};
+
+					return {
+						key: datastore.key([kind, uuid(item.id)]),
+						data,
+						excludeFromIndexes: Object.keys(data).filter(field => !indexed.has(field))
+					};
+
+				}));
 			}
 
 			return items;
