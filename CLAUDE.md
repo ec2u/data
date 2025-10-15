@@ -3,6 +3,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # External Documentation
 
 - [Immutable.js Documentation](https://immutable-js.com/docs/v5/) - Immutable data structures for JavaScript
+- [IxJS Documentation](https://github.com/ReactiveX/IxJS) - Interactive Extensions for JavaScript (async iterables and
+  iterable operators)
 - [Google GenAI Documentation](https://googleapis.github.io/js-genai/release_docs/index.html) - Google Generative AI SDK
   for JavaScript/TypeScript
 - [Google Cloud Datastore Documentation](https://cloud.google.com/nodejs/docs/reference/datastore/latest) - Google Cloud

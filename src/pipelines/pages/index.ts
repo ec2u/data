@@ -43,7 +43,6 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
-import { Promisable } from "@/utilities/core/async";
 import { log } from "@/utilities/core/log";
 import { uuid } from "@/utilities/node/uuid";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
@@ -96,16 +95,16 @@ export interface Link {
  * Cache function for storing and retrieving processed web pages.
  *
  * Retrieves a cached page by URL or generates it using the provided fetcher function if not present in the cache.
- * Supports both synchronous and asynchronous cache implementations through the {@link Promisable} return type.
+ * Supports both synchronous and asynchronous cache implementations.
  *
  * @param url - The URL to look up in the cache
  * @param fetcher - Function to generate the page if not cached
  *
- * @returns The cached or newly generated page
+ * @returns The cached or newly generated page (may be returned synchronously or asynchronously)
  */
 export interface Cache {
 
-	(url: string, fetcher: (url: string) => Promisable<Page>): Promisable<Page>;
+	(url: string, fetcher: (url: string) => Page | Promise<Page>): Page | Promise<Page>;
 
 }
 

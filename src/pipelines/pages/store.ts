@@ -23,7 +23,6 @@
 
 import { Page } from "@/pipelines/pages/index";
 import { immutable } from "@/utilities/core";
-import { Promisable } from "@/utilities/core/async";
 import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
@@ -39,7 +38,7 @@ const cache=new Map<string, Promise<Page>>();
 
 export const pages=immutable({
 
-	async lookup(url: string, fetcher: (url: string) => Promisable<Page>): Promise<Page> {
+	async lookup(url: string, fetcher: (url: string) => Page | Promise<Page>): Promise<Page> {
 
 		const promise=cache.get(url);
 

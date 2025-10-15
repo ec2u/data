@@ -84,6 +84,39 @@ export function isError(value: unknown): value is Error {
 	return value instanceof Error;
 }
 
+/**
+ * Checks if a value is a promise.
+ *
+ * @param value the value to check
+ *
+ * @returns `true` if the value is a thenable object (has a `then` method)
+ */
+export function isPromise<T=unknown>(value: unknown): value is Promise<T> {
+	return value != null && typeof value === "object" && "then" in value && isFunction(value.then);
+}
+
+/**
+ * Checks if a value is iterable.
+ *
+ * @param value the value to check
+ *
+ * @returns `true` if the value implements the iterable protocol (has a `[Symbol.iterator]` method)
+ */
+export function isIterable<T=unknown>(value: unknown): value is Iterable<T> {
+	return value != null && isFunction((value as { [Symbol.iterator]?: unknown })[Symbol.iterator]);
+}
+
+/**
+ * Checks if a value is async iterable.
+ *
+ * @param value the value to check
+ *
+ * @returns `true` if the value implements the async iterable protocol (has a `[Symbol.asyncIterator]` method)
+ */
+export function isAsyncIterable<T=unknown>(value: unknown): value is AsyncIterable<T> {
+	return value != null && isFunction((value as { [Symbol.asyncIterator]?: unknown })[Symbol.asyncIterator]);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

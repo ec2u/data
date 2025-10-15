@@ -14,54 +14,52 @@
  * limitations under the License.
  */
 
-
 import { matches, merge } from "@/pipelines/units/index";
 import { units } from "@/pipelines/units/store";
+import { analyze } from "@/pipelines/units/tasks/analyze";
 import { explore } from "@/pipelines/units/tasks/explore";
 import { Units } from "@/utilities/hub";
 import { uuid } from "@/utilities/node/uuid";
+import { from, merge as mergeStreams, of, toArray } from "ix/asynciterable";
+import { filter, flatMap, map, take } from "ix/asynciterable/operators";
 
-units.select({ updated: 0 })
+of(await units.select({ updated: 0 }))
+	.pipe(map(async items => toArray(from(items).pipe(
+		take(1), // !!!
+		flatMap(lead => mergeStreams(
+			of(lead).pipe(
+				flatMap(analyze),
+				map(item => lead.updated && matches(lead, item) ? lead
+					: merge(lead, { ...item, updated: Date.now() })
+				)
+			),
+			of(lead).pipe(
+				flatMap(explore),
+				filter(item => !!(item.profile || item.website)),
+				map(item => ({
 
-	.then(items => items.slice(0, 1)) // !!!
+					parent: lead.id,
+					university: lead.university,
 
-	.then(items => {
+					formal: item.formal,
+					short: item.short,
+					acronym: item.acronym,
 
-		// const promise=Promise.all(leads.map(lead => Promise.resolve(lead)
-		// 	.then(analyze)
-		// 	.then(structure)
-		// 	.then(item => lead.updated && matches(lead, item) ? lead : merge(lead, { ...item, updated: Date.now() }))
-		// ));
+					summary: item.summary,
+					profile: item.profile,
+					website: item.website
 
-		return Promise.all(items.map(item => Promise.resolve(item).then(explore).then(leads => leads
-				.filter(lead => lead.profile || lead.website)
-				.map(lead => ({
-
-					parent: item.id,
-					university: item.university,
-
-					formal: lead.formal,
-					short: lead.short,
-					acronym: lead.acronym,
-					summary: lead.summary,
-
-					profile: lead.profile,
-					website: lead.website
-
-				}))
-				.map(async lead => {
+				})),
+				flatMap(async lead => {
 
 					const current=await units.lookup(lead);
 
-					return !current ? { ...item, id: `${Units}${uuid()}` }
-						: !matches(current, item) ? merge(current, { ...item, updated: undefined })
+					return !current ? { ...lead, id: `${Units}${uuid()}` }
+						: !matches(current, lead) ? merge(current, { ...lead, updated: undefined })
 							: current;
-
 
 				})
 			)
-		));
-
-	})
-
-	.then(console.info);
+		))
+	))))
+	.forEach(console.info);
