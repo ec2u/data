@@ -141,3 +141,25 @@ names, including the quotes and subtitle text
 
 **Validation**: Verify the extraction output contains only currently active departments listed on the page, not
 historical ones referenced in downloadable documents or archives
+
+## Translate Names to English
+
+**Input**: https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti
+
+**Expected Behavior**:
+
+- All formal names must be translated from Italian to English
+- Example: `Dipartimento di Biologia e Biotecnologie "Lazzaro Spallanzani"` should become
+  `Department of Biology and Biotechnology "Lazzaro Spallanzani"`
+- Preserve quoted subtitles in their original form (e.g., proper names like "Lazzaro Spallanzani" should not be
+  translated)
+- Translation must be accurate and preserve the full meaning of the original name
+
+**Root Cause of Past Issues**: Without explicit translation instructions, LLMs may leave names in the source language or
+inconsistently translate some names but not others.
+
+**Validation**: Verify all formal names in the extraction output are in English, with only proper names (like quoted
+subtitles) preserved in their original form
+
+**CRITICAL**: When modifying this prompt, ensure translation instructions explicitly require English output regardless
+of source language
