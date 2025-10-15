@@ -38,10 +38,10 @@ Promise.resolve(
 	.then(url => ({ profile: url }))
 
 	.then(analyze)
-	.then(dump("work.md"))
+	.then(dump("_work.md"))
 
 	.then(structure)
-	.then(dump("pavia.work.json"))
+	.then(dump("pavia._work.json"))
 
 	.then(console.info)
 	.catch(console.error);

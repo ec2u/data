@@ -54,11 +54,10 @@ Promise.resolve(root)
 
 	.then(async items => Promise.all(items.map(async item => {
 
-		const updated=Date.now();
 		const current=await units.lookup(item);
 
-		return !current ? { ...item, updated, id: `${Units}${uuid()}` }
-			: !matches(current, item) ? merge(current, { ...item, updated })
+		return !current ? { ...item, updated: undefined, id: `${Units}${uuid()}` }
+			: !matches(current, item) ? merge(current, { ...item, updated: undefined })
 				: current;
 
 	})))

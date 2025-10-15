@@ -18,7 +18,7 @@ import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { topics } from "@/pipelines/topics/store";
 import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
-import { Lead, Unit } from "@/pipelines/units";
+import { Unit } from "@/pipelines/units";
 import { ai, data, text } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
@@ -32,14 +32,14 @@ const tools=[
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function analyze(lead: Lead): Promise<string> {
+export async function analyze(lead: Unit): Promise<string> {
 	return text(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
 		contents: JSON.stringify(lead, null, 2),
 		config: {
 			seed: 0,
 			temperature: 0,
-			systemInstruction: await file("index.ai", import.meta.url),
+			systemInstruction: await file(".ai", import.meta.url),
 			tools,
 			automaticFunctionCalling: {
 				maximumRemoteCalls: 20

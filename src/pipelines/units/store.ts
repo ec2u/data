@@ -21,7 +21,7 @@ import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";
-import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
+import { or, PropertyFilter } from "@google-cloud/datastore/build/src/filter";
 
 const kind="Unit";
 const batch=100;
@@ -135,10 +135,25 @@ export const units=immutable({
 
 			let query=datastore.createQuery(kind);
 
-			if ( updated ) {
-				query=query.filter(new PropertyFilter("updated", ">=", updated)).order("updated");
+			if ( updated === 0 ) {
+
+				query=query
+					.filter(new PropertyFilter("updated", "=", 0))
+					.order("updated");
+
+			} else if ( updated ) {
+
+				query=query
+					.filter(or([
+						new PropertyFilter("updated", ">=", Math.abs(updated)),
+						new PropertyFilter("updated", "<=", -Math.abs(updated))
+					]))
+					.order("updated");
+
 			} else {
+
 				query=query.order("__key__");
+
 			}
 
 			if ( offset ) {
@@ -170,6 +185,7 @@ export const units=immutable({
 
 					const data={
 						...item,
+						updated: item.updated ?? 0,
 						...(item.formal ? { formal_: normalizeName(item.formal) } : {}),
 						...(item.profile ? { profile: normalizeUrl(item.profile) } : {}),
 						...(item.website ? { website: normalizeUrl(item.website) } : {})

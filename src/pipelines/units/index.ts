@@ -33,15 +33,14 @@ export interface Unit {
 	readonly university: string;
 
 
-	/** Timestamp when the record was last updated. */
-	readonly updated: number;
-
-	/** Timestamp when the record was last updated from web sources. */
-	readonly visited?: number;
-
-	/** Timestamp when the record was deleted. */
-	readonly deleted?: number;
-
+	/**
+	 * Processing timestamp for the record.
+	 *
+	 * - `undefined  | 0` = unprocessed
+	 * - `> 0` = processed at the specified timestamp
+	 * - `< 0` = deleted at the absolute value of the timestamp
+	 */
+	readonly updated?: number;
 
 	/** List of field names that were populated from an authoritative source. */
 	readonly authoritative?: readonly string[];
