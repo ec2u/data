@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import { Unit } from "@/pipelines/units";
-import { scan, structure } from "@/pipelines/units/feeds/pavia";
+import { scan } from "@/pipelines/units/feeds/pavia";
 import { units } from "@/pipelines/units/store";
-import { base, pavia } from "@/utilities/hub";
+import { pavia } from "@/utilities/hub";
 import { uuid } from "@/utilities/node/uuid";
-
-
-const Units=`${base}units/`; // !!!
+import { Units } from "../../../utilities/hub";
+import { matches, merge } from "../index";
 
 
 const root=
@@ -37,7 +35,6 @@ const university=pavia;
 Promise.resolve(root)
 
 	.then(scan)
-	.then(structure)
 
 	.then(items => items.map(item => ({
 
@@ -56,7 +53,7 @@ Promise.resolve(root)
 
 		const current=await units.lookup(item);
 
-		return !current ? { ...item, updated: undefined, id: `${Units}${uuid()}` }
+		return !current ? { ...item, id: `${Units}${uuid()}` }
 			: !matches(current, item) ? merge(current, { ...item, updated: undefined })
 				: current;
 
@@ -64,37 +61,3 @@ Promise.resolve(root)
 
 	.then(units.insert)
 	.then(console.info);
-
-
-/**
- * Checks if a unit matches all properties specified in a partial unit.
- *
- * @param match the unit to test against
- * @param item the partial unit containing properties to match
- *
- * @returns true if all properties in item have equal values in match, false otherwise
- */
-function matches(match: Unit, item: Partial<Unit>) {
-	return Object.entries(item).every(([key, value]) => match[key as keyof Unit] === value);
-}
-
-
-/**
- * Merges a delta unit into an existing unit value, respecting authoritative field declarations.
- *
- * Fields marked as authoritative in the existing value are preserved unless the delta also declares them as
- * authoritative. This allows controlled updates where certain fields can be protected from modification.
- *
- * @param value the existing unit to merge into
- * @param delta the partial unit containing updates to apply
- * @returns a new unit with delta fields merged into value, respecting authoritative declarations
- */
-function merge<U extends Partial<Unit>>(value: U, delta: Partial<Unit>): U {
-
-	const valueAuthoritative=new Set(value.authoritative ?? []);
-	const deltaAuthoritative=new Set(delta.authoritative ?? []);
-
-	return Object.assign({}, value, Object.fromEntries(Object.entries(delta).filter(([key]) =>
-		!valueAuthoritative.has(key) || deltaAuthoritative.has(key)
-	)));
-}

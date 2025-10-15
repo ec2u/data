@@ -25,10 +25,10 @@ When asked to validate this prompt:
 
 1. **Create and run temporary test driver**:
     - Use Write tool to create `.test.ts` with test code
-    - Import `scan` and `structure` functions from `pavia.js`
+   - Import `scan` function from `pavia.js`
     - Configure test URL and options (structured vs raw output)
     - Execute `npx tsx .test.ts` to generate output
-    - Delete `.test.ts` after execution
+   - Delete `.test.ts` after the complete testing process is finished
 
 2. **Perform independent verification**:
     - Use WebFetch to retrieve the target page

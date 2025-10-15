@@ -16,8 +16,9 @@
 
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { Lead } from "@/pipelines/units";
-import { ai, data, text } from "@/utilities/gcp/gemini";
+import { Unit } from "@/pipelines/units";
+import { md } from "@/utilities/core/tags";
+import { ai, data } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 
@@ -29,10 +30,17 @@ const tools=[
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function explore(lead: Lead): Promise<string> {
-	return text(await ai.models.generateContent({
+export async function explore(lead: Partial<Unit>): Promise<readonly Partial<Unit>[]> {
+	return data(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
-		contents: JSON.stringify(lead, null, 2),
+		contents: md`
+			profile: ${lead.profile ?? "Not provided"}
+			website: ${lead.website ?? "Not provided"}
+			formal: ${lead.formal ?? "Not provided"}
+			short: ${lead.short ?? "Not provided"}
+			acronym: ${lead.acronym ?? "Not provided"}
+			summary: ${lead.summary ?? "Not provided"}
+		`,
 		config: {
 			seed: 0,
 			temperature: 0,
@@ -42,11 +50,7 @@ export async function explore(lead: Lead): Promise<string> {
 				maximumRemoteCalls: 20
 			}
 		}
-	}));
-}
-
-export async function structure(report: string): Promise<readonly Lead[]> {
-	return data(report, {
+	}), {
 		type: Type.ARRAY,
 		items: {
 			type: Type.OBJECT,
@@ -59,16 +63,24 @@ export async function structure(report: string): Promise<readonly Lead[]> {
 					type: Type.STRING,
 					description: "The URL of the unit's self-managed website (omit if not available)"
 				},
-				name: {
+				formal: {
 					type: Type.STRING,
-					description: "The name of the research unit"
+					description: "The formal name of the research unit"
+				},
+				short: {
+					type: Type.STRING,
+					description: "The short name of the research unit (omit if not available)"
+				},
+				acronym: {
+					type: Type.STRING,
+					description: "The acronym of the research unit (omit if not available)"
 				},
 				summary: {
 					type: Type.STRING,
 					description: "A brief summary of the research unit"
 				}
 			},
-			required: ["name", "summary"]
+			required: ["formal", "summary"]
 		}
 	});
 }

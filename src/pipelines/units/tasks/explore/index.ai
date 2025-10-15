@@ -8,7 +8,9 @@ You will be provided with a lead to an online description of a research unit, po
 
 - profile: the URL of the institutional profile of the unit
 - website: the URL of the unit's self-managed website
-- name: the name of the research unit
+- formal: the formal name of the research unit
+- short: the short name of the research unit
+- acronym: the acronym of the research unit
 - summary: a brief summary of the research unit
 
 # Task
@@ -27,7 +29,9 @@ Generate a plaintext report listing each subunit with:
 
 - **profile:** the URL of the institutional profile (if available)
 - **website:** the URL of the subunit's self-managed website (**include when found on profile page**)
-- **name:** the name of the subunit
+- **formal:** the formal name of the subunit
+- **short:** the short name of the subunit (if available)
+- **acronym:** the acronym of the subunit (if available)
 - **summary:** a brief description (~100 chars)
 
 Format as a markdown list with all available information for each subunit.

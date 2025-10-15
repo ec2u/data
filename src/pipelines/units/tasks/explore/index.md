@@ -28,10 +28,10 @@ When asked to validate this prompt:
 
 1. **Create and run test driver**:
     - Write temporary `.test.ts` file with test code
-    - Import `explore` and `structure` functions from `index.js`
+   - Import `explore` function from `index.js`
     - Configure test with URL and run options
     - Execute `npx tsx .test.ts` to generate output
-    - Delete `.test.ts` after execution
+   - Delete `.test.ts` after the complete testing process is finished
 
 2. **Perform independent verification**:
     - Use WebFetch to retrieve target pages

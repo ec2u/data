@@ -17,7 +17,7 @@
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { Unit } from "@/pipelines/units";
-import { ai, data, text } from "@/utilities/gcp/gemini";
+import { ai, data } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 
@@ -29,8 +29,8 @@ const tools=[
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function scan(url: string): Promise<string> {
-	return text(await ai.models.generateContent({
+export async function scan(url: string): Promise<readonly Partial<Unit>[]> {
+	return data(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
 		contents: url,
 		config: {
@@ -39,11 +39,7 @@ export async function scan(url: string): Promise<string> {
 			systemInstruction: await file(".ai", import.meta.url),
 			tools
 		}
-	}));
-}
-
-export async function structure(report: string): Promise<readonly Partial<Unit>[]> {
-	return data(report, {
+	}), {
 		type: Type.ARRAY,
 		items: {
 			type: Type.OBJECT,

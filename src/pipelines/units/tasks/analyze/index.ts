@@ -19,7 +19,8 @@ import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { topics } from "@/pipelines/topics/store";
 import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
 import { Unit } from "@/pipelines/units";
-import { ai, data, text } from "@/utilities/gcp/gemini";
+import { md } from "@/utilities/core/tags";
+import { ai, data } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 
@@ -32,10 +33,15 @@ const tools=[
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function analyze(lead: Unit): Promise<string> {
-	return text(await ai.models.generateContent({
+export async function analyze(lead: Partial<Unit>): Promise<Partial<Unit>> {
+	return data(await ai.models.generateContent({
 		model: "gemini-2.5-flash",
-		contents: JSON.stringify(lead, null, 2),
+		contents: md`
+			profile: ${lead.profile ?? "Not provided"}
+			website: ${lead.website ?? "Not provided"}
+			name: ${lead.formal ?? lead.short ?? "Not provided"}
+			summary: ${lead.summary ?? "Not provided"}
+		`,
 		config: {
 			seed: 0,
 			temperature: 0,
@@ -45,11 +51,7 @@ export async function analyze(lead: Unit): Promise<string> {
 				maximumRemoteCalls: 20
 			}
 		}
-	}));
-}
-
-export async function structure(report: string): Promise<Unit> {
-	return data(report, {
+	}), {
 		type: Type.OBJECT,
 		properties: {
 			formal: {

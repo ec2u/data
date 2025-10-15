@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { isString } from "@/utilities/core";
 import { message } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
@@ -80,24 +81,24 @@ export function embedding(response: EmbedContentResponse) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Converts unstructured text into structured data using the Gemini API.
+ * Converts unstructured text source into structured data using the Gemini API.
  *
- * Instructs the model to extract and structure information from text according to the provided schema,
+ * Instructs the model to extract and structure information from source according to the provided schema,
  * with deterministic output (seed=0, temperature=0) and automatic omission of undefined/empty values.
  *
  * @typeParam T Type of the structured data to return
  *
- * @param text Textual report to convert
+ * @param source Textual report to convert
  * @param schema JSON schema defining the expected output structure
  *
  * @returns Structured data conforming to the schema
  *
  * @throws Error if the model response is malformed or invalid JSON
  */
-export async function data<T>(text: string, schema: SchemaUnion): Promise<T> {
+export async function data<T>(source: string | GenerateContentResponse, schema: SchemaUnion): Promise<T> {
 	return json(await ai.models.generateContent({
 		model: "gemini-2.5-flash-lite",
-		contents: text,
+		contents: isString(source) ? source : text(source),
 		config: {
 			seed: 0,
 			temperature: 0,

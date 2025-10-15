@@ -19,20 +19,20 @@ import SparqlClient from "sparql-http-client";
 
 export const base="https://data.ec2u.eu/";
 
-export const units=`${base}units/`;
 
-export const universities=`${base}universities/`;
+export const Universities=`${base}universities/`;
+export const Units=`${base}units/`;
 
 
-export const coimbra=`${universities}coimbra`;
-export const iasi=`${universities}iasi`;
-export const jena=`${universities}jena`;
-export const linz=`${universities}linz`;
-export const pavia=`${universities}pavia`;
-export const poitiers=`${universities}poitiers`;
-export const salamanca=`${universities}salamanca`;
-export const turku=`${universities}turku`;
-export const umea=`${universities}umea`;
+export const coimbra=`${Universities}coimbra`;
+export const iasi=`${Universities}iasi`;
+export const jena=`${Universities}jena`;
+export const linz=`${Universities}linz`;
+export const pavia=`${Universities}pavia`;
+export const poitiers=`${Universities}poitiers`;
+export const salamanca=`${Universities}salamanca`;
+export const turku=`${Universities}turku`;
+export const umea=`${Universities}umea`;
 
 
 export const hub=new SparqlClient({

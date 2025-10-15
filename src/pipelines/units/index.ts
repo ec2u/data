@@ -94,3 +94,38 @@ export interface Unit {
 	readonly keywords?: readonly string[];
 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Checks if a unit matches all properties specified in a partial unit.
+ *
+ * @param match the unit to test against
+ * @param item the partial unit containing properties to match
+ *
+ * @returns true if all properties in item have equal values in match, false otherwise
+ */
+export function matches(match: Unit, item: Partial<Unit>) {
+	return Object.entries(item).every(([key, value]) => match[key as keyof Unit] === value);
+}
+
+/**
+ * Merges a delta unit into an existing unit value, respecting authoritative field declarations.
+ *
+ * Fields marked as authoritative in the existing value are preserved unless the delta also declares them as
+ * authoritative. This allows controlled updates where certain fields can be protected from modification.
+ *
+ * @param value the existing unit to merge into
+ * @param delta the partial unit containing updates to apply
+ * @returns a new unit with delta fields merged into value, respecting authoritative declarations
+ */
+export function merge<U extends Partial<Unit>>(value: U, delta: Partial<Unit>): U {
+
+	const valueAuthoritative=new Set(value.authoritative ?? []);
+	const deltaAuthoritative=new Set(delta.authoritative ?? []);
+
+	return Object.assign({}, value, Object.fromEntries(Object.entries(delta).filter(([key]) =>
+		!valueAuthoritative.has(key) || deltaAuthoritative.has(key)
+	)));
+}
