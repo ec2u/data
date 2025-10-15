@@ -14,16 +14,36 @@
  * limitations under the License.
  */
 
-import { collect, filter, forEach, map, pipe, process, reduce } from "./async";
 
-await process(pipe([1, 2, 3])
+import { filter, forEach, items, map, pipe, reduce } from "./async";
+
+pipe(items([1, 2, 3])
 	(map(v => v*v))
 	(filter(v => v > 2))
 	(forEach(console.info))
 );
 
-console.log(await collect(pipe([1, 2, 3, 4, 5])
+console.log(await pipe(items([1, 2, 3, 4, 5])
 	(filter(n => n > 2))
 	(map(n => n*2))
-	(reduce((acc, n) => acc+n, 0))
+	(reduce((sum, n) => sum+n, 0))
 ));
+
+
+
+// review test suite
+
+// remove IxJs dependency
+// rework _pipe()
+
+
+Low;
+Priority:
+	5.;
+Add;
+input;
+validation;
+to;
+batch();
+size;
+parameter;

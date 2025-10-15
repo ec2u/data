@@ -18,10 +18,13 @@ import { matches, merge } from "@/pipelines/units/index";
 import { units } from "@/pipelines/units/store";
 import { analyze } from "@/pipelines/units/tasks/analyze";
 import { explore } from "@/pipelines/units/tasks/explore";
+import { items } from "@/utilities/core/async";
 import { Units } from "@/utilities/hub";
 import { uuid } from "@/utilities/node/uuid";
 import { from, merge as mergeStreams, of, toArray } from "ix/asynciterable";
 import { filter, flatMap, map, take } from "ix/asynciterable/operators";
+
+items(1);
 
 of(await units.select({ updated: 0 }))
 	.pipe(map(async items => toArray(from(items).pipe(
