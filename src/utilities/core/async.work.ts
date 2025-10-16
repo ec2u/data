@@ -30,20 +30,9 @@ console.log(await pipe(items([1, 2, 3, 4, 5])
 ));
 
 
+// docs
+// chain
+// review
 
+// performance
 // review test suite
-
-// remove IxJs dependency
-// rework _pipe()
-
-
-Low;
-Priority:
-	5.;
-Add;
-input;
-validation;
-to;
-batch();
-size;
-parameter;

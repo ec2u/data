@@ -27,61 +27,19 @@ import {
 	merge,
 	peek,
 	pipe,
-	process,
+	Pipe,
 	range,
 	reduce,
 	skip,
 	some,
 	take,
-	toArray
-} from "./async"; // !!! import *
+	toArray,
+	toMap,
+	toSet
+} from "./async";
 
 
-// !!! remove
-
-async function collectArray<T>(source: AsyncIterable<T>): Promise<T[]> {
-	const result: T[]=[];
-	for await (const item of source) {
-		result.push(item);
-	}
-	return result;
-}
-
-
-//// Drivers ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-describe("process()", () => {
-
-	// !!! test Promise<T
-
-	it("should consume async iterable without collecting", async () => {
-
-		const sideEffects: number[]=[];
-		const source=items(range(1, 4))(peek(n => {
-			sideEffects.push(n);
-		}));
-
-		await process(source);
-
-		expect(sideEffects).toEqual([1, 2, 3]);
-
-	});
-
-	it("should consume pipe without collecting", async () => {
-
-		const sideEffects: number[]=[];
-
-		await process(items(range(1, 4))(peek(n => {
-			sideEffects.push(n);
-		})));
-
-		expect(sideEffects).toEqual([1, 2, 3]);
-
-	});
-
-});
-
-describe("collect()", () => {
+describe("pipe()", () => {
 
 	it("should return promise value directly", async () => {
 
@@ -91,17 +49,9 @@ describe("collect()", () => {
 
 	});
 
-	it("should collect items from async iterable", async () => {
+	it("should retrieve async iterable from pipe", async () => {
 
-		const values=await pipe(range(1, 4));
-
-		expect(values).toEqual([1, 2, 3]);
-
-	});
-
-	it("should collect items from pipe", async () => {
-
-		const values=await pipe(items(range(1, 4)));
+		const values=await items(pipe(items(range(1, 4))))(toArray());
 
 		expect(values).toEqual([1, 2, 3]);
 
@@ -109,675 +59,837 @@ describe("collect()", () => {
 
 });
 
+describe("Factories", () => {
 
-//// Factories /////////////////////////////////////////////////////////////////////////////////////////////////////////
+	describe("range()", () => {
 
-// !!! range()
+		it("should generate ascending range", async () => {
 
-describe("stream()", () => {
+			const values=await range(1, 5)(toArray());
 
-	it("should create pipe from single value", async () => {
+			expect(values).toEqual([1, 2, 3, 4]);
 
-		const values=await pipe(items(42));
+		});
 
-		expect(values).toEqual([42]);
+		it("should generate descending range", async () => {
 
-	});
+			const values=await range(5, 1)(toArray());
 
-	it("should create pipe from array", async () => {
+			expect(values).toEqual([5, 4, 3, 2]);
 
-		const values=await pipe(items([1, 2, 3]));
+		});
 
-		expect(values).toEqual([1, 2, 3]);
+		it("should generate empty range when start equals end", async () => {
 
-	});
+			const values=await range(3, 3)(toArray());
 
-	it("should create pipe from iterable", async () => {
+			expect(values).toEqual([]);
 
-		const values=await pipe(items(new Set([1, 2, 3])));
+		});
 
-		expect(values).toEqual([1, 2, 3]);
+		it("should work with negative numbers", async () => {
 
-	});
+			const values=await range(-2, 2)(toArray());
 
-	it("should create pipe from async iterable", async () => {
+			expect(values).toEqual([-2, -1, 0, 1]);
 
-		const values=await pipe(items(range(1, 4)));
+		});
 
-		expect(values).toEqual([1, 2, 3]);
+		describe("should create a compliant pipe object", () => {
 
-	});
+			it("should return async iterable when called without transform", async () => {
+				expect(await pipe(range(1, 4)(toArray()))).toEqual([1, 2, 3]);
+			});
 
-	it("should return async iterable when called without transform", async () => {
+			it("should apply task and return new pipe", async () => {
+				expect(await pipe(range(1, 4)(map(x => x*2))(toArray()))).toEqual([2, 4, 6]);
+			});
 
-		const iterable=items([1, 2, 3])();
-		const values=await collectArray(iterable);
+			it("should apply sink and return promise", async () => {
+				expect(await range(1, 4)(reduce((acc, x) => acc+x, 0))).toBe(6);
+			});
 
-		expect(values).toEqual([1, 2, 3]);
+			it("should chain multiple tasks", async () => {
+				expect(await pipe(
+					range(1, 6)
+					(filter(x => x%2 === 0))
+					(map(x => x*2))
+					(toArray())
+				)).toEqual([4, 8]);
+			});
 
-	});
-
-	it("should apply task and return new pipe", async () => {
-
-		const values=await pipe(items([1, 2, 3])(map(x => x*2)));
-
-		expect(values).toEqual([2, 4, 6]);
-
-	});
-
-	it("should apply sink and return promise", async () => {
-
-		const sum=await items([1, 2, 3])(reduce((acc, x) => acc+x, 0));
-
-		expect(sum).toBe(6);
-
-	});
-
-	it("should chain multiple tasks", async () => {
-
-		const values=await pipe(
-			items([1, 2, 3, 4, 5])
-			(filter(x => x%2 === 0))
-			(map(x => x*2))
-		);
-
-		expect(values).toEqual([4, 8]);
+		});
 
 	});
 
-});
+	describe("items()", () => {
 
-describe("merge()", () => {
+		it("should create pipe from single value", async () => {
 
-	it("should merge multiple async iterables", async () => {
+			const values=await items(42)(toArray());
 
-		const source1=range(1, 3);
-		const source2=range(10, 12);
-		const merged=merge(source1, source2);
-		const values=(await collectArray(merged)).sort();
+			expect(values).toEqual([42]);
 
-		expect(values).toEqual([1, 2, 10, 11]);
+		});
+
+		it("should create pipe from array", async () => {
+
+			const values=await items([1, 2, 3])(toArray());
+
+			expect(values).toEqual([1, 2, 3]);
+
+		});
+
+		it("should create pipe from iterable", async () => {
+
+			const values=await items(new Set([1, 2, 3]))(toArray());
+
+			expect(values).toEqual([1, 2, 3]);
+
+		});
+
+		it("should create pipe from async iterable", async () => {
+
+			const values=await items(range(1, 4))(toArray());
+
+			expect(values).toEqual([1, 2, 3]);
+
+		});
+
+		describe("should create a compliant pipe object", () => {
+
+			it("should return async iterable when called without transform", async () => {
+				expect(await pipe(items(items([1, 2, 3])())(toArray()))).toEqual([1, 2, 3]);
+			});
+
+			it("should apply task and return new pipe", async () => {
+				expect(await pipe(items([1, 2, 3])(map(x => x*2))(toArray()))).toEqual([2, 4, 6]);
+			});
+
+			it("should apply sink and return promise", async () => {
+				expect(await items([1, 2, 3])(reduce((acc, x) => acc+x, 0))).toBe(6);
+			});
+
+			it("should chain multiple tasks", async () => {
+				expect(await pipe(
+					items([1, 2, 3, 4, 5])
+					(filter(x => x%2 === 0))
+					(map(x => x*2))
+					(toArray())
+				)).toEqual([4, 8]);
+			});
+
+		});
 
 	});
 
-	it("should merge multiple pipes", async () => {
+	describe("merge()", () => {
 
-		const values=await pipe(
-			merge(
-				items(range(1, 3)),
-				items(range(10, 12))
-			)
-		);
+		it("should merge multiple pipes", async () => {
 
-		expect([...values].sort()).toEqual([1, 2, 10, 11]);
+			const values=await merge(range(1, 3), range(10, 12))(toArray());
 
-	});
+			expect([...values].sort((a, b) => a-b)).toEqual([1, 2, 10, 11]);
 
-	it("should handle empty sources", async () => {
+		});
 
-		const merged=merge(range(1, 1), range(2, 2));
-		const values=await collectArray(merged);
+		it("should handle empty pipes", async () => {
 
-		expect(values).toEqual([]);
+			const values=await merge(range(1, 1), range(2, 2))(toArray());
 
-	});
+			expect(values).toEqual([]);
 
-	it("should clean up iterators on early termination", async () => {
+		});
 
-		const cleanup: string[]=[];
+		it("should clean up iterators on early termination", async () => {
 
-		async function* tracked(name: string): AsyncIterable<number> {
-			try {
-				yield 1;
-				yield 2;
-			} finally {
-				cleanup.push(name);
+			const cleanup: string[]=[];
+
+			function tracked(name: string): Pipe<number> {
+				return items((async function* () {
+					try {
+						yield 1;
+						yield 2;
+					} finally {
+						cleanup.push(name);
+					}
+				})());
 			}
-		}
 
-		const merged=merge(tracked("a"), tracked("b"));
-		const iterator=merged[Symbol.asyncIterator]();
+			const merged=merge(tracked("a"), tracked("b"));
+			const iterator=merged()[Symbol.asyncIterator]();
 
-		await iterator.next();
-		await iterator.return?.();
+			await iterator.next();
+			await iterator.return?.();
 
-		expect(cleanup.length).toBe(2);
+			expect(cleanup.length).toBe(2);
 
-	});
+		});
 
-});
+		describe("should create a compliant pipe object", () => {
 
+			it("should return async iterable when called without transform", async () => {
+				const values=await pipe(merge(range(1, 3), range(10, 12))(toArray()));
+				expect([...values].sort((a, b) => a-b)).toEqual([1, 2, 10, 11]);
+			});
 
-//// Tasks /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			it("should apply task and return new pipe", async () => {
+				const values=await pipe(merge(range(1, 3), range(10, 12))(map(x => x*2))(toArray()));
+				expect([...values].sort((a, b) => a-b)).toEqual([2, 4, 20, 22]);
+			});
 
-describe("skip()", () => {
+			it("should apply sink and return promise", async () => {
+				expect(await merge(range(1, 3), range(10, 12))(reduce((acc, x) => acc+x, 0))).toBe(24);
+			});
 
-	it("should skip first n items", async () => {
+			it("should chain multiple tasks", async () => {
+				const values=await pipe(
+					merge(range(1, 4), range(10, 13))
+					(filter(x => x%2 === 0))
+					(map(x => x*2))
+					(toArray())
+				);
+				expect([...values].sort((a, b) => a-b)).toEqual([4, 20, 24]);
+			});
 
-		const values=await pipe(items([1, 2, 3, 4, 5])(skip(2)));
-
-		expect(values).toEqual([3, 4, 5]);
-
-	});
-
-	it("should skip all items when n >= length", async () => {
-
-		const values=await pipe(items([1, 2, 3])(skip(5)));
-
-		expect(values).toEqual([]);
-
-	});
-
-	it("should skip zero items", async () => {
-
-		const values=await pipe(items([1, 2, 3])(skip(0)));
-
-		expect(values).toEqual([1, 2, 3]);
+		});
 
 	});
 
 });
 
-describe("take()", () => {
+describe("Tasks", () => {
 
-	it("should take first n items", async () => {
+	describe("skip()", () => {
 
-		const values=await pipe(items([1, 2, 3, 4, 5])(take(3)));
+		it("should skip first n items", async () => {
 
-		expect(values).toEqual([1, 2, 3]);
+			const values=await items([1, 2, 3, 4, 5])(skip(2))(toArray());
 
-	});
+			expect(values).toEqual([3, 4, 5]);
 
-	it("should take all items when n >= length", async () => {
+		});
 
-		const values=await pipe(items([1, 2, 3])(take(5)));
+		it("should skip all items when n >= length", async () => {
 
-		expect(values).toEqual([1, 2, 3]);
+			const values=await items([1, 2, 3])(skip(5))(toArray());
 
-	});
+			expect(values).toEqual([]);
 
-	it("should take zero items", async () => {
+		});
 
-		const values=await pipe(items([1, 2, 3])(take(0)));
+		it("should skip zero items", async () => {
 
-		expect(values).toEqual([]);
+			const values=await items([1, 2, 3])(skip(0))(toArray());
 
-	});
+			expect(values).toEqual([1, 2, 3]);
 
-});
+		});
 
-describe("peek()", () => {
+		it("should treat negative n as zero", async () => {
 
-	it("should execute side effect for each item", async () => {
+			const values=await items([1, 2, 3])(skip(-5))(toArray());
 
-		const sideEffects: number[]=[];
-		const values=await pipe(
-			items([1, 2, 3])(peek(x => sideEffects.push(x*10)))
-		);
+			expect(values).toEqual([1, 2, 3]);
 
-		expect(values).toEqual([1, 2, 3]);
-		expect(sideEffects).toEqual([10, 20, 30]);
+		});
 
 	});
 
-	it("should support async consumers", async () => {
+	describe("take()", () => {
 
-		const sideEffects: number[]=[];
-		const values=await pipe(
-			items([1, 2, 3])(peek(async x => {
+		it("should take first n items", async () => {
+
+			const values=await items([1, 2, 3, 4, 5])(take(3))(toArray());
+
+			expect(values).toEqual([1, 2, 3]);
+
+		});
+
+		it("should take all items when n >= length", async () => {
+
+			const values=await items([1, 2, 3])(take(5))(toArray());
+
+			expect(values).toEqual([1, 2, 3]);
+
+		});
+
+		it("should take zero items", async () => {
+
+			const values=await items([1, 2, 3])(take(0))(toArray());
+
+			expect(values).toEqual([]);
+
+		});
+
+		it("should treat negative n as zero", async () => {
+
+			const values=await items([1, 2, 3])(take(-5))(toArray());
+
+			expect(values).toEqual([]);
+
+		});
+
+	});
+
+	describe("peek()", () => {
+
+		it("should execute side effect for each item", async () => {
+
+			const sideEffects: number[]=[];
+			const values=await items([1, 2, 3])(peek(x => {
+				sideEffects.push(x*10);
+			}))(toArray());
+
+			expect(values).toEqual([1, 2, 3]);
+			expect(sideEffects).toEqual([10, 20, 30]);
+
+		});
+
+		it("should support async consumers", async () => {
+
+			const sideEffects: number[]=[];
+			const values=await items([1, 2, 3])(peek(async x => {
 				await Promise.resolve();
 				sideEffects.push(x);
-			}))
-		);
+			}))(toArray());
 
-		expect(values).toEqual([1, 2, 3]);
-		expect(sideEffects).toEqual([1, 2, 3]);
+			expect(values).toEqual([1, 2, 3]);
+			expect(sideEffects).toEqual([1, 2, 3]);
 
-	});
-
-});
-
-describe("filter()", () => {
-
-	it("should filter items by predicate", async () => {
-
-		const values=await pipe(
-			items([1, 2, 3, 4, 5])(filter(x => x%2 === 0))
-		);
-
-		expect(values).toEqual([2, 4]);
+		});
 
 	});
 
-	it("should support async predicates", async () => {
+	describe("filter()", () => {
 
-		const values=await pipe(
-			items([1, 2, 3, 4, 5])(filter(async x => {
+		it("should filter items by predicate", async () => {
+
+			const values=await items([1, 2, 3, 4, 5])(filter(x => x%2 === 0))(toArray());
+
+			expect(values).toEqual([2, 4]);
+
+		});
+
+		it("should support async predicates", async () => {
+
+			const values=await items([1, 2, 3, 4, 5])(filter(async x => {
 				await Promise.resolve();
 				return x > 2;
-			}))
-		);
+			}))(toArray());
 
-		expect(values).toEqual([3, 4, 5]);
+			expect(values).toEqual([3, 4, 5]);
 
-	});
+		});
 
-	it("should handle empty results", async () => {
+		it("should handle empty results", async () => {
 
-		const values=await pipe(
-			items([1, 2, 3])(filter(() => false))
-		);
+			const values=await items([1, 2, 3])(filter(() => false))(toArray());
 
-		expect(values).toEqual([]);
+			expect(values).toEqual([]);
 
-	});
-
-});
-
-describe("distinct()", () => {
-
-	it("should filter out duplicate primitives", async () => {
-
-		const values=await pipe(
-			items([1, 2, 2, 3, 1, 4])(distinct())
-		);
-
-		expect(values).toEqual([1, 2, 3, 4]);
+		});
 
 	});
 
-	it("should use selector for comparison", async () => {
+	describe("distinct()", () => {
 
-		const values=await pipe(
-			items([
+		it("should filter out duplicate primitives", async () => {
+
+			const values=await items([1, 2, 2, 3, 1, 4])(distinct())(toArray());
+
+			expect(values).toEqual([1, 2, 3, 4]);
+
+		});
+
+		it("should use selector for comparison", async () => {
+
+			const values=await items([
 				{ id: 1, name: "a" },
 				{ id: 2, name: "b" },
 				{ id: 1, name: "c" }
-			])(distinct(item => item.id))
-		);
+			])(distinct(item => item.id))(toArray());
 
-		expect(values).toEqual([
-			{ id: 1, name: "a" },
-			{ id: 2, name: "b" }
-		]);
+			expect(values).toEqual([
+				{ id: 1, name: "a" },
+				{ id: 2, name: "b" }
+			]);
 
-	});
+		});
 
-	it("should handle empty stream", async () => {
+		it("should handle empty stream", async () => {
 
-		const values=await pipe(
-			items([] as number[])(distinct())
-		);
+			const values=await items([] as number[])(distinct())(toArray());
 
-		expect(values).toEqual([]);
+			expect(values).toEqual([]);
 
-	});
-
-});
-
-describe("map()", () => {
-
-	it("should transform items", async () => {
-
-		const values=await pipe(
-			items([1, 2, 3])(map(x => x*2))
-		);
-
-		expect(values).toEqual([2, 4, 6]);
+		});
 
 	});
 
-	it("should support async mappers", async () => {
+	describe("map()", () => {
 
-		const values=await pipe(
-			items([1, 2, 3])(map(async x => {
+		it("should transform items", async () => {
+
+			const values=await items([1, 2, 3])(map(x => x*2))(toArray());
+
+			expect(values).toEqual([2, 4, 6]);
+
+		});
+
+		it("should support async mappers", async () => {
+
+			const values=await items([1, 2, 3])(map(async x => {
 				await Promise.resolve();
 				return x*2;
-			}))
-		);
+			}))(toArray());
 
-		expect(values).toEqual([2, 4, 6]);
+			expect(values).toEqual([2, 4, 6]);
+
+		});
+
+		it("should change item types", async () => {
+
+			const values=await items([1, 2, 3])(map(x => `value-${x}`))(toArray());
+
+			expect(values).toEqual(["value-1", "value-2", "value-3"]);
+
+		});
 
 	});
 
-	it("should change item types", async () => {
+	describe("flatMap()", () => {
 
-		const values=await pipe(
-			items([1, 2, 3])(map(x => `value-${x}`))
-		);
+		it("should flatten mapped async iterables", async () => {
 
-		expect(values).toEqual(["value-1", "value-2", "value-3"]);
-
-	});
-
-});
-
-describe("flatMap()", () => {
-
-	it("should flatten mapped async iterables", async () => {
-
-		const values=await pipe(
-			items([1, 2, 3])(flatMap(async function* (x) {
+			const values=await items([1, 2, 3])(flatMap(async function* (x) {
 				yield x;
 				yield x*10;
-			}))
-		);
+			}))(toArray());
 
-		expect(values).toEqual([1, 10, 2, 20, 3, 30]);
+			expect(values).toEqual([1, 10, 2, 20, 3, 30]);
 
-	});
+		});
 
-	it("should handle empty iterables", async () => {
+		it("should handle empty iterables", async () => {
 
-		const values=await pipe(
-			items([1, 2, 3])(flatMap(async function* (x) {
+			const values=await items([1, 2, 3])(flatMap(async function* (x) {
 				if ( x === 2 ) {
 					yield x;
 				}
-			}))
-		);
+			}))(toArray());
 
-		expect(values).toEqual([2]);
+			expect(values).toEqual([2]);
+
+		});
+
+	});
+
+	describe("batch()", () => {
+
+		it("should group items into batches of specified size", async () => {
+
+			const values=await items([1, 2, 3, 4, 5])(batch(2))(toArray());
+
+			expect(values).toEqual([[1, 2], [3, 4], [5]]);
+
+		});
+
+		it("should collect all items when size is 0", async () => {
+
+			const values=await items([1, 2, 3, 4, 5])(batch(0))(toArray());
+
+			expect(values).toEqual([[1, 2, 3, 4, 5]]);
+
+		});
+
+		it("should handle empty stream", async () => {
+
+			const values=await items([] as number[])(batch(2))(toArray());
+
+			expect(values).toEqual([]);
+
+		});
+
+		it("should yield final partial batch", async () => {
+
+			const values=await items([1, 2, 3])(batch(2))(toArray());
+
+			expect(values).toEqual([[1, 2], [3]]);
+
+		});
+
+		it("should create individual batches when size is 1", async () => {
+
+			const values=await items([1, 2, 3, 4])(batch(1))(toArray());
+
+			expect(values).toEqual([[1], [2], [3], [4]]);
+
+		});
+
+		it("should process batches through pipeline", async () => {
+
+			const result=await items([1, 2, 3, 4, 5, 6, 7])
+			(batch(3))
+			(map(batch => batch.reduce((sum, n) => sum+n, 0)))
+			(toArray());
+
+			expect(result).toEqual([6, 15, 7]);
+
+		});
 
 	});
 
 });
 
-describe("batch()", () => {
+describe("Sinks", () => {
 
-	it("should group items into batches of specified size", async () => {
+	describe("reduce()", () => {
 
-		const values=await pipe(
-			items([1, 2, 3, 4, 5])(batch(2))
-		);
+		it("should reduce with initial value", async () => {
 
-		expect(values).toEqual([[1, 2], [3, 4], [5]]);
+			const sum=await items([1, 2, 3, 4])(reduce((acc, x) => acc+x, 0));
 
-	});
+			expect(sum).toBe(10);
 
-	it("should collect all items when size is 0", async () => {
+		});
 
-		const values=await pipe(
-			items([1, 2, 3, 4, 5])(batch(0))
-		);
+		it("should reduce without initial value", async () => {
 
-		expect(values).toEqual([[1, 2, 3, 4, 5]]);
+			const sum=await items([1, 2, 3, 4])(reduce((acc, x) => acc+x));
 
-	});
+			expect(sum).toBe(10);
 
-	it("should handle empty stream", async () => {
+		});
 
-		const values=await pipe(
-			items([] as number[])(batch(2))
-		);
+		it("should return undefined for empty stream without initial", async () => {
 
-		expect(values).toEqual([]);
+			const result=await items([] as number[])(reduce((acc, x) => acc+x));
 
-	});
+			expect(result).toBeUndefined();
 
-	it("should yield final partial batch", async () => {
+		});
 
-		const values=await pipe(
-			items([1, 2, 3])(batch(2))
-		);
+		it("should return initial for empty stream with initial", async () => {
 
-		expect(values).toEqual([[1, 2], [3]]);
+			const result=await items([] as number[])(reduce((acc, x) => acc+x, 100));
 
-	});
+			expect(result).toBe(100);
 
-});
+		});
 
+		it("should support async reducers", async () => {
 
-//// Sinks /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			const sum=await items([1, 2, 3])(reduce(async (acc, x) => {
+				await Promise.resolve();
+				return acc+x;
+			}, 0));
 
-describe("reduce()", () => {
+			expect(sum).toBe(6);
 
-	it("should reduce with initial value", async () => {
-
-		const sum=await items([1, 2, 3, 4])(reduce((acc, x) => acc+x, 0));
-
-		expect(sum).toBe(10);
+		});
 
 	});
 
-	it("should reduce without initial value", async () => {
+	describe("find()", () => {
 
-		const sum=await items([1, 2, 3, 4])(reduce((acc, x) => acc+x));
+		it("should find first matching item", async () => {
 
-		expect(sum).toBe(10);
+			const result=await items([1, 2, 3, 4, 5])(find(x => x > 2));
 
-	});
+			expect(result).toBe(3);
 
-	it("should return undefined for empty stream without initial", async () => {
+		});
 
-		const result=await items([] as number[])(reduce((acc, x) => acc+x));
+		it("should return undefined when no match", async () => {
 
-		expect(result).toBeUndefined();
+			const result=await items([1, 2, 3])(find(x => x > 10));
 
-	});
+			expect(result).toBeUndefined();
 
-	it("should return initial for empty stream with initial", async () => {
+		});
 
-		const result=await items([] as number[])(reduce((acc, x) => acc+x, 100));
+		it("should support async predicates", async () => {
 
-		expect(result).toBe(100);
+			const result=await items([1, 2, 3, 4])(find(async x => {
+				await Promise.resolve();
+				return x === 3;
+			}));
 
-	});
+			expect(result).toBe(3);
 
-	it("should support async reducers", async () => {
-
-		const sum=await items([1, 2, 3])(reduce(async (acc, x) => {
-			await Promise.resolve();
-			return acc+x;
-		}, 0));
-
-		expect(sum).toBe(6);
+		});
 
 	});
 
-});
+	describe("some()", () => {
 
-describe("find()", () => {
+		it("should return true when any item matches", async () => {
 
-	it("should find first matching item", async () => {
+			const result=await items([1, 2, 3, 4])(some(x => x > 3));
 
-		const result=await items([1, 2, 3, 4, 5])(find(x => x > 2));
+			expect(result).toBe(true);
 
-		expect(result).toBe(3);
+		});
 
-	});
+		it("should return false when no items match", async () => {
 
-	it("should return undefined when no match", async () => {
+			const result=await items([1, 2, 3])(some(x => x > 10));
 
-		const result=await items([1, 2, 3])(find(x => x > 10));
+			expect(result).toBe(false);
 
-		expect(result).toBeUndefined();
+		});
 
-	});
+		it("should support async predicates", async () => {
 
-	it("should support async predicates", async () => {
+			const result=await items([1, 2, 3])(some(async x => {
+				await Promise.resolve();
+				return x === 2;
+			}));
 
-		const result=await items([1, 2, 3, 4])(find(async x => {
-			await Promise.resolve();
-			return x === 3;
-		}));
+			expect(result).toBe(true);
 
-		expect(result).toBe(3);
-
-	});
-
-});
-
-describe("some()", () => {
-
-	it("should return true when any item matches", async () => {
-
-		const result=await items([1, 2, 3, 4])(some(x => x > 3));
-
-		expect(result).toBe(true);
+		});
 
 	});
 
-	it("should return false when no items match", async () => {
+	describe("every()", () => {
 
-		const result=await items([1, 2, 3])(some(x => x > 10));
+		it("should return true when all items match", async () => {
 
-		expect(result).toBe(false);
+			const result=await items([1, 2, 3, 4])(every(x => x > 0));
 
-	});
+			expect(result).toBe(true);
 
-	it("should support async predicates", async () => {
+		});
 
-		const result=await items([1, 2, 3])(some(async x => {
-			await Promise.resolve();
-			return x === 2;
-		}));
+		it("should return false when any item doesn't match", async () => {
 
-		expect(result).toBe(true);
+			const result=await items([1, 2, 3, 4])(every(x => x < 3));
 
-	});
+			expect(result).toBe(false);
 
-});
+		});
 
-describe("every()", () => {
+		it("should support async predicates", async () => {
 
-	it("should return true when all items match", async () => {
+			const result=await items([1, 2, 3])(every(async x => {
+				await Promise.resolve();
+				return x > 0;
+			}));
 
-		const result=await items([1, 2, 3, 4])(every(x => x > 0));
+			expect(result).toBe(true);
 
-		expect(result).toBe(true);
+		});
 
-	});
+		it("should return true for empty stream", async () => {
 
-	it("should return false when any item doesn't match", async () => {
+			const result=await items([] as number[])(every(x => x > 10));
 
-		const result=await items([1, 2, 3, 4])(every(x => x < 3));
+			expect(result).toBe(true);
 
-		expect(result).toBe(false);
-
-	});
-
-	it("should support async predicates", async () => {
-
-		const result=await items([1, 2, 3])(every(async x => {
-			await Promise.resolve();
-			return x > 0;
-		}));
-
-		expect(result).toBe(true);
+		});
 
 	});
 
-	it("should return true for empty stream", async () => {
+	describe("toArray()", () => {
 
-		const result=await items([] as number[])(every(x => x > 10));
+		it("should collect all items into array", async () => {
 
-		expect(result).toBe(true);
+			const values=await items([1, 2, 3])(toArray());
 
-	});
+			expect(values).toEqual([1, 2, 3]);
 
-});
+		});
 
-describe("toArray()", () => {
+		it("should handle empty stream", async () => {
 
-	it("should collect all items into array", async () => {
+			const values=await items([] as number[])(toArray());
 
-		const values=await items([1, 2, 3])(toArray());
+			expect(values).toEqual([]);
 
-		expect(values).toEqual([1, 2, 3]);
-
-	});
-
-	it("should handle empty stream", async () => {
-
-		const values=await items([] as number[])(toArray());
-
-		expect(values).toEqual([]);
+		});
 
 	});
 
-});
+	describe("toSet()", () => {
 
-describe("forEach()", () => {
+		it("should collect all items into set", async () => {
 
-	it("should execute consumer for each item", async () => {
+			const values=await items([1, 2, 3])(toSet());
 
-		const sideEffects: number[]=[];
+			expect(values).toEqual(new Set([1, 2, 3]));
 
-		await items([1, 2, 3])(forEach(x => sideEffects.push(x)));
+		});
 
-		expect(sideEffects).toEqual([1, 2, 3]);
+		it("should remove duplicates", async () => {
 
-	});
+			const values=await items([1, 2, 2, 3, 1, 4])(toSet());
 
-	it("should support async consumers", async () => {
+			expect(values).toEqual(new Set([1, 2, 3, 4]));
 
-		const sideEffects: number[]=[];
+		});
 
-		await items([1, 2, 3])(forEach(async x => {
-			await Promise.resolve();
-			sideEffects.push(x*2);
-		}));
+		it("should handle empty stream", async () => {
 
-		expect(sideEffects).toEqual([2, 4, 6]);
+			const values=await items([] as number[])(toSet());
 
-	});
+			expect(values).toEqual(new Set());
 
-	it("should handle empty stream", async () => {
+		});
 
-		const sideEffects: number[]=[];
+		it("should preserve insertion order", async () => {
 
-		await items([] as number[])(forEach(x => sideEffects.push(x)));
+			const values=await items([3, 1, 2])(toSet());
 
-		expect(sideEffects).toEqual([]);
+			expect([...values]).toEqual([3, 1, 2]);
 
-	});
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-describe("complex pipelines", () => {
-
-	it("should compose multiple operations", async () => {
-
-		const result=await items([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-		(filter(x => x%2 === 0))
-		(map(x => x*2))
-		(skip(1))
-		(take(2))
-		(reduce((acc, x) => acc+x, 0));
-
-		expect(result).toBe(20);
+		});
 
 	});
 
-	it("should handle async operations in pipeline", async () => {
+	describe("toMap()", () => {
 
-		const result=await items([1, 2, 3, 4, 5])
-		(map(async x => {
-			await Promise.resolve();
-			return x*2;
-		}))
-		(filter(async x => {
-			await Promise.resolve();
-			return x > 4;
-		}))
-		(toArray());
+		it("should collect items into map using key selector", async () => {
 
-		expect(result).toEqual([6, 8, 10]);
+			const values=await items([
+				{ id: 1, name: "a" },
+				{ id: 2, name: "b" },
+				{ id: 3, name: "c" }
+			])(toMap(item => item.id));
+
+			expect(values).toEqual(new Map([
+				[1, { id: 1, name: "a" }],
+				[2, { id: 2, name: "b" }],
+				[3, { id: 3, name: "c" }]
+			]));
+
+		});
+
+		it("should collect items into map using key and value selectors", async () => {
+
+			const values=await items([
+				{ id: 1, name: "a" },
+				{ id: 2, name: "b" },
+				{ id: 3, name: "c" }
+			])(toMap(item => item.id, item => item.name));
+
+			expect(values).toEqual(new Map([
+				[1, "a"],
+				[2, "b"],
+				[3, "c"]
+			]));
+
+		});
+
+		it("should support async key selectors", async () => {
+
+			const values=await items([
+				{ id: 1, name: "a" },
+				{ id: 2, name: "b" }
+			])(toMap(async item => {
+				await Promise.resolve();
+				return item.id;
+			}));
+
+			expect(values).toEqual(new Map([
+				[1, { id: 1, name: "a" }],
+				[2, { id: 2, name: "b" }]
+			]));
+
+		});
+
+		it("should support async value selectors", async () => {
+
+			const values=await items([
+				{ id: 1, name: "a" },
+				{ id: 2, name: "b" }
+			])(toMap(
+				item => item.id,
+				async item => {
+					await Promise.resolve();
+					return item.name.toUpperCase();
+				}
+			));
+
+			expect(values).toEqual(new Map([
+				[1, "A"],
+				[2, "B"]
+			]));
+
+		});
+
+		it("should overwrite duplicate keys", async () => {
+
+			const values=await items([
+				{ id: 1, name: "a" },
+				{ id: 2, name: "b" },
+				{ id: 1, name: "c" }
+			])(toMap(item => item.id, item => item.name));
+
+			expect(values).toEqual(new Map([
+				[1, "c"],
+				[2, "b"]
+			]));
+
+		});
+
+		it("should handle empty stream", async () => {
+
+			const values=await items([] as { id: number; name: string }[])(toMap(item => item.id));
+
+			expect(values).toEqual(new Map());
+
+		});
+
+		it("should preserve insertion order", async () => {
+
+			const values=await items([3, 1, 2])(toMap(x => x));
+
+			expect([...values.keys()]).toEqual([3, 1, 2]);
+
+		});
 
 	});
 
-	it("should process batches through pipeline", async () => {
+	describe("forEach()", () => {
 
-		const result=await items([1, 2, 3, 4, 5, 6, 7])
-		(batch(3))
-		(map(batch => batch.reduce((sum, n) => sum+n, 0)))
-		(toArray());
+		it("should execute consumer for each item", async () => {
 
-		expect(result).toEqual([6, 15, 7]);
+			const sideEffects: number[]=[];
+
+			await items([1, 2, 3])(forEach(x => {
+				sideEffects.push(x);
+			}));
+
+			expect(sideEffects).toEqual([1, 2, 3]);
+
+		});
+
+		it("should support async consumers", async () => {
+
+			const sideEffects: number[]=[];
+
+			await items([1, 2, 3])(forEach(async x => {
+				await Promise.resolve();
+				sideEffects.push(x*2);
+			}));
+
+			expect(sideEffects).toEqual([2, 4, 6]);
+
+		});
+
+		it("should handle empty stream", async () => {
+
+			const sideEffects: number[]=[];
+
+			await items([] as number[])(forEach(x => {
+				sideEffects.push(x);
+			}));
+
+			expect(sideEffects).toEqual([]);
+
+		});
 
 	});
 

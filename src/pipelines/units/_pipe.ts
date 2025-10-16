@@ -18,51 +18,46 @@ import { matches, merge } from "@/pipelines/units/index";
 import { units } from "@/pipelines/units/store";
 import { analyze } from "@/pipelines/units/tasks/analyze";
 import { explore } from "@/pipelines/units/tasks/explore";
-import { items } from "@/utilities/core/async";
+import { filter, flatMap, forEach, items, map, merge as mergePipes, pipe, take } from "@/utilities/core/async";
 import { Units } from "@/utilities/hub";
 import { uuid } from "@/utilities/node/uuid";
-import { from, merge as mergeStreams, of, toArray } from "ix/asynciterable";
-import { filter, flatMap, map, take } from "ix/asynciterable/operators";
 
-items(1);
+pipe(items(await units.select({ updated: 0 }))
+	(take(1))
+	(flatMap(lead => mergePipes(
+		(items(lead)
+			(map(analyze))
+			(map(item => lead.updated && matches(lead, item) ? lead
+				: merge(lead, { ...item, updated: Date.now() })
+			))
+		),
+		(items(lead)
+			(flatMap(explore))
+			(filter(item => !!(item.profile || item.website)))
+			(map(item => ({
 
-of(await units.select({ updated: 0 }))
-	.pipe(map(async items => toArray(from(items).pipe(
-		take(1), // !!!
-		flatMap(lead => mergeStreams(
-			of(lead).pipe(
-				flatMap(analyze),
-				map(item => lead.updated && matches(lead, item) ? lead
-					: merge(lead, { ...item, updated: Date.now() })
-				)
-			),
-			of(lead).pipe(
-				flatMap(explore),
-				filter(item => !!(item.profile || item.website)),
-				map(item => ({
+				parent: lead.id,
+				university: lead.university,
 
-					parent: lead.id,
-					university: lead.university,
+				formal: item.formal,
+				short: item.short,
+				acronym: item.acronym,
 
-					formal: item.formal,
-					short: item.short,
-					acronym: item.acronym,
+				summary: item.summary,
+				profile: item.profile,
+				website: item.website
 
-					summary: item.summary,
-					profile: item.profile,
-					website: item.website
+			})))
+			(map(async lead => {
 
-				})),
-				flatMap(async lead => {
+				const current=await units.lookup(lead);
 
-					const current=await units.lookup(lead);
+				return !current ? { ...lead, id: `${Units}${uuid()}` }
+					: !matches(current, lead) ? merge(current, { ...lead, updated: undefined })
+						: current;
 
-					return !current ? { ...lead, id: `${Units}${uuid()}` }
-						: !matches(current, lead) ? merge(current, { ...lead, updated: undefined })
-							: current;
-
-				})
-			)
-		))
-	))))
-	.forEach(console.info);
+			}))
+		)
+	)))
+	(forEach(console.info))
+);

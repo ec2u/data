@@ -19,17 +19,53 @@
  *
  * Provides a composable API for working with async iterables through pipes, tasks, and sinks.
  *
- * Core abstractions:
+ * @groupDescription Drivers
+ * Core utilities for processing pipes.
  *
- * - {@link Pipe} - Fluent interface for chaining operations on async streams
- * - {@link Task} - Transformations that process and pass through stream items
- * - {@link Sink} - Terminal operations that consume streams and produce results
+ * @groupDescription Factories
+ * Factory functions that create new pipes from various sources.
+ *
+ * @groupDescription Tasks
+ * Intermediate operations that transform, filter, or process stream items while maintaining the stream flow.
+ *
+ * @groupDescription Sinks
+ * Terminal operations that consume streams and produce final results.
  *
  * @module
  */
 
 import { isAsyncIterable, isFunction, isIterable, isPromise } from "@/utilities/core";
 
+
+/**
+ * Flexible input source for stream processing.
+ *
+ * Represents various input formats that can be converted into async streams:
+ *
+ * - Single value: `V` - yields one item
+ * - Array: `readonly V[]` - yields items from the array
+ * - Synchronous iterable: `Iterable<V>` - yields items from the iterable
+ * - Asynchronous iterable: `AsyncIterable<V>` - yields items from the async iterable
+ * - Pipe: {@link Pipe}`<V>` - yields items from the pipe's underlying async iterable
+ *
+ * @typeParam V The type of values in the feed
+ *
+ * @remarks
+ * This type enables functions to accept inputs in the most convenient format for the caller,
+ * while internally normalizing them to async iterables for uniform processing.
+ * Used extensively by {@link items} to create pipes and by {@link flatMap} to flatten nested feeds.
+ *
+ * @example
+ * ```typescript
+ * // All of these are valid Feed<number> values:
+ * const singleValue: Feed<number> = 42;
+ * const arrayFeed: Feed<number> = [1, 2, 3];
+ * const iterableFeed: Feed<number> = new Set([1, 2, 3]);
+ * const asyncFeed: Feed<number> = (async function*() { yield 1; yield 2; })();
+ * const pipeFeed: Feed<number> = items([1, 2, 3]);
+ * ```
+ */
+export type Feed<V>=V | readonly V[] | Iterable<V> | AsyncIterable<V> | Pipe<V>
 
 /**
  * Fluent interface for composing async stream operations.
@@ -98,10 +134,12 @@ export interface Sink<V, R=V> {
 }
 
 
-//// Driver ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// Drivers ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Processes a promise, returning it as-is.
+ *
+ * @group Drivers
  *
  * @param source The promise to process
  *
@@ -111,6 +149,8 @@ export function pipe<V>(source: Promise<V>): Promise<V>;
 
 /**
  * Processes a pipe, retrieving its underlying async iterable.
+ *
+ * @group Drivers
  *
  * @param source The pipe to process
  */
@@ -129,6 +169,8 @@ export function pipe(source: unknown): unknown {
  * Creates a pipe that yields a sequence of numbers within a range.
  *
  * Generates numbers in ascending order if `start` < `end`, or descending order if `start` > `end`.
+ *
+ * @group Factories
  *
  * @param start The starting value (inclusive)
  * @param end The ending value (exclusive)
@@ -157,33 +199,41 @@ export function range(start: number, end: number): Pipe<number> {
 }
 
 /**
- * Creates a pipe from a value, array, iterable, or async iterable.
+ * Creates a pipe from an item feed.
+ *
+ * @group Factories
  *
  * @typeParam V The type of items in the stream
  *
- * @param value The source to create a pipe from
+ * @param feed The source to create a pipe from
  *
  * @returns A pipe for fluent composition
  */
-export function items<V>(value: V | readonly V[] | Iterable<V> | AsyncIterable<V>): Pipe<V> {
+export function items<V>(feed: Feed<V>): Pipe<V> {
 
-	const generator=isAsyncIterable<V>(value) ?
+	const generator=isFunction(feed) ?
 
 		async function* () {
-			yield* value;
+			yield* feed();
 		}
 
-		: isIterable<V>(value) ?
+		: isAsyncIterable<V>(feed) ?
 
 			async function* () {
-				for (const item of value) {
-					yield item;
-				}
+				yield* feed;
 			}
 
-			: async function* () {
-				yield value;
-			};
+			: isIterable<V>(feed) ?
+
+				async function* () {
+					for (const item of feed) {
+						yield item;
+					}
+				}
+
+				: async function* () {
+					yield feed;
+				};
 
 	function pipe(): AsyncIterable<V>;
 	function pipe<R>(task: Task<V, R>): Pipe<R>;
@@ -213,13 +263,15 @@ export function items<V>(value: V | readonly V[] | Iterable<V> | AsyncIterable<V
  * Items are emitted in the order they resolve, not in source order.
  * All sources are consumed concurrently.
  *
+ * @group Factories
+ *
  * @typeParam T The type of items in the streams
  *
  * @param sources The pipes to merge
  *
  * @returns A pipe containing all items from all sources
  */
-export function merge<T>(...sources: readonly Pipe<T>[]): Pipe<T> {
+export function merge<V>(...sources: readonly Pipe<V>[]): Pipe<V> {
 
 	const generator=async function* () {
 
@@ -243,7 +295,7 @@ export function merge<T>(...sources: readonly Pipe<T>[]): Pipe<T> {
 
 				} else { // schedule next iteration before yielding to prevent race conditions
 
-					pending.set(iterator, iterator.next().then((result: IteratorResult<T>) => ({
+					pending.set(iterator, iterator.next().then((result: IteratorResult<V>) => ({
 						iterator,
 						result
 					})));
@@ -271,9 +323,11 @@ export function merge<T>(...sources: readonly Pipe<T>[]): Pipe<T> {
 /**
  * Creates a task skipping the first n items from the stream.
  *
+ * @group Tasks
+ *
  * @typeParam V The type of items in the stream
  *
- * @param n The number of items to skip
+ * @param n The number of items to skip (negative values treated as zero)
  *
  * @returns A task that skips the first n items
  */
@@ -295,9 +349,11 @@ export function skip<V>(n: number): Task<V> {
 /**
  * Creates a task taking only the first n items from the stream.
  *
+ * @group Tasks
+ *
  * @typeParam V The type of items in the stream
  *
- * @param n The maximum number of items to take
+ * @param n The maximum number of items to take (negative values treated as zero)
  *
  * @returns A task that takes the first n items
  */
@@ -320,6 +376,8 @@ export function take<V>(n: number): Task<V> {
  *
  * Useful for debugging or monitoring items as they flow through the pipeline.
  *
+ * @group Tasks
+ *
  * @typeParam V The type of items in the stream
  *
  * @param consumer The function to execute for each item
@@ -337,6 +395,8 @@ export function peek<V>(consumer: (item: V) => void | Promise<void>): Task<V> {
 
 /**
  * Creates a task filtering stream items based on a predicate.
+ *
+ * @group Tasks
  *
  * @typeParam V The type of items in the stream
  *
@@ -356,6 +416,8 @@ export function filter<V>(predicate: (item: V) => boolean | Promise<boolean>): T
 
 /**
  * Creates a task filtering out duplicate items.
+ *
+ * @group Tasks
  *
  * @typeParam V The type of items in the stream
  * @typeParam K The type of comparison key
@@ -389,6 +451,8 @@ export function distinct<V, K>(selector?: (item: V) => K | Promise<K>): Task<V> 
 /**
  * Creates a task transforming each item using a mapper function.
  *
+ * @group Tasks
+ *
  * @typeParam V The type of input items
  * @typeParam R The type of output items
  *
@@ -407,20 +471,26 @@ export function map<V, R>(mapper: (item: V) => R | Promise<R>): Task<V, R> {
 /**
  * Creates a task transforming and flattening stream items.
  *
+ * @group Tasks
+ *
  * @typeParam V The type of input items
  * @typeParam R The type of output items
  *
- * @param mapper The function to transform each item into a value, array, iterable, or async iterable
+ * @param mapper The function to transform each item into an item feed
  *
  * @returns A task that transforms and flattens items
  */
-export function flatMap<V, R>(mapper: (item: V) => R | readonly R[] | Iterable<R> | AsyncIterable<R> | Promise<R | readonly R[] | Iterable<R> | AsyncIterable<R>>): Task<V, R> {
+export function flatMap<V, R>(mapper: (item: V) => Feed<R> | Promise<Feed<R>>): Task<V, R> {
 	return async function* (source: AsyncIterable<V>) {
 		for await (const item of source) {
 
 			const result=await mapper(item);
 
-			if ( isAsyncIterable<R>(result) ) {
+			if ( isFunction(result) ) {
+
+				yield* result();
+
+			} else if ( isAsyncIterable<R>(result) ) {
 
 				yield* result;
 
@@ -443,17 +513,19 @@ export function flatMap<V, R>(mapper: (item: V) => R | readonly R[] | Iterable<R
 /**
  * Creates a task grouping items into batches of a specified size.
  *
- * If size is 0, collects all items into a single batch.
+ * If size is 0 or negative, collects all items into a single batch.
  * The final batch may contain fewer items than the specified size.
+ *
+ * @group Tasks
  *
  * @typeParam V The type of items in the stream
  *
- * @param size The maximum number of items per batch (0 for unbounded)
+ * @param size The maximum number of items per batch (0 or negative for unbounded)
  *
  * @returns A task that groups items into batches
  *
  * @remarks
- * When size is 0, all stream items are accumulated in memory before
+ * When size is 0 or negative, all stream items are accumulated in memory before
  * yielding a single batch. For large or infinite streams, this may cause
  * memory issues. Use a positive size for bounded memory consumption.
  */
@@ -483,6 +555,8 @@ export function batch<V>(size: number=0): Task<V, readonly V[]> {
 /**
  * Creates a sink checking if any item satisfies the predicate.
  *
+ * @group Sinks
+ *
  * @typeParam V The type of items in the stream
  *
  * @param predicate The function to test each item
@@ -504,6 +578,8 @@ export function some<V>(predicate: (item: V) => boolean | Promise<boolean>): Sin
 
 /**
  * Creates a sink checking if all items satisfy the predicate.
+ *
+ * @group Sinks
  *
  * @typeParam V The type of items in the stream
  *
@@ -527,6 +603,8 @@ export function every<V>(predicate: (item: V) => boolean | Promise<boolean>): Si
 /**
  * Creates a sink retrieving the first item that satisfies the predicate.
  *
+ * @group Sinks
+ *
  * @typeParam V The type of items in the stream
  *
  * @param predicate The function to test each item
@@ -549,6 +627,8 @@ export function find<V>(predicate: (item: V) => boolean | Promise<boolean>): Sin
 /**
  * Creates a sink reducing the stream to a single value without an initial value.
  *
+ * @group Sinks
+ *
  * @typeParam V The type of items in the stream
  *
  * @param reducer The function to combine the accumulator with each item
@@ -561,6 +641,8 @@ export function reduce<V>(reducer: (accumulator: V, item: V) => V | Promise<V>):
 /**
  * Creates a sink reducing the stream to a single value with an initial value.
  *
+ * @group Sinks
+ *
  * @typeParam V The type of items in the stream
  * @typeParam R The type of the accumulated result
  *
@@ -571,56 +653,30 @@ export function reduce<V>(reducer: (accumulator: V, item: V) => V | Promise<V>):
  */
 export function reduce<V, R>(reducer: (accumulator: R, item: V) => R | Promise<R>, initial: R): Sink<V, R>;
 
-export function reduce<V, R>(reducer: Function, ...args: [] | [R]): Sink<V, undefined | V | R> {
+export function reduce<V, R>(reducer: Function, initial?: R): Sink<V, undefined | V | R> {
+	return async source => {
 
-	if ( args.length === 0 ) { // no initial value provided: use first item
+		let started=arguments.length > 1;
+		let accumulator: V | R | undefined=started ? initial : undefined;
 
-		return async source => {
-
-			const iterator=source[Symbol.asyncIterator]();
-			const first=await iterator.next();
-
-			if ( first.done ) {
-
-				return undefined;
-
-			} else {
-
-				let accumulator=first.value;
-				let next=await iterator.next();
-
-				while ( !next.done ) {
-					accumulator= await reducer(accumulator, next.value);
-					next= await iterator.next();
-				}
-
-				return accumulator;
-
-			}
-		};
-
-	} else { // initial value provided
-
-		const [initial]=args;
-
-		return async source => {
-
-			let accumulator=initial;
-
-			for await (const item of source) {
+		for await (const item of source) {
+			if ( started ) {
 				accumulator= await reducer(accumulator, item);
+			} else {
+				accumulator=item;
+				started=true;
 			}
+		}
 
-			return accumulator;
+		return accumulator;
 
-		};
-
-	}
-
+	};
 }
 
 /**
  * Creates a sink collecting all items into an array.
+ *
+ * @group Sinks
  *
  * @typeParam V The type of items in the stream
  *
@@ -642,6 +698,8 @@ export function toArray<V>(): Sink<V, readonly V[]> {
 /**
  * Creates a sink collecting all unique items into a set.
  *
+ * @group Sinks
+ *
  * @typeParam V The type of items in the stream
  *
  * @returns A sink that collects all unique items into a set
@@ -662,6 +720,8 @@ export function toSet<V>(): Sink<V, ReadonlySet<V>> {
 /**
  * Creates a sink collecting items into a map using item values.
  *
+ * @group Sinks
+ *
  * @typeParam V The type of items in the stream
  * @typeParam K The type of map keys
  *
@@ -675,6 +735,8 @@ export function toMap<V, K>(
 
 /**
  * Creates a sink collecting items into a map using custom keys and values.
+ *
+ * @group Sinks
  *
  * @typeParam V The type of items in the stream
  * @typeParam K The type of map keys
@@ -715,6 +777,8 @@ export function toMap<V, K, R>(
  * Creates a sink executing a side effect for each item and consuming the stream.
  *
  * Terminal operation that triggers stream execution.
+ *
+ * @group Sinks
  *
  * @typeParam V The type of items in the stream
  *

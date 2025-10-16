@@ -3,8 +3,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # External Documentation
 
 - [Immutable.js Documentation](https://immutable-js.com/docs/v5/) - Immutable data structures for JavaScript
-- [IxJS Documentation](https://github.com/ReactiveX/IxJS) - Interactive Extensions for JavaScript (async iterables and
-  iterable operators)
 - [Google GenAI Documentation](https://googleapis.github.io/js-genai/release_docs/index.html) - Google Generative AI SDK
   for JavaScript/TypeScript
 - [Google Cloud Datastore Documentation](https://cloud.google.com/nodejs/docs/reference/datastore/latest) - Google Cloud
@@ -14,6 +12,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [Dedent Documentation](https://github.com/dmnd/dedent) - ES6 string tag that strips indentation from multi-line
   strings
 - [JSDOM Documentation](https://github.com/jsdom/jsdom) - A JavaScript implementation of the DOM and HTML standards
+
+# Task Workflows
+
+## Testing
+
+- **Run all tests**: `npm run check`
+- **Run specific test file**: `npm run check -- path/to/test.ts`
+- Tests are written using Jest and located in `*.test.ts` files alongside the source code
 
 ---
 
