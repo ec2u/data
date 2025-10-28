@@ -15,7 +15,7 @@
  */
 
 import Fastify from "fastify";
-import { unitsRoutes } from "./work/units";
+import { unitsRoutes } from "./units";
 
 Fastify({ logger: true })
 

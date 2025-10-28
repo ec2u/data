@@ -18,22 +18,22 @@ import { matches, merge } from "@/pipelines/units/index";
 import { units } from "@/pipelines/units/store";
 import { analyze } from "@/pipelines/units/tasks/analyze";
 import { explore } from "@/pipelines/units/tasks/explore";
+import { log, message } from "@/utilities/core/log";
 import { Units } from "@/utilities/hub";
 import { uuid } from "@/utilities/node/uuid";
-import { filter, flatMap, forEach, items, map, merge as mergePipes, pipe, take } from "@metreeca/pipe";
+import { filter, flatMap, forEach, items, iterate, map, merge as mergePipes, peek, pipe } from "@metreeca/pipe";
 
-pipe(
-	(items(await units.select({ updated: 0 })))
-	(take(1))
+pipe( // !!! merge update >= fence
+	(iterate(() => units.select({ updated: 0 })))
 	(flatMap(lead => mergePipes(
 		(items(lead)
-			(map(analyze))
+			(map(guard(analyze)))
 			(map(item => lead.updated && matches(lead, item) ? lead
 				: merge(lead, { ...item, updated: Date.now() })
 			))
 		),
 		(items(lead)
-			(flatMap(explore))
+			(flatMap(guard(explore)))
 			(filter(item => !!(item.profile || item.website)))
 			(map(item => ({
 
@@ -51,7 +51,7 @@ pipe(
 			})))
 			(map(async lead => {
 
-				const current=await units.lookup(lead);
+				const current = await units.lookup(lead);
 
 				return !current ? { ...lead, id: `${Units}${uuid()}` }
 					: !matches(current, lead) ? merge(current, { ...lead, updated: undefined })
@@ -60,5 +60,25 @@ pipe(
 			}))
 		)
 	)))
-	(forEach(console.info))
+	(peek(console.info))
+	(forEach(units.insert))
 );
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function guard<T, R>(generator: (argument: T) => Promise<R>): typeof generator {
+	return async (argument: T) => {
+		try {
+
+			return await generator(argument);
+
+		} catch ( error ) {
+
+			log.error(generator.name, message(error));
+
+			return undefined as R;
+
+		}
+	};
+}

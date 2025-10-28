@@ -16,13 +16,17 @@
 
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { Unit } from "@/pipelines/units";
+import { matches, merge, Unit } from "@/pipelines/units";
+import { units } from "@/pipelines/units/store";
 import { ai, data } from "@/utilities/gcp/gemini";
+import { pavia, Units } from "@/utilities/hub";
 import { file } from "@/utilities/node/files";
+import { uuid } from "@/utilities/node/uuid";
 import { Type } from "@google/genai";
+import { batch, flatMap, forEach, items, map, peek, pipe } from "@metreeca/pipe";
 
 
-const tools=[
+const tools = [
 	fetchPage({ cache: pages.lookup })
 ];
 
@@ -66,3 +70,70 @@ export async function scan(url: string): Promise<readonly Partial<Unit>[]> {
 		}
 	});
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+pipe(
+	(items([
+		"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti",
+		"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo",
+		"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali",
+		"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/grandi-infrastrutture-di-ricerca"
+	]))
+	(flatMap(root => pipe(
+		items([root])
+		(flatMap(scan, {
+			parallel: 0
+		}))
+		(map(item => ({
+
+			parent: pavia,
+			university: pavia,
+
+			formal: item.formal,
+			acronym: item.acronym,
+
+			profile: root,
+			website: item.website
+
+		})))
+	), {
+		parallel: 0
+	}))
+	(map(async item => {
+
+		const current = await units.lookup(item);
+
+		return !current ? { ...item, id: `${Units}${uuid()}` }
+			: !matches(current, item) ? merge(current, { ...item, updated: undefined })
+				: current;
+
+	}))
+	(peek(console.info))
+	(batch())
+	(map(async (items) => {
+		// Deduplicate by id - first entry wins, log warnings for duplicates
+		const seen = new Map<string, Unit>();
+		const duplicates: Unit[] = [];
+
+		for (const item of items) {
+			if ( seen.has(item.id) ) {
+				duplicates.push(item);
+			} else {
+				seen.set(item.id, item);
+			}
+		}
+
+		if ( duplicates.length > 0 ) {
+			console.warn(`⚠️  Ignoring ${duplicates.length} duplicate unit(s):`);
+			for (const dup of duplicates) {
+				console.warn(`   - ${dup.formal || dup.id} (id: ${dup.id})`);
+			}
+		}
+
+		return Array.from(seen.values());
+	}))
+	(forEach(units.insert))
+);

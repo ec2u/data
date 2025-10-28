@@ -110,7 +110,7 @@ If no structural subunits are found after thorough exploration, return an empty 
     - A summary (~100 chars) describing focus, research areas, and purpose
     - Website URL when available on the profile page (subdomains or external links)
 - Report URLs verbatim (exactly as found)
-
+- **CRITICAL:** All formal names, short names, and summaries MUST be translated to English
 # Guidelines
 
 ## Exploration Process

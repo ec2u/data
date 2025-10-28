@@ -174,21 +174,22 @@ export const units=immutable({
 
 	},
 
-	async insert(items: readonly Unit[]): Promise<readonly Unit[]> {
+	async insert(items: Unit | readonly Unit[]): Promise<readonly Unit[]> {
 
 		return time(async () => {
 
+			const itemsArray = Array.isArray(items) ? items : [items];
 			const indexed=new Set(["parent", "university", "updated", "formal_", "website"]);
 
-			for (let i=0; i < items.length; i+=batch) {
-				await datastore.upsert(items.slice(i, i+batch).map(item => {
+			for (let i = 0; i < itemsArray.length; i += batch) {
+				await datastore.upsert(itemsArray.slice(i, i+batch).map(item => {
 
 					const data={
 						...item,
 						updated: item.updated ?? 0,
-						...(item.formal ? { formal_: normalizeName(item.formal) } : {}),
-						...(item.profile ? { profile: normalizeUrl(item.profile) } : {}),
-						...(item.website ? { website: normalizeUrl(item.website) } : {})
+						formal_: item.formal && normalizeName(item.formal),
+						profile: item.profile && normalizeUrl(item.profile),
+						website: item.website && normalizeUrl(item.website)
 					};
 
 					return {
@@ -200,7 +201,7 @@ export const units=immutable({
 				}));
 			}
 
-			return items;
+			return itemsArray;
 
 		}, (value, elapsed) => log.info(units.insert.name,
 			`inserted <${message(value.length)}> units in <${message(elapsed)}> ms`
