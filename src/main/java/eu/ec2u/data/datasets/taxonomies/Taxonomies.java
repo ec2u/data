@@ -27,9 +27,9 @@ import eu.ec2u.data.datasets.Dataset;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.work.ai.Embedder;
-import eu.ec2u.work.ai.StoreEmbedder;
 import eu.ec2u.work.ai.Vector;
 import eu.ec2u.work.ai.VectorIndex;
+import eu.ec2u.work.ai.store.StoreEmbedder;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
