@@ -22,10 +22,10 @@
  */
 
 import { Page } from "@/pipelines/pages/index";
-import { immutable } from "@/utilities/core";
 import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
+import { immutable } from "@metreeca/core";
 
 
 const kind="Page";

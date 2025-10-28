@@ -14,7 +14,7 @@
       "ESNext"
     ],
     "module": "ES2022",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "sourceMap": true,
     "skipLibCheck": true

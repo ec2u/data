@@ -18,11 +18,12 @@ import { matches, merge } from "@/pipelines/units/index";
 import { units } from "@/pipelines/units/store";
 import { analyze } from "@/pipelines/units/tasks/analyze";
 import { explore } from "@/pipelines/units/tasks/explore";
-import { filter, flatMap, forEach, items, map, merge as mergePipes, pipe, take } from "@/utilities/core/async";
 import { Units } from "@/utilities/hub";
 import { uuid } from "@/utilities/node/uuid";
+import { filter, flatMap, forEach, items, map, merge as mergePipes, pipe, take } from "@metreeca/pipe";
 
-pipe(items(await units.select({ updated: 0 }))
+pipe(
+	(items(await units.select({ updated: 0 })))
 	(take(1))
 	(flatMap(lead => mergePipes(
 		(items(lead)

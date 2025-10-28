@@ -21,6 +21,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Run specific test file**: `npm run check -- path/to/test.ts`
 - Tests are written using Jest and located in `*.test.ts` files alongside the source code
 
+## Fastify API Routes
+
+- **Route documentation**: Use inline `schema` objects instead of JSDoc comments for route documentation
+- **Schema benefits**: Fastify schemas provide automatic request validation and enable API documentation generation via
+  `@fastify/swagger`
+- **Documentation format**: Each route should define `description`, `tags`, and parameter schemas
+  (`querystring`/`params`/`body`)
+- **Response schemas**: **IMPORTANT** - Only define `response` schemas if you fully specify all object properties.
+  Incomplete schemas (e.g., `type: "object"` without `properties`) will cause fast-json-stringify to serialize empty
+  objects `{}`. When in doubt, omit the response schema to use native `JSON.stringify()`.
+- **Example**:
+  ```typescript
+  fastify.get("/", {
+    schema: {
+      description: "List resources",
+      tags: ["resources"],
+      querystring: {
+        type: "object",
+        properties: {
+          limit: { type: "integer", description: "Maximum results", minimum: 1 }
+        }
+      }
+      // Omit response schema unless fully defined with all properties
+    }
+  }, async (request, reply) => {
+    // handler returns data directly
+    return results;
+  });
+  ```
+
 ---
 
 # Gemini API Coding Guidelines (JavaScript/TypeScript)

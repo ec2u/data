@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { isString } from "@/utilities/core";
 import { message } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
 import { EmbedContentResponse, GenerateContentResponse, GoogleGenAI, SchemaUnion } from "@google/genai";
+import { isString } from "@metreeca/core";
 
 export const ai=new GoogleGenAI({
 	apiKey: await secret("googleai-key")

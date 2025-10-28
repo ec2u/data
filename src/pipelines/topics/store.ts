@@ -16,11 +16,11 @@
 
 import { Topic } from "@/pipelines/topics/index";
 import { compress, decompress } from "@/utilities/ai/embeddings";
-import { immutable } from "@/utilities/core";
 import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
+import { immutable } from "@metreeca/core";
 
 
 const kind="Topic";

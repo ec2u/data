@@ -15,10 +15,13 @@
  */
 
 import Fastify from "fastify";
+import { unitsRoutes } from "./work/units";
 
 Fastify({ logger: true })
 
-	.get("/", async (request, reply) => {
+	.register(unitsRoutes, { prefix: "/units" })
+
+	.get("/", async () => {
 		return "ciao!";
 	})
 

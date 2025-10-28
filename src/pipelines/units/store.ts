@@ -16,12 +16,12 @@
 
 import { normalize as normalizeUrl } from "@/pipelines/pages/index";
 import { Unit } from "@/pipelines/units/index";
-import { immutable, isString } from "@/utilities/core";
 import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";
 import { or, PropertyFilter } from "@google-cloud/datastore/build/src/filter";
+import { immutable, isString } from "@metreeca/core";
 
 const kind="Unit";
 const batch=100;

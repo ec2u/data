@@ -23,7 +23,7 @@
  * context padding for improved readability in console output.
  */
 
-import { immutable, isError, isNumber } from "@/utilities/core";
+import { immutable, isError, isNumber } from "@metreeca/core";
 
 
 /**

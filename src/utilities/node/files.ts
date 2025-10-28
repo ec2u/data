@@ -20,7 +20,7 @@
  * Utilities for file operations
  */
 
-import { isString } from "@/utilities/core";
+import { isString } from "@metreeca/core";
 import { writeFileSync } from "fs";
 import { readFile } from "fs/promises";
 

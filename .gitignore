@@ -1,9 +1,9 @@
 /.idea/
 /.vscode/
-/.claude/
 
 /pipe.*
 
+/docs/
 /node_modules/
 
 *~
