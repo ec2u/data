@@ -85,8 +85,6 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): CallableTool {
 
 	const name="fetchPage" as const;
 
-	const visited=new Set<string>();
-
 	return {
 
 		tool: async (): Promise<Tool> => ({
@@ -128,46 +126,29 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): CallableTool {
 
 				log.info(name, `calling ${name}(${JSON.stringify(call.args)})`);
 
-				if ( visited.has(url) ) {
+				try {
 
-					log.warn(name, `previously visited URL <${url}>`);
+					const page = await visit(url, opts);
+
+					log.info(name, `fetched <${url}> (${page.content.length} chars)`);
 
 					return {
 						functionResponse: {
 							name: name,
-							response: { error: `previously visited URL <${url}>` }
+							response: page as unknown as Record<string, unknown>
 						}
 					};
 
-				} else {
+				} catch ( error ) {
 
-					visited.add(url);
+					log.error(name, `failed to fetch <${url}>: ${message(error)}`);
 
-					try {
-
-						const page=await visit(url, opts);
-
-						log.info(name, `fetched <${url}> (${page.content.length} chars)`);
-
-						return {
-							functionResponse: {
-								name: name,
-								response: page as unknown as Record<string, unknown>
-							}
-						};
-
-					} catch ( error ) {
-
-						log.error(name, `failed to fetch <${url}>: ${message(error)}`);
-
-						return {
-							functionResponse: {
-								name: name,
-								response: { error: message(error) }
-							}
-						};
-
-					}
+					return {
+						functionResponse: {
+							name: name,
+							response: { error: message(error) }
+						}
+					};
 
 				}
 

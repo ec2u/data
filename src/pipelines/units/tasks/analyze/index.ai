@@ -27,8 +27,8 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - **Institutional Email Address**: Email if found, otherwise "Not defined"
 - **Typology**: Formal topic ID from the organizations taxonomy (not a free-form classification type)
 - **Topics**: Bulleted list of formal topic IDs from research taxonomies
-- **Summary**: Concise paragraph of about 500 chars
-- **General Description**: Standalone description of about 250 words, 2-4 paragraphs
+- **Summary**: REQUIRED - Concise paragraph of approximately 500 chars (NEVER omit this field)
+- **General Description**: REQUIRED - Standalone description of approximately 250 words, 2-4 paragraphs
 - **Keywords**: Bulleted list of free-form keywords describing research areas and fields
 
 # Requirements
@@ -41,11 +41,25 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 ## Names
 
 - ALWAYS include a standalone unit name that can uniquely identify it out of context
-- ALWAYS include the unit typology in the name
+- CRITICAL: ALWAYS include the unit typology in the name (e.g., "Department", "Laboratory", "Research Group")
+- NEVER omit the typology from the name - this is a mandatory requirement
 - ALWAYS translate names to ENGLISH
 - NEVER include references to the university or to parent units in the name
 - NEVER report an official name as short name
 - NEVER report an acronym as short name
+
+**Examples of CORRECT names with typology:**
+
+- "Department of Internal Medicine and Medical Therapy" ✅ (includes "Department")
+- "Laboratory of Molecular Biology" ✅ (includes "Laboratory")
+- "Research Group on Artificial Intelligence" ✅ (includes "Research Group")
+- "Institute for Advanced Studies" ✅ (includes "Institute")
+
+**Examples of INCORRECT names missing typology:**
+
+- "Internal Medicine and Medical Therapy" ❌ (missing "Department")
+- "Molecular Biology" ❌ (missing "Laboratory")
+- "Artificial Intelligence" ❌ (missing "Research Group")
 
 ## Identifiers
 
@@ -57,16 +71,33 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - NEVER use a PERSONAL email address as INSTITUTIONAL email address for the unit; in doubt omit it
 - Try to remove anti-spam cloaking from email addresses, for instance "name(at)example.edu"
 
+
 ## Typology
 
 - ALWAYS determine the unit type by calling `matchTopics` to find the best-matching topic ID
-- Use the unit's classification type (for instance, Department, Laboratory, Research Group) as the query text
+- CRITICAL: Extract ONLY the organizational classification type (e.g., "Department", "Laboratory", "Research Group")
+  from the unit's full name
+- DO NOT include the field/domain name in the query - use only the structural/organizational type
+- The query text should be the classification type alone, not the full unit name
 - Use scheme: `https://data.ec2u.eu/taxonomies/organizations/`
 - Use focus: `https://data.ec2u.eu/taxonomies/organizations/university-unit`
 - Set limit: 1
 - Set threshold: 0.5 (reject matches with distance > 0.5 as too dissimilar)
 - Report the ID of the returned topic as the typology value
 - If no match is found within threshold, report "Not defined"
+
+**Examples of CORRECT query text:**
+
+- Unit: "Department of Internal Medicine" → Query: "Department"
+- Unit: "Laboratory of Molecular Biology" → Query: "Laboratory"
+- Unit: "Research Group on Artificial Intelligence" → Query: "Research Group"
+- Unit: "Centre for Advanced Studies" → Query: "Centre"
+
+**Examples of INCORRECT query text:**
+
+- Unit: "Department of Internal Medicine" → Query: "Department of Internal Medicine" ❌ (includes field name)
+- Unit: "Department of Internal Medicine" → Query: "Medical Department" ❌ (adds domain modifier)
+- Unit: "Department of Internal Medicine" → Query: "Internal Medicine" ❌ (only field, missing type)
 
 ## Topics
 
@@ -97,9 +128,13 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 
 ## Summary and Description
 
+- CRITICAL: Summary and description are REQUIRED fields that MUST ALWAYS be generated
+- NEVER omit the summary field - it is mandatory for all units
 - ALWAYS refer to the unit by the ENGLISH translation of its name in summary and description
 - Focus ONLY on the research unit itself, its activities, facilities, and scientific objectives
 - Make sure that summary and description highlight the research topics of the unit
+- Summary MUST be a concise paragraph of approximately 500 characters
+- Description MUST be approximately 250 words in 2-4 paragraphs
 - NEVER use headings to structure the description
 - Ensure that the description reads as a standalone document that can be understood out of context
 

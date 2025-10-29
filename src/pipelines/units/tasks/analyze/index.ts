@@ -56,7 +56,7 @@ export async function analyze(lead: Partial<Unit>): Promise<Partial<Unit>> {
 		properties: {
 			formal: {
 				type: Type.STRING,
-				description: "Formal name of the research unit"
+				description: "Formal name of the research unit - MUST include the unit typology (e.g., 'Laboratory of...', 'Department of...', 'Research Group on...')"
 			},
 			short: {
 				type: Type.STRING,
@@ -85,7 +85,7 @@ export async function analyze(lead: Partial<Unit>): Promise<Partial<Unit>> {
 			},
 			summary: {
 				type: Type.STRING,
-				description: "Summary of the research unit (~500 chars)"
+				description: "REQUIRED - Summary of the research unit (~500 chars) - NEVER omit this field"
 			},
 			description: {
 				type: Type.STRING,

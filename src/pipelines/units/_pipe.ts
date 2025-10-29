@@ -37,16 +37,10 @@ pipe( // !!! merge update >= fence
 			(filter(item => !!(item.profile || item.website)))
 			(map(item => ({
 
+				...item,
+
 				parent: lead.id,
 				university: lead.university,
-
-				formal: item.formal,
-				short: item.short,
-				acronym: item.acronym,
-
-				summary: item.summary,
-				profile: item.profile,
-				website: item.website
 
 			})))
 			(map(async lead => {
@@ -60,7 +54,7 @@ pipe( // !!! merge update >= fence
 			}))
 		)
 	)))
-	(peek(console.info))
+	(peek(console.info)) // !!!
 	(forEach(units.insert))
 );
 
