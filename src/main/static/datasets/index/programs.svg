@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink"
-        xmlns="http://www.w3.org/2000/svg" viewBox="-752 792 695 187" width="695" height="187">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-752 792 695 187" width="695" height="187">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -41,13 +41,13 @@
             </g>
         </marker>
     </defs>
-    <g id="programs" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none">
+    <g id="programs" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
         <title>programs</title>
         <rect fill="white" x="-752" y="792" width="695" height="187"/>
         <g id="programs_Layer_1">
             <title>Layer 1</title>
             <g id="Line_38">
-                <path d="M -400.8394 855.8835 L -397.4894 855.8835 L -379.7394 855.8835 L -379.7394 882.3405 L -242.7199 882.3405"
+                <path d="M -400.8394 855.8835 L -397.4894 855.8835 L -379.7394 855.8835 L -379.7394 882.3405 L -235.8699 882.3405"
                         marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width=".25"/>
             </g>

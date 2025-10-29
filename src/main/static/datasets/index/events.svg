@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink"
-        xmlns="http://www.w3.org/2000/svg" viewBox="4 166 511 149" width="511" height="149">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="4 166 511 149" width="511" height="149">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20"
@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="events" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none">
+    <g id="events" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
         <title>events</title>
         <rect fill="white" x="4" y="166" width="511" height="149"/>
         <g id="events_Layer_1">

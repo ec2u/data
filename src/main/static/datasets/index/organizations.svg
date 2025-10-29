@@ -16,8 +16,8 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink"
-        xmlns="http://www.w3.org/2000/svg" viewBox="463 220 562 180" width="562" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        xmlns:xl="http://www.w3.org/1999/xlink" viewBox="463 220 562 180" width="562" height="180">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker"
                 stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44"
@@ -34,7 +34,7 @@
             </g>
         </marker>
     </defs>
-    <g id="organizations" fill-opacity="1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none">
+    <g id="organizations" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1">
         <title>organizations</title>
         <rect fill="white" x="463" y="220" width="562" height="180"/>
         <g id="organizations_Layer_1">
@@ -111,7 +111,7 @@
             </g>
             <g id="Group_13">
                 <g id="Graphic_14">
-                    <a xl:href="taxonomies.svg">
+                    <a xl:href="https://docs.google.com/spreadsheets/d/1AFAL5WZ8UXw9NWiMZKNYepHzu7mNHZLYwS_d6zBY4Og/edit?gid=214347773#gid=214347773">
                         <rect x="862.5749" y="267.97873" width="148.16016" height="17" fill="white"/>
                         <rect x="862.5749" y="267.97873" width="148.16016" height="17" stroke="black"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>

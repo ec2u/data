@@ -57,6 +57,7 @@ import static java.util.function.Predicate.not;
 @Class
 @Namespace("[ec2u]")
 @Namespace(prefix="dct", value="http://purl.org/dc/terms/")
+@Namespace(prefix="dcat", value="http://www.w3.org/ns/dcat#")
 public interface Unit extends Organization, OrgOrganizationalUnit {
 
     UnitFrame GLADE=new UnitFrame()
@@ -190,6 +191,17 @@ public interface Unit extends Organization, OrgOrganizationalUnit {
                 .flatMap(new Validate<>());
     }
 
+    static Optional<UnitFrame> _review(final UnitFrame unit) { // !! variant for pre-classified daa from microservice
+
+        if ( unit == null ) {
+            throw new NullPointerException("null unit");
+        }
+
+        return Optional.of(unit) // translate before English-based classification
+                .map(u -> localize(u, locale -> translate(u, locale)))
+                .flatMap(new Validate<>());
+    }
+
 
     private static UnitFrame translate(final UnitFrame unit, final Locale source) {
 
@@ -257,6 +269,9 @@ public interface Unit extends Organization, OrgOrganizationalUnit {
 
     @Forward("dct:")
     Set<Topic> subject();
+
+    @Forward("dcat:")
+    Set<String> keyword();
 
 
     //̸// !!! Factor on Organization ///////////////////////////////////////////////////////////////////////////////////
