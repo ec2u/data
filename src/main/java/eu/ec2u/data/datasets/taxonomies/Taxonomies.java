@@ -140,7 +140,10 @@ public interface Taxonomies extends Dataset {
 
         @Override
         protected Stream<TopicFrame> process(final CSVRecord record, final java.util.Collection<CSVRecord> records) {
-            return value(record, "id").filter(not(String::isBlank))
+            return value(record, "id")
+
+                    .map(String::trim)
+                    .filter(not(String::isBlank))
 
                     .flatMap(id -> {
 
