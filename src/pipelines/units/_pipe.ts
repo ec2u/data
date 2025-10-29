@@ -21,41 +21,44 @@ import { explore } from "@/pipelines/units/tasks/explore";
 import { log, message } from "@/utilities/core/log";
 import { Units } from "@/utilities/hub";
 import { uuid } from "@/utilities/node/uuid";
-import { filter, flatMap, forEach, items, iterate, map, merge as mergePipes, peek, pipe } from "@metreeca/pipe";
+import { filter, flatMap, forEach, items, map, merge as mergePipes, peek, pipe } from "@metreeca/pipe";
 
 pipe( // !!! merge update >= fence
-	(iterate(() => units.select({ updated: 0 })))
-	(flatMap(lead => mergePipes(
-		(items(lead)
-			(map(guard(analyze)))
-			(map(item => lead.updated && matches(lead, item) ? lead
-				: merge(lead, { ...item, updated: Date.now() })
-			))
-		),
-		(items(lead)
-			(flatMap(guard(explore)))
-			(filter(item => !!(item.profile || item.website)))
-			(map(item => ({
+	(items(units.select({ updated: 0 }))) // !!! iterate
 
-				...item,
+		(filter(u => u.parent === "https://data.ec2u.eu/units/736ca4af-03c3-4fde-af86-bd8852edc9bd"))
 
-				parent: lead.id,
-				university: lead.university,
+		(flatMap(lead => mergePipes(
+			(items(lead)
+				(map(guard(analyze)))
+				(map(item => lead.updated && matches(lead, item) ? lead
+					: merge(lead, { ...item, updated: Date.now() })
+				))
+			),
+			(items(lead)
+				(flatMap(guard(explore)))
+				(filter(item => !!(item.profile || item.website)))
+				(map(item => ({
 
-			})))
-			(map(async lead => {
+					...item,
 
-				const current = await units.lookup(lead);
+					parent: lead.id,
+					university: lead.university
 
-				return !current ? { ...lead, id: `${Units}${uuid()}` }
-					: !matches(current, lead) ? merge(current, { ...lead, updated: undefined })
-						: current;
+				})))
+			)
+		)))
+		(peek(v => console.info(v))) // !!!
+		(forEach(async lead => {
 
-			}))
-		)
-	)))
-	(peek(console.info)) // !!!
-	(forEach(units.insert))
+			const current = await units.lookup(lead);
+
+			await units.insert(!current ? { ...lead, id: `${Units}${uuid()}`, updated: Date.now() }
+				: !matches(current, lead) ? merge(current, { ...lead, updated: undefined })
+					: current
+			);
+
+		}))
 );
 
 

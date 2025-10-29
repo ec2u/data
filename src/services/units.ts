@@ -55,7 +55,7 @@ export const unitsRoutes: FastifyPluginAsync = async (fastify) => {
 		};
 
 		return await units.select({
-			updated: updated ? parseInt(updated, 10) : undefined,
+			updated: updated ? parseInt(updated, 10) : null, // return only processed units
 			offset: offset ? parseInt(offset, 10) : undefined,
 			limit: limit ? parseInt(limit, 10) : undefined
 		});

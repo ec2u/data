@@ -124,7 +124,7 @@ export const units=immutable({
 
 	async select({ updated, offset, limit }: {
 
-		readonly updated?: number;
+		readonly updated?: null | number;
 
 		readonly offset?: number;
 		readonly limit?: number;
@@ -135,7 +135,13 @@ export const units=immutable({
 
 			let query=datastore.createQuery(kind);
 
-			if ( updated === 0 ) {
+			if ( updated === null ) {
+
+				query = query
+					.filter(new PropertyFilter("updated", "!=", 0))
+					.order("updated");
+
+			} else if ( updated === 0 ) {
 
 				query=query
 					.filter(new PropertyFilter("updated", "=", 0))

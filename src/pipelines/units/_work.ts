@@ -15,5 +15,10 @@
  */
 
 import { units } from "@/pipelines/units/store";
+import { filter, forEach, items, pipe } from "@metreeca/pipe";
 
-console.log((await units.select({ updated: 0 })).length);
+pipe(
+	items(units.select({ updated: 0 }))
+	(filter(u => u.parent === "https://data.ec2u.eu/units/736ca4af-03c3-4fde-af86-bd8852edc9bd"))
+	(forEach(console.log))
+);

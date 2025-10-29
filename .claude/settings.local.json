@@ -44,7 +44,8 @@
       "Read(//Users/Alessandro/.claude/**)",
       "WebFetch(domain:claudelog.com)",
       "WebFetch(domain:jannesklaas.github.io)",
-      "Read(//Users/Alessandro/Claude/agents/**)"
+      "Read(//Users/Alessandro/Claude/agents/**)",
+      "Bash(lsof:*)"
     ],
     "deny": [],
     "ask": []
