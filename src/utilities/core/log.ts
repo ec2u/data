@@ -15,12 +15,12 @@
  */
 
 /**
- * @module log
- *
  * Structured logging utilities with consistent formatting and context-based organization.
  *
  * Provides a unified logging interface that formats messages with visual prefixes and
  * context padding for improved readability in console output.
+ *
+ * @module
  */
 
 import { immutable, isError, isNumber } from "@metreeca/core";
@@ -32,7 +32,7 @@ import { immutable, isError, isNumber } from "@metreeca/core";
  * All log methods accept a context string (typically module or function name)
  * and a message string. Output is formatted for improved console readability.
  */
-export const log=immutable({
+export const log = immutable({
 
 	/**
 	 * Logs debug information.
@@ -110,24 +110,35 @@ export function message(value: unknown) {
 }
 
 /**
- * Executes a task and monitors its execution time.
+ * Executes a synchronous task and monitors its execution time.
  *
- * <p>Supports both synchronous and asynchronous tasks. For promises, the elapsed time
- * is measured from task invocation until promise resolution. The monitor callback receives
- * the unwrapped result value and elapsed time in milliseconds.</p>
+ * @typeParam T The type of value returned by the task
  *
- * @param task Function returning a value or promise to be timed
+ * @param task Function returning a value to be timed
  * @param monitor Callback invoked with the result value and elapsed time in milliseconds
  *
- * @returns The task's return value (promise or direct value)
+ * @returns The task's return value
+ */
+export function time<T>(task: () => T, monitor: (value: T, elapsed: number) => void): T;
+
+/**
+ * Executes an asynchronous task and monitors its execution time.
+ *
+ * The elapsed time is measured from task invocation until promise resolution.
+ *
+ * @typeParam T The type of value returned by the task
+ *
+ * @param task Function returning a promise to be timed
+ * @param monitor Callback invoked with the result value and elapsed time in milliseconds
+ *
+ * @returns A promise resolving to the task's return value
  */
 export function time<T>(task: () => Promise<T>, monitor: (value: T, elapsed: number) => void): Promise<T>;
-export function time<T>(task: () => T, monitor: (value: T, elapsed: number) => void): T;
 export function time<T>(task: () => T | Promise<T>, monitor: (value: T, elapsed: number) => void): T | Promise<T> {
 
-	const start=Date.now();
+	const start = Date.now();
 
-	const value=task();
+	const value = task();
 
 	if ( value instanceof Promise ) {
 
@@ -147,4 +158,67 @@ export function time<T>(task: () => T | Promise<T>, monitor: (value: T, elapsed:
 
 	}
 
+}
+
+/**
+ * Wraps a synchronous function with error handling and logging.
+ *
+ * Catches any errors thrown by the function, logs them using the function's name via {@link log},
+ * and returns `undefined` instead of propagating the error. Useful for preventing
+ * pipeline failures from unhandled errors.
+ *
+ * @typeParam T The tuple type of function arguments
+ * @typeParam R The return type of the function
+ *
+ * @param f Function to wrap with error handling
+ *
+ * @returns Wrapped function that returns the original result or `undefined` on error
+ */
+export function guard<T extends unknown[], R>(f: (...args: T) => R): (...args: T) => undefined | R;
+
+/**
+ * Wraps an asynchronous function with error handling and logging.
+ *
+ * Catches any errors thrown or rejected by the function, logs them using the function's name via {@link log},
+ * and returns `undefined` instead of propagating the error. Useful for preventing
+ * pipeline failures from unhandled errors.
+ *
+ * @typeParam T The tuple type of function arguments
+ * @typeParam R The return type of the function
+ *
+ * @param f Async function to wrap with error handling
+ *
+ * @returns Wrapped function that returns a promise resolving to the original result or `undefined` on error
+ */
+export function guard<T extends unknown[], R>(f: (...args: T) => Promise<R>): (...args: T) => Promise<undefined | R>;
+export function guard<T extends unknown[], R>(f: (...args: T) => R | Promise<R>) {
+	return (...args: T) => {
+		try {
+
+			const result = f(...args);
+
+			if ( result instanceof Promise ) {
+
+				return result.catch(error => {
+
+					log.error(f.name, message(error));
+
+					return undefined;
+
+				});
+
+			} else {
+
+				return result;
+
+			}
+
+		} catch ( error ) {
+
+			log.error(f.name, message(error));
+
+			return undefined;
+
+		}
+	};
 }

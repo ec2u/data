@@ -14,68 +14,54 @@
  * limitations under the License.
  */
 
-import { matches, merge } from "@/pipelines/units/index";
 import { units } from "@/pipelines/units/store";
-import { analyze } from "@/pipelines/units/tasks/analyze";
 import { explore } from "@/pipelines/units/tasks/explore";
-import { log, message } from "@/utilities/core/log";
+import { guard } from "@/utilities/core/log";
 import { Units } from "@/utilities/hub";
 import { uuid } from "@/utilities/node/uuid";
-import { filter, flatMap, forEach, items, map, merge as mergePipes, peek, pipe } from "@metreeca/pipe";
+import { filter, flatMap, forEach, items, map, peek, pipe, toArray } from "@metreeca/pipe";
 
-pipe( // !!! merge update >= fence
+const leads = await pipe(// !!! merge update >= fence
 	(items(units.select({ updated: 0 }))) // !!! iterate
-
-		(filter(u => u.parent === "https://data.ec2u.eu/units/736ca4af-03c3-4fde-af86-bd8852edc9bd"))
-
-		(flatMap(lead => mergePipes(
-			(items(lead)
-				(map(guard(analyze)))
-				(map(item => lead.updated && matches(lead, item) ? lead
-					: merge(lead, { ...item, updated: Date.now() })
-				))
-			),
-			(items(lead)
-				(flatMap(guard(explore)))
-				(filter(item => !!(item.profile || item.website)))
-				(map(item => ({
-
-					...item,
-
-					parent: lead.id,
-					university: lead.university
-
-				})))
-			)
-		)))
-		(peek(v => console.info(v))) // !!!
-		(forEach(async lead => {
-
-			const current = await units.lookup(lead);
-
-			await units.insert(!current ? { ...lead, id: `${Units}${uuid()}`, updated: Date.now() }
-				: !matches(current, lead) ? merge(current, { ...lead, updated: undefined })
-					: current
-			);
-
-		}))
+		// (filter(u => u.parent === "https://data.ec2u.eu/units/736ca4af-03c3-4fde-af86-bd8852edc9bd"))
+		(toArray())
 );
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// pipe(
+// 	(items(leads))
+// 	(flatMap(lead => pipe(
+// 		items(lead)
+// 		(map(guard(analyze)))
+// 		(map(item => lead.updated && matches(lead, item) ? lead
+// 			: merge(lead, { ...item, updated: Date.now() })
+// 		))
+// 	)))
+// 	(peek(v => console.info(v)))
+// 	(forEach(units.insert))
+// );
 
-function guard<T, R>(generator: (argument: T) => Promise<R>): typeof generator {
-	return async (argument: T) => {
-		try {
+pipe(
+	(items(leads))
+	(flatMap(lead => pipe(
+		items(lead)
+		(flatMap(guard(v => explore(v))))
+		(filter(item => !!(item.profile || item.website)))
+		(map(item => ({
 
-			return await generator(argument);
+			...item,
 
-		} catch ( error ) {
+			parent: lead.id,
+			university: lead.university
 
-			log.error(generator.name, message(error));
+		})))
+	)))
+	(peek(v => console.info(v)))
+	(forEach(async lead => {
 
-			return undefined as R;
-
+		if ( !await units.lookup(lead) ) {
+			await units.insert({ ...lead, id: `${Units}${uuid()}`, updated: undefined });
 		}
-	};
-}
+
+	}))
+);

@@ -101,7 +101,8 @@ pipe(
 		const current = await units.lookup(item);
 
 		await units.insert(!current ? { ...item, id: `${Units}${uuid()}`, updated: undefined }
-			: !matches(current, item) ? merge(current, { ...item, updated: undefined })
+			: !matches(current, item) ? merge(current, { ...item, updated: undefined }) // !!! breaks retrieval / mark as to be
+																		  // reanalyzed
 				: current
 		);
 

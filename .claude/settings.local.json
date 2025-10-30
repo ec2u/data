@@ -45,7 +45,8 @@
       "WebFetch(domain:claudelog.com)",
       "WebFetch(domain:jannesklaas.github.io)",
       "Read(//Users/Alessandro/Claude/agents/**)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Skill(typedoc-writer)"
     ],
     "deny": [],
     "ask": []
