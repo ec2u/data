@@ -15,9 +15,9 @@
  */
 
 /**
- * @module
- *
  * Utilities for file operations
+ *
+ * @module
  */
 
 import { isString } from "@metreeca/core";
@@ -56,19 +56,32 @@ export function file(url: string | URL, base?: string | URL): Promise<string> {
 /**
  * Creates a function that writes data to a file and returns it unmodified.
  *
- * @template T - The type of data to be written and returned
+ * @typeParam T The type of data to be written and returned
  *
- * @param path - The file path to write to
+ * @param path The file path to write to
+ * @param append If `true`, appends data to the file instead of overwriting it (default: `false`)
  *
  * @returns A function that accepts data, writes it to the specified file, and returns the data unchanged
+ *
+ * @remarks
+ *
+ * String data is written as-is. Non-string data is serialized to JSON with 4-space indentation.
  */
-export function dump<T>(path: string): (data: T) => T {
+export function dump<T>(path: string, {
+
+	append
+
+}: {
+
+	append?: boolean
+
+} = {}): (data: T) => T {
 	return (data: T) => {
 
 		writeFileSync(
 			path,
 			isString(data) ? data : JSON.stringify(data, null, 4),
-			"utf8"
+			{ encoding: "utf8", flag: append ? "a" : "w" }
 		);
 
 		return data;

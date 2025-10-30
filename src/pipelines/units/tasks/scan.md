@@ -1,5 +1,5 @@
 ---
-title: Prompt Testing Log for units/tasks/explore
+title: Prompt Testing Log for units/tasks/scan
 description: |
   Memory for LLM assistants working with the research unit exploration prompt.
   Documents behavioral requirements, known issues, and validation procedures.
@@ -28,7 +28,7 @@ When asked to validate this prompt:
 
 1. **Create and run test driver**:
     - Write temporary `.test.ts` file with test code
-   - Import `explore` function from `index.js`
+   - Import `scan` function from `scan.ts`
     - Configure test with URL and run options
     - Execute `npx tsx .test.ts` to generate output
    - Delete `.test.ts` after the complete testing process is finished

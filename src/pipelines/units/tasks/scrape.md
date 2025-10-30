@@ -1,5 +1,5 @@
 ---
-title: Prompt Testing Log for @index.ai
+title: Prompt Testing Log for @scrape.ai
 description: |
   Memory for LLM assistants working with the research unit analysis prompt.
   Documents behavioral requirements, known issues, and validation procedures.
@@ -28,7 +28,7 @@ When asked to validate this prompt:
 
 1. **Create and run test driver**:
     - Write temporary `.test.ts` file with test code
-   - Import `analyze` function from `index.js`
+   - Import `scrape` function from `scrape.ts`
     - Configure test with sample Lead object containing profile/website URLs
     - Execute `npx tsx .test.ts` to generate output
    - Delete `.test.ts` after the complete testing process is finished

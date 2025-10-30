@@ -26,85 +26,103 @@ import { Type } from "@google/genai";
 import { flatMap, forEach, items, map, peek, pipe } from "@metreeca/pipe";
 
 
+const university = pavia;
+
+const roots = [
+	"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti"
+	// "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo",
+	// "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali",
+	// "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/grandi-infrastrutture-di-ricerca"
+];
+
+
 const tools = [
 	fetchPage({ cache: pages.lookup })
 ];
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export async function scan(url: string): Promise<readonly Partial<Unit>[]> {
-	return data(await ai.models.generateContent({
-		model: "gemini-2.5-flash",
-		contents: url,
-		config: {
-			seed: 0,
-			temperature: 0,
-			systemInstruction: await file(".ai", import.meta.url),
-			tools
-		}
-	}), {
-		type: Type.ARRAY,
-		items: {
-			type: Type.OBJECT,
-			properties: {
-				formal: {
-					type: Type.STRING,
-					description: `REQUIRED - The full official name of the research unit. MUST NOT include the acronym 
-					in this field. Example: 'Laboratory for Computational Biology' not 'Laboratory for Computational 
-					Biology (LCB)'`
-				},
-				acronym: {
-					type: Type.STRING,
-					description: `OPTIONAL - The acronym or short form of the research unit name. Only include if
-					 explicitly mentioned in the source. Omit this field entirely if not available. Example: 'LCB'`
-				},
-				website: {
-					type: Type.STRING,
-					description: `OPTIONAL - The complete URL of the research unit's homepage or main web presence.
-					Must be a valid URL starting with http:// or https://. Omit this field entirely if not available. 
-					Example: 'https://lab.university.edu'`
-				}
-			},
-			required: ["formal"]
-		}
-	});
+if ( import.meta.main ) {
+	scan();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pipe(
-	(items([
-		"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti"
-		// "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo",
-		// "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali",
-		// "https://portale.unipv.it/it/ricerca/strutture-di-ricerca/grandi-infrastrutture-di-ricerca"
-	]))
-	(flatMap(root => pipe(
-		items(root)
-		(flatMap(scan))
-		(map(item => ({
+export async function scan(): Promise<void>;
+export async function scan(url: string): Promise<readonly Partial<Unit>[]>;
 
-			...item,
 
-			parent: pavia,
-			university: pavia,
+export async function scan(url?: string) {
 
-			profile: root
+	if ( url ) {
 
-		})))
-	)))
-	(peek(v => console.info(v)))
-	(forEach(async item => {
+		return data(await ai.models.generateContent({
+			model: "gemini-2.5-flash",
+			contents: url,
+			config: {
+				seed: 0,
+				temperature: 0,
+				systemInstruction: await file(".ai", import.meta.url),
+				tools
+			}
+		}), {
+			type: Type.ARRAY,
+			items: {
+				type: Type.OBJECT,
+				properties: {
+					formal: {
+						type: Type.STRING,
+						description: `REQUIRED - The full official name of the research unit. MUST NOT include the acronym 
+					in this field. Example: 'Laboratory for Computational Biology' not 'Laboratory for Computational 
+					Biology (LCB)'`
+					},
+					acronym: {
+						type: Type.STRING,
+						description: `OPTIONAL - The acronym or short form of the research unit name. Only include if
+					 explicitly mentioned in the source. Omit this field entirely if not available. Example: 'LCB'`
+					},
+					website: {
+						type: Type.STRING,
+						description: `OPTIONAL - The complete URL of the research unit's homepage or main web presence.
+					Must be a valid URL starting with http:// or https://. Omit this field entirely if not available. 
+					Example: 'https://lab.university.edu'`
+					}
+				},
+				required: ["formal"]
+			}
+		});
 
-		const current = await units.lookup(item);
+	} else {
 
-		await units.insert(!current ? { ...item, id: `${Units}${uuid()}`, updated: undefined }
-			: !matches(current, item) ? merge(current, { ...item, updated: undefined }) // !!! breaks retrieval / mark as to be
-																		  // reanalyzed
-				: current
+		pipe(
+			(items(roots))
+			(flatMap(root => pipe(
+				items(root)
+				(flatMap(scan))
+				(map(item => ({
+
+					...item,
+
+					parent: university,
+					university: university,
+
+					profile: root
+
+				})))
+			)))
+			(peek(v => console.info(v)))
+			(forEach(async item => {
+
+				const current = await units.lookup(item);
+
+				await units.insert(!current ? { ...item, id: `${Units}${uuid()}` }
+					: !matches(current, item) ? merge(current, { ...item, scraped: undefined, scanned: undefined })
+						: current
+				);
+
+			}))
 		);
 
-	}))
-);
+	}
+
+}

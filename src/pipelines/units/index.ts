@@ -21,6 +21,36 @@
  */
 export interface Unit {
 
+	/**
+	 * Updating timestamp.
+	 *
+	 * - `undefined | 0` = not yet processed
+	 * - `> 0` = last updated at this timestamp
+	 * - `< 0` = deleted at the absolute value of this timestamp
+	 */
+	readonly updated?: number;
+
+	/**
+	 * Processing timestamp by the scraping task.
+	 *
+	 * - `undefined` = never processed or needs reprocessing
+	 * - `> 0` = scraped at the specified timestamp
+	 */
+	readonly scraped?: number;
+
+	/**
+	 * Processing timestamp by the scanning task.
+	 *
+	 * - `undefined` = never processed or needs reprocessing
+	 * - `> 0` = scanned at the specified timestamp
+	 */
+	readonly scanned?: number;
+
+
+	/** List of field names that were populated from an authoritative source. */
+	readonly authoritative?: readonly string[];
+
+
 	/** The IRI identifying the research unit. */
 	readonly id: string;
 
@@ -31,19 +61,6 @@ export interface Unit {
 
 	/** The IRI identifying the university. */
 	readonly university: string;
-
-
-	/**
-	 * Processing timestamp for the record.
-	 *
-	 * - `undefined  | 0` = unprocessed
-	 * - `> 0` = processed at the specified timestamp
-	 * - `< 0` = deleted at the absolute value of the timestamp
-	 */
-	readonly updated?: number;
-
-	/** List of field names that were populated from an authoritative source. */
-	readonly authoritative?: readonly string[];
 
 
 	/** The formal name. */
@@ -122,8 +139,8 @@ export function matches(match: Unit, item: Partial<Unit>) {
  */
 export function merge<U extends Partial<Unit>>(value: U, delta: Partial<Unit>): U {
 
-	const valueAuthoritative=new Set(value.authoritative ?? []);
-	const deltaAuthoritative=new Set(delta.authoritative ?? []);
+	const valueAuthoritative = new Set(value.authoritative ?? []);
+	const deltaAuthoritative = new Set(delta.authoritative ?? []);
 
 	return Object.assign({}, value, Object.fromEntries(Object.entries(delta).filter(([key]) =>
 		!valueAuthoritative.has(key) || deltaAuthoritative.has(key)

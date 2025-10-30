@@ -20,16 +20,31 @@ import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";
-import { or, PropertyFilter } from "@google-cloud/datastore/build/src/filter";
+import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
 import { immutable, isString } from "@metreeca/core";
 
-const kind="Unit";
-const batch=100;
+const kind = "Unit";
+const batch = 100;
+
+const indexed = new Set([
+
+	"updated",
+	"scraped",
+	"scanned",
+
+	"parent",
+	"university",
+
+	"formal_",
+	"website"
+
+]);
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const units=immutable({
+export const units = immutable({
 
 	async lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
 
@@ -37,7 +52,7 @@ export const units=immutable({
 
 			if ( isString(key) ) {
 
-				const [entity]=await datastore.get(datastore.key([kind, uuid(key)]));
+				const [entity] = await datastore.get(datastore.key([kind, uuid(key)]));
 
 				if ( entity ) {
 					return clean(entity);
@@ -49,7 +64,7 @@ export const units=immutable({
 
 				if ( key.id ) {
 
-					const [entity]=await datastore.get(datastore.key([kind, uuid(key.id)]));
+					const [entity] = await datastore.get(datastore.key([kind, uuid(key.id)]));
 
 					if ( entity ) {
 						return clean(entity);
@@ -61,12 +76,12 @@ export const units=immutable({
 
 					if ( key.website ) {
 
-						const query=datastore.createQuery(kind)
+						const query = datastore.createQuery(kind)
 							.filter(new PropertyFilter("website", "=", normalizeUrl(key.website)))
 							.filter(new PropertyFilter("parent", "=", key.parent))
 							.filter(new PropertyFilter("university", "=", key.university));
 
-						const [entities]=await datastore.runQuery(query);
+						const [entities] = await datastore.runQuery(query);
 
 						if ( entities.length === 1 ) {
 
@@ -87,12 +102,12 @@ export const units=immutable({
 
 					if ( key.formal ) {
 
-						const query=datastore.createQuery(kind)
+						const query = datastore.createQuery(kind)
 							.filter(new PropertyFilter("formal_", "=", normalizeName(key.formal)))
 							.filter(new PropertyFilter("parent", "=", key.parent))
 							.filter(new PropertyFilter("university", "=", key.university));
 
-						const [entities]=await datastore.runQuery(query);
+						const [entities] = await datastore.runQuery(query);
 
 						if ( entities.length === 1 ) {
 
@@ -122,55 +137,88 @@ export const units=immutable({
 
 	},
 
-	async select({ updated, offset, limit }: {
+	async select({
 
-		readonly updated?: null | number;
+		updated,
+		scraped,
+		scanned,
+
+		offset,
+		limit
+
+	}: {
+
+		readonly updated?: number;
+		readonly scraped?: number;
+		readonly scanned?: number;
 
 		readonly offset?: number;
 		readonly limit?: number;
 
-	}={}): Promise<readonly Unit[]> {
+	} = {}): Promise<readonly Unit[]> {
 
 		return time(async () => {
 
-			let query=datastore.createQuery(kind);
+			let query = datastore.createQuery(kind);
 
-			if ( updated === null ) {
+			if ( updated === 0 ) { // unprocessed units
 
 				query = query
-					.filter(new PropertyFilter("updated", "!=", 0))
-					.order("updated");
-
-			} else if ( updated === 0 ) {
-
-				query=query
 					.filter(new PropertyFilter("updated", "=", 0))
 					.order("updated");
 
 			} else if ( updated ) {
 
-				query=query
-					.filter(or([
-						new PropertyFilter("updated", ">=", Math.abs(updated)),
-						new PropertyFilter("updated", "<=", -Math.abs(updated))
-					]))
+				query = query
+					.filter(updated > 0
+						? new PropertyFilter("updated", ">=", updated) // current units
+						: new PropertyFilter("updated", "<=", -updated) // deleted units
+					)
 					.order("updated");
 
 			} else {
 
-				query=query.order("__key__");
+				query = query.order("__key__");
+
+			}
+
+			if ( scraped === 0 ) {
+
+				query = query
+					.filter(new PropertyFilter("scraped", "=", 0))
+					.order("scraped");
+
+			} else if ( scraped ) {
+
+				query = query
+					.filter(new PropertyFilter("scraped", ">=", scraped))
+					.order("scraped");
+
+			}
+
+			if ( scanned === 0 ) {
+
+				query = query
+					.filter(new PropertyFilter("scanned", "=", 0))
+					.order("scanned");
+
+			} else if ( scanned ) {
+
+				query = query
+					.filter(new PropertyFilter("scanned", ">=", scanned))
+					.order("scanned");
 
 			}
 
 			if ( offset ) {
-				query=query.offset(offset);
+				query = query.offset(offset);
 			}
 
 			if ( limit ) {
-				query=query.limit(limit);
+				query = query.limit(limit);
 			}
 
-			const [entities]=await datastore.runQuery(query);
+			const [entities] = await datastore.runQuery(query);
 
 			return entities.map(clean);
 
@@ -185,14 +233,15 @@ export const units=immutable({
 		return time(async () => {
 
 			const itemsArray = Array.isArray(items) ? items : [items];
-			const indexed=new Set(["parent", "university", "updated", "formal_", "website"]);
 
 			for (let i = 0; i < itemsArray.length; i += batch) {
 				await datastore.upsert(itemsArray.slice(i, i+batch).map(item => {
 
-					const data={
+					const data = {
 						...item,
 						updated: item.updated ?? 0,
+						scraped: item.scraped ?? 0,
+						scanned: item.scanned ?? 0,
 						formal_: item.formal && normalizeName(item.formal),
 						profile: item.profile && normalizeUrl(item.profile),
 						website: item.website && normalizeUrl(item.website)
@@ -219,10 +268,10 @@ export const units=immutable({
 
 		time(async () => {
 
-			const [items]=await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
+			const [items] = await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
 
 			if ( items.length !== 0 ) {
-				for (let i=0; i < items.length; i+=batch) {
+				for (let i = 0; i < items.length; i += batch) {
 					await datastore.delete(items.slice(i, i+batch).map(entity => entity[datastore.KEY]));
 				}
 			}
@@ -252,7 +301,7 @@ export const units=immutable({
  */
 function clean(entity: Entity): Unit {
 
-	const { [datastore.KEY]: _, formal_, ...item }=entity;
+	const { [datastore.KEY]: _, formal_, ...item } = entity;
 
 	return item;
 }

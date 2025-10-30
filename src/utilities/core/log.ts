@@ -109,17 +109,6 @@ export function message(value: unknown) {
 			: String(value);
 }
 
-/**
- * Executes a synchronous task and monitors its execution time.
- *
- * @typeParam T The type of value returned by the task
- *
- * @param task Function returning a value to be timed
- * @param monitor Callback invoked with the result value and elapsed time in milliseconds
- *
- * @returns The task's return value
- */
-export function time<T>(task: () => T, monitor: (value: T, elapsed: number) => void): T;
 
 /**
  * Executes an asynchronous task and monitors its execution time.
@@ -134,6 +123,19 @@ export function time<T>(task: () => T, monitor: (value: T, elapsed: number) => v
  * @returns A promise resolving to the task's return value
  */
 export function time<T>(task: () => Promise<T>, monitor: (value: T, elapsed: number) => void): Promise<T>;
+
+/**
+ * Executes a synchronous task and monitors its execution time.
+ *
+ * @typeParam T The type of value returned by the task
+ *
+ * @param task Function returning a value to be timed
+ * @param monitor Callback invoked with the result value and elapsed time in milliseconds
+ *
+ * @returns The task's return value
+ */
+export function time<T>(task: () => T, monitor: (value: T, elapsed: number) => void): T;
+
 export function time<T>(task: () => T | Promise<T>, monitor: (value: T, elapsed: number) => void): T | Promise<T> {
 
 	const start = Date.now();
@@ -160,21 +162,6 @@ export function time<T>(task: () => T | Promise<T>, monitor: (value: T, elapsed:
 
 }
 
-/**
- * Wraps a synchronous function with error handling and logging.
- *
- * Catches any errors thrown by the function, logs them using the function's name via {@link log},
- * and returns `undefined` instead of propagating the error. Useful for preventing
- * pipeline failures from unhandled errors.
- *
- * @typeParam T The tuple type of function arguments
- * @typeParam R The return type of the function
- *
- * @param f Function to wrap with error handling
- *
- * @returns Wrapped function that returns the original result or `undefined` on error
- */
-export function guard<T extends unknown[], R>(f: (...args: T) => R): (...args: T) => undefined | R;
 
 /**
  * Wraps an asynchronous function with error handling and logging.
@@ -191,6 +178,23 @@ export function guard<T extends unknown[], R>(f: (...args: T) => R): (...args: T
  * @returns Wrapped function that returns a promise resolving to the original result or `undefined` on error
  */
 export function guard<T extends unknown[], R>(f: (...args: T) => Promise<R>): (...args: T) => Promise<undefined | R>;
+
+/**
+ * Wraps a synchronous function with error handling and logging.
+ *
+ * Catches any errors thrown by the function, logs them using the function's name via {@link log},
+ * and returns `undefined` instead of propagating the error. Useful for preventing
+ * pipeline failures from unhandled errors.
+ *
+ * @typeParam T The tuple type of function arguments
+ * @typeParam R The return type of the function
+ *
+ * @param f Function to wrap with error handling
+ *
+ * @returns Wrapped function that returns the original result or `undefined` on error
+ */
+export function guard<T extends unknown[], R>(f: (...args: T) => R): (...args: T) => undefined | R;
+
 export function guard<T extends unknown[], R>(f: (...args: T) => R | Promise<R>) {
 	return (...args: T) => {
 		try {

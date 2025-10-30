@@ -46,7 +46,9 @@
       "WebFetch(domain:jannesklaas.github.io)",
       "Read(//Users/Alessandro/Claude/agents/**)",
       "Bash(lsof:*)",
-      "Skill(typedoc-writer)"
+      "Skill(typedoc-writer)",
+      "Read(//Users/Alessandro/Metreeca/Packages/Pipe/src/**)",
+      "Read(//Users/Alessandro/Metreeca/Packages/Pipe/**)"
     ],
     "deny": [],
     "ask": []
