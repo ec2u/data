@@ -23,7 +23,7 @@ import { immutable, multiple, optional, repeatable, required } from "@metreeca/c
 import { boolean } from "@metreeca/core/boolean";
 import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { id, toIdString } from "@metreeca/core/id";
-import { string } from "@metreeca/core/string";
+import { string, stringCompare } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
 import { useResource } from "@metreeca/data/models/resource";
 import { icon } from "@metreeca/view";
@@ -35,7 +35,7 @@ import { TileLink } from "@metreeca/view/widgets/link";
 import { TileMark } from "@metreeca/view/widgets/mark";
 import React from "react";
 
-export const Unit=immutable({
+export const Unit = immutable({
 
 	id: required("/units/{code}"),
 
@@ -81,14 +81,16 @@ export const Unit=immutable({
 		broaderTransitive: multiple({
 			id: required(id)
 		})
-	})
+	}),
+
+	keyword: multiple(string)
 
 });
 
 
 export function DataUnit() {
 
-	const [unit]=useResource(Unit);
+	const [unit] = useResource(Unit);
 
 	return <DataPage name={[Units, ""]} info={<DataAI>{unit?.generated}</DataAI>}
 
@@ -150,19 +152,20 @@ export function DataUnit() {
 		<TileFrame placeholder={Events[icon]} as={({
 
 			prefLabel,
-			altLabel,
 			definition,
 
 			university,
 
+			subject,
+			keyword,
+
 			unitOf,
-			hasUnit,
-			subject
+			hasUnit
 
 		}) => {
 
-			const parent=unitOf.filter(unit => !university || unit.id !== university.id);
-			const description=definition;
+			const parent = unitOf.filter(unit => !university || unit.id !== university.id);
+			const description = definition;
 
 			return <>
 
@@ -170,22 +173,34 @@ export function DataUnit() {
 
 				{description && <TileMark>{toTextString(description)}</TileMark>}
 
-				{(subject?.length || parent.length || hasUnit?.length) && <TilePanel stack>
+				{(subject?.length || keyword?.length) && <TilePanel>
 
 					{subject && subject.length > 0 && <TileLabel name={"Topics"} wide>
                         <ul>{subject.slice()
 							.sort((x, y) => {
 
-								const xdepth=x.broaderTransitive?.length || 0;
-								const ydepth=y.broaderTransitive?.length || 0;
+								const xdepth = x.broaderTransitive?.length || 0;
+								const ydepth = y.broaderTransitive?.length || 0;
 
-								return xdepth !== ydepth ? xdepth - ydepth : entryCompare(x, y);
+								return xdepth !== ydepth ? xdepth-ydepth : entryCompare(x, y);
 
 							})
 							.map(subject =>
 								<li key={subject.id}><TileLink>{subject}</TileLink></li>
 							)}</ul>
                     </TileLabel>}
+
+					{keyword && keyword.length > 0 && <TileLabel name={"Keywords"} wide>
+                        <ul>{keyword.slice()
+							.sort(stringCompare)
+							.map(keyword =>
+								<li key={keyword}>{keyword}</li>
+							)}</ul>
+                    </TileLabel>}
+
+                </TilePanel>}
+
+				{(parent.length || hasUnit?.length) && <TilePanel>
 
 					{parent.length > 0 && <TileLabel name={"Parent Organizations"} wide>
                         <ul>{parent.slice()
