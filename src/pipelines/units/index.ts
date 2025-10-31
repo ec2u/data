@@ -48,7 +48,7 @@ export interface Unit {
 
 
 	/** List of field names that were populated from an authoritative source. */
-	readonly authoritative?: readonly string[];
+	readonly authoritative?: readonly (keyof Unit)[];
 
 
 	/** The IRI identifying the research unit. */
@@ -139,10 +139,16 @@ export function matches(match: Unit, item: Partial<Unit>) {
  */
 export function merge<U extends Partial<Unit>>(value: U, delta: Partial<Unit>): U {
 
-	const valueAuthoritative = new Set(value.authoritative ?? []);
-	const deltaAuthoritative = new Set(delta.authoritative ?? []);
+	const valueAuthoritative = new Set<string>(value.authoritative ?? []);
+	const deltaAuthoritative = new Set<string>(delta.authoritative ?? []);
 
-	return Object.assign({}, value, Object.fromEntries(Object.entries(delta).filter(([key]) =>
-		!valueAuthoritative.has(key) || deltaAuthoritative.has(key)
-	)));
+	return Object.assign({},
+		value,
+		Object.fromEntries(Object.entries(delta).filter(([key]) =>
+			!valueAuthoritative.has(key) || deltaAuthoritative.has(key)
+		)),
+		{
+			authoritative: [...new Set([...valueAuthoritative, ...deltaAuthoritative])]
+		}
+	);
 }
