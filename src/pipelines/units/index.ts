@@ -139,13 +139,13 @@ export function matches(match: Unit, item: Partial<Unit>) {
  */
 export function merge<U extends Partial<Unit>>(value: U, delta: Partial<Unit>): U {
 
-	const valueAuthoritative = new Set<string>(value.authoritative ?? []);
-	const deltaAuthoritative = new Set<string>(delta.authoritative ?? []);
+	const valueAuthoritative = new Set<keyof Unit>(value.authoritative ?? []);
+	const deltaAuthoritative = new Set<keyof Unit>(delta.authoritative ?? []);
 
 	return Object.assign({},
 		value,
 		Object.fromEntries(Object.entries(delta).filter(([key]) =>
-			!valueAuthoritative.has(key) || deltaAuthoritative.has(key)
+			!valueAuthoritative.has(key as keyof Unit) || deltaAuthoritative.has(key as keyof Unit)
 		)),
 		{
 			authoritative: [...new Set([...valueAuthoritative, ...deltaAuthoritative])]
