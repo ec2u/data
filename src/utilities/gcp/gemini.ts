@@ -20,7 +20,7 @@ import { secret } from "@/utilities/gcp/secrets";
 import { EmbedContentResponse, GenerateContentResponse, GoogleGenAI, SchemaUnion } from "@google/genai";
 import { isString } from "@metreeca/core";
 
-export const ai=new GoogleGenAI({
+export const ai = new GoogleGenAI({
 	apiKey: await secret("googleai-key")
 });
 
@@ -83,8 +83,9 @@ export function embedding(response: EmbedContentResponse) {
 /**
  * Converts unstructured text source into structured data using the Gemini API.
  *
- * Instructs the model to extract and structure information from source according to the provided schema,
- * with deterministic output (seed=0, temperature=0) and automatic omission of undefined/empty values.
+ * Extracts URLs from the source and provides them as a reference list to ensure accurate preservation
+ * during structured extraction. Uses deterministic output (seed=0, temperature=0) and automatic omission
+ * of undefined/empty values.
  *
  * @typeParam T Type of the structured data to return
  *
@@ -96,21 +97,35 @@ export function embedding(response: EmbedContentResponse) {
  * @throws Error if the model response is malformed or invalid JSON
  */
 export async function data<T>(source: string | GenerateContentResponse, schema: SchemaUnion): Promise<T> {
+
+	const input = isString(source) ? source : text(source);
+	const urls = [...new Set(input.match(/https?:\/\/[^\s\[\]()<>]+/g) || [])];
+
 	return json(await ai.models.generateContent({
 		model: "gemini-2.5-flash-lite",
-		contents: isString(source) ? source : text(source),
+		contents: [input, urls.length > 0
+			? md`REFERENCE URLs found in source (use EXACTLY as written):
+					${urls.map(url => `- ${url}`).join("\n")}
+			`
+			: "REFERENCE URLs found in source: (none identified)"
+		],
 		config: {
 			seed: 0,
 			temperature: 0,
 			systemInstruction: md`
 				ROLE / You are a data engineer.
-				INPUT / You will be provided with a textual report.
+				INPUT / You will be provided with a textual report and a reference list of URLs extracted from it.
 				GOAL / Your task is to convert it into a structured machine-readable representation.
 				OUTPUT / Reply with a structured JSON object; unless otherwise required by the provided schema:
 
 				- ALWAYS omit undefined scalar values
 				- ALWAYS omit empty object values
 				- ALWAYS omit empty array values
+
+				CRITICAL: When including URLs in the output, copy them EXACTLY from the REFERENCE URLs list.
+				- DO NOT modify domain names (e.g., 'ec2u' must remain 'ec2u', NOT 'ec22')
+				- DO NOT modify path components
+				- Use copy-paste accuracy from the reference list
 
 			`,
 			responseMimeType: "application/json",
