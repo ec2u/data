@@ -18,14 +18,14 @@ import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { topics } from "@/pipelines/topics/store";
 import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
-import { matches, merge, Unit } from "@/pipelines/units";
+import { matches, merge, stale, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
 import { guard, log, message, time } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
 import { ai, data } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
-import { flatMap, forEach, items, map, peek, pipe } from "@metreeca/pipe";
+import { chain, flatMap, forEach, items, iterate, map, peek, pipe } from "@metreeca/pipe";
 
 
 const tools = [
@@ -39,6 +39,7 @@ if ( import.meta.main ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 export async function scrape(): Promise<void>;
 export async function scrape(lead: Partial<Unit>): Promise<Partial<Unit>>;
@@ -115,8 +116,11 @@ export async function scrape(lead?: Partial<Unit>) {
 
 	} else {
 
-		return time(() => pipe( // !!! iterate // !!! merge scraped >= fence
-			(items(units.select({ scraped: 0 })))
+		return time(() => pipe(
+			(iterate(() => chain(
+				units.select({ scraped: 0 }),
+				units.select({ scraped: Date.now()-stale })
+			)))
 			(flatMap(lead => pipe(
 				items(lead)
 				(map(guard(scrape)))

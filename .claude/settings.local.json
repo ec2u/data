@@ -48,7 +48,8 @@
       "Bash(lsof:*)",
       "Skill(typedoc-writer)",
       "Read(//Users/Alessandro/Metreeca/Packages/Pipe/src/**)",
-      "Read(//Users/Alessandro/Metreeca/Packages/Pipe/**)"
+      "Read(//Users/Alessandro/Metreeca/Packages/Pipe/**)",
+      "WebFetch(domain:tc39.es)"
     ],
     "deny": [],
     "ask": []

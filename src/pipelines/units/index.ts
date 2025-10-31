@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
+import { duration } from "@/utilities/core/temporal";
+
+
+export const stale: number = 30*duration.day;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Structured information about a research unit.
  *

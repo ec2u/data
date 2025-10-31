@@ -176,38 +176,50 @@ export const units = immutable({
 					)
 					.order("updated");
 
-			} else {
-
-				query = query.order("__key__");
-
 			}
 
 			if ( scraped === 0 ) {
 
 				query = query
-					.filter(new PropertyFilter("scraped", "=", 0))
-					.order("scraped");
+					.filter(new PropertyFilter("scraped", "=", 0));
+
+				if ( updated === undefined ) {
+					query = query.order("scraped");
+				}
 
 			} else if ( scraped ) {
 
 				query = query
-					.filter(new PropertyFilter("scraped", ">=", scraped))
-					.order("scraped");
+					.filter(new PropertyFilter("scraped", "<=", scraped));
+
+				if ( updated === undefined ) {
+					query = query.order("scraped");
+				}
 
 			}
 
 			if ( scanned === 0 ) {
 
 				query = query
-					.filter(new PropertyFilter("scanned", "=", 0))
-					.order("scanned");
+					.filter(new PropertyFilter("scanned", "=", 0));
+
+				if ( updated === undefined && scraped === undefined ) {
+					query = query.order("scanned");
+				}
 
 			} else if ( scanned ) {
 
 				query = query
-					.filter(new PropertyFilter("scanned", ">=", scanned))
-					.order("scanned");
+					.filter(new PropertyFilter("scanned", "<=", scanned));
 
+				if ( updated === undefined && scraped === undefined ) {
+					query = query.order("scanned");
+				}
+
+			}
+
+			if ( updated === undefined && scraped === undefined && scanned === undefined ) {
+				query = query.order("__key__");
 			}
 
 			if ( offset ) {

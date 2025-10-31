@@ -101,39 +101,47 @@ export async function scan(lead?: Partial<Unit>) {
 
 	} else {
 
-		return time(() => pipe( // !!! iterate // !!! merge scanned >= fence
+		return time(() => pipe(
 			(items(units.select({ scanned: 0 })))
-			(map(async lead => ({
-				lead, items: await pipe(
-					(items(lead))
-					(flatMap(guard(scan)))
-					(filter(item => !!(item.profile || item.website)))
-					(map(item => ({
 
-						...item,
+				// !!! we must upate the scanned timestamp of the input lead
 
-						parent: lead.id,
-						university: lead.university
+				// (iterate(() => chain(
+				// 	units.select({ scanned: 0 }),
+				// 	units.select({ scanned: Date.now()-stale })
+				// )))
 
-					})))
-					(toArray())
-				)
+				(map(async lead => ({
+					lead, items: await pipe(
+						(items(lead))
+						(flatMap(guard(scan)))
+						(filter(item => !!(item.profile || item.website)))
+						(map(item => ({
 
-			}), {
-				parallel: true
-			}))
-			(peek(v => console.info(v)))
-			(forEach(async ({ lead, items }) => {
+							...item,
 
-				await units.insert({ ...lead, scanned: Date.now() });
+							parent: lead.id,
+							university: lead.university
 
-				for (const item of items) {
-					if ( !await units.lookup(item) ) { // check and update atomically
-						await units.insert({ ...item, id: `${Units}${uuid()}` });
+						})))
+						(toArray())
+					)
+
+				}), {
+					parallel: true
+				}))
+				(peek(v => console.info(v)))
+				(forEach(async ({ lead, items }) => {
+
+					await units.insert({ ...lead, scanned: Date.now() });
+
+					for (const item of items) {
+						if ( !await units.lookup(item) ) { // check and update atomically
+							await units.insert({ ...item, id: `${Units}${uuid()}` });
+						}
 					}
-				}
 
-			}))
+				}))
 		), (count, elapsed) => log.info(scan.name, // !!! broken count
 			`identified <${count}> units in <${message(elapsed)}> ms`
 		));
