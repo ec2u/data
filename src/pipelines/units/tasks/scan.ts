@@ -119,7 +119,9 @@ export async function scan(lead?: Partial<Unit>) {
 					(toArray())
 				)
 
-			})))
+			}), {
+				parallel: true
+			}))
 			(peek(v => console.info(v)))
 			(forEach(async ({ lead, items }) => {
 
@@ -132,7 +134,7 @@ export async function scan(lead?: Partial<Unit>) {
 				}
 
 			}))
-		), (count, elapsed) => log.info(scan.name,
+		), (count, elapsed) => log.info(scan.name, // !!! broken count
 			`identified <${count}> units in <${message(elapsed)}> ms`
 		));
 

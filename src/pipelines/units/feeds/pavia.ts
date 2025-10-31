@@ -103,12 +103,14 @@ export async function scan(url?: string) {
 
 					...item,
 
+					authoritative: ["parent", "university", "profile"],
+
 					parent: university,
 					university: university,
 
 					profile: root
 
-				})))
+				} satisfies Partial<Unit>)))
 			)))
 			(peek(v => console.info(v)))
 			(forEach(async item => {

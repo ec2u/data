@@ -22,8 +22,8 @@ import { matches, merge, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
 import { guard, log, message, time } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
-import { ai, data, text } from "@/utilities/gcp/gemini";
-import { dump, file } from "@/utilities/node/files";
+import { ai, data } from "@/utilities/gcp/gemini";
+import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 import { flatMap, forEach, items, map, peek, pipe } from "@metreeca/pipe";
 
@@ -47,7 +47,7 @@ export async function scrape(lead?: Partial<Unit>) {
 
 	if ( lead ) {
 
-		const source = await ai.models.generateContent({
+		return data(await ai.models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: md`
 			profile: ${lead.profile ?? "Not provided"}
@@ -64,10 +64,7 @@ export async function scrape(lead?: Partial<Unit>) {
 					maximumRemoteCalls: 20
 				}
 			}
-		});
-
-		dump("work.md", { append: true })(text(source));
-		return data(source, {
+		}), {
 			type: Type.OBJECT,
 			properties: {
 				formal: {
@@ -92,12 +89,12 @@ export async function scrape(lead?: Partial<Unit>) {
 				},
 				type: {
 					type: Type.STRING,
-					description: "Formal topic ID from the organizations taxonomy"
+					description: "Formal topic ID from the organizations taxonomy - MUST be a complete URL preserved exactly as found (e.g., 'https://data.ec2u.eu/...')"
 				},
 				topics: {
 					type: Type.ARRAY,
 					items: { type: Type.STRING },
-					description: "List of formal research topic IDs"
+					description: "List of formal research topic IDs - MUST be complete URLs preserved exactly as found, character-by-character (e.g., 'https://data.ec2u.eu/taxonomies/euroscivoc/...')"
 				},
 				summary: {
 					type: Type.STRING,
@@ -122,10 +119,7 @@ export async function scrape(lead?: Partial<Unit>) {
 			(items(units.select({ scraped: 0 })))
 			(flatMap(lead => pipe(
 				items(lead)
-				(map(lead => {
-					console.info("Starting scrape for", lead.id);
-					return guard(scrape)(lead);
-				}))
+				(map(guard(scrape)))
 				(map(item => merge(lead, {
 
 					...item,
@@ -135,7 +129,7 @@ export async function scrape(lead?: Partial<Unit>) {
 
 				})))
 			), {
-				parallel: 0
+				parallel: 10
 			}))
 			(peek(v => console.info(v)))
 			(forEach(units.insert))
