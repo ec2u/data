@@ -1,5 +1,5 @@
 ---
-title: Prompt Testing Log for @scrape.ai
+title: Prompt Testing Log for @analyze.ai
 description: |
   Memory for LLM assistants working with the research unit analysis prompt.
   Documents behavioral requirements, known issues, and validation procedures.

@@ -35,16 +35,16 @@ const tools = [
 
 
 if ( import.meta.main ) {
-	scrape();
+	analyze();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export async function scrape(): Promise<void>;
-export async function scrape(lead: Partial<Unit>): Promise<Partial<Unit>>;
+export async function analyze(): Promise<void>;
+export async function analyze(lead: Partial<Unit>): Promise<Partial<Unit>>;
 
-export async function scrape(lead?: Partial<Unit>) {
+export async function analyze(lead?: Partial<Unit>) {
 
 	if ( lead ) {
 
@@ -118,18 +118,18 @@ export async function scrape(lead?: Partial<Unit>) {
 
 		return time(() => pipe(
 			(iterate(() => chain(
-				units.select({ scraped: 0 }),
-				units.select({ scraped: Date.now()-stale })
+				units.select({ analyzed: 0 }),
+				units.select({ analyzed: Date.now()-stale })
 			)))
 			(flatMap(lead => pipe(
 				items(lead)
-				(map(guard(scrape)))
+				(map(guard(analyze)))
 				(map(item => merge(lead, {
 
 					...item,
 
 					updated: matches(lead, item) ? lead.updated : Date.now(),
-					scraped: Date.now()
+					analyzed: Date.now()
 
 				})))
 			), {
@@ -137,7 +137,7 @@ export async function scrape(lead?: Partial<Unit>) {
 			}))
 			(peek(v => console.info(v)))
 			(forEach(units.insert))
-		), (count, elapsed) => log.info(scrape.name,
+		), (count, elapsed) => log.info(analyze.name,
 			`processed <${count}> units in <${message(elapsed)}> ms`
 		));
 

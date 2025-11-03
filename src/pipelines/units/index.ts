@@ -39,20 +39,20 @@ export interface Unit {
 	readonly updated?: number;
 
 	/**
-	 * Processing timestamp by the scraping task.
+	 * Processing timestamp by the analyze task.
 	 *
 	 * - `undefined` = never processed or needs reprocessing
-	 * - `> 0` = scraped at the specified timestamp
+	 * - `> 0` = analyzed at the specified timestamp
 	 */
-	readonly scraped?: number;
+	readonly analyzed?: number;
 
 	/**
-	 * Processing timestamp by the scanning task.
+	 * Processing timestamp by the expand task.
 	 *
 	 * - `undefined` = never processed or needs reprocessing
-	 * - `> 0` = scanned at the specified timestamp
+	 * - `> 0` = expanded at the specified timestamp
 	 */
-	readonly scanned?: number;
+	readonly expanded?: number;
 
 
 	/** List of field names that were populated from an authoritative source. */

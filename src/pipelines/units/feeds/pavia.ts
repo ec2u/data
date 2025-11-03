@@ -118,7 +118,7 @@ export async function scan(url?: string) {
 				const current = await units.lookup(item);
 
 				await units.insert(!current ? { ...item, id: `${Units}${uuid()}` }
-					: !matches(current, item) ? merge(current, { ...item, scraped: undefined, scanned: undefined })
+					: !matches(current, item) ? merge(current, { ...item, analyzed: undefined, expanded: undefined })
 						: current
 				);
 

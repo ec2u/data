@@ -20,8 +20,11 @@ import { sparql } from "@/utilities/core/tags";
 import { hub } from "@/utilities/hub";
 import type { Term } from "@rdfjs/types";
 
-extract("https://data.ec2u.eu/taxonomies/organizations/").then(topics.insert);
-extract("https://data.ec2u.eu/taxonomies/euroscivoc/").then(topics.insert);
+
+if ( import.meta.main ) {
+	extract("https://data.ec2u.eu/taxonomies/organizations/").then(topics.insert);
+	extract("https://data.ec2u.eu/taxonomies/euroscivoc/").then(topics.insert);
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,9 +74,9 @@ async function extract(scheme: string): Promise<readonly Topic[]> {
 
 		.then(topics => {
 
-			const broaders=new Map(topics.map(t => [t.id, t.broader]));
+			const broaders = new Map(topics.map(t => [t.id, t.broader]));
 
-			const lineage=(id: undefined | string): readonly string[] => {
+			const lineage = (id: undefined | string): readonly string[] => {
 				return !id ? [] : [...lineage(broaders.get(id)), id];
 			};
 

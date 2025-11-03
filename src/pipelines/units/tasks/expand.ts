@@ -34,16 +34,16 @@ const tools = [
 
 
 if ( import.meta.main ) {
-	scan();
+	expand();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function scan(): Promise<void>;
-export async function scan(lead: Partial<Unit>): Promise<readonly Partial<Unit>[]>;
+export async function expand(): Promise<void>;
+export async function expand(lead: Partial<Unit>): Promise<readonly Partial<Unit>[]>;
 
-export async function scan(lead?: Partial<Unit>) {
+export async function expand(lead?: Partial<Unit>) {
 
 	if ( lead ) {
 
@@ -104,14 +104,14 @@ export async function scan(lead?: Partial<Unit>) {
 
 		return time(() => pipe(
 			(iterate(() => chain(
-				units.select({ scanned: 0 }),
-				units.select({ scanned: Date.now()-stale })
+				units.select({ expanded: 0 }),
+				units.select({ expanded: Date.now()-stale })
 			)))
 
 			(map(async lead => ({
 				lead, items: await pipe(
 					(items(lead))
-					(flatMap(guard(scan)))
+					(flatMap(guard(expand)))
 					(filter(item => {
 
 						const leadProfileDomain = domain(lead.profile);
@@ -167,10 +167,10 @@ export async function scan(lead?: Partial<Unit>) {
 					}
 				}
 
-				await units.insert({ ...lead, scanned: Date.now() });
+				await units.insert({ ...lead, expanded: Date.now() });
 
 			}))
-		), (count, elapsed) => log.info(scan.name, // !!! broken count
+		), (count, elapsed) => log.info(expand.name, // !!! broken count
 			`identified <${count}> units in <${message(elapsed)}> ms`
 		));
 

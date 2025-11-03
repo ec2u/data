@@ -36,7 +36,7 @@ export const umea=`${Universities}umea`;
 
 
 export const hub=new SparqlClient({
-	endpointUrl: "https://graphdb.ec2u.net/repositories/data-main",
+	endpointUrl: "https://graphdb.ec2u.net/repositories/data-next",
 	user: await secret("gdb-server-usr"),
 	password: await secret("gdb-server-pwd")
 });

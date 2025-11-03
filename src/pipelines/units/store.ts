@@ -29,8 +29,8 @@ const batch = 100;
 const indexed = new Set([
 
 	"updated",
-	"scraped",
-	"scanned",
+	"analyzed",
+	"expanded",
 
 	"parent",
 	"university",
@@ -39,7 +39,6 @@ const indexed = new Set([
 	"website"
 
 ]);
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,8 +139,8 @@ export const units = immutable({
 	async select({
 
 		updated,
-		scraped,
-		scanned,
+		analyzed,
+		expanded,
 
 		university,
 
@@ -151,8 +150,8 @@ export const units = immutable({
 	}: {
 
 		readonly updated?: number;
-		readonly scraped?: number;
-		readonly scanned?: number;
+		readonly analyzed?: number;
+		readonly expanded?: number;
 
 		readonly university?: string;
 
@@ -182,42 +181,42 @@ export const units = immutable({
 
 			}
 
-			if ( scraped === 0 ) {
+			if ( analyzed === 0 ) {
 
 				query = query
-					.filter(new PropertyFilter("scraped", "=", 0));
+					.filter(new PropertyFilter("analyzed", "=", 0));
 
 				if ( updated === undefined ) {
-					query = query.order("scraped");
+					query = query.order("analyzed");
 				}
 
-			} else if ( scraped ) {
+			} else if ( analyzed ) {
 
 				query = query
-					.filter(new PropertyFilter("scraped", "<=", scraped));
+					.filter(new PropertyFilter("analyzed", "<=", analyzed));
 
 				if ( updated === undefined ) {
-					query = query.order("scraped");
+					query = query.order("analyzed");
 				}
 
 			}
 
-			if ( scanned === 0 ) {
+			if ( expanded === 0 ) {
 
 				query = query
-					.filter(new PropertyFilter("scanned", "=", 0));
+					.filter(new PropertyFilter("expanded", "=", 0));
 
-				if ( updated === undefined && scraped === undefined ) {
-					query = query.order("scanned");
+				if ( updated === undefined && analyzed === undefined ) {
+					query = query.order("expanded");
 				}
 
-			} else if ( scanned ) {
+			} else if ( expanded ) {
 
 				query = query
-					.filter(new PropertyFilter("scanned", "<=", scanned));
+					.filter(new PropertyFilter("expanded", "<=", expanded));
 
-				if ( updated === undefined && scraped === undefined ) {
-					query = query.order("scanned");
+				if ( updated === undefined && analyzed === undefined ) {
+					query = query.order("expanded");
 				}
 
 			}
@@ -226,7 +225,7 @@ export const units = immutable({
 				query = query.filter(new PropertyFilter("university", "=", university));
 			}
 
-			if ( updated === undefined && scraped === undefined && scanned === undefined ) {
+			if ( updated === undefined && analyzed === undefined && expanded === undefined ) {
 				query = query.order("__key__");
 			}
 
@@ -260,8 +259,8 @@ export const units = immutable({
 					const data = {
 						...item,
 						updated: item.updated ?? 0,
-						scraped: item.scraped ?? 0,
-						scanned: item.scanned ?? 0,
+						analyzed: item.analyzed ?? 0,
+						expanded: item.expanded ?? 0,
 						formal_: item.formal && normalizeName(item.formal),
 						profile: item.profile && normalizeUrl(item.profile),
 						website: item.website && normalizeUrl(item.website)
