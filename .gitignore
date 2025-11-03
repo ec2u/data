@@ -1,8 +1,7 @@
 /.idea/
 /.vscode/
 
-/pipe.*
-
+/@/
 /docs/
 /node_modules/
 
