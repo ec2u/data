@@ -16,7 +16,7 @@
 
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { Unit } from "@/pipelines/units";
+import { stale, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
 import { guard, log, message, time } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
@@ -25,7 +25,7 @@ import { Units } from "@/utilities/hub";
 import { file } from "@/utilities/node/files";
 import { uuid } from "@/utilities/node/uuid";
 import { Type } from "@google/genai";
-import { filter, flatMap, forEach, items, map, peek, pipe, toArray } from "@metreeca/pipe";
+import { chain, filter, flatMap, forEach, items, iterate, map, peek, pipe, toArray } from "@metreeca/pipe";
 
 
 const tools = [
@@ -36,6 +36,7 @@ const tools = [
 if ( import.meta.main ) {
 	scan();
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -102,50 +103,103 @@ export async function scan(lead?: Partial<Unit>) {
 	} else {
 
 		return time(() => pipe(
-			(items(units.select({ scanned: 0 })))
+			(iterate(() => chain(
+				units.select({ scanned: 0 }),
+				units.select({ scanned: Date.now()-stale })
+			)))
 
-				// !!! we must upate the scanned timestamp of the input lead
+			(map(async lead => ({
+				lead, items: await pipe(
+					(items(lead))
+					(flatMap(guard(scan)))
+					(filter(item => {
 
-				// (iterate(() => chain(
-				// 	units.select({ scanned: 0 }),
-				// 	units.select({ scanned: Date.now()-stale })
-				// )))
+						const leadProfileDomain = domain(lead.profile);
+						const leadWebsiteDomain = domain(lead.website);
 
-				(map(async lead => ({
-					lead, items: await pipe(
-						(items(lead))
-						(flatMap(guard(scan)))
-						(filter(item => !!(item.profile || item.website)))
-						(map(item => ({
+						// 1. Lead must have at least one domain
 
-							...item,
+						if ( !leadProfileDomain && !leadWebsiteDomain ) { return false; }
 
-							parent: lead.id,
-							university: lead.university
+						// 2. If lead has both, they must match
 
-						})))
-						(toArray())
-					)
-
-				}), {
-					parallel: true
-				}))
-				(peek(v => console.info(v)))
-				(forEach(async ({ lead, items }) => {
-
-					await units.insert({ ...lead, scanned: Date.now() });
-
-					for (const item of items) {
-						if ( !await units.lookup(item) ) { // check and update atomically
-							await units.insert({ ...item, id: `${Units}${uuid()}` });
+						if ( leadProfileDomain && leadWebsiteDomain && leadProfileDomain !== leadWebsiteDomain ) {
+							return false;
 						}
-					}
 
-				}))
+						// 3. Identify the shared lead domain
+
+						const sharedDomain = leadProfileDomain ?? leadWebsiteDomain;
+
+						// 4. Item's URLs (if defined) must match the shared domain
+
+						const itemProfileDomain = domain(item.profile);
+						const itemWebsiteDomain = domain(item.website);
+
+						if ( itemProfileDomain && itemProfileDomain !== sharedDomain ) { return false; }
+						if ( itemWebsiteDomain && itemWebsiteDomain !== sharedDomain ) { return false; }
+
+						// At least one item URL must be present
+
+						return !!(itemProfileDomain || itemWebsiteDomain);
+
+					}))
+					(map(item => ({
+
+						...item,
+
+						parent: lead.id,
+						university: lead.university
+
+					})))
+					(toArray())
+				)
+
+			}), {
+				parallel: true
+			}))
+			(peek(v => console.info(v)))
+			(forEach(async ({ lead, items }) => {
+
+				for (const item of items) {
+					if ( !await units.lookup(item) ) { // check and update atomically
+						await units.insert({ ...item, id: `${Units}${uuid()}` });
+					}
+				}
+
+				await units.insert({ ...lead, scanned: Date.now() });
+
+			}))
 		), (count, elapsed) => log.info(scan.name, // !!! broken count
 			`identified <${count}> units in <${message(elapsed)}> ms`
 		));
 
 	}
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * Extract the domain from a URL (e.g., "unipv.it" from "https://dept.unipv.it/path")
+ */
+function domain(url: string | undefined): string | undefined {
+	if ( url ) {
+
+		try {
+
+			const hostname = new URL(url).hostname;
+			const parts = hostname.split(".");
+
+			return parts.length >= 2 ? parts.slice(-2).join(".") : hostname;
+
+		} catch {
+
+			return undefined;
+
+		}
+
+	} else { return undefined; }
 }

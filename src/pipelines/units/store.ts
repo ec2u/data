@@ -143,6 +143,8 @@ export const units = immutable({
 		scraped,
 		scanned,
 
+		university,
+
 		offset,
 		limit
 
@@ -151,6 +153,8 @@ export const units = immutable({
 		readonly updated?: number;
 		readonly scraped?: number;
 		readonly scanned?: number;
+
+		readonly university?: string;
 
 		readonly offset?: number;
 		readonly limit?: number;
@@ -216,6 +220,10 @@ export const units = immutable({
 					query = query.order("scanned");
 				}
 
+			}
+
+			if ( university ) {
+				query = query.filter(new PropertyFilter("university", "=", university));
 			}
 
 			if ( updated === undefined && scraped === undefined && scanned === undefined ) {
