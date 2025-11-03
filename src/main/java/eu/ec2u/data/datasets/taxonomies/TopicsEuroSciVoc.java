@@ -52,7 +52,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.lang.String.format;
-import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
+import static org.eclipse.rdf4j.rio.RDFFormat.RDFXML;
 
 /**
  * European Science Vocabulary (EuroSciVoc).
@@ -69,11 +69,11 @@ public final class TopicsEuroSciVoc implements Runnable {
 
     public static final String PATH=Taxonomies.PATH+"euroscivoc/";
 
-    private static final String VERSION="1.5-20241002";
+    private static final String VERSION="1.6-20250924";
 
-    private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"
-            +"?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution%2Feuroscivoc%2F20241002-0%2Fttl%2Fskos_xl%2FEuroSciVoc.ttl"
-            +"&fileName=EuroSciVoc.ttl";
+    private static final String URL="https://op.europa.eu/o/opportal-service/euvoc-download-handler"+
+            "?cellarURI=http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fdistribution%2Feuroscivoc%2F20250924-0%2Frdf%2Fskos_xl%2FEuroSciVoc.rdf"+
+            "&fileName=EuroSciVoc.rdf";
 
 
     private static final OrganizationFrame EU_PUBLICATION_OFFICE=new OrganizationFrame()
@@ -133,7 +133,7 @@ public final class TopicsEuroSciVoc implements Runnable {
                         Stream.of(URL)
 
                                 .map(new Retrieve()
-                                        .format(TURTLE)
+                                        .format(RDFXML)
                                 )
 
                                 .flatMap(model -> rover(model)
