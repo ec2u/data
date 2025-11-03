@@ -99,6 +99,13 @@ export function embedding(response: EmbedContentResponse) {
 export async function data<T>(source: string | GenerateContentResponse, schema: SchemaUnion): Promise<T> {
 
 	const input = isString(source) ? source : text(source);
+
+	// reject empty or whitespace-only input to prevent hallucinations
+
+	if ( !input || input.trim().length === 0 ) {
+		throw new Error("empty model response: unable to extract structured data");
+	}
+
 	const urls = [...new Set(input.match(/https?:\/\/[^\s\[\]()<>]+/g) || [])];
 
 	return json(await ai.models.generateContent({

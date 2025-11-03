@@ -62,7 +62,7 @@ export async function scrape(lead?: Partial<Unit>) {
 				systemInstruction: await file(".ai", import.meta.url),
 				tools,
 				automaticFunctionCalling: {
-					maximumRemoteCalls: 20
+					maximumRemoteCalls: 50
 				}
 			}
 		}), {
