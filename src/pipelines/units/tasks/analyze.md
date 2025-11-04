@@ -28,7 +28,7 @@ When asked to validate this prompt:
 
 1. **Create and run test driver**:
     - Write temporary `.test.ts` file with test code
-   - Import `scrape` function from `scrape.ts`
+   - Import `analyze` function from `analyze.ts`
     - Configure test with sample Lead object containing profile/website URLs
     - Execute `npx tsx .test.ts` to generate output
    - Delete `.test.ts` after the complete testing process is finished
@@ -238,3 +238,46 @@ keyword" with parallel execution guidance
 - Keywords array contains free-form terms
 
 **Validation**: Verify structured output matches Unit type definition with all required fields present
+
+## Typology Classification Accuracy
+
+**Issue**: Original keyword-only matching ("Cluster") lost critical context, causing misclassifications:
+
+- "Computing Cluster" → matched `group` instead of `facility/computing`
+- Departments → matched `school/medical`, `school/business` instead of `department`
+- Overall failure rate: ~50% in classification.csv
+
+**Solutions Tested**:
+
+1. **Full Context** (FAILED): Used complete name+summary in `matchTopics` → prioritized domain over structure
+2. **Minimal Context** (INCONSISTENT): Keyword extraction → unreliable embedding matches, cache issues
+3. **Static List** (100%): Load all typologies at startup, pass in contents → adds tokens to every request
+4. **Multi-Candidate** (75%): Retrieve top-5 via `matchTopics` → model sometimes ignored candidates
+5. **Dynamic Retrieval** (100% - IMPLEMENTED): Model calls `listTopics` tool on demand
+
+**Implemented Solution** (analyze.ts, listTopics.ts, analyze.ai):
+
+Created `listTopics` tool for dynamic retrieval:
+
+```typescript
+// Tool registration (analyze.ts:34-35)
+listTopics({ topics: scheme => topics.select({ scheme }) })
+```
+
+Model calls `listTopics` to retrieve 28 typologies as structured objects (id, label, definition).
+
+**Key Principles**:
+
+- Model calls `listTopics(scheme, focus)` to retrieve complete typology list
+- DO NOT call `matchTopics` for typology classification
+- Focus on ORGANIZATIONAL STRUCTURE (department, school, lab), not domain (medical, business)
+- "Department of X" → Always `department`, regardless of X's domain
+
+**Test Results**: 100% accuracy on Computing Cluster, Dept Political Sciences, Dept Medicine, Dept Mathematics
+
+**Root Cause**: Taxonomy has both structural types (`department`) and domain-qualified types (`school/medical`).
+Semantic matching without explicit guidance conflates these dimensions.
+
+**Validation**: Verify model calls `listTopics` with scheme `https://data.ec2u.eu/taxonomies/organizations/` and focus
+`https://data.ec2u.eu/taxonomies/organizations/university-unit`, retrieves 28 topics, departments classified as
+`department` not `school/*`.

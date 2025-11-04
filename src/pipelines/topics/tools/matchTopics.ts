@@ -37,9 +37,9 @@ export function matchTopics(opts: {
 
 }): CallableTool {
 
-	const name="matchTopics" as const;
+	const name = "matchTopics" as const;
 
-	const cache=new Map<string, Promise<readonly Topic[]>>();
+	const cache = new Map<string, Promise<readonly Topic[]>>();
 
 	return {
 
@@ -120,7 +120,7 @@ export function matchTopics(opts: {
 					threshold,
 					tolerance,
 					narrowing
-				}=call.args as {
+				} = call.args as {
 					text: string
 					scheme: string
 					focus?: string
@@ -134,13 +134,13 @@ export function matchTopics(opts: {
 
 				try {
 
-					let topics=cache.get(scheme);
+					let topics = cache.get(scheme);
 
 					if ( !topics ) {
-						cache.set(scheme, (topics=Promise.resolve(opts.topics(scheme))));
+						cache.set(scheme, (topics = Promise.resolve(opts.topics(scheme))));
 					}
 
-					const matches=await match(text, {
+					const matches = await match(text, {
 						topics: await topics,
 						focus,
 						limit,
@@ -149,7 +149,9 @@ export function matchTopics(opts: {
 						narrowing
 					});
 
-					log.info(name, `matched ${matches.length} topics for query <${text}>`);
+					log.info(name, `matched ${matches.length} topics for query <${text}> ${
+						JSON.stringify(matches.map(t => t.id))
+					}`);
 
 					return {
 						functionResponse: {

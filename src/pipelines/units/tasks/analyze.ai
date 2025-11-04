@@ -13,8 +13,8 @@ You will be provided with a lead to an online description of a research unit, po
 
 # Task
 
-Explore the website starting from the provided URL. When you have gathered sufficient information, stop exploring
-and generate a comprehensive plaintext report about the research unit.
+Explore the website starting from the provided URL. When you have gathered sufficient information, stop exploring and
+generate a comprehensive plaintext report about the research unit.
 
 # Output
 
@@ -71,34 +71,61 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - NEVER use a PERSONAL email address as INSTITUTIONAL email address for the unit; in doubt omit it
 - Try to remove anti-spam cloaking from email addresses, for instance "name(at)example.edu"
 
-
 ## Typology
 
-- ALWAYS determine the unit type by calling `matchTopics` to find the best-matching topic ID
-- CRITICAL: Extract ONLY the organizational classification type (e.g., "Department", "Laboratory", "Research Group")
-  from the unit's full name
-- DO NOT include the field/domain name in the query - use only the structural/organizational type
-- The query text should be the classification type alone, not the full unit name
+- CRITICAL: First, retrieve the complete list of valid typologies by calling `listTopics`
 - Use scheme: `https://data.ec2u.eu/taxonomies/organizations/`
 - Use focus: `https://data.ec2u.eu/taxonomies/organizations/university-unit`
-- Set limit: 1
-- Set threshold: 0.5 (reject matches with distance > 0.5 as too dissimilar)
-- Report the ID of the returned topic as the typology value
-- If no match is found within threshold, report "Not defined"
+- This will return all valid organizational unit typologies as an array of objects with id, label, and definition
+- Then, select the most appropriate typology from the retrieved list
+- DO NOT call `matchTopics` for typology - use `listTopics` to get the complete list, then select from it
+- Analyze the unit's formal name, organizational structure, and function to determine which typology fits best
+- Focus on ORGANIZATIONAL STRUCTURE, not domain/function
+- Report the complete typology ID URL from the list
+- If none of the retrieved typologies match reasonably well, report "Not defined"
 
-**Examples of CORRECT query text:**
+**Key Classification Principles:**
 
-- Unit: "Department of Internal Medicine" → Query: "Department"
-- Unit: "Laboratory of Molecular Biology" → Query: "Laboratory"
-- Unit: "Research Group on Artificial Intelligence" → Query: "Research Group"
-- Unit: "Centre for Advanced Studies" → Query: "Centre"
+1. **Department** vs **School**:
+  - Department = primary academic division around a specific discipline
+  - School = larger academic division that may contain multiple departments
+  - "Department of X" → Always use `Department`
+  - "Medical School", "Business School" → Use specific school types
 
-**Examples of INCORRECT query text:**
+2. **Research Group** vs **Centre** vs **Laboratory**:
+  - Laboratory = physical facility for experimental work
+  - Centre = focal point for specialized research/education, often multidisciplinary
+  - Research Group = collective of researchers, may be formal or informal
 
-- Unit: "Department of Internal Medicine" → Query: "Department of Internal Medicine" ❌ (includes field name)
-- Unit: "Department of Internal Medicine" → Query: "Medical Department" ❌ (adds domain modifier)
-- Unit: "Department of Internal Medicine" → Query: "Internal Medicine" ❌ (only field, missing type)
+3. **Facility** types:
+  - Computing Facility = computational infrastructure (HPC clusters, data centers)
+  - Research Facility = general specialized infrastructure
+  - Museum, Library, Station = specific facility types
 
+4. **Ambiguous terms require interpretation**:
+  - "Computing Cluster" → **Computing Facility** (it's infrastructure, not a group)
+  - "Data Hub" → Likely **Centre** or **Computing Facility** (assess function)
+  - "X Laboratory" → **Laboratory**
+
+**Examples:**
+
+- "Department of Internal Medicine" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/department`
+- "Medical School" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/school/medical`
+- "Computing Cluster" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/facility/computing`
+- "Laboratory of Molecular Biology" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/laboratory`
+- "Interdisciplinary Research Centre" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/centre` or more
+  specific centre subtype
+- "AI Research Group" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/group` (or recognized/informal if
+  known)
+
+**Process:**
+
+1. Call `listTopics` with scheme and focus to retrieve all valid typologies
+2. Review the retrieved typology list carefully
+3. Identify the organizational structure keywords in the unit's formal name
+4. Match to the appropriate typology based on definitions
+5. Select the most specific applicable typology (e.g., `Computing Facility` over generic `Research Facility`)
+6. Return the complete typology ID URL
 ## Topics
 
 - Topics should be formal topic IDs obtained by calling `matchTopics` for each keyword **separately**

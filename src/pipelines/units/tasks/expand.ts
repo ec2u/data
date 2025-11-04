@@ -25,7 +25,7 @@ import { Units } from "@/utilities/hub";
 import { file } from "@/utilities/node/files";
 import { uuid } from "@/utilities/node/uuid";
 import { Type } from "@google/genai";
-import { chain, filter, flatMap, forEach, items, iterate, map, peek, pipe, toArray } from "@metreeca/pipe";
+import { filter, flatMap, forEach, items, map, peek, pipe, toArray } from "@metreeca/pipe";
 
 
 const tools = [
@@ -103,11 +103,7 @@ export async function expand(lead?: Partial<Unit>) {
 	} else {
 
 		return time(() => pipe(
-			(iterate(() => chain(
-				units.select({ expanded: 0 }),
-				units.select({ expanded: Date.now()-stale })
-			)))
-
+			(items(units.select({ expanded: Date.now()-stale })))
 			(map(async lead => ({
 				lead, items: await pipe(
 					(items(lead))

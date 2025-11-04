@@ -28,7 +28,7 @@ When asked to validate this prompt:
 
 1. **Create and run test driver**:
     - Write temporary `.test.ts` file with test code
-   - Import `scan` function from `scan.ts`
+   - Import `expand` function from `expand.ts`
     - Configure test with URL and run options
     - Execute `npx tsx .test.ts` to generate output
    - Delete `.test.ts` after the complete testing process is finished

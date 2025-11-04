@@ -17,6 +17,7 @@
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { topics } from "@/pipelines/topics/store";
+import { listTopics } from "@/pipelines/topics/tools/listTopics";
 import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
 import { matches, merge, stale, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
@@ -25,12 +26,13 @@ import { md } from "@/utilities/core/tags";
 import { ai, data } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
-import { chain, flatMap, forEach, items, iterate, map, peek, pipe } from "@metreeca/pipe";
+import { flatMap, forEach, items, map, peek, pipe } from "@metreeca/pipe";
 
 
 const tools = [
 	fetchPage({ cache: pages.lookup }),
-	matchTopics({ topics: scheme => topics.select({ scheme }) })
+	matchTopics({ topics: scheme => topics.select({ scheme }) }),
+	listTopics({ topics: scheme => topics.select({ scheme }) })
 ];
 
 
@@ -38,8 +40,8 @@ if ( import.meta.main ) {
 	analyze();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export async function analyze(): Promise<void>;
 export async function analyze(lead: Partial<Unit>): Promise<Partial<Unit>>;
@@ -51,11 +53,11 @@ export async function analyze(lead?: Partial<Unit>) {
 		return data(await ai.models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: md`
-			profile: ${lead.profile ?? "Not provided"}
-			website: ${lead.website ?? "Not provided"}
-			name: ${lead.formal ?? lead.short ?? "Not provided"}
-			summary: ${lead.summary ?? "Not provided"}
-		`,
+				profile: ${lead.profile ?? "Not provided"}
+				website: ${lead.website ?? "Not provided"}
+				name: ${lead.formal ?? lead.short ?? "Not provided"}
+				summary: ${lead.summary ?? "Not provided"}
+			`,
 			config: {
 				seed: 0,
 				temperature: 0,
@@ -117,10 +119,7 @@ export async function analyze(lead?: Partial<Unit>) {
 	} else {
 
 		return time(() => pipe(
-			(iterate(() => chain(
-				units.select({ analyzed: 0 }),
-				units.select({ analyzed: Date.now()-stale })
-			)))
+			(items(units.select({ analyzed: Date.now()-stale })))
 			(flatMap(lead => pipe(
 				items(lead)
 				(map(guard(analyze)))

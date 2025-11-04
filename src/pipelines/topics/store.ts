@@ -90,6 +90,26 @@ export const topics=immutable({
 			`inserted <${message(value.length)}> topics in <${message(elapsed)}> ms`
 		));
 
+	},
+
+	async remove(): Promise<void> {
+
+		time(async () => {
+
+			const [items] = await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
+
+			if ( items.length !== 0 ) {
+				for (let i = 0; i < items.length; i += batch) {
+					await datastore.delete(items.slice(i, i+batch).map(entity => entity[datastore.KEY]));
+				}
+			}
+
+			return items;
+
+		}, (items, elapsed) => log.info(topics.remove.name,
+			`removed <${message(items.length)}> units in <${message(elapsed)}> ms`
+		));
+
 	}
 
 });
