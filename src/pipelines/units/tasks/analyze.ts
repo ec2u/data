@@ -27,7 +27,10 @@ import { ai, data } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 import { isString } from "@metreeca/core";
-import { flatMap, forEach, items, map, peek, pipe } from "@metreeca/pipe";
+import { pipe } from "@metreeca/pipe";
+import { items } from "@metreeca/pipe/feeds";
+import { forEach } from "@metreeca/pipe/sinks";
+import { flatMap, map, peek } from "@metreeca/pipe/tasks";
 
 
 const tools = [
@@ -62,7 +65,7 @@ export async function analyze(lead?: Partial<Unit>) {
 			config: {
 				seed: 0,
 				temperature: 0,
-				systemInstruction: await file(".ai", import.meta.url),
+				systemInstruction: await file(".sys.md", import.meta.url),
 				tools,
 				automaticFunctionCalling: {
 					maximumRemoteCalls: 50

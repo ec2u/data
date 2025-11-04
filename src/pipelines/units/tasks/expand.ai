@@ -71,8 +71,8 @@ If no structural subunits are found after thorough exploration, return an empty 
 **NOT subunits** (ignore these):
 
 - Parent units (units that contain the target unit)
-- External collaborating units (partnerships, joint projects with other institutions)
-- Coordinating bodies that the unit participates in but doesn't contain
+- **External collaborating organizations** (international experiments, consortia, partnerships with other institutions)
+- **Organizations the unit participates in or collaborates with** (collaborations, joint projects, coordinating bodies)
 - Units with only horizontal/peer relationships (sister units, partners)
 - **Research themes, topics, or areas** (thematic groupings that may contain labs but are not themselves organizational
   units)
@@ -82,10 +82,37 @@ If no structural subunits are found after thorough exploration, return an empty 
   language center, university-wide cooperation commissions). However, departmental research centers that happen to be
   interdisciplinary ARE subunits if they belong to the department
 
+**CRITICAL: External Collaborations vs Internal Subunits**
+
+The following are **NOT subunits** - they are external collaborations:
+
+- **International experiments at external facilities** (e.g., experiments at CERN, PSI, Fermilab, RIKEN)
+- **Multi-institutional collaborations** where the parent unit participates but doesn't host/manage
+- **Consortia or projects** hosted by other institutions or international organizations
+- **Organizations with websites on different institutional domains** (e.g., cern.ch, psi.ch, fnal.gov)
+
+**Key indicators of EXTERNAL collaborations (NOT subunits):**
+
+- Description uses "participate in", "collaborate with", "partnership with", "member of"
+- Website domain differs from parent unit's domain (e.g., atlas.cern vs fisica.dip.unipv.it)
+- Hosted at external facilities (CERN, PSI, Fermilab, etc.)
+- Multi-institutional membership (many universities/countries involved)
+- Parent unit is described as "participating" or "contributing" rather than "hosting" or "managing"
+
+**Key indicators of INTERNAL subunits (report these):**
+
+- Description uses "part of", "belonging to", "within", "hosted by"
+- Website domain matches parent unit's domain (same base domain, may be subdomain)
+- Located at parent unit's institution/facilities
+- Managed/directed by parent unit
+- Dedicated space, resources, or members within parent unit
+
 **Key distinctions:**
 
-- "Belonging to" or "part of" → subunit; "collaborate with" or "participate in" → not a subunit
-- Has dedicated members/space/PI → likely a unit; purely thematic/topical grouping → not a unit
+- "Belonging to" or "part of" or "hosted by" → subunit; "collaborate with" or "participate in" or "member of" → NOT a
+  subunit
+- Same institutional domain → likely subunit; different institutional domain → likely external collaboration
+- Has dedicated members/space/PI within parent unit → likely a unit; purely thematic/topical grouping → not a unit
 - If a page links to actual labs/groups underneath it, those linked labs are subunits, not the theme page itself
 - **Individual person's page → NOT a unit**; organizational entity with multiple members → likely a unit
 - **University-wide/interdepartmental centers → check organizational belonging**: If the center is described as "part
@@ -95,14 +122,20 @@ If no structural subunits are found after thorough exploration, return an empty 
 - **CRITICAL:** Staff/team member pages, personal profiles, and individual professorships are NEVER research units
 - **CRITICAL:** Check if interdepartmental centers are structurally part of the unit or exist at university level
   (e.g., "Centro Interdipartimentale" at university level vs departmental research center)
+- **CRITICAL:** International experiments and collaborations are NEVER subunits, even if prominently featured on the
+  unit's research page
 
 # Requirements
 
 - Identify ONLY structural subunits (not collaborations, parent units, individual people, or true university-wide
   centers)
 - **NEVER report individual people's pages** (staff profiles, personal pages, team member pages)
+- **NEVER report external collaborating organizations** (international experiments, consortia, multi-institutional
+  projects)
 - **Check organizational level of interdepartmental centers**: Report them if they are part of the target unit, exclude
   them if they are university-wide services
+- **Check website domains**: If a unit's website is on a different institutional domain, it is likely an external
+  collaboration
 - Report EVERY subunit found, including all entries from directories/tables/lists
 - **MUST fetch each subunit's profile page** to extract complete information
 - Each subunit **MUST** have:
@@ -111,6 +144,7 @@ If no structural subunits are found after thorough exploration, return an empty 
     - Website URL when available on the profile page (subdomains or external links)
 - Report URLs verbatim (exactly as found)
 - **CRITICAL:** All formal names, short names, and summaries MUST be translated to English
+
 # Guidelines
 
 ## Exploration Process
@@ -124,6 +158,7 @@ If no structural subunits are found after thorough exploration, return an empty 
 5. **If pages appear to be research themes/topics rather than actual units**, explore links within those pages to find
    actual labs/groups
 6. **Fetch each identified subunit's profile page** to extract website links and additional details
+7. **Check for external collaboration indicators** (different domains, multi-institutional projects)
 
 **Key principles:**
 
@@ -131,6 +166,7 @@ If no structural subunits are found after thorough exploration, return an empty 
 - Do NOT rely solely on website content
 - Do NOT report thematic pages as units; explore them to find actual labs underneath
 - **Do NOT report individual people's pages as units** (staff profiles, team member pages, personal pages)
+- **Do NOT report external collaborations as subunits** (check domains and organizational relationship)
 - Prioritize pages likely containing comprehensive subunit lists
 - Prioritize local language pages over English translations
 - Ignore PDFs and linked documents
@@ -148,7 +184,7 @@ If no structural subunits are found after thorough exploration, return an empty 
 - Subdomains differing from parent unit's subdomain (e.g., `labname.example.edu`)
 - Independent domains (e.g., `labname.org`)
 - Links in profile page content (often within text or as standalone links)
-- Links labeled "website", "website", "site", or appearing as clickable lab names in main content area
+- Links labeled "website", "sito web", "site", or appearing as clickable lab names in main content area
 - **Look carefully in profile page text** for subdomain or external URLs
 - Ignore footer links (university services, privacy policies, webmail)
 
@@ -157,7 +193,9 @@ If no structural subunits are found after thorough exploration, return an empty 
 1. Check directory/listing pages for direct website links (subdomains or external URLs)
 2. **For each identified subunit, fetch its profile page** to find website links
 3. Extract website URLs from profile page content (look for subdomains and external links)
-4. Website links are often embedded in the profile text or listed as "website", "website", or similar labels
+4. Website links are often embedded in the profile text or listed as "website", "sito web", or similar labels
+5. **Evaluate domain**: If website domain differs from parent unit's institutional domain, investigate if it's an
+   external collaboration
 
 ## Stopping Conditions
 
@@ -168,7 +206,8 @@ If no structural subunits are found after thorough exploration, return an empty 
 3. All structural subunits from listing pages are identified
 4. **Each subunit's profile page is fetched** (if not already on a listing page)
 5. Website URLs are extracted from profile pages where available
-6. Profile and/or website URLs are collected for each subunit
-7. Information for summaries is gathered
+6. **External collaboration indicators are checked** (domain differences, organizational language)
+7. Profile and/or website URLs are collected for each subunit
+8. Information for summaries is gathered
 
 **Then** generate the structured report. Return empty list if no subunits found after thorough exploration.

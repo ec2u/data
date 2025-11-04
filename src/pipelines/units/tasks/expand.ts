@@ -16,7 +16,7 @@
 
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { stale, Unit } from "@/pipelines/units";
+import { Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
 import { guard, log, message, time } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
@@ -25,7 +25,10 @@ import { Units } from "@/utilities/hub";
 import { file } from "@/utilities/node/files";
 import { uuid } from "@/utilities/node/uuid";
 import { Type } from "@google/genai";
-import { filter, flatMap, forEach, items, map, peek, pipe, toArray } from "@metreeca/pipe";
+import { pipe } from "@metreeca/pipe";
+import { items } from "@metreeca/pipe/feeds";
+import { forEach, toArray } from "@metreeca/pipe/sinks";
+import { filter, flatMap, map, peek } from "@metreeca/pipe/tasks";
 
 
 const tools = [
@@ -103,7 +106,8 @@ export async function expand(lead?: Partial<Unit>) {
 	} else {
 
 		return time(() => pipe(
-			(items(units.select({ expanded: Date.now()-stale })))
+			(items({ website: "https://fisica.dip.unipv.it/" } as Unit))
+				// (items(units.select({ expanded: Date.now()-stale })))
 			(map(async lead => ({
 				lead, items: await pipe(
 					(items(lead))

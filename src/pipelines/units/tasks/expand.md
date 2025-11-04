@@ -327,3 +327,38 @@ leading to false positives.
 - Summary length constraint
 
 **Validation**: Verify structured output matches Lead type definition with all required fields present
+
+## External Collaborations vs Internal Research Lines
+
+**Input**: https://fisica.dip.unipv.it/
+
+**Description**: Physics department with internal research lines and extensive external collaboration experiments (
+ATLAS, CMS, MEG, etc. at CERN, PSI, Fermilab).
+
+**Expected Behavior**:
+
+- Report ONLY internal research lines (6 lines: Didactics/History, Applied Physics, Experimental/Theoretical Condensed
+  Matter, Experimental/Theoretical Fundamental Interactions)
+- MUST NOT report external experiments/collaborations (ATLAS, CMS, MEG, MUonE, RD_FCC, RD_MUCOL, ICARUS, HERD, ALICE,
+  FAMU, MAMBO)
+- Recognize indicators of external collaborations:
+  - Different institutional domains (atlas.cern, cms.cern, psi.ch, fnal.gov)
+  - Language like "participate in", "collaborate with", "member of"
+  - Hosted at external facilities
+  - Multi-institutional membership
+- All reported units should have URLs on department domain (fisica.dip.unipv.it)
+
+**Key Issues Tested**:
+
+- Distinguishing internal structural units from external collaborations
+- Domain-based detection of external organizations
+- Language-based detection (collaboration indicators)
+- Not reporting prominently featured international experiments as subunits
+- Understanding "participate in" vs "part of" distinction
+
+**Root Cause**: Research departments often prominently feature international collaborations and experiments they
+participate in. Without explicit guidance, models may report these as structural subunits rather than external
+partnerships.
+
+**CRITICAL**: When modifying the prompt, ensure external collaboration exclusion remains explicit with domain checking
+and language indicators

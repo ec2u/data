@@ -49,7 +49,8 @@
       "Skill(typedoc-writer)",
       "Read(//Users/Alessandro/Metreeca/Packages/Pipe/src/**)",
       "Read(//Users/Alessandro/Metreeca/Packages/Pipe/**)",
-      "WebFetch(domain:tc39.es)"
+      "WebFetch(domain:tc39.es)",
+      "WebFetch(domain:fisica.dip.unipv.it)"
     ],
     "deny": [],
     "ask": []
