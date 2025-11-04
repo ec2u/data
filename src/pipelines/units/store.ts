@@ -283,22 +283,37 @@ export const units = immutable({
 
 	},
 
-	async remove(): Promise<void> {
+	async remove(items?: Unit | readonly Unit[]): Promise<void> {
 
-		time(async () => {
+		await time(async () => {
 
-			const [items] = await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
+			if ( items ) { // Selective removal: delete only the specified items
 
-			if ( items.length !== 0 ) {
-				for (let i = 0; i < items.length; i += batch) {
-					await datastore.delete(items.slice(i, i+batch).map(entity => entity[datastore.KEY]));
+				const itemsArray = Array.isArray(items) ? items : [items];
+
+				for (let i = 0; i < itemsArray.length; i += batch) {
+					const keys = itemsArray.slice(i, i+batch).map(item => datastore.key([kind, uuid(item.id)]));
+					await datastore.delete(keys);
 				}
+
+				return itemsArray;
+
+			} else { // Remove all: query all keys and delete them
+
+				const [entities] = await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
+
+				if ( entities.length !== 0 ) {
+					for (let i = 0; i < entities.length; i += batch) {
+						await datastore.delete(entities.slice(i, i+batch).map(entity => entity[datastore.KEY]));
+					}
+				}
+
+				return entities;
+
 			}
 
-			return items;
-
-		}, (items, elapsed) => log.info(units.remove.name,
-			`removed <${message(items.length)}> units in <${message(elapsed)}> ms`
+		}, (removedItems, elapsed) => log.info(units.remove.name,
+			`removed <${message(removedItems.length)}> units in <${message(elapsed)}> ms`
 		));
 
 	}

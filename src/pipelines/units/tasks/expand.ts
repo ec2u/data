@@ -171,9 +171,12 @@ export async function expand(lead?: Partial<Unit>) {
 	} else {
 
 		return time(() => pipe(
-			// (items({ website: "https://fisica.dip.unipv.it/" } as Unit))
-			(items({ website: "https://iii.dip.unipv.it/it" } as Unit))
-				// (items(units.select({ expanded: Date.now()-stale })))
+			// (items(units.select({ expanded: Date.now()-stale }))) // !!!
+
+			(items(units.select()))
+				// (filter(u => u.website === "https://fisica.dip.unipv.it/")) // !!!
+				(filter(u => u.website === "https://iii.dip.unipv.it/")) // !!!
+
 				(map(async lead => ({
 					lead, items: await pipe(
 						(items(lead))

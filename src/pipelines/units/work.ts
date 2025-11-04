@@ -15,9 +15,18 @@
  */
 
 
-import { expand } from "@/pipelines/units/tasks/expand";
+import { units } from "@/pipelines/units/store";
+import { pipe } from "@metreeca/pipe";
+import { items } from "@metreeca/pipe/feeds";
+import { forEach } from "@metreeca/pipe/sinks";
+import { filter, peek } from "@metreeca/pipe/tasks";
 
-// units.remove();
+units.remove();
 
-
-expand().then(console.info);
+const numberPromise = pipe(
+	(items(units.select()))
+	(filter(u => !u.university || !u.parent))
+	(peek(console.info))
+	(forEach(units.remove))
+		.then(console.info)
+);
