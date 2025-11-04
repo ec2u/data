@@ -119,7 +119,11 @@ https://data.ec2u.eu/taxonomies/organizations/university-unit/department
 
 ## Typology
 
-- CRITICAL: First, retrieve the complete list of valid typologies by calling `listTopics`
+**CRITICAL: Typology uses the ORGANIZATIONS taxonomy, NOT EuroSciVoc!**
+
+- Typology MUST come from: `https://data.ec2u.eu/taxonomies/organizations/`
+- NEVER use EuroSciVoc (`https://data.ec2u.eu/taxonomies/euroscivoc/`) for typology
+- First, retrieve the complete list of valid typologies by calling `listTopics`
 - Use scheme: `https://data.ec2u.eu/taxonomies/organizations/`
 - Use focus: `https://data.ec2u.eu/taxonomies/organizations/university-unit`
 - This will return all valid organizational unit typologies as an array of objects with id, label, and definition
@@ -128,6 +132,7 @@ https://data.ec2u.eu/taxonomies/organizations/university-unit/department
 - Analyze the unit's formal name, organizational structure, and function to determine which typology fits best
 - Focus on ORGANIZATIONAL STRUCTURE, not domain/function
 - Report the complete typology ID URL from the list
+- VALIDATION: Ensure the typology URL starts with `https://data.ec2u.eu/taxonomies/organizations/`
 - If none of the retrieved typologies match reasonably well, report "Not defined"
 
 **Key Classification Principles:**
@@ -174,6 +179,10 @@ https://data.ec2u.eu/taxonomies/organizations/university-unit/department
 6. Return the complete typology ID URL
 ## Topics
 
+**CRITICAL: Topics use the EuroSciVoc taxonomy, NOT the organizations taxonomy!**
+
+- Topics MUST come from: `https://data.ec2u.eu/taxonomies/euroscivoc/`
+- NEVER use organizations taxonomy (`https://data.ec2u.eu/taxonomies/organizations/`) for topics
 - Topics should be formal topic IDs obtained by calling `matchTopics` for each keyword **separately**
 - IMPORTANT: Call `matchTopics` ONCE per keyword, NOT with all keywords combined in a single text
 - Use each individual keyword as the query text for its own `matchTopics` call
@@ -184,6 +193,7 @@ https://data.ec2u.eu/taxonomies/organizations/university-unit/department
 - ALWAYS batch independent keyword matching requests together for efficiency (parallel calls, not combined text)
 - Deduplicate results to avoid repeating the same topic ID
 - Omit keywords that don't match any topic within the threshold
+- VALIDATION: Ensure all topic URLs start with `https://data.ec2u.eu/taxonomies/euroscivoc/`
 
 **Example**: For keywords ["Machine Learning", "Robotics", "Data Science"], make THREE parallel calls:
 

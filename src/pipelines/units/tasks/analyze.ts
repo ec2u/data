@@ -43,14 +43,14 @@ if ( import.meta.main ) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function analyze(): Promise<void>;
+export async function analyze(): Promise<number>;
 export async function analyze(lead: Partial<Unit>): Promise<Partial<Unit>>;
 
 export async function analyze(lead?: Partial<Unit>) {
 
 	if ( lead ) {
 
-		return data(await ai.models.generateContent({
+		return validate(await data<Partial<Unit>>(await ai.models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: md`
 				profile: ${lead.profile ?? "Not provided"}
@@ -72,49 +72,74 @@ export async function analyze(lead?: Partial<Unit>) {
 			properties: {
 				formal: {
 					type: Type.STRING,
-					description: "Formal name of the research unit - MUST include the unit typology (e.g., 'Laboratory of...', 'Department of...', 'Research Group on...')"
+					description: md`
+						Formal name of the research unit - MUST include the unit typology
+						(e.g., 'Laboratory of...', 'Department of...', 'Research Group on...')
+					`
 				},
 				short: {
 					type: Type.STRING,
-					description: "Short name of the research unit (OPTIONAL - omit if not actually found on website, or if it equals the formal name or acronym)"
+					description: md`
+						Short name of the research unit (OPTIONAL - omit if not actually found on website,
+						or if it equals the formal name or acronym)
+					`
 				},
 				acronym: {
 					type: Type.STRING,
-					description: "Acronym of the research unit (OPTIONAL - omit if not actually found on website)"
+					description: md`
+						Acronym of the research unit (OPTIONAL - omit if not actually found on website)
+					`
 				},
 				identifier: {
 					type: Type.STRING,
-					description: "Internal identifier of the research unit (OPTIONAL - omit if not actually found on website)"
+					description: md`
+						Internal identifier of the research unit (OPTIONAL - omit if not actually found on website)
+					`
 				},
 				email: {
 					type: Type.STRING,
-					description: "Institutional email address of the research unit (OPTIONAL - omit if not actually found on website)"
+					description: md`
+						Institutional email address of the research unit
+						(OPTIONAL - omit if not actually found on website)
+					`
 				},
 				type: {
 					type: Type.STRING,
-					description: "Formal topic ID from the organizations taxonomy - MUST be a complete URL preserved exactly as found (e.g., 'https://data.ec2u.eu/...')"
+					description: md`
+						Formal topic ID from the organizations taxonomy - MUST be a complete URL preserved exactly
+						as found (e.g., 'https://data.ec2u.eu/...')
+					`
 				},
 				topics: {
 					type: Type.ARRAY,
 					items: { type: Type.STRING },
-					description: "List of formal research topic IDs - MUST be complete URLs preserved exactly as found, character-by-character (e.g., 'https://data.ec2u.eu/taxonomies/euroscivoc/...')"
+					description: md`
+						List of formal research topic IDs - MUST be complete URLs preserved exactly as found,
+						character-by-character (e.g., 'https://data.ec2u.eu/taxonomies/euroscivoc/...')
+					`
 				},
 				summary: {
 					type: Type.STRING,
-					description: "REQUIRED - Summary of the research unit (~500 chars) - NEVER omit this field"
+					description: md`
+						REQUIRED - Summary of the research unit (~500 chars) - NEVER omit this field
+					`
 				},
 				description: {
 					type: Type.STRING,
-					description: "General description in markdown format"
+					description: md`
+						General description in markdown format
+					`
 				},
 				keywords: {
 					type: Type.ARRAY,
 					items: { type: Type.STRING },
-					description: "List of keywords research topics and fields"
+					description: md`
+						List of keywords research topics and fields
+					`
 				}
 			},
 			required: ["formal", "type", "topics", "summary", "description", "keywords"]
-		});
+		}));
 
 	} else {
 
@@ -142,4 +167,44 @@ export async function analyze(lead?: Partial<Unit>) {
 
 	}
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Validates extracted unit data to ensure correct taxonomy usage.
+ *
+ * - Typology must come from organizations taxonomy (https://data.ec2u.eu/taxonomies/organizations/)
+ * - Topics must come from EuroSciVoc taxonomy (https://data.ec2u.eu/taxonomies/euroscivoc/)
+ *
+ * @param result Extracted unit data from AI model
+ * @returns Validated result with incorrect taxonomy entries removed
+ */
+function validate(result: Partial<Unit>): Partial<Unit> {
+
+	const organizations = "https://data.ec2u.eu/taxonomies/organizations/";
+	const euroscivoc = "https://data.ec2u.eu/taxonomies/euroscivoc/";
+
+	function invalid(message: string): undefined {
+
+		log.warn(analyze.name, message);
+
+		return undefined;
+	}
+
+
+	return {
+
+		...result,
+
+		type: result.type?.startsWith(organizations) ? result.type
+			: result.type ? invalid(`invalid type <${result.type}>`)
+				: undefined,
+
+		topics: result.topics?.filter(topic =>
+			topic.startsWith(euroscivoc) || !invalid(`invalid topic <${topic}>`)
+		)
+
+	};
 }
