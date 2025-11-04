@@ -30,7 +30,7 @@ import { isString } from "@metreeca/core";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
-import { flatMap, map, peek, take } from "@metreeca/pipe/tasks";
+import { flatMap, map, peek } from "@metreeca/pipe/tasks";
 
 
 const tools = [
@@ -148,7 +148,6 @@ export async function analyze(lead?: Partial<Unit>) {
 
 		return time(() => pipe(
 			(items(units.select({ analyzed: Date.now()-stale })))
-			(take(1))
 			(flatMap(lead => pipe(
 				items(lead)
 				(map(guard(analyze)))

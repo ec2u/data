@@ -30,14 +30,14 @@ export const ai = new GoogleGenAI({
 /**
  * Extracts and validates text content from a Gemini API response.
  *
- * Manually extracts text parts to avoid SDK console warnings when non-text parts (like thinking, function calls, etc.)
- * are present in the response. Checks automatic function calling limits if history is present.
+ * Filters out non-text parts (thinking, function calls, etc.) to extract only output text.
+ * Validates response completeness when automatic function calling is used.
  *
  * @param response Response from a generateContent call
  *
- * @returns Trimmed text content
+ * @returns Trimmed text content from the final response
  *
- * @throws Error if the response contains no text content or function call limit was reached
+ * @throws Error if response validation fails or contains no output text
  */
 export function text(response: GenerateContentResponse): string {
 	return (validate(response).candidates?.[0]?.content?.parts ?? [])
@@ -54,7 +54,7 @@ export function text(response: GenerateContentResponse): string {
  *
  * @returns Parsed JSON object
  *
- * @throws Error if the response contains no text or invalid JSON, or function call limit was reached
+ * @throws Error if response validation fails, contains no output text, or has invalid JSON
  */
 export function json<T>(response: GenerateContentResponse): T {
 	try {
@@ -81,20 +81,20 @@ export function embedding(response: EmbedContentResponse) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Converts unstructured text source into structured data using the Gemini API.
+ * Converts unstructured text into structured data using the Gemini API.
  *
- * Extracts URLs from the source and provides them as a reference list to ensure accurate preservation
- * during structured extraction. Uses deterministic output (seed=0, temperature=0) and automatic omission
- * of undefined/empty values. Checks automatic function calling limits if source is a response.
+ * Extracts URLs from the source and provides them as a reference list to ensure accurate preservation.
+ * Uses deterministic output (seed=0, temperature=0) and automatic omission of undefined/empty values.
+ * When source is a GenerateContentResponse, validates completeness before extraction.
  *
  * @typeParam T Type of the structured data to return
  *
- * @param source Textual report to convert or GenerateContentResponse
+ * @param source Textual report or GenerateContentResponse to convert
  * @param schema JSON schema defining the expected output structure
  *
  * @returns Structured data conforming to the schema
  *
- * @throws Error if the model response is malformed, invalid JSON, or function call limit was reached
+ * @throws Error if source validation fails, response is empty, or contains invalid JSON
  */
 export async function data<T>(source: string | GenerateContentResponse, schema: SchemaUnion): Promise<T> {
 
@@ -149,10 +149,9 @@ export async function data<T>(source: string | GenerateContentResponse, schema: 
 /**
  * Validates a Gemini API response for completeness and correctness.
  *
- * Currently, checks if automatic function calling was interrupted by reaching maximumRemoteCalls.
- * With automatic function calling enabled, a complete conversation naturally ends with the model
- * generating text (the final answer). If instead the last model turn is a function call without text,
- * this indicates the conversation was interrupted mid-process.
+ * When automatic function calling is enabled, checks if the final response contains output text.
+ * A complete response should have text in candidates[0].content.parts after function calling completes.
+ * If the final response has no output text, this indicates the generation was interrupted or incomplete.
  *
  * @param response Response from a generateContent call
  *
@@ -166,28 +165,20 @@ function validate(response: GenerateContentResponse): GenerateContentResponse {
 
 	if ( history && history.length > 0 ) {
 
-		// Find the last model turn in the conversation
+		// Check if the final response (not history) contains output text
 
-		const lastModelMessage = [...history].reverse().find(msg => msg.role === "model");
+		const finalParts = response.candidates?.[0]?.content?.parts ?? [];
+		const hasOutputText = finalParts.some(part => part.text && !part.thought);
 
-		if ( lastModelMessage ) {
+		if ( !hasOutputText ) {
 
-			const hasFunctionCall = lastModelMessage.parts?.some(part => part.functionCall);
-			const hasText = lastModelMessage.parts?.some(part => part.text);
+			const functionCallTurns = history.filter(msg =>
+				msg.role === "model" && msg.parts?.some(part => part.functionCall)
+			).length;
 
-			// A model turn with ONLY function calls (no text) as the final turn indicates
-			// the conversation was interrupted before the model could generate the final answer
-
-			if ( hasFunctionCall && !hasText ) {
-
-				const callCount = history.filter(msg =>
-					msg.role === "model" && msg.parts?.some(part => part.functionCall)
-				).length;
-
-				throw new Error(
-					`maximumRemoteCalls limit reached (${callCount} calls) - generation incomplete`
-				);
-			}
+			throw new Error(
+				`generation incomplete with no output text after ${functionCallTurns} function calling turn(s)`
+			);
 		}
 	}
 
