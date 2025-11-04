@@ -31,16 +31,16 @@ export const ai = new GoogleGenAI({
  * Extracts and validates text content from a Gemini API response.
  *
  * Manually extracts text parts to avoid SDK console warnings when non-text parts (like thinking, function calls, etc.)
- * are present in the response.
+ * are present in the response. Checks automatic function calling limits if history is present.
  *
  * @param response Response from a generateContent call
  *
  * @returns Trimmed text content
  *
- * @throws Error if the response contains no text content
+ * @throws Error if the response contains no text content or function call limit was reached
  */
 export function text(response: GenerateContentResponse): string {
-	return (response.candidates?.[0]?.content?.parts ?? [])
+	return (validate(response).candidates?.[0]?.content?.parts ?? [])
 		.filter(part => part.text && !part.thought)
 		.map(part => part.text)
 		.join("\n\n")
@@ -54,7 +54,7 @@ export function text(response: GenerateContentResponse): string {
  *
  * @returns Parsed JSON object
  *
- * @throws Error if the response contains no text or invalid JSON
+ * @throws Error if the response contains no text or invalid JSON, or function call limit was reached
  */
 export function json<T>(response: GenerateContentResponse): T {
 	try {
@@ -85,16 +85,16 @@ export function embedding(response: EmbedContentResponse) {
  *
  * Extracts URLs from the source and provides them as a reference list to ensure accurate preservation
  * during structured extraction. Uses deterministic output (seed=0, temperature=0) and automatic omission
- * of undefined/empty values.
+ * of undefined/empty values. Checks automatic function calling limits if source is a response.
  *
  * @typeParam T Type of the structured data to return
  *
- * @param source Textual report to convert
+ * @param source Textual report to convert or GenerateContentResponse
  * @param schema JSON schema defining the expected output structure
  *
  * @returns Structured data conforming to the schema
  *
- * @throws Error if the model response is malformed or invalid JSON
+ * @throws Error if the model response is malformed, invalid JSON, or function call limit was reached
  */
 export async function data<T>(source: string | GenerateContentResponse, schema: SchemaUnion): Promise<T> {
 
@@ -141,4 +141,55 @@ export async function data<T>(source: string | GenerateContentResponse, schema: 
 			responseSchema: schema
 		}
 	}));
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Validates a Gemini API response for completeness and correctness.
+ *
+ * Currently, checks if automatic function calling was interrupted by reaching maximumRemoteCalls.
+ * With automatic function calling enabled, a complete conversation naturally ends with the model
+ * generating text (the final answer). If instead the last model turn is a function call without text,
+ * this indicates the conversation was interrupted mid-process.
+ *
+ * @param response Response from a generateContent call
+ *
+ * @returns The same response (pass-through for chaining)
+ *
+ * @throws Error if validation fails (incomplete results, corrupted response, etc.)
+ */
+function validate(response: GenerateContentResponse): GenerateContentResponse {
+
+	const history = response.automaticFunctionCallingHistory;
+
+	if ( history && history.length > 0 ) {
+
+		// Find the last model turn in the conversation
+
+		const lastModelMessage = [...history].reverse().find(msg => msg.role === "model");
+
+		if ( lastModelMessage ) {
+
+			const hasFunctionCall = lastModelMessage.parts?.some(part => part.functionCall);
+			const hasText = lastModelMessage.parts?.some(part => part.text);
+
+			// A model turn with ONLY function calls (no text) as the final turn indicates
+			// the conversation was interrupted before the model could generate the final answer
+
+			if ( hasFunctionCall && !hasText ) {
+
+				const callCount = history.filter(msg =>
+					msg.role === "model" && msg.parts?.some(part => part.functionCall)
+				).length;
+
+				throw new Error(
+					`maximumRemoteCalls limit reached (${callCount} calls) - generation incomplete`
+				);
+			}
+		}
+	}
+
+	return response;
 }
