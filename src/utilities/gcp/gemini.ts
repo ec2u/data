@@ -128,6 +128,8 @@ export async function data<T>(source: string | GenerateContentResponse, schema: 
 				- ALWAYS omit undefined scalar values
 				- ALWAYS omit empty object values
 				- ALWAYS omit empty array values
+				- ALWAYS omit fields with value "Not defined" or similar placeholder text
+				- ALWAYS omit fields with error messages or system artifacts
 
 				CRITICAL: When including URLs in the output, copy them EXACTLY from the REFERENCE URLs list.
 				- DO NOT modify domain names (e.g., 'ec2u' must remain 'ec2u', NOT 'ec22')

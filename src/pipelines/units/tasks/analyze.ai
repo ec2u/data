@@ -20,11 +20,11 @@ generate a comprehensive plaintext report about the research unit.
 
 Generate a plaintext report with the following structure (each item as an H1 heading):
 
-- **Official Name**: The formal name
-- **Common or Short Name**: Short name if defined, otherwise "Not defined"
-- **Acronym**: Acronym if defined, otherwise "Not defined"
-- **Identifier**: Internal identifier if defined, otherwise "Not defined"
-- **Institutional Email Address**: Email if found, otherwise "Not defined"
+- **Official Name**: The formal name (REQUIRED - ALWAYS provide this field)
+- **Common or Short Name**: Short name if ACTUALLY defined on the website; OMIT this section entirely if not found
+- **Acronym**: Acronym if ACTUALLY defined on the website; OMIT this section entirely if not found
+- **Identifier**: Internal identifier if ACTUALLY found on the website; OMIT this section entirely if not found
+- **Institutional Email Address**: Email if ACTUALLY found on the website; OMIT this section entirely if not found
 - **Typology**: Formal topic ID from the organizations taxonomy (not a free-form classification type)
 - **Topics**: Bulleted list of formal topic IDs from research taxonomies
 - **Summary**: REQUIRED - Concise paragraph of approximately 500 chars (NEVER omit this field)
@@ -61,6 +61,28 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - "Molecular Biology" ❌ (missing "Laboratory")
 - "Artificial Intelligence" ❌ (missing "Research Group")
 
+## Short Names and Acronyms
+
+**CRITICAL: The following are NOT valid short names or acronyms:**
+
+- **"Not defined"** - NEVER use this value; OMIT the section entirely if not found
+- **Duplicates of the official name** - If short name equals official name, OMIT the short name section
+- **Duplicates of the acronym** - If short name equals acronym, OMIT the short name section
+- **Acronym as short name** - If the only alternative is an acronym, put it in the Acronym section, NOT short name
+- **Generated/synthetic values** - Only report ACTUAL short names found on the website
+
+**Valid short name examples:**
+
+- Official: "Department of Computer Science" → Short: "Computer Science Department" ✅
+- Official: "Laboratory of Molecular and Cellular Biology" → Short: "MCB Lab" ✅
+
+**Invalid short name examples:**
+
+- Official: "Department of Computer Science" → Short: "DCS" ❌ (this is an acronym, not a short name)
+- Official: "Department of Economics" → Short: "Department of Economics" ❌ (duplicate of official name)
+- Official: "Department of Mathematics" → Short: "DEM" ❌ (this is an acronym)
+- Short: "Not defined" ❌ (placeholder value - OMIT the section entirely)
+
 ## Identifiers
 
 - Consider ONLY internal identifiers; NEVER report external identifiers, for instance VAT numbers
@@ -70,6 +92,30 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - NEVER report the institutional email address only if not ACTUALLY found in one of the pages
 - NEVER use a PERSONAL email address as INSTITUTIONAL email address for the unit; in doubt omit it
 - Try to remove anti-spam cloaking from email addresses, for instance "name(at)example.edu"
+
+## Undefined/Missing Values
+
+**CRITICAL: For optional fields (short name, acronym, identifier, email):**
+
+- If the value is NOT found on the website, OMIT that section ENTIRELY from the report
+- NEVER write "Not defined" or any placeholder text
+- NEVER include the section heading if there is no actual value
+- The structured extraction process will handle missing sections appropriately
+
+**Example of CORRECT behavior:**
+
+```
+# Official Name
+Department of Computer Science
+
+# Typology
+https://data.ec2u.eu/taxonomies/organizations/university-unit/department
+
+# Topics
+...
+```
+
+(Note: Short Name, Acronym, Identifier, and Email sections are completely omitted because they were not found)
 
 ## Typology
 
@@ -195,3 +241,12 @@ After stopping exploration, generate a detailed plaintext report
 - Use a neutral, objective tone, without hype and emphasis
 - Write original content; do not copy text verbatim from source pages
 - Don't use abbreviations ("for instance" rather than "e.g.")
+
+## Error Handling
+
+**CRITICAL: If you are interrupted or encounter errors during processing:**
+
+- NEVER include error messages like "[Request interrupted by user]" in any field values
+- NEVER include system messages or processing artifacts in the output
+- If a field cannot be determined due to interruption, OMIT that section entirely
+- Ensure all output fields contain ONLY clean, user-facing content

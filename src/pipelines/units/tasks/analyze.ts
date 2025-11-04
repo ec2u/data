@@ -76,19 +76,19 @@ export async function analyze(lead?: Partial<Unit>) {
 				},
 				short: {
 					type: Type.STRING,
-					description: "Short name of the research unit"
+					description: "Short name of the research unit (OPTIONAL - omit if not actually found on website, or if it equals the formal name or acronym)"
 				},
 				acronym: {
 					type: Type.STRING,
-					description: "Acronym of the research unit"
+					description: "Acronym of the research unit (OPTIONAL - omit if not actually found on website)"
 				},
 				identifier: {
 					type: Type.STRING,
-					description: "Unique identifier of the research unit"
+					description: "Internal identifier of the research unit (OPTIONAL - omit if not actually found on website)"
 				},
 				email: {
 					type: Type.STRING,
-					description: "Institutional email address of the research unit"
+					description: "Institutional email address of the research unit (OPTIONAL - omit if not actually found on website)"
 				},
 				type: {
 					type: Type.STRING,
