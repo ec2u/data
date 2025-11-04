@@ -63,10 +63,10 @@ export async function expand(lead?: Partial<Unit>) {
 			config: {
 				seed: 0,
 				temperature: 0,
-				systemInstruction: await file(".ai", import.meta.url),
+				systemInstruction: await file(".sys.md", import.meta.url),
 				tools,
 				automaticFunctionCalling: {
-					maximumRemoteCalls: 20
+					maximumRemoteCalls: 100 // Allow deep exploration through research lines to functional units
 				}
 			}
 		}), {

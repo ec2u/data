@@ -1,5 +1,5 @@
 ---
-title: Prompt Testing Log for @pavia.ai
+title: Prompt Testing Log for @pavia.sys.md
 ---
 
 # Inbox

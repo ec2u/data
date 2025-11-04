@@ -18,8 +18,8 @@ You will be provided with a lead to an online description of a research unit, po
 Explore the content starting from the provided URL to identify **direct structural subunits** of the target research
 unit.
 
-**IMPORTANT:** Report ONLY the immediate/direct subunits (one level down). Do NOT include nested subunits of subunits -
-the pipeline will handle those recursively in subsequent calls.
+**IMPORTANT:** Report ONLY actual functional units. Do NOT report thematic groupings or research lines that merely
+organize other units.
 
 When you have gathered sufficient information, stop exploring and generate a structured report of direct subunits.
 
@@ -60,13 +60,14 @@ If no structural subunits are found after thorough exploration, return an empty 
 
 ## Subunits
 
-**Structural subunits** are units that are organizationally part of the target unit:
+**Structural subunits** are actual functional units that are organizationally part of the target unit:
 
 - Laboratories
 - Research groups
 - Research centers **that are part of the unit**
 - Divisions, sections, or other organizational subdivisions
 - Units with direct hierarchical or membership relationship to the parent
+- Units with dedicated members, space, resources, or leadership
 
 **NOT subunits** (ignore these):
 
@@ -74,13 +75,36 @@ If no structural subunits are found after thorough exploration, return an empty 
 - **External collaborating organizations** (international experiments, consortia, partnerships with other institutions)
 - **Organizations the unit participates in or collaborates with** (collaborations, joint projects, coordinating bodies)
 - Units with only horizontal/peer relationships (sister units, partners)
-- **Research themes, topics, or areas** (thematic groupings that may contain labs but are not themselves organizational
-  units)
+- **Research themes, lines, topics, or areas** (thematic/topical groupings that organize other units but are not
+  themselves functional units)
 - **Individual people** (professors, researchers, staff members - their personal/staff pages are NOT research units)
 - **Administrative roles** (chairs, professorships, positions held by individuals)
 - **University-wide or interdepartmental centers** that are managed at a higher organizational level (e.g., university
   language center, university-wide cooperation commissions). However, departmental research centers that happen to be
   interdisciplinary ARE subunits if they belong to the department
+
+**CRITICAL: Research Lines vs Functional Units**
+
+**Research lines** are thematic/topical groupings (NOT functional units):
+
+- Organize research by topic area (e.g., "Didactics, History and Foundations of Physics")
+- May have a dedicated page listing actual groups underneath
+- Serve as navigation/organizational structure
+- **DO NOT report these as units**
+
+**Functional units** are actual organizational entities (report these):
+
+- Have dedicated members, leadership, space, or resources
+- Have their own profile or website pages
+- Conduct specific research activities
+- Examples: "Didactics of Physics Group", "History of Physics Group", "Laboratory of X"
+
+**Detection strategy:**
+
+1. When you encounter a research line page (e.g., "Didactics, History and Foundations")
+2. **MUST explore that page** to look for actual functional units underneath
+3. If it contains subunits (groups, labs), **report those subunits**, NOT the line
+4. If it's a standalone unit with no subunits, then it's functional and should be reported
 
 **CRITICAL: External Collaborations vs Internal Subunits**
 
@@ -99,13 +123,14 @@ The following are **NOT subunits** - they are external collaborations:
 - Multi-institutional membership (many universities/countries involved)
 - Parent unit is described as "participating" or "contributing" rather than "hosting" or "managing"
 
-**Key indicators of INTERNAL subunits (report these):**
+**Key indicators of INTERNAL functional units (report these):**
 
 - Description uses "part of", "belonging to", "within", "hosted by"
 - Website domain matches parent unit's domain (same base domain, may be subdomain)
 - Located at parent unit's institution/facilities
 - Managed/directed by parent unit
 - Dedicated space, resources, or members within parent unit
+- Has dedicated profile page with specific research focus
 
 **Key distinctions:**
 
@@ -113,6 +138,7 @@ The following are **NOT subunits** - they are external collaborations:
   subunit
 - Same institutional domain → likely subunit; different institutional domain → likely external collaboration
 - Has dedicated members/space/PI within parent unit → likely a unit; purely thematic/topical grouping → not a unit
+- **Research line with subunits underneath → explore and report the subunits, not the line**
 - If a page links to actual labs/groups underneath it, those linked labs are subunits, not the theme page itself
 - **Individual person's page → NOT a unit**; organizational entity with multiple members → likely a unit
 - **University-wide/interdepartmental centers → check organizational belonging**: If the center is described as "part
@@ -124,11 +150,14 @@ The following are **NOT subunits** - they are external collaborations:
   (e.g., "Centro Interdipartimentale" at university level vs departmental research center)
 - **CRITICAL:** International experiments and collaborations are NEVER subunits, even if prominently featured on the
   unit's research page
+- **CRITICAL:** Research lines are organizational categories, not functional units - explore them and report actual
+  units underneath
 
 # Requirements
 
-- Identify ONLY structural subunits (not collaborations, parent units, individual people, or true university-wide
-  centers)
+- Identify ONLY functional structural subunits (not thematic groupings, collaborations, parent units, individual people,
+  or true university-wide centers)
+- **NEVER report research lines or thematic groupings as units** - explore them to find actual functional units
 - **NEVER report individual people's pages** (staff profiles, personal pages, team member pages)
 - **NEVER report external collaborating organizations** (international experiments, consortia, multi-institutional
   projects)
@@ -136,12 +165,14 @@ The following are **NOT subunits** - they are external collaborations:
   them if they are university-wide services
 - **Check website domains**: If a unit's website is on a different institutional domain, it is likely an external
   collaboration
-- Report EVERY subunit found, including all entries from directories/tables/lists
-- **MUST fetch each subunit's profile page** to extract complete information
+- **When you find research line pages**, MUST explore them to identify actual functional units underneath
+- Report EVERY functional subunit found, including all entries from directories/tables/lists
+- **MUST fetch each subunit's profile page** to extract complete information and verify it's a functional unit
 - Each subunit **MUST** have:
     - At least one URL (profile or website) as evidence of online presence
     - A summary (~100 chars) describing focus, research areas, and purpose
     - Website URL when available on the profile page (subdomains or external links)
+  - Evidence of being a functional unit (dedicated members, specific research focus, not just a thematic grouping)
 - Report URLs verbatim (exactly as found)
 - **CRITICAL:** All formal names, short names, and summaries MUST be translated to English
 
@@ -155,18 +186,24 @@ The following are **NOT subunits** - they are external collaborations:
 2. Examine navigation for links to research/organization/groups sections
 3. Fetch section pages (may be overview/index pages)
 4. From section pages, fetch listing pages with actual subunit directories
-5. **If pages appear to be research themes/topics rather than actual units**, explore links within those pages to find
-   actual labs/groups
-6. **Fetch each identified subunit's profile page** to extract website links and additional details
-7. **Check for external collaboration indicators** (different domains, multi-institutional projects)
+5. **If pages appear to be research lines/themes rather than actual functional units**, explore links within those pages
+   to find actual labs/groups
+6. **CRITICAL: When you find a research line page** (e.g., "Didactics, History and Foundations"), you MUST:
+  - Fetch that page
+  - Look for links to actual functional units underneath
+  - Report those functional units, NOT the research line
+  - If no subunits exist, skip the research line (don't report it)
+7. **Fetch each identified functional unit's profile page** to extract website links and verify it's an actual unit
+8. **Check for external collaboration indicators** (different domains, multi-institutional projects)
 
 **Key principles:**
 
 - Do NOT assume website directly links to listing pages
 - Do NOT rely solely on website content
-- Do NOT report thematic pages as units; explore them to find actual labs underneath
+- Do NOT report thematic/research line pages as units; explore them to find actual functional units underneath
 - **Do NOT report individual people's pages as units** (staff profiles, team member pages, personal pages)
 - **Do NOT report external collaborations as subunits** (check domains and organizational relationship)
+- **Always explore research line pages** to find actual units underneath
 - Prioritize pages likely containing comprehensive subunit lists
 - Prioritize local language pages over English translations
 - Ignore PDFs and linked documents
@@ -196,6 +233,7 @@ The following are **NOT subunits** - they are external collaborations:
 4. Website links are often embedded in the profile text or listed as "website", "sito web", or similar labels
 5. **Evaluate domain**: If website domain differs from parent unit's institutional domain, investigate if it's an
    external collaboration
+6. **If a page appears to be a research line**, explore it to find actual functional units with their own pages
 
 ## Stopping Conditions
 
@@ -203,11 +241,12 @@ The following are **NOT subunits** - they are external collaborations:
 
 1. All relevant section pages (research/groups/organization) are fetched and explored
 2. Listing pages within those sections are identified and fetched
-3. All structural subunits from listing pages are identified
-4. **Each subunit's profile page is fetched** (if not already on a listing page)
-5. Website URLs are extracted from profile pages where available
-6. **External collaboration indicators are checked** (domain differences, organizational language)
-7. Profile and/or website URLs are collected for each subunit
-8. Information for summaries is gathered
+3. **All research line pages are explored** to identify functional units underneath
+4. All functional structural subunits from listing pages are identified
+5. **Each subunit's profile page is fetched** (if not already on a listing page) to verify it's functional
+6. Website URLs are extracted from profile pages where available
+7. **External collaboration indicators are checked** (domain differences, organizational language)
+8. Profile and/or website URLs are collected for each functional subunit
+9. Information for summaries is gathered
 
-**Then** generate the structured report. Return empty list if no subunits found after thorough exploration.
+**Then** generate the structured report. Return empty list if no functional subunits found after thorough exploration.

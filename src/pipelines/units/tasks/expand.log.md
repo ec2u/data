@@ -1,5 +1,5 @@
 ---
-title: Prompt Testing Log for units/tasks/expand
+title: Prompt Testing Log for @expand.sys.md
 description: |
   Memory for LLM assistants working with the research unit exploration prompt.
   Documents behavioral requirements, known issues, and validation procedures.

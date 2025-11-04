@@ -33,15 +33,15 @@ const cache=new Map<string, Promise<string>>();
  * Reads a file as UTF-8 text with global caching.
  *
  * @param url - The file URL or path relative to base. If url starts with `.` and base is provided, the trailing
- * file extension in the base URL is replaced with url.
+ * file extension (including compound extensions) in the base URL is replaced with url.
  * @param base - The base URL to resolve relative paths against
  *
  * @returns A promise resolving to the file contents as a string
  */
 export function file(url: string | URL, base?: string | URL): Promise<string> {
 
-	const src=base && isString(url) && /^\.[a-z0-9]+$/i.test(url)
-		? new URL(new URL(base).href.replace(/\.[a-z0-9]+$/i, url), base)
+	const src = base && isString(url) && /^(\.[a-z0-9]+)+$/i.test(url)
+		? new URL(new URL(base).href.replace(/(\.[a-z0-9]+)+$/i, url), base)
 		: new URL(url, base);
 
 	const key=src.href;

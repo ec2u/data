@@ -24,7 +24,10 @@ import { pavia, Units } from "@/utilities/hub";
 import { file } from "@/utilities/node/files";
 import { uuid } from "@/utilities/node/uuid";
 import { Type } from "@google/genai";
-import { flatMap, forEach, items, map, peek, pipe } from "@metreeca/pipe";
+import { pipe } from "@metreeca/pipe";
+import { items } from "@metreeca/pipe/feeds";
+import { forEach } from "@metreeca/pipe/sinks";
+import { flatMap, map, peek } from "@metreeca/pipe/tasks";
 
 
 const university = pavia;
@@ -63,7 +66,7 @@ export async function scan(url?: string) {
 			config: {
 				seed: 0,
 				temperature: 0,
-				systemInstruction: await file(".ai", import.meta.url),
+				systemInstruction: await file(".sys.md", import.meta.url),
 				tools
 			}
 		}), {
