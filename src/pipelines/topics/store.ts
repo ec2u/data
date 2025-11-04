@@ -20,16 +20,105 @@ import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
-import { immutable } from "@metreeca/core";
+import { immutable, isString } from "@metreeca/core";
 
 
 const kind="Topic";
 const batch=100;
 
+const indexed = new Set([
+
+	"id",
+	"scheme"
+
+]);
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const topics=immutable({
+
+	async lookup(key: string | Partial<Topic>): Promise<undefined | Topic> {
+
+		return time(async () => {
+
+			if ( isString(key) ) {
+
+				const [entity] = await datastore.get(datastore.key([kind, uuid(key)]));
+
+				if ( entity ) {
+
+					const { [datastore.KEY]: _, embedding, ...topic } = entity;
+
+					return {
+						...topic,
+						embedding: decompress(embedding as string)
+					};
+
+				} else {
+
+					return undefined;
+
+				}
+
+			} else {
+
+				if ( !key.id ) {
+
+					return undefined;
+
+				} else if ( key.scheme ) { // If scheme is specified, use it as a filter in the query
+
+					const query = datastore.createQuery(kind)
+						.filter(new PropertyFilter("id", "=", key.id))
+						.filter(new PropertyFilter("scheme", "=", key.scheme))
+						.limit(1);
+
+					const [entities] = await datastore.runQuery(query);
+
+					if ( entities.length === 1 ) {
+
+						const { [datastore.KEY]: _, embedding, ...topic } = entities[0];
+
+						return {
+							...topic,
+							embedding: decompress(embedding as string)
+						};
+
+					} else {
+
+						return undefined;
+
+					}
+
+				} else {// No scheme filter - use direct get by key
+
+					const [entity] = await datastore.get(datastore.key([kind, uuid(key.id)]));
+
+					if ( entity ) {
+
+						const { [datastore.KEY]: _, embedding, ...topic } = entity;
+
+						return {
+							...topic,
+							embedding: decompress(embedding as string)
+						};
+
+					} else {
+
+						return undefined;
+
+					}
+
+				}
+
+			}
+
+		}, (value, elapsed) => value && log.info(topics.lookup.name,
+			`fetched topic <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`
+		));
+
+	},
 
 	async select({
 
@@ -66,8 +155,6 @@ export const topics=immutable({
 	async insert(items: readonly Topic[]): Promise<readonly Topic[]> {
 
 		return time(async () => {
-
-			const indexed=new Set(["scheme"]);
 
 			for (let i=0; i < items.length; i+=batch) {
 

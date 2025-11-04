@@ -33,6 +33,35 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 
 # Requirements
 
+## MANDATORY Tool Usage
+
+**CRITICAL: You MUST use tools to retrieve taxonomy IDs - NEVER generate or construct them manually**
+
+### For Typology:
+
+- **REQUIRED**: Call `listTopics` with `scheme: "https://data.ec2u.eu/taxonomies/organizations/"` to get valid
+  typologies
+- **FORBIDDEN**: NEVER construct typology URLs manually
+- **FORBIDDEN**: NEVER guess or invent typology IDs
+- **REQUIRED**: Select the typology ID from the `listTopics` results ONLY
+- The typology field MUST contain an ID that was ACTUALLY returned by `listTopics`
+
+### For Topics:
+
+- **REQUIRED**: Call `matchTopics` for EACH keyword separately to get matching topics
+- **FORBIDDEN**: NEVER construct topic URLs manually
+- **FORBIDDEN**: NEVER append keywords to base URLs
+- **FORBIDDEN**: NEVER guess, invent, or generate topic IDs
+- **REQUIRED**: Use ONLY the exact topic IDs returned by `matchTopics`
+- Each topic in the topics array MUST be an ID that was ACTUALLY returned by `matchTopics`
+
+**Zero Tolerance Policy:**
+
+- If `listTopics` or `matchTopics` returns no results, you MUST omit that field
+- NEVER fill in fields with constructed, guessed, or invented values
+- A missing/omitted field is better than an invalid generated value
+- ALL taxonomy IDs MUST come from tool results - no exceptions
+
 ## Privacy
 
 - You are STRICTLY FORBIDDEN to INCLUDE ANY personal information about staff, researchers, collaborators, faculty
@@ -200,6 +229,24 @@ https://data.ec2u.eu/taxonomies/organizations/university-unit/department
 - `matchTopics(text: "Machine Learning", scheme: "...", limit: 1, threshold: 0.6)`
 - `matchTopics(text: "Robotics", scheme: "...", limit: 1, threshold: 0.6)`
 - `matchTopics(text: "Data Science", scheme: "...", limit: 1, threshold: 0.6)`
+
+### Topics Validation
+
+**CRITICAL: Use ONLY topic IDs returned by matchTopics - NEVER modify or construct them**
+
+- ALWAYS use the exact topic ID returned by matchTopics verbatim
+- NEVER truncate, modify, or alter the IDs returned by matchTopics
+- NEVER construct topic URLs manually
+- NEVER append keywords to base URLs
+- NEVER invent or guess topic IDs
+
+**Process:**
+
+1. Extract research keywords from the unit description
+2. Call matchTopics separately for each keyword in parallel
+3. Collect ONLY the exact topic IDs returned by matchTopics
+4. Deduplicate the results
+5. Return ONLY the IDs exactly as received from matchTopics
 
 ## Keywords
 

@@ -26,6 +26,7 @@ import { md } from "@/utilities/core/tags";
 import { ai, data } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
+import { isString } from "@metreeca/core";
 import { flatMap, forEach, items, map, peek, pipe } from "@metreeca/pipe";
 
 
@@ -50,7 +51,7 @@ export async function analyze(lead?: Partial<Unit>) {
 
 	if ( lead ) {
 
-		return validate(await data<Partial<Unit>>(await ai.models.generateContent({
+		return await validate(await data<Partial<Unit>>(await ai.models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: md`
 				profile: ${lead.profile ?? "Not provided"}
@@ -114,8 +115,7 @@ export async function analyze(lead?: Partial<Unit>) {
 					type: Type.ARRAY,
 					items: { type: Type.STRING },
 					description: md`
-						List of formal research topic IDs - MUST be complete URLs preserved exactly as found,
-						character-by-character (e.g., 'https://data.ec2u.eu/taxonomies/euroscivoc/...')
+						List of topic IDs from matchTopics results - use exact IDs returned by the tool
 					`
 				},
 				summary: {
@@ -176,35 +176,36 @@ export async function analyze(lead?: Partial<Unit>) {
  * Validates extracted unit data to ensure correct taxonomy usage.
  *
  * - Typology must come from organizations taxonomy (https://data.ec2u.eu/taxonomies/organizations/)
- * - Topics must come from EuroSciVoc taxonomy (https://data.ec2u.eu/taxonomies/euroscivoc/)
+ * - Topics must exist in EuroSciVoc taxonomy (verified via lookup)
  *
  * @param result Extracted unit data from AI model
  * @returns Validated result with incorrect taxonomy entries removed
  */
-function validate(result: Partial<Unit>): Partial<Unit> {
+async function validate(result: Partial<Unit>): Promise<Partial<Unit>> {
 
 	const organizations = "https://data.ec2u.eu/taxonomies/organizations/";
 	const euroscivoc = "https://data.ec2u.eu/taxonomies/euroscivoc/";
 
-	function invalid(message: string): undefined {
+	async function check(id: string, scheme: string): Promise<string | undefined> {
+		if ( await topics.lookup({ id, scheme }) ) {
 
-		log.warn(analyze.name, message);
+			return id;
 
-		return undefined;
+		} else {
+
+			log.warn(analyze.name, `invalid entry <${id}> for scheme <${scheme}>`);
+
+			return undefined;
+
+		}
 	}
-
 
 	return {
 
 		...result,
 
-		type: result.type?.startsWith(organizations) ? result.type
-			: result.type ? invalid(`invalid type <${result.type}>`)
-				: undefined,
-
-		topics: result.topics?.filter(topic =>
-			topic.startsWith(euroscivoc) || !invalid(`invalid topic <${topic}>`)
-		)
+		type: result.type ? await check(result.type, organizations) : undefined,
+		topics: (await Promise.all((result.topics || []).map(id => check(id, euroscivoc)))).filter(isString)
 
 	};
 }
