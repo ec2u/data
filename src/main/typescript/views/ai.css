@@ -22,13 +22,20 @@ data-ai {
     width: 100%;
 
     align-items: center;
-    justify-content: space-between;
 
     font-weight: 700;
     color: red;
 
     & > span:first-child {
         font-size: 1.25em;
+        margin-right: 0.33em;
+    }
+
+    & > a {
+        display: flex;
+        flex-direction: row;
+        margin-left: auto;
+        color: inherit;
     }
 
 }

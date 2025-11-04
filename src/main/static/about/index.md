@@ -1,6 +1,7 @@
 # Introduction
 
 - [Linked Data Models](rdf/)
+- [AI-Generated Content](ai)
 
 # Data Models
 

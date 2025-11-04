@@ -23,6 +23,7 @@ import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Hidden;
 import com.metreeca.mesh.meta.jsonld.Namespace;
+import com.metreeca.mesh.meta.shacl.MaxLength;
 import com.metreeca.mesh.meta.shacl.Pattern;
 
 import eu.ec2u.data.datasets.Reference;
@@ -160,6 +161,15 @@ public interface Event extends Resource, SchemaEvent {
     default Events dataset() {
         return EVENTS;
     }
+
+
+    @Override
+    @MaxLength(LABEL_LENGTH) // ;( sanity check on model hallucinations
+    Map<Locale, String> name();
+
+    @Override
+    @MaxLength(COMMENT_LENGTH) // ;( sanity check on model hallucinations
+    Map<Locale, String> disambiguatingDescription();
 
 
     @Override

@@ -16,7 +16,6 @@
 
 import { DataPage, NotFound } from "@ec2u/data/views/page";
 import { immutable, required } from "@metreeca/core";
-import { useRouter } from "@metreeca/data/contexts/router";
 import { useAsset } from "@metreeca/data/hooks/asset";
 import { TileHint } from "@metreeca/view/widgets/hint";
 import { NotFoundIcon } from "@metreeca/view/widgets/icon";
@@ -26,17 +25,17 @@ import * as React from "react";
 
 export const Books=immutable({
 
-	id: "/handbooks/",
+	id: "/about/",
 
 	label: required({
-		"": "Handbooks"
+		"": "About"
 	})
 
 });
 
 export const Book=immutable({
 
-	id: "/handbooks/*"
+	id: "/about/*"
 
 });
 

@@ -6,7 +6,7 @@ summary: Standards for documenting and structuring data models
 # Documentation Structure
 
 Data models are described by markdown files in the `@src/main/static/datasets/` and
-`@src/main/static/handbooks/vocabularies` folders; each document:
+`@src/main/static/about/vocabularies` folders; each document:
 
 - Has a brief summary of the vocabulary after the yaml front matter section, cross-linked to overview reference
   documents for the vocabularies in use
