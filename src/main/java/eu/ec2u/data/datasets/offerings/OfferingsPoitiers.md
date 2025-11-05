@@ -1,14 +1,14 @@
-# Sites
+# Sources
 
-* none
+- none
 
 # Integration
 
-* Dedicated REST/JSON API
+- Dedicated REST/JSON API
 
 ## 2023-??-??
 
-* initial integration
+- initial integration
 
 # Feeds
 

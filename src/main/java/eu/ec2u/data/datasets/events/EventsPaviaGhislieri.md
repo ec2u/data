@@ -1,12 +1,11 @@
-# Site
+# Sources
 
-* https://www.ghislieri.it/calendario-eventi/
-    * Fondazione Ghislieri / Calendario Eventi
-    * Ghislieri Foundation / Events Calendar
+- https://www.ghislieri.it/calendario-eventi/
+  - Fondazione Ghislieri / Calendario Eventi
+  - Ghislieri Foundation / Events Calendar
 
 # ~~Integration~~
 
-* currently not integrated
-    * no easily crawl able event catalog
-    * detailed event info available only as pdf
-
+- currently not integrated
+  - no easily crawl able event catalog
+  - detailed event info available only as pdf

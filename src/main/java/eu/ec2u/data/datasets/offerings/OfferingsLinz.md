@@ -1,19 +1,19 @@
-# Sites
+# Sources
 
-* https://www.jku.at/en/degree-programs/academic-degree-programs/all-degree-programs/
-* https://www.jku.at/en/degree-programs/international-students/exchange-students/courses/
+- https://www.jku.at/en/degree-programs/academic-degree-programs/all-degree-programs/
+- https://www.jku.at/en/degree-programs/international-students/exchange-students/courses/
 
 # Integration
 
-* data extracted from dedicated REST/JSON APIs
+- data extracted from dedicated REST/JSON APIs
 
 ## 2025-04-28
 
-* Update courses pipeline to read `educationalLevel` directly from the course description
+- Update courses pipeline to read `educationalLevel` directly from the course description
 
 ## 2025-03-24
 
-* Initial integration
+- Initial integration
 
 # Feeds
 

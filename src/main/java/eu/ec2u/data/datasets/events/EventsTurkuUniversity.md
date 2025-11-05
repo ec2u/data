@@ -1,16 +1,16 @@
-# Site
+# Sources
 
-* https://www.utu.fi/event-search
-    * University of Turku / News
-    * Turun yliopisto / Ajankohtaista
+- https://www.utu.fi/event-search
+  - University of Turku / News
+  - Turun yliopisto / Ajankohtaista
 
 # Integration
 
-* Event info extracted by LLM from event catalog and linked event pages
+- Event info extracted by LLM from event catalog and linked event pages
 
 ## 2025-05-07
 
-* migrated to LLM extraction
+- migrated to LLM extraction
 
 ---
 
@@ -18,24 +18,24 @@
 
 ## API
 
-* JSON
-  * https://api-ext.utu.fi/events/v1/public
-  * proxied version of the base IP-restricted API @ https://api.utu.fi/events/v1/public
+- JSON
+  - https://api-ext.utu.fi/events/v1/public
+  - proxied version of the base IP-restricted API @ https://api.utu.fi/events/v1/public
 
 ## Integration
 
-* custom adapter
-* access key stored on GCP Secret Manager
-* required contact address provided by MMT
+- custom adapter
+- access key stored on GCP Secret Manager
+- required contact address provided by MMT
 
 ## Pending
 
-* review availability of image links
+- review availability of image links
 
 ## 2022-06-07
 
-* fix conflicting labels for online locations
-  * generated when the same URL is used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
+- fix conflicting labels for online locations
+  - generated when the same URL is used for multiple events, e.g. `https://utu.zoom.us/j/65956988902`
 
 ## Samples
 

@@ -1,23 +1,23 @@
-# Sites
+# Sources
 
-* https://www.uc.pt/iii/investigacao/unidades-i-d-e-laboratorios-associados/
+- https://www.uc.pt/iii/investigacao/unidades-i-d-e-laboratorios-associados/
 
 # Integration
 
-* data loaded from dedicated API
+- data loaded from dedicated API
 
 ## 2022-05-03
 
-* Ingest description and head name
+- Ingest description and head name
 
 ## 2022-04-19
 
-* upgrade to dedicated API
-*
+- upgrade to dedicated API
+-
 
 ## 2022-12-13
 
-* Initial integration from manually curated spreadsheet
+- Initial integration from manually curated spreadsheet
 
 # Samples
 
