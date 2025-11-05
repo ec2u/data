@@ -19,7 +19,7 @@ package eu.ec2u.data.datasets.offerings;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.XPath;
-import com.metreeca.flow.xml.formats.HTML;
+import com.metreeca.flow.xml.formats.XML;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;
@@ -35,7 +35,6 @@ import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
-import static com.metreeca.shim.Streams.traverse;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -63,17 +62,17 @@ public final class OfferingsUmeaPrograms implements Runnable {
     public void run() {
         time(() -> Stream
 
-                .of("https://www.umu.se/utbildning/sok/?edu=p")
+                .of("https://www.umu.se/utbildning/sitemap.xml")
 
-                .flatMap(traverse(
+                .flatMap(optional(new GET<>(new XML())))
+                .map(XPath::new)
 
-                        url -> Stream.of(url)
-                                .flatMap(optional(new GET<>(new HTML())))
-                                .map(XPath::new),
-
-                        path -> path.links("//ul[@class='pagination text-center']//a/@href"),
-                        path -> path.links("//a[contains(@class,'eduName')]/@href")
-
+                .flatMap(path -> path.links("""
+                        //_:loc[
+                            starts-with(., 'https://www.umu.se/utbildning/program/')
+                            and not(contains(., '/utbildningsportrattvisningssida/'))
+                        ]
+                        """
                 ))
 
                 .flatMap(optional(lenient(URIs::uri)))
