@@ -20,28 +20,28 @@
 ## REST/JSON Programs API
 
 ```http
-POST {{programs-linz-url}}
+GET {{programs-linz-url}}
 Accept: application/json
 ```
 
 ```json
 [
   {
-    "numberOfCredits": 180.0,
-    "educationalLevel": "https://data.ec2u.eu/concepts/isced-2011/8",
+    "numberOfCredits": 120.0,
+    "educationalLevel": "https://data.ec2u.eu/concepts/isced-2011/7",
     "url": [
-      "https://www.jku.at/studium/studienarten/doktoratphd/"
+      "https://www.jku.at/studium/studienarten/master/"
     ],
     "identifier": [
-      "794/056"
+      "066/977"
     ],
     "name": {
-      "de": "Education"
+      "de": "Economic and Business Analytics"
     },
     "description": {
-      "de": "Das Doktoratsstudium Doctor of Philosophy in Education (kurz: PhD in Education) …"
+      "de": "(1) The Master's program in Economic and Business Analytics is an advanced academic and method-oriented program of education. It qualifies students to process and solve complex practice-oriented business and economic problems…",
     }
-  },
+  }
   …
 ]
 ```
@@ -49,14 +49,14 @@ Accept: application/json
 ## REST/JSON Courses API
 
 ```http
-POST {{courses-linz-url}}
+GET {{courses-linz-url}}
 Accept: application/json
 ```
 
 ```json
 [
   {
-    "courseCode": "491ESYNPCHP19",
+    "courseCode": "990CEBCCUCK13",
     "inProgram": [
       {
         "numberOfCredits": 120.0,
@@ -65,30 +65,29 @@ Accept: application/json
           "https://www.jku.at/studium/studienarten/master/"
         ],
         "identifier": [
-          "066/491"
+          "066/990"
         ],
         "name": {
-          "de": "Chemistry and Chemical Technology"
+          "de": "JMP Global Business Russia/Italy"
         },
         "description": {
-          "de": "(1) The English-language Master’s program in \"\"Chemistry and Chemical Technology\"\" at the Faculty…"
+          "de": "(1) The inter-university Joint Master's Program \"\"Global Business\"\" is offered by the Johannes Kepler University Linz…"
         }
       }
     ],
-    "numberOfCredits": 2.0,
+    "numberOfCredits": 3.0,
     "educationalLevel": "https://data.ec2u.eu/concepts/isced-2011/7",
     "url": [
-      "https://studienhandbuch.jku.at/detail.php?lang=en&klaId=491ESYNPCHP19"
+      "https://studienhandbuch.jku.at/detail.php?lang=en&klaId=990CEBCCUCK13"
     ],
     "identifier": [
-      "491ESYNPCHP19"
+      "990CEBCCUCK13"
     ],
     "name": {
-      "de": "Practical Photochemistry PR",
-      "en": "Practical Photochemistry PR"
+      "de": "Cultural Context KS",
+      "en": "Cultural Context KS"
     }
   },
   …
 ]
 ```
-
