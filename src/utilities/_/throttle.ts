@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2025 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,47 +15,27 @@
  */
 
 /**
- * Configuration options for creating a throttle instance.
+ * Adaptive throttling for rate-limiting concurrent task execution.
+ *
+ * Provides an intelligent throttling mechanism that dynamically adjusts execution rates based on
+ * system load and task success/failure patterns. Implements exponential backoff on failures,
+ * recovery on successes, and queue-based delay scaling to prevent overload.
+ *
+ * @module
  */
-export interface ThrottleOptions {
-	/**
-	 * The minimum delay between task executions in milliseconds.
-	 * @default 0
-	 */
-	minimum?: number;
 
-	/**
-	 * The maximum delay between task executions in milliseconds; 0 means no limit.
-	 * @default 0
-	 */
-	maximum?: number;
-
-	/**
-	 * The exponential factor for queue-based delay increases (must be >= 1.0).
-	 * Higher values cause more aggressive slowdown as concurrent tasks increase.
-	 * @default 1
-	 */
-	buildup?: number;
-
-	/**
-	 * The multiplicative factor for increasing delays on task failure (must be >= 1.0).
-	 * Values > 1.0 implement exponential backoff on failures.
-	 * @default 1
-	 */
-	backoff?: number;
-
-	/**
-	 * The multiplicative factor for decreasing delays on task success (must be between 0.0 and 1.0).
-	 * Values < 1.0 allow the throttle to speed up after successful completions.
-	 * @default 1
-	 */
-	recover?: number;
-}
+import { isBoolean } from "@metreeca/core";
 
 /**
- * A throttle instance for rate-limiting concurrent task execution.
+ * Adaptive throttle for rate-limiting concurrent task execution.
+ *
+ * Implements exponential backoff and recovery mechanisms to dynamically adjust execution
+ * rates based on load and success rates.
+ *
+ * @typeParam T The type of values that can be passed through the throttle's `apply` method
  */
 export interface Throttle<T = unknown> {
+
 	/**
 	 * Waits for permission to execute a task, respecting throttling constraints.
 	 *
@@ -64,6 +44,7 @@ export interface Throttle<T = unknown> {
 	 *
 	 * @param adapt - If true, increments the queue counter and expects completion feedback through
 	 *                the {@link adapt} method. Defaults to true.
+	 *
 	 * @returns A promise that resolves with the time elapsed since the last task execution in milliseconds
 	 */
 	await(adapt?: boolean): Promise<number>;
@@ -103,6 +84,7 @@ export interface Throttle<T = unknown> {
 	 */
 	apply<V extends T>(value: V): Promise<V>;
 
+
 	/**
 	 * Creates a new throttle instance with updated minimum delay.
 	 *
@@ -110,7 +92,7 @@ export interface Throttle<T = unknown> {
 	 * @returns A new throttle instance with the updated minimum delay
 	 * @throws Error if minimum is negative or greater than maximum
 	 */
-	withMinimum(minimum: number): Throttle<T>;
+	minimum(minimum: number): Throttle<T>;
 
 	/**
 	 * Creates a new throttle instance with updated maximum delay.
@@ -119,7 +101,7 @@ export interface Throttle<T = unknown> {
 	 * @returns A new throttle instance with the updated maximum delay
 	 * @throws Error if maximum is negative or less than minimum
 	 */
-	withMaximum(maximum: number): Throttle<T>;
+	maximum(maximum: number): Throttle<T>;
 
 	/**
 	 * Creates a new throttle instance with updated buildup factor.
@@ -128,7 +110,7 @@ export interface Throttle<T = unknown> {
 	 * @returns A new throttle instance with the updated buildup factor
 	 * @throws Error if buildup is less than 1.0
 	 */
-	withBuildup(buildup: number): Throttle<T>;
+	buildup(buildup: number): Throttle<T>;
 
 	/**
 	 * Creates a new throttle instance with updated backoff factor.
@@ -137,7 +119,7 @@ export interface Throttle<T = unknown> {
 	 * @returns A new throttle instance with the updated backoff factor
 	 * @throws Error if backoff is less than 1.0
 	 */
-	withBackoff(backoff: number): Throttle<T>;
+	backoff(backoff: number): Throttle<T>;
 
 	/**
 	 * Creates a new throttle instance with updated recovery factor.
@@ -146,58 +128,12 @@ export interface Throttle<T = unknown> {
 	 * @returns A new throttle instance with the updated recovery factor
 	 * @throws Error if recover is not between 0.0 and 1.0
 	 */
-	withRecover(recover: number): Throttle<T>;
+	recover(recover: number): Throttle<T>;
+
 }
 
-/**
- * Clamps a value between a minimum and maximum.
- */
-function clamp(value: number, min: number, max: number): number {
-	return Math.min(Math.max(value, min), max);
-}
 
-/**
- * Sleeps for a random duration to avoid thundering herd effects.
- */
-function randomSleep(baseMs: number): Promise<void> {
-	const jitter = Math.floor(Math.random() * baseMs);
-	return new Promise(resolve => setTimeout(resolve, baseMs + jitter));
-}
-
-/**
- * Validates throttle configuration parameters.
- */
-function validateOptions(
-	minimum: number,
-	maximum: number,
-	buildup: number,
-	backoff: number,
-	recover: number
-): void {
-	if (minimum < 0) {
-		throw new Error(`negative minimum delay <${minimum}>`);
-	}
-
-	if (maximum < 0) {
-		throw new Error(`negative maximum delay <${maximum}>`);
-	}
-
-	if (maximum > 0 && minimum > maximum) {
-		throw new Error(`conflicting minimum <${minimum}> and maximum <${maximum}> delays`);
-	}
-
-	if (buildup < 1.0) {
-		throw new Error(`illegal buildup factor <${buildup.toFixed(3)}>`);
-	}
-
-	if (backoff < 1.0) {
-		throw new Error(`illegal backoff factor <${backoff.toFixed(3)}>`);
-	}
-
-	if (recover < 0 || recover > 1.0) {
-		throw new Error(`illegal recover factor <${recover.toFixed(3)}>`);
-	}
-}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Creates an adaptive throttle for rate-limiting concurrent task execution.
@@ -233,33 +169,80 @@ function validateOptions(
  * }
  * ```
  *
- * @param options - Configuration options for the throttle
+ * @param minimum The minimum delay between task executions in milliseconds.
+ *                Must be non-negative.
+ * @param maximum The maximum delay between task executions in milliseconds; 0 means no limit.
+ *                Must be non-negative.
+ * @param buildup The exponential factor for queue-based delay increases.
+ *                Must be >= 1.0. Higher values cause more aggressive slowdown as concurrent tasks increase.
+ * @param backoff The multiplicative factor for increasing delays on task failure.
+ *                Must be >= 1.0. Values > 1.0 implement exponential backoff on failures.
+ * @param recover The multiplicative factor for decreasing delays on task success.
+ *                Must be between 0.0 and 1.0. Values < 1.0 allow the throttle to speed up after
+ *                successful completions.
+ *
  * @returns A throttle instance for rate-limiting operations
+ *
  * @throws Error if any parameter validation fails
  */
-export function createThrottle<T = unknown>(options: ThrottleOptions = {}): Throttle<T> {
-	// Extract and validate options
-	const minimum = options.minimum ?? 0;
-	const maximum = options.maximum ?? 0;
-	const buildup = options.buildup ?? 1;
-	const backoff = options.backoff ?? 1;
-	const recover = options.recover ?? 1;
+export function Throttle<T = unknown>({
 
-	validateOptions(minimum, maximum, buildup, backoff, recover);
+	minimum = 0,
+	maximum = 0,
+	buildup = 1,
+	backoff = 1,
+	recover = 1
 
-	// Internal state
+}: {
+
+	minimum?: number;
+	maximum?: number;
+	buildup?: number;
+	backoff?: number;
+	recover?: number;
+
+} = {}): Throttle<T> {
+
+	if ( minimum < 0 ) {
+		throw new Error(`negative minimum delay <${minimum}>`);
+	}
+
+	if ( maximum < 0 ) {
+		throw new Error(`negative maximum delay <${maximum}>`);
+	}
+
+	if ( maximum > 0 && minimum > maximum ) {
+		throw new Error(`conflicting minimum <${minimum}> and maximum <${maximum}> delays`);
+	}
+
+	if ( buildup < 1.0 ) {
+		throw new Error(`illegal buildup factor <${buildup.toFixed(3)}>`);
+	}
+
+	if ( backoff < 1.0 ) {
+		throw new Error(`illegal backoff factor <${backoff.toFixed(3)}>`);
+	}
+
+	if ( recover < 0 || recover > 1.0 ) {
+		throw new Error(`illegal recover factor <${recover.toFixed(3)}>`);
+	}
+
 	const state = {
+
 		minimum,
-		maximum: maximum === 0 ? Number.MAX_SAFE_INTEGER : maximum,
+		maximum,
 		buildup,
 		backoff,
 		recover,
+
 		dirty: false, // true if the last response was a rejection, restricting pending tasks to 1
 		delay: minimum, // the current baseline delay between two task executions (ms)
 		fence: Date.now(), // the timestamp of the last task execution (ms since epoch)
 		queue: 0, // the number of active tasks
-		mutex: Promise.resolve(), // simple mutex for synchronization
+		mutex: Promise.resolve() // simple mutex for synchronization
+
 	};
+
 
 	/**
 	 * Attempts to reserve an execution slot, respecting throttling constraints.
@@ -268,44 +251,54 @@ export function createThrottle<T = unknown>(options: ThrottleOptions = {}): Thro
 	 * After a failure, only allows one request at a time until a success occurs.
 	 * If successful, atomically updates the fence timestamp and optionally increments the queue counter.
 	 *
-	 * @param adapt - True to increment the queue counter, false to leave it unchanged
+	 * @param adapt True to increment the queue counter, false to leave it unchanged
+	 *
 	 * @returns The time elapsed since the last task execution in milliseconds, or a negative value
 	 *          if the caller should wait
 	 */
 	function tryDelay(adapt: boolean): number {
 		const next = Date.now();
 		const wait = clamp(
-			Math.round(state.delay * Math.pow(state.buildup, state.queue)),
+			Math.round(state.delay*Math.pow(state.buildup, state.queue)),
 			state.minimum,
-			state.maximum
+			state.maximum === 0 ? Number.MAX_SAFE_INTEGER : state.maximum
 		);
 
-		if ((state.dirty && state.queue > 0) || state.fence + wait > next) {
+		if ( (state.dirty && state.queue > 0) || state.fence+wait > next ) {
 			return -1;
 		} else {
 			const last = state.fence;
 			state.fence = next;
 
-			if (adapt) {
+			if ( adapt ) {
 				state.queue++;
 			}
 
-			return next - last;
+			return next-last;
 		}
 	}
 
 	/**
 	 * Adapts the throttling parameters based on task completion status (internal implementation).
+	 *
+	 * @param completed True if the task completed successfully, false if it failed
+	 * @param retry The explicit retry delay in milliseconds, or 0 for adaptive behavior
+	 *
+	 * @returns The new baseline delay in milliseconds
 	 */
 	function adaptInternal(completed: boolean, retry: number): number {
+
 		state.dirty = !completed;
 		state.queue--;
 
 		state.delay = Math.max(
 			retry,
 			completed
-				? Math.max(Math.round(state.delay * state.recover), state.minimum)
-				: Math.min(Math.round(state.delay * state.backoff), state.maximum)
+				? Math.max(Math.round(state.delay*state.recover), state.minimum)
+				: Math.min(
+					Math.round(state.delay*state.backoff),
+					state.maximum === 0 ? Number.MAX_SAFE_INTEGER : state.maximum
+				)
 		);
 
 		return state.delay;
@@ -313,97 +306,118 @@ export function createThrottle<T = unknown>(options: ThrottleOptions = {}): Thro
 
 	/**
 	 * Executes a function with mutual exclusion.
+	 *
+	 * @param fn The function to execute with exclusive access
+	 *
+	 * @returns A promise resolving to the function's return value
 	 */
 	async function synchronized<R>(fn: () => R): Promise<R> {
+
 		const release = state.mutex;
+
 		let resolve: () => void;
+
 		state.mutex = new Promise(r => (resolve = r));
 
 		await release;
+
 		try {
 			return fn();
 		} finally {
 			resolve!();
 		}
+
 	}
 
-	// Public API
+
+	/**
+	 * Clamps a value between a minimum and maximum.
+	 */
+	function clamp(value: number, min: number, max: number): number {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	/**
+	 * Sleeps for a random duration to avoid thundering herd effects.
+	 */
+	function randomSleep(base: number): Promise<void> {
+		return new Promise(resolve =>
+			setTimeout(resolve, base+Math.floor(Math.random()*base))
+		);
+	}
+
+	/**
+	 * Waits for throttle permission, respecting constraints.
+	 *
+	 * @param adapt True to increment the queue counter, false to leave it unchanged
+	 *
+	 * @returns A promise that resolves with the time elapsed since the last task execution
+	 */
+	async function awaitThrottle(adapt: boolean): Promise<number> {
+
+		let elapsed: number;
+
+		while ( (elapsed = await synchronized(() => tryDelay(adapt))) < 0 ) {
+			await randomSleep(state.minimum);
+		}
+
+		return elapsed;
+
+	}
+
+
 	return {
+
 		async await(adapt: boolean = true): Promise<number> {
-			let elapsed: number;
-
-			while ((elapsed = await synchronized(() => tryDelay(adapt))) < 0) {
-				await randomSleep(state.minimum);
-			}
-
-			return elapsed;
+			return awaitThrottle(adapt);
 		},
 
-		adapt(completedOrRetry: boolean | number): number {
-			if (typeof completedOrRetry === 'number') {
-				const retry = completedOrRetry;
-				if (retry < 0) {
+		adapt(status: boolean | number): number {
+
+			if ( isBoolean(status) ) {
+
+				return adaptInternal(status, 0);
+
+			} else {
+
+				const retry = status;
+
+				if ( retry < 0 ) {
 					throw new Error(`negative delay <${retry}>`);
 				}
+
 				return adaptInternal(retry === 0, retry);
-			} else {
-				return adaptInternal(completedOrRetry, 0);
+
 			}
+
 		},
 
 		async apply<V extends T>(value: V): Promise<V> {
-			await this.await(false);
+			await awaitThrottle(false);
 			return value;
 		},
 
-		withMinimum(newMinimum: number): Throttle<T> {
-			return createThrottle({
-				minimum: newMinimum,
-				maximum: state.maximum === Number.MAX_SAFE_INTEGER ? 0 : state.maximum,
-				buildup: state.buildup,
-				backoff: state.backoff,
-				recover: state.recover,
-			});
+
+		minimum(minimum: number): Throttle<T> {
+			return Throttle({ ...state, minimum });
 		},
 
-		withMaximum(newMaximum: number): Throttle<T> {
-			return createThrottle({
-				minimum: state.minimum,
-				maximum: newMaximum,
-				buildup: state.buildup,
-				backoff: state.backoff,
-				recover: state.recover,
-			});
+		maximum(maximum: number): Throttle<T> {
+			return Throttle({ ...state, maximum });
 		},
 
-		withBuildup(newBuildup: number): Throttle<T> {
-			return createThrottle({
-				minimum: state.minimum,
-				maximum: state.maximum === Number.MAX_SAFE_INTEGER ? 0 : state.maximum,
-				buildup: newBuildup,
-				backoff: state.backoff,
-				recover: state.recover,
-			});
+		buildup(buildup: number): Throttle<T> {
+			return Throttle({ ...state, buildup });
 		},
 
-		withBackoff(newBackoff: number): Throttle<T> {
-			return createThrottle({
-				minimum: state.minimum,
-				maximum: state.maximum === Number.MAX_SAFE_INTEGER ? 0 : state.maximum,
-				buildup: state.buildup,
-				backoff: newBackoff,
-				recover: state.recover,
-			});
+		backoff(backoff: number): Throttle<T> {
+			return Throttle({ ...state, backoff });
 		},
 
-		withRecover(newRecover: number): Throttle<T> {
-			return createThrottle({
-				minimum: state.minimum,
-				maximum: state.maximum === Number.MAX_SAFE_INTEGER ? 0 : state.maximum,
-				buildup: state.buildup,
-				backoff: state.backoff,
-				recover: newRecover,
-			});
-		},
+		recover(recover: number): Throttle<T> {
+			return Throttle({ ...state, recover });
+		}
+
 	};
+
 }
