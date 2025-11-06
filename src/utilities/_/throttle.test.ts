@@ -315,47 +315,47 @@ describe("createThrottle", () => {
 
 	describe("builder methods", () => {
 
-		it("should create new instance with withMinimum", () => {
+		it("should create new instance with minimum", () => {
 			const throttle1 = createThrottle({ minimum: 100 });
-			const throttle2 = throttle1.withMinimum(200);
+			const throttle2 = throttle1.minimum(200);
 
 			expect(throttle2).not.toBe(throttle1);
 		});
 
-		it("should create new instance with withMaximum", () => {
+		it("should create new instance with maximum", () => {
 			const throttle1 = createThrottle({ maximum: 1000 });
-			const throttle2 = throttle1.withMaximum(2000);
+			const throttle2 = throttle1.maximum(2000);
 
 			expect(throttle2).not.toBe(throttle1);
 		});
 
-		it("should create new instance with withBuildup", () => {
+		it("should create new instance with buildup", () => {
 			const throttle1 = createThrottle({ buildup: 1.5 });
-			const throttle2 = throttle1.withBuildup(2.0);
+			const throttle2 = throttle1.buildup(2.0);
 
 			expect(throttle2).not.toBe(throttle1);
 		});
 
-		it("should create new instance with withBackoff", () => {
+		it("should create new instance with backoff", () => {
 			const throttle1 = createThrottle({ backoff: 1.5 });
-			const throttle2 = throttle1.withBackoff(2.0);
+			const throttle2 = throttle1.backoff(2.0);
 
 			expect(throttle2).not.toBe(throttle1);
 		});
 
-		it("should create new instance with withRecover", () => {
+		it("should create new instance with recover", () => {
 			const throttle1 = createThrottle({ recover: 0.8 });
-			const throttle2 = throttle1.withRecover(0.5);
+			const throttle2 = throttle1.recover(0.5);
 
 			expect(throttle2).not.toBe(throttle1);
 		});
 
-		it("should preserve other parameters when using withMinimum", async () => {
+		it("should preserve other parameters when using minimum", async () => {
 			const throttle1 = createThrottle({
 				minimum: 100,
 				backoff: 3.0
 			});
-			const throttle2 = throttle1.withMinimum(200);
+			const throttle2 = throttle1.minimum(200);
 
 			await throttle2.await();
 			const delay = throttle2.adapt(false);

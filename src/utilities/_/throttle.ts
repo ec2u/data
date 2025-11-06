@@ -106,47 +106,47 @@ export interface Throttle<T = unknown> {
 	/**
 	 * Creates a new throttle instance with updated minimum delay.
 	 *
-	 * @param minimum - The minimum delay in milliseconds
+	 * @param value - The minimum delay in milliseconds
 	 * @returns A new throttle instance with the updated minimum delay
 	 * @throws Error if minimum is negative or greater than maximum
 	 */
-	withMinimum(minimum: number): Throttle<T>;
+	minimum(value: number): Throttle<T>;
 
 	/**
 	 * Creates a new throttle instance with updated maximum delay.
 	 *
-	 * @param maximum - The maximum delay in milliseconds; 0 means no limit
+	 * @param value - The maximum delay in milliseconds; 0 means no limit
 	 * @returns A new throttle instance with the updated maximum delay
 	 * @throws Error if maximum is negative or less than minimum
 	 */
-	withMaximum(maximum: number): Throttle<T>;
+	maximum(value: number): Throttle<T>;
 
 	/**
 	 * Creates a new throttle instance with updated buildup factor.
 	 *
-	 * @param buildup - The exponential factor for delay increases based on queue size (must be >= 1.0)
+	 * @param value - The exponential factor for delay increases based on queue size (must be >= 1.0)
 	 * @returns A new throttle instance with the updated buildup factor
 	 * @throws Error if buildup is less than 1.0
 	 */
-	withBuildup(buildup: number): Throttle<T>;
+	buildup(value: number): Throttle<T>;
 
 	/**
 	 * Creates a new throttle instance with updated backoff factor.
 	 *
-	 * @param backoff - The multiplicative factor for delay increases (must be >= 1.0)
+	 * @param value - The multiplicative factor for delay increases (must be >= 1.0)
 	 * @returns A new throttle instance with the updated backoff factor
 	 * @throws Error if backoff is less than 1.0
 	 */
-	withBackoff(backoff: number): Throttle<T>;
+	backoff(value: number): Throttle<T>;
 
 	/**
 	 * Creates a new throttle instance with updated recovery factor.
 	 *
-	 * @param recover - The multiplicative factor for delay decreases (must be between 0.0 and 1.0)
+	 * @param value - The multiplicative factor for delay decreases (must be between 0.0 and 1.0)
 	 * @returns A new throttle instance with the updated recovery factor
 	 * @throws Error if recover is not between 0.0 and 1.0
 	 */
-	withRecover(recover: number): Throttle<T>;
+	recover(value: number): Throttle<T>;
 }
 
 /**
@@ -356,9 +356,9 @@ export function createThrottle<T = unknown>(options: ThrottleOptions = {}): Thro
 			return value;
 		},
 
-		withMinimum(newMinimum: number): Throttle<T> {
+		minimum(value: number): Throttle<T> {
 			return createThrottle({
-				minimum: newMinimum,
+				minimum: value,
 				maximum: state.maximum === Number.MAX_SAFE_INTEGER ? 0 : state.maximum,
 				buildup: state.buildup,
 				backoff: state.backoff,
@@ -366,43 +366,43 @@ export function createThrottle<T = unknown>(options: ThrottleOptions = {}): Thro
 			});
 		},
 
-		withMaximum(newMaximum: number): Throttle<T> {
+		maximum(value: number): Throttle<T> {
 			return createThrottle({
 				minimum: state.minimum,
-				maximum: newMaximum,
+				maximum: value,
 				buildup: state.buildup,
 				backoff: state.backoff,
 				recover: state.recover,
 			});
 		},
 
-		withBuildup(newBuildup: number): Throttle<T> {
+		buildup(value: number): Throttle<T> {
 			return createThrottle({
 				minimum: state.minimum,
 				maximum: state.maximum === Number.MAX_SAFE_INTEGER ? 0 : state.maximum,
-				buildup: newBuildup,
+				buildup: value,
 				backoff: state.backoff,
 				recover: state.recover,
 			});
 		},
 
-		withBackoff(newBackoff: number): Throttle<T> {
+		backoff(value: number): Throttle<T> {
 			return createThrottle({
 				minimum: state.minimum,
 				maximum: state.maximum === Number.MAX_SAFE_INTEGER ? 0 : state.maximum,
 				buildup: state.buildup,
-				backoff: newBackoff,
+				backoff: value,
 				recover: state.recover,
 			});
 		},
 
-		withRecover(newRecover: number): Throttle<T> {
+		recover(value: number): Throttle<T> {
 			return createThrottle({
 				minimum: state.minimum,
 				maximum: state.maximum === Number.MAX_SAFE_INTEGER ? 0 : state.maximum,
 				buildup: state.buildup,
 				backoff: state.backoff,
-				recover: newRecover,
+				recover: value,
 			});
 		},
 	};
