@@ -15,11 +15,9 @@
  */
 
 /**
- * Adaptive throttling for rate-limiting concurrent task execution.
+ * Asynchronous processing utilities.
  *
- * Provides an intelligent throttling mechanism that dynamically adjusts execution rates based on
- * system load and task success/failure patterns. Implements exponential backoff on failures,
- * recovery on successes, and queue-based delay scaling to prevent overload.
+ * Provides utilities for managing asynchronous operations.
  *
  * @module
  */
@@ -29,8 +27,9 @@ import { isBoolean } from "@metreeca/core";
 /**
  * Adaptive throttle for rate-limiting concurrent task execution.
  *
- * Implements exponential backoff and recovery mechanisms to dynamically adjust execution
- * rates based on load and success rates.
+ * Provides an intelligent throttling mechanism that dynamically adjusts execution rates based on
+ * system load and task success/failure patterns. Implements exponential backoff on failures,
+ * recovery on successes, and queue-based delay scaling to prevent overload.
  *
  * @typeParam T The type of values that can be passed through the throttle's `apply` method
  */
@@ -43,11 +42,23 @@ export interface Throttle<T = unknown> {
 	 * current load and timing. Uses randomized sleep intervals to avoid thundering herd effects.
 	 *
 	 * @param adapt - If true, increments the queue counter and expects completion feedback through
-	 *                the {@link adapt} method. Defaults to true.
+	 *                the {@link adapt} method. Defaults to false.
 	 *
 	 * @returns A promise that resolves with the time elapsed since the last task execution in milliseconds
 	 */
-	await(adapt?: boolean): Promise<number>;
+	queue(adapt?: boolean): Promise<number>;
+
+	/**
+	 * Applies throttling to a value by waiting without affecting the queue counter.
+	 *
+	 * This allows the throttle to be used in functional programming contexts where rate
+	 * limiting is needed. The value is passed through unchanged after the throttling delay.
+	 *
+	 * @param value - The input value to pass through
+	 * @returns A promise that resolves with the same value after applying throttling delay
+	 */
+	queue<V extends T>(value: V): Promise<V>;
+
 
 	/**
 	 * Adapts throttling parameters based on task completion status.
@@ -72,17 +83,6 @@ export interface Throttle<T = unknown> {
 	 * @throws Error if retry is negative
 	 */
 	adapt(retry: number): number;
-
-	/**
-	 * Applies throttling to a value by waiting without affecting the queue counter.
-	 *
-	 * This allows the throttle to be used in functional programming contexts where rate
-	 * limiting is needed. The value is passed through unchanged after the throttling delay.
-	 *
-	 * @param value - The input value to pass through
-	 * @returns A promise that resolves with the same value after applying throttling delay
-	 */
-	apply<V extends T>(value: V): Promise<V>;
 
 
 	/**
@@ -152,7 +152,7 @@ export interface Throttle<T = unknown> {
  *
  * // Use in an async operation
  * async function processItem(item: string) {
- *   await throttle.await();
+ *   await throttle.queue();
  *   try {
  *     // Do work
  *     throttle.adapt(true); // success
@@ -164,7 +164,7 @@ export interface Throttle<T = unknown> {
  * // Or use as a function operator
  * const items = ['a', 'b', 'c'];
  * for (const item of items) {
- *   await throttle.apply(item);
+ *   await throttle.queue(item);
  *   // Process item
  * }
  * ```
@@ -189,6 +189,7 @@ export function Throttle<T = unknown>({
 
 	minimum = 0,
 	maximum = 0,
+
 	buildup = 1,
 	backoff = 1,
 	recover = 1
@@ -197,6 +198,7 @@ export function Throttle<T = unknown>({
 
 	minimum?: number;
 	maximum?: number;
+
 	buildup?: number;
 	backoff?: number;
 	recover?: number;
@@ -231,6 +233,7 @@ export function Throttle<T = unknown>({
 
 		minimum,
 		maximum,
+
 		buildup,
 		backoff,
 		recover,
@@ -257,7 +260,9 @@ export function Throttle<T = unknown>({
 	 *          if the caller should wait
 	 */
 	function tryDelay(adapt: boolean): number {
+
 		const next = Date.now();
+
 		const wait = clamp(
 			Math.round(state.delay*Math.pow(state.buildup, state.queue)),
 			state.minimum,
@@ -265,9 +270,13 @@ export function Throttle<T = unknown>({
 		);
 
 		if ( (state.dirty && state.queue > 0) || state.fence+wait > next ) {
+
 			return -1;
+
 		} else {
+
 			const last = state.fence;
+
 			state.fence = next;
 
 			if ( adapt ) {
@@ -340,9 +349,9 @@ export function Throttle<T = unknown>({
 	/**
 	 * Sleeps for a random duration to avoid thundering herd effects.
 	 */
-	function randomSleep(base: number): Promise<void> {
-		return new Promise(resolve =>
-			setTimeout(resolve, base+Math.floor(Math.random()*base))
+	function sleep(baseline: number): Promise<void> {
+		return baseline === 0 ? Promise.resolve() : new Promise(resolve =>
+			setTimeout(resolve, baseline+Math.floor(Math.random()*baseline))
 		);
 	}
 
@@ -358,7 +367,7 @@ export function Throttle<T = unknown>({
 		let elapsed: number;
 
 		while ( (elapsed = await synchronized(() => tryDelay(adapt))) < 0 ) {
-			await randomSleep(state.minimum);
+			await sleep(state.minimum);
 		}
 
 		return elapsed;
@@ -368,8 +377,14 @@ export function Throttle<T = unknown>({
 
 	return {
 
-		async await(adapt: boolean = true): Promise<number> {
-			return awaitThrottle(adapt);
+		queue(adaptOrValue?: unknown): Promise<any> {
+
+			if ( adaptOrValue === undefined || isBoolean(adaptOrValue) ) {
+				return awaitThrottle(adaptOrValue ?? false);
+			} else {
+				return awaitThrottle(false).then(() => adaptOrValue);
+			}
+
 		},
 
 		adapt(status: boolean | number): number {
@@ -390,11 +405,6 @@ export function Throttle<T = unknown>({
 
 			}
 
-		},
-
-		async apply<V extends T>(value: V): Promise<V> {
-			await awaitThrottle(false);
-			return value;
 		},
 
 
