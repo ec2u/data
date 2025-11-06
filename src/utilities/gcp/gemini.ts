@@ -16,7 +16,7 @@
 
 import { message } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
-import { withRetry } from "@/utilities/gcp/retry";
+import { withRetry } from "@/utilities/gcp/_retry";
 import { secret } from "@/utilities/gcp/secrets";
 import { Content, EmbedContentResponse, GenerateContentResponse, GoogleGenAI, Part } from "@google/genai";
 
