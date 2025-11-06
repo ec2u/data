@@ -62,6 +62,7 @@ export function isRateLimitError(error: unknown): boolean {
  * Extracts retry delay from API error details.
  *
  * The Gemini API includes RetryInfo in 429 error responses with the recommended delay.
+ * Error structure can vary - details may be at top level, nested under error, or in message JSON.
  *
  * @param error ApiError with potential RetryInfo
  *
@@ -72,10 +73,32 @@ export function extractRetryDelay(error: unknown): number | undefined {
 		return undefined;
 	}
 
-	// Check multiple possible locations for details
-	const details = (error as any).details ?? (error as any).error?.details;
+	// Try multiple locations for details array
+	let details: any[] | undefined;
 
-	if ( !Array.isArray(details) ) {
+	// 1. Check direct details property
+	if ( Array.isArray((error as any).details) ) {
+		details = (error as any).details;
+	}
+	// 2. Check nested error.details
+	else if ( Array.isArray((error as any).error?.details) ) {
+		details = (error as any).error.details;
+	}
+	// 3. Try parsing message as JSON (some SDK versions serialize full response)
+	else if ( typeof error.message === "string" ) {
+		try {
+			const parsed = JSON.parse(error.message);
+			if ( Array.isArray(parsed?.error?.details) ) {
+				details = parsed.error.details;
+			} else if ( Array.isArray(parsed?.details) ) {
+				details = parsed.details;
+			}
+		} catch {
+			// Not JSON, continue
+		}
+	}
+
+	if ( !details ) {
 		return undefined;
 	}
 
