@@ -19,7 +19,7 @@ import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { matches, merge, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
 import { log, message, time } from "@/utilities/core/log";
-import { ai, data } from "@/utilities/gcp/gemini";
+import { ai, json } from "@/utilities/gcp/gemini";
 import { pavia, Units } from "@/utilities/hub";
 import { file } from "@/utilities/node/files";
 import { uuid } from "@/utilities/node/uuid";
@@ -56,46 +56,50 @@ export async function scan(): Promise<void>;
 export async function scan(url: string): Promise<readonly Partial<Unit>[]>;
 
 
-export async function scan(url?: string) {
+export async function scan(url?: string): Promise<unknown> {
 
 	if ( url ) {
 
-		return data(await ai.models.generateContent({
+		return json<Partial<Unit>>(await ai.models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: url,
 			config: {
 				seed: 0,
 				temperature: 0,
 				systemInstruction: await file(".sys.md", import.meta.url),
-				tools
-			}
-		}), {
-			type: Type.ARRAY,
-			items: {
-				type: Type.OBJECT,
-				properties: {
-					formal: {
-						type: Type.STRING,
-						description: `REQUIRED - The full official name of the research unit. MUST NOT include the
+				tools,
+				responseMimeType: "application/json",
+				responseSchema: {
+					type: Type.ARRAY,
+					items: {
+						type: Type.OBJECT,
+						properties: {
+							formal: {
+								type: Type.STRING,
+								description: `REQUIRED - The full official name of the research unit. MUST NOT include the
 								acronym in this field. Example: 'Laboratory for Computational Biology' not 'Laboratory
 								for Computational Biology (LCB)'`
-					},
-					acronym: {
-						type: Type.STRING,
-						description: `OPTIONAL - The acronym or short form of the research unit name. Only include if
+							},
+							acronym: {
+								type: Type.STRING,
+								description: `OPTIONAL - The acronym or short form of the research unit name. Only include if
 					 			explicitly mentioned in the source. Omit this field entirely if not available. Example:
 					 			'LCB'`
-					},
-					website: {
-						type: Type.STRING,
-						description: `OPTIONAL - The complete URL of the research unit's homepage or main web presence.
+							},
+							website: {
+								type: Type.STRING,
+								description: `OPTIONAL - The complete URL of the research unit's homepage or main web presence.
 								Must be a valid URL starting with http:// or https://. Omit this field entirely if not
 								available. Example: 'https://lab.university.edu'`
+							}
+						},
+						required: [
+							"formal"
+						]
 					}
-				},
-				required: ["formal"]
+				}
 			}
-		});
+		}));
 
 	} else {
 

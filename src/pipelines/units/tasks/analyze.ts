@@ -23,7 +23,7 @@ import { matches, merge, stale, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
 import { guard, log, message, time } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
-import { ai, data } from "@/utilities/gcp/gemini";
+import { ai, json } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 import { isString } from "@metreeca/core";
@@ -54,7 +54,7 @@ export async function analyze(lead?: Partial<Unit>) {
 
 	if ( lead ) {
 
-		return await validate(await data<Partial<Unit>>(await ai.models.generateContent({
+		return await validate(json<Partial<Unit>>(await ai.models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: md`
 				profile: ${lead.profile ?? "Not provided"}
@@ -69,80 +69,89 @@ export async function analyze(lead?: Partial<Unit>) {
 				tools,
 				automaticFunctionCalling: {
 					maximumRemoteCalls: 50
+				},
+				responseMimeType: "application/json",
+				responseSchema: {
+					type: Type.OBJECT,
+					properties: {
+						formal: {
+							type: Type.STRING,
+							description: md`
+								Formal name of the research unit - MUST include the unit typology
+								(e.g., 'Laboratory of...', 'Department of...', 'Research Group on...')
+							`
+						},
+						short: {
+							type: Type.STRING,
+							description: md`
+								Short name of the research unit (OPTIONAL - omit if not actually found on website,
+								or if it equals the formal name or acronym)
+							`
+						},
+						acronym: {
+							type: Type.STRING,
+							description: md`
+								Acronym of the research unit (OPTIONAL - omit if not actually found on website)
+							`
+						},
+						identifier: {
+							type: Type.STRING,
+							description: md`
+								Internal identifier of the research unit (OPTIONAL - omit if not actually found on website)
+							`
+						},
+						email: {
+							type: Type.STRING,
+							description: md`
+								Institutional email address of the research unit
+								(OPTIONAL - omit if not actually found on website)
+							`
+						},
+						type: {
+							type: Type.STRING,
+							description: md`
+								Formal topic ID from the organizations taxonomy - MUST be a complete URL preserved exactly
+								as found (e.g., 'https://data.ec2u.eu/...')
+							`
+						},
+						topics: {
+							type: Type.ARRAY,
+							items: { type: Type.STRING },
+							description: md`
+								List of topic IDs from matchTopics results - use exact IDs returned by the tool
+							`
+						},
+						summary: {
+							type: Type.STRING,
+							description: md`
+								REQUIRED - Summary of the research unit (~500 chars) - NEVER omit this field
+							`
+						},
+						description: {
+							type: Type.STRING,
+							description: md`
+								General description in markdown format
+							`
+						},
+						keywords: {
+							type: Type.ARRAY,
+							items: { type: Type.STRING },
+							description: md`
+								List of keywords research topics and fields
+							`
+						}
+					},
+					required: [
+						"formal",
+						"type",
+						"topics",
+						"summary",
+						"description",
+						"keywords"
+					]
 				}
 			}
-		}), {
-			type: Type.OBJECT,
-			properties: {
-				formal: {
-					type: Type.STRING,
-					description: md`
-						Formal name of the research unit - MUST include the unit typology
-						(e.g., 'Laboratory of...', 'Department of...', 'Research Group on...')
-					`
-				},
-				short: {
-					type: Type.STRING,
-					description: md`
-						Short name of the research unit (OPTIONAL - omit if not actually found on website,
-						or if it equals the formal name or acronym)
-					`
-				},
-				acronym: {
-					type: Type.STRING,
-					description: md`
-						Acronym of the research unit (OPTIONAL - omit if not actually found on website)
-					`
-				},
-				identifier: {
-					type: Type.STRING,
-					description: md`
-						Internal identifier of the research unit (OPTIONAL - omit if not actually found on website)
-					`
-				},
-				email: {
-					type: Type.STRING,
-					description: md`
-						Institutional email address of the research unit
-						(OPTIONAL - omit if not actually found on website)
-					`
-				},
-				type: {
-					type: Type.STRING,
-					description: md`
-						Formal topic ID from the organizations taxonomy - MUST be a complete URL preserved exactly
-						as found (e.g., 'https://data.ec2u.eu/...')
-					`
-				},
-				topics: {
-					type: Type.ARRAY,
-					items: { type: Type.STRING },
-					description: md`
-						List of topic IDs from matchTopics results - use exact IDs returned by the tool
-					`
-				},
-				summary: {
-					type: Type.STRING,
-					description: md`
-						REQUIRED - Summary of the research unit (~500 chars) - NEVER omit this field
-					`
-				},
-				description: {
-					type: Type.STRING,
-					description: md`
-						General description in markdown format
-					`
-				},
-				keywords: {
-					type: Type.ARRAY,
-					items: { type: Type.STRING },
-					description: md`
-						List of keywords research topics and fields
-					`
-				}
-			},
-			required: ["formal", "type", "topics", "summary", "description", "keywords"]
-		}));
+		})));
 
 	} else {
 
