@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-import { message } from "@/utilities/core/log";
+import { Throttle } from "@/utilities/_/async";
+import { log, message } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
-import { withRetry } from "@/utilities/gcp/_retry";
 import { secret } from "@/utilities/gcp/secrets";
-import { Content, EmbedContentResponse, GenerateContentResponse, GoogleGenAI, Part } from "@google/genai";
+import { ApiError, Content, EmbedContentResponse, GenerateContentResponse, GoogleGenAI, Part } from "@google/genai";
 
 
 export const ai = await (async (ai) => {
+
+	/**
+	 * Shared throttles by model name for rate limiting API requests.
+	 */
+	const throttles = new Map<string, ReturnType<typeof Throttle>>();
+
+
 	return Object.assign(ai, { // patch to work around known issues
 
 		models: Object.assign(ai.models, {
@@ -107,19 +114,54 @@ export const ai = await (async (ai) => {
 								? params.contents.map(normalizeContent)
 								: [normalizeContent(params.contents)];
 
+							// Create throttle for this model
+							const throttle = throttles.get(params.model) ?? throttles.set(params.model, Throttle({
+								minimum: 100,
+								maximum: 60*1000,
+								buildup: 1.10,
+								backoff: 1.10,
+								recover: 0.95
+							})).get(params.model)!;
+
 							let turnCount = 0;
 
 							while ( turnCount < maximumRemoteCalls ) {
 								turnCount++;
 
-								// Call API with retry logic - conversationHistory preserved across retries
-								const response = await withRetry(
+								// Execute API call with adaptive throttling for rate limit handling
+								const response = await retry(
+									throttle,
+									params.model,
 									() => generateContent({
 										...params,
 										contents: conversationHistory,
 										config: { ...configWithoutSchema, tools: toolDeclarations }
 									}, ...rest),
-									{ name: `generateContent(turn ${turnCount})` }
+									{
+
+										monitor: (error) => {
+											if ( error instanceof ApiError && error.status === 429 ) {
+
+												// Extract retry delay from API response (RetryInfo in error details)
+
+												const retryDelay = (error as any).error?.details
+													?.find((d: any) => d["@type"]?.includes("RetryInfo"))
+													?.retryDelay;
+
+												// Parse duration string like "15s" or "46.745947355s" to milliseconds
+
+												const match = retryDelay?.match(/^(\d+(?:\.\d+)?)s$/);
+
+												return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
+
+											} else {
+
+												return undefined;
+
+											}
+										}
+
+									}
 								);
 
 								// Add model's response to conversation history
@@ -389,4 +431,87 @@ function validate(response: GenerateContentResponse): GenerateContentResponse {
 	}
 
 	return response;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * Executes an async function with retry logic using adaptive throttling.
+ *
+ * Implements the same approach as the Java OpenAI retry logic, using a shared
+ * throttle per model to coordinate rate limiting across all requests.
+ *
+ * @param throttle Throttle instance for rate limiting
+ * @param model Model name for logging
+ * @param task Async function to execute
+ * @param options Retry options
+ * @param options.attempts Maximum retry attempts (0 = unlimited, default: 0)
+ * @param options.monitor Optional callback to determine if an error is retryable and extract
+ *                        API-specified delay. Returns `undefined` for non-retryable errors (will be thrown),
+ *                        or a number (in milliseconds) for retryable errors:
+ *                        0 = use default backoff, >0 = use API-specified delay
+ *
+ * @returns Result of the function call
+ *
+ * @throws Original error if non-retryable (monitor returns undefined) or max attempts exceeded
+ */
+async function retry<T>(
+	throttle: ReturnType<typeof Throttle>,
+	model: string,
+	task: () => Promise<T>,
+	{
+
+		attempts = 0,
+
+		monitor
+
+	}: {
+
+		attempts?: number
+
+		monitor?: (error: unknown) => undefined | number
+
+	} = {}
+): Promise<T> {
+
+	for (let attempt = 0; attempts === 0 || attempt < attempts; attempt++) {
+		try {
+
+			const delay = await throttle.queue(true);
+
+			log.info(model, `request attempt ${attempt+1} submitted with delay ${delay} ms`);
+
+			const result = await task();
+
+			throttle.adapt(true);
+
+			return result;
+
+		} catch ( error ) {
+
+			const apiDelay = monitor?.(error);
+
+			if ( apiDelay === undefined ) { // non-retryable error
+
+				throttle.adapt(false);
+
+				throw error;
+
+			} else { // retryable error with API-specified or default delay
+
+				const delay = apiDelay > 0
+					? throttle.adapt(apiDelay)
+					: throttle.adapt(false);
+
+				log.warn(model, `request attempt ${attempt+1} rejected with delay ${delay} ms`);
+
+			}
+
+		}
+	}
+
+	throw new Error(`request aborted after ${attempts} attempts`);
+
 }
