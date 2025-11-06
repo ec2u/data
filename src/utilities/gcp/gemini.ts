@@ -87,6 +87,14 @@ export function embedding(response: EmbedContentResponse) {
  * Uses deterministic output (seed=0, temperature=0) and automatic omission of undefined/empty values.
  * When source is a GenerateContentResponse, validates completeness before extraction.
  *
+ * @remarks
+ * This function uses a two-step approach because the Gemini API doesn't support combining
+ * function calling/tools with structured output (responseSchema) in a single request.
+ * See: https://github.com/googleapis/js-genai/issues/727
+ *
+ * When automaticFunctionCalling is enabled, the first call executes tools without responseSchema,
+ * then this function makes a second call with responseSchema but without tools to format the result.
+ *
  * @typeParam T Type of the structured data to return
  *
  * @param source Textual report or GenerateContentResponse to convert
@@ -152,6 +160,11 @@ export async function data<T>(source: string | GenerateContentResponse, schema: 
  * When automatic function calling is enabled, checks if the final response contains output text.
  * A complete response should have text in candidates[0].content.parts after function calling completes.
  * If the final response has no output text, this indicates the generation was interrupted or incomplete.
+ *
+ * @remarks
+ * This validation is necessary because automaticFunctionCalling and responseSchema cannot
+ * be used together (see https://github.com/googleapis/js-genai/issues/727). Responses with function
+ * calling must be validated separately before passing to the data() function for structured extraction.
  *
  * @param response Response from a generateContent call
  *
