@@ -18,7 +18,16 @@ import { Throttle } from "@/utilities/_/async/throttle";
 import { log, message } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
-import { ApiError, Content, EmbedContentResponse, GenerateContentResponse, GoogleGenAI, Part } from "@google/genai";
+import {
+	ApiError,
+	CallableTool,
+	Content,
+	EmbedContentResponse,
+	GenerateContentResponse,
+	GoogleGenAI,
+	Part
+} from "@google/genai";
+import { isString } from "@metreeca/core";
 
 
 export const ai = await (async (ai) => {
@@ -75,154 +84,120 @@ export const ai = await (async (ai) => {
 
 						} = config ?? {};
 
-						if ( automaticFunctionCalling?.disable ) {
+						if ( automaticFunctionCalling?.disable ) { // caller will handle function calling
 
 							return await generateContent({ ...params, config: configWithoutSchema }, ...rest);
 
-						} else {
+						}
 
-							// Manual function calling loop with quota throttling
-							const maximumRemoteCalls = automaticFunctionCalling?.maximumRemoteCalls ?? 100;
+						// automatic function calling loop with quota throttling
 
-							// Extract CallableTool instances if present
-							const callableTools = tools?.filter((tool): tool is {
-									tool: () => Promise<any>;
-									callTool: (calls: any[]) => Promise<Part[]>
-								} =>
-									typeof tool === "object" && "callTool" in tool
-									&& typeof tool.callTool === "function"
-							) ?? [];
+						const maximumRemoteCalls = automaticFunctionCalling?.maximumRemoteCalls ?? 100;
 
-							// Get tool declarations from CallableTool instances if present, otherwise use tools as-is
-							const toolDeclarations = callableTools.length > 0
-								? await Promise.all(callableTools.map(t => t.tool()))
-								: tools;
+						const callableTools = tools?.filter((tool: any): tool is CallableTool =>
+							typeof tool === "object" && "callTool" in tool
+							&& typeof tool.callTool === "function"
+						) ?? [];
 
-							// Initialize conversation history from initial contents
-							const normalizeContent = (c: any): Content => {
-								if ( typeof c === "string" ) {
-									return { role: "user" as const, parts: [{ text: c }] };
-								}
-								if ( "role" in c ) {
-									return c as Content;
-								}
-								// Single Part object, wrap it as user content
-								return { role: "user" as const, parts: [c] };
-							};
+						function normalizeContent(content: string | Content | Part): Content {
 
-							const conversationHistory: Content[] = Array.isArray(params.contents)
-								? params.contents.map(normalizeContent)
-								: [normalizeContent(params.contents)];
+							return isString(content) ? { role: "user", parts: [{ text: content }] }
+								: "role" in content && "parts" in content ? content
+									: { role: "user", parts: [content as Part] };
 
-							// Create throttle for this model
-							const throttle = throttles.get(params.model) ?? throttles.set(params.model, Throttle({
-								minimum: 100,
-								maximum: 60*1000,
-								buildup: 1.10,
-								backoff: 1.10,
-								recover: 0.95
-							})).get(params.model)!;
+						}
 
-							let turnCount = 0;
+						const conversationHistory: Content[] = Array.isArray(params.contents)
+							? params.contents.map(normalizeContent)
+							: [normalizeContent(params.contents)];
 
-							while ( turnCount < maximumRemoteCalls ) {
-								turnCount++;
+						const throttle = throttles.get(params.model) ?? throttles.set(params.model, Throttle({
+							minimum: 100,
+							maximum: 60*1000,
+							buildup: 1.10,
+							backoff: 1.10,
+							recover: 0.95
+						})).get(params.model)!;
 
-								// Execute API call with adaptive throttling for rate limit handling
-								const response = await retry(
-									throttle,
-									params.model,
-									() => generateContent({
-										...params,
-										contents: conversationHistory,
-										config: { ...configWithoutSchema, tools: toolDeclarations }
-									}, ...rest),
-									{
+						return await functionCallingLoop();
 
-										monitor: (error) => {
-											if ( error instanceof ApiError && error.status === 429 ) {
 
-												// Extract retry delay from API response (RetryInfo in error details)
+						async function functionCallingLoop() {
 
-												const retryDelay = (error as any).error?.details
-													?.find((d: any) => d["@type"]?.includes("RetryInfo"))
-													?.retryDelay;
+							for (let turn = 1; turn <= maximumRemoteCalls; turn++) {
 
-												// Parse duration string like "15s" or "46.745947355s" to milliseconds
+								const response = await callModel();
 
-												const match = retryDelay?.match(/^(\d+(?:\.\d+)?)s$/);
-
-												return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
-
-											} else {
-
-												return undefined;
-
-											}
-										}
-
-									}
-								);
-
-								// Add model's response to conversation history
 								const modelContent = response.candidates?.[0]?.content;
+
 								if ( !modelContent ) {
 									throw new Error("no model content in response");
 								}
 
 								conversationHistory.push(modelContent);
 
-								// Check if model wants to call functions
 								const functionCalls = modelContent.parts?.filter(part => part.functionCall);
 
-								if ( functionCalls && functionCalls.length > 0 ) {
+								if ( !functionCalls || functionCalls.length === 0 ) {
 
-									// Execute function calls using CallableTool interface if available
-									if ( callableTools.length > 0 ) {
-
-										const allResults: Part[] = [];
-
-										for (const tool of callableTools) {
-											const results = await tool.callTool(
-												functionCalls.map(fc => fc.functionCall!).filter(Boolean)
-											);
-											allResults.push(...results);
-										}
-
-										// Add function responses to history as user message
-										conversationHistory.push({
-											role: "user",
-											parts: allResults
-										});
-
-									} else {
-
-										// No CallableTool implementations - cannot execute functions
-										throw new Error([
-											"model requested function calls",
-											"but no CallableTool implementations provided"
-										].join(" "));
-
-									}
-
-									// Continue loop - model will process function results in next turn
-
-								} else {
-
-									// Model provided final response without function calls
-									// Add automaticFunctionCallingHistory to mimic SDK behavior
 									return Object.assign(response, {
-										automaticFunctionCallingHistory: conversationHistory.slice(
-											0,
-											conversationHistory.length-1
-										) // Exclude the final model response
+										automaticFunctionCallingHistory: conversationHistory.slice(0, -1)
 									});
-
 								}
+
+								if ( callableTools.length === 0 ) {
+									throw new Error(
+										"model requested function calls but no CallableTool implementations provided"
+									);
+								}
+
+								const allResults: Part[] = [];
+
+								for (const tool of callableTools) {
+									const results = await tool.callTool(
+										functionCalls.map(fc => fc.functionCall!).filter(Boolean)
+									);
+									allResults.push(...results);
+								}
+
+								conversationHistory.push({
+									role: "user",
+									parts: allResults
+								});
 							}
 
 							throw new Error(`maximum turns (${maximumRemoteCalls}) reached without completion`);
+						}
 
+						async function callModel() {
+							return await retry(
+								throttle,
+								params.model,
+								() => generateContent({
+									...params,
+									contents: conversationHistory,
+									config: { ...configWithoutSchema, tools }
+								}, ...rest),
+								{
+									monitor: (error) => {
+										if ( error instanceof ApiError && error.status === 429 ) {
+
+											const retryDelay = (error as any).error?.details
+												?.find((d: any) => d["@type"]?.includes("RetryInfo"))
+												?.retryDelay;
+
+											const match = retryDelay?.match(/^(\d+(?:\.\d+)?)s$/);
+
+											return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
+
+										} else {
+
+											return undefined;
+
+										}
+									}
+								}
+							);
 						}
 
 					}
@@ -346,7 +321,10 @@ export const ai = await (async (ai) => {
  * Extracts and validates text content from a Gemini API response.
  *
  * Filters out non-text parts (thinking, function calls, etc.) to extract only output text.
- * Validates response completeness when automatic function calling is used.
+ *
+ * When automatic function calling is used, validates that the final response contains output text.
+ * A complete response should have text in `candidates[0].content.parts` after function calling completes.
+ * If the final response has no output text, this indicates the generation was interrupted or incomplete.
  *
  * @param response Response from a generateContent call
  *
@@ -355,7 +333,15 @@ export const ai = await (async (ai) => {
  * @throws Error if response validation fails or contains no output text
  */
 export function text(response: GenerateContentResponse): string {
-	return (validate(response).candidates?.[0]?.content?.parts ?? [])
+
+	const afc = response.automaticFunctionCallingHistory;
+	const parts = response.candidates?.[0]?.content?.parts ?? [];
+
+	if ( afc?.length && !parts.some(part => part.text && !part.thought) ) {
+		throw new Error(`incomplete generation with no output text`);
+	}
+
+	return parts
 		.filter(part => part.text && !part.thought)
 		.map(part => part.text)
 		.join("\n\n")
@@ -393,49 +379,6 @@ export function embedding(response: EmbedContentResponse) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Validates a Gemini API response for completeness and correctness.
- *
- * When automatic function calling is enabled, checks if the final response contains output text.
- * A complete response should have text in candidates[0].content.parts after function calling completes.
- * If the final response has no output text, this indicates the generation was interrupted or incomplete.
- *
- * @param response Response from a generateContent call
- *
- * @returns The same response (pass-through for chaining)
- *
- * @throws Error if validation fails (incomplete results, corrupted response, etc.)
- */
-function validate(response: GenerateContentResponse): GenerateContentResponse {
-
-	const history = response.automaticFunctionCallingHistory;
-
-	if ( history && history.length > 0 ) {
-
-		// Check if the final response (not history) contains output text
-
-		const finalParts = response.candidates?.[0]?.content?.parts ?? [];
-		const hasOutputText = finalParts.some(part => part.text && !part.thought);
-
-		if ( !hasOutputText ) {
-
-			const functionCallTurns = history.filter(msg =>
-				msg.role === "model" && msg.parts?.some(part => part.functionCall)
-			).length;
-
-			throw new Error(
-				`generation incomplete with no output text after ${functionCallTurns} function calling turn(s)`
-			);
-		}
-	}
-
-	return response;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /**
  * Executes an async function with retry logic using adaptive throttling.
@@ -493,13 +436,17 @@ async function retry<T>(
 
 			const apiDelay = monitor?.(error);
 
-			if ( apiDelay === undefined ) { // non-retryable error
+			if ( apiDelay === undefined ) {
+
+				// non-retryable error
 
 				throttle.adapt(false);
 
 				throw error;
 
-			} else { // retryable error with API-specified or default delay
+			} else {
+
+				// retryable error with API-specified or default delay
 
 				const delay = apiDelay > 0
 					? throttle.adapt(apiDelay)
