@@ -15,7 +15,7 @@
  */
 
 import { visit } from "@/pipelines/pages";
-import { log, message } from "@/utilities/core/log";
+import { log, message } from "@/utilities/_/logger/log";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import dedent from "dedent";
 

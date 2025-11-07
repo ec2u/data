@@ -43,7 +43,7 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
-import { log } from "@/utilities/core/log";
+import { log } from "@/utilities/_/logger/log";
 import { uuid } from "@/utilities/node/uuid";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";

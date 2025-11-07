@@ -17,7 +17,7 @@
 import { describe, expect, it } from "vitest";
 import { guard } from "./log.js";
 
-describe("guard", () => {
+describe("guard()", () => {
 
 	it("should handle functions with no arguments", async () => {
 		const fn = guard(async () => "success");

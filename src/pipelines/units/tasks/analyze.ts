@@ -21,7 +21,8 @@ import { listTopics } from "@/pipelines/topics/tools/listTopics";
 import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
 import { matches, merge, stale, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
-import { guard, log, message, time } from "@/utilities/core/log";
+import { Level, log, simple } from "@/utilities/_/logger";
+import { guard, message, time } from "@/utilities/_/logger/log";
 import { md } from "@/utilities/core/tags";
 import { ai, json } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
@@ -33,6 +34,8 @@ import { forEach } from "@metreeca/pipe/sinks";
 import { flatMap, map, peek } from "@metreeca/pipe/tasks";
 
 
+const logger = log(import.meta.url);
+
 const tools = [
 	fetchPage({ cache: pages.lookup }),
 	matchTopics({ topics: scheme => topics.select({ scheme }) }),
@@ -41,6 +44,18 @@ const tools = [
 
 
 if ( import.meta.main ) {
+
+	log({
+
+		console: simple(),
+
+		"": {
+			level: Level.info,
+			sink: "console"
+		}
+
+	});
+
 	analyze();
 }
 
@@ -156,26 +171,26 @@ export async function analyze(lead?: Partial<Unit>) {
 	} else {
 
 		return time(() => pipe(
-			(items(units.select({ analyzed: Date.now()-stale })))
-			(flatMap(lead => pipe(
-				items(lead)
-				(map(guard(analyze)))
-				(map(item => merge(lead, {
+				(items(units.select({ analyzed: Date.now()-stale })))
+				(flatMap(lead => pipe(
+					items(lead)
+					(map(guard(analyze)))
+					(map(item => merge(lead, {
 
-					...item,
+						...item,
 
-					updated: matches(lead, item) ? lead.updated : Date.now(),
-					analyzed: Date.now()
+						updated: matches(lead, item) ? lead.updated : Date.now(),
+						analyzed: Date.now()
 
-				})))
-			), {
-				parallel: true
-			}))
-			(peek(v => console.info(v)))
-			(forEach(units.insert))
-		), (count, elapsed) => log.info(analyze.name,
-			`processed <${count}> units in <${message(elapsed)}> ms`
-		));
+					})))
+				), {
+					parallel: true
+				}))
+				(peek(v => console.info(v)))
+				(forEach(units.insert))
+			), (count, elapsed) => logger.info
+				`processed <${count}> units in <${message(elapsed)}> ms`
+		);
 
 	}
 
@@ -205,7 +220,7 @@ async function validate(result: Partial<Unit>): Promise<Partial<Unit>> {
 
 		} else {
 
-			log.warn(analyze.name, `invalid entry <${id}> for scheme <${scheme}>`);
+			logger.warning`invalid entry <${id}> for scheme <${scheme}>`;
 
 			return undefined;
 

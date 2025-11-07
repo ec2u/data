@@ -16,7 +16,7 @@
 
 import { normalize as normalizeUrl } from "@/pipelines/pages/index";
 import { Unit } from "@/pipelines/units/index";
-import { log, message, time } from "@/utilities/core/log";
+import { log, message, time } from "@/utilities/_/logger/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";

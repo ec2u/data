@@ -2,18 +2,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # External Documentation
 
+## Core Libraries
 
-- [Google GenAI Documentation](https://googleapis.github.io/js-genai/release_docs/index.html) - Google Generative AI SDK
-  for JavaScript/TypeScript
-- [Google Cloud Datastore Documentation](https://cloud.google.com/nodejs/docs/reference/datastore/latest) - Google Cloud
-  Datastore client library
-- [Google Cloud Secret Manager Documentation](https://cloud.google.com/nodejs/docs/reference/secret-manager/latest) -
-  Google Cloud Secret Manager client library
-- [Dedent Documentation](https://github.com/dmnd/dedent) - ES6 string tag that strips indentation from multi-line
-  strings
-- [JSDOM Documentation](https://github.com/jsdom/jsdom) - A JavaScript implementation of the DOM and HTML standards
-- [@metreeca/pipe Documentation](https://github.com/metreeca/pipe) - TypeScript library for processing async iterables
-  with composable, type-safe pipelines
+- [@metreeca/pipe](https://github.com/metreeca/pipe) - TypeScript library for processing async iterables with
+  composable, type-safe pipelines
+
+## Utilities
+
+- [Dedent](https://github.com/dmnd/dedent) - ES6 string tag that strips indentation from multi-line strings
+- [JSDOM](https://github.com/jsdom/jsdom) - JavaScript implementation of the DOM and HTML standards
+
+## Google Cloud Platform
+
+- [Google GenAI SDK](https://googleapis.github.io/js-genai/release_docs/index.html) - Google Generative AI SDK for
+  JavaScript/TypeScript
+- [Google Cloud Datastore](https://cloud.google.com/nodejs/docs/reference/datastore/latest) - Google Cloud Datastore
+  client library
+- [Google Cloud Secret Manager](https://cloud.google.com/nodejs/docs/reference/secret-manager/latest) - Google Cloud
+  Secret Manager client library
 
 # Task Workflows
 

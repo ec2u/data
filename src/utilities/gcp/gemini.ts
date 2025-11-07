@@ -15,7 +15,8 @@
  */
 
 import { Throttle } from "@/utilities/_/async/throttle";
-import { log, message } from "@/utilities/core/log";
+import { log } from "@/utilities/_/logger";
+import { message } from "@/utilities/_/logger/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
 import {
@@ -28,6 +29,9 @@ import {
 	Part
 } from "@google/genai";
 import { isString } from "@metreeca/core";
+
+
+const logger = log(import.meta.url);
 
 
 export const ai = await (async (ai) => {
@@ -424,7 +428,7 @@ async function retry<T>(
 
 			const delay = await throttle.queue(true);
 
-			log.info(model, `request attempt ${attempt+1} submitted with delay ${delay} ms`);
+			logger.info`${model} / request attempt ${attempt+1} submitted with delay ${delay} ms`;
 
 			const result = await task();
 
@@ -452,7 +456,7 @@ async function retry<T>(
 					? throttle.adapt(apiDelay)
 					: throttle.adapt(false);
 
-				log.warn(model, `request attempt ${attempt+1} rejected with delay ${delay} ms`);
+				logger.warning`${model} / request attempt ${attempt+1} rejected with delay ${delay} ms`;
 
 			}
 

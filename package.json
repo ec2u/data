@@ -1,14 +1,10 @@
 {
   "private": true,
   "type": "module",
-  "sideEffects": false,
-  "exports": {
-    "./services": "./lib/serices"
-  },
   "scripts": {
-    "clean": "rm -rf lib docs node_modules",
+    "clean": "rm -rf lib node_modules",
     "setup": "npm install && npm audit fix",
-    "build": "rm -rf lib docs && tsc && typedoc",
+    "build": "rm -rf lib && tsc",
     "check": "npx vitest run",
     "serve": "npx tsx --watch src/services/index.ts"
   },
@@ -16,7 +12,7 @@
     "@google-cloud/datastore": "^10.0.1",
     "@google-cloud/secret-manager": "^6.1.0",
     "@google/genai": "^1.22.0",
-    "@metreeca/core": "^0.9.1",
+    "@metreeca/core": "^0.9.3",
     "@metreeca/pipe": "^0.9.11",
     "dedent": "^1.7.0",
     "defuddle": "^0.6.6",

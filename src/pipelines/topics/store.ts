@@ -15,8 +15,8 @@
  */
 
 import { Topic } from "@/pipelines/topics/index";
+import { log, message, time } from "@/utilities/_/logger/log";
 import { compress, decompress } from "@/utilities/ai/embeddings";
-import { log, message, time } from "@/utilities/core/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
