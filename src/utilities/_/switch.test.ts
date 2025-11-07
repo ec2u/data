@@ -110,7 +110,7 @@ describe("Switch", () => {
 	describe("partial handlers with fallback", () => {
 
 		it("should use specific handler when case matches", () => {
-			const result = Switch<TestCases, "default">({ value: "hello" })({
+			const result = Switch<TestCases, "default">({ value: "hello" }, "default")({
 				value: "specific handler",
 				default: "fallback handler"
 			});
@@ -119,7 +119,7 @@ describe("Switch", () => {
 		});
 
 		it("should use fallback when case does not match any specific handler", () => {
-			const result = Switch<TestCases, "default">({ loading: false })({
+			const result = Switch<TestCases, "default">({ loading: false }, "default")({
 				value: "value handler",
 				default: "fallback handler"
 			});
@@ -128,7 +128,7 @@ describe("Switch", () => {
 		});
 
 		it("should pass value to fallback function handler", () => {
-			const result = Switch<TestCases, "other">({ error: new Error("fail") })({
+			const result = Switch<TestCases, "other">({ error: new Error("fail") }, "other")({
 				value: (v) => `value: ${v}`,
 				other: (v) => {
 					if ( v instanceof Error ) {
@@ -142,7 +142,7 @@ describe("Switch", () => {
 		});
 
 		it("should use constant fallback handler", () => {
-			const result = Switch<TestCases, "_">({ loading: true })({
+			const result = Switch<TestCases, "_">({ loading: true }, "_")({
 				_: 999
 			});
 
@@ -150,7 +150,7 @@ describe("Switch", () => {
 		});
 
 		it("should prefer specific handler over fallback", () => {
-			const result = Switch<TestCases, "default">({ value: "test" })({
+			const result = Switch<TestCases, "default">({ value: "test" }, "default")({
 				value: "specific",
 				error: "error",
 				loading: "loading",
@@ -299,7 +299,7 @@ describe("Switch", () => {
 		}
 
 		it("should handle form state transitions with fallback", () => {
-			const result = Switch<FormState, "default">({ editing: { value: "text" } })({
+			const result = Switch<FormState, "default">({ editing: { value: "text" } }, "default")({
 				submitted: (s) => `Submitted with id: ${s.id}`,
 				default: "Form is not submitted"
 			});
@@ -605,7 +605,7 @@ describe("Switch", () => {
 			});
 
 			it("should return R (not R | undefined) with fallback", () => {
-				const result: string = Switch<TestCases, "fallback">({ string: "test" })({
+				const result: string = Switch<TestCases, "fallback">({ string: "test" }, "fallback")({
 					boolean: "matched boolean",
 					fallback: "default case"
 					// 'string' and 'number' handlers missing, but fallback guarantees a result
@@ -640,6 +640,42 @@ describe("Switch", () => {
 				});
 
 				expect(typeof result).toBe("number");
+			});
+
+		});
+
+		describe("mandatory fallback parameter", () => {
+
+			it("type check: fallback parameter required when F type specified", () => {
+				// ✅ Valid: Fallback parameter specified when using fallback handler
+				const a = Switch<{ value: string; error: Error }, "_">({ value: "done" }, "_")({
+					value: (v) => `value: ${v}`,
+					_: () => "unhandled"
+				});
+
+				expect(a).toBe("value: done");
+			});
+
+			it("type check: fallback handler invalid without fallback parameter", () => {
+				// ❌ Invalid: Fallback handler without fallback parameter
+				const b = Switch<{ value: string; error: Error }>({ value: "done" })({
+					value: (v) => `value: ${v}`,
+					// @ts-expect-error - Demonstrating invalid usage: '_' is not valid without fallback parameter
+					_: () => "unhandled"
+				});
+
+				expect(b).toBe("value: done");
+			});
+
+			it("type check: type parameter mismatch with runtime", () => {
+				// ❌ Invalid: Fallback type parameter specified but not passed at runtime
+				// @ts-expect-error - Expected 2 arguments, but got 1
+				const c = Switch<{ value: string; error: Error }, "_">({ value: "done" })({
+					value: (v) => `value: ${v}`,
+					_: () => "unhandled"
+				});
+
+				expect(c).toBe("value: done");
 			});
 
 		});

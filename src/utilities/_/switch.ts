@@ -153,20 +153,20 @@ export type Handler<V, R> =
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates a type-safe pattern matching function for a value with exactly one active state.
+ * Creates a type-safe pattern matching function for a caze with exactly one active state.
  *
  * @typeParam C The states type defining all possible variants
  * @typeParam F The fallback handler key name (defaults to `never` for no fallback)
  *
- * @param value A value containing exactly one property from the states type
- * @param fallback Optional key name for the fallback handler
+ * @param caze A caze containing exactly one property from the states type
+ * @param fallback Key name for the fallback handler (required when `F` is specified, omitted when `F` is `never`)
  *
  * @returns A {@link Switch} function that accepts handlers for each state
  *
  * @example
  *
  * ```typescript
- * // All states handled - no fallback needed
+ * // Handle all states explicitly
  * const result = Switch<{
  *   value: string;
  *   error: Error
@@ -175,74 +175,33 @@ export type Handler<V, R> =
  *   error: (e) => `error: ${e.message}`
  * })
  *
- * // ✅ Valid: Fallback parameter specified when using fallback handler
- * const result = Switch({ value: "done" }, "_")({
+ * // Use fallback for unhandled states
+ * const result = Switch({ value: "done" }, "other")({
  *   value: (v) => `value: ${v}`,
- *   _: () => "unhandled"
- * })
- *
- * // ❌ Invalid: Fallback handler without fallback parameter
- * const result = Switch({ value: "done" })({
- *   value: (v) => `value: ${v}`,
- *   _: () => "unhandled"  // This won't work - no fallback key specified
+ *   other: () => "unhandled"
  * })
  * ```
  */
 export function Switch<C extends Cases, F extends string = never>(
-	value: Case<C>,
-	...args: [F] extends [never] ? [] : [F]
+	caze: Case<C>,
+	...[fallback]: [F] extends [never] ? [] : [F]
 ): Switch<C, F> {
-	const fallback = args[0];
+
+	const [label, value] = Object.entries(caze)[0] ?? []; // find the active case
 
 	return function <R>(handlers: Partial<Handlers<C, R, F>> & Partial<Fallback<C, R, F>>): R | undefined {
 
-		// Find the active case
-		const activeCase = Object.keys(value)
-			.filter(key => Object.prototype.hasOwnProperty.call(value, key))
-			.map(key => ({ key, value: value[key] }))[0];
+		// find the matching handler or fallback
 
-		// Find the matching handler or fallback
-		const result = activeCase && (
-			handlers[activeCase.key as keyof typeof handlers] !== undefined
-				? {
-					handler: handlers[activeCase.key as keyof typeof handlers] as Handler<unknown, R>,
-					value: activeCase.value
-				}
-				: fallback && handlers[fallback] !== undefined
-					? {
-						handler: handlers[fallback] as Handler<unknown, R>,
-						value: activeCase.value
-					}
-					: undefined
-		);
+		const handler = handlers[label] || (fallback && handlers[fallback]);
 
-		// Execute handler if found
-		return result && (isFunction(result.handler)
-				? (result.handler as (value: unknown) => R)(result.value)
-				: result.handler as R
+		// execute handler if found
+
+		return handler && (isFunction(handler)
+				? (handler as (value: unknown) => R)(value)
+				: handler as R
 		);
 
 	};
 
 }
-
-
-// ✅ Valid: Fallback parameter specified when using fallback handler
-const a = Switch<{ value: string; error: Error }, "_">({ value: "done" }, "_")({
-	value: (v) => `value: ${v}`,
-	_: () => "unhandled"
-});
-
-// ❌ Invalid: Fallback handler without fallback parameter
-const b = Switch<{ value: string; error: Error }>({ value: "done" })({
-	value: (v) => `value: ${v}`,
-	// @ts-expect-error - Demonstrating invalid usage: '_' is not valid without fallback parameter
-	_: () => "unhandled"
-});
-
-// ❌ Invalid: Fallback type parameter specified but not passed at runtime
-// @ts-expect-error - Expected 2 arguments, but got 1
-const c = Switch<{ value: string; error: Error }, "_">({ value: "done" })({
-	value: (v) => `value: ${v}`,
-	_: () => "unhandled"
-});

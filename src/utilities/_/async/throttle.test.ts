@@ -15,7 +15,8 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { Throttle } from "./async.js";
+import { Throttle } from "./throttle.js";
+
 
 describe("Throttle", () => {
 
@@ -309,59 +310,6 @@ describe("Throttle", () => {
 
 	});
 
-
-	describe("builder methods", () => {
-
-		it("should create new instance with minimum", () => {
-			const throttle1 = Throttle({ minimum: 100 });
-			const throttle2 = throttle1.minimum(200);
-
-			expect(throttle2).not.toBe(throttle1);
-		});
-
-		it("should create new instance with maximum", () => {
-			const throttle1 = Throttle({ maximum: 1000 });
-			const throttle2 = throttle1.maximum(2000);
-
-			expect(throttle2).not.toBe(throttle1);
-		});
-
-		it("should create new instance with buildup", () => {
-			const throttle1 = Throttle({ buildup: 1.5 });
-			const throttle2 = throttle1.buildup(2.0);
-
-			expect(throttle2).not.toBe(throttle1);
-		});
-
-		it("should create new instance with backoff", () => {
-			const throttle1 = Throttle({ backoff: 1.5 });
-			const throttle2 = throttle1.backoff(2.0);
-
-			expect(throttle2).not.toBe(throttle1);
-		});
-
-		it("should create new instance with recover", () => {
-			const throttle1 = Throttle({ recover: 0.8 });
-			const throttle2 = throttle1.recover(0.5);
-
-			expect(throttle2).not.toBe(throttle1);
-		});
-
-		it("should preserve other parameters when using minimum", async () => {
-			const throttle1 = Throttle({
-				minimum: 10,
-				backoff: 3.0
-			});
-			const throttle2 = throttle1.minimum(20);
-
-			await throttle2.queue();
-			const delay = throttle2.adapt(false);
-
-			// Should still use backoff=3.0 from original
-			expect(delay).toBe(60); // 20 * 3.0
-		});
-
-	});
 
 	describe("adaptive behavior", () => {
 

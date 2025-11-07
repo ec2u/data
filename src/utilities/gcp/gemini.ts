@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Throttle } from "@/utilities/_/async";
+import { Throttle } from "@/utilities/_/async/throttle";
 import { log, message } from "@/utilities/core/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
