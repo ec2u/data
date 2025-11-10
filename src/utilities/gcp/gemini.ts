@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Throttle } from "@/utilities/_/async/throttle";
 import { log, Logger } from "@/utilities/_/logger";
 import { message } from "@/utilities/_/logger/log";
 import { md } from "@/utilities/core/tags";
@@ -29,6 +28,7 @@ import {
 	Part
 } from "@google/genai";
 import { isString } from "@metreeca/core";
+import { Throttle } from "@metreeca/pipe/async";
 
 
 const logger = log(import.meta.url);
@@ -39,14 +39,12 @@ const logger = log(import.meta.url);
 export const ai = await (async (ai) => {
 
 	/**
-	 * Shared throttles by model name for rate limiting API requests.
+	 * Shared throttle and logger instances by model name.
 	 */
-	const throttles = new Map<string, ReturnType<typeof Throttle>>();
-
-	/**
-	 * Cached logger instances by model name.
-	 */
-	const loggers = new Map<string, Logger>();
+	const utilities = new Map<string, {
+		throttle: Throttle;
+		logger: Logger;
+	}>();
 
 
 	return Object.assign(ai, { // patch to work around known issues
@@ -86,7 +84,11 @@ export const ai = await (async (ai) => {
 						const {
 
 							tools,
-							automaticFunctionCalling,
+
+							automaticFunctionCalling: {
+								disable = false,
+								maximumRemoteCalls = 0
+							} = {},
 
 							responseSchema,
 							responseMimeType,
@@ -95,142 +97,130 @@ export const ai = await (async (ai) => {
 
 						} = config ?? {};
 
-						if ( automaticFunctionCalling?.disable ) { // caller will handle function calling
+
+						if ( disable ) { // caller will handle function calling
 
 							return await generateContent({ ...params, config: configWithoutSchema }, ...rest);
 
-						} else {
+						} else { // automatic function calling loop with quota throttling
 
-							// automatic function calling loop with quota throttling
+							return await afc();
 
-							const maximumRemoteCalls = automaticFunctionCalling?.maximumRemoteCalls ?? 100;
+						}
 
-							const callableTools = tools?.filter((tool: any): tool is CallableTool =>
-								typeof tool === "object" && "callTool" in tool
+						async function afc() {
+
+							const callables = tools?.filter((tool): tool is CallableTool =>
+								typeof tool === "object" && tool !== null && "callTool" in tool
 								&& typeof tool.callTool === "function"
 							) ?? [];
 
-							function normalizeContent(content: string | Content | Part): Content {
-
-								return isString(content) ? { role: "user", parts: [{ text: content }] }
+							const history: Content[] = (Array.isArray(params.contents)
+									? params.contents
+									: [params.contents]
+							).map(content =>
+								isString(content) ? { role: "user", parts: [{ text: content }] }
 									: "role" in content && "parts" in content ? content
-										: { role: "user", parts: [content as Part] };
+										: { role: "user", parts: [content as Part] }
+							);
 
-							}
+							for (let turn = 0; maximumRemoteCalls === 0 || turn < maximumRemoteCalls; turn++) {
 
-							const conversationHistory: Content[] = Array.isArray(params.contents)
-								? params.contents.map(normalizeContent)
-								: [normalizeContent(params.contents)];
+								const response = await retry(history);
 
-							const throttle = throttles.get(params.model) ?? throttles
-								.set(params.model, Throttle({
-									minimum: 100,
-									maximum: 60*1000,
-									buildup: 1.10,
-									backoff: 1.10,
-									recover: 0.95
-								}))
-								.get(params.model)!;
-
-							return await functionCallingLoop();
-
-
-							async function functionCallingLoop() {
-
-								for (let turn = 1; turn <= maximumRemoteCalls; turn++) {
-
-									const response = await callModel();
-
-									const modelContent = response.candidates?.[0]?.content;
-
-									if ( !modelContent ) {
-										throw new Error("no model content in response");
-									}
-
-									conversationHistory.push(modelContent);
-
-									const functionCalls = modelContent.parts?.filter(part => part.functionCall);
-
-									if ( !functionCalls || functionCalls.length === 0 ) {
-
-										return Object.assign(response, {
-											automaticFunctionCallingHistory: conversationHistory.slice(0, -1)
-										});
-									}
-
-									if ( callableTools.length === 0 ) {
-										throw new Error(
-											"model requested function calls but no CallableTool implementations provided"
-										);
-									}
-
-									const allResults: Part[] = [];
-
-									for (const tool of callableTools) {
-										const results = await tool.callTool(
-											functionCalls.map(fc => fc.functionCall!).filter(Boolean)
-										);
-										allResults.push(...results);
-									}
-
-									conversationHistory.push({
-										role: "user",
-										parts: allResults
-									});
+								if ( !response.candidates?.[0]?.content ) {
+									throw new Error("no model content in response");
 								}
 
-								throw new Error(`maximum turns (${maximumRemoteCalls}) reached without completion`);
+								const calls = (response.candidates[0]?.content?.parts ?? [])
+									.map(part => part.functionCall)
+									.filter((call) => call !== undefined);
+
+								if ( calls.length === 0 ) {
+
+									return Object.assign(response, {
+										automaticFunctionCallingHistory: history
+									});
+
+								} else {
+
+									if ( callables.length === 0 ) {
+										throw new Error(`no callable tools available to fulfill model requests <${
+											calls.map(call => call.name).join(", ")
+										}>`);
+									}
+
+									history.push(response.candidates[0].content, {
+										role: "user",
+										parts: (await Promise.all(callables.map(tool => tool.callTool(calls)))).flat()
+									});
+
+								}
+
 							}
 
-							async function callModel() {
-								return await throttle.retry(
-									() => generateContent({
-										...params,
-										contents: conversationHistory,
-										config: { ...configWithoutSchema, tools }
-									}, ...rest),
-									{
+							throw new Error(`maximum turns (${maximumRemoteCalls}) reached without completion`);
+						}
 
-										recover: (error) => {
-											if ( error instanceof ApiError && error.status === 429 ) {
+						async function retry(history: Content[]) {
 
-												const delay = (error as any).error?.details
-													?.find((d: any) => d["@type"]?.includes("RetryInfo"))
-													?.retryDelay;
+							const { throttle, logger: mlogger } = utilities.get(params.model) ?? utilities
+								.set(params.model, {
+									throttle: Throttle({
+										minimum: 100,
+										maximum: 60*1000,
+										buildup: 1.10,
+										backoff: 1.10,
+										recover: 0.95
+									}),
+									logger: logger(params.model)
+								})
+								.get(params.model)!;
 
-												const match = delay?.match(/^(\d+(?:\.\d+)?)s$/);
+							return await throttle.retry(
+								() => generateContent({
+									...params,
+									contents: history,
+									config: { ...configWithoutSchema, tools }
+								}, ...rest),
+								{
 
-												return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
+									recover: (error) => {
+										if ( error instanceof ApiError && error.status === 429 ) {
 
-											} else {
+											const delay = (error as any).error?.details
+												?.find((d: any) => d["@type"]?.includes("RetryInfo"))
+												?.retryDelay;
 
-												return undefined;
+											const match = delay?.match(/^(\d+(?:\.\d+)?)s$/);
 
-											}
-										},
+											return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
 
-										monitor: (attempt, attempts, elapsed) => {
+										} else {
 
-											const log = loggers.get(params.model) ?? loggers
-												.set(params.model, logger(params.model))
-												.get(params.model)!;
+											return undefined;
 
-											const count = attempts > 0 ? `${attempt+1}/${attempts}` : `${attempt+1}`;
+										}
+									},
 
-											if ( elapsed === undefined ) {
-												log.error`request attempt ${count} aborted`;
-											} else if ( attempt > 0 ) {
-												log.warning`request attempt ${count} rejected with delay ${elapsed} ms`;
-											} else {
-												log.info`request attempt ${count} submitted with delay ${elapsed} ms`;
-											}
+									monitor: (attempt, attempts, elapsed) => {
 
+										const count = attempts > 0 ? `${attempt+1}/${attempts}` : `${attempt+1}`;
+
+										if ( elapsed === undefined ) {
+											mlogger.error`request attempt ${count} aborted`;
+										} else if ( attempt > 0 ) {
+											mlogger.warning`request attempt ${count} rejected with delay ${elapsed} ms`;
+										} else {
+											mlogger.info`request attempt ${count} submitted with delay ${elapsed} ms`;
 										}
 
 									}
-								);
-							}
+
+								}
+							);
 						}
+
 					}
 
 					/**
@@ -329,7 +319,6 @@ export const ai = await (async (ai) => {
 
 						}
 					}
-
 
 				};
 

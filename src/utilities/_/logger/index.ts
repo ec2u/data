@@ -171,7 +171,7 @@ export function simple(): Sink {
 
 		logger("%s %s %s",
 			prefix.padStart(3),
-			context.padEnd(15),
+			context.padEnd(20),
 			text
 		);
 
