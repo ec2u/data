@@ -21,7 +21,7 @@
  * that are either successful or failed, UI states that are loading, ready, or error, or any domain
  * model where alternatives are mutually exclusive.
  *
- * The {@link Switch} function lets you handle each state with a dedicated handler, while TypeScript
+ * The {@link Status} function lets you handle each state with a dedicated handler, while TypeScript
  * ensures all states are covered and values are accessed safely. Eliminates verbose conditional
  * logic and prevents bugs from unhandled cases.
  *
@@ -32,7 +32,7 @@
 import { isFunction } from "@metreeca/core";
 
 /**
- * Pattern matcher returned by the {@link Switch} function.
+ * Pattern matcher returned by the {@link Status} function.
  *
  * Accepts handlers for each state and returns the result from the matched handler.
  * Three usage patterns are supported:
@@ -44,7 +44,7 @@ import { isFunction } from "@metreeca/core";
  * @typeParam C The states type defining all possible variants
  * @typeParam F The fallback handler key name (defaults to `never` for no fallback)
  */
-export type Switch<C extends Cases, F extends string = never> = {
+export type Status<C extends Cases, F extends string = never> = {
 
 	/**
 	 * Handles all states with complete handlers.
@@ -161,7 +161,7 @@ export type Handler<V, R> =
  * @param caze A caze containing exactly one property from the states type
  * @param fallback Key name for the fallback handler (required when `F` is specified, omitted when `F` is `never`)
  *
- * @returns A {@link Switch} function that accepts handlers for each state
+ * @returns A {@link Status} function that accepts handlers for each state
  *
  * @example
  *
@@ -182,10 +182,10 @@ export type Handler<V, R> =
  * })
  * ```
  */
-export function Switch<C extends Cases, F extends string = never>(
+export function Status<C extends Cases, F extends string = never>(
 	caze: Case<C>,
 	...[fallback]: [F] extends [never] ? [] : [F]
-): Switch<C, F> {
+): Status<C, F> {
 
 	const [label, value] = Object.entries(caze)[0] ?? []; // find the active case
 

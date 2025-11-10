@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { Case, Switch } from "./switch.js";
+import { Case } from "./status.js";
 
 
 describe("Switch", () => {

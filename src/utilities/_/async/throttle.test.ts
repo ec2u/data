@@ -134,7 +134,7 @@ describe("Throttle", () => {
 			// With buildup=2.0 and queue=1, delay should be 10*2^1 = 20ms
 			expect(duration).toBeGreaterThanOrEqual(15); // Allow some variance
 
-			throttle.adapt(true); // Decrement queue
+			await throttle.adapt(true); // Decrement queue
 		});
 
 		it("should not increment queue when adapt is false", async () => {
@@ -167,9 +167,9 @@ describe("Throttle", () => {
 			expect(duration).toBeLessThan(40);
 
 			// Clean up queue
-			throttle.adapt(true);
-			throttle.adapt(true);
-			throttle.adapt(true);
+			await throttle.adapt(true);
+			await throttle.adapt(true);
+			await throttle.adapt(true);
 		});
 
 	});
@@ -239,9 +239,9 @@ describe("Throttle", () => {
 			expect(() => throttle.adapt(0)).not.toThrow();
 		});
 
-		it("should reject negative retry delay", () => {
+		it("should reject negative retry delay", async () => {
 			const throttle = Throttle();
-			expect(() => throttle.adapt(-100)).toThrow("negative delay <-100>");
+			await expect(throttle.adapt(-100)).rejects.toThrow("negative delay <-100>");
 		});
 
 		it("should reduce delay on success with recover factor", async () => {
@@ -252,8 +252,8 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			throttle.adapt(false); // Increase delay to 20
-			const delay1 = throttle.adapt(true); // Should reduce to 10
+			await throttle.adapt(false); // Increase delay to 20
+			const delay1 = await throttle.adapt(true); // Should reduce to 10
 
 			expect(delay1).toBe(10); // 20 * 0.5 = 10
 		});
@@ -266,7 +266,7 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			const delay = throttle.adapt(false); // Should increase to 20
+			const delay = await throttle.adapt(false); // Should increase to 20
 
 			expect(delay).toBe(20); // 10 * 2.0 = 20
 		});
@@ -278,7 +278,7 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			const delay = throttle.adapt(true);
+			const delay = await throttle.adapt(true);
 
 			expect(delay).toBeGreaterThanOrEqual(10);
 		});
@@ -291,7 +291,7 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			const delay = throttle.adapt(false);
+			const delay = await throttle.adapt(false);
 
 			expect(delay).toBeLessThanOrEqual(50);
 		});
@@ -303,7 +303,7 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			const delay = throttle.adapt(100); // Explicit retry of 100ms
+			const delay = await throttle.adapt(100); // Explicit retry of 100ms
 
 			expect(delay).toBe(100);
 		});
@@ -328,8 +328,8 @@ describe("Throttle", () => {
 
 			expect(duration).toBeGreaterThanOrEqual(30); // Allow variance
 
-			throttle.adapt(true);
-			throttle.adapt(true);
+			await throttle.adapt(true);
+			await throttle.adapt(true);
 		});
 
 	it("should restrict to one task after failure", async () => {
@@ -337,7 +337,7 @@ describe("Throttle", () => {
 
 		// Start and fail first task
 		await throttle.queue(true); // queue = 1
-		throttle.adapt(false); // queue = 0, dirty = true
+		await throttle.adapt(false); // queue = 0, dirty = true
 
 		// Start second task (should succeed since queue was 0)
 		await throttle.queue(true); // queue = 1, dirty still true
@@ -354,15 +354,15 @@ describe("Throttle", () => {
 		// Should timeout because dirty flag blocks concurrent tasks
 		expect(result).toBe("timeout");
 
-		throttle.adapt(true); // Complete second task, clears dirty flag
+		await throttle.adapt(true); // Complete second task, clears dirty flag
 	});
 
 		it("should clear dirty flag on successful completion", async () => {
 			const throttle = Throttle({ minimum: 10 });
 
 			await throttle.queue(true);
-			throttle.adapt(false); // Set dirty flag
-			throttle.adapt(true); // Clear dirty flag
+			await throttle.adapt(false); // Set dirty flag
+			await throttle.adapt(true); // Clear dirty flag
 
 			// Should now allow concurrent tasks again
 			const start = Date.now();
@@ -379,15 +379,15 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			let delay = throttle.adapt(false); // 20
+			let delay = await throttle.adapt(false); // 20
 			expect(delay).toBe(20);
 
 			await throttle.queue();
-			delay = throttle.adapt(false); // 40
+			delay = await throttle.adapt(false); // 40
 			expect(delay).toBe(40);
 
 			await throttle.queue();
-			delay = throttle.adapt(false); // 80
+			delay = await throttle.adapt(false); // 80
 			expect(delay).toBe(80);
 		});
 
@@ -399,18 +399,18 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			throttle.adapt(false); // 40
+			await throttle.adapt(false); // 40
 
 			await throttle.queue();
-			let delay = throttle.adapt(true); // 20
+			let delay = await throttle.adapt(true); // 20
 			expect(delay).toBe(20);
 
 			await throttle.queue();
-			delay = throttle.adapt(true); // 10
+			delay = await throttle.adapt(true); // 10
 			expect(delay).toBe(10);
 
 			await throttle.queue();
-			delay = throttle.adapt(true); // Still 10 (minimum)
+			delay = await throttle.adapt(true); // Still 10 (minimum)
 			expect(delay).toBe(10);
 		});
 
@@ -456,9 +456,9 @@ describe("Throttle", () => {
 			// Total should be at least 60ms
 			expect(duration).toBeGreaterThanOrEqual(50);
 
-			throttle.adapt(true);
-			throttle.adapt(true);
-			throttle.adapt(true);
+			await throttle.adapt(true);
+			await throttle.adapt(true);
+			await throttle.adapt(true);
 		});
 
 	});
@@ -492,8 +492,8 @@ describe("Throttle", () => {
 			// With buildup=1.0, delay should be 10*1^n = 10 regardless of queue
 			expect(duration).toBeLessThan(30);
 
-			throttle.adapt(true);
-			throttle.adapt(true);
+			await throttle.adapt(true);
+			await throttle.adapt(true);
 		});
 
 		it("should handle backoff of 1.0 (no increase on failure)", async () => {
@@ -503,7 +503,7 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			const delay = throttle.adapt(false);
+			const delay = await throttle.adapt(false);
 
 			expect(delay).toBe(10); // 10 * 1.0 = 10
 		});
@@ -516,10 +516,10 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			throttle.adapt(false); // Increase to 20
+			await throttle.adapt(false); // Increase to 20
 
 			await throttle.queue();
-			const delay = throttle.adapt(true);
+			const delay = await throttle.adapt(true);
 
 			expect(delay).toBe(20); // 20 * 1.0 = 20
 		});
@@ -540,7 +540,7 @@ describe("Throttle", () => {
 			// Should be capped at maximum despite large buildup
 			expect(duration).toBeLessThan(40);
 
-			throttle.adapt(true);
+			await throttle.adapt(true);
 		});
 
 		it("should handle minimum equal to maximum", async () => {
@@ -551,10 +551,499 @@ describe("Throttle", () => {
 			});
 
 			await throttle.queue();
-			const delay = throttle.adapt(false);
+			const delay = await throttle.adapt(false);
 
 			// Delay should stay at 10 despite backoff
 			expect(delay).toBe(10);
+		});
+
+	});
+
+	describe("retry()", () => {
+
+		describe("successful execution", () => {
+
+			it("should execute and return result from async task on first attempt", async () => {
+				const throttle = Throttle({ minimum: 10 });
+				const task = async () => "success";
+
+				const result = await throttle.retry(task);
+
+				expect(result).toBe("success");
+			});
+
+			it("should execute and return result from sync task on first attempt", async () => {
+				const throttle = Throttle({ minimum: 10 });
+				const task = () => "success";
+
+				const result = await throttle.retry(task);
+
+				expect(result).toBe("success");
+			});
+
+			it("should return complex objects", async () => {
+				const throttle = Throttle();
+				const expected = { data: [1, 2, 3], nested: { value: "test" } };
+				const task = async () => expected;
+
+				const result = await throttle.retry(task);
+
+				expect(result).toEqual(expected);
+			});
+
+			it("should call adapt(true) on successful completion", async () => {
+				const throttle = Throttle({ minimum: 10 });
+				const task = async () => "success";
+
+				await throttle.retry(task);
+
+				// Verify by checking that delay hasn't increased
+				const delay = await throttle.adapt(true);
+				expect(delay).toBe(10);
+			});
+
+		});
+
+		describe("non-retryable errors", () => {
+
+			it("should throw original error when recover returns undefined", async () => {
+				const throttle = Throttle({ minimum: 10 });
+				const error = new Error("non-retryable");
+				const task = async () => { throw error; };
+				const recover = () => undefined;
+
+				await expect(throttle.retry(task, { recover }))
+					.rejects.toThrow("non-retryable");
+			});
+
+			it("should call adapt(false) on non-retryable error", async () => {
+				const throttle = Throttle({ minimum: 10, backoff: 2.0 });
+				const task = async () => { throw new Error("fail"); };
+				const recover = () => undefined;
+
+				await expect(throttle.retry(task, { recover })).rejects.toThrow();
+
+				// Verify delay increased due to adapt(false)
+				const delay = await throttle.adapt(false);
+				expect(delay).toBe(40); // 10 -> 20 -> 40
+			});
+
+			it("should not retry when recover returns undefined", async () => {
+				const throttle = Throttle();
+				let attempts = 0;
+				const task = async () => {
+					attempts++;
+					throw new Error("fail");
+				};
+				const recover = () => undefined;
+
+				await expect(throttle.retry(task, { attempts: 3, recover }))
+					.rejects.toThrow();
+
+				expect(attempts).toBe(1); // Only tried once
+			});
+
+		});
+
+		describe("retryable errors with default backoff", () => {
+
+			it("should retry on error when recover returns 0", async () => {
+				const throttle = Throttle({ minimum: 10 });
+				let attemptCount = 0;
+				const task = async () => {
+					attemptCount++;
+					if ( attemptCount < 3 ) {
+						throw new Error("retry");
+					}
+					return "success";
+				};
+				const recover = () => 0; // Use default backoff
+
+				const result = await throttle.retry(task, { attempts: 5, recover });
+
+				expect(result).toBe("success");
+				expect(attemptCount).toBe(3);
+			});
+
+			it("should call adapt(false) when recover returns 0", async () => {
+				const throttle = Throttle({ minimum: 10, backoff: 2.0 });
+				const task = async () => { throw new Error("retry"); };
+				const recover = (error: unknown) => {
+					if ( error instanceof Error && error.message === "retry" ) {
+						return 0;
+					}
+					return undefined;
+				};
+
+				const retryPromise = throttle.retry(task, { attempts: 1, recover });
+				await expect(retryPromise).rejects.toThrow("retry");
+
+				// Verify delay increased due to adapt(false)
+				const delay = await throttle.adapt(false);
+				expect(delay).toBe(40); // 10 -> 20 -> 40
+			});
+
+		});
+
+		describe("retryable errors with API-specified delay", () => {
+
+			it("should retry with API-specified delay when recover returns >0", async () => {
+				const throttle = Throttle({ minimum: 10 });
+				let attemptCount = 0;
+				const task = async () => {
+					attemptCount++;
+					if ( attemptCount < 2 ) {
+						throw new Error("retry");
+					}
+					return "success";
+				};
+				const recover = () => 50; // API specifies 50ms delay
+
+				const result = await throttle.retry(task, { attempts: 3, recover });
+
+				expect(result).toBe("success");
+				expect(attemptCount).toBe(2);
+			});
+
+			it("should call adapt(delay) when recover returns >0", async () => {
+				const throttle = Throttle({ minimum: 10, backoff: 2.0 });
+				const task = async () => { throw new Error("retry"); };
+				const recover = () => 100; // API specifies 100ms
+
+				const retryPromise = throttle.retry(task, { attempts: 2, recover });
+				await expect(retryPromise).rejects.toThrow("retry");
+
+				// Verify delay was set to API-specified value (100ms)
+				// After first failure, API delay is applied (baseline = 100).
+				// After retry exhaustion on second attempt, adapt(false) is called (baseline = 200).
+				// Next adapt(false) applies backoff again.
+				const delay = await throttle.adapt(false);
+				expect(delay).toBe(400); // 200 * 2.0 = 400
+			});
+
+		});
+
+		describe("maximum attempts", () => {
+
+			it("should throw error when max attempts exceeded", async () => {
+				const throttle = Throttle({ minimum: 5 });
+				const task = async () => { throw new Error("always fails"); };
+				const recover = () => 0;
+
+				await expect(throttle.retry(task, { attempts: 3, recover }))
+					.rejects.toThrow("always fails");
+			});
+
+			it("should retry exactly N times before throwing", async () => {
+				const throttle = Throttle({ minimum: 5 });
+				let attemptCount = 0;
+				const task = async () => {
+					attemptCount++;
+					throw new Error("fail");
+				};
+				const recover = () => 0;
+
+				await expect(throttle.retry(task, { attempts: 5, recover }))
+					.rejects.toThrow("fail");
+
+				expect(attemptCount).toBe(5);
+			});
+
+			it("should throw original error when max attempts exceeded", async () => {
+				const throttle = Throttle();
+				const originalError = new Error("original");
+				const task = async () => { throw originalError; };
+				const recover = () => 0;
+
+				await expect(throttle.retry(task, { attempts: 2, recover }))
+					.rejects.toThrow(originalError);
+			});
+
+		});
+
+		describe("unlimited retries", () => {
+
+			it("should retry indefinitely when attempts is 0", async () => {
+				const throttle = Throttle({ minimum: 5 });
+				let attemptCount = 0;
+				const task = async () => {
+					attemptCount++;
+					if ( attemptCount < 10 ) {
+						throw new Error("retry");
+					}
+					return "success";
+				};
+				const recover = () => 0;
+
+				const result = await throttle.retry(task, { attempts: 0, recover });
+
+				expect(result).toBe("success");
+				expect(attemptCount).toBe(10);
+			});
+
+			it("should use 0 as default attempts value", async () => {
+				const throttle = Throttle({ minimum: 5 });
+				let attemptCount = 0;
+				const task = async () => {
+					attemptCount++;
+					if ( attemptCount < 15 ) {
+						throw new Error("retry");
+					}
+					return "success";
+				};
+				const recover = () => 0;
+
+				// No attempts specified - should default to 0 (unlimited)
+				const result = await throttle.retry(task, { recover });
+
+				expect(result).toBe("success");
+				expect(attemptCount).toBe(15);
+			});
+
+		});
+
+		describe("monitor callback", () => {
+
+			it("should call monitor on first attempt submission", async () => {
+				const throttle = Throttle({ minimum: 10 });
+				const task = async () => "success";
+				const monitorCalls: Array<[number, number, number | undefined]> = [];
+				const monitor = (attempt: number, attempts: number, elapsed: number | undefined) => {
+					monitorCalls.push([attempt, attempts, elapsed]);
+				};
+
+				await throttle.retry(task, { attempts: 3, monitor });
+
+				expect(monitorCalls.length).toBeGreaterThan(0);
+				// First call: attempt=0, attempts=3, elapsed should be ~0 (just started)
+				expect(monitorCalls[0][0]).toBe(0);
+				expect(monitorCalls[0][1]).toBe(3);
+				expect(monitorCalls[0][2]).toBeDefined();
+			});
+
+			it("should call monitor with undefined elapsed on non-retryable error", async () => {
+				const throttle = Throttle({ minimum: 10 });
+				const task = async () => { throw new Error("fail"); };
+				const recover = () => undefined;
+				const monitorCalls: Array<[number, number, number | undefined]> = [];
+				const monitor = (attempt: number, attempts: number, elapsed: number | undefined) => {
+					monitorCalls.push([attempt, attempts, elapsed]);
+				};
+
+				await expect(throttle.retry(task, { attempts: 3, recover, monitor }))
+					.rejects.toThrow();
+
+				// Last call should have undefined elapsed (failed)
+				const lastCall = monitorCalls[monitorCalls.length-1];
+				expect(lastCall[0]).toBe(0); // attempt 0
+				expect(lastCall[1]).toBe(3); // max attempts
+				expect(lastCall[2]).toBeUndefined(); // failed
+			});
+
+			it("should call monitor with elapsed time on retryable error", async () => {
+				const throttle = Throttle({ minimum: 5 });
+				let attemptCount = 0;
+				const task = async () => {
+					attemptCount++;
+					if ( attemptCount < 3 ) {
+						throw new Error("retry");
+					}
+					return "success";
+				};
+				const recover = () => 0;
+				const monitorCalls: Array<[number, number, number | undefined]> = [];
+				const monitor = (attempt: number, attempts: number, elapsed: number | undefined) => {
+					monitorCalls.push([attempt, attempts, elapsed]);
+				};
+
+				await throttle.retry(task, { attempts: 5, recover, monitor });
+
+				// Should have multiple calls, all with defined elapsed (except possibly last)
+				expect(monitorCalls.length).toBeGreaterThan(2);
+
+				// Check that retry calls have increasing elapsed times
+				for (let i = 1; i < monitorCalls.length-1; i++) {
+					expect(monitorCalls[i][2]).toBeDefined();
+					if ( i > 0 && monitorCalls[i-1][2] !== undefined && monitorCalls[i][2] !== undefined ) {
+						expect(monitorCalls[i][2]).toBeGreaterThanOrEqual(monitorCalls[i-1][2] as number);
+					}
+				}
+			});
+
+			it("should call monitor with (attempts, attempts, undefined) when max attempts exceeded", async () => {
+				const throttle = Throttle({ minimum: 5 });
+				const task = async () => { throw new Error("always fails"); };
+				const recover = () => 0;
+				const monitorCalls: Array<[number, number, number | undefined]> = [];
+				const monitor = (attempt: number, attempts: number, elapsed: number | undefined) => {
+					monitorCalls.push([attempt, attempts, elapsed]);
+				};
+
+				await expect(throttle.retry(task, { attempts: 3, recover, monitor }))
+					.rejects.toThrow("always fails");
+
+				// Last call should indicate max attempts exhausted
+				const lastCall = monitorCalls[monitorCalls.length-1];
+				expect(lastCall[0]).toBe(2); // last attempt (0-indexed, so attempts-1)
+				expect(lastCall[1]).toBe(3); // max attempts
+				expect(lastCall[2]).toBeUndefined(); // failed
+			});
+
+			it("should track increasing attempt numbers across retries", async () => {
+				const throttle = Throttle({ minimum: 5 });
+				let attemptCount = 0;
+				const task = async () => {
+					attemptCount++;
+					if ( attemptCount < 4 ) {
+						throw new Error("retry");
+					}
+					return "success";
+				};
+				const recover = () => 0;
+				const monitorCalls: Array<[number, number, number | undefined]> = [];
+				const monitor = (attempt: number, attempts: number, elapsed: number | undefined) => {
+					monitorCalls.push([attempt, attempts, elapsed]);
+				};
+
+				await throttle.retry(task, { attempts: 10, recover, monitor });
+
+				// Verify attempt numbers increase: 0, 0, 1, 1, 2, 2, 3
+				// (each attempt is called twice: once on submit, once on retry/complete)
+				const attemptNumbers = monitorCalls.map(call => call[0]);
+				expect(attemptNumbers).toContain(0);
+				expect(attemptNumbers).toContain(1);
+				expect(attemptNumbers).toContain(2);
+				expect(attemptNumbers).toContain(3);
+			});
+
+		});
+
+		describe("integration with throttle", () => {
+
+			it("should use throttle queue for rate limiting", async () => {
+				const throttle = Throttle({ minimum: 20 });
+				const task = async () => "success";
+
+				const start = Date.now();
+				await throttle.retry(task);
+				const duration = Date.now()-start;
+
+				// Should have waited for queue
+				expect(duration).toBeGreaterThanOrEqual(15);
+			});
+
+			it("should apply adaptive delay on retries", async () => {
+				const throttle = Throttle({ minimum: 10, backoff: 2.0 });
+				let attemptCount = 0;
+				const task = async () => {
+					attemptCount++;
+					if ( attemptCount < 3 ) {
+						throw new Error("retry");
+					}
+					return "success";
+				};
+				const recover = () => 0;
+
+				const start = Date.now();
+				await throttle.retry(task, { attempts: 5, recover });
+				const duration = Date.now()-start;
+
+				// Should have adaptive delays between retries
+				// First: ~10ms, Second: ~20ms (backoff applied), Third: ~40ms
+				expect(duration).toBeGreaterThanOrEqual(30);
+			});
+
+		});
+
+		describe("edge cases", () => {
+
+			it("should handle empty options object", async () => {
+				const throttle = Throttle();
+				const task = async () => "success";
+
+				const result = await throttle.retry(task, {});
+
+				expect(result).toBe("success");
+			});
+
+			it("should handle no options parameter", async () => {
+				const throttle = Throttle();
+				const task = async () => "success";
+
+				const result = await throttle.retry(task);
+
+				expect(result).toBe("success");
+			});
+
+			it("should handle task returning undefined", async () => {
+				const throttle = Throttle();
+				const task = async () => undefined;
+
+				const result = await throttle.retry(task);
+
+				expect(result).toBeUndefined();
+			});
+
+			it("should handle task returning null", async () => {
+				const throttle = Throttle();
+				const task = async () => null;
+
+				const result = await throttle.retry(task);
+
+				expect(result).toBeNull();
+			});
+
+			it("should handle task returning 0", async () => {
+				const throttle = Throttle();
+				const task = async () => 0;
+
+				const result = await throttle.retry(task);
+
+				expect(result).toBe(0);
+			});
+
+			it("should handle task returning false", async () => {
+				const throttle = Throttle();
+				const task = async () => false;
+
+				const result = await throttle.retry(task);
+
+				expect(result).toBe(false);
+			});
+
+			it("should handle synchronous errors", async () => {
+				const throttle = Throttle();
+				const task = () => { throw new Error("sync error"); };
+				const recover = () => undefined;
+
+				await expect(throttle.retry(task, { recover }))
+					.rejects.toThrow("sync error");
+			});
+
+			it("should handle recover throwing errors", async () => {
+				const throttle = Throttle();
+				const task = async () => { throw new Error("task error"); };
+				const recover = () => {
+					throw new Error("recover error");
+				};
+
+				// Should propagate recover error
+				await expect(throttle.retry(task, { attempts: 1, recover }))
+					.rejects.toThrow("recover error");
+			});
+
+			it("should handle monitor throwing errors", async () => {
+				const throttle = Throttle();
+				const task = async () => "success";
+				const monitor = () => {
+					throw new Error("monitor error");
+				};
+
+				// Should propagate monitor error
+				await expect(throttle.retry(task, { monitor }))
+					.rejects.toThrow("monitor error");
+			});
+
 		});
 
 	});

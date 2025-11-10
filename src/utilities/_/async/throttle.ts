@@ -77,20 +77,64 @@ export interface Throttle {
 	 *
 	 * @param completed - True if the task completed successfully, false if it failed
 	 *
-	 * @returns The new baseline delay in milliseconds
+	 * @returns A promise that resolves to the new baseline delay in milliseconds
 	 */
-	adapt(completed: boolean): number;
+	adapt(completed: boolean): Promise<number>;
 
 	/**
 	 * Adapts throttling parameters with an explicit retry delay.
 	 *
 	 * @param retry - The explicit retry delay in milliseconds; 0 indicates successful task completion
 	 *
-	 * @returns The new baseline delay in milliseconds
+	 * @returns A promise that resolves to the new baseline delay in milliseconds
 	 *
 	 * @throws Error if retry is negative
 	 */
-	adapt(retry: number): number;
+	adapt(retry: number): Promise<number>;
+
+
+	/**
+	 * Executes a function with retry logic using this throttle.
+	 *
+	 * @param task Function to execute (synchronous or asynchronous)
+	 * @param attempts Maximum retry attempts (`0` = unlimited retries, default: `0`)
+	 * @param recover Callback to determine if an error is retryable and extract API-specified delay.
+	 *                Returns `undefined` for non-retryable errors, or a delay in milliseconds for retryable errors
+	 *                (`0` = use default backoff, `>0` = use API-specified delay)
+	 * @param monitor Optional callback invoked before each attempt with current attempt (zero-indexed),
+	 *                maximum attempts, and elapsed time since retry started.
+	 *                Elapsed time is `undefined` when task fails (non-retryable error or max attempts exhausted),
+	 *                or time in milliseconds when task is about to execute or will retry after error
+	 *
+	 * @returns Promise resolving to the result of the executed task
+	 *
+	 * @throws Re-throws the error from `task` when retrying stops, either because `recover` returns
+	 *         `undefined` (non-retryable error) or maximum retry attempts are exceeded
+	 *
+	 * @remarks
+	 *
+	 * **Warning**: Setting `attempts = 0` creates an **infinite retry loop** that only terminates
+	 * when the task succeeds or a non-retryable error occurs (when `recover` returns `undefined`).
+	 * Use with caution in production code.
+	 *
+	 * **Note**: Attempt numbers are zero-indexed. The first execution is attempt 0,
+	 * the second is attempt 1, and so on. When `attempts = N`, the loop runs attempts 0 through N-1.
+	 */
+	retry<T>(task: () => T | Promise<T>, {
+
+		attempts,
+
+		recover,
+		monitor
+
+	}?: {
+
+		attempts?: number
+
+		recover?: (error: unknown) => undefined | number
+		monitor?: (attempt: number, attempts: number, elapsed: undefined | number) => void
+
+	}): Promise<T>;
 
 }
 
@@ -119,9 +163,9 @@ export interface Throttle {
  *
  * try {
  *   await processItem();
- *   throttle.adapt(true);
+ *   await throttle.adapt(true);
  * } catch (error) {
- *   throttle.adapt(false);
+ *   await throttle.adapt(false);
  * }
  * ```
  *
@@ -264,7 +308,7 @@ export function Throttle({
 
 		},
 
-		adapt(input: boolean | number): number {
+		async adapt(input: boolean | number): Promise<number> {
 
 			// adapt(completed: boolean): adaptive delay adjustment
 			// adapt(retry: number): explicit retry delay (0 = success)
@@ -278,15 +322,83 @@ export function Throttle({
 
 			// adapt throttling parameters based on task completion status
 
-			dirty = !completed;
-			count--;
+			return mutex.execute(() => {
 
-			delay = Math.max(retry, completed
-				? Math.max(Math.round(delay*recover), minimum)
-				: Math.min(Math.round(delay*backoff), ceiling)
-			);
+				dirty = !completed;
+				count--;
 
-			return delay;
+				delay = Math.max(retry, completed
+					? Math.max(Math.round(delay*recover), minimum)
+					: Math.min(Math.round(delay*backoff), ceiling)
+				);
+
+				return delay;
+
+			});
+
+		},
+
+		async retry<T>(task: () => T | Promise<T>, {
+
+			attempts = 0,
+
+			recover,
+			monitor
+
+		}: {
+
+			attempts?: number
+
+			recover?: (error: unknown) => undefined | number
+			monitor?: (attempt: number, attempts: number, elapsed: undefined | number) => void
+
+		} = {}): Promise<T> {
+
+			const start = Date.now();
+
+			// noinspection ForLoopThatDoesntUseLoopVariableJS
+
+			for (let attempt = 0; true; attempt++) {
+				try {
+
+					await this.queue(true);
+
+					monitor?.(attempt, attempts, Date.now()-start);
+
+					const result = await task();
+
+					await this.adapt(true);
+
+					return result;
+
+				} catch ( error ) {
+
+					const delay = recover?.(error);
+
+					if ( delay === undefined // non-retryable error
+						|| (attempts > 0 && attempt+1 >= attempts) // no more attempts remaining
+					) {
+
+						await this.adapt(false);
+
+						monitor?.(attempt, attempts, undefined);
+
+						throw error;
+
+					} else { // retries remaining
+
+						if ( delay > 0 ) {
+							await this.adapt(delay);
+						} else {
+							await this.adapt(false);
+						}
+
+						monitor?.(attempt, attempts, Date.now()-start);
+
+					}
+
+				}
+			}
 
 		}
 

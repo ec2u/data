@@ -34,6 +34,8 @@ import { isString } from "@metreeca/core";
 const logger = log(import.meta.url);
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const ai = await (async (ai) => {
 
 	/**
@@ -97,137 +99,138 @@ export const ai = await (async (ai) => {
 
 							return await generateContent({ ...params, config: configWithoutSchema }, ...rest);
 
-						}
+						} else {
 
-						// automatic function calling loop with quota throttling
+							// automatic function calling loop with quota throttling
 
-						const maximumRemoteCalls = automaticFunctionCalling?.maximumRemoteCalls ?? 100;
+							const maximumRemoteCalls = automaticFunctionCalling?.maximumRemoteCalls ?? 100;
 
-						const callableTools = tools?.filter((tool: any): tool is CallableTool =>
-							typeof tool === "object" && "callTool" in tool
-							&& typeof tool.callTool === "function"
-						) ?? [];
+							const callableTools = tools?.filter((tool: any): tool is CallableTool =>
+								typeof tool === "object" && "callTool" in tool
+								&& typeof tool.callTool === "function"
+							) ?? [];
 
-						function normalizeContent(content: string | Content | Part): Content {
+							function normalizeContent(content: string | Content | Part): Content {
 
-							return isString(content) ? { role: "user", parts: [{ text: content }] }
-								: "role" in content && "parts" in content ? content
-									: { role: "user", parts: [content as Part] };
+								return isString(content) ? { role: "user", parts: [{ text: content }] }
+									: "role" in content && "parts" in content ? content
+										: { role: "user", parts: [content as Part] };
 
-						}
+							}
 
-						const conversationHistory: Content[] = Array.isArray(params.contents)
-							? params.contents.map(normalizeContent)
-							: [normalizeContent(params.contents)];
+							const conversationHistory: Content[] = Array.isArray(params.contents)
+								? params.contents.map(normalizeContent)
+								: [normalizeContent(params.contents)];
 
-						const throttle = throttles.get(params.model) ?? throttles.set(params.model, Throttle({
-							minimum: 100,
-							maximum: 60*1000,
-							buildup: 1.10,
-							backoff: 1.10,
-							recover: 0.95
-						})).get(params.model)!;
+							const throttle = throttles.get(params.model) ?? throttles
+								.set(params.model, Throttle({
+									minimum: 100,
+									maximum: 60*1000,
+									buildup: 1.10,
+									backoff: 1.10,
+									recover: 0.95
+								}))
+								.get(params.model)!;
 
-						return await functionCallingLoop();
+							return await functionCallingLoop();
 
 
-						async function functionCallingLoop() {
+							async function functionCallingLoop() {
 
-							for (let turn = 1; turn <= maximumRemoteCalls; turn++) {
+								for (let turn = 1; turn <= maximumRemoteCalls; turn++) {
 
-								const response = await callModel();
+									const response = await callModel();
 
-								const modelContent = response.candidates?.[0]?.content;
+									const modelContent = response.candidates?.[0]?.content;
 
-								if ( !modelContent ) {
-									throw new Error("no model content in response");
-								}
+									if ( !modelContent ) {
+										throw new Error("no model content in response");
+									}
 
-								conversationHistory.push(modelContent);
+									conversationHistory.push(modelContent);
 
-								const functionCalls = modelContent.parts?.filter(part => part.functionCall);
+									const functionCalls = modelContent.parts?.filter(part => part.functionCall);
 
-								if ( !functionCalls || functionCalls.length === 0 ) {
+									if ( !functionCalls || functionCalls.length === 0 ) {
 
-									return Object.assign(response, {
-										automaticFunctionCallingHistory: conversationHistory.slice(0, -1)
+										return Object.assign(response, {
+											automaticFunctionCallingHistory: conversationHistory.slice(0, -1)
+										});
+									}
+
+									if ( callableTools.length === 0 ) {
+										throw new Error(
+											"model requested function calls but no CallableTool implementations provided"
+										);
+									}
+
+									const allResults: Part[] = [];
+
+									for (const tool of callableTools) {
+										const results = await tool.callTool(
+											functionCalls.map(fc => fc.functionCall!).filter(Boolean)
+										);
+										allResults.push(...results);
+									}
+
+									conversationHistory.push({
+										role: "user",
+										parts: allResults
 									});
 								}
 
-								if ( callableTools.length === 0 ) {
-									throw new Error(
-										"model requested function calls but no CallableTool implementations provided"
-									);
-								}
-
-								const allResults: Part[] = [];
-
-								for (const tool of callableTools) {
-									const results = await tool.callTool(
-										functionCalls.map(fc => fc.functionCall!).filter(Boolean)
-									);
-									allResults.push(...results);
-								}
-
-								conversationHistory.push({
-									role: "user",
-									parts: allResults
-								});
+								throw new Error(`maximum turns (${maximumRemoteCalls}) reached without completion`);
 							}
 
-							throw new Error(`maximum turns (${maximumRemoteCalls}) reached without completion`);
-						}
+							async function callModel() {
+								return await throttle.retry(
+									() => generateContent({
+										...params,
+										contents: conversationHistory,
+										config: { ...configWithoutSchema, tools }
+									}, ...rest),
+									{
 
-						async function callModel() {
-							return await retry(
-								throttle,
-								() => generateContent({
-									...params,
-									contents: conversationHistory,
-									config: { ...configWithoutSchema, tools }
-								}, ...rest),
-								{
+										recover: (error) => {
+											if ( error instanceof ApiError && error.status === 429 ) {
 
-									recover: (error) => {
-										if ( error instanceof ApiError && error.status === 429 ) {
+												const delay = (error as any).error?.details
+													?.find((d: any) => d["@type"]?.includes("RetryInfo"))
+													?.retryDelay;
 
-											const delay = (error as any).error?.details
-												?.find((d: any) => d["@type"]?.includes("RetryInfo"))
-												?.retryDelay;
+												const match = delay?.match(/^(\d+(?:\.\d+)?)s$/);
 
-											const match = delay?.match(/^(\d+(?:\.\d+)?)s$/);
+												return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
 
-											return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
+											} else {
 
-										} else {
+												return undefined;
 
-											return undefined;
+											}
+										},
 
-										}
-									},
+										monitor: (attempt, attempts, elapsed) => {
 
-									monitor: (attempt, attempts, elapsed) => {
+											const log = loggers.get(params.model) ?? loggers
+												.set(params.model, logger(params.model))
+												.get(params.model)!;
 
-										const log = loggers.get(params.model) ?? loggers
-											.set(params.model, logger(params.model))
-											.get(params.model)!;
+											const count = attempts > 0 ? `${attempt+1}/${attempts}` : `${attempt+1}`;
 
-										const count = attempts > 0 ? `${attempt+1}/${attempts}` : `${attempt+1}`;
+											if ( elapsed === undefined ) {
+												log.error`request attempt ${count} aborted`;
+											} else if ( attempt > 0 ) {
+												log.warning`request attempt ${count} rejected with delay ${elapsed} ms`;
+											} else {
+												log.info`request attempt ${count} submitted with delay ${elapsed} ms`;
+											}
 
-										if ( elapsed === undefined ) {
-											log.error`request attempt ${count} aborted`;
-										} else if ( attempt > 0 ) {
-											log.warning`request attempt ${count} rejected with delay ${elapsed} ms`;
-										} else {
-											log.info`request attempt ${count} submitted with delay ${elapsed} ms`;
 										}
 
 									}
-
-								}
-							);
+								);
+							}
 						}
-
 					}
 
 					/**
@@ -403,99 +406,7 @@ export function json<T>(response: GenerateContentResponse): T {
  * @returns Embedding vector as an array of numbers, or empty array if not present
  */
 export function embedding(response: EmbedContentResponse) {
+
 	return response.embeddings?.[0]?.values ?? [];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Executes an async function with retry logic using adaptive throttling.
- *
- * Implements the same approach as the Java OpenAI retry logic, using a shared
- * throttle per model to coordinate rate limiting across all requests.
- *
- * @param throttle Throttle instance for rate limiting
- * @param task Async function to execute
- * @param options Retry options
- * @param options.attempts Maximum retry attempts (0 = unlimited, default: 0)
- * @param options.recover Callback to determine if an error is retryable and extract
- *                        API-specified delay. Returns `undefined` for non-retryable errors (will be thrown),
- *                        or a number (in milliseconds) for retryable errors:
- *                        0 = use default backoff, >0 = use API-specified delay
- * @param options.monitor Optional callback invoked on each attempt: receives current attempt (zero-indexed),
- *                        maximum attempts, and elapsed time since retry started:
- *                        - undefined = failed (non-retryable error or max attempts exhausted)
- *                        - number (with current === 0 or elapsed === 0) = submitted (about to execute)
- *                        - number (with current > 0) = rejected (retryable error, will retry)
- *
- * @returns Result of the function call
- *
- * @throws Original error if non-retryable (recover returns undefined) or max attempts exceeded
- */
-async function retry<T>(
-	throttle: ReturnType<typeof Throttle>,
-	task: () => Promise<T>,
-	{
-
-		attempts = 0,
-
-		recover,
-		monitor
-
-	}: {
-
-		attempts?: number
-
-		recover?: (error: unknown) => undefined | number
-		monitor?: (attempt: number, attempts: number, elapsed: undefined | number) => void
-
-	} = {}
-): Promise<T> {
-
-	const start = Date.now();
-
-	for (let attempt = 0; attempts === 0 || attempt < attempts; attempt++) {
-		try {
-
-			await throttle.queue(true);
-
-			monitor?.(attempt, attempts, Date.now()-start);
-
-			const result = await task();
-
-			throttle.adapt(true);
-
-			return result;
-
-		} catch ( error ) {
-
-			const delay = recover?.(error);
-
-			if ( delay === undefined ) { // non-retryable error
-
-				throttle.adapt(false);
-
-				monitor?.(attempt, attempts, undefined);
-
-				throw error;
-
-			} else { // retryable error with API-specified or default delay
-
-				if ( delay > 0 ) {
-					throttle.adapt(delay);
-				} else {
-					throttle.adapt(false);
-				}
-
-				monitor?.(attempt, attempts, Date.now()-start);
-
-			}
-
-		}
-	}
-
-	monitor?.(attempts, attempts, undefined);
-
-	throw new Error(`request aborted after ${attempts} attempts`);
 
 }
