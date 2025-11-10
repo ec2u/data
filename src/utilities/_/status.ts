@@ -28,122 +28,120 @@
  * @module
  */
 
+import { isDefined, isFunction } from "@metreeca/core";
 
-import { isFunction } from "@metreeca/core";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Pattern matcher returned by the {@link Status} function.
+ * Pattern matcher.
  *
- * Accepts handlers for each state and returns the result from the matched handler.
+ * Accepts handlers for each condition and returns the result from the matched handler.
  * Three usage patterns are supported:
  *
- * - All states handled: provide a handler for every state, returns `R`
- * - Some states with fallback: provide handlers for some states plus a fallback, returns `R`
- * - Some states without fallback: provide handlers for some states only, returns `R | undefined`
+ * - All conditions handled: provide a handler for every condition, returns `R`
+ * - Some conditions with fallback: provide handlers for some conditions plus a fallback, returns `R`
+ * - Some conditions without fallback: provide handlers for some conditions only, returns `R | undefined`
  *
- * @typeParam C The states type defining all possible variants
- * @typeParam F The fallback handler key name (defaults to `never` for no fallback)
+ * @typeParam C The conditions type defining all possible condition variants
  */
-export type Status<C extends Cases, F extends string = never> = {
+export type Status<C extends Conditions> = {
 
 	/**
-	 * Handles all states with complete handlers.
+	 * Handles all conditions with complete handlers.
 	 *
 	 * @typeParam R The return type of all handlers
 	 *
-	 * @param handlers Mapping of all state keys to their handlers
+	 * @param handlers Mapping of all condition keys to their handlers
 	 *
 	 * @returns The result from the matched handler
-	 */<R>(handlers: Handlers<C, R, F>): R
+	 */<R>(handlers: Handlers<C, R>): R
 
 	/**
-	 * Handles some states with a fallback.
+	 * Handles some conditions without a fallback.
 	 *
 	 * @typeParam R The return type of all handlers
 	 *
-	 * @param handlers Partial mapping of state keys to handlers, plus required fallback handler
-	 *
-	 * @returns The result from the matched handler or fallback
-	 */<R>(handlers: Partial<Handlers<C, R, F>> & Fallback<C, R, F>): R
-
-	/**
-	 * Handles some states without a fallback.
-	 *
-	 * @typeParam R The return type of all handlers
-	 *
-	 * @param handlers Partial mapping of state keys to handlers
+	 * @param handlers Partial mapping of condition keys to handlers
 	 *
 	 * @returns The result from the matched handler, or `undefined` if no handler matched
-	 */<R>(handlers: Partial<Handlers<C, R, F>>): undefined | R
+	 */<R>(handlers: Partial<Handlers<C, R>>): undefined | R
+
+	/**
+	 * Handles some conditions with a fallback handler for unmatched conditions.
+	 *
+	 * @typeParam R The return type of all handlers
+	 *
+	 * @param handlers Partial mapping of condition keys to handlers
+	 * @param fallback Fallback handler receiving union of condition values
+	 *
+	 * @returns The result from the matched handler or fallback
+	 */<R>(handlers: Partial<Handlers<C, R>>, fallback: Handler<C[keyof C], R>): R
 
 }
 
+
 /**
- * Constraint for state definitions.
+ * Condition patterns.
  *
- * Represents the possible states as an object type where each property key maps to a value type.
+ * Defines matchable conditions as an object type where each property key names a distinct known condition
+ * and its type specifies the associated value.
  */
-export type Cases = {
+export type Conditions = {
 
 	readonly [key: string]: unknown
 
 }
 
 /**
- * Value containing exactly one active state from the possible states.
+ * Condition value.
  *
- * Enforces that only one property from the states type can be present, with all others
- * explicitly forbidden. This prevents invalid multi-state values at compile time.
+ * Represents a specific state with exactly one active property from the condition patterns.
+ * The type uses mapped types to ensure mutual exclusivity: when one property is active,
+ * all others are explicitly set to `never`, preventing invalid multi-variant values at compile time.
  *
- * @typeParam C The states type to extract from
+ * @typeParam C The condition patterns defining available states
  */
-export type Case<C extends Cases> = {
+export type Condition<C extends Conditions> = {
 
 	readonly [K in keyof C]: { [P in K]: C[P] } & { [P in Exclude<keyof C, K>]?: never }
 
 }[keyof C]
 
+
 /**
- * Maps state keys to their corresponding handlers with optional fallback support.
+ * Condition handlers.
  *
- * Each {@link Handler} receives the state's value and produces a result of type `R`. Handlers can be
- * either constant values or functions. When a fallback key is specified, an optional fallback
- * handler is added to handle unmatched states.
+ * Maps each condition name to a {@link Handler} that processes the matched value and produces
+ * a result of type `R`.
  *
- * @typeParam C The states type defining all possible state keys
+ * @typeParam C The condition patterns
  * @typeParam R The return type of all handlers
- * @typeParam F The fallback handler key name (defaults to `never` for no fallback)
  */
-export type Handlers<C extends Cases, R, F extends string = never> = {
+export type Handlers<C extends Conditions, R> = {
 
 	readonly [K in keyof C]: Handler<C[K], R>
-
-} & ([F] extends [never] ? {} : Partial<Fallback<C, R, F>>)
-
-
-/**
- * Defines the structure of a fallback handler.
- *
- * Maps a fallback key to a {@link Handler} that receives a union of all possible state values.
- *
- * @typeParam C The states type
- * @typeParam R The return type of the handler
- * @typeParam F The fallback handler key name
- */
-export type Fallback<C extends Cases, R, F extends string> = {
-
-	readonly [K in F]: Handler<C[keyof C], R>
 
 }
 
 /**
- * Handler that processes a state value and produces a result.
+ * Condition handler.
  *
- * Can be either a constant value returned directly, or a function that computes the result
- * from the state value.
+ * Processes a matched condition value to produce a result. Can be either a constant value of type
+ * `R` returned directly, or a function that receives the matched value and computes a result.
  *
- * @typeParam V The type of the state value the handler receives
+ * @typeParam V The type of the matched condition value
  * @typeParam R The return type of the handler
+ *
+ * @example
+ *
+ * ```typescript
+ * // Constant handler - returns the value directly
+ * const handler1: Handler<string, number> = 42;
+ *
+ * // Function handler - computes result from the matched value
+ * const handler2: Handler<string, number> = (value) => value.length;
+ * ```
  */
 export type Handler<V, R> =
 	| R
@@ -153,21 +151,19 @@ export type Handler<V, R> =
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates a type-safe pattern matching function for a caze with exactly one active state.
+ * Creates a type-safe pattern matching function for a condition.
  *
- * @typeParam C The states type defining all possible variants
- * @typeParam F The fallback handler key name (defaults to `never` for no fallback)
+ * @typeParam C The conditions type defining all possible condition variants
  *
- * @param caze A caze containing exactly one property from the states type
- * @param fallback Key name for the fallback handler (required when `F` is specified, omitted when `F` is `never`)
+ * @param condition A condition
  *
- * @returns A {@link Status} function that accepts handlers for each state
+ * @returns A {@link Status} function that accepts handlers for each condition and an optional fallback
  *
  * @example
  *
  * ```typescript
- * // Handle all states explicitly
- * const result = Switch<{
+ * // Handle all conditions explicitly
+ * const result = Status<{
  *   value: string;
  *   error: Error
  * }>({ value: "done" })({
@@ -175,32 +171,22 @@ export type Handler<V, R> =
  *   error: (e) => `error: ${e.message}`
  * })
  *
- * // Use fallback for unhandled states
- * const result = Switch({ value: "done" }, "other")({
- *   value: (v) => `value: ${v}`,
- *   other: () => "unhandled"
- * })
+ * // Use fallback for unhandled conditions
+ * const result = Status({ value: "done" })({
+ *   value: (v) => `value: ${v}`
+ * }, () => "unhandled")
  * ```
  */
-export function Status<C extends Cases, F extends string = never>(
-	caze: Case<C>,
-	...[fallback]: [F] extends [never] ? [] : [F]
-): Status<C, F> {
+export function Status<C extends Conditions>(condition: Condition<C>): Status<C> {
 
-	const [label, value] = Object.entries(caze)[0] ?? []; // find the active case
+	const [label, value] = Object.entries(condition)[0] ?? []; // find the active condition
 
-	return function <R>(handlers: Partial<Handlers<C, R, F>> & Partial<Fallback<C, R, F>>): R | undefined {
+	return <R>(handlers: Partial<Handlers<C, R>>, fallback?: Handler<C[keyof C], R>) => {
 
-		// find the matching handler or fallback
-
-		const handler = handlers[label] || (fallback && handlers[fallback]);
-
-		// execute handler if found
-
-		return handler && (isFunction(handler)
-				? (handler as (value: unknown) => R)(value)
-				: handler as R
-		);
+		return isFunction(handlers[label]) ? handlers[label](value)
+			: isDefined(handlers[label]) ? handlers[label]
+				: isFunction(fallback) ? fallback(value)
+					: fallback;
 
 	};
 
