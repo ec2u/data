@@ -21,8 +21,8 @@ import { listTopics } from "@/pipelines/topics/tools/listTopics";
 import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
 import { matches, merge, stale, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
-import { Level, log, simple } from "@/utilities/_/logger";
-import { guard, message, time } from "@/utilities/_/logger/log";
+import { log } from "@/utilities/core/logger";
+import { guard, message, time } from "@/utilities/core/logger/log";
 import { md } from "@/utilities/core/tags";
 import { ai, json } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
@@ -44,18 +44,6 @@ const tools = [
 
 
 if ( import.meta.main ) {
-
-	log({
-
-		console: simple(),
-
-		"": {
-			level: Level.info,
-			sink: "console"
-		}
-
-	});
-
 	analyze();
 }
 

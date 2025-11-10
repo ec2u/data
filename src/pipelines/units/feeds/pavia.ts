@@ -18,7 +18,8 @@ import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { matches, merge, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
-import { log, message, time } from "@/utilities/_/logger/log";
+import { log } from "@/utilities/core/logger";
+import { message, time } from "@/utilities/core/logger/log";
 import { ai, json } from "@/utilities/gcp/gemini";
 import { pavia, Units } from "@/utilities/hub";
 import { file } from "@/utilities/node/files";
@@ -39,6 +40,10 @@ const roots = [
 	"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/grandi-infrastrutture-di-ricerca"
 ];
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const logger = log(import.meta.url);
 
 const tools = [
 	fetchPage({ cache: pages.lookup })
@@ -134,9 +139,9 @@ export async function scan(url?: string): Promise<unknown> {
 				);
 
 			}))
-		), (count, elapsed) => log.info(scan.name,
+			), (count, elapsed) => logger.info
 			`identified <${count}> units in <${message(elapsed)}> ms`
-		));
+		);
 
 	}
 

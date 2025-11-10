@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { log, Logger } from "@/utilities/_/logger";
-import { message } from "@/utilities/_/logger/log";
+import { log, Logger } from "@/utilities/core/logger";
+import { message } from "@/utilities/core/logger/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
 import {

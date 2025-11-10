@@ -22,7 +22,7 @@
  */
 
 import { Page } from "@/pipelines/pages/index";
-import { log, message, time } from "@/utilities/_/logger/log";
+import { log, message, time } from "@/utilities/core/logger/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { immutable } from "@metreeca/core";

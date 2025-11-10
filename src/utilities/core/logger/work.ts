@@ -15,7 +15,7 @@
  */
 
 
-import { Level, log, simple, Sink } from "@/utilities/_/logger/index";
+import { Level, log, simple, Sink } from "@/utilities/core/logger/index";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -36,7 +36,7 @@ function upper(sink: Sink): Sink {
 	return (path: string, level: Level, message: TemplateStringsArray, values: unknown[]) => {
 		const parts = message.map(s => s.toUpperCase());
 		const uppercased = Object.assign(parts, { raw: message.raw.map(s => s.toUpperCase()) });
-		sink(path, level, uppercased as TemplateStringsArray, values);
+		return sink(path, level, uppercased as TemplateStringsArray, values);
 	};
 }
 
